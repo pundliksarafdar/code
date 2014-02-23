@@ -1,0 +1,23 @@
+Openshift Server:
+
+	username:sarafdarpundlik@gmail.com
+	password:gaurav26993
+
+	mysql5.1
+		Root User: adminCpI6iys
+		Root Password: 4lqjihh7HZmC
+		Database Name: classapplication
+		
+		
+	Jenkins
+		User: admin
+		Password: zgjs9Yruca7E
+
+	SVN Repo:https://classapp.googlecode.com/svn/trunk	
+		
+
+*************************************************************************
+Git:https://github.com/pundliksarafdar/PundlikTest/
+	gitusername:pundliksarafdar
+	git pass:gaurav26993
+openshift url:ssh://52e530434382ecfa5b000249@classapplication-mycorex.rhcloud.com/~/git/classapplication.git		

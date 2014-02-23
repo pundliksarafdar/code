@@ -1,0 +1,2 @@
+Intallation for openhift client tool
+https://www.openshift.com/developers/rhc-client-tools-install

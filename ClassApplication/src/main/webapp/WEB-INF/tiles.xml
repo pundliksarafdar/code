@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+   "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+   "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+   <definition name="baseLayout" template="/BaseLayout.jsp">
+      <put-attribute name="title"  value="Template"/>
+      <put-attribute name="header" value="/header.jsp"/>
+      <put-attribute name="topnav"   value="/admin/menu.jsp"/>
+      <put-attribute name="body"   value="/index.jsp"/>
+      <put-attribute name="footer"   value="/footer.jsp"/>
+   </definition>
+   
+   <definition name="NoTopnavBaseLayout" template="/NoTopnavBaseLayout.jsp">
+      <put-attribute name="title"  value=""/>
+      <put-attribute name="header" value="/header.jsp"/>
+      <put-attribute name="body"   value="/index.jsp"/>
+      <put-attribute name="footer"   value="footer.jsp"/>
+   </definition>
+
+   <definition name="login" extends="NoTopnavBaseLayout">
+      <put-attribute name="title"  value="Template"/>
+      <put-attribute name="header" value="header.jsp"/>
+      <put-attribute name="body"   value="/index.jsp"/>
+      <put-attribute name="footer"   value="footer.jsp"/>
+   </definition>
+   
+   <definition name="Admin.LoginSuccess" extends="baseLayout">
+      <put-attribute name="title"  value="Admin"/>
+      <put-attribute name="header"  value="/header.jsp"/>
+      <put-attribute name="topnav"  value="/admin/menu.jsp"/>
+      <put-attribute name="body"   value="/admin/loginSuccess.jsp"/>      
+   </definition>
+
+	<definition name="register" extends="NoTopnavBaseLayout">
+      <put-attribute name="title"  value="Register"/>
+      <put-attribute name="header"  value="/header.jsp"/>
+      <put-attribute name="body"   value="/register.jsp"/>      
+   </definition>
+	
+	<definition name="registersuccess" extends="NoTopnavBaseLayout">
+      <put-attribute name="title"  value="Register"/>
+      <put-attribute name="header"  value="/header.jsp"/>
+      <put-attribute name="body"   value="/General/RegisterSuccess.jsp"/>      
+   </definition>
+   
+   <definition name="edituser" extends="NoTopnavBaseLayout">
+      <put-attribute name="title"  value="Edit User"/>
+      <put-attribute name="header"  value="/header.jsp"/>
+      <put-attribute name="body"   value="/General/edituser.jsp"/>      
+   </definition>
+
+	<definition name="edituserreview" extends="NoTopnavBaseLayout">
+      <put-attribute name="title"  value="Edit Review"/>
+      <put-attribute name="header"  value="/header.jsp"/>
+      <put-attribute name="body"   value="/General/edituserreview.jsp"/>      
+   </definition>
+   
+   <definition name="editusersave" extends="NoTopnavBaseLayout">
+      <put-attribute name="title"  value="Save"/>
+      <put-attribute name="header"  value="/header.jsp"/>
+      <put-attribute name="body"   value="/General/editusersave.jsp"/>      
+   </definition>
+   
+   <definition name="editusersuccess" extends="NoTopnavBaseLayout">
+      <put-attribute name="title"  value="Save"/>
+      <put-attribute name="header"  value="/header.jsp"/>
+      <put-attribute name="body"   value="/General/editusersuccess.jsp"/>      
+   </definition>
+
+   <definition name="getclasslist" extends="NoTopnavBaseLayout">
+      <put-attribute name="title"  value="Save"/>
+      <put-attribute name="header"  value="/header.jsp"/>
+      <put-attribute name="body"   value="/Class/searchClassList.jsp"/>      
+   </definition>
+
+   <definition name="searchclass" extends="baseLayout">
+      <put-attribute name="title"  value="Search"/>
+      <put-attribute name="body"   value="/Class/searchClassList.jsp"/>      
+   </definition>
+   
+
+</tiles-definitions>

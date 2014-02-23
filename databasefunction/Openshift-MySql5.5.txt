@@ -1,0 +1,9 @@
+  Root User: admin7wiv5Ys
+   Root Password: ReVSpsgcVdXl
+   Database Name: jbdev
+
+Connection URL: mysql://$OPENSHIFT_MYSQL_DB_HOST:$OPENSHIFT_MYSQL_DB_PORT/
+
+ Root User: admin7wiv5Ys
+  Root Password: ReVSpsgcVdXl
+URL: https://jbdev-mycorex.rhcloud.com/phpmyadmin/
