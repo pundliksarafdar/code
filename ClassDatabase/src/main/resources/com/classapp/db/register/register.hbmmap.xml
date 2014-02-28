@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
  
 <hibernate-mapping>
-    <class name="com.classapp.db.register.RegisterBean" table="regtable" catalog="classdb">
+    <class name="com.classapp.db.register.RegisterBean" table="regTable" catalog="CLASSDB">
         <id name="regId" type="java.lang.Integer">
             <column name="REG_ID" />
             <generator class="identity" />
