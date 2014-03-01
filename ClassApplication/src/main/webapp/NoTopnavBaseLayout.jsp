@@ -11,15 +11,28 @@
  <link href="css/bootstrap.min.css" rel="stylesheet">
  <link href="css/bootstrap-responsive.css" rel="stylesheet">
  <link href="css/admin.css" rel="stylesheet">
+ <link href="css/datetimepicker.css" rel="stylesheet">
  <script src="js/jquery-1.10.2.min.js"></script>
  <script src="js/bootstrap.min.js"></script>
  <script src="js/allAjax.js"></script>	
+ <script src="js/datepicker.js"></script>
 </head>
 <body>
   <tiles:insertAttribute name="header" /><br/>
    <hr size="2px"/>
+   <div style="padding-left: 5px; padding-right: 25px">
    <tiles:insertAttribute name="body" /><br/>
+   </div>
    <hr size="2px"/>
    <tiles:insertAttribute name="footer" /><br/>
+   
+   <script type="text/javascript">
+      $(document).ready(function(){
+      $('#datetimepicker').datetimepicker({
+    	  format: 'dd/MM/yyyy',	
+    	  pickTime: false
+      });
+      });
+</script>
 </body>
 </html>

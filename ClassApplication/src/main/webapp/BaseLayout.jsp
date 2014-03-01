@@ -12,6 +12,7 @@
 <link href="css/prettify.css" rel="stylesheet" />
 <link href="css/bootstrap-modal-bs3patch.css" rel="stylesheet" />
 <link href="css/bootstrap-modal.css" rel="stylesheet" />
+<link href="css/datetimepicker.css" rel="stylesheet">
 <style>
 .text-center {
 	text-align: center;
@@ -63,7 +64,7 @@ html,body {
 <script src="js/bootstrap-modalmanager.js"></script>
 <script src="js/bootstrap-modal.js"></script>
 <script src="js/bootstrap-paginator.min.js"></script>
-
+<script src="js/datepicker.js"></script>
 
 <script type="text/javascript" src=""></script>
 </head>

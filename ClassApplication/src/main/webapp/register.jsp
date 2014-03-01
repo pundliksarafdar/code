@@ -1,117 +1,179 @@
 <%@taglib prefix="s" uri="/struts-tags"%>
-<form action="registeruser" method="post">
+
+<script type="text/javascript">
+	function validate(){
+		$('#mandatoryerror').hide();
+		$('input').each(function(){
+			$(this).parents('.form-group').removeClass('has-error');
+			if($(this).attr('required')=='required'){
+				if($(this).val().trim().length==0){
+					//alert('field is required');form-control
+					$(this).parents('.form-group').addClass('has-error');
+					$('#mandatoryerror').show();
+				}
+			}
+		});
+		
+	}
+	
+	function addRole(role){
+		if(role==0){
+			$('#rolebtn').html('Admin <span class="caret"></span>');
+		}else if(role==1){
+			$('#rolebtn').html('ClassOwner <span class="caret"></span>');
+		}else if(role==2){
+			$('#rolebtn').html('ClassTeacher <span class="caret"></span>');
+		}else{
+			$('#rolebtn').html('Student <span class="caret"></span>');
+		}
+		$('#role').val(role);
+	}
+
+</script>
+
+<form action="registeruser" method="post" role="form" class="form-horizontal">
 <s:if test="hasActionErrors()">
    <div class="errors">
       <s:actionerror/>
    </div>
 </s:if>
-<table>
-<tr><td>
-	First Name
-</td>
-<td>
-	<input type="text" name="registerBean.fname"/>
-</td></tr>
-<tr><td>
-	Middle Name
-</td>
-<td>
-	<input type="text" name="registerBean.mname"/>
-</td></tr>
-<tr><td>
-	Last Name
-</td>
-<td>
-	<input type="text" name="registerBean.lname"/>
-</td></tr>
-<tr><td>
-	Date of Birth
-</td>
-<td>
-	<input type="date" name="registerBean.dob"/>
-</td></tr>
-<tr><td>
-	*Address1
-</td>
-<td>
-	<input type="text" name="registerBean.addr1"/>
-</td></tr>
-<tr><td>
-	&nbsp;Address1
-</td>
-<td>
-	<input type="text" name="registerBean.addr2"/>
-</td></tr>
-<tr><td>
-	*City
-</td>
-<td>
-	<input type="text" name="registerBean.city"/>
-</td></tr>
-<tr><td>
-	*State
-</td>
-<td>
-	<input type="text" name="registerBean.state"/>
-</td></tr>
-<tr><td>
-	*Country
-</td>
-<td>
-	<input type="text" name="registerBean.country"/>
-</td></tr>
-<tr><td>
-	*Phone 1
-</td>
-<td>
-	<input type="text" name="registerBean.phone1"/>
-</td></tr>
-<tr><td>
-	&nbsp;Phone 2
-</td>
-<td>
-	<input type="text" name="registerBean.phone2"/>
-</td></tr>
-
-<tr><td>
-	*Class Name
-</td>
-<td>
-	<input type="text" name="registerBean.className" id="loginname"/>
-</td>
-</tr>
-
-<tr><td>
-	*Desired Login Name
-</td>
-<td>
-	<input type="text" name="registerBean.loginName" id="loginname"/>
-</td>
-</tr>
-
-<tr>
-<td>
-	*Password
-</td>
-<td>
-	<input type="text" name="registerBean.loginPass" id="loginpass">
-</td>
-</tr>
-<tr>
-<td>*Re-Enter Password</td>
-<td><input type="text" name="registerBean.loginPassRe" id="loginpassre"/>
-</td>
-</tr>
-<tr>
-<td>
-<select name="ROLE">
-  <option value="0">Admin</option>
-  <option value="1">Class Owner</option>
-  <option value="2">Class Teacher</option>
-  <option value="3">Student</option>
-</select>
-</td>
-</tr>
-<tr><td><input type="submit" value="Submit"></td></tr>
-</table>
+<fieldset>
+	<div class="alert alert-danger" id="mandatoryerror" hidden="hidden">Field marked with * are mandatory</div>
+	<div class="form-group">
+    	<label for="fname" class="col-sm-2 control-label">*First Name</label>
+    	<div class="col-sm-10">
+			<input type="text" class="form-control" name="registerBean.fname" id="fname" required="required"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="mname" class="col-sm-2 control-label">Middle Name</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="registerBean.mname" id="mname"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="lname" class="col-sm-2 control-label">*Last Name</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="registerBean.lname" id="lname" required="required"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="dob" class="col-sm-2 control-label" >*Date of Birth</label>
+		<div class="col-sm-10">
+				<!-- 
+				<div id="datetimepicker" class="input-append date">
+					<input type="text"></input> <span class="add-on icon icon-calendar"> <i
+						data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+					</span>
+				</div>
+				-->
+				
+				<div id="datetimepicker" class="input-group" style="width :250px;">
+					<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
+						type="text"  required="required"/> <span class="input-group-addon add-on"> <i
+						class="glyphicon glyphicon-calendar glyphicon-time"></i>
+					</span>
+				</div>
+				
+			</div>
+	</div>
+	<div class="form-group">
+		<label for="adr1" class="col-sm-2 control-label">*Address1</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="registerBean.addr1"  id="adr1" required="required"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="adr2" class="col-sm-2 control-label">Address2</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="registerBean.addr2"  id="adr2"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="city" class="col-sm-2 control-label">*City</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="registerBean.city" id="city" required="required"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="state" class="col-sm-2 control-label">*State</label>
+		<div class="col-sm-10">	
+			<input type="text" class="form-control" name="registerBean.state" id="state" required="required"/>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label for="country" class="col-sm-2 control-label">*Country</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="registerBean.country" id="country" required="required"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="phone1" class="col-sm-2 control-label">*Phone 1</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="registerBean.phone1" id="phone1" required="required"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="phone2" class="col-sm-2 control-label">Phone 2</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="registerBean.phone2" id="phone2"/>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label for="classname" class="col-sm-2 control-label">*Class Name</label>
+		<div class="col-sm-10">	
+			<input type="text" class="form-control" name="registerBean.className" id="classname" required="required"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="loginname" class="col-sm-2 control-label">*Desired Login Name</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="registerBean.loginName" id="loginname" required="required"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="loginpass" class="col-sm-2 control-label">*Password</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="registerBean.loginPass" id="loginpass" required="required"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="loginpassre" class="col-sm-2 control-label">*Re-Enter Password</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" name="registerBean.loginPassRe" id="loginpassre" required="required"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="role"  class="col-sm-2 control-label">Select your role</label>
+		<div class="col-sm-10">
+		<input type="hidden" class="form-control" name="registerBean.role" id="role" value="" required="required"/>
+		<div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle"
+					data-toggle="dropdown" id="rolebtn">
+					Role <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="javascript:addRole('0')">Admin</a></li>
+					<li><a href="javascript:addRole('1')">Class Owner</a></li>
+					<li><a href="javascript:addRole('2')">Class Teacher</a></li>
+					<li><a href="javascript:addRole('3')">Student</a></li>
+				</ul>
+		</div>
+		</div>
+			<!--<select name="ROLE" id="role">
+			  <option value="0">Admin</option>
+			  <option value="1">Class Owner</option>
+			  <option value="2">Class Teacher</option>
+			  <option value="3">Student</option>
+			</select>
+			-->
+	</div>
+	
+	<div class="form-group">
+		<label for="submit"  class="col-sm-2 control-label"> </label>
+		<div class="col-sm-10">
+			<input type="button" class="btn btn-default" value="Submit" id="submit" onclick="validate();"/>
+		</div>
+	</div>
+</fieldset>
 </form>
