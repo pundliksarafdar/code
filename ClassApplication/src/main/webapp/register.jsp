@@ -1,7 +1,26 @@
 <%@taglib prefix="s" uri="/struts-tags"%>
 
 <script type="text/javascript">
+	$(document).ready(function(){
+		$('#role').val("");
+	});
+	
 	function validate(){
+		if(validateBlank()){
+			if(isPasswordValid()){
+				return true;	
+			}else{
+				return false;	
+			}
+		}else{
+			isPasswordValid();
+			return false;			
+		}		
+	}
+	
+	function validateBlank(){
+		$('#mandatoryerror ul').text("");
+		var isValid = true;
 		$('#mandatoryerror').hide();
 		$('input').each(function(){
 			$(this).parents('.form-group').removeClass('has-error');
@@ -9,11 +28,16 @@
 				if($(this).val().trim().length==0){
 					//alert('field is required');form-control
 					$(this).parents('.form-group').addClass('has-error');
-					$('#mandatoryerror').show();
+					isValid = false;
 				}
 			}
 		});
 		
+		if(!isValid){
+			$('#mandatoryerror ul').append("<li>Field marked with the * are mandatory</li>");
+			$('#mandatoryerror').show();
+		}
+		return isValid;
 	}
 	
 	function addRole(role){
@@ -28,17 +52,41 @@
 		}
 		$('#role').val(role);
 	}
+	
+	function go(){
+		if(validate()){
+			$('#regform').submit();
+		}
+	}
 
+	function isPasswordValid(){
+		var ispassvalid = false;
+		if($('#loginpass').val()===$('#loginpassre').val()){
+			ispassvalid = true;
+		}else{
+			$('#loginpass').val("");
+			$('#loginpassre').val("");
+			$('#loginpass').parents('.form-group').addClass('has-error');
+			$('#mandatoryerror ul').append("<li>Reentered password should match</li>");
+			$('#mandatoryerror').show();
+			ispassvalid = false;
+		}
+			return ispassvalid;
+	}
 </script>
 
-<form action="registeruser" method="post" role="form" class="form-horizontal">
+<form id="regform" action="/registeruser" method="post" role="form" class="form-horizontal">
 <s:if test="hasActionErrors()">
-   <div class="errors">
-      <s:actionerror/>
+   <div class="alert alert-danger" id="mandatoryerror" hidden="hidden">
+	   <s:actionerror/>
    </div>
 </s:if>
 <fieldset>
-	<div class="alert alert-danger" id="mandatoryerror" hidden="hidden">Field marked with * are mandatory</div>
+	<div class="alert alert-danger" id="mandatoryerror" hidden="hidden">
+		<ul>
+			
+		</ul>
+	</div>
 	<div class="form-group">
     	<label for="fname" class="col-sm-2 control-label">*First Name</label>
     	<div class="col-sm-10">
@@ -70,7 +118,7 @@
 				
 				<div id="datetimepicker" class="input-group" style="width :250px;">
 					<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
-						type="text"  required="required"/> <span class="input-group-addon add-on"> <i
+						type="text"  name="registerBean.dob" required="required"/> <span class="input-group-addon add-on"> <i
 						class="glyphicon glyphicon-calendar glyphicon-time"></i>
 					</span>
 				</div>
@@ -80,7 +128,7 @@
 	<div class="form-group">
 		<label for="adr1" class="col-sm-2 control-label">*Address1</label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" name="registerBean.addr1"  id="adr1" required="required"/>
+			<input type="text" class="form-control" name="registerBean.addr1"  id="adr1" required="required" />
 		</div>
 	</div>
 	<div class="form-group">
@@ -92,25 +140,25 @@
 	<div class="form-group">
 		<label for="city" class="col-sm-2 control-label">*City</label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" name="registerBean.city" id="city" required="required"/>
+			<input type="text" class="form-control" name="registerBean.city" id="city" required="required" />
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="state" class="col-sm-2 control-label">*State</label>
 		<div class="col-sm-10">	
-			<input type="text" class="form-control" name="registerBean.state" id="state" required="required"/>
+			<input type="text" class="form-control" name="registerBean.state" id="state"  required="required"/>
 		</div>	
 	</div>
 	<div class="form-group">
 		<label for="country" class="col-sm-2 control-label">*Country</label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" name="registerBean.country" id="country" required="required"/>
+			<input type="text" class="form-control" name="registerBean.country" id="country" required="required" />
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="phone1" class="col-sm-2 control-label">*Phone 1</label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" name="registerBean.phone1" id="phone1" required="required"/>
+			<input type="text" class="form-control" name="registerBean.phone1" id="phone1" required="required" />
 		</div>
 	</div>
 	<div class="form-group">
@@ -122,31 +170,31 @@
 	<div class="form-group">
 		<label for="classname" class="col-sm-2 control-label">*Class Name</label>
 		<div class="col-sm-10">	
-			<input type="text" class="form-control" name="registerBean.className" id="classname" required="required"/>
+			<input type="text" class="form-control" name="registerBean.className" id="classname" required="required" />
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="loginname" class="col-sm-2 control-label">*Desired Login Name</label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" name="registerBean.loginName" id="loginname" required="required"/>
+			<input type="text" class="form-control" name="registerBean.loginName" id="loginname" required="required" />
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="loginpass" class="col-sm-2 control-label">*Password</label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" name="registerBean.loginPass" id="loginpass" required="required"/>
+			<input type="password" class="form-control" name="registerBean.loginPass" id="loginpass" required="required" />
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="loginpassre" class="col-sm-2 control-label">*Re-Enter Password</label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" name="registerBean.loginPassRe" id="loginpassre" required="required"/>
+			<input type="password" class="form-control" name="registerBean.loginPassRe" id="loginpassre" required="required" />
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="role"  class="col-sm-2 control-label">Select your role</label>
 		<div class="col-sm-10">
-		<input type="hidden" class="form-control" name="registerBean.role" id="role" value="" required="required"/>
+		<input type="hidden" class="form-control" name="registerBean.role" id="role" value=""  required="required"/>
 		<div class="btn-group">
 				<button type="button" class="btn btn-default dropdown-toggle"
 					data-toggle="dropdown" id="rolebtn">
@@ -172,7 +220,7 @@
 	<div class="form-group">
 		<label for="submit"  class="col-sm-2 control-label"> </label>
 		<div class="col-sm-10">
-			<input type="button" class="btn btn-default" value="Submit" id="submit" onclick="validate();"/>
+			<input type="button" onclick="go();" value="Submit" class="btn btn-default"/>
 		</div>
 	</div>
 </fieldset>

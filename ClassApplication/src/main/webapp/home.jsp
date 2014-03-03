@@ -7,7 +7,7 @@
 <title>Home Page</title>
 <script type="text/javascript">
 function login(){
-	location.href="/ClassApplication/login";
+	location.href="/login";
 }
 </script>
 </head>
