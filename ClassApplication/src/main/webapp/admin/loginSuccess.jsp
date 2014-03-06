@@ -81,7 +81,7 @@ function acceptClass(regId,that){
 		<tr>
 			<th>RegId</th>
 			<th>Class Name</th>
-			<th>Owner</th>
+			<th class = "visible-lg">Owner</th>
 			<th>Start Date</th>
 			<th>Days left</th>
 		</tr>
@@ -94,9 +94,9 @@ function acceptClass(regId,that){
 		<tr id="tableTr">
 			<td id="regId"><%=registerBean.getRegId() %></td>
 			<td><%=registerBean.getClassName() %></td>
-			<td><%=registerBean.getFname() %></td>
+			<td class = "visible-lg"><%=registerBean.getFname() %></td>
 			<%if(null == daysLeft){%>
-			<td><input type="text" placeholder="Duration" id="duration" /></td>
+			<td><input type="text" placeholder="Duration" id="duration" style="width: 80px;"/></td>
 			<td><button type="button" class="btn btn-warning"
 					onclick="acceptClass('<%=registerBean.getRegId() %>',this)">Accept</button></td>
 			<%}else{%>

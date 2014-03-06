@@ -11,7 +11,7 @@ Openshift Server:
 		
 	Jenkins
 		User: admin
-		Password: zgjs9Yruca7E
+		Password: gaurav26993
 
 	SVN Repo:https://classapp.googlecode.com/svn/trunk	
 		
