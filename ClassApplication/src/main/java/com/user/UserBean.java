@@ -18,7 +18,9 @@ public class UserBean{
 	private String country;
 	private String phone1;
 	private String phone2;
-	
+	private String startdate;
+	private String enddate;
+
 	public String getDob() {
 		return dob;
 	}
@@ -113,6 +115,18 @@ public class UserBean{
 	}
 	public void setPhone2(String phone2) {
 		this.phone2 = phone2;
+	}
+	public String getStartdate() {
+		return startdate;
+	}
+	public void setStartdate(String startdate) {
+		this.startdate = startdate;
+	}
+	public String getEnddate() {
+		return enddate;
+	}
+	public void setEnddate(String enddate) {
+		this.enddate = enddate;
 	}
 	
 	

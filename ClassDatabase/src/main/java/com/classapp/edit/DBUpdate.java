@@ -36,7 +36,36 @@ public class DBUpdate {
 		return errorMessage;
 	}
 	
+	public String blockUser(String regId,String role){
+		String errorMessage = null;
+		String query = "UPDATE RegisterBean SET role =:rolBlock WHERE regId = :regId";
+		Session session = HibernateUtil.getSessionfactory().openSession();
+		Transaction transaction = session.beginTransaction();
+		Query updateQuery = session.createQuery(query);
+		Integer roleInt = Integer.parseInt("1"+role);
+		updateQuery.setParameter("rolBlock", roleInt);
+		updateQuery.setParameter("regId", Integer.parseInt(regId));
+		int result = updateQuery.executeUpdate();
+		transaction.commit();
+		System.out.println("Result "+result);
+		return errorMessage;
+	}
 	
+	public String unBlockUser(String regId,String role){
+		String errorMessage = null;
+		String query = "UPDATE RegisterBean SET role =:rolBlock WHERE regId = :regId";
+		Session session = HibernateUtil.getSessionfactory().openSession();
+		Transaction transaction = session.beginTransaction();
+		Query updateQuery = session.createQuery(query);
+		Integer roleInt = Integer.parseInt(role);
+		updateQuery.setParameter("rolBlock", roleInt%10);
+		updateQuery.setParameter("regId", Integer.parseInt(regId));
+		int result = updateQuery.executeUpdate();
+		transaction.commit();
+		System.out.println("Result "+result);
+		return errorMessage;
+	}
+
 	public String dateConverter(String year,String month,String day){
 		String date = "";
 		if (month.length() != 2) {

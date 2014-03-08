@@ -50,10 +50,9 @@ html,body {
 }
 
 #footer {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	height: 60px; /* Height of the footer */
+ 	position: fixed;
+    bottom: 0;
+    width: 100%;
 }
 </style>
 <script src="js/jquery-1.10.2.min.js"></script>

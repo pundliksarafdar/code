@@ -3,10 +3,8 @@ package com.register;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.classapp.db.login.LoginCheck;
 import com.classapp.db.register.RegisterUser;
 import com.config.BaseAction;
-import com.config.Constants;
 import com.google.gson.Gson;
 import com.signon.LoginBean;
 import com.signon.LoginUser;

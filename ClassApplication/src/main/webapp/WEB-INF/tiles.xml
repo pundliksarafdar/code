@@ -17,7 +17,7 @@
       <put-attribute name="title"  value=""/>
       <put-attribute name="header" value="/header.jsp"/>
       <put-attribute name="body"   value="/index.jsp"/>
-      <put-attribute name="footer"   value="footer.jsp"/>
+      <put-attribute name="footer"   value="/footer.jsp"/>
    </definition>
 
    <definition name="login" extends="NoTopnavBaseLayout">
@@ -27,14 +27,47 @@
       <put-attribute name="footer"   value="footer.jsp"/>
    </definition>
    
-   <definition name="Admin.LoginSuccess" extends="baseLayout">
+   <definition name="admin.loginsuccess" extends="baseLayout">
       <put-attribute name="title"  value="Admin"/>
       <put-attribute name="header"  value="/header.jsp"/>
       <put-attribute name="topnav"  value="/admin/menu.jsp"/>
       <put-attribute name="body"   value="/admin/loginSuccess.jsp"/>      
    </definition>
 
-	<definition name="register" extends="NoTopnavBaseLayout">
+   <definition name="classowner.loginsuccess" extends="baseLayout">
+      <put-attribute name="title"  value="Admin"/>
+      <put-attribute name="header"  value="/header.jsp"/>
+      <put-attribute name="topnav"  value="/admin/menu.jsp"/>
+      <put-attribute name="body"   value="/admin/loginSuccess.jsp"/>      
+   </definition>
+   
+   <definition name="classteacher.loginsuccess" extends="baseLayout">
+      <put-attribute name="title"  value="Admin"/>
+      <put-attribute name="header"  value="/header.jsp"/>
+      <put-attribute name="topnav"  value="/admin/menu.jsp"/>
+      <put-attribute name="body"   value="/admin/loginSuccess.jsp"/>      
+   </definition>
+
+   <definition name="student.loginsuccess" extends="baseLayout">
+      <put-attribute name="title"  value="Admin"/>
+      <put-attribute name="header"  value="/header.jsp"/>
+      <put-attribute name="topnav"  value="/admin/menu.jsp"/>
+      <put-attribute name="body"   value="/admin/loginSuccess.jsp"/>      
+   </definition>
+   
+	<definition name="unaccepted" extends="NoTopnavBaseLayout">
+      <put-attribute name="title"  value="Register"/>
+      <put-attribute name="header"  value="/header.jsp"/>
+      <put-attribute name="body"   value="/General/NotAccepted.jsp"/>      
+   </definition>
+   
+	<definition name="accessblocked" extends="NoTopnavBaseLayout">
+      <put-attribute name="title"  value="Register"/>
+      <put-attribute name="header"  value="/header.jsp"/>
+      <put-attribute name="body"   value="/General/AccessBlocked.jsp"/>      
+   </definition>
+   
+   <definition name="register" extends="NoTopnavBaseLayout">
       <put-attribute name="title"  value="Register"/>
       <put-attribute name="header"  value="/header.jsp"/>
       <put-attribute name="body"   value="/register.jsp"/>      

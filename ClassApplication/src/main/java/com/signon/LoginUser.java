@@ -2,6 +2,7 @@ package com.signon;
 
 import com.classapp.db.login.LoginCheck;
 import com.config.BaseAction;
+import com.config.Constants;
 import com.google.gson.Gson;
 import com.user.UserBean;
 
@@ -55,9 +56,34 @@ public class LoginUser extends BaseAction{
 			userBean.setRole(gson.fromJson(userBeanJson, UserBean.class).getRole());
 			userBean.setState(gson.fromJson(userBeanJson, UserBean.class).getState());
 			userBean.setUsername(gson.fromJson(userBeanJson, UserBean.class).getUsername());
-			
+			userBean.setStartdate(gson.fromJson(userBeanJson, UserBean.class).getStartdate());
+			userBean.setEnddate(gson.fromJson(userBeanJson, UserBean.class).getEnddate());
 			userBean.setLoginBean(loginBean);
-			return SUCCESS;
+
+			//Check for acceptance
+			if(null != userBean.getRole() && 0 != userBean.getRole() && 10 != userBean.getRole()){
+				if(null!=userBean.getStartdate()){
+					return SUCCESS;
+				}else{
+					return Constants.UNACCEPTED;
+				}
+			}
+			
+			if(null != userBean.getRole() && 9 < userBean.getRole()){
+				return Constants.ACCESSBLOCKED;
+			}
+			if((null != userBean.getRole()) && 0 == userBean.getRole()){
+				return SUCCESS;
+			}else if((null != userBean.getRole()) && 1 == userBean.getRole()){
+				return Constants.CLASSOWNER;
+			}else if((null != userBean.getRole()) && 2 == userBean.getRole()){
+				return Constants.CLASSTEACHER;
+			}else if((null != userBean.getRole()) && 3 == userBean.getRole()){
+				return Constants.CLASSSTUDENT;
+			}else{
+				return ERROR;
+			}
+					
 		}else{
 			return ERROR;
 		}

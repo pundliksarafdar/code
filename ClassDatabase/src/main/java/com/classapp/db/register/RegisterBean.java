@@ -162,8 +162,8 @@ public class RegisterBean implements Serializable{
 			Date dateStart = dateFormat.parse(this.startDate);
 			Date dateEnd = dateFormat.parse(this.endDate);
 			Long daysLeft1 = dateEnd.getTime()-dateStart.getTime();
-			Date monthLeft = new Date(daysLeft1);
-			this.daysLeft = dateFormat.format(monthLeft).toString();
+			//Date monthLeft = new Date(daysLeft1);
+			this.daysLeft = (daysLeft1 /(24 * 60 * 60 * 1000))+"";//dateFormat.format(monthLeft).toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

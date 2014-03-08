@@ -12,6 +12,14 @@
  <link href="css/bootstrap-responsive.css" rel="stylesheet">
  <link href="css/admin.css" rel="stylesheet">
  <link href="css/datetimepicker.css" rel="stylesheet">
+ <style>
+ #footer {
+ 	position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+ 	
+ </style>
  <script src="js/jquery-1.10.2.min.js"></script>
  <script src="js/bootstrap.min.js"></script>
  <script src="js/allAjax.js"></script>	
@@ -23,9 +31,10 @@
    <div style="padding-left: 5px; padding-right: 25px">
    <tiles:insertAttribute name="body" /><br/>
    </div>
+   <div id="footer">
    <hr size="2px"/>
    <tiles:insertAttribute name="footer" /><br/>
-   
+   </div>
    <script type="text/javascript">
       $(document).ready(function(){
       $('#datetimepicker').datetimepicker({

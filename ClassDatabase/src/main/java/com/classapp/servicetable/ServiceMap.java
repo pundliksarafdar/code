@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import javassist.compiler.TokenId;
-
 import org.hibernate.Session;
 
 import com.classapp.persistence.Constants;
@@ -22,10 +20,11 @@ public class ServiceMap {
 	public static void loadServiceMap(){
 		Session session = HibernateUtil.getSessionfactory().openSession();
 		System.out.println("In Load Service map");
-		Map dataMap = new HashMap();
+		
 		try{			
 			List services = session.createQuery("from ServiceTable").list();
 			for (int i=0; services.size() >= i;i++) {
+				Map dataMap = new HashMap();
 				System.out.println("Service Map:"+((ServiceTable)services.get(i)).getServiceId());
 				dataMap.put(Constants.SERVICE_ID, ((ServiceTable)services.get(i)).getServiceId());
 				dataMap.put(Constants.SERVICE_NAME, ((ServiceTable)services.get(i)).getServiceName());
@@ -43,8 +42,8 @@ public class ServiceMap {
 	public static String getSystemParam(String serviceId,String serviceParam){
 		String serviceParamValue="";
 		Map mapTemp = (Map) SERVICEMAP.get(serviceId);
-		String ServiceParam = (String) mapTemp.get(Constants.SERVICE_PARAM);
-		StringTokenizer stringTokenizer = new StringTokenizer(ServiceParam,";");
+		String serviceParam1 = (String) mapTemp.get(Constants.SERVICE_PARAM);
+		StringTokenizer stringTokenizer = new StringTokenizer(serviceParam1,";");
 		
 		while (stringTokenizer.hasMoreElements()) {
 			String params = stringTokenizer.nextToken();

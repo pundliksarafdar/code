@@ -26,4 +26,10 @@ public class Constants {
 	public static String CLASSSERACHFORM = "searchform";
 	public static String PREV = "prev";
 	public static String NEXT ="next";
+	
+	public static String CLASSOWNER = "success_classowner";
+	public static String CLASSTEACHER = "success_classteacher";
+	public static String CLASSSTUDENT = "success_student";
+	public static String UNACCEPTED = "unaccepted";
+	public static String ACCESSBLOCKED = "accessblocked";
 }

@@ -14,7 +14,12 @@
       <action name="login" 
             class="com.signon.LoginUser" 
             method="execute">
-            <result name="success" type="tiles">Admin.LoginSuccess</result>
+            <result name="success" type="tiles">admin.loginsuccess</result>
+            <result name="success_classowner" type="tiles">classowner.loginsuccess</result>
+            <result name="success_classteacher" type="tiles">classteacher.loginsuccess</result>
+            <result name="success_student" type="tiles">student.loginsuccess</result>
+            <result name="unaccepted" type="tiles">unaccepted</result>
+            <result name="accessblocked" type="tiles">accessblocked</result>
             <result name="error"  type="tiles">login</result>
             <result name="input" type="tiles">login</result>
       </action>
@@ -72,7 +77,7 @@
 	  <action name="searchclass" 
             class="com.classuser.ClassSearchAction" 
             method="execute">
-            <result name="success" type="tiles">Admin.LoginSuccess</result>
+            <result name="success" type="tiles">admin.loginsuccess</result>
             <result name="error" type="tiles">register</result>
       </action>	 	
    </package>

@@ -2,31 +2,27 @@ package com.classapp.myclass;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import com.classapp.db.register.RegisterBean;
 import com.classapp.persistence.Constants;
 import com.classapp.persistence.HibernateUtil;
 import com.classapp.servicetable.ServiceMap;
-import com.google.gson.Gson;
 
 public class SearchClassDb {
+	static final String CNAME = "cname";
 	public List searchClassData(ClassSearchForm classSearchForm){
-		final String cName = "cname";
-		
 		int startPage = 0;
 		if(null != classSearchForm.getCurrentPage()){
 			startPage = Integer.parseInt(classSearchForm.getCurrentPage());
 		}
-		int resultPerPage = Integer.parseInt(ServiceMap.getSystemParam(Constants.SERVICE_PAGINATION, "resultsperpage"));
+		int resultPerPage = Integer.parseInt(ServiceMap.getSystemParam(Constants.SERVICE_PAGINATION, Constants.RESULT_PER_PAGE));
 		String queryStr = formQuery(classSearchForm);
 		Session session = HibernateUtil.getSessionfactory().openSession();
 		Query query = session.createQuery(queryStr);
 		
-		if(queryStr.contains(cName)){
-			query.setParameter(cName,classSearchForm.getCname()+"%");
+		if(queryStr.contains(CNAME)){
+			query.setParameter(CNAME,classSearchForm.getCname()+"%");
 		}
 		
 		if(0 != startPage || 0 != resultPerPage){
@@ -79,19 +75,17 @@ public class SearchClassDb {
 	}
 
 	public int getPagesCount(ClassSearchForm classSearchForm){
-		final String cName = "cname";
 		int count = 0;
 		int resultPerPage = Integer.parseInt(ServiceMap.getSystemParam(Constants.SERVICE_PAGINATION, "resultsperpage"));
 		String queryStr = formQuery(classSearchForm);
 		Session session = HibernateUtil.getSessionfactory().openSession();
 		Query query = session.createQuery(queryStr);
 		
-		if(queryStr.contains(cName)){
-			query.setParameter(cName,classSearchForm.getCname()+"%");
+		if(queryStr.contains(CNAME)){
+			query.setParameter(CNAME,classSearchForm.getCname()+"%");
 		}
 		int totalResult = query.list().size();
 		count = totalResult/resultPerPage;
-		System.out.println("In ClassSeachForm-DB.."+classSearchForm);
 		return count;
 	}
 
