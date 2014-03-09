@@ -48,7 +48,7 @@
 <div class="container-fluid" style="padding: 10px;">
   	<table>
 	<tr><td><button type="button" class="close" aria-hidden="true">&times;</button>
-	<td>Name Initials<td><input type="text" name="classSearchForm.cname" data-provide="typeahead"/>
+	<td>Name Initials<td><input type="text" name="classSearchForm.cname" data-provide="typeahead" class="form-control"/>
 	</td>
 	</tr>
 	
@@ -62,29 +62,31 @@
   		</ul>	
   	</div>
   	<td id="exact" style="display: none;">
-  		<input type="date" name="classSearchForm.cexactdate">
+  		<input type="date" name="classSearchForm.cexactdate" class="form-control">
   	<td>
   	<td id="between" style="display: none;">
-  		<input type="date" placeholder="Form" name="classSearchForm.cfrmdate"/><span>&nbsp;</span><input type="date" placeholder="To" name="classSearchForm.ctodate"/>
+  		<input type="date" placeholder="Form" name="classSearchForm.cfrmdate" class="form-control"/>
+  		<span>&nbsp;</span><input type="date" placeholder="To" name="classSearchForm.ctodate" class="form-control"/>
   	<td>
 	</td></tr>
 	
 	<tr><td><button type="button" class="close" aria-hidden="true">&times;</button>
-	<td>Duration<td><input type="text" name="classSearchForm.cduration" data-provide="typeahead"/> Month
+	<td>Duration<td><input type="text" name="classSearchForm.cduration" data-provide="typeahead" class="form-control"/> 
 	</td>
+	<td>Month</td>
 	</tr>
 	<tr><td><button type="button" class="close" aria-hidden="true">&times;</button>
-	<td>State<td><input type="text" name="classSearchForm.cstate" data-provide="typeahead"/>
-	</td>
-	</tr>
-	
-	<tr><td><button type="button" class="close" aria-hidden="true">&times;</button>
-	<td>City<td><input type="text" name="classSearchForm.ccity" data-provide="typeahead"/>
+	<td>State<td><input type="text" name="classSearchForm.cstate" data-provide="typeahead" class="form-control"/>
 	</td>
 	</tr>
 	
 	<tr><td><button type="button" class="close" aria-hidden="true">&times;</button>
-	<td>Class Id<td><input type="text" name="classSearchForm.cid" data-provide="typeahead"/>
+	<td>City<td><input type="text" name="classSearchForm.ccity" data-provide="typeahead" class="form-control"/>
+	</td>
+	</tr>
+	
+	<tr><td><button type="button" class="close" aria-hidden="true">&times;</button>
+	<td>Class Id<td><input type="text" name="classSearchForm.cid" data-provide="typeahead" class="form-control"/>
 	</td>
 	</tr>
 	</table>

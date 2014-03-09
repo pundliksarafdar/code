@@ -84,12 +84,6 @@ function acceptClass(regId,that){
 
 </script>
 
-<div class="btn-group">
-<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">USER <span class="caret"></span></button>
-  <ul class="dropdown-menu">
-    <li><a href="javascript:allAjax.classSearch();">Class List</a></li>
-  </ul>
-</div>
 <div id='divLoad'>
 </div>
 
@@ -158,12 +152,12 @@ function acceptClass(regId,that){
 						<%if(registerBean.getRole() > 9){%>
 							class = "hide"
 						<%} %>
-						><a onclick="blockClass('<%=registerBean.getRegId() %>','<%=registerBean.getRole() %>',this)">Block</a></li>
+						><a onclick="blockClass('<%=registerBean.getRegId() %>','<%=registerBean.getRole() %>',this)" href="#">Block</a></li>
 						<li id="unblock"
 						<%if(registerBean.getRole() < 10){%>
 							class = "hide"
 						<%} %>
-						><a onclick="unBlockClass('<%=registerBean.getRegId() %>','<%=registerBean.getRole() %>',this)">UnBlock</a></li>
+						><a onclick="unBlockClass('<%=registerBean.getRegId() %>','<%=registerBean.getRole() %>',this)" href="#">UnBlock</a></li>
 						<li><a href="#">Delete</a></li>
 					</ul>
 				</div>
