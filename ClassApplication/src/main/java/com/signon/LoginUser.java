@@ -97,7 +97,7 @@ public class LoginUser extends BaseAction{
 					return Constants.UNACCEPTED;
 				}
 			} else {
-				return ERROR;
+				return SUCCESS;
 			}
 		}else{
 			return ERROR;
