@@ -81,7 +81,9 @@ function acceptClass(regId,that){
 		$("#mymodalmessage").text(message);
 		$('#pageModal').modal('show');
 	}
-
+	
+	
+	
 </script>
 
 <div id='divLoad'>

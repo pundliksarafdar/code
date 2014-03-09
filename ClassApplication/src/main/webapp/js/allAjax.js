@@ -5,5 +5,8 @@ var allAjax = {
 	classSearch : function(){
 		$('#divLoad').load('/ClassApplication/getClassList',function(response, status, xhr){
 		});
+	},
+	addSubject :function(){
+		location.href = "addsubject";
 	}
 }

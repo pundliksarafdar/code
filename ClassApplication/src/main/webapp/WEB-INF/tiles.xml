@@ -38,7 +38,7 @@
       <put-attribute name="title"  value="Admin"/>
       <put-attribute name="header"  value="/header.jsp"/>
       <put-attribute name="topnav"  value="/admin/menu.jsp"/>
-      <put-attribute name="body"   value="/admin/loginSuccess.jsp"/>      
+      <put-attribute name="body"   value="/ClassOwner/ClassOwner.jsp"/>      
    </definition>
    
    <definition name="classteacher.loginsuccess" extends="baseLayout">
@@ -114,5 +114,9 @@
       <put-attribute name="body"   value="/Class/searchClassList.jsp"/>      
    </definition>
    
-
+   <definition name="classowner" extends="baseLayout">
+      <put-attribute name="title"  value="Add Subject"/>
+      <put-attribute name="body"   value="/ClassOwner/AddSubject.jsp"/>      
+   </definition>
+   
 </tiles-definitions>

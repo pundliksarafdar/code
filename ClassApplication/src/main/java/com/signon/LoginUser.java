@@ -60,7 +60,9 @@ public class LoginUser extends BaseAction{
 			userBean.setEnddate(gson.fromJson(userBeanJson, UserBean.class).getEnddate());
 			userBean.setLoginBean(loginBean);
 
+			
 			//Check for acceptance
+			/*
 			if(null != userBean.getRole() && 0 != userBean.getRole() && 10 != userBean.getRole()){
 				if(null!=userBean.getStartdate()){
 					return SUCCESS;
@@ -68,22 +70,35 @@ public class LoginUser extends BaseAction{
 					return Constants.UNACCEPTED;
 				}
 			}
+			*/
 			
-			if(null != userBean.getRole() && 9 < userBean.getRole()){
-				return Constants.ACCESSBLOCKED;
-			}
-			if((null != userBean.getRole()) && 0 == userBean.getRole()){
-				return SUCCESS;
-			}else if((null != userBean.getRole()) && 1 == userBean.getRole()){
-				return Constants.CLASSOWNER;
-			}else if((null != userBean.getRole()) && 2 == userBean.getRole()){
-				return Constants.CLASSTEACHER;
-			}else if((null != userBean.getRole()) && 3 == userBean.getRole()){
-				return Constants.CLASSSTUDENT;
-			}else{
+			if (null != userBean.getRole() && 0 != userBean.getRole()
+					&& 10 != userBean.getRole()) {
+				if (null != userBean.getStartdate()) {
+
+					if (null != userBean.getRole() && 9 < userBean.getRole()) {
+						return Constants.ACCESSBLOCKED;
+					}
+					if ((null != userBean.getRole()) && 0 == userBean.getRole()) {
+						return SUCCESS;
+					} else if ((null != userBean.getRole())
+							&& 1 == userBean.getRole()) {
+						return Constants.CLASSOWNER;
+					} else if ((null != userBean.getRole())
+							&& 2 == userBean.getRole()) {
+						return Constants.CLASSTEACHER;
+					} else if ((null != userBean.getRole())
+							&& 3 == userBean.getRole()) {
+						return Constants.CLASSSTUDENT;
+					} else {
+						return ERROR;
+					}
+				} else {
+					return Constants.UNACCEPTED;
+				}
+			} else {
 				return ERROR;
 			}
-					
 		}else{
 			return ERROR;
 		}

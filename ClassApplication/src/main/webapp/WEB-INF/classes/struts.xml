@@ -80,5 +80,13 @@
             <result name="success" type="tiles">admin.loginsuccess</result>
             <result name="error" type="tiles">register</result>
       </action>	 	
-   </package>
+
+	  <action name="addsubject" 
+            class="com.classowner.AddSubjectAction" 
+            method="execute">
+            <result name="success" type="tiles">admin.loginsuccess</result>
+            <result name="error" type="tiles">register</result>
+      </action>	 	
+	  
+	  </package>
 </struts>

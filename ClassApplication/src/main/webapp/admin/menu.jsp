@@ -27,9 +27,16 @@
 	            <li><a href="javascript:allAjax.classSearch();">Class List</a></li>
           	</ul>
       </li>
-    <%}if(userBean.getRole() < 1){ %>  
-      <li><a href="#">Class Owner</a></li>
     <%}if(userBean.getRole() < 2){ %>  
+      <li>
+      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Class Owner</a>
+      		<ul class="dropdown-menu">
+	            <li><a href="login">Class Owner</a></li>
+	            <li><a href="javascript:allAjax.addSubject();">Add Subject</a></li>
+	            <li><a href="#">Time Table</a></li>
+          	</ul>
+      </li>
+    <%}if(userBean.getRole() < 3){ %>  
       <li><a href="#">Class Teacher</a></li>  
     <%}if(userBean.getRole() == 3 ||userBean.getRole() == 0){ %>  
       <li><a href="#">Students</a></li>
@@ -39,7 +46,7 @@
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=userBean.getFirstname() %> <b class="caret"></b></a>
         <ul class="dropdown-menu">
-          <li><a href="edit">Edit</a></li>
+          <li><a href="#">Edit</a></li>
           <li><a href="logout">Logout</a></li>
         </ul>
       </li>
