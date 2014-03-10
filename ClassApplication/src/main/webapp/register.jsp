@@ -43,12 +43,20 @@
 	function addRole(role){
 		if(role==0){
 			$('#rolebtn').html('Admin <span class="caret"></span>');
+			$('#divClassname').show();
+			$('#divClassname').find('input').attr("required","required");
 		}else if(role==1){
 			$('#rolebtn').html('ClassOwner <span class="caret"></span>');
+			$('#divClassname').show();
+			$('#divClassname').find('input').attr("required","required");
 		}else if(role==2){
 			$('#rolebtn').html('ClassTeacher <span class="caret"></span>');
+			$('#divClassname').hide();
+			$('#divClassname').find('input').removeAttr("required");
 		}else{
 			$('#rolebtn').html('Student <span class="caret"></span>');
+			$('#divClassname').hide();
+			$('#divClassname').find('input').removeAttr("required");
 		}
 		$('#role').val(role);
 	}
@@ -87,6 +95,33 @@
 			
 		</ul>
 	</div>
+	
+	<div class="form-group">
+		<label for="role"  class="col-sm-2 control-label">Select your role</label>
+		<div class="col-sm-10">
+		<input type="hidden" class="form-control" name="registerBean.role" id="role" value=""  required="required"/>
+		<div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle"
+					data-toggle="dropdown" id="rolebtn">
+					Role <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li><a href="javascript:addRole('0')">Admin</a></li>
+					<li><a href="javascript:addRole('1')">Class Owner</a></li>
+					<li><a href="javascript:addRole('2')">Class Teacher</a></li>
+					<li><a href="javascript:addRole('3')">Student</a></li>
+				</ul>
+		</div>
+		</div>
+			<!--<select name="ROLE" id="role">
+			  <option value="0">Admin</option>
+			  <option value="1">Class Owner</option>
+			  <option value="2">Class Teacher</option>
+			  <option value="3">Student</option>
+			</select>
+			-->
+	</div>
+	
 	<div class="form-group">
     	<label for="fname" class="col-sm-2 control-label">*First Name</label>
     	<div class="col-sm-10">
@@ -167,7 +202,7 @@
 			<input type="text" class="form-control" name="registerBean.phone2" id="phone2"/>
 		</div>	
 	</div>
-	<div class="form-group">
+	<div class="form-group" id="divClassname">
 		<label for="classname" class="col-sm-2 control-label">*Class Name</label>
 		<div class="col-sm-10">	
 			<input type="text" class="form-control" name="registerBean.className" id="classname" required="required" />
@@ -191,31 +226,7 @@
 			<input type="password" class="form-control" name="registerBean.loginPassRe" id="loginpassre" required="required" />
 		</div>
 	</div>
-	<div class="form-group">
-		<label for="role"  class="col-sm-2 control-label">Select your role</label>
-		<div class="col-sm-10">
-		<input type="hidden" class="form-control" name="registerBean.role" id="role" value=""  required="required"/>
-		<div class="btn-group">
-				<button type="button" class="btn btn-default dropdown-toggle"
-					data-toggle="dropdown" id="rolebtn">
-					Role <span class="caret"></span>
-				</button>
-				<ul class="dropdown-menu" role="menu">
-					<li><a href="javascript:addRole('0')">Admin</a></li>
-					<li><a href="javascript:addRole('1')">Class Owner</a></li>
-					<li><a href="javascript:addRole('2')">Class Teacher</a></li>
-					<li><a href="javascript:addRole('3')">Student</a></li>
-				</ul>
-		</div>
-		</div>
-			<!--<select name="ROLE" id="role">
-			  <option value="0">Admin</option>
-			  <option value="1">Class Owner</option>
-			  <option value="2">Class Teacher</option>
-			  <option value="3">Student</option>
-			</select>
-			-->
-	</div>
+	
 	
 	<div class="form-group">
 		<label for="submit"  class="col-sm-2 control-label"> </label>

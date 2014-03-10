@@ -84,7 +84,7 @@ html,body {
 			</div>
 
 		</div>
-		<div id="footer">
+		<div id="footer" style="background: lavender;height: 25px;">
 			<hr size="2px" />
 			<tiles:insertAttribute name="footer" />
 			<br />

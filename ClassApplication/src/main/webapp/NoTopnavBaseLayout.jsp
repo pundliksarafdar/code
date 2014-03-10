@@ -31,7 +31,7 @@
    <div style="padding-left: 5px; padding-right: 25px">
    <tiles:insertAttribute name="body" /><br/>
    </div>
-   <div id="footer">
+   <div id="footer" style="background: lavender;height: 25px;">
    <hr size="2px"/>
    <tiles:insertAttribute name="footer" /><br/>
    </div>
