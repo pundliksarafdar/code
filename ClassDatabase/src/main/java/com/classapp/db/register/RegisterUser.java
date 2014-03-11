@@ -38,7 +38,7 @@ public class RegisterUser {
 		if (message.contains("UNI_PHONE1") && message.contains(duplicate)) {
 			errorMessage = "This contact number is already registered, Please contact administrator"; 
 		}else if(message.contains("LGNAME") && message.contains(duplicate)){
-			errorMessage = "You can not save use this username";
+			errorMessage = "This username is already registered, You can not use this username";
 		}
 		return errorMessage;
 	}
