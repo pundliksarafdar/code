@@ -9,7 +9,7 @@ public class Constants {
 	public static String SUCCESS = "success";
 	public static String ERROR = "error";
 	public static String PAGINATION_SERVICE_ID = "1";
-	
+	public static String ERROR_MESSAGE = "errormessage";
 	
 	
 	

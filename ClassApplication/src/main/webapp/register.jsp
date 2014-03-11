@@ -1,3 +1,4 @@
+<%@page import="com.config.Constants"%>
 <%@taglib prefix="s" uri="/struts-tags"%>
 
 <script type="text/javascript">
@@ -36,6 +37,7 @@
 		if(!isValid){
 			$('#mandatoryerror ul').append("<li>Field marked with the * are mandatory</li>");
 			$('#mandatoryerror').show();
+			$("#rolebtn").focus();
 		}
 		return isValid;
 	}
@@ -84,11 +86,19 @@
 </script>
 
 <form id="regform" action="/registeruser" method="post" role="form" class="form-horizontal">
-<s:if test="hasActionErrors()">
-   <div class="alert alert-danger" id="mandatoryerror" hidden="hidden">
-	   <s:actionerror/>
-   </div>
-</s:if>
+
+	<%if(request.getAttribute(Constants.ERROR_MESSAGE) != null){%>
+		<div class="alert alert-danger" id="mandatoryerror">
+			<%=request.getAttribute(Constants.ERROR_MESSAGE)%>
+		</div>
+		<script>
+			$("#rolebtn").focus();
+		</script>
+		
+		
+	<% }%>	   	
+
+
 <fieldset>
 	<div class="alert alert-danger" id="mandatoryerror" hidden="hidden">
 		<ul>
