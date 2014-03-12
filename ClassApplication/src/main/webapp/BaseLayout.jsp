@@ -75,9 +75,13 @@ html,body {
 <body>
 	<div id="container">
 		<div id="header">
+			<div class = "visible-lg">
 			<tiles:insertAttribute name="header" />
+			</div>
 			<br />
+			<div class = "visible-lg">
 			<hr size="2px" />
+			</div>
 			<tiles:insertAttribute name="topnav" />
 			<br />
 			<hr size="2px" />
