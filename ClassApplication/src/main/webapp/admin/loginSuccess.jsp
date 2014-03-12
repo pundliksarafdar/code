@@ -120,7 +120,7 @@ function acceptClass(regId,that){
 			<th>RegId</th>
 			<th>Class Name</th>
 			<th class = "visible-lg">Owner</th>
-			<th>End Date</th>
+			<th class = "visible-lg">End Date</th>
 			<th>Accept</th>
 		</tr>
 		<%
@@ -134,11 +134,11 @@ function acceptClass(regId,that){
 			<td><%=registerBean.getClassName() %></td>
 			<td class = "visible-lg"><%=registerBean.getFname() %></td>
 			<%if(null == daysLeft){%>
-			<td><input type="text" placeholder="Duration" id="duration" style="width: 80px;"/></td>
+			<td class = "visible-lg"><input type="text" placeholder="Duration" id="duration" style="width: 80px;"/></td>
 			<td><button type="button" class="btn btn-warning"
 					onclick="acceptClass('<%=registerBean.getRegId() %>',this)">Accept</button></td>
 			<%}else{%>
-			<td><%=miscFunction.dateFormater(registerBean.getEndDate())%></td>
+			<td class = "visible-lg"><%=miscFunction.dateFormater(registerBean.getEndDate())%></td>
 			<td>
 				<!-- 
 				<button type="button" class="btn btn-danger"

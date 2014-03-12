@@ -20,8 +20,8 @@
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
     <%if(userBean.getRole() == 0) {%>
-      <li class="active">
-      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin</a>
+      <li>
+      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
       		<ul class="dropdown-menu">
 	            <li><a href="login">Admin</a></li>
 	            <li><a href="javascript:allAjax.classSearch();">Class List</a></li>
@@ -29,7 +29,7 @@
       </li>
     <%}if(userBean.getRole() < 2){ %>  
       <li>
-      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Class Owner</a>
+      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Class Owner <b class="caret"></b></a>
       		<ul class="dropdown-menu">
 	            <li><a href="login">Class Owner</a></li>
 	            <li><a href="javascript:allAjax.addSubject();">Add Subject</a></li>

@@ -27,6 +27,11 @@
 .marketing p {
 	font-size: 18px;
 }
+
+body{
+    padding-right: 0px;
+    padding-left: 0px;
+}
 </style>
 <link href="css/admin.css" rel="stylesheet">
 <style type="text/css">

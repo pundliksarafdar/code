@@ -49,10 +49,10 @@ public class RegisterUserAction extends BaseAction{
 			loginBean.setLoginname(registerBean.getLoginName());
 			loginBean.setLoginpass(registerBean.getLoginPass());
 			LoginUser loginUser = new LoginUser();
-			String forward = null;
+			String forward = "success";
 			if(null != loginBean){
 				userBean.setLoginBean(loginBean);
-			    forward = loginUser.loadBean(userBean, loginBean);
+			    loginUser.loadBean(userBean, loginBean);
 			}
 			
 			return forward;
