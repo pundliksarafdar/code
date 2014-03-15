@@ -4,17 +4,28 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('#role').val("");
+		$('#phone1,#phone2').keydown(function(e){
+		    console.log("loggin :"+e.keyCode+":"+e.which);
+		    if(((e.keyCode < 47 || e.keyCode > 57)) && !(e.keyCode == 8 || e.keyCode == 9 || e.keyCode == 46 || e.keyCode ==37 || e.keyCode ==39)){
+		    	if(((e.keyCode < 97 || e.keyCode > 105)) && !(e.keyCode == 8 || e.keyCode == 46 || e.keyCode ==37 || e.keyCode ==39)){
+			    	return false;
+			    }
+		    }else{
+		    	return true;
+		    }
+		});
 	});
 	
 	function validate(){
 		if(validateBlank()){
-			if(isPasswordValid()){
+			if(isPasswordValid() && validateFields()){
 				return true;	
 			}else{
 				return false;	
 			}
 		}else{
 			isPasswordValid();
+			validateFields();
 			return false;			
 		}		
 	}
@@ -45,8 +56,8 @@
 	function addRole(role){
 		if(role==0){
 			$('#rolebtn').html('Admin <span class="caret"></span>');
-			$('#divClassname').show();
-			$('#divClassname').find('input').attr("required","required");
+			$('#divClassname').hide();
+			$('#divClassname').find('input').removeAttr("required");
 		}else if(role==1){
 			$('#rolebtn').html('ClassOwner <span class="caret"></span>');
 			$('#divClassname').show();
@@ -83,6 +94,21 @@
 		}
 			return ispassvalid;
 	}
+	
+	function validateFields(){
+		var isValidated = true;
+		var regPhoneNumber = new RegExp('^[0-9]+$');
+		if(!regPhoneNumber.test($("#phone1").val())){
+			isValidated = false;
+			$("#phone1").addClass("has-error");
+			$('#mandatoryerror ul').append("<li>Phone number not valid</li>");
+		}
+		
+		$('#mandatoryerror').show();
+		$("#rolebtn").focus();
+		return isValidated;
+	}
+	
 </script>
 
 <form id="regform" action="/registeruser" method="post" role="form" class="form-horizontal">

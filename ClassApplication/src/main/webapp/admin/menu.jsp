@@ -13,13 +13,13 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="#">CoreX</a>
+    <a class="navbar-brand" href="login">CoreX</a>
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
-    <%if(userBean.getRole() == 0) {%>
+    <%if(userBean.getRole() == 0 || userBean.getRole() == 10) {%>
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
       		<ul class="dropdown-menu">
@@ -27,7 +27,7 @@
 	            <li><a href="javascript:allAjax.classSearch();">Class List</a></li>
           	</ul>
       </li>
-    <%}if(userBean.getRole() < 2){ %>  
+    <%}if(userBean.getRole() < 2 || userBean.getRole() == 10){ %>  
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Class Owner <b class="caret"></b></a>
       		<ul class="dropdown-menu">
@@ -36,9 +36,9 @@
 	            <li><a href="#">Time Table</a></li>
           	</ul>
       </li>
-    <%}if(userBean.getRole() < 3){ %>  
+    <%}if(userBean.getRole() < 3 || userBean.getRole() == 10){ %>  
       <li><a href="#">Class Teacher</a></li>  
-    <%}if(userBean.getRole() == 3 ||userBean.getRole() == 0){ %>  
+    <%}if(userBean.getRole() == 3 || userBean.getRole() == 0 || userBean.getRole() == 10){ %>  
       <li><a href="#">Students</a></li>
     <%}%>      
     </ul>

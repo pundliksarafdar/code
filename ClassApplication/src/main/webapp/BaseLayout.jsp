@@ -69,17 +69,37 @@ html,body {
 <script src="js/bootstrap-modal.js"></script>
 <script src="js/bootstrap-paginator.min.js"></script>
 <script src="js/datepicker.js"></script>
+<script src="js/modal/modal.js"></script>
+<script type="text/javascript" src="">
 
-<script type="text/javascript" src=""></script>
+</script>
 </head>
 <body>
+	<!-- Modal confirmation Box Start -->
+	<div class="modal fade bs-example-modal-sm" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="myModalLabel">Small modal</h4>
+        </div>
+        <div class="modal-body" id="mymodalmessage">
+          
+        </div>
+      	<div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+      	</div>
+    </div>
+</div>
+	
+	<!-- Modal Box End -->
 	<div id="container">
 		<div id="header">
-			<div class = "visible-lg">
+			<div class = "hidden-xs">
 			<tiles:insertAttribute name="header" />
 			</div>
 			<br />
-			<div class = "visible-lg">
+			<div class = "hidden-xs">
 			<hr size="2px" />
 			</div>
 			<tiles:insertAttribute name="topnav" />

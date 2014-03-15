@@ -41,47 +41,13 @@ function acceptClass(regId,that){
 		});
 	}
 	
-	function blockClass(regId,role,that){
-		alert($(that).parents('td').find('#block').parent().html());
-		$.ajax({
-			   url: "admajxsrvlt",
-			   data: {
-			    	 methodToCall: "block",
-					 regId:regId,
-					 role:role
-			   		},
-			   type:"POST",
-			   success:function(){
-				   		$(that).parents('td').find('#block').addClass('hide');
-				   		$(that).parents('td').find('#unblock').removeClass('hide');
-				   		launchModal("Success","User Blocked!");	   		
-			   }
-			});
+	function blockUser(regId,role){
+		modal.modalConfirm("Block","Do you want to block user?","No","Yes",allAjax.blockUser,[regId,role]);
 	}
 	
-	function unBlockClass(regId,role,that){
-		$.ajax({
-			   url: "admajxsrvlt",
-			   data: {
-			    	 methodToCall: "unblock",
-					 regId:regId,
-					 role:role
-			   		},
-			   type:"POST",
-			   success:function(){
-				   	$(that).parents('td').find('#unblock').addClass('hide');
-			   		$(that).parents('td').find('#block').removeClass('hide');			   		
-			   		launchModal("Success","User UnBlocked!");	   		
-			   }
-			});
+	function unBlockUser(regId,role){
+		modal.modalConfirm("UnBlock","Do you want to unblock user?","No","Yes",allAjax.unBlockUser,[regId,role]);
 	}
-	
-	function launchModal(header,message){
-		$("#myModalLabel").text(header);
-		$("#mymodalmessage").text(message);
-		$('#pageModal').modal('show');
-	}
-	
 	
 	
 </script>
@@ -119,8 +85,8 @@ function acceptClass(regId,that){
 		<tr>
 			<th>RegId</th>
 			<th>Class Name</th>
-			<th class = "visible-lg">Owner</th>
-			<th class = "visible-lg">End Date</th>
+			<th class = "hidden-xs">Owner</th>
+			<th class = "hidden-xs">End Date</th>
 			<th>Accept</th>
 		</tr>
 		<%
@@ -132,35 +98,47 @@ function acceptClass(regId,that){
 		<tr id="tableTr">
 			<td id="regId"><%=registerBean.getRegId() %></td>
 			<td><%=registerBean.getClassName() %></td>
-			<td class = "visible-lg"><%=registerBean.getFname() %></td>
+			<td class = "hidden-xs"><%=registerBean.getFname() %></td>
 			<%if(null == daysLeft){%>
-			<td class = "visible-lg"><input type="text" placeholder="Duration" id="duration" style="width: 80px;"/></td>
-			<td><button type="button" class="btn btn-warning"
-					onclick="acceptClass('<%=registerBean.getRegId() %>',this)">Accept</button></td>
+			<td class = "hidden-xs"><input type="text" placeholder="Duration" id="duration" style="width: 80px;"/></td>
+			<td>
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary dropdown-toggle"
+						data-toggle="dropdown">
+						Action <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li id="accept"><a onclick="acceptClass('<%=registerBean.getRegId() %>',this)" href="#">Accept</a></li>
+						<li id="unblock"><a href="#">Reject</a></li>
+					</ul>
+				</div>
+		
+					
+			</td>
 			<%}else{%>
-			<td class = "visible-lg"><%=miscFunction.dateFormater(registerBean.getEndDate())%></td>
+			<td class = "hidden-xs"><%=miscFunction.dateFormater(registerBean.getEndDate())%></td>
 			<td>
 				<!-- 
 				<button type="button" class="btn btn-danger"
 					onclick="blockClass('<%=registerBean.getRegId() %>','<%=registerBean.getRole() %>',this)" style="width: 69px;">Block</button>
 				-->
 				<div class="btn-group">
-					<button type="button" class="btn btn-default dropdown-toggle"
+					<button type="button" class="btn btn-info dropdown-toggle"
 						data-toggle="dropdown">
 						Action <span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" role="menu">
-						<li id="block"
+						<li id="block<%=registerBean.getRegId() %>"
 						<%if(registerBean.getRole() > 9){%>
 							class = "hide"
 						<%} %>
-						><a onclick="blockClass('<%=registerBean.getRegId() %>','<%=registerBean.getRole() %>',this)" href="#">Block</a></li>
-						<li id="unblock"
+						><a onclick="blockUser('<%=registerBean.getRegId() %>','<%=registerBean.getRole() %>')" href="#">Block</a></li>
+						<li id="unblock<%=registerBean.getRegId() %>"
 						<%if(registerBean.getRole() < 10){%>
 							class = "hide"
 						<%} %>
-						><a onclick="unBlockClass('<%=registerBean.getRegId() %>','<%=registerBean.getRole() %>',this)" href="#">UnBlock</a></li>
-						<li><a href="#">Delete</a></li>
+						><a onclick="unBlockUser('<%=registerBean.getRegId() %>','<%=registerBean.getRole() %>')" href="#">UnBlock</a></li>
+						<li><a href="#" onclick="deleteUser()">Delete</a></li>
 					</ul>
 				</div>
 			</td>
@@ -188,20 +166,4 @@ function acceptClass(regId,that){
 	<input type="hidden" name="classSearchForm.currentPage" id="currentPage" value="<%=currentPage%>">
 	<input type="hidden" name="classSearchForm.task" id="task">
 </form>
-
-<div class="modal fade bs-example-modal-sm" id="pageModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-    <div class="modal-content">
- 		<div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title" id="myModalLabel">Small modal</h4>
-        </div>
-        <div class="modal-body" id="mymodalmessage">
-          
-        </div>
-      	<div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
-      	</div>
-    </div>
-</div>
 </html>
