@@ -53,6 +53,6 @@ Modal.prototype.modalConfirm = function(heading, question, cancelButtonTxt, okBu
   
 	Modal.prototype.launchAlert = function(header,message){
 			$("#myModalLabel").text(header);
-			$("#mymodalmessage").text(message);
+			$("#mymodalmessage").html(message);
 			$('#messageModal').modal('show');		
 	}

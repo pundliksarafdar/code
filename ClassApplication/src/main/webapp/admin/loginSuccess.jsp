@@ -97,7 +97,7 @@ function acceptClass(regId,that){
 			<td><%=registerBean.getClassName() %></td>
 			<td class = "hidden-xs"><%=registerBean.getFname() %></td>
 			<%if(null == daysLeft){%>
-			<td class = "hidden-xs">NA</td>
+			<td class = "hidden-xs" id="duration">NA</td>
 			<td>
 				<div class="btn-group">
 					<button type="button" class="btn btn-primary dropdown-toggle"
@@ -113,7 +113,7 @@ function acceptClass(regId,that){
 					
 			</td>
 			<%}else{%>
-			<td class = "hidden-xs"><%=miscFunction.dateFormater(registerBean.getEndDate())%></td>
+			<td class = "hidden-xs" id="duration"><%=miscFunction.dateFormater(registerBean.getEndDate())%></td>
 			<td>
 				<!-- 
 				<button type="button" class="btn btn-danger"

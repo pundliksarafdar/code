@@ -58,9 +58,12 @@ var allAjax = {
 			   type:"POST",
 			   success:function(e){
 				   var resultJson = JSON.parse(e);
-				   alert(resultJson);
 				   if(resultJson.status != 'error'){
-					   	modal.launchAlert("Success","User Accepted till "+resultJson.endDate);
+					   	modal.launchAlert("Success","User Accepted till "+resultJson.endDate+"<br> Page will refresh");
+					   	//$("#regId"+regId).parents('#tableTr').find('#duration').text(resultJson.endDate);
+					   	setTimeout(function(){
+					   		location.reload();
+					   	},1000*3);
 				   	}else{
 				   		modal.launchAlert("Error","Error occured");
 				   	}
