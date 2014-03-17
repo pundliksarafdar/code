@@ -3,6 +3,7 @@ package com.classapp.edit;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -32,6 +33,14 @@ public class DBUpdate {
 		updateQuery.setParameter("regId", Integer.parseInt(regId));
 		int result = updateQuery.executeUpdate();
 		transaction.commit();
+		
+		query = "Select endDate from RegisterBean WHERE regId = :regId"; 
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		updateQuery = session.createQuery(query);
+		updateQuery.setParameter("regId", Integer.parseInt(regId));
+		List resList = updateQuery.list();
+		errorMessage = (String) resList.get(0);
 		System.out.println("Result "+result);
 		return errorMessage;
 	}

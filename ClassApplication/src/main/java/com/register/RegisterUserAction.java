@@ -6,13 +6,10 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.components.ActionError;
-
 import com.classapp.db.register.RegisterUser;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.google.gson.Gson;
-import com.opensymphony.xwork2.ActionContext;
 import com.signon.LoginBean;
 import com.signon.LoginUser;
 import com.user.UserBean;

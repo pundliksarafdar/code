@@ -91,7 +91,46 @@ html,body {
       	</div>
     </div>
 </div>
-	
+
+<div class="modal fade bs-example-modal-sm" id="acceptModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="">Accept Class</h4>
+        </div>
+        <div class="modal-body" id="">
+          	<div>Do you want to accept the class?</div>
+          	<div>
+          		<table>
+          			<tr>
+          				<td><input type="text" id="duration" data-provide="typeahead" class="form-control"/></td><td>&nbsp;&nbsp;&nbsp; Months</td>
+          			</tr>
+          		</table>
+          	</div>
+        </div>
+      	<div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-success" data-dismiss="modal">Ok</button>
+      	</div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="">Reject Class</h4>
+        </div>
+        <div class="modal-body" id="">
+          	<div>Do you want to reject the class?</div>
+          	
+        </div>
+      	<div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>
+      	</div>
+    </div>
+</div>	
 	<!-- Modal Box End -->
 	<div id="container">
 		<div id="header">

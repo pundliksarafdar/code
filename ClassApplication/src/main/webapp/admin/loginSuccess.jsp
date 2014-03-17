@@ -27,20 +27,17 @@ function loadClassList(){
 }
 
 function acceptClass(regId,that){
-	$.ajax({
-		   url: "admajxsrvlt",
-		   data: {
-		    	 methodToCall: "reg",
-				 regId:$(that).parents('#tableTr').find('#regId').text(),
-				 duration:$(that).parents('#tableTr').find('#duration').val()
-		   		},
-		   type:"POST",
-		   success:function(){
-			   		alert('Success');
-		   		}
-		});
+	$('#acceptModal .btn-success').on('click',function(){
+		var duration = $(this).parents('.modal-content').find('#duration').val()
+		allAjax.acceptClass(regId,duration);
+	});
+	
+	$('#acceptModal').modal('show');
 	}
 	
+	function rejectClass(){
+		$('#rejectModal').modal('show');
+	} 
 	function blockUser(regId,role){
 		modal.modalConfirm("Block","Do you want to block user?","No","Yes",allAjax.blockUser,[regId,role]);
 	}
@@ -100,7 +97,7 @@ function acceptClass(regId,that){
 			<td><%=registerBean.getClassName() %></td>
 			<td class = "hidden-xs"><%=registerBean.getFname() %></td>
 			<%if(null == daysLeft){%>
-			<td class = "hidden-xs"><input type="text" placeholder="Duration" id="duration" style="width: 80px;"/></td>
+			<td class = "hidden-xs">NA</td>
 			<td>
 				<div class="btn-group">
 					<button type="button" class="btn btn-primary dropdown-toggle"
@@ -109,7 +106,7 @@ function acceptClass(regId,that){
 					</button>
 					<ul class="dropdown-menu" role="menu">
 						<li id="accept"><a onclick="acceptClass('<%=registerBean.getRegId() %>',this)" href="#">Accept</a></li>
-						<li id="unblock"><a href="#">Reject</a></li>
+						<li id="unblock"><a onclick="rejectClass();" href="#">Reject</a></li>
 					</ul>
 				</div>
 		

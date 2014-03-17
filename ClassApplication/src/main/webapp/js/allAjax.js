@@ -46,6 +46,29 @@ var allAjax = {
 				   modal.launchAlert("Error","Error occured while unblocking user");	   		
 			   }
 			});
+	},
+	acceptClass :function(regId,duration){
+		$.ajax({
+			   url: "admajxsrvlt",
+			   data: {
+			    	 methodToCall: "reg",
+					 regId:regId,
+					 duration:duration
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   var resultJson = JSON.parse(e);
+				   alert(resultJson);
+				   if(resultJson.status != 'error'){
+					   	modal.launchAlert("Success","User Accepted till "+resultJson.endDate);
+				   	}else{
+				   		modal.launchAlert("Error","Error occured");
+				   	}
+			   		},
+			   error:function(){
+				   modal.launchAlert("Error","Error occured while accepting the user!");
+			   }
+			});
 	}
 	
 

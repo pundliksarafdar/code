@@ -1,6 +1,7 @@
 package com.admin.misc;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -8,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.edit.DBUpdate;
+import com.google.gson.JsonObject;
+import com.miscfunction.MiscFunction;
 
 public class AdminAjaxServlet extends HttpServlet{
 	@Override
@@ -20,6 +23,7 @@ public class AdminAjaxServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		DBUpdate dbUpdate = new DBUpdate();
+		PrintWriter writer = resp.getWriter();
 		String methodeToCall = (String) req.getParameter("methodToCall");
 		if("reg".equalsIgnoreCase(methodeToCall)){
 			String regId = (String)req.getParameter("regId");
@@ -27,7 +31,17 @@ public class AdminAjaxServlet extends HttpServlet{
 			System.out.println("MethodeToCall-"+methodeToCall);
 			System.out.println("Registration Id-"+regId);
 			System.out.println("Duration-"+duration);
-			dbUpdate.updateDuration(regId, duration);
+			try{
+				String result = dbUpdate.updateDuration(regId, duration);
+				JsonObject resultJson = new JsonObject();
+				resultJson.addProperty("status", "success");
+				resultJson.addProperty("endDate", MiscFunction.dateFormater(result));
+				String resultJsonStr = resultJson.toString();
+				writer.print(resultJsonStr);
+			}catch(Exception e){
+				
+				writer.print("{'status':'error'}");
+			}
 		}else if("block".equalsIgnoreCase(methodeToCall)){
 			String regId = (String)req.getParameter("regId");
 			String role = (String)req.getParameter("role");
