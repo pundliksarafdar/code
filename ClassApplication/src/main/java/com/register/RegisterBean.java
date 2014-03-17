@@ -36,7 +36,6 @@ public class RegisterBean implements Serializable{
 	private String daysLeft;
 	private Integer role;
 	
-	MiscFunction miscFunction = new MiscFunction();
 	
 	public String getClassName() {
 		return className;
@@ -143,13 +142,13 @@ public class RegisterBean implements Serializable{
 		this.registrationDate = registrationDate;
 	}
 	public String getStartDate() {
-		return miscFunction.dateFormater(startDate);
+		return MiscFunction.dateFormater(startDate);
 	}
 	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 	public String getEndDate() {
-		return miscFunction.dateFormater(endDate);
+		return MiscFunction.dateFormater(endDate);
 	}
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
