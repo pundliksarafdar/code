@@ -59,6 +59,10 @@ html,body {
     bottom: 0;
     width: 100%;
 }
+
+.error{
+	color: red;
+}
 </style>
 <script src="js/jquery-1.10.2.min.js"></script>
 <script src="js/allAjax.js"></script>
@@ -131,6 +135,26 @@ html,body {
       	</div>
     </div>
 </div>	
+
+<div class="modal fade bs-example-modal-sm" id="addBatSubModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id=""></h4>
+        </div>
+        <div class="modal-body" id="">
+          	<div id="addMessage"></div>
+          	<div class="error"></div>
+          	<input type="text" id="name" data-provide="typeahead" class="form-control"/>
+          	<input type="hidden" id="task"/>
+        </div>
+      	<div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal">Add</button>
+      	</div>
+    </div>
+</div>	
+
 	<!-- Modal Box End -->
 	<div id="container">
 		<div id="header">

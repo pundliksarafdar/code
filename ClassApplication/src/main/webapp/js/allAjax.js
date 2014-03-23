@@ -72,6 +72,31 @@ var allAjax = {
 				   modal.launchAlert("Error","Error occured while accepting the user!");
 			   }
 			});
+	},
+	
+	deleteUser :function(regId){
+		$.ajax({
+			   url: "admajxsrvlt",
+			   data: {
+			    	 methodToCall: "deleteuser",
+					 regId:regId,
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   var resultJson = JSON.parse(e);
+				   if(resultJson.status != 'error'){
+					   	modal.launchAlert("Success","User Deleted");
+					   	setTimeout(function(){
+					   		location.reload();
+					   	},1000*3);
+				   }else{
+				   		modal.launchAlert("Error","Error occured");
+				   	}
+			   		},
+			   error:function(){
+				   modal.launchAlert("Error","Error occured while deleting the user!");
+			   }
+		});
 	}
 	
 

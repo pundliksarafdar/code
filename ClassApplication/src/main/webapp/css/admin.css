@@ -2,3 +2,7 @@
 	background: rgb(240, 109, 35);
 	color: white;
 }
+
+.navbar .dropdown-menu a{
+    padding: 15px 0px 10px 10px;
+}

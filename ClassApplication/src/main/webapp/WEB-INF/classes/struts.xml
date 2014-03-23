@@ -6,6 +6,7 @@
 <constant name="struts.devMode" value="true" />
 <constant name="struts.action.excludePattern" value="LoadConfig"/>
 <constant name="struts.action.excludePattern" value="/admajxsrvlt*"/>
+    
    <package name="classapp" extends="struts-default">
      <result-types>
          <result-type name="tiles" 
@@ -13,7 +14,8 @@
       </result-types>
       <action name="login" 
             class="com.signon.LoginUser" 
-            method="execute">
+            method="execute"
+            >
             <result name="success" type="tiles">admin.loginsuccess</result>
             <result name="success_classowner" type="tiles">classowner.loginsuccess</result>
             <result name="success_classteacher" type="tiles">classteacher.loginsuccess</result>
@@ -84,7 +86,7 @@
 	  <action name="addsubject" 
             class="com.classowner.AddSubjectAction" 
             method="execute">
-            <result name="success" type="tiles">admin.loginsuccess</result>
+            <result name="success" type="tiles">classowner.addsubject</result>
             <result name="error" type="tiles">register</result>
       </action>	 	
 	  

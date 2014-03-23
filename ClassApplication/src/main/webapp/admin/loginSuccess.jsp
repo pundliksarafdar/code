@@ -5,6 +5,11 @@
 <%@page import="java.util.List"%>
 <%@taglib prefix="s" uri="/struts-tags"%>
 <html>
+<style>
+	.tooltip{
+		width : 150px;
+	}
+</style>
 <script type="text/javascript">
 
 $(document).ready(function(){
@@ -16,6 +21,10 @@ $(document).ready(function(){
 			$('#task').val("prev");
 			$('#searchClass').submit();
 		}
+	});
+	
+	$('a').hover(function(){
+		$(this).tooltip('show');
 	});
 });
 
@@ -35,8 +44,8 @@ function acceptClass(regId,that){
 	$('#acceptModal').modal('show');
 	}
 	
-	function rejectClass(){
-		$('#rejectModal').modal('show');
+	function rejectClass(regId){
+		modal.modalConfirm("Reject","Do you want to reject user","No","Yes",allAjax.deleteUser,[regId]);
 	} 
 	function blockUser(regId,role){
 		modal.modalConfirm("Block","Do you want to block user?","No","Yes",allAjax.blockUser,[regId,role]);
@@ -46,6 +55,9 @@ function acceptClass(regId,that){
 		modal.modalConfirm("UnBlock","Do you want to unblock user?","No","Yes",allAjax.unBlockUser,[regId,role]);
 	}
 	
+	function deleteUser(regId){
+		modal.modalConfirm("Reject","Do you want to delete user","No","Yes",allAjax.deleteUser,[regId]);
+	}
 	
 </script>
 
@@ -54,7 +66,6 @@ function acceptClass(regId,that){
 
 <!-- Table for class list-->
 	<%
-	MiscFunction miscFunction = new MiscFunction();
 	List list = (List)request.getAttribute("searchresult");
 	int totalPages = 0;
 	int currentPage = 0;
@@ -90,11 +101,12 @@ function acceptClass(regId,that){
 		String daysLeft = null;
 		while(iterator.hasNext()){
 			RegisterBean registerBean = (RegisterBean)iterator.next();
-			daysLeft = registerBean.getDaysLeft(); 
+			daysLeft = registerBean.getDaysLeft();
+			String toolTip = "Registration Date:"+registerBean.getRegistrationDate()+"\nStart Date:"+registerBean.getStartDate()+"\nRole:"+registerBean.getRole();
 		%>
 		<tr id="tableTr">
 			<td id="regId"><%=registerBean.getRegId() %></td>
-			<td><%=registerBean.getClassName() %></td>
+			<td><a title="<%=toolTip %>" data-toggle="tooltip"><%=registerBean.getClassName() %></a></td>
 			<td class = "hidden-xs"><%=registerBean.getFname() %></td>
 			<%if(null == daysLeft){%>
 			<td class = "hidden-xs" id="duration">NA</td>
@@ -106,14 +118,14 @@ function acceptClass(regId,that){
 					</button>
 					<ul class="dropdown-menu" role="menu">
 						<li id="accept"><a onclick="acceptClass('<%=registerBean.getRegId() %>',this)" href="#">Accept</a></li>
-						<li id="unblock"><a onclick="rejectClass();" href="#">Reject</a></li>
+						<li id="unblock"><a onclick="rejectClass('<%=registerBean.getRegId() %>');" href="#">Reject</a></li>
 					</ul>
 				</div>
 		
 					
 			</td>
 			<%}else{%>
-			<td class = "hidden-xs" id="duration"><%=miscFunction.dateFormater(registerBean.getEndDate())%></td>
+			<td class = "hidden-xs" id="duration"><%=MiscFunction.dateFormater(registerBean.getEndDate())%></td>
 			<td>
 				<!-- 
 				<button type="button" class="btn btn-danger"
@@ -135,7 +147,7 @@ function acceptClass(regId,that){
 							class = "hide"
 						<%} %>
 						><a onclick="unBlockUser('<%=registerBean.getRegId() %>','<%=registerBean.getRole() %>')" href="#">UnBlock</a></li>
-						<li><a href="#" onclick="deleteUser()">Delete</a></li>
+						<li><a href="#" onclick="deleteUser('<%=registerBean.getRegId() %>')">Delete</a></li>
 					</ul>
 				</div>
 			</td>

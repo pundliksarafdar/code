@@ -56,3 +56,40 @@ Modal.prototype.modalConfirm = function(heading, question, cancelButtonTxt, okBu
 			$("#mymodalmessage").html(message);
 			$('#messageModal').modal('show');		
 	}
+	
+	
+	var ModalVar = {
+			addBatch : function(){
+				$('#addBatSubModal').find(".modal-title").text("Add New Batch");
+				$('#addBatSubModal').find("#addMessage").text("Enter Batch Name");
+				$('#addBatSubModal').find("#task").val("addbatch");
+				$('#addBatSubModal').modal('show');
+				$('#addBatSubModal .btn-primary').unbind('click');
+				$('#addBatSubModal .btn-primary').on('click',function(){
+					console.log($(this).parents('#addBatSubModal').find('#name').val().length);
+					if($(this).parents('#addBatSubModal').find('#name').val().length !== 0){
+						
+					}else{
+						$(this).parents('#addBatSubModal').find('#error').text("Please enter the subject name");
+						$('#addBatSubModal').modal('show');
+					}
+				});
+			},
+			addSubject : function(){
+				$('#addBatSubModal').find(".modal-title").text("Add New Subject");
+				$('#addBatSubModal').find("#addMessage").text("Enter Subject Name");
+				$('#addBatSubModal').find("#task").val("addsubject");
+				$('#addBatSubModal').modal('show');
+				
+				$('#addBatSubModal .btn-primary').unbind('click');
+				$('#addBatSubModal .btn-primary').on('click',function(){
+					if($(this).parents('#addBatSubModal').find('#name').val().length !== 0){
+						
+					}else{
+						$(this).parents('#addBatSubModal').find('#error').text("Please enter the subject name");
+					}
+				});
+			}
+	}
+	
+	

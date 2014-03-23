@@ -61,5 +61,23 @@ public class AdminAjaxServlet extends HttpServlet{
 			}
 			dbUpdate.unBlockUser(regId,role);
 		}
+		else if("deleteuser".equalsIgnoreCase(methodeToCall)){
+			String regId = (String)req.getParameter("regId");
+			String role = (String)req.getParameter("role");
+			System.out.println("MethodeToCall-"+methodeToCall);
+			System.out.println("Registration Id-"+regId);
+			if(dbUpdate.deleteUser(regId)){
+				JsonObject resultJson = new JsonObject();
+				resultJson.addProperty("status", "success");
+				String resultJsonStr = resultJson.toString();
+				writer.print(resultJsonStr);
+			}else{
+				JsonObject resultJson = new JsonObject();
+				resultJson.addProperty("status", "error");
+				String resultJsonStr = resultJson.toString();
+				writer.print(resultJsonStr);
+			}
+				
+		}
 	}
 }
