@@ -8,10 +8,26 @@ public class MiscFunction {
 		
 	}
 	public static String dateFormater(String date){
-		String year = date.substring(0,4);
-		String month = date.substring(4, 6);
-		String days = date.substring(6, 8);
+		try{
+			String year = date.substring(0,4);
+			String month = date.substring(4, 6);
+			String days = date.substring(6, 8);
+			return year+"-"+month+"-"+days;
+		}catch(Exception e){
+			return "Error";
+		}
 		
-		return year+"-"+month+"-"+days;
+	}
+	
+	public static String roleConverter(Integer role){
+		if(0 == role){
+			return "Admin";
+		}else if(1 == role){
+			return "Class Owner";
+		}else if(2 == role){
+			return "Class Teacher";
+		}else{
+			return "Student";
+		}
 	}
 }

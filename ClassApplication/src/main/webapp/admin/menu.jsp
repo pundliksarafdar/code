@@ -24,7 +24,7 @@
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
       		<ul class="dropdown-menu">
 	            <li><a href="login">Admin</a></li>
-	            <li><a href="javascript:allAjax.classSearch();">Class List</a></li>
+	            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#ajax-modal">Class List</a></li>
           	</ul>
       </li>
     <%}if(userBean.getRole() < 2 || userBean.getRole() == 10){ %>  

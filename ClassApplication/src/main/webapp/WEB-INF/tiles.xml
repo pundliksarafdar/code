@@ -103,16 +103,6 @@
       <put-attribute name="body"   value="/General/editusersuccess.jsp"/>      
    </definition>
 
-   <definition name="getclasslist" extends="NoTopnavBaseLayout">
-      <put-attribute name="title"  value="Save"/>
-      <put-attribute name="header"  value="/header.jsp"/>
-      <put-attribute name="body"   value="/Class/searchClassList.jsp"/>      
-   </definition>
-
-   <definition name="searchclass" extends="baseLayout">
-      <put-attribute name="title"  value="Search"/>
-      <put-attribute name="body"   value="/Class/searchClassList.jsp"/>      
-   </definition>
    
    <definition name="classowner.addsubject" extends="baseLayout">
       <put-attribute name="title"  value="Add Subject"/>

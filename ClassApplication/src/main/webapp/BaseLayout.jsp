@@ -79,6 +79,70 @@ html,body {
 </script>
 </head>
 <body>
+	<!-- Search Modal  start-->
+<div id="ajax-modal" class="modal fade" tabindex="-1" style="display: none;">
+<form action="searchclass" method="post" id="searchclass">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Search</h4>
+  </div>
+
+<div class="container-fluid" style="padding: 10px;">
+  	<table>
+	<tr><td><button type="button" class="close" aria-hidden="true">&times;</button>
+	<td>Name Initials<td><input type="text" name="classSearchForm.cname" data-provide="typeahead" class="form-control"/>
+	</td>
+	</tr>
+	
+	<tr><td><button type="button" class="close" aria-hidden="true" onclick="clearDate();">&times;</button>
+	<td>Join Date<td>
+	<div class="btn-group">
+		<button id="cdatebtn" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"> Choose <span class="caret"></span></button>
+  		<ul class="dropdown-menu">
+    		<li><a href="javascript:enableExactDate();">Exact Date</a></li>
+    		<li><a href="javascript:enableBetweenDate();">Between</a></li>
+  		</ul>	
+  	</div>
+  	<td id="exact" style="display: none;">
+  		<input type="date" name="classSearchForm.cexactdate" class="form-control">
+  	<td>
+  	<td id="between" style="display: none;">
+  		<input type="date" placeholder="Form" name="classSearchForm.cfrmdate" class="form-control"/>
+  		<span>&nbsp;</span><input type="date" placeholder="To" name="classSearchForm.ctodate" class="form-control"/>
+  	<td>
+	</td></tr>
+	
+	<tr><td><button type="button" class="close" aria-hidden="true">&times;</button>
+	<td>Duration<td><input type="text" name="classSearchForm.cduration" data-provide="typeahead" class="form-control"/> 
+	</td>
+	<td>Month</td>
+	</tr>
+	<tr><td><button type="button" class="close" aria-hidden="true">&times;</button>
+	<td>State<td><input type="text" name="classSearchForm.cstate" data-provide="typeahead" class="form-control"/>
+	</td>
+	</tr>
+	
+	<tr><td><button type="button" class="close" aria-hidden="true">&times;</button>
+	<td>City<td><input type="text" name="classSearchForm.ccity" data-provide="typeahead" class="form-control"/>
+	</td>
+	</tr>
+	
+	<tr><td><button type="button" class="close" aria-hidden="true">&times;</button>
+	<td>Class Id<td><input type="text" name="classSearchForm.cid" data-provide="typeahead" class="form-control"/>
+	</td>
+	</tr>
+	</table>
+</div>
+
+<!-- footer -->
+  <div class="modal-footer">
+    <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+    <button type="button" class="btn btn-info" onclick="allAjax.searchClass('searchclass')">Search</button>
+  </div>
+</form>
+</div>
+
+	<!-- Search Modal  end-->
 	<!-- Modal confirmation Box Start -->
 	<div class="modal fade bs-example-modal-sm" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-content">

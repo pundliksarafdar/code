@@ -30,7 +30,12 @@ public class ClassSearchAction extends BaseAction{
 		String forward = null;
 		ActionContext.getContext().getSession().put("isSearched", "true");
 		SearchClassDb searchClassDb = new SearchClassDb();
-		String task = classSearchForm.getTask();
+		String task = "";
+		if(null != classSearchForm){
+			task = classSearchForm.getTask();
+		}else{
+			classSearchForm = (ClassSearchForm) ActionContext.getContext().getSession().get(Constants.CLASSSERACHFORM);
+		}
 		String currentPage = "0";
 
 		if(null == classSearchForm.getTask()){

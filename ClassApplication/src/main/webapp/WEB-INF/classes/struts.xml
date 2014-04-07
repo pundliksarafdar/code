@@ -62,12 +62,6 @@
             <result name="success" type="tiles">editusersuccess</result>
             <result name="error" type="tiles">register</result>
       </action>
-      <action name="getClassList" 
-            class="com.classuser.GetClassListAction" 
-            method="execute">
-            <result name="success">/Class/searchClassList.jsp</result>
-            <result name="error" type="tiles">register</result>
-      </action>
 
       <action name="deleteuser" 
             class="com.classuser.DeleteUserAction" 

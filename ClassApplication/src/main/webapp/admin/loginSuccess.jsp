@@ -7,33 +7,25 @@
 <html>
 <style>
 	.tooltip{
-		width : 150px;
+		width : 250px;
 	}
 </style>
 <script type="text/javascript">
 
 $(document).ready(function(){
-	$('#pager li').bind('click',function(){
+	$('.pager li').on('click',function(){
 		if('next' == $(this).attr('class')){
-			$('#task').val("next");
+			$('.task').prop("value","next");
 			$('#searchClass').submit();
 		}else if('previous'== $(this).attr('class')){
-			$('#task').val("prev");
+			$('.task').prop("value","prev");
 			$('#searchClass').submit();
 		}
 	});
 	
-	$('a').hover(function(){
-		$(this).tooltip('show');
-	});
+	
+	$('a').tooltip({'html':true});
 });
-
-function loadClassList(){
-
-	$('#divLoad').load('/ClassApplication/getClassList',function(response, status, xhr){		
-		
-	});
-}
 
 function acceptClass(regId,that){
 	$('#acceptModal .btn-success').on('click',function(){
@@ -102,12 +94,16 @@ function acceptClass(regId,that){
 		while(iterator.hasNext()){
 			RegisterBean registerBean = (RegisterBean)iterator.next();
 			daysLeft = registerBean.getDaysLeft();
-			String toolTip = "Registration Date:"+registerBean.getRegistrationDate()+"\nStart Date:"+registerBean.getStartDate()+"\nRole:"+registerBean.getRole();
+			String toolTip = "Registration Date:"+MiscFunction.dateFormater(registerBean.getRegistrationDate())+"<br>";
+			if(!"Error".equals(MiscFunction.dateFormater(registerBean.getStartDate()))){
+				toolTip += "Start Date:"+MiscFunction.dateFormater(registerBean.getStartDate())+"<br>";
+			}
+			toolTip += "Role:"+MiscFunction.roleConverter(registerBean.getRole());
 		%>
 		<tr id="tableTr">
 			<td id="regId"><%=registerBean.getRegId() %></td>
-			<td><a title="<%=toolTip %>" data-toggle="tooltip"><%=registerBean.getClassName() %></a></td>
-			<td class = "hidden-xs"><%=registerBean.getFname() %></td>
+			<td><%=registerBean.getClassName() %></td>
+			<td class = "hidden-xs"><a title="<%=toolTip %>" data-toggle="tooltip"><%=registerBean.getFname() %></a></td>
 			<%if(null == daysLeft){%>
 			<td class = "hidden-xs" id="duration">NA</td>
 			<td>
@@ -162,9 +158,9 @@ function acceptClass(regId,that){
 	<div style="width: 50%; float: right"></div>
 	<ul class="pager" id="pager" style="margin:10px 10px;">
 	<%if(currentPage != 0){ %>
-		<li class="previous"><a href="#">&larr; Older</a></li>
+		<li class="previous"><a href="javascript:void(0)">&larr; Older</a></li>
 		<%} if(currentPage != totalPages){ %>
-		<li class="next"><a href="#">Newer &rarr;</a></li>
+		<li class="next"><a href="javascript:void(0)">Newer &rarr;</a></li>
 		<%} %>
 	</ul>
 	</div>
@@ -173,6 +169,6 @@ function acceptClass(regId,that){
 
 <form action = "searchclass" id = "searchClass">
 	<input type="hidden" name="classSearchForm.currentPage" id="currentPage" value="<%=currentPage%>">
-	<input type="hidden" name="classSearchForm.task" id="task">
+	<input type="hidden" name="classSearchForm.task" class="task" value="next">
 </form>
 </html>
