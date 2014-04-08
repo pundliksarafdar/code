@@ -84,8 +84,8 @@ function acceptClass(regId,that){
 	<table class="table table-striped">
 		<tr>
 			<th>RegId</th>
-			<th>Class Name</th>
-			<th class = "hidden-xs">Owner</th>
+			<th class = "hidden-xs">Class Name</th>
+			<th >Owner</th>
 			<th class = "hidden-xs">End Date</th>
 			<th>Accept</th>
 		</tr>
@@ -94,7 +94,7 @@ function acceptClass(regId,that){
 		while(iterator.hasNext()){
 			RegisterBean registerBean = (RegisterBean)iterator.next();
 			daysLeft = registerBean.getDaysLeft();
-			String toolTip = "Registration Date:"+MiscFunction.dateFormater(registerBean.getRegistrationDate())+"<br>";
+			String toolTip = "<span class='hidden-lg'>Class Name: "+registerBean.getClassName()+"</span>Registration Date:"+MiscFunction.dateFormater(registerBean.getRegistrationDate())+"<br>";
 			if(!"Error".equals(MiscFunction.dateFormater(registerBean.getStartDate()))){
 				toolTip += "Start Date:"+MiscFunction.dateFormater(registerBean.getStartDate())+"<br>";
 			}
@@ -102,8 +102,8 @@ function acceptClass(regId,that){
 		%>
 		<tr id="tableTr">
 			<td id="regId"><%=registerBean.getRegId() %></td>
-			<td><%=registerBean.getClassName() %></td>
-			<td class = "hidden-xs"><a title="<%=toolTip %>" data-toggle="tooltip"><%=registerBean.getFname() %></a></td>
+			<td class = "hidden-xs"><%=registerBean.getClassName() %></td>
+			<td><a title="<%=toolTip %>" data-toggle="tooltip"><%=registerBean.getFname() %></a></td>
 			<%if(null == daysLeft){%>
 			<td class = "hidden-xs" id="duration">NA</td>
 			<td>
