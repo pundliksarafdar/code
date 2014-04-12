@@ -32,4 +32,6 @@ public class Constants {
 	public static String CLASSSTUDENT = "success_student";
 	public static String UNACCEPTED = "unaccepted";
 	public static String ACCESSBLOCKED = "accessblocked";
+	
+	public static String BATCH_LIST = "batchList";
 }

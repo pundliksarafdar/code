@@ -1,5 +1,11 @@
 package com.signon;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import com.classapp.db.login.LoginCheck;
 import com.config.BaseAction;
 import com.config.Constants;
@@ -21,7 +27,7 @@ public class LoginUser extends BaseAction{
 
 	
 	@Override
-	public String performBaseAction(UserBean userBean) {
+	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		String forward = null;
 		if(null != loginBean){
 			userBean.setLoginBean(loginBean);

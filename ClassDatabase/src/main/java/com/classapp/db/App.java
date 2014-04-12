@@ -1,12 +1,5 @@
 package com.classapp.db;
 
-import org.hibernate.Session;
-
-import com.classapp.db.register.RegisterBean;
-import com.classapp.db.register.RegisterUser;
-import com.classapp.persistence.HibernateUtil;
-import com.google.gson.Gson;
-
 /**
  * Hello world!
  *

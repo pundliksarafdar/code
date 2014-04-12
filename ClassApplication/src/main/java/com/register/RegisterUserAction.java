@@ -2,8 +2,11 @@ package com.register;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
 import com.classapp.db.register.RegisterUser;
@@ -30,7 +33,7 @@ public class RegisterUserAction extends BaseAction{
 	}
 
 	@Override
-	public String performBaseAction(UserBean userBean) {
+	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		RegisterUser registerUser = new RegisterUser();
 		Gson gson = new Gson();
 		Date date = new Date();
@@ -54,7 +57,7 @@ public class RegisterUserAction extends BaseAction{
 			
 			return forward;
 		}else{
-			HttpServletRequest request = ServletActionContext.getRequest();
+			request = ServletActionContext.getRequest();
 			request.setAttribute(Constants.ERROR_MESSAGE, status);
 			return "error";
 		}

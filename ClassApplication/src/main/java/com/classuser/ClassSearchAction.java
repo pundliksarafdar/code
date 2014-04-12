@@ -1,8 +1,11 @@
 package com.classuser;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
 
@@ -10,8 +13,10 @@ import com.classapp.myclass.ClassSearchForm;
 import com.classapp.myclass.SearchClassDb;
 import com.config.BaseAction;
 import com.config.Constants;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.user.UserBean;
+
 
 public class ClassSearchAction extends BaseAction{
 	private static final long serialVersionUID = 1L;
@@ -26,7 +31,7 @@ public class ClassSearchAction extends BaseAction{
 	}
 
 	@Override
-	public String performBaseAction(UserBean userBean) {
+	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		String forward = null;
 		ActionContext.getContext().getSession().put("isSearched", "true");
 		SearchClassDb searchClassDb = new SearchClassDb();
@@ -56,7 +61,7 @@ public class ClassSearchAction extends BaseAction{
 		classSearchForm.setTask(task);
 		List list = searchClassDb.searchClassData(classSearchForm);
 		int totalPages = searchClassDb.getPagesCount(classSearchForm);
-		HttpServletRequest request = ServletActionContext.getRequest();
+		request = ServletActionContext.getRequest();
 		request.setAttribute("searchresult", list);
 		request.setAttribute("totalPages", totalPages);
 		request.setAttribute("currentPage", currentPage);

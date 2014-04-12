@@ -1,11 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>MyClassApplication</groupId>
+    <artifactId>MyClassApplication</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
   <groupId>ClassApplication</groupId>
   <artifactId>ClassApplication</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>ClassApplication Maven Webapp</name>
+  <name>ClassApplication</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
@@ -46,11 +51,22 @@
 		<artifactId>gson</artifactId>
 		<version>1.7.1</version>
 	</dependency>
-  	<dependency>
-		<groupId>com.classapp.db</groupId>
-		<artifactId>ClassDatabase</artifactId>
-		<version>1.0-SNAPSHOT</version>
-	</dependency>
+    <dependency>
+      <groupId>com.datalayer</groupId>
+      <artifactId>DataLayer</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.classapp.db</groupId>
+      <artifactId>ClassDatabase</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+	<dependency>
+      <groupId>MyClassApplication</groupId>
+      <artifactId>TransactionLayer</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    
   </dependencies>
 <!--           
   <build>
