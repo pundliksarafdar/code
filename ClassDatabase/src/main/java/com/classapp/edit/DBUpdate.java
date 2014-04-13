@@ -107,7 +107,6 @@ public class DBUpdate {
 
 	public boolean deleteUser(String regId){
 		boolean result = true;
-		String errorMessage = null;
 		String query = "DELETE FROM RegisterBean WHERE regId = :regId";
 		Session session = null;
 		Transaction transaction = null;
@@ -121,6 +120,7 @@ public class DBUpdate {
 			System.out.println("Result "+rowaffected);
 			result = true;
 		}catch(Exception e){
+			e.printStackTrace();
 			transaction.rollback();
 			result = false;
 		}finally{

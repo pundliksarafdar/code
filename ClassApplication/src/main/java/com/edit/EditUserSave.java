@@ -4,8 +4,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import com.classapp.db.register.RegisterBean;
 import com.config.BaseAction;
 import com.user.UserBean;

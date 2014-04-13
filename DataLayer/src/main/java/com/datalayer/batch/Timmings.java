@@ -1,19 +1,19 @@
 package com.datalayer.batch;
 
 public class Timmings {
-	private String StartTimming;
-	private String EndTimming;
+	private String startTimming;
+	private String endTimming;
 	public String getStartTimming() {
-		return StartTimming;
+		return startTimming;
 	}
 	public void setStartTimming(String startTimming) {
-		StartTimming = startTimming;
+		this.startTimming = startTimming;
 	}
 	public String getEndTimming() {
-		return EndTimming;
+		return endTimming;
 	}
 	public void setEndTimming(String endTimming) {
-		EndTimming = endTimming;
+		this.endTimming = endTimming;
 	}
 	
 	

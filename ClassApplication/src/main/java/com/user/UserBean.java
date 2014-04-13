@@ -20,7 +20,8 @@ public class UserBean{
 	private String phone2;
 	private String startdate;
 	private String enddate;
-
+	private Integer regId;
+	
 	public String getDob() {
 		return dob;
 	}
@@ -127,6 +128,12 @@ public class UserBean{
 	}
 	public void setEnddate(String enddate) {
 		this.enddate = enddate;
+	}
+	public Integer getRegId() {
+		return regId;
+	}
+	public void setRegId(Integer regId) {
+		this.regId = regId;
 	}
 	
 	

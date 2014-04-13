@@ -60,10 +60,8 @@ public class AdminAjaxServlet extends HttpServlet{
 				role = "0";
 			}
 			dbUpdate.unBlockUser(regId,role);
-		}
-		else if("deleteuser".equalsIgnoreCase(methodeToCall)){
+		}else if("deleteuser".equalsIgnoreCase(methodeToCall)){
 			String regId = (String)req.getParameter("regId");
-			String role = (String)req.getParameter("role");
 			System.out.println("MethodeToCall-"+methodeToCall);
 			System.out.println("Registration Id-"+regId);
 			if(dbUpdate.deleteUser(regId)){

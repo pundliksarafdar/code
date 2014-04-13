@@ -7,7 +7,7 @@ function Modal(){
 Modal.prototype.modalConfirm = function(heading, question, cancelButtonTxt, okButtonTxt,callback,params) {
 	
     var confirmModal = 
-      $('<div class="modal fade">' +    
+      $('<div class="modal fade"><div class="modal-dialog"><div class="modal-content">' +    
           '<div class="modal-header">' +
             '<a class="close" data-dismiss="modal" >&times;</a>' +
             '<h4>' + heading +'</h4>' +
@@ -25,7 +25,7 @@ Modal.prototype.modalConfirm = function(heading, question, cancelButtonTxt, okBu
               okButtonTxt + 
             '</a>' +
           '</div>' +
-        '</div>');
+        '</div></div></div>');
 
     	confirmModal.find('#okButton').click(function(event) {
       

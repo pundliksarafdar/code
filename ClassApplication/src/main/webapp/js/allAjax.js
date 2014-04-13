@@ -75,7 +75,7 @@ var allAjax = {
 			   url: "admajxsrvlt",
 			   data: {
 			    	 methodToCall: "deleteuser",
-					 regId:regId,
+					 regId:regId
 			   		},
 			   type:"POST",
 			   success:function(e){
@@ -93,7 +93,28 @@ var allAjax = {
 				   modal.launchAlert("Error","Error occured while deleting the user!");
 			   }
 		});
+	},
+	addBatch :function(regId,batchName){
+		$.ajax({
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "addBatch",
+					 regId:regId,
+					 batchName:batchName
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   var resultJson = JSON.parse(e);
+				   if(resultJson.status != 'error'){
+					   //$($('div#addBatchModal #addBtachTime').)
+				   }else{
+				   		$('div#addBatchModal .error').html('<strong>Error!</strong> Unable to add');
+				   	}
+			   	},
+			   error:function(){
+				   modal.launchAlert("Error","Error occured while deleting the user!");
+			   }
+		});
 	}
-	
 
 }

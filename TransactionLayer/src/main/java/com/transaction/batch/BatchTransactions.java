@@ -22,6 +22,7 @@ public class BatchTransactions {
 		batchDataClass.setSubjectList(subjectList);
 		batchDataClass.setBatchName("bATCH nAME");
 		batchDataClass.setTimmings(timmings);
+		batchDataClass.setCandidatesInBatch(10);
 		list.add(batchDataClass);
 		
 		
@@ -37,6 +38,7 @@ public class BatchTransactions {
 		batchDataClass.setSubjectList(subjectList);
 		batchDataClass.setBatchName("Batch Name");
 		batchDataClass.setTimmings(timmings);
+		batchDataClass.setCandidatesInBatch(112);
 		list.add(batchDataClass);
 		return list;
 	}

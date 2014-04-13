@@ -4,8 +4,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import com.classapp.db.login.LoginCheck;
 import com.config.BaseAction;
 import com.config.Constants;
@@ -64,6 +62,7 @@ public class LoginUser extends BaseAction{
 			userBean.setUsername(gson.fromJson(userBeanJson, UserBean.class).getUsername());
 			userBean.setStartdate(gson.fromJson(userBeanJson, UserBean.class).getStartdate());
 			userBean.setEnddate(gson.fromJson(userBeanJson, UserBean.class).getEnddate());
+			userBean.setRegId(gson.fromJson(userBeanJson, UserBean.class).getRegId());
 			userBean.setLoginBean(loginBean);
 
 			

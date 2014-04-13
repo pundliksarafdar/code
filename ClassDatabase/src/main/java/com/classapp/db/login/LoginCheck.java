@@ -52,7 +52,7 @@ public class LoginCheck implements Serializable{
 			userBean.setRole(registerBean.getRole());
 			userBean.setStartdate(registerBean.getStartDate());
 			userBean.setEnddate(registerBean.getEndDate());
-			
+			userBean.setRegId(registerBean.getRegId());
 			return gson.toJson(userBean);
 		}catch(Exception ex){
 			return null;

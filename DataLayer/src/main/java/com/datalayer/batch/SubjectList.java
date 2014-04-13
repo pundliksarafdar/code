@@ -1,7 +1,5 @@
 package com.datalayer.batch;
 
-import java.util.List;
-
 public class SubjectList {
 	private String subjectName;
 	private Timmings timmings;
