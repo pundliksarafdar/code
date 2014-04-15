@@ -94,7 +94,7 @@ var allAjax = {
 			   }
 		});
 	},
-	addBatch :function(regId,batchName){
+	addBatch :function(regId,batchName,successCallback,errorCallback){
 		$.ajax({
 			   url: "classOwnerServlet",
 			   data: {
@@ -104,15 +104,10 @@ var allAjax = {
 			   		},
 			   type:"POST",
 			   success:function(e){
-				   var resultJson = JSON.parse(e);
-				   if(resultJson.status != 'error'){
-					   //$($('div#addBatchModal #addBtachTime').)
-				   }else{
-				   		$('div#addBatchModal .error').html('<strong>Error!</strong> Unable to add');
-				   	}
+				   successCallback(e);
 			   	},
-			   error:function(){
-				   modal.launchAlert("Error","Error occured while deleting the user!");
+			   error:function(e){
+				   errorCallback(e);
 			   }
 		});
 	}

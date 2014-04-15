@@ -23,6 +23,7 @@
 	text-shadow: 0 -1px #b30000, 0px 2px #fff;
 	width: 30px;
 }
+
 </style>
 
 	<!-- Search Modal  start-->
@@ -163,39 +164,36 @@
           <h4 class="modal-title" id="">Add Batch</h4>
         </div>
         <div class="modal-body" id="">
-          	<div id="addMessage"></div>
-          	<div class="error"></div>
-          	<label for="batchname">
-          		Enter Batch Name
- 			</label>
-          	<input type="text" id="batchname" data-provide="typeahead" class="form-control"/>
-          	<input type="hidden" id="task"/>
-          	<div id="addBtachTime">
-					<div class="form-group">
-						<label for="dob" class="col-sm-2 control-label">*Date of
-							Birth</label>
-						<div class="col-sm-10">
-							<!-- 
-				<div id="datetimepicker" class="input-append date">
-					<input type="text"></input> <span class="add-on icon icon-calendar"> <i
-						data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-					</span>
-				</div>
-				-->
-
-							<div id="datetimepicker" class="input-group"
-								style="width: 250px;">
-								<input class="form-control" data-format="HH:mm"
-									type="text" name="registerBean.dob" required="required" /> <span
-									class="input-group-addon add-on"> <i
-									class="glyphicon glyphicon-calendar glyphicon-time"></i>
-								</span>
-							</div>
-
-						</div>
+        	<div class="error alert alert-danger"></div>
+			<div class="form-group">
+				<input type="text" class="form-control" id="batchName"/>
+				<br>
+				<div id="classTimming" class="hide">
+				<div class="container-fluid">
+  				<div class="row">
+  					
+					<div class="col-sm-6">
+					<label for="">Start Time</label>
+					<div class='input-group date' id='fromDate' data-date-format="hh:mm A" style="width: 150px;">
+						<input type='text' class="form-control"/> <span
+							class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span> </span>
+					</div>
+					</div>
+					
+					<div class="col-sm-6">
+					<label for="">End Time</label>
+					<div class='input-group date' id='toDate' data-date-format="hh:mm A" style="width: 150px;">
+						<input type='text' class="form-control"/> <span
+							class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span> </span>
+					</div>
 					</div>
 				</div>
-        </div>
+				</div>
+				</div>
+			</div>
+		</div>
       	<div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 	        <button type="button" class="btn btn-primary btn-add" id="btn-add">Add</button>

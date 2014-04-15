@@ -11,7 +11,7 @@
 <link href="css/bootstrap.min.css" rel="stylesheet">
  <link href="css/bootstrap-responsive.css" rel="stylesheet">
  <link href="css/admin.css" rel="stylesheet">
- <link href="css/datetimepicker.css" rel="stylesheet">
+ <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
  <style>
 .text-center {
 	text-align: center;
@@ -68,7 +68,8 @@ html,body {
 <script src="js/main.js"></script>
 <script src="js/bootstrap.min.js""></script>
 <script src="js/modal/modal.js"></script>
-<script src="js/datepicker.js"></script>
+<script src="js/moment.min.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js"></script>
 </head>
 <body>
 <jsp:include page="allmodals.jsp"></jsp:include>
