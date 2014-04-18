@@ -110,6 +110,23 @@ var allAjax = {
 				   errorCallback(e);
 			   }
 		});
+	},
+	addBatchTimming :function(regId,batchName,successCallback,errorCallback){
+		$.ajax({
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "addBatchTimming",
+					 regId:regId,
+					 batchName:batchName
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   successCallback(e);
+			   	},
+			   error:function(e){
+				   errorCallback(e);
+			   }
+		});
 	}
 
 }

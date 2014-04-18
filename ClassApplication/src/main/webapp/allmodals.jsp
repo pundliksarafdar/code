@@ -1,28 +1,4 @@
 <style>
-#iosbtn {
-	background: -moz-linear-gradient(-90deg, #da7d83, #da7d83 50%, #ca444e 50%, #ca444e);
-	background: -ms-linear-gradient(-90deg, #da7d83, #da7d83 50%, #ca444e 50%, #ca444e);
-	background: -o-linear-gradient(-90deg, #da7d83, #da7d83 50%, #ca444e 50%, #ca444e);
-	background: -webkit-gradient(linear, left top, left bottom, from(#da7d83), color-stop(0.5, #da7d83), color-stop(0.5, #ca444e), to(#ca444e));
-	background: linear-gradient(-90deg, #da7d83, #da7d83 50%, #ca444e 50%, #ca444e);
-	border: 3px solid #fff;
-	-moz-border-radius: 30px;
-	-ms-border-radius: 30px;
-	-o-border-radius: 30px;
-	-webkit-border-radius: 30px;
-	border-radius: 30px;
-	-moz-box-shadow: 0 2px 2px rgba(0,0,0, 1);
-	-ms-box-shadow: 0 2px 2px rgba(0,0,0, 1);
-	-o-box-shadow: 0 2px 2px rgba(0,0,0, 1);
-	-webkit-box-shadow: 0 2px 2px rgba(0,0,0, 1);
-	box-shadow: 0 2px 2px rgba(0,0,0, 1);
-	color: #fff;
-	font: bold 32px/24px Arial;
-	height: 30px;
-	text-align: center;
-	text-shadow: 0 -1px #b30000, 0px 2px #fff;
-	width: 30px;
-}
 
 </style>
 
@@ -156,7 +132,7 @@
     </div>
 </div>	
 </div>
-<div class="modal fade" id="addBatchModal">
+<div class="modal fade" id="addBatchModal" data-backdrop="static">
   <div class="modal-dialog">
       <div class="modal-content">
  		<div class="modal-header">
@@ -192,11 +168,23 @@
 				</div>
 				</div>
 				</div>
+			</div>				
 			</div>
-		</div>
       	<div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	        <div class="progress progress-striped active hide">
+					<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="45"
+						aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+						Processing your request Please wait
+					</div>
+			</div>
+	        <div class="add">
+	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Cancel</button>
 	        <button type="button" class="btn btn-primary btn-add" id="btn-add">Add</button>
+	        </div>
+	        <div class="setTimming hide">
+	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Not Now</button>
+	        <button type="button" class="btn btn-primary btn-setTimming" id="btn-setTimming">Done</button>
+	        </div>
       	</div>
     </div>
 </div>	

@@ -38,8 +38,18 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 			String batchName = (String) req.getAttribute("batchName");
 			respObject.addProperty(STATUS, "success");
+		}else if("addBatchTimming".equals(methodToCall)){
+			Integer regId = Integer.parseInt(req.getParameter("regId"));
+			UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+			if(0 == userBean.getRole()){
+				
+			}else{
+				regId = userBean.getRegId();
+			}
+			String batchName = (String) req.getAttribute("batchName");
+			respObject.addProperty(STATUS, "success");
 		}
-		
+
 		printWriter.write(respObject.toString());
 	}
 }
