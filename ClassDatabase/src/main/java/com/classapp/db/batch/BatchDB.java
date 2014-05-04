@@ -63,11 +63,13 @@ public class BatchDB {
 				session.close();
 			}
 		}
-		for(int i=0;i<batchList.size();i++){
-			batchDataClass = new BatchDataClass();
-			batchDataClass.setBatchName(batchList.get(i).getBatch());
-			batchDataClass.setCandidatesInBatch(10);
-			batchDataClasses.add(batchDataClass);
+		if(null!=batchList){
+			for(int i=0;i<batchList.size();i++){
+				batchDataClass = new BatchDataClass();
+				batchDataClass.setBatchName(batchList.get(i).getBatch());
+				batchDataClass.setCandidatesInBatch(10);
+				batchDataClasses.add(batchDataClass);
+			}
 		}
 		return batchDataClasses;
 	}
