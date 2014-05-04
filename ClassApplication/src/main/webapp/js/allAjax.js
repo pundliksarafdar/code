@@ -2,9 +2,6 @@ var allAjax = {
 	searchClass : function(form){
 		$('#'+form).submit();
 	},
-	addSubject :function(){
-		location.href = "addsubject";
-	},
 	blockUser :function (regId,role){
 		$.ajax({
 			   url: "admajxsrvlt",
@@ -111,11 +108,47 @@ var allAjax = {
 			   }
 		});
 	},
-	addBatchTimming :function(regId,batchName,successCallback,errorCallback){
+	addBatchTimming :function(regId,batchName,fromTime,toTime,successCallback,errorCallback){
 		$.ajax({
 			   url: "classOwnerServlet",
 			   data: {
 			    	 methodToCall: "addBatchTimming",
+					 regId:regId,
+					 batchName:batchName,
+					 fromTime:fromTime,
+					 toTime:toTime
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   successCallback(e);
+			   	},
+			   error:function(e){
+				   errorCallback(e);
+			   }
+		});
+	},
+	addSubject :function(regId,subjectName,successCallback,errorCallback){
+		$.ajax({
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "addSubject",
+					 regId:regId,
+					 subjectName:subjectName
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   successCallback(e);
+			   	},
+			   error:function(e){
+				   errorCallback(e);
+			   }
+		});
+	},
+	deleteBatch:function(regId,batchName,successCallback,errorCallback){
+		$.ajax({
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "deleteBatch",
 					 regId:regId,
 					 batchName:batchName
 			   		},
@@ -128,5 +161,4 @@ var allAjax = {
 			   }
 		});
 	}
-
 }

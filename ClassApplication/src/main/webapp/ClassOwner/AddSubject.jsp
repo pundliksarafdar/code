@@ -9,8 +9,22 @@
 			$(this).tooltip('hide');
 		});
 		
+		$('.addsubject2batch').tooltip();
+/*		$('[data-toggle="popover"]').popover({container: '.popoverContainer'+$(this).attr('popovername')});
+*/	
+/*
+		$('[data-toggle="popover"]').on('click',function(){
+			$(this).popover('show');
+		});
+		*/
+		
+		$('.addsubject2batch').popover({'placement':'bottom','content':$('#allSubject').html(),'html':true});
+
 	});
 </script>
+<div>
+	<span class="btn btn-info pull-right addsubject2batch" data-toggle="popover" title="Drag and drop subject to respective batch"><i class="glyphicon glyphicon-plus"></i>Subjects</span>
+</div>
 <div class="btn-group btn-group-sm">
   <button type="button" class="btn btn-info" data-target="#addBatchModal"  data-toggle="modal">Add Batch</button>
   <button type="button" class="btn btn-info" data-target="#addSubjectModal" data-toggle="modal">Add Subject</button>
@@ -24,25 +38,41 @@
 	  Iterator iteratorList = list.iterator();
 	  while(iteratorList.hasNext()){
 	  BatchDataClass batchDataClass = (BatchDataClass)iteratorList.next();
-	  String timmingsTitle = "Start time :"+ batchDataClass.getTimmings().getStartTimming()+"<br>End Time :"+batchDataClass.getTimmings().getEndTimming(); 
+	  //String timmingsTitle = "Start time :"+ batchDataClass.getTimmings().getStartTimming()+"<br>End Time :"+batchDataClass.getTimmings().getEndTimming(); 
+  		String timmingsTitle = "Start time :";
   %>
+  
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4 class="panel-title">
-        <a title="<%=timmingsTitle %>" class="batchName" data-toggle="collapse" data-parent="#accordion" href="#batchItem<%=i %>">
+        <i class="glyphicon glyphicon-trash" title="Delete Batch" onclick="deleteBatch('<%= batchDataClass.getBatchName()%>')"></i>&nbsp;
+        <a class="batchName" data-toggle="collapse" data-parent="#accordion" href="#batchItem<%=i %>">
           <%= batchDataClass.getBatchName()%>
         </a>
       <span class="badge pull-right"><%=batchDataClass.getCandidatesInBatch() %></span>
       </h4>
     </div>
     <div id="batchItem<%=i %>" class="panel-collapse collapse">
+      <div class="popoverContainer<%=batchDataClass.getCandidatesInBatch() %>"></div>
       <div class="panel-body">
-        Subject
-      </div>
+      			<button type="button" class="btn btn-default" data-container="body" popovername="'<%=batchDataClass.getBatchName()%>'"
+					data-toggle="popover" data-placement="right">
+					Popover on right</button>
+	  </div>
     </div>
   </div>
   <%
   i++;
 	  } 		
  } %>
+ 
+</div>
+
+<div class="hide">
+	<div id="allSubject">
+		Not implemented only for demo
+	<input type="button" value="Maths"/>
+	<br/>
+	<input type="button" value="Chemestry"/>
+	</div>
 </div>

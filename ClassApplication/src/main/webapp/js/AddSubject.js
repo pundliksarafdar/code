@@ -12,39 +12,42 @@ $(document).ready(function(){
 		}else{
 			$('div#addBatchModal .progress').removeClass('hide');
 			$('.add').addClass('hide');
-			allAjax.addBatch('12',batchName,successCallback,errorCallback);
+			allAjax.addBatch('',batchName,successCallback,errorCallback);
 		}
 	});
 	
-	$('div#addBatchModal').on('click','button#btn-setTimming',function(){
-		$('div#addBatchModal .error').html('');
-		$('div#addBatchModal .error').hide();
+	
+	$('div#addSubjectModal').on('click','button#btn-add',function(){
+		batchName = "";
+		$('div#addSubjectModal .error').html('');
+		$('div#addSubjectModal .error').hide();
 		var regId;
-		var toTime = $('div#addBatchModal').find('#toDate').find('input[type="text"]').val();
-		var fromTime = $('div#addBatchModal').find('#fromDate').find('input[type="text"]').val();
-		
-		if(batchName){
-			if(toTime.trim()=="" || fromTime.trim()==""){
-				$('div#addBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Start time and end time must be present<br> if you dont want to give time now then you can click on not now and add latter');
-				$('div#addBatchModal .error').show();
-			}else{
-				$('div#addBatchModal .setTimming').addClass('hide');
-				$('div#addBatchModal .progress').removeClass('hide');
-				allAjax.addBatchTimming('12',batchName,successCallbackBatchTimming,errorCallbackBatchTimming);
-			}
+		subjectName = $('div#addSubjectModal').find('#subjectName').val();
+		if(!subjectName || subjectName.trim()==""){
+			$('div#addSubjectModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Subject name cannot be blank');
+			$('div#addSubjectModal .error').show();
 		}else{
-			$('div#addBatchModal .progress').addClass('hide');
-			$('div#addBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Something unexpected occured,Please refresh page');
-			$('div#addBatchModal .error').show();
-		
+			$('div#addSubjectModal .progress').removeClass('hide');
+			$('.add').addClass('hide');
+			allAjax.addSubject('',subjectName,successCallbackSubject,errorCallbackSubject);
 		}
 	});
-	
+
 	$('[data-target="#addBatchModal"]').on('click',function(){
 		$('#addBatchModal').find('.error').hide();
 		$('div#addBatchModal #classTimming').addClass('hide');
 		$('div#addBatchModal .setTimming').addClass('hide');
 		$('div#addBatchModal .add').removeClass('hide');
+		$('div#addBatchModal .progress').addClass('hide');
+	});
+	
+	$('[data-target="#addSubjectModal"]').on('click',function(){
+		$('#addSubjectModal').find('.error').hide();
+		$('div#addSubjectModal #classTimming').addClass('hide');
+		$('div#addSubjectModal .setTimming').addClass('hide');
+		$('div#addSubjectModal .add').removeClass('hide');
+		$('div#addSubjectModal .progress').addClass('hide');
+
 	});
 	
 	$('#fromDate,#toDate').datetimepicker({
@@ -52,29 +55,82 @@ $(document).ready(function(){
 	});
 });
 
+function deleteBatch(batchName){
+	modal.modalConfirm("Delete Batch", "Do you want to delete batch?", "No", "Yes", deleteBatchConfirm, [batchName]);
+}
+
+function deleteBatchConfirm(batchName){
+	$('#progressModal').modal('show');
+	allAjax.deleteBatch("",batchName,successCallBackDeleteBatch,errorcallBackDeleteBacth);
+}
+
+function successCallBackDeleteBatch(){
+	$('#progressModal').modal('hide');
+	location.reload();
+}
+
+function errorcallBackDeleteBacth(){
+	modal.launchAlert("Error", "Unable to delete batch");
+}
+
 function errorCallback(e){
-	   $('div#addBatchModal .error').show();
+		$('div#addBatchModal .progress').addClass('hide');
+		$('div#addBatchModal .add').removeClass('hide');
+		$('div#addBatchModal .error').show();
   		$('div#addBatchModal .error').html('<strong>Error!</strong> Unable to add');
 }
 
 function successCallback(e){
 	$('div#addBatchModal .progress').addClass('hide');
-	
 	var resultJson = JSON.parse(e);
 	   if(resultJson.status != 'error'){
-		   $('div#addBatchModal #classTimming').removeClass('hide');
-		   $('.setTimming').removeClass('hide');
-		   $('.add').addClass('hide');
-		   
+		   $('div#addBatchModal').modal('hide');
+		   modal.launchAlert("Success","Batch Added! Page will refresh in 2 sec");
+		   setTimeout(function(){
+			   location.reload();
+		   },2*1000);		   
 	   }else{
 		   $('div#addBatchModal .add').removeClass('hide');
 		   $('div#addBatchModal .error').show();
-	   		$('div#addBatchModal .error').html('<strong>Error!</strong> Unable to add');
+	   	if(!resultJson.message){
+		   $('div#addBatchModal .error').html('<strong>Error!</strong> Unable to add');
+	   	}else{
+	   		$('div#addBatchModal .error').html('<strong>Error!</strong>'+resultJson.message);
+	   	}
 	   	}
 }
 
+function errorCallbackSubject(e){
+	$('div#addSubjectModal .progress').addClass('hide');
+	$('div#addSubjectModal .add').removeClass('hide');
+	$('div#addSubjectModal .error').show();
+		$('div#addSubjectModal .error').html('<strong>Error!</strong> Unable to add');
+}
+
+function successCallbackSubject(e){
+$('div#addSubjectModal .progress').addClass('hide');
+var resultJson = JSON.parse(e);
+   if(resultJson.status != 'error'){
+	   $('div#addSubjectModal').modal('hide');
+	   modal.launchAlert("Success","Subject Added! Page will refresh in 2 sec");
+	   setTimeout(function(){
+		   location.reload();
+	   },2*1000);		   
+   }else{
+	   $('div#addSubjectModal .add').removeClass('hide');
+	   $('div#addSubjectModal .error').show();
+   	if(!resultJson.message){
+	   $('div#addSubjectModal .error').html('<strong>Error!</strong> Unable to add');
+   	}else{
+   		$('div#addSubjectModal .error').html('<strong>Error!</strong>'+resultJson.message);
+   	}
+   	}
+}
+
 function errorCallbackBatchTimming(e){
-	   $('div#addBatchModal .error').show();
+		$('div#addBatchModal .progress').addClass('hide');
+		$('div#addBatchModal .setTimming').removeClass('hide');		   
+		$('div#addBatchModal .error').show();
 		$('div#addBatchModal .error').html('<strong>Error!</strong> Unable to add');
 }
 
@@ -91,6 +147,18 @@ function successCallbackBatchTimming(e){
 	   }else{
 		   $('div#addBatchModal .setTimming').removeClass('hide');
 		   $('div#addBatchModal .error').show();
-	   		$('div#addBatchModal .error').html('<strong>Error!</strong> Unable to add');
+		   if(!resultJso.message){
+			   $('div#addBatchModal .error').html('<strong>Error!</strong> Unable to add');
+		   	}else{
+		   		$('div#addBatchModal .error').html('<strong>Error!</strong>'+resultJson.message);
+		   	}
 	   	}
+}
+
+
+
+/****************function called by AddSubject.jsp********************/
+
+function removeClass(){
+	modal.modalConfirm("Delete", "Do you want to delete batch", "No", "Delete", deleteBatch, "Deleted");
 }

@@ -15,7 +15,7 @@ public class AddSubjectAction extends BaseAction{
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		BatchTransactions batchTransactions = new BatchTransactions();
-		List list = batchTransactions.getAllBatchClass();
+		List list = batchTransactions.getBatchData(userBean.getRegId());
 		request.setAttribute(Constants.BATCH_LIST, list);
 		return SUCCESS;
 	}

@@ -1,12 +1,12 @@
 package com.datalayer.batch;
 
+import java.util.List;
+
 public class BatchDataClass {
 	private String batchName;
 	private String registeredOn;
-	private Timmings timmings;
-	private SubjectList subjectList;
+	private List<SubjectList> subjectList;
 	private int candidatesInBatch;
-	
 	public String getBatchName() {
 		return batchName;
 	}
@@ -19,16 +19,10 @@ public class BatchDataClass {
 	public void setRegisteredOn(String registeredOn) {
 		this.registeredOn = registeredOn;
 	}
-	public Timmings getTimmings() {
-		return timmings;
-	}
-	public void setTimmings(Timmings timmings) {
-		this.timmings = timmings;
-	}
-	public SubjectList getSubjectList() {
+	public List<SubjectList> getSubjectList() {
 		return subjectList;
 	}
-	public void setSubjectList(SubjectList subjectList) {
+	public void setSubjectList(List<SubjectList> subjectList) {
 		this.subjectList = subjectList;
 	}
 	public int getCandidatesInBatch() {
@@ -38,4 +32,5 @@ public class BatchDataClass {
 		this.candidatesInBatch = candidatesInBatch;
 	}
 	
+		
 }

@@ -32,7 +32,7 @@
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Class Owner <b class="caret"></b></a>
       		<ul class="dropdown-menu">
 	            <li><a href="login">Class Owner</a></li>
-	            <li><a href="javascript:allAjax.addSubject();">Add Subject</a></li>
+	            <li><a href="addsubject">Add Subject</a></li>
 	            <li><a href="#">Time Table</a></li>
           	</ul>
       </li>

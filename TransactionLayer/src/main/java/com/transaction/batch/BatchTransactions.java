@@ -1,15 +1,24 @@
 package com.transaction.batch;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
+
+import com.classapp.db.batch.AddBatch;
+import com.classapp.db.batch.BatchDB;
+import com.classapp.db.batch.BatchData;
+import com.classapp.db.batch.DeleteBatch;
+import com.classapp.db.user.UserBean;
+import com.datalayer.batch.Batch;
 import com.datalayer.batch.BatchDataClass;
 import com.datalayer.batch.SubjectList;
 import com.datalayer.batch.Timmings;
 
 public class BatchTransactions {
 	public List getAllBatchClass(){
-		List list = new ArrayList();
+		/*List list = new ArrayList();
 		Timmings timmings = new Timmings();
 		SubjectList subjectList = new SubjectList();
 		BatchDataClass batchDataClass = new BatchDataClass();
@@ -41,8 +50,57 @@ public class BatchTransactions {
 		batchDataClass.setCandidatesInBatch(112);
 		list.add(batchDataClass);
 		return list;
+		*/
+		return null;
+	}
+	
+
+	public List getBatchData(Integer regId){
+		BatchDB batchDB = new BatchDB();
+		List dataList = batchDB.getBatchData(regId);
+		return dataList;
+	}
+	
+	public boolean addUpdateDb(Batch batch){
+		AddBatch addBatch = new AddBatch();
+		if (!isBatchExist(batch)) {
+			addBatch.addOrUpdateBatch(batch);
+			return true;
+		}		
+		return false;
+	}
+	
+	public boolean addUpdateDatchTime(Batch batch){
+		AddBatch addBatch = new AddBatch();
+		if (isBatchExist(batch)) {
+			addBatch.addOrUpdateBatch(batch);
+			return true;
+		}		
+		return false;
 	}
 
+	public boolean isBatchExist(Batch batch){
+		BatchData batchData = new BatchData();
+		boolean status = batchData.isBatchExist(batch.getRegId(), batch.getBatch());
+		return status;
+	}
 	
+	public boolean deleteBatch(Batch batch){
+		boolean status = false;
+		DeleteBatch deleteBatch = new DeleteBatch();
+		com.classapp.db.batch.Batch batchDbLayer =new com.classapp.db.batch.Batch();
+		try {
+			BeanUtils.copyProperties(batchDbLayer, batch);
+			status = deleteBatch.deletebatch(batchDbLayer);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			status = false;
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+			status = false;
+		}
+		
+		return status;
+	}
 
 }

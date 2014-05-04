@@ -190,26 +190,73 @@
 </div>	
 </div>
 
-<div class="modal fade" id="addSubjectModal">
-    <div class="modal-content">
+
+<div class="modal fade" id="addSubjectModal" data-backdrop="static">
+  <div class="modal-dialog">
+      <div class="modal-content">
  		<div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
           <h4 class="modal-title" id="">Add Subject</h4>
         </div>
         <div class="modal-body" id="">
-          	<div id="addMessage"></div>
-          	<div class="error"></div>
-          	<label for="subjectname">
-          		Enter Subject Name
- 			</label>
-          	<input type="text" id="subjectname" data-provide="typeahead" class="form-control"/>
-          	<input type="hidden" id="task"/>
-        </div>
+        	<div class="error alert alert-danger"></div>
+			<div class="form-group">
+				<input type="text" class="form-control" id="subjectName"/>
+				<br>
+				<div id="classTimming" class="hide">
+				<div class="container-fluid">
+  				<div class="row">
+  					
+					<div class="col-sm-6">
+					<label for="">Start Time</label>
+					<div class='input-group date' id='fromDate' data-date-format="hh:mm A" style="width: 150px;">
+						<input type='text' class="form-control"/> <span
+							class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span> </span>
+					</div>
+					</div>
+					
+					<div class="col-sm-6">
+					<label for="">End Time</label>
+					<div class='input-group date' id='toDate' data-date-format="hh:mm A" style="width: 150px;">
+						<input type='text' class="form-control"/> <span
+							class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span> </span>
+					</div>
+					</div>
+				</div>
+				</div>
+				</div>
+			</div>				
+			</div>
       	<div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-	        <button type="button" class="btn btn-primary" >Add</button>
+	        <div class="progress progress-striped active hide">
+					<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="45"
+						aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+						Processing your request Please wait
+					</div>
+			</div>
+	        <div class="add">
+	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Cancel</button>
+	        <button type="button" class="btn btn-primary btn-add" id="btn-add">Add</button>
+	        </div>
+	        <div class="setTimming hide">
+	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Not Now</button>
+	        <button type="button" class="btn btn-primary btn-setTimming" id="btn-setTimming">Done</button>
+	        </div>
       	</div>
     </div>
 </div>	
+</div>
+
+<div class="modal fade" data-backdrop="static" id="progressModal" style="padding-top: 20%">
+    <div class="modal-dialog">
+		<div class="progress progress-striped active">
+			<div class="progress-bar progress-bar-success" role="progressbar"
+				aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+				style="width: 100%">In progress please wait......</div>
+		</div>
+	</div>	
+</div>
 
 	<!-- Modal Box End -->

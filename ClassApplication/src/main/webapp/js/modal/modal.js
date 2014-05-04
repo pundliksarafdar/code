@@ -21,7 +21,7 @@ Modal.prototype.modalConfirm = function(heading, question, cancelButtonTxt, okBu
             '<a href="#" class="btn btn-default" data-dismiss="modal">' + 
               cancelButtonTxt + 
             '</a>' +
-            '<a href="#" id="okButton" class="btn btn-primary">' + 
+            '<a href="#" id="okButton" class="btn btn-primary" data-dismiss="modal">' + 
               okButtonTxt + 
             '</a>' +
           '</div>' +

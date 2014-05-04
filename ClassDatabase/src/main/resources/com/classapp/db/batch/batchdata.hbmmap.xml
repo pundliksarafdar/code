@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="com.classapp.db.batch.Batch" table="batch_db" catalog="CLASSDB">
+        <id name="batch" type="string">
+            <column name="BATCH_NAME" length="20" not-null="true" unique="false"/>
+        </id>
+        <property name="regId" type="java.lang.Integer">
+            <column name="REG_ID" length="10" not-null="true" unique="false" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="com.classapp.db.subject.Subjects" table="SUBJECT_DB" catalog="CLASSDB">
+        <id name="subjectCode" type="java.lang.Integer">
+            <column name="SUBJECT_CODE" />
+            <generator class="identity" />
+        </id>
+        <property name="subjectName" type="string">
+            <column name="SUBJECT_NAME" length="20" not-null="true" unique="false" />
+        </property>
+        <property name="regId" type="java.lang.Integer">
+            <column name="REG_ID" length="20" not-null="true" unique="false" />
+        </property>
+     </class>
+</hibernate-mapping>
