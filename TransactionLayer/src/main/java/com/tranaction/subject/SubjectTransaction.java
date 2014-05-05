@@ -1,7 +1,10 @@
 package com.tranaction.subject;
 
+import java.util.List;
+
 import com.classapp.db.subject.AddSubject;
 import com.classapp.db.subject.GetSubject;
+import com.classapp.db.subject.Subjects;
 import com.datalayer.subject.Subject;
 
 public class SubjectTransaction {
@@ -17,4 +20,9 @@ public class SubjectTransaction {
 		return status;
 	}
 	
+	public List<Subject> getAllSubjects(int regId){
+		GetSubject getSubject = new GetSubject();
+		List<Subject> allSubject = getSubject.getSubjects(regId);
+		return allSubject;
+	}
 }

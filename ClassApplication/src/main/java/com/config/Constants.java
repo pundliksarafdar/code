@@ -34,4 +34,5 @@ public class Constants {
 	public static String ACCESSBLOCKED = "accessblocked";
 	
 	public static String BATCH_LIST = "batchList";
+	public static String SUBJECT_LIST = "subjectList";
 }

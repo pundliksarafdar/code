@@ -2,6 +2,8 @@ package com.classapp.db.subject;
 
 import java.util.List;
 
+import com.datalayer.subject.Subject;
+
 public class SubjectTest {
 
 	public static void main(String[] args) {
@@ -12,7 +14,7 @@ public class SubjectTest {
 			addSubject.addSubject(subject);
 			*/
 		GetSubject getSubject = new GetSubject();
-		List<Subjects> subjects = getSubject.getSubjects(34); 
+		List<Subject> subjects = getSubject.getSubjects(34); 
 		for(int i=0;i<subjects.size();i++){
 			System.out.println(subjects.get(i).getSubjectName());
 		}

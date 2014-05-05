@@ -1,3 +1,5 @@
+<%@page import="com.datalayer.subject.Subject"%>
+<%@page import="com.classapp.db.subject.Subjects"%>
 <%@page import="com.datalayer.batch.BatchDataClass"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
@@ -23,7 +25,7 @@
 	});
 </script>
 <div>
-	<span class="btn btn-info pull-right addsubject2batch" data-toggle="popover" title="Drag and drop subject to respective batch"><i class="glyphicon glyphicon-plus"></i>Subjects</span>
+	<span class="btn btn-info pull-right addsubject2batch" data-toggle="popover" title="Drag and drop subject to respective batch"><i class="glyphicon glyphicon-plus"></i>&nbsp;Subjects</span>
 </div>
 <div class="btn-group btn-group-sm">
   <button type="button" class="btn btn-info" data-target="#addBatchModal"  data-toggle="modal">Add Batch</button>
@@ -70,9 +72,16 @@
 
 <div class="hide">
 	<div id="allSubject">
-		Not implemented only for demo
-	<input type="button" value="Maths"/>
-	<br/>
-	<input type="button" value="Chemestry"/>
+	<%List<Subject> allSubjects = (List<Subject>)request.getAttribute(Constants.SUBJECT_LIST);
+		if(null!=allSubjects){
+			Iterator iteratorSubject = allSubjects.iterator();
+		while(iteratorSubject.hasNext()){
+			Subject subject = (Subject)iteratorSubject.next();
+		%>
+			<span class="btn btn-info" style="width: 100%;margin: 2px;"><%=subject.getSubjectName() %></span>
+		<%}	  
+		}
+	%>
+	
 	</div>
 </div>
