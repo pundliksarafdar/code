@@ -4,9 +4,13 @@
  
 <hibernate-mapping>
     <class name="com.classapp.db.batch.Batch" table="batch_db" catalog="CLASSDB">
-        <id name="batch" type="string">
-            <column name="BATCH_NAME" length="20" not-null="true" unique="false"/>
+        <id name="batchCode" type="java.lang.Integer">
+            <column name="BATCH_CODE" />
+            <generator class="identity" />
         </id>
+        <property name="batch" type="string">
+            <column name="BATCH_NAME" length="20" not-null="true" unique="false"/>
+        </property>
         <property name="regId" type="java.lang.Integer">
             <column name="REG_ID" length="10" not-null="true" unique="false" />
         </property>
