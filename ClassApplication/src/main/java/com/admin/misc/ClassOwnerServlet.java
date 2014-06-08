@@ -38,7 +38,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			try{
 				regId = Integer.parseInt(req.getParameter("regId"));
 			}catch(Exception e){
-				
+				e.printStackTrace();	
 			}
 			UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 			if(0 == userBean.getRole() || !"".equals(regId)){
@@ -64,7 +64,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			try{
 				regId = Integer.parseInt(req.getParameter("regId"));
 			}catch(Exception e){
-				
+				e.printStackTrace();
 			}
 			UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 			if(0 == userBean.getRole() || !"".equals(regId)){
@@ -91,7 +91,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			try{
 				regId = Integer.parseInt(req.getParameter("regId"));
 			}catch(Exception e){
-				
+				e.printStackTrace();
 			}
 			UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 			if(0 == userBean.getRole() || !"".equals(regId)){

@@ -1,3 +1,7 @@
+<%@page import="com.datalayer.batch.BatchDataClass"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="com.config.Constants"%>
+<%@page import="java.util.List"%>
 <style>
 
 </style>
@@ -259,4 +263,62 @@
 	</div>	
 </div>
 
+<div class="modal fade" id="addSubjectToBatchModal" data-backdrop="static">
+  <div class="modal-dialog">
+      <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="">Add Subject</h4>
+          Click on the batch to add subject to  
+        </div>
+        <div class="modal-body" id="">
+         <div class="panel-group" id="accordion">
+				
+		  <%List list = (List)request.getAttribute(Constants.BATCH_LIST); 
+		  int i = 0;
+		  if(null != list){
+			  Iterator iteratorList = list.iterator();
+			  while(iteratorList.hasNext()){
+			  BatchDataClass batchDataClass = (BatchDataClass)iteratorList.next();
+		  %>
+				<!-- <div class="batchData">
+					<button type="button" class="btn btn-danger" data-toggle="collapse"
+						data-target=".timingAndTeacher<%=i %>"><%=batchDataClass.getBatchName()%></button>
+					<input type="hidden" id=""
+						value="'<%=batchDataClass.getBatchCode()%>'" />
+					<div class="timingAndTeacher<%=i %> collapse">Collapsible</div>
+				</div>
+				-->
+				<div class="panel panel-default">
+				<div class="panel-heading">
+							<h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion"
+									href="#batchTime<%=i%>"><%=batchDataClass.getBatchName()%></a>
+							</h4>
+						</div>
+						<div id="batchTime<%=i%>" class="panel-collapse collapse">
+							<div class="panel-body">
+								<input type="hidden" id="batchCode" value="'<%=batchDataClass.getBatchCode()%>'" />
+								<div class="pull-left">
+								<p class="text-warning">Click on add button to add the subject to batch</p>
+								</div>
+								<div class="pull-right">
+								<button type="button" class="btn btn-info" onclick="javascript:addSub2batchDB(this);">Add</button>
+								</div>
+							</div>
+						</div>
+						</div>
+				<%
+				i++;
+			  }} %>
+				
+				</div>
+			
+		</div>
+    </div>
+</div>	
+</div>
+
 	<!-- Modal Box End -->
+
+	

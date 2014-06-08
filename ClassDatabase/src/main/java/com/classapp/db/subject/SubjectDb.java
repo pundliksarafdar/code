@@ -1,16 +1,12 @@
 package com.classapp.db.subject;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.classapp.db.batch.Batch;
-import com.classapp.db.user.UserBean;
 import com.classapp.persistence.HibernateUtil;
-import com.google.gson.Gson;
 
 public class SubjectDb {
 

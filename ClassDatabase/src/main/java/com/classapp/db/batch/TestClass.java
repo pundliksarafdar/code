@@ -1,10 +1,10 @@
 package com.classapp.db.batch;
 
-public class testClass {
+public class TestClass {
 
-	/**
-	 * @param args
-	 */
+	private TestClass() {
+		
+	}
 	public static void main(String[] args) {
 		Batch batch = new Batch();
 		batch.setBatch("batchName");

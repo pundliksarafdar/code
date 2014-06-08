@@ -25,7 +25,7 @@
 	});
 </script>
 <div>
-	<span class="btn btn-info pull-right addsubject2batch" data-toggle="popover" title="Drag and drop subject to respective batch"><i class="glyphicon glyphicon-plus"></i>&nbsp;Subjects</span>
+	<span class="btn btn-info pull-right addsubject2batch" data-toggle="popover" title="Select menu to add, remove, rename subjects"><i class="glyphicon glyphicon-plus"></i>&nbsp;Subjects</span>
 </div>
 <div class="btn-group btn-group-sm">
   <button type="button" class="btn btn-info" data-target="#addBatchModal"  data-toggle="modal">Add Batch</button>
@@ -48,18 +48,16 @@
     <div class="panel-heading">
       <h4 class="panel-title">
         <i class="glyphicon glyphicon-trash" title="Delete Batch" onclick="deleteBatch('<%= batchDataClass.getBatchName()%>')"></i>&nbsp;
+        <i class="glyphicon glyphicon-edit" title="Rename Batch" onclick="javascript:editBatch()"></i>&nbsp;
         <a class="batchName" data-toggle="collapse" data-parent="#accordion" href="#batchItem<%=i %>">
           <%= batchDataClass.getBatchName()%>
-        </a>
+        </a>        
       <span class="badge pull-right"><%=batchDataClass.getCandidatesInBatch() %></span>
       </h4>
     </div>
     <div id="batchItem<%=i %>" class="panel-collapse collapse">
       <div class="popoverContainer<%=batchDataClass.getCandidatesInBatch() %>"></div>
       <div class="panel-body">
-      			<button type="button" class="btn btn-default" data-container="body" popovername="'<%=batchDataClass.getBatchName()%>'"
-					data-toggle="popover" data-placement="right">
-					Popover on right</button>
 	  </div>
     </div>
   </div>
@@ -72,16 +70,30 @@
 
 <div class="hide">
 	<div id="allSubject">
+	
 	<%List<Subject> allSubjects = (List<Subject>)request.getAttribute(Constants.SUBJECT_LIST);
 		if(null!=allSubjects){
 			Iterator iteratorSubject = allSubjects.iterator();
 		while(iteratorSubject.hasNext()){
 			Subject subject = (Subject)iteratorSubject.next();
 		%>
-			<span class="btn btn-info" style="width: 100%;margin: 2px;"><%=subject.getSubjectName() %></span>
-		<%}	  
-		}
-	%>
-	
+		<div class="btn-group" style="padding: 2px; width: 100%"> 
+		<button type="button" class="btn btn-info btn-xs" style="width: 80%"><%=subject.getSubjectName()%></button>
+		<button type="button" class="btn btn-info dropdown-toggle btn-xs"
+			data-toggle="dropdown" style="height: 22px;">
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="javascript:addSubject2Batch(<%= subject.getSubjectCode()%>);">Add to Batch</a></li>
+			<li><a href="#">Rename</a></li>
+			<li class="divider"></li>
+			<li><a href="#">Remove</a></li>
+		</ul>
+		</div>
+		<br>
+		<%
+			}
+			}
+		%>
 	</div>
 </div>

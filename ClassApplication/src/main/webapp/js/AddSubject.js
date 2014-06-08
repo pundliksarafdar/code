@@ -158,7 +158,47 @@ function successCallbackBatchTimming(e){
 
 
 /****************function called by AddSubject.jsp********************/
+function BatchSubjectData(){
+	this.batchCode = 0;
+	this.subjectCode = 0;
+}
+
+var batchSubjectData = new BatchSubjectData();
 
 function removeClass(){
 	modal.modalConfirm("Delete", "Do you want to delete batch", "No", "Delete", deleteBatch, "Deleted");
+}
+
+function addSubject2Batch(subjectCode){
+	$('#addSubjectToBatchModal').modal('show');
+	batchSubjectData.subjectCode = subjectCode; 
+}
+
+function batchClick(batchCode){
+	batchSubjectData.batchCode = batchCode;
+	//alert(JSON.stringify(batchSubjectData));
+	$("#addSubjectToBatchModal .btn-info").text("Loading....");
+	$("#addSubjectToBatchModal .btn-info").removeAttr('onclick');
+	addSubToBatch(batchSubjectData);
+}
+
+function editBatch(){
+	$('#addSubjectToBatchModal').modal('show');
+}
+
+function addSub2batchDB(that){
+	batchClick($(that).parents('.panel-body').find('#batchCode').val());
+}
+
+function addSubToBatch(batchData){
+	$.ajax({
+		url:"http://www.google.com",
+		sucess:function(s){
+			alert(batchData);
+		},
+		error:function(e){
+			alert(e);
+		}
+	});
+	
 }

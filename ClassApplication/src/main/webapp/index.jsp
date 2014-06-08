@@ -11,7 +11,7 @@
 	</s:if>
 	  <s:textfield name="loginBean.loginname" label="Login name" />
  	  <s:password  name="loginBean.loginpass" label="Password" />
-	  <s:submit value="Login"></s:submit>
+	  <s:submit value="Login" ></s:submit>
 </s:form>
 	<a href="register">Register</a>
 </body>

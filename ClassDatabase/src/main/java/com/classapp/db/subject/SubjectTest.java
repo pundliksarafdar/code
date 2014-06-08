@@ -6,6 +6,10 @@ import com.datalayer.subject.Subject;
 
 public class SubjectTest {
 
+	private SubjectTest(){
+		
+	}
+	
 	public static void main(String[] args) {
 			/*AddSubject addSubject = new AddSubject();
 			Subject subject = new Subject();

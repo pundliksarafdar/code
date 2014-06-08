@@ -7,12 +7,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.classapp.persistence.Constants;
 import com.classapp.persistence.HibernateUtil;
 import com.datalayer.batch.BatchDataClass;
-import com.datalayer.batch.Timmings;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class BatchDB {
@@ -40,7 +37,6 @@ public class BatchDB {
 	}
 	
 	public List<BatchDataClass> getBatchData(Integer regId){
-		String status = "";
 		Session session = null;
 		Transaction transaction = null;
 		List<Batch> batchList = null;
@@ -67,6 +63,7 @@ public class BatchDB {
 			for(int i=0;i<batchList.size();i++){
 				batchDataClass = new BatchDataClass();
 				batchDataClass.setBatchName(batchList.get(i).getBatch());
+				batchDataClass.setBatchCode(batchList.get(i).getBatchCode());
 				batchDataClass.setCandidatesInBatch(10);
 				batchDataClasses.add(batchDataClass);
 			}
@@ -75,7 +72,6 @@ public class BatchDB {
 	}
 
 	public JsonArray getBatch(Integer regId){
-		String status = "";
 		Session session = null;
 		Transaction transaction = null;
 		List<Batch> batchList = null;

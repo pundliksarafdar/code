@@ -21,7 +21,7 @@ public class AddSubject {
 		boolean status = false;
 		SubjectDb subjectDb = new SubjectDb();
 		String statusCode = subjectDb.updateDb(subjects);
-		if(!statusCode.equals("0")){
+		if(!"0".equals(statusCode)){
 			status = false;
 		}else{
 			status = true;

@@ -13,6 +13,6 @@ function login(){
 </script>
 </head>
 <body>
-	<input type="button" onclick="javascript:login()" value="Login"/>
+	<input type="submit" onclick="javascript:login()" value="Login" autofocus/>
 </body>
 </html>

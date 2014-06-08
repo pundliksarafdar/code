@@ -10,11 +10,7 @@ import com.classapp.db.batch.AddBatch;
 import com.classapp.db.batch.BatchDB;
 import com.classapp.db.batch.BatchData;
 import com.classapp.db.batch.DeleteBatch;
-import com.classapp.db.user.UserBean;
 import com.datalayer.batch.Batch;
-import com.datalayer.batch.BatchDataClass;
-import com.datalayer.batch.SubjectList;
-import com.datalayer.batch.Timmings;
 
 public class BatchTransactions {
 	public List getAllBatchClass(){
@@ -51,14 +47,13 @@ public class BatchTransactions {
 		list.add(batchDataClass);
 		return list;
 		*/
-		return null;
+		return new ArrayList();
 	}
 	
 
 	public List getBatchData(Integer regId){
 		BatchDB batchDB = new BatchDB();
-		List dataList = batchDB.getBatchData(regId);
-		return dataList;
+		return batchDB.getBatchData(regId);
 	}
 	
 	public boolean addUpdateDb(Batch batch){
@@ -81,8 +76,7 @@ public class BatchTransactions {
 
 	public boolean isBatchExist(Batch batch){
 		BatchData batchData = new BatchData();
-		boolean status = batchData.isBatchExist(batch.getRegId(), batch.getBatch());
-		return status;
+		return batchData.isBatchExist(batch.getRegId(), batch.getBatch());
 	}
 	
 	public boolean deleteBatch(Batch batch){
