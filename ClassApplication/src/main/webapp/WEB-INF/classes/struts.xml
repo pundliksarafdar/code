@@ -76,6 +76,7 @@
             <result name="success" type="tiles">classowner.addsubject</result>
             <result name="error" type="tiles">register</result>
       </action>	 	
-	  
+
+	  	  
 	  </package>
 </struts>

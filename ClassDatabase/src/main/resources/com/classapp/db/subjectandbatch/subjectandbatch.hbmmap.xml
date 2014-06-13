@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="com.classapp.db.batchandsubject.BatchAndSubject" table="batch_subject" catalog="CLASSDB">
+		
+		<id name="rowId" type="java.lang.Integer">
+			<column name="ROW_ID" />
+			<generator class="identity" />
+		</id>
+		<property name="batchCode" type="java.lang.Integer">
+            <column name="BATCH_CODE" length="20" not-null="true" unique="false" />
+        </property>
+        <property name="subjectCode" type="java.lang.Integer">
+            <column name="SUBJECT_CODE" length="20" not-null="true" unique="false" />
+        </property>
+        <property name="teacherCode" type="java.lang.Integer">
+            <column name="TEACHER_CODE" length="20" not-null="false" unique="false" />
+        </property>
+        <property name="startTime" type="java.util.Date">
+            <column name="START_TIME" length="20" not-null="false" unique="false" />
+        </property>
+        <property name="endTime" type="java.util.Date">
+            <column name="END_TIME" length="20" not-null="false" unique="false" />
+        </property>
+        <property name="regId" type="java.lang.Integer">
+            <column name="REG_ID" length="20" not-null="true" unique="false" />
+        </property>
+     </class>
+</hibernate-mapping>

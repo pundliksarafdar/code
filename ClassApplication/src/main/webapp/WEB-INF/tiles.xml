@@ -103,10 +103,14 @@
       <put-attribute name="body"   value="/General/editusersuccess.jsp"/>      
    </definition>
 
-   
    <definition name="classowner.addsubject" extends="baseLayout">
       <put-attribute name="title"  value="Add Subject"/>
       <put-attribute name="body"   value="/ClassOwner/AddSubject.jsp"/>      
+   </definition>
+
+   <definition name="classowner.addbatchsubject" extends="baseLayout">
+      <put-attribute name="title"  value="Add Subject"/>
+      <put-attribute name="body"   value="/ClassOwner/AddBatchSubject.jsp"/>      
    </definition>
    
 </tiles-definitions>
