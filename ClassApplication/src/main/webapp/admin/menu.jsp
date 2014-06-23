@@ -1,4 +1,5 @@
 <%@taglib prefix="s" uri="/struts-tags"%>
+<%@taglib prefix="c" uri="http://tiles.apache.org/tags-tiles"%>
 <%@page import="com.user.UserBean"%>
 <%@page import="com.signon.User"%>
 <%
@@ -51,5 +52,6 @@
         </ul>
       </li>
     </ul>
+    
   </div><!-- /.navbar-collapse -->
 </nav>
