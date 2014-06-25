@@ -8,6 +8,7 @@ import com.classapp.db.login.LoginCheck;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.google.gson.Gson;
+import com.tranaction.login.login;
 import com.user.UserBean;
 
 public class LoginUser extends BaseAction{
@@ -43,8 +44,8 @@ public class LoginUser extends BaseAction{
 	}
 	
 	public String loadBean(UserBean userBean,LoginBean loginBean){
-		LoginCheck loginCheck = new LoginCheck();
-		String userBeanJson = loginCheck.loadUserObject(loginBean.getLoginname(), loginBean.getLoginpass());
+		login loginCheck=new login();
+		String userBeanJson = loginCheck.loginck(loginBean.getLoginname(), loginBean.getLoginpass());
 		if(null!=userBeanJson){
 			Gson gson = new Gson();
 			userBean.setAddr1( gson.fromJson(userBeanJson, UserBean.class).getAddr1());
