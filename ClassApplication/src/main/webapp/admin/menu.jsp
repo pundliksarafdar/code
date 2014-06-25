@@ -76,7 +76,7 @@
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=userBean.getFirstname() %> <b class="caret"></b></a>
         <ul class="dropdown-menu">
-          <li><a href="#">Edit</a></li>
+          <li><a href="#edit">Edit</a></li>
           <li><a href="logout">Logout</a></li>
         </ul>
       </li>
