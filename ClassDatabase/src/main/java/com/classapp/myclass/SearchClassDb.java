@@ -11,6 +11,9 @@ import com.classapp.servicetable.ServiceMap;
 
 public class SearchClassDb {
 	static final String CNAME = "cname";
+	static final String CITY = "city1";
+	static final String STATE = "state1";
+	static final String BLANK="";
 	public List searchClassData(ClassSearchForm classSearchForm){
 		int startPage = 0;
 		if(null != classSearchForm.getCurrentPage()){
@@ -20,11 +23,23 @@ public class SearchClassDb {
 		String queryStr = formQuery(classSearchForm);
 		Session session = HibernateUtil.getSessionfactory().openSession();
 		Query query = session.createQuery(queryStr);
+	
 		
 		if(queryStr.contains(CNAME)){
 			query.setParameter(CNAME,classSearchForm.getCname()+"%");
 		}
-		
+		if(!"".equals(classSearchForm.getCcity()))
+		{
+			query.setParameter("city1",classSearchForm.getCcity()+"%");
+		}else{
+			query.setParameter("city1",BLANK+"%");
+		}
+		if(!"".equals(classSearchForm.getCstate()))
+		{
+			query.setParameter("state1", classSearchForm.getCstate()+"%");
+		}else{
+			query.setParameter("state1",BLANK+"%");
+		}
 		if(0 != startPage || 0 != resultPerPage){
 			query.setFirstResult(startPage*resultPerPage);
 			query.setMaxResults(resultPerPage);
@@ -38,38 +53,7 @@ public class SearchClassDb {
 	
 	private String formQuery(ClassSearchForm classSearchForm){
 		String query = "from RegisterBean "; 
-		boolean isParameter = false;
-		if (null != classSearchForm.getCname() && !"".equals(classSearchForm.getCname())) {
-			if(!isParameter){
-				query += "where className like :cname ";
-			}else{
-				query += "and className like :cname ";
-			}
-			isParameter = true;
-		}
-		/*
-		if (null != classSearchForm.getCexactdate() && !"".equals(classSearchForm.getCexactdate())) {
-			if(!isParameter)
-				query += "where className like %:cname% ";
-			else
-				query += "and className = :cname ";
-			isParameter = true;
-				
-		}
-
-		/*
-		if (null != classSearchForm.getCname() && "".equals(classSearchForm.getCname())) {
-			
-		}
-
-		if (null != classSearchForm.getCname() && "".equals(classSearchForm.getCname())) {
-			
-		}
-
-		if (null != classSearchForm.getCname() && "".equals(classSearchForm.getCname())) {
-			
-		}
-		*/
+				query += "where className like :cname and  city like :city1 and state like :state1";
 		return query;
 		
 	}
@@ -83,6 +67,18 @@ public class SearchClassDb {
 		
 		if(queryStr.contains(CNAME)){
 			query.setParameter(CNAME,classSearchForm.getCname()+"%");
+		}
+		if(!"".equals(classSearchForm.getCcity()))
+		{
+			query.setParameter("city1",classSearchForm.getCcity()+"%");
+		}else{
+			query.setParameter("city1",BLANK+"%");
+		}
+		if(!"".equals(classSearchForm.getCstate()))
+		{
+			query.setParameter("state1", classSearchForm.getCstate()+"%");
+		}else{
+			query.setParameter("state1",BLANK+"%");
 		}
 		int totalResult = query.list().size();
 		count = totalResult/resultPerPage;
