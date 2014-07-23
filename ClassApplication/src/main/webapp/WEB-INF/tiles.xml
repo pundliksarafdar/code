@@ -113,4 +113,14 @@
       <put-attribute name="body"   value="/ClassOwner/AddBatchSubject.jsp"/>      
    </definition>
    
+    <definition name="timetable.TimetableOption" extends="baseLayout">
+      <put-attribute name="title"  value="Time Table"/>
+      <put-attribute name="body"   value="/Timetable/TimetableOption.jsp"/>      
+   </definition>
+   
+   <definition name="timetable.CreateTimeTable" extends="baseLayout">
+      <put-attribute name="title"  value="Time Table"/>
+      <put-attribute name="body"   value="/Timetable/CreateTimeTable.jsp"/>      
+   </definition>
+   
 </tiles-definitions>

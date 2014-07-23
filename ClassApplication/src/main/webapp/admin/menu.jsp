@@ -1,11 +1,9 @@
 <%@taglib prefix="s" uri="/struts-tags"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <%@page import="com.user.UserBean"%>
 <%@page import="com.signon.User"%>
 <%
 	UserBean userBean = (UserBean)session.getAttribute("user"); 	
 %>
-<c:set value='${sessionScope["user"]}' var="userBean"></c:set>
 <nav class="navbar navbar-default" role="navigation" style="margin-top: -20px; margin-bottom: -40px">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
@@ -17,11 +15,10 @@
     </button>
     <a class="navbar-brand" href="login">CoreX</a>
   </div>
-  
+
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
-    <!-- 
     <%if(userBean.getRole() == 0 || userBean.getRole() == 10) {%>
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
@@ -36,51 +33,23 @@
       		<ul class="dropdown-menu">
 	            <li><a href="login">Class Owner</a></li>
 	            <li><a href="addsubject">Add Subject</a></li>
-	            <li><a href="#">Time Table</a></li>
+	            <li><a href="timetable">Time Table</a></li>
           	</ul>
       </li>
     <%}if(userBean.getRole() < 3 || userBean.getRole() == 10){ %>  
       <li><a href="#">Class Teacher</a></li>  
     <%}if(userBean.getRole() == 3 || userBean.getRole() == 0 || userBean.getRole() == 10){ %>  
       <li><a href="#">Students</a></li>
-    <%}%>  
-     -->    
-    
-    <c:if test="${0 eq userBean.role or 10 eq userBean.role}">
-  		<li>
-      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
-      		<ul class="dropdown-menu">
-	            <li><a href="login">Admin</a></li>
-	            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#ajax-modal">Class List</a></li>
-          	</ul>
-      </li>
-  	</c:if>
-  	<c:if test="${userBean.role < 2 or userBean.role ==10 }">
-  		<li>
-      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Class Owner <b class="caret"></b></a>
-      		<ul class="dropdown-menu">
-	            <li><a href="login">Class Owner</a></li>
-	            <li><a href="addsubject">Add Subject</a></li>
-	            <li><a href="#">Time Table</a></li>
-          	</ul>
-      	</li>
-  	</c:if>
-  	<c:if test="${userBean.role < 3 or userBean.role == 10 }">
-  		<li><a href="#">Class Teacher</a></li>
-  	</c:if>
-  	<c:if test="${userBean.role == 3 or userBean.role == 10 }">
-  		<li><a href="#">Students</a></li>
-  	</c:if>
+    <%}%>      
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=userBean.getFirstname() %> <b class="caret"></b></a>
         <ul class="dropdown-menu">
-          <li><a href="#edit">Edit</a></li>
+          <li><a href="edit">Edit</a></li>
           <li><a href="logout">Logout</a></li>
         </ul>
       </li>
     </ul>
-    
   </div><!-- /.navbar-collapse -->
 </nav>
