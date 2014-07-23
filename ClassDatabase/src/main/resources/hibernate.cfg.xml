@@ -9,7 +9,7 @@
         <!-- Uncomment for openshiftdeployment  -->
         <property name="hibernate.connection.username">admin7wiv5Ys</property>
         <property name="hibernate.connection.password">ReVSpsgcVdXl</property>
-        <property name="hibernate.connection.url">jdbc:mysql://127.6.14.2:3306/CLASSDB</property>
+        <property name="hibernate.connection.url">jdbc:mysql://127.6.14.2:3306/classdb</property>
         <!-- comment for openshiftdeployment  -->
         <!-- 
         <property name="hibernate.connection.username">root</property>
