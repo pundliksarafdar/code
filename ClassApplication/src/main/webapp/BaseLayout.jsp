@@ -12,6 +12,7 @@
  <link href="css/bootstrap-responsive.css" rel="stylesheet">
  <link href="css/admin.css" rel="stylesheet">
  <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+ <link href="css/jquery.autocomplete.css" rel="stylesheet">
  <style>
 .text-center {
 	text-align: center;
@@ -70,6 +71,7 @@ html,body {
 <script src="js/modal/modal.js"></script>
 <script src="js/moment.min.js"></script>
 <script src="js/bootstrap-datetimepicker.min.js"></script>
+<script src="js/jquery.autocomplete.js"></script>
 </head>
 <body>
 <jsp:include page="allmodals.jsp"></jsp:include>

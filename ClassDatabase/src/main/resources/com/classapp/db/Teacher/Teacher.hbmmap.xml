@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="com.classapp.db.Teacher.Teacher" table="appl_classes" catalog="CLASSDB">
+		
+		<composite-id>
+		<key-property name="user_id" column="user_id"></key-property>
+		<key-property name="class_id" column="class_id"></key-property>
+		</composite-id>
+		<property name="sub_ids" type="string">
+            <column name="sub_ids" length="100" not-null="false" unique="false" />
+        </property>  
+     </class>
+</hibernate-mapping>

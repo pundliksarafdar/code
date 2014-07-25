@@ -144,6 +144,24 @@ var allAjax = {
 			   }
 		});
 	},
+	addTeacher :function(regId,subjects,teacherID,successCallback,errorCallback){
+		$.ajax({
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "addTeacher",
+					 regId:regId,
+					 teacherID:teacherID,
+					 subjects:subjects
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   successCallback(e);
+			   	},
+			   error:function(e){
+				   errorCallback(e);
+			   }
+		});
+	},
 	deleteBatch:function(regId,batchName,successCallback,errorCallback){
 		$.ajax({
 			   url: "classOwnerServlet",

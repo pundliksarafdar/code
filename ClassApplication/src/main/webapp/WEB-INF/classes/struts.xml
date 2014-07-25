@@ -77,6 +77,16 @@
             <result name="error" type="tiles">register</result>
       </action>	 	
 
-	  	  
+	  	  <action name="timetable" 
+            class="com.timetable.TimeTableAction" 
+            method="execute">
+            <result name="success" type="tiles">timetable.TimetableOption</result>
+      </action>
+      <action name="createtimetable" 
+            class="com.timetable.CreateTimeTableAction" 
+            method="execute">
+            <result name="success" type="tiles">timetable.CreateTimeTable</result>
+      </action>
+      
 	  </package>
 </struts>
