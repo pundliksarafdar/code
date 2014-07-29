@@ -1,10 +1,10 @@
+<%@page import="com.classapp.db.subject.Subjects"%>
+<%@page import="com.classapp.db.subject.ClassSubjects"%>
+<%@page import="com.datalayer.subject.Subject"%>
 <%@page import="com.datalayer.batch.BatchDataClass"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="com.config.Constants"%>
 <%@page import="java.util.List"%>
-<style>
-
-</style>
 
 	<!-- Search Modal  start-->
 <div class="modal fade" id="ajax-modal">
@@ -202,10 +202,13 @@
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
           <h4 class="modal-title" id="">Add Subject</h4>
         </div>
-        <div class="modal-body" id="">
+        <div class="modal-body" id="abc">
         	<div class="error alert alert-danger"></div>
-			<div class="form-group">
-				<input type="text" class="form-control" id="subjectName"/>
+			<div class="form-group" id="abc1">
+				<input type="text"  id="subjectName" name="subjectName"/>
+				<script>
+				$("#subjectName").autocomplete("AutoComplete.jsp");
+				</script>
 				<br>
 				<div id="classTimming" class="hide">
 				<div class="container-fluid">
@@ -263,7 +266,7 @@
 	</div>	
 </div>
 
-<div class="modal fade" id="addSubjectToBatchModal" data-backdrop="static">
+<%-- <div class="modal fade" id="addSubjectToBatchModal" data-backdrop="static">
   <div class="modal-dialog">
       <div class="modal-content">
  		<div class="modal-header">
@@ -317,8 +320,77 @@
 		</div>
     </div>
 </div>	
+</div> --%>
+
+
+
+<div class="modal fade" id="addTeacherModal" data-backdrop="static" style="display:none;" >
+  <div class="modal-dialog">
+      <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="">Enter Teacher ID</h4>
+        </div>
+        <div class="modal-body" id="">
+        	<div class="error alert alert-danger"></div>
+			<div class="form-group" id="">
+				<input type="text"  id="teacherID" name="teacherID"/>
+				
+				<br>
+				<%
+				List<Subjects> str=(List<Subjects>)request.getAttribute("subjectList");
+				if(str!= null)
+				{
+				if(str.size()>0){
+					int j=0;
+					for(j=0;j<str.size();j++){
+				%>
+				<input type="checkbox" name="subjectsname" value="<%=str.get(j).getSubjectCode()%>" class="chk"><%=str.get(j).getSubjectName() %>
+				<%}}} %>
+				<div id="classTimming" class="hide">
+				<div class="container-fluid">
+  				<div class="row">
+  					
+					<div class="col-sm-6">
+					<label for="">Start Time</label>
+					<div class='input-group date' id='fromDate' data-date-format="hh:mm A" style="width: 150px;">
+						<input type='text' class="form-control"/> <span
+							class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span> </span>
+					</div>
+					</div>
+					
+					<div class="col-sm-6">
+					<label for="">End Time</label>
+					<div class='input-group date' id='toDate' data-date-format="hh:mm A" style="width: 150px;">
+						<input type='text' class="form-control"/> <span
+							class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span> </span>
+					</div>
+					</div>
+				</div>
+				</div>
+				</div>
+			</div>				
+			</div>
+      	<div class="modal-footer">
+	        <div class="progress progress-striped active hide">
+					<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="45"
+						aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+						Processing your request Please wait
+					</div>
+			</div>
+	        <div class="add">
+	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Cancel</button>
+	        <button type="button" class="btn btn-primary btn-add" id="btn-add">Add</button>
+	        </div>
+	        <div class="setTimming hide">
+	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Not Now</button>
+	        <button type="button" class="btn btn-primary btn-setTimming" id="btn-setTimming">Done</button>
+	        </div>
+      	</div>
+    </div>
+</div>	
 </div>
 
 	<!-- Modal Box End -->
-
-	

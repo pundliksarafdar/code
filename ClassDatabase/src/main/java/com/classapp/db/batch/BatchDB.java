@@ -36,7 +36,7 @@ public class BatchDB {
 		return status;
 	}
 	
-	public List<BatchDataClass> getBatchData(Integer regId){
+	public List<BatchDataClass> getBatchData(int batch_id){
 		Session session = null;
 		Transaction transaction = null;
 		List<Batch> batchList = null;
@@ -45,8 +45,8 @@ public class BatchDB {
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("from Batch where regId =:regId");
-			query.setParameter("regId", regId);
+			Query query = session.createQuery("from Batch where batch_id =:batch_id");
+			query.setParameter("batch_id", batch_id);
 			batchList = query.list();
 			
 		}catch(Exception e){
@@ -62,8 +62,8 @@ public class BatchDB {
 		if(null!=batchList){
 			for(int i=0;i<batchList.size();i++){
 				batchDataClass = new BatchDataClass();
-				batchDataClass.setBatchName(batchList.get(i).getBatch());
-				batchDataClass.setBatchCode(batchList.get(i).getBatchCode());
+				batchDataClass.setBatchName(batchList.get(i).getBatch_name());
+				batchDataClass.setBatchId(batchList.get(i).getBatch_id());
 				batchDataClass.setCandidatesInBatch(10);
 				batchDataClasses.add(batchDataClass);
 			}
@@ -83,7 +83,7 @@ public class BatchDB {
 			Query query = session.createQuery("from Batch where regId =:regId");
 			query.setParameter("regId", regId);
 			batchList = query.list();
-			batch = ((Batch)batchList.get(0)).getBatch();
+			batch = ((Batch)batchList.get(0)).getBatch_name();
 			JsonParser jsonParser = new JsonParser();
 			jsonArray = jsonParser.parse(batch).getAsJsonArray();
 		}catch(Exception e){
@@ -122,6 +122,52 @@ public class BatchDB {
 			}
 		}
 		return status;
+	}
+	
+	public List getAllBatches(int regID) {
+		
+		Session session = null;
+		Transaction transaction = null;
+		List batchList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from Batch where class_id =:regId");
+			query.setParameter("regId", regID);
+			batchList = query.list();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}
+		return batchList;
+	}
+	
+public List getBatchSubjects(String batchID) {
+		
+		Session session = null;
+		Transaction transaction = null;
+		List batchList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("select sub_id from Batch where batch_id =:batchID");
+			query.setParameter("batchID", Integer.parseInt(batchID));
+			batchList = query.list();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}
+		return batchList;
 	}
 	
 }

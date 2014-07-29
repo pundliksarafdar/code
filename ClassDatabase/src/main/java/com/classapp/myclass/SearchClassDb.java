@@ -25,20 +25,23 @@ public class SearchClassDb {
 		Query query = session.createQuery(queryStr);
 	
 		
-		if(queryStr.contains(CNAME)){
+		if(!"".equals(classSearchForm.getCname())){
 			query.setParameter(CNAME,classSearchForm.getCname()+"%");
+		}else
+		{
+			query.setParameter(CNAME, BLANK+"%");
 		}
 		if(!"".equals(classSearchForm.getCcity()))
 		{
-			query.setParameter("city1",classSearchForm.getCcity()+"%");
+			query.setParameter(CITY,classSearchForm.getCcity()+"%");
 		}else{
-			query.setParameter("city1",BLANK+"%");
+			query.setParameter(CITY,BLANK+"%");
 		}
 		if(!"".equals(classSearchForm.getCstate()))
 		{
-			query.setParameter("state1", classSearchForm.getCstate()+"%");
+			query.setParameter(STATE, classSearchForm.getCstate()+"%");
 		}else{
-			query.setParameter("state1",BLANK+"%");
+			query.setParameter(STATE,BLANK+"%");
 		}
 		if(0 != startPage || 0 != resultPerPage){
 			query.setFirstResult(startPage*resultPerPage);
@@ -53,7 +56,38 @@ public class SearchClassDb {
 	
 	private String formQuery(ClassSearchForm classSearchForm){
 		String query = "from RegisterBean "; 
+		boolean isParameter = false;
+		if (null != classSearchForm.getCname() && !"".equals(classSearchForm.getCname())) {
+			if(!isParameter){
 				query += "where className like :cname and  city like :city1 and state like :state1";
+			}else{
+				query += "and className like :cname and  city like :city1 and state like :state1";
+			}
+			isParameter = true;
+		}
+		/*
+		if (null != classSearchForm.getCexactdate() && !"".equals(classSearchForm.getCexactdate())) {
+			if(!isParameter)
+				query += "where className like %:cname% ";
+			else
+				query += "and className = :cname ";
+			isParameter = true;
+				
+		}
+
+		/*
+		if (null != classSearchForm.getCname() && "".equals(classSearchForm.getCname())) {
+			
+		}
+
+		if (null != classSearchForm.getCname() && "".equals(classSearchForm.getCname())) {
+			
+		}
+
+		if (null != classSearchForm.getCname() && "".equals(classSearchForm.getCname())) {
+			
+		}
+		*/
 		return query;
 		
 	}
@@ -65,20 +99,23 @@ public class SearchClassDb {
 		Session session = HibernateUtil.getSessionfactory().openSession();
 		Query query = session.createQuery(queryStr);
 		
-		if(queryStr.contains(CNAME)){
+		if(!"".equals(classSearchForm.getCname())){
 			query.setParameter(CNAME,classSearchForm.getCname()+"%");
+		}else
+		{
+			query.setParameter(CNAME, BLANK+"%");
 		}
 		if(!"".equals(classSearchForm.getCcity()))
 		{
-			query.setParameter("city1",classSearchForm.getCcity()+"%");
+			query.setParameter(CITY,classSearchForm.getCcity()+"%");
 		}else{
-			query.setParameter("city1",BLANK+"%");
+			query.setParameter(CITY,BLANK+"%");
 		}
 		if(!"".equals(classSearchForm.getCstate()))
 		{
-			query.setParameter("state1", classSearchForm.getCstate()+"%");
+			query.setParameter(STATE, classSearchForm.getCstate()+"%");
 		}else{
-			query.setParameter("state1",BLANK+"%");
+			query.setParameter(STATE,BLANK+"%");
 		}
 		int totalResult = query.list().size();
 		count = totalResult/resultPerPage;

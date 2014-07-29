@@ -3,16 +3,16 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
  
 <hibernate-mapping>
-    <class name="com.classapp.db.subject.Subjects" table="SUBJECT_DB" catalog="CLASSDB">
+    <class name="com.classapp.db.subject.Subjects" table="subject" catalog="CLASSDB">
         <id name="subjectCode" type="java.lang.Integer">
-            <column name="SUBJECT_CODE" />
-            <generator class="identity" />
+            <column name="SUB_ID" />
+            <generator class="increment" />
         </id>
         <property name="subjectName" type="string">
-            <column name="SUBJECT_NAME" length="20" not-null="true" unique="false" />
+            <column name="SUB_NAME" length="100" not-null="true" unique="false" />
         </property>
-        <property name="regId" type="java.lang.Integer">
+     <!--    <property name="regId" type="java.lang.Integer">
             <column name="REG_ID" length="20" not-null="true" unique="false" />
-        </property>
+        </property> -->
      </class>
 </hibernate-mapping>

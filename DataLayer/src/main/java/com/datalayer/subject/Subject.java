@@ -1,7 +1,7 @@
 package com.datalayer.subject;
 
 public class Subject {
-	private Integer subjectCode,regId;
+	private Integer subjectCode;
 	private String subjectName;
 	
 	public Integer getSubjectCode() {
@@ -16,12 +16,7 @@ public class Subject {
 	public void setSubjectName(String subjectName) {
 		this.subjectName = subjectName;
 	}
-	public Integer getRegId() {
-		return regId;
-	}
-	public void setRegId(Integer regId) {
-		this.regId = regId;
-	}
+
 	
 	
 }

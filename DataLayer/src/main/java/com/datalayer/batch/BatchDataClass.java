@@ -4,7 +4,7 @@ import java.util.List;
 
 public class BatchDataClass {
 	private String batchName;
-	private Integer batchCode;
+	private int batchId;
 	private String registeredOn;
 	private List<SubjectList> subjectList;
 	private int candidatesInBatch;
@@ -14,12 +14,7 @@ public class BatchDataClass {
 	public void setBatchName(String batchName) {
 		this.batchName = batchName;
 	}
-	public Integer getBatchCode() {
-		return batchCode;
-	}
-	public void setBatchCode(Integer batchCode) {
-		this.batchCode = batchCode;
-	}
+	
 	public String getRegisteredOn() {
 		return registeredOn;
 	}
@@ -37,6 +32,12 @@ public class BatchDataClass {
 	}
 	public void setCandidatesInBatch(int candidatesInBatch) {
 		this.candidatesInBatch = candidatesInBatch;
+	}
+	public Integer getBatchId() {
+		return batchId;
+	}
+	public void setBatchId(Integer batchId) {
+		this.batchId = batchId;
 	}
 	
 		

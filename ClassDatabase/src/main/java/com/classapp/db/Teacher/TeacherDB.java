@@ -86,4 +86,18 @@ public class TeacherDB {
 		}
 		return false;
 	}
+	
+	public List getSubjectTeacher(String subid) {
+		Transaction transaction=null;
+		Session session=null;
+		List<RegisterBean> list=null;
+		List<Teacher> list2=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query=session.createQuery("select user_id from Teacher where sub_ids like :sub_ids");
+		query.setParameter("sub_ids", "%,"+subid+",%");
+		list=query.list();
+		
+		return list;
+	}
 }

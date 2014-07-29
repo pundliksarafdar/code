@@ -7,8 +7,8 @@ public class TestClass {
 	}
 	public static void main(String[] args) {
 		Batch batch = new Batch();
-		batch.setBatch("batchName");
-		batch.setRegId(34);
+		//batch.setBatch("batchName");
+		//batch.setRegId(34);
 		BatchDB batchDB = new BatchDB();
 		batchDB.updateDb(batch);
 	}

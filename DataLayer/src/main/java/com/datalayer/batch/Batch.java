@@ -1,19 +1,40 @@
 package com.datalayer.batch;
 
 public class Batch {
-	private Integer regId;
-	private String batch;
-	public Integer getRegId() {
-		return regId;
+	private int batch_id;
+	private int class_id;
+	private int div_id;
+	private String batch_name;
+	private String sub_id;
+	public int getBatch_id() {
+		return batch_id;
 	}
-	public void setRegId(Integer regId) {
-		this.regId = regId;
+	public void setBatch_id(int batch_id) {
+		this.batch_id = batch_id;
 	}
-	public String getBatch() {
-		return batch;
+	public int getClass_id() {
+		return class_id;
 	}
-	public void setBatch(String batch) {
-		this.batch = batch;
+	public void setClass_id(int class_id) {
+		this.class_id = class_id;
+	}
+	public int getDiv_id() {
+		return div_id;
+	}
+	public void setDiv_id(int div_id) {
+		this.div_id = div_id;
+	}
+	public String getBatch_name() {
+		return batch_name;
+	}
+	public void setBatch_name(String batch_name) {
+		this.batch_name = batch_name;
+	}
+	public String getSub_id() {
+		return sub_id;
+	}
+	public void setSub_id(String sub_id) {
+		this.sub_id = sub_id;
 	}
 
 }

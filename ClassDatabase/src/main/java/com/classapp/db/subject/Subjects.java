@@ -1,7 +1,7 @@
 package com.classapp.db.subject;
 
 public class Subjects {
-	private Integer subjectCode,regId;
+	private Integer subjectCode;
 	private String subjectName;
 	
 	public Integer getSubjectCode() {
@@ -16,11 +16,6 @@ public class Subjects {
 	public void setSubjectName(String subjectName) {
 		this.subjectName = subjectName;
 	}
-	public Integer getRegId() {
-		return regId;
-	}
-	public void setRegId(Integer regId) {
-		this.regId = regId;
-	}
+
 	
 }

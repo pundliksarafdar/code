@@ -1,17 +1,24 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
- 
+<!-- Generated 18 Jul, 2014 11:15:40 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.classapp.db.batch.Batch" table="batchTable" catalog="CLASSDB">
-        <id name="regId" type="java.lang.Integer">
-            <column name="REG_ID" />
+    <class name="com.classapp.db.batch.Batch" table="batch" catalog="classdb">
+        <id name="batch_id" type="int">
+            <column name="BATCH_ID" />
+            <generator class="increment" />
         </id>
-        <property name="batch" type="string">
-            <column name="BATCH" length="20" not-null="true" unique="false" />
+        <property name="class_id" type="int">
+            <column name="CLASS_ID" />
         </property>
-        <property name="subject" type="string">
-            <column name="SUBJECTS" length="20" not-null="true" unique="false" />
-        </property>        
+        <property name="div_id" type="int">
+            <column name="DIV_ID" />
+        </property>
+        <property name="batch_name" type="java.lang.String">
+            <column name="BATCH_NAME" />
+        </property>
+        <property name="sub_id" type="java.lang.String">
+            <column name="SUB_ID" />
+        </property>
     </class>
 </hibernate-mapping>

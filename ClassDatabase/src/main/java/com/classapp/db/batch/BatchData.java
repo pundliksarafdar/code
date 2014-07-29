@@ -5,7 +5,7 @@ import java.util.List;
 import com.datalayer.batch.BatchDataClass;
 
 public class BatchData {
-	public boolean isBatchExist(Integer regID,String batch){
+	public boolean isBatchExist(int regID,String batch){
 		BatchDB batchDB = new BatchDB();
 		boolean status = false;
 		List<BatchDataClass> batchList = batchDB.getBatchData(regID);

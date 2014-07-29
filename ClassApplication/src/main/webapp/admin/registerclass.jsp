@@ -89,7 +89,7 @@
 	</td>
 	</tr>
 	
-	<tr><td> <button id="" class="btn btn-danger dropdown-toggle clear">X</button>
+	<tr><td> <button id="" class="btn btn-danger dropdown-toggle clear">X</button></td>
 	<td>Class Id<td><input type="text" name="cid" data-provide="typeahead"/>
 	</td>
 	</tr>

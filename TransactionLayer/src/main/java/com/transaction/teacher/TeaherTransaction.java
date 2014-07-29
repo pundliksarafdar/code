@@ -1,6 +1,7 @@
 package com.transaction.teacher;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -30,4 +31,12 @@ public class TeaherTransaction {
 	}
 
 }
+	
+	public List getSubjectTeacher(String subid) {
+		
+		TeacherDB teacherDB=new TeacherDB();
+		List list=teacherDB.getSubjectTeacher(subid);
+		return list;
+		
+	}
 }

@@ -10,6 +10,7 @@ import com.classapp.db.batch.AddBatch;
 import com.classapp.db.batch.BatchDB;
 import com.classapp.db.batch.BatchData;
 import com.classapp.db.batch.DeleteBatch;
+import com.classapp.db.subject.SubjectDb;
 import com.datalayer.batch.Batch;
 
 public class BatchTransactions {
@@ -76,7 +77,7 @@ public class BatchTransactions {
 
 	public boolean isBatchExist(Batch batch){
 		BatchData batchData = new BatchData();
-		return batchData.isBatchExist(batch.getRegId(), batch.getBatch());
+		return batchData.isBatchExist(batch.getClass_id(), batch.getBatch_name());
 	}
 	
 	public boolean deleteBatch(Batch batch){
@@ -96,5 +97,46 @@ public class BatchTransactions {
 		
 		return status;
 	}
+	
+	public List getAllBatches(int regID) {
+		BatchDB batchDB=new BatchDB();
+		return batchDB.getAllBatches(regID);
+		
+	}
+	
+	public String getBatcheSubjects(String batchID) {
+		BatchDB batchDB=new BatchDB();
+		List Subjects=batchDB.getBatchSubjects(batchID);
+		String subject=(String) Subjects.get(0);
+		String[] subjectids=subject.split(",");
+		List subidsList = new ArrayList();
+		for(int i=0;i<subjectids.length;i++)
+		{
+			subidsList.add(Integer.parseInt(subjectids[i]));
+		}
+		SubjectDb db=new SubjectDb();
+		List Batchsubjects=db.getSubjects(subidsList);
+		for(int i=0;i<Batchsubjects.size();i++)
+		{
+			
+			subjectids[i]=(String) Batchsubjects.get(i);
+		}
+		subject="";
+		for(int i=0;i<subjectids.length;i++)
+		{
+			if(i==0)
+			{
+			subject=subject+subjectids[i];
+			}else{
+				
+				subject=subject+","+subjectids[i];
+			}
+		
+		}
+		return subject;
+		
+	}
+	
+	
 
 }

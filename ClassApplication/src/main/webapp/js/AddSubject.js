@@ -1,5 +1,9 @@
 var batchName;
 $(document).ready(function(){
+	
+	/*$('div#abc1').find('#subjectName').autocomplete("AutoComplete.jsp");*/
+	
+	
 	$('div#addBatchModal').on('click','button#btn-add',function(){
 		batchName = "";
 		$('div#addBatchModal .error').html('');
@@ -23,6 +27,7 @@ $(document).ready(function(){
 		$('div#addSubjectModal .error').hide();
 		var regId;
 		subjectName = $('div#addSubjectModal').find('#subjectName').val();
+		
 		if(!subjectName || subjectName.trim()==""){
 			$('div#addSubjectModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Subject name cannot be blank');
 			$('div#addSubjectModal .error').show();
@@ -32,7 +37,55 @@ $(document).ready(function(){
 			allAjax.addSubject('',subjectName,successCallbackSubject,errorCallbackSubject);
 		}
 	});
-
+	
+	var subjectsname="";
+	function getSelectedCheckbox()
+	{
+		var subjects;
+		subjects=$(".chk:checked").map(function() {
+			return this.value;
+		});
+	var i=0;
+	while(i<subjects.size())
+		{
+		if(i==0)
+			{
+		subjectsname=subjectsname+subjects[0]+"";
+			}else{
+				subjectsname=subjectsname+","+subjects[i];
+			}
+		i++;
+		}
+	
+	}
+	
+	
+	$('div#addTeacherModal').on('click','button#btn-add',function(){
+		subjectsname="";
+		batchName = "";
+		$('div#addTeacherModal .error').html('');
+		$('div#addTeacherModal .error').hide();
+		var regId;
+		teacherID = $('div#addTeacherModal').find('#teacherID').val();
+		getSelectedCheckbox();
+		if(!teacherID || teacherID.trim()==""){
+			$('div#addTeacherModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Teacher ID cannot be blank');
+			$('div#addTeacherModal .error').show();
+		}else{
+			$('div#addTeacherModal .progress').removeClass('hide');
+			$('.add').addClass('hide');
+			allAjax.addTeacher('',subjectsname,teacherID,successCallbackAddTeacher,errorCallbackaddTeacher);
+		}
+	});
+	
+	$('[data-target="#addTeacherModal"]').on('click',function(){
+		$('#addTeacherModal').find('.error').hide();
+		$('div#addTeacherModal #classTimming').addClass('hide');
+		$('div#addTeacherModal .setTimming').addClass('hide');
+		$('div#addTeacherModal .add').removeClass('hide');
+		$('div#addTeacherModal .progress').addClass('hide');
+	});
+	
 	$('[data-target="#addBatchModal"]').on('click',function(){
 		$('#addBatchModal').find('.error').hide();
 		$('div#addBatchModal #classTimming').addClass('hide');
@@ -123,6 +176,34 @@ var resultJson = JSON.parse(e);
 	   $('div#addSubjectModal .error').html('<strong>Error!</strong> Unable to add');
    	}else{
    		$('div#addSubjectModal .error').html('<strong>Error!</strong>'+resultJson.message);
+   	}
+   	}
+}
+
+
+function errorCallbackaddTeacher(e){
+	$('div#addTeacherModal .progress').addClass('hide');
+	$('div#addTeacherModal .add').removeClass('hide');
+	$('div#addTeacherModal .error').show();
+		$('div#addTeacherModal .error').html('<strong>Error!</strong> Unable to add');
+}
+
+function successCallbackAddTeacher(e){
+$('div#addTeacherModal .progress').addClass('hide');
+var resultJson = JSON.parse(e);
+   if(resultJson.status != 'error'){
+	   $('div#addTeacherModal').modal('hide');
+	   modal.launchAlert("Success","Teacher Added! Page will refresh in 2 sec");
+	   setTimeout(function(){
+		   location.reload();
+	   },2*1000);		   
+   }else{
+	   $('div#addTeacherModal .add').removeClass('hide');
+	   $('div#addTeacherModal .error').show();
+   	if(!resultJson.message){
+	   $('div#addTeacherModal .error').html('<strong>Error!</strong> Unable to add');
+   	}else{
+   		$('div#addTeacherModal .error').html('<strong>Error!</strong>'+resultJson.message);
    	}
    	}
 }
