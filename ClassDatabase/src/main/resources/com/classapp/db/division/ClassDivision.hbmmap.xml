@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
  
 <hibernate-mapping>
-    <class name="com.classapp.db.batch.division.ClassDivision" table="Class_Rel_Divisions" catalog="CLASSDB">
+    <class name="com.classapp.db.batch.division.ClassDivision" table="Class_Rel_Divisions" catalog="classdb">
         <composite-id>
         <key-property name="class_id" column="class_id"></key-property>
         <key-property name="div_id" column="div_id"></key-property>
