@@ -3,14 +3,14 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
  
 <hibernate-mapping>
-    <class name="com.classapp.db.batchandsubject.BatchAndSubject" table="batch_subject" catalog="CLASSDB">
+    <class name="com.classapp.db.batchandsubject.BatchAndSubject" table="batch_subject" catalog="classdb">
 		
 		<id name="rowId" type="java.lang.Integer">
 			<column name="ROW_ID" />
 			<generator class="identity" />
 		</id>
-		<property name="batchCode" type="java.lang.Integer">
-            <column name="BATCH_CODE" length="20" not-null="true" unique="false" />
+		<property name="batch_id" type="java.lang.Integer">
+            <column name="BATCH_ID" length="20" not-null="true" unique="false" />
         </property>
         <property name="subjectCode" type="java.lang.Integer">
             <column name="SUBJECT_CODE" length="20" not-null="true" unique="false" />

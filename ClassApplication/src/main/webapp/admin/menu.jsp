@@ -1,10 +1,11 @@
 <%@taglib prefix="s" uri="/struts-tags"%>
+<%@taglib prefix="c" uri="http://tiles.apache.org/tags-tiles"%>
 <%@page import="com.user.UserBean"%>
 <%@page import="com.signon.User"%>
 <%
 	UserBean userBean = (UserBean)session.getAttribute("user"); 	
 %>
-<nav class="navbar navbar-default" role="navigation" style="margin-top: -20px; margin-bottom: -40px">
+<nav class="navbar navbar-default" role="navigation">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -33,14 +34,40 @@
       		<ul class="dropdown-menu">
 	            <li><a href="login">Class Owner</a></li>
 	            <li><a href="addsubject">Add Subject</a></li>
-	            <li><a href="timetable">Time Table</a></li>
-          	</ul>
+ 				<!-- <li><a href="managestudent">Manage Student</a></li>
+	            <li><a href="manageteacher">Manage Teacher</a></li>
+	            <li><a href="managebatch">Manage Batch</a></li>
+	            <li><a href="manageexams">Manage Exams</a></li>
+	            <li><a href="searchexamnonstudent">Manage</a></li> -->
+	         </ul>
       </li>
-    <%}if(userBean.getRole() < 3 || userBean.getRole() == 10){ %>  
-      <li><a href="#">Class Teacher</a></li>  
-    <%}if(userBean.getRole() == 3 || userBean.getRole() == 0 || userBean.getRole() == 10){ %>  
-      <li><a href="#">Students</a></li>
-    <%}%>      
+      
+      <li>
+      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Manage <b class="caret"></b></a>
+      		<ul class="dropdown-menu">
+	            <li><a href="managestudent">Manage Student</a></li>
+	            <li><a href="manageteacher">Manage Teacher</a></li>
+	            <li><a href="managebatch">Manage Batch</a></li>
+	         </ul>
+      </li>
+      
+      <li>
+      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Exam <b class="caret"></b></a>
+      		<ul class="dropdown-menu">
+	            <li><a href="manageexams">Add Exam</a></li>
+	            <li><a href="searchexamnonstudent">Attempt Exam</a></li>
+	         </ul>
+      </li>
+      <li>
+      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Time Table <b class="caret"></b></a>
+      		<ul class="dropdown-menu">
+	            <li><a href="createtimetable">Create Time Table</a></li>
+	            <li><a href="updatetimetable">Update Time Table</a></li>
+	            <li><a href="showtimetable">See Time Table</a></li>
+	         </ul>
+      </li>
+    <%}%>
+    <li><a href="notes">Notes</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <li class="dropdown">
@@ -53,3 +80,5 @@
     </ul>
   </div><!-- /.navbar-collapse -->
 </nav>
+
+

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22 Jul, 2014 1:44:01 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.exams.MCQData" table="MCQData" catalog="classdb">
+     
+       	  <id name="exam_id" type="int">
+            <column name="EXAM_ID" />
+            <generator class="increment" />
+         </id>
+         <property name="upload_path" type="java.lang.String">
+            <column name="UPLOAD_PATH" />
+         </property>
+        <property name="class_id" type="int">
+            <column name="CLASS_ID" />
+        </property>
+      
+        <property name="div_id" type="int">
+            <column name="DIV_ID" />
+        </property>
+        <property name="subject_id" type="int">
+            <column name="SUBJECT_ID" />
+        </property>
+         <property name="teacher_id" type="int">
+            <column name="TEACHER_ID" />
+        </property>
+         <property name="create_date" type="java.util.Date">
+            <column name="CREATE_DATE" />
+        </property>
+    </class>
+</hibernate-mapping>

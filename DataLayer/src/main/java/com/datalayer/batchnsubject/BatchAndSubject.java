@@ -4,7 +4,13 @@ import java.util.Date;
 
 public class BatchAndSubject {
 	int rowId;
-	int batchCode;
+	int batch_id;
+	public int getBatch_id() {
+		return batch_id;
+	}
+	public void setBatch_id(int batch_id) {
+		this.batch_id = batch_id;
+	}
 	int subjectCode;
 	int teacherCode;
 	Date startTime;
@@ -17,12 +23,7 @@ public class BatchAndSubject {
 	public void setRowId(int rowId) {
 		this.rowId = rowId;
 	}
-	public int getBatchCode() {
-		return batchCode;
-	}
-	public void setBatchCode(int batchCode) {
-		this.batchCode = batchCode;
-	}
+	
 	public int getSubjectCode() {
 		return subjectCode;
 	}

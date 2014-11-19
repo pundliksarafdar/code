@@ -11,17 +11,30 @@ import com.google.gson.Gson;
 
 public class SearchClassDb {
 	public List searchClassData(String searchData){
+		Query query =null;
+		Session session =null;
+		List list =null;
+		try{
 		Gson gson = new Gson();
 		ClassSearchForm classSearchForm = gson.fromJson(searchData, ClassSearchForm.class);
 		String queryStr = formQuery(classSearchForm);
-		Session session = HibernateUtil.getSessionfactory().openSession();
+		session = HibernateUtil.getSessionfactory().openSession();
 		Transaction transaction = session.beginTransaction();
-		Query query = session.createQuery(queryStr);
+		query = session.createQuery(queryStr);
 		
 		if(queryStr.contains("cname"))
 			query.setParameter("cname",classSearchForm.getCname()+"%");
-		List list = query.list();
+		list = query.list();
 		System.out.println("In ClassSeachForm-DB.."+classSearchForm);
+		
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			if(null!=session){
+				session.close();
+			}
+		}
 		return list;
 	}
 	

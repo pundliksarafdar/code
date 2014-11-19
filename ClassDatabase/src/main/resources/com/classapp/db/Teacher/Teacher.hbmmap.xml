@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
  
 <hibernate-mapping>
-    <class name="com.classapp.db.Teacher.Teacher" table="appl_classes" catalog="CLASSDB">
+    <class name="com.classapp.db.Teacher.Teacher" table="appl_classes" catalog="classdb">
 		
 		<composite-id>
 		<key-property name="user_id" column="user_id"></key-property>

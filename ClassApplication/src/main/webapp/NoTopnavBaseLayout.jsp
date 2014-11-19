@@ -13,11 +13,6 @@
  <link href="css/admin.css" rel="stylesheet">
  <link href="css/datetimepicker.css" rel="stylesheet">
  <style>
- #footer {
- 	position: fixed;
-    bottom: 0;
-    width: 100%;
-}
  	
 body{
     padding-right: 0px;
@@ -31,22 +26,30 @@ body{
  <script src="js/datepicker.js"></script>
 </head>
 <body>
-  <tiles:insertAttribute name="header" /><br/>
-   <hr size="2px"/>
-   <div style="padding-left: 5px; padding-right: 25px">
-   <tiles:insertAttribute name="body" /><br/>
-   </div>
-   <div id="footer" style="background: lavender;height: 25px;">
-   <hr size="2px"/>
-   <tiles:insertAttribute name="footer" /><br/>
-   </div>
-   <script type="text/javascript">
-      $(document).ready(function(){
-      $('#datetimepicker').datetimepicker({
-    	  format: 'yyyy-MM-dd',	
-    	  pickTime: false
-      });
-      });
-</script>
+	<div id="outerDiv" align ="center">
+		<div id = "innerDiv" >
+			<div id="header">
+				<tiles:insertAttribute name="header" />
+				<br/>							
+			</div>
+			<div id="body">
+				<div style="padding: 5px;">
+					<tiles:insertAttribute name="body" />
+					<br />
+				</div>	
+			</div>
+			<div id="footer" style="background: red;">
+				<tiles:insertAttribute name="footer" />				
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+		$('#datetimepicker').datetimepicker({
+		 format: 'yyyy-MM-dd',	
+		 pickTime: false
+		});
+		});
+	</script>
 </body>
 </html>

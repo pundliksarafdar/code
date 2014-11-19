@@ -19,12 +19,17 @@ public class RegisterUser {
 			
 			try{
 				session.save(registerBeantoSave);
+				session.getTransaction().commit();
 			}catch(Exception e){
 				session.getTransaction().rollback();
 				errorMessage = formatMessage(e.getCause().getMessage());
 				return errorMessage;
+			}finally{
+				if(null!=session){
+					session.close();
+				}
 			}
-			
+
 			if(success.equals(errorMessage)){
 			session.getTransaction().commit();
 			}

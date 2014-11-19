@@ -1,14 +1,19 @@
 package com.classapp.db.subject;
 
+/**
+ * @author Surajprakash
+ *
+ */
 public class Subjects {
-	private Integer subjectCode;
+	private Integer subjectId;
 	private String subjectName;
 	
-	public Integer getSubjectCode() {
-		return subjectCode;
+
+	public Integer getSubjectId() {
+		return subjectId;
 	}
-	public void setSubjectCode(Integer subjectCode) {
-		this.subjectCode = subjectCode;
+	public void setSubjectId(Integer subjectId) {
+		this.subjectId = subjectId;
 	}
 	public String getSubjectName() {
 		return subjectName;

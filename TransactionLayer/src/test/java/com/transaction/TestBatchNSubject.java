@@ -12,7 +12,7 @@ public class TestBatchNSubject {
 		BatchAndSubject batchAndSubject = new BatchAndSubject();
 		BatchNSubjectTransaction batchNSubjectTransaction = new BatchNSubjectTransaction();
 		batchAndSubject.setRegId(34);
-		batchAndSubject.setBatchCode(2);
+		batchAndSubject.setBatch_id(2);
 		batchAndSubject.setSubjectCode(3);
 		batchNSubjectTransaction.addBatchNSubject(batchAndSubject);
 		

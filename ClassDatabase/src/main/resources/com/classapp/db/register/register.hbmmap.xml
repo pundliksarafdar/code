@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
  
 <hibernate-mapping>
-    <class name="com.classapp.db.register.RegisterBean" table="regtable" catalog="CLASSDB">
+    <class name="com.classapp.db.register.RegisterBean" table="regtable" catalog="classdb">
         <id name="regId" type="java.lang.Integer">
             <column name="REG_ID" />
             <generator class="identity" />
@@ -56,6 +56,7 @@
         <property name="startDate" type="string">
             <column name="STARTDATE" length="10" not-null="false" unique="false" />
         </property>
+        
         <property name="endDate" type="string">
             <column name="ENDDATE" length="10" not-null="false" unique="false" />
         </property>
@@ -64,6 +65,9 @@
         </property>        
         <property name="role" type="java.lang.Integer">
             <column name="ROLE" not-null="false" unique="false" />
+        </property> 
+        <property name="div_id" type="java.lang.Integer">
+            <column name="DIV_ID" not-null="false" unique="false" />
         </property>        
         </class>
 </hibernate-mapping>

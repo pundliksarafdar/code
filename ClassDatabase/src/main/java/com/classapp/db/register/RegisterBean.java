@@ -33,7 +33,14 @@ public class RegisterBean implements Serializable{
 	private String renewedDates;
 	private String daysLeft;
 	private Integer role;
+	private Integer div_id;
 	
+	public Integer getDiv_id() {
+		return div_id;
+	}
+	public void setDiv_id(Integer div_id) {
+		this.div_id = div_id;
+	}
 	public String getClassName() {
 		return className;
 	}

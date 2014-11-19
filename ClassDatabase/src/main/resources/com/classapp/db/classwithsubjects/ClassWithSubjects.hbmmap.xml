@@ -4,7 +4,7 @@
 <!-- Generated 18 Jul, 2014 1:48:14 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
  <class name="com.classapp.db.classwithsubject.ClassWithSubjects" table="class_rel_subs" catalog="classdb">
-  <composite-id name="class_subject_pk">
+  <composite-id>
   <key-property name="class_id" column="class_id"></key-property>
   <key-property name="sub_id" column="sub_id"></key-property>
   </composite-id>

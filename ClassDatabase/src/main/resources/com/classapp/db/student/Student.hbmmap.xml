@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22 Jul, 2014 1:44:01 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.student.Student" table="STUDENT" catalog="classdb">
+       <composite-id>
+       	 <key-property name="student_id" type="int">
+            <column name="STUDENT_ID" />
+         </key-property>
+        <key-property name="class_id" type="int">
+            <column name="CLASS_ID" />
+        </key-property>
+       </composite-id>
+        <property name="div_id" type="int">
+            <column name="DIV_ID" />
+        </property>
+        <property name="batch_id" type="string">
+            <column name="BATCH_ID" />
+        </property>
+    </class>
+</hibernate-mapping>

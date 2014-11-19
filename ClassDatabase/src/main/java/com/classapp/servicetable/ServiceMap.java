@@ -23,7 +23,7 @@ public class ServiceMap {
 		
 		try{			
 			List services = session.createQuery("from ServiceTable").list();
-			for (int i=0; services.size() >= i;i++) {
+			for (int i=0; i<services.size(); i++) {
 				Map dataMap = new HashMap();
 				System.out.println("Service Map:"+((ServiceTable)services.get(i)).getServiceId());
 				dataMap.put(Constants.SERVICE_ID, ((ServiceTable)services.get(i)).getServiceId());
@@ -36,21 +36,26 @@ public class ServiceMap {
 			}
 		}catch(Exception ex){
 			System.out.println("Exception in servicemap..."+ex.getMessage());
+			ex.printStackTrace();
 		}
 	}
 	
 	public static String getSystemParam(String serviceId,String serviceParam){
 		String serviceParamValue="";
-		Map mapTemp = (Map) SERVICEMAP.get(serviceId);
-		String serviceParam1 = (String) mapTemp.get(Constants.SERVICE_PARAM);
-		StringTokenizer stringTokenizer = new StringTokenizer(serviceParam1,";");
 		
-		while (stringTokenizer.hasMoreElements()) {
-			String params = stringTokenizer.nextToken();
-			if(params.toLowerCase().startsWith(serviceParam.toLowerCase())){
-				serviceParamValue = params.substring(params.indexOf('=')+1);
+		Map mapTemp = (Map) SERVICEMAP.get(serviceId);
+		if (null!=mapTemp && mapTemp.containsKey(Constants.SERVICE_PARAM)) {
+			String serviceParam1 = (String) mapTemp.get(Constants.SERVICE_PARAM);
+			StringTokenizer stringTokenizer = new StringTokenizer(serviceParam1,";");
+			
+			while (stringTokenizer.hasMoreElements()) {
+				String params = stringTokenizer.nextToken();
+				if(params.toLowerCase().startsWith(serviceParam.toLowerCase())){
+					serviceParamValue = params.substring(params.indexOf('=')+1);
+				}
 			}
 		}
+		
 		return serviceParamValue;
 	}
 }

@@ -3,8 +3,8 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
  
 <hibernate-mapping>
-    <class name="com.classapp.db.subject.Subjects" table="subject" catalog="CLASSDB">
-        <id name="subjectCode" type="java.lang.Integer">
+    <class name="com.classapp.db.subject.Subjects" table="subject" catalog="classdb">
+        <id name="subjectId" type="java.lang.Integer">
             <column name="SUB_ID" />
             <generator class="increment" />
         </id>

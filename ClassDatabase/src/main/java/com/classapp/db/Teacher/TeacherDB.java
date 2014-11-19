@@ -1,5 +1,7 @@
 package com.classapp.db.Teacher;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -7,39 +9,51 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.classapp.db.register.RegisterBean;
+import com.classapp.db.student.Student;
+import com.classapp.db.student.StudentDetails;
+import com.classapp.db.subject.Subject;
+import com.classapp.db.subject.SubjectDb;
 import com.classapp.persistence.HibernateUtil;
+
 
 public class TeacherDB {
 
-	public Boolean isTeacherRegistered(String teacher) {
-		Transaction transaction=null;
-		Session session=null;
-		List<RegisterBean> list=null;
-		
-		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
-		Query query=session.createQuery("from RegisterBean where loginName=:userid and role=2");
-		query.setParameter("userid", teacher);
-		list=query.list();
-		if(list.size()>0)
-		{
-		return true;
+	public Boolean isTeacherRegistered(String teacherLoginName) {
+		Transaction transaction = null;
+		Session session = null;
+		List<RegisterBean> list = null;
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session
+					.createQuery("from RegisterBean where loginName=:userid and role=2");
+			query.setParameter("userid", teacherLoginName);
+			list = query.list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != session) {
+				session.close();
+			}
 		}
-		else{
+		if (list.size() > 0) {
+			return true;
+		} else {
 			return false;
 		}
 	}
 	
 	
-	public Boolean isTeacherExists(String teacherID,int regid) {
+	public Boolean isTeacherExists(String teacherLoginName,int regid) {
 		Transaction transaction=null;
 		Session session=null;
 		List<RegisterBean> list=null;
 		List<Teacher> list2=null;
+		try{
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		Query query=session.createQuery("from RegisterBean where loginName=:userid and role=2");
-		query.setParameter("userid", teacherID);
+		query.setParameter("userid", teacherLoginName);
 		list=query.list();
 		if(list.size()>0)
 		{
@@ -51,6 +65,9 @@ public class TeacherDB {
 			query.setParameter("userid", teacher.getUser_id());
 			query.setParameter("regid", teacher.getClass_id());
 			list2=query.list();
+			
+			
+				
 			if (list2.size()>0) {
 				return true;
 			}else{
@@ -59,45 +76,274 @@ public class TeacherDB {
 			}
 		
 		}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
 		return false;
 	}
 	
 	
-	public Boolean add(String teacherID,int regid,String subjects) {
+	public Boolean add(String teacherLoginName,int regid,String subjects) {
 		Transaction transaction=null;
 		Session session=null;
 		List<RegisterBean> list=null;
 		List<Teacher> list2=null;
-		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
-		Query query=session.createQuery("from RegisterBean where loginName=:userid and role=2");
-		query.setParameter("userid", teacherID);
-		list=query.list();
-		if(list.size()>0)
-		{
-			RegisterBean bean=list.get(0);
-			Teacher teacher=new Teacher();
-			teacher.setClass_id(regid);
-			teacher.setUser_id(bean.getRegId());
-			teacher.setSub_ids(subjects);
-			session.save(teacher);
-			transaction.commit();
-		return  true;
+		try{
+			session=HibernateUtil.getSessionfactory().openSession();
+			transaction=session.beginTransaction();
+			Query query=session.createQuery("from RegisterBean where loginName=:userid and role=2");
+			query.setParameter("userid", teacherLoginName);
+			list=query.list();
+			if(list.size()>0)
+			{
+				RegisterBean bean=list.get(0);
+				Teacher teacher=new Teacher();
+				teacher.setClass_id(regid);
+				teacher.setUser_id(bean.getRegId());
+				teacher.setSub_ids(subjects);
+				session.save(teacher);
+				transaction.commit();
+				//session.close();
+			return  true;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
 		return false;
 	}
 	
 	public List getSubjectTeacher(String subid) {
+		Transaction transaction = null;
+		Session session = null;
+		List<RegisterBean> list = null;
+		List<Teacher> list2 = null;
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session
+					.createQuery("select user_id from Teacher where sub_ids like :sub_ids");
+			query.setParameter("sub_ids", "%," + subid + ",%");
+			list = query.list();
+			// session.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != session) {
+				session.close();
+			}
+		}
+
+		return list;
+	}
+
+	public List getSubjectTeacher(String subid,int regId) {
 		Transaction transaction=null;
 		Session session=null;
 		List<RegisterBean> list=null;
 		List<Teacher> list2=null;
+		try{
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
-		Query query=session.createQuery("select user_id from Teacher where sub_ids like :sub_ids");
-		query.setParameter("sub_ids", "%,"+subid+",%");
+		Query query=session.createQuery("select user_id from Teacher where (sub_ids like :sub_id1 or sub_ids like :sub_id2 or sub_ids like :sub_id3) and class_id=:regId");
+		query.setParameter("sub_id1", "%,"+subid+",%");
+		query.setParameter("sub_id2", subid+",%");
+		query.setParameter("sub_id3", "%,"+subid);
+		query.setParameter("regId", regId);
 		list=query.list();
-		
+			}catch(Exception e){
+				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
+			}
 		return list;
 	}
+	
+	public List<TeacherDetails> getAllTeachersFromClass(int class_id){
+		ArrayList<TeacherDetails> teachers=new ArrayList<TeacherDetails>();
+		Session session = null;
+		Transaction transaction = null;
+		List queryResultList=null;
+		String queryString="from Teacher where class_id=:class_id";
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setInteger("class_id", class_id);  
+			queryResultList = query.list();
+			transaction.commit();
+			Iterator itr= queryResultList.iterator();
+			
+			while(itr.hasNext()){
+				Teacher entry= (Teacher)itr.next();
+				TeacherDetails teacherDetails= new TeacherDetails();
+				teacherDetails.setTeacherId(entry.getUser_id());
+				teacherDetails.setSubjectIds(entry.getSub_ids());
+				teacherDetails.setTeacherBean(getTeacherDetailsFromID(entry.getUser_id()));
+				teacherDetails.setSubjects(getAssignedSubjects(entry.getSub_ids().split(",")));
+				teachers.add(teacherDetails);
+			}
+			return teachers;
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		
+		return null;
+	}
+	
+	public RegisterBean getTeacherDetailsFromID(int teacher_id){
+		Session session = null;
+		Transaction transaction = null;
+		List queryResultList=null;
+		
+		String queryString="from RegisterBean where regId = :regId";
+			
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setInteger("regId", teacher_id);
+			queryResultList = query.list();
+			transaction.commit();
+			if(queryResultList.size()==1){
+				return (RegisterBean) queryResultList.get(0);
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return null;
+	}
+	
+	public boolean updateDb(Teacher teacher){
+		boolean status=true;
+		Session session = null;
+		Transaction transaction = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			session.saveOrUpdate(teacher);
+			transaction.commit();
+		}catch(Exception e){
+			status = false;
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return status;
+	}
+	
+	public boolean deleteTeacher(int user_id, int class_id) {
+		
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		String queryString="from Teacher where user_id = :user_id and class_id = :class_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setInteger("user_id", user_id);
+			query.setInteger("class_id", class_id);  
+					
+				Teacher teacher=(Teacher)query.uniqueResult();
+				if(teacher!=null){
+					session.delete(teacher);
+					status=true;					
+				}
+			
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return status;
+	}
+	
+public Teacher getTeacher(int user_id, int class_id) {
+		
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		String queryString="from Teacher where user_id = :user_id and class_id=:class_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setInteger("user_id", user_id);
+			query.setInteger("class_id", class_id);  
+					
+				Teacher teacher=(Teacher)query.uniqueResult();
+				if(teacher!=null){
+					return teacher;				
+				}
+			
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return null;
+	}
+	
+	private List<Subject> getAssignedSubjects(String[] sub_ids){
+		ArrayList<Subject> subjects=new ArrayList<Subject>();
+		SubjectDb subjectDb=new SubjectDb();
+		for (String sub_Id : sub_ids) {
+			Subject subject=subjectDb.retrive(Integer.parseInt(sub_Id));
+			subjects.add(subject);
+		}
+		return subjects;
+	}
+	
+	public List getTeachersClass(int regID){
+		
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List classids=null;
+		String queryString="select class_id from Teacher where user_id = :user_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setInteger("user_id", regID);
+				classids=query.list();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return classids;
+	}
+	
 }

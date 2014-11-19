@@ -5,7 +5,12 @@ import java.util.List;
 import com.datalayer.batch.BatchDataClass;
 
 public class BatchData {
-	public boolean isBatchExist(int regID,String batch){
+	BatchDB batchDB;
+	
+	public BatchData() {
+		batchDB= new BatchDB();
+	}
+/*	public boolean isBatchExist(int regID,String batch){
 		BatchDB batchDB = new BatchDB();
 		boolean status = false;
 		List<BatchDataClass> batchList = batchDB.getBatchData(regID);
@@ -21,5 +26,23 @@ public class BatchData {
 			status = false;
 		}
 		return status;
+	}*/
+
+
+	public boolean isBatchExist(int regID,String batchName){
+		return batchDB.isBatchExist(regID, batchName);		
+		
+	}
+	
+	public List<Batch> getAllBatchesOfClass(int class_id){
+		return batchDB.retriveAllBatches(class_id);
+	}
+	
+	public List<Batch> getAllBatchesOfClass(List<String> class_id){
+		return batchDB.retriveAllBatches(class_id);
+	}
+	
+	public List<BatchDetails> getAllBatchDetailsList(int class_id){
+			return batchDB.getAllBatchesOfClass(class_id);
 	}
 }

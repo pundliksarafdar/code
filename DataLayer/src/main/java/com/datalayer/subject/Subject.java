@@ -1,22 +1,23 @@
 package com.datalayer.subject;
 
 public class Subject {
-	private Integer subjectCode;
+	private Integer subjectId;
 	private String subjectName;
 	
-	public Integer getSubjectCode() {
-		return subjectCode;
-	}
-	public void setSubjectCode(Integer subjectCode) {
-		this.subjectCode = subjectCode;
-	}
+	
 	public String getSubjectName() {
 		return subjectName;
 	}
 	public void setSubjectName(String subjectName) {
 		this.subjectName = subjectName;
 	}
-
+	
+	public Integer getSubjectId() {
+		return subjectId;
+	}
+	public void setSubjectId(Integer subjectId) {
+		this.subjectId = subjectId;
+	}
 	
 	
 }

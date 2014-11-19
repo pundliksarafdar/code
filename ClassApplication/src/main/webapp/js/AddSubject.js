@@ -1,3 +1,41 @@
+var batchIds;
+var subjectname;
+var div_id;
+function getSelectedCheckbox(){
+	var subjects;
+	subjects=$(".chk:checked").map(function(){
+	return this.value;
+	});
+	
+	var i=0;
+	while(i<subjects.size()){
+		if(i==0){
+			subjectname=subjectname+subjects[0]+"";
+		}else{
+			subjectname=subjectname+","+subjects[i];
+		}
+		i++;
+	}
+}
+
+
+function getSelectedBatchesForStudent(){
+	var batches;
+	batches=$(".chkBatch:checked").map(function(){
+	return this.value;
+	});
+	
+	var i=0;
+	while(i<batches.size()){
+		if(i==0){
+			batchIds=batchIds+batches[0]+"";
+		}else{
+			batchIds=batchIds+","+batches[i];
+		}
+		i++;
+	}
+}
+
 var batchName;
 $(document).ready(function(){
 	
@@ -35,6 +73,23 @@ $(document).ready(function(){
 			$('div#addSubjectModal .progress').removeClass('hide');
 			$('.add').addClass('hide');
 			allAjax.addSubject('',subjectName,successCallbackSubject,errorCallbackSubject);
+		}
+	});
+	
+	$('div#addclassModal').on('click','button#btn-add',function(){
+		batchName = "";
+		$('div#addclassModal .error').html('');
+		$('div#addclassModal .error').hide();
+		var regId;
+		className = $('div#addclassModal').find('#classname').val();
+		stream= $('div#addclassModal').find('#stream').val();
+		if(!className){
+			$('div#addclassModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Subject name cannot be blank');
+			$('div#addclassModal .error').show();
+		}else{
+			$('div#addclassModal .progress').removeClass('hide');
+			$('.add').addClass('hide');
+			allAjax.addclass('',className,stream,successCallbackSubject,errorCallbackSubject);
 		}
 	});
 	

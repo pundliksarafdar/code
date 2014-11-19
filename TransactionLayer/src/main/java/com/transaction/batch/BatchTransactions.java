@@ -6,14 +6,20 @@ import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.batch.AddBatch;
+import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.BatchDB;
 import com.classapp.db.batch.BatchData;
 import com.classapp.db.batch.DeleteBatch;
 import com.classapp.db.subject.SubjectDb;
-import com.datalayer.batch.Batch;
+
 
 public class BatchTransactions {
+	BatchDB batchDB= null;
+	public BatchTransactions() {
+		batchDB= new BatchDB();
+	}
 	public List getAllBatchClass(){
 		/*List list = new ArrayList();
 		Timmings timmings = new Timmings();
@@ -53,14 +59,12 @@ public class BatchTransactions {
 	
 
 	public List getBatchData(Integer regId){
-		BatchDB batchDB = new BatchDB();
-		return batchDB.getBatchData(regId);
+		return batchDB.retriveAllBatches(regId);
 	}
 	
 	public boolean addUpdateDb(Batch batch){
-		AddBatch addBatch = new AddBatch();
-		if (!isBatchExist(batch)) {
-			addBatch.addOrUpdateBatch(batch);
+		
+		if (batchDB.updateDb(batch).equals("0")) {
 			return true;
 		}		
 		return false;
@@ -98,14 +102,18 @@ public class BatchTransactions {
 		return status;
 	}
 	
+	public Batch getBatch(int batchId){
+		return batchDB.getBatchFromID(batchId);
+		
+	}
+	
 	public List getAllBatches(int regID) {
-		BatchDB batchDB=new BatchDB();
 		return batchDB.getAllBatches(regID);
 		
 	}
 	
+	
 	public String getBatcheSubjects(String batchID) {
-		BatchDB batchDB=new BatchDB();
 		List Subjects=batchDB.getBatchSubjects(batchID);
 		String subject=(String) Subjects.get(0);
 		String[] subjectids=subject.split(",");
@@ -137,6 +145,34 @@ public class BatchTransactions {
 		
 	}
 	
+	public List getBatcheSubject(String batchID) {
+		BatchDB batchDB=new BatchDB();
+		List Subjects=batchDB.getBatchSubjects(batchID);
+		String subject=(String) Subjects.get(0);
+		String[] subjectids=subject.split(",");
+		List subidsList = new ArrayList();
+		for(int i=0;i<subjectids.length;i++)
+		{
+			subidsList.add(Integer.parseInt(subjectids[i]));
+		}
+		SubjectDb db=new SubjectDb();
+		List Batchsubjects=db.getSubjects(subidsList);
+		
+		return Batchsubjects;
+		
+	}
+	public List<Batch> getTeachersBatch(List<Schedule> schedules) {
+		List<Batch>  batchs=new ArrayList<Batch>();
+		batchDB=new BatchDB();
+		int counter=0;
+		while(counter<schedules.size()){
+		Batch batch=batchDB.getBatchFromID(schedules.get(counter).getBatch_id());
+		batchs.add(batch);
+		counter++;
+		}
+		return batchs;
+		
+	}
 	
 
 }

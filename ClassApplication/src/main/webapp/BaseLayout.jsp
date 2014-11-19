@@ -1,3 +1,4 @@
+<%@page import="com.user.UserBean"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
@@ -74,7 +75,12 @@ html,body {
 <script src="js/jquery.autocomplete.js"></script>
 </head>
 <body>
+<%
+UserBean userBean =(UserBean)session.getAttribute("user");
+if(userBean.getRole()<2){
+%>
 <jsp:include page="allmodals.jsp"></jsp:include>
+<% }%>
 	<div id="container">
 		<div id="header">
 			<div class = "hidden-xs">

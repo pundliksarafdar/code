@@ -7,6 +7,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.classapp.db.batch.division.DivisionDB;
+import com.classapp.db.subject.Subject;
+import com.classapp.db.subject.SubjectDb;
 import com.classapp.persistence.HibernateUtil;
 import com.datalayer.batch.BatchDataClass;
 import com.google.gson.JsonArray;
@@ -36,7 +39,7 @@ public class BatchDB {
 		return status;
 	}
 	
-	public List<BatchDataClass> getBatchData(int batch_id){
+	public List<BatchDataClass> getBatchData(int class_id){
 		Session session = null;
 		Transaction transaction = null;
 		List<Batch> batchList = null;
@@ -45,8 +48,8 @@ public class BatchDB {
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("from Batch where batch_id =:batch_id");
-			query.setParameter("batch_id", batch_id);
+			Query query = session.createQuery("from Batch where class_id =:class_id");
+			query.setInteger("class_id", class_id);
 			batchList = query.list();
 			
 		}catch(Exception e){
@@ -69,6 +72,52 @@ public class BatchDB {
 			}
 		}
 		return batchDataClasses;
+	}
+	
+	public List<BatchDetails> getAllBatchesOfClass(int class_id){
+		Session session = null;
+		Transaction transaction = null;
+		List<Batch> batchList = null;
+		List<BatchDetails> batchDetailsList = new ArrayList<BatchDetails>();
+		BatchDetails batchDetails = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from Batch where class_id =:class_id");
+			query.setInteger("class_id", class_id);
+			batchList = query.list();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		
+		if(null!=batchList){
+			SubjectDb subjectDb= new SubjectDb();
+			DivisionDB divisionDB= new DivisionDB();
+			for(int i=0;i<batchList.size();i++){
+				batchDetails = new BatchDetails();
+				batchDetails.setBatch(batchList.get(i));
+				batchDetails.setDivision(divisionDB.retriveByID(batchList.get(i).getDiv_id()));
+				List<Subject> subjectList= new ArrayList<Subject>();
+				String subjectIds= batchList.get(i).getSub_id();
+				for (String  subjectId: subjectIds.split(",")) {
+					Subject subject= subjectDb.retrive(Integer.parseInt(subjectId));
+					if(subject!=null){
+						subjectList.add(subject);
+					}
+				}
+				batchDetails.setSubjects(subjectList);
+				batchDetailsList.add(batchDetails);
+			}
+		}
+		return batchDetailsList;
 	}
 
 	public JsonArray getBatch(Integer regId){
@@ -99,7 +148,93 @@ public class BatchDB {
 		}
 		return jsonArray;
 	}
+	
+	public List<Batch> retriveAllBatches(int class_id){
+		Session session = null;
+		Transaction transaction = null;
+		List<Batch> batchList = null;
+		List<Batch> batches = new ArrayList<Batch>();
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from Batch where class_id =:class_id");
+			query.setInteger("class_id", class_id);
+			batchList = query.list();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		if(null!=batchList){
+			for(int i=0;i<batchList.size();i++){
+				batches.add(batchList.get(i));
+			}
+		}
+		return batches;
+	}
 
+	public boolean isBatchExist(int class_id,String batch_name){
+		Session session = null;
+		Transaction transaction = null;
+		List<Batch> batchList = null;
+				
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from Batch where class_id =:class_id and batch_name =:batch_name");
+			query.setInteger("class_id", class_id);
+			query.setString("batch_name", batch_name);
+			batchList = query.list();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		if(null!=batchList && batchList.size()>0){
+			return true;
+		}
+		return false;
+	}
+	
+	public Batch getBatchFromID(int batchId){
+		Session session = null;
+		Transaction transaction = null;
+		Batch batch=null;		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from Batch where batch_id =:batch_id");
+			query.setInteger("batch_id", batchId);
+			batch = (Batch) query.uniqueResult();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		
+		return batch;
+	}
+	
+	
 	public String deleteBatch(Batch batch){
 		String status = "0";
 		Session session = null;
@@ -143,6 +278,10 @@ public class BatchDB {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
 		return batchList;
 	}
@@ -166,8 +305,40 @@ public List getBatchSubjects(String batchID) {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
 		return batchList;
 	}
+
+public List<Batch> retriveAllBatches(List<String> class_id) {
+	Session session = null;
+	Transaction transaction = null;
+	List batchList = null;
 	
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("select sub_id from Batch where batch_id in (:batchID)");
+		query.setParameterList("batchID", class_id);
+		batchList = query.list();
+		
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return batchList;
+
+}
+	
+
 }

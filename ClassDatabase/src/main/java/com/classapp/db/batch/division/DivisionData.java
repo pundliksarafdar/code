@@ -5,12 +5,17 @@ import java.util.List;
 
 
 public class DivisionData {
+	DivisionDB divisionDB;
+	
+	public DivisionData() {
+		divisionDB=new DivisionDB();
+	}
 
-	public static boolean isDivisionExist(String divisionName){
+	public boolean isDivisionExist(String divisionName){
 		
 		boolean status = false;
 		
-		List<Division> divisionList = DivisionDB.getAllDivisions();
+		List<Division> divisionList = divisionDB.getAllDivisions();
 	
 		if (null!=divisionList && !divisionList.isEmpty()) {
 			for(int i = 0;i<divisionList.size();i++){
@@ -28,9 +33,17 @@ public class DivisionData {
 		return status;
 	}
 	
-public static int getDivisionId(String divisionName){		
-		int div_id = DivisionDB.retrive(divisionName).getDivId();
+public int getDivisionId(String divisionName,String stream){		
+		int div_id =divisionDB.retrive(divisionName,stream).getDivId();
 		return div_id;
 	}
+
+public boolean deleteDivision(int div_id){
+	return divisionDB.removeByDivID(div_id);
+}
+
+public List<Division> getAllDivision(){
+	return divisionDB.getAllDivisions();
+}
 
 }

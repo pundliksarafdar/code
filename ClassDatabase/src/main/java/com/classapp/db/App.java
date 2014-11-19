@@ -15,7 +15,9 @@ public class App
 {
     public static void main( String[] args )
     {
-    	Session session = HibernateUtil.getSessionfactory().openSession();
+    	Session session =null;
+    	try{
+    	session = HibernateUtil.getSessionfactory().openSession();
     	session.beginTransaction();
     	
     	RegisterBean registerBean = new RegisterBean();
@@ -41,7 +43,14 @@ public class App
     	Gson gson = new Gson();
     	String status = registerUser.registerUser(gson.toJson(registerBean));
     	System.out.println(status);
-    	
+	    }catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			if(null!=session){
+				session.close();
+			}
+		}
     	/*Query query = session.createQuery("from Stock where stockCode = :code ");
     	query.setParameter("code", "7277");
     	List list = query.list();

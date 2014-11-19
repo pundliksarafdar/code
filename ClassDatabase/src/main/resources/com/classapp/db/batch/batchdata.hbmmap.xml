@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
  
 <hibernate-mapping>
-    <class name="com.classapp.db.batch.Batch" table="batch_db" catalog="CLASSDB">
+    <class name="com.classapp.db.batch.Batch" table="batch_db" catalog="classdb">
         <id name="batchCode" type="java.lang.Integer">
             <column name="BATCH_CODE" />
             <generator class="identity" />

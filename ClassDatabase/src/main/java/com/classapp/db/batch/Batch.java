@@ -37,4 +37,12 @@ public class Batch {
 		this.sub_id = sub_id;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		Batch batch=(Batch)obj;
+		if(batch.getBatch_id()==this.batch_id && batch.getBatch_name().equals(this.batch_name) && batch.getClass_id()==this.class_id && batch.getDiv_id()==this.div_id && batch.getSub_id().equals(this.sub_id)){
+			return true;
+		}
+		return false;
+	}
 }

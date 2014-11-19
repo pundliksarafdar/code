@@ -1,6 +1,7 @@
-<%@page import="com.datalayer.subject.Subject"%>
+<%@page import="com.classapp.db.subject.Subject"%>
 <%@page import="com.classapp.db.subject.Subjects"%>
 <%@page import="com.datalayer.batch.BatchDataClass"%>
+<%@page import="com.classapp.db.batch.Batch"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
 <%@page import="com.config.Constants"%>
@@ -51,8 +52,11 @@
 <div class="btn-group btn-group-sm">
   <button type="button" class="btn btn-info" data-target="#addBatchModal"  data-toggle="modal">Add Batch</button>
   <button type="button" class="btn btn-info" data-target="#addSubjectModal" data-toggle="modal">Add Subject</button>
-  <button type="button" class="btn btn-info" >Add Student</button>
+  <button type="button" class="btn btn-info" data-target="#addStudentModal" data-toggle="modal">Add Student</button>
   <button id="addteacher" type="button" class="btn btn-info" data-toggle="modal">Add Teacher</button>
+  <button data-target="#addclassModal" type="button" class="btn btn-info" data-toggle="modal">Add Class</button>
+  <button type="button" class="btn btn-info" data-target="#modifyStudentModal" data-toggle="modal">Modify Student Batch</button>
+  <button type="button" class="btn btn-info" data-target="#modifyTeacherModal" data-toggle="modal">Modify Teacher</button>
 </div>
 <br><br>
 <div class="panel-group" id="accordion">
@@ -61,7 +65,7 @@
   if(null != list){
 	  Iterator iteratorList = list.iterator();
 	  while(iteratorList.hasNext()){
-	  BatchDataClass batchDataClass = (BatchDataClass)iteratorList.next();
+	  Batch batch = (Batch)iteratorList.next();
 	  //String timmingsTitle = "Start time :"+ batchDataClass.getTimmings().getStartTimming()+"<br>End Time :"+batchDataClass.getTimmings().getEndTimming(); 
   		String timmingsTitle = "Start time :";
   %>
@@ -69,19 +73,19 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4 class="panel-title">
-        <i class="glyphicon glyphicon-trash" title="Delete Batch" onclick="deleteBatch('<%= batchDataClass.getBatchName()%>')"></i>&nbsp;
+        <i class="glyphicon glyphicon-trash" title="Delete Batch" onclick="deleteBatch('<%= batch.getBatch_name()%>')"></i>&nbsp;
         <i class="glyphicon glyphicon-edit" title="Rename Batch" onclick="javascript:editBatch()"></i>&nbsp;
         <a class="batchName" data-toggle="collapse" data-parent="#accordion" href="#batchItem<%=i %>">
-          <%= batchDataClass.getBatchName()%>
+          <%= batch.getBatch_name()%>
         </a>        
-      <span class="badge pull-right"><%=batchDataClass.getCandidatesInBatch() %></span>
+      <%-- <span class="badge pull-right"><%=batch.getCandidatesInBatch() %></span> --%>
       </h4>
     </div>
-    <div id="batchItem<%=i %>" class="panel-collapse collapse">
+   <%--  <div id="batchItem<%=i %>" class="panel-collapse collapse">
       <div class="popoverContainer<%=batchDataClass.getCandidatesInBatch() %>"></div>
       <div class="panel-body">
 	  </div>
-    </div>
+    </div> --%>
   </div>
   <%
   i++;
@@ -90,7 +94,7 @@
  
 </div>
 
-<%-- <div class="hide">
+<div class="hide">
 	<div id="allSubject">
 	
 	<%List<Subject> allSubjects = (List<Subject>)request.getAttribute(Constants.SUBJECT_LIST);
@@ -105,12 +109,12 @@
 			data-toggle="dropdown" style="height: 22px;">
 			<span class="caret"></span>
 		</button>
-		<ul class="dropdown-menu" role="menu">
+	<%-- 	<ul class="dropdown-menu" role="menu">
 			<li><a href="javascript:addSubject2Batch(<%= subject.getSubjectCode()%>);">Add to Batch</a></li>
 			<li><a href="#">Rename</a></li>
 			<li class="divider"></li>
 			<li><a href="#">Remove</a></li>
-		</ul>
+		</ul> --%>
 		</div>
 		<br>
 		<%
@@ -118,4 +122,4 @@
 			}
 		%>
 	</div>
-</div> --%>
+</div>

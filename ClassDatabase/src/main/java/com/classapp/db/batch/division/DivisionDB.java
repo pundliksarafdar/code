@@ -10,7 +10,7 @@ import org.hibernate.Transaction;
 import com.classapp.persistence.HibernateUtil;
 
 public class DivisionDB {
-	public static String updateDb(Division division){
+	public String updateDb(Division division){
 		String status = "0";
 		Session session = null;
 		Transaction transaction = null;
@@ -33,7 +33,7 @@ public class DivisionDB {
 		return status;
 	}
 	
-	public static List<Division> getAllDivisions(){
+	public List<Division> getAllDivisions(){
 		Session session = null;
 		Transaction transaction = null;
 		ArrayList<Division> listOfDivision=new ArrayList<Division>();
@@ -49,14 +49,18 @@ public class DivisionDB {
 			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
 		
 		return listOfDivision;
 	}
 	
-	public static int removeByDivID(int div_id){
+	public boolean removeByDivID(int div_id){
 		Session session = null;
-		int status=0;
+		boolean status=false;
 		Transaction transaction = null;
 		String queryString="from Division";
 		try{
@@ -68,19 +72,23 @@ public class DivisionDB {
 				Division division=(Division)object;
 				if(division.getDivId()==div_id){
 					session.delete(object);
-					status=1;
+					status=true;
 					break;
 				}
 			}
 			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
 		
 		return status;
 	}
 	
-	public static int removeByDivisionName(String div_name){
+	public int removeByDivisionName(String div_name){
 		Session session = null;
 		int status=0;
 		Transaction transaction = null;
@@ -102,27 +110,183 @@ public class DivisionDB {
 			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
 		
 		return status;
 	}
 	
-	public static Division retrive(String divisionName){
+	public Division retrive(String divisionName,String stream){
 		Session session = null;
 		Transaction transaction = null;
 		Object queryResult=null;
-		String queryString="from Division where div_name = :div_name";
+		String queryString="from Division where divisionName = :div_name and stream=:stream";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
-			query.setString("div_name", divisionName);  
+			query.setString("div_name", divisionName); 
+			query.setString("stream", stream); 
 			queryResult = query.uniqueResult();
 			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
 		
 		return (Division)queryResult;
+	}
+	
+	public Division retriveByID(int divisionId){
+		Session session = null;
+		Transaction transaction = null;
+		Object queryResult=null;
+		String queryString="from Division where divId = :divId";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setInteger("divId", divisionId);  
+			queryResult = query.uniqueResult();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+			return (Division)queryResult;
+	}
+	
+	public boolean isclassDivisionExists(ClassDivision division) {
+		Session session = null;
+		Transaction transaction = null;
+		List queryResult=null;
+		String queryString="from ClassDivision where div_id = :div_id and class_id=:class_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setInteger("div_id", division.getDiv_id()); 
+			query.setInteger("class_id", division.getClass_id());
+			queryResult = query.list();
+			if(queryResult.size()>0)
+			{
+				return true;
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return false;
+		
+	}
+	
+	
+	public int getdivisionID(Division division) {
+		Session session = null;
+		Transaction transaction = null;
+		List<Division> queryResult=null;
+		String queryString="from Division where div_name = :div_name and stream=:stream";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setString("div_name", division.getDivisionName()); 
+			query.setString("stream", division.getStream());
+			queryResult = query.list();
+			if(queryResult.size()>0)
+			{
+				return queryResult.get(0).getDivId();
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return 0;
+	}
+	
+	public static String addclassdivision(ClassDivision division){
+		String status = "0";
+		Session session = null;
+		Transaction transaction = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			session.saveOrUpdate(division);
+			transaction.commit();
+		}catch(Exception e){
+			status = "1";
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return status;
+	}
+
+	public List<Division> getAllDivision(Integer regId) {
+		Session session = null;
+		Transaction transaction = null;
+		List<Integer> queryResult=null;
+		List<Division> divisions=null;
+		String queryString="Select div_id from ClassDivision where class_id=:class_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setInteger("class_id", regId);
+			queryResult = query.list();
+			if(queryResult!=null){
+				queryString="from Division where divId in (:divId)";
+				query = session.createQuery(queryString);
+				query.setParameterList("divId", queryResult);
+				divisions = query.list();
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return divisions;
+		
+	}
+	
+	public boolean isDivisionExists(Division division) {
+		Session session = null;
+		Transaction transaction = null;
+		List queryResult=null;
+		String queryString="from Division where div_name = :div_name and stream=:stream";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setString("div_name", division.getDivisionName()); 
+			query.setString("stream", division.getStream());
+			queryResult = query.list();
+			if(queryResult.size()>0)
+			{
+				return true;
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return false;
+		
 	}
 }

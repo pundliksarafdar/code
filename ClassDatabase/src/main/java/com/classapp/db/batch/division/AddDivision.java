@@ -2,8 +2,12 @@ package com.classapp.db.batch.division;
 
 
 public class AddDivision {
-	
-	public static void addOrUpdateDivision(Division division){
-		 DivisionDB.updateDb(division);		
+	DivisionDB divisionDB;
+	public AddDivision() {
+		divisionDB=new DivisionDB();
+	}
+	public void addOrUpdateDivision(Division division){
+		
+		 divisionDB.updateDb(division);		
 	}
 }

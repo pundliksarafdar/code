@@ -1,6 +1,7 @@
 package com.config;
 
 public class Constants {
+	
 	private Constants(){
 		
 	}
@@ -35,4 +36,16 @@ public class Constants {
 	
 	public static String BATCH_LIST = "batchList";
 	public static String SUBJECT_LIST = "subjectList";
+	public static String STUDENT_LIST = "listOfStudents";
+	public static String TEACHER_LIST = "listOfteachers";
+	public static String BATCHES_LIST = "listOfBatches";
+	public static String MCQS_LIST= "listOfMCQs";	
+	public static String FILEPATH="C:\\ExamPapers";
+	
+	public static String EXAM_SEARCH_RESULT = "examSearchResult";
+	public static final String EXAM_DATA = "examData";
+	
+	public static final String EXAM_DATA_LENGTH = "examDataLength";
+	public static final String QUESTION_DATA = "questionData";
+	public static String DIVISION_NAMES="divisionNames";
 }

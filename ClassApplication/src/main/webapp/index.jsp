@@ -1,8 +1,12 @@
 
 <html>
 <%@ taglib prefix="s" uri="/struts-tags"%>
+<%@ taglib prefix="c" uri="WEB-INF/customtaglib/switch.tld"%>
 <body>
 <h2>Hello World!</h2>
+<c:Switch switchId="23">
+	<div>I am</div>
+</c:Switch>
 <s:form action="login">
 	<s:if test="hasActionErrors()">
    	<div class="errors">

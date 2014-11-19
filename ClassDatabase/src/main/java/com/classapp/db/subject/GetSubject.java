@@ -9,20 +9,38 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.classapp.db.batch.Batch;
 import com.classapp.persistence.HibernateUtil;
-import com.datalayer.batch.BatchDataClass;
-import com.datalayer.subject.Subject;
 
 public class GetSubject {
 	
 	public List<Subject> getSubjects(String subname){
-		List<Subjects> subjectList = null;
+		List<Subject> subjectList = null;
 		List<Subject> subjects = new ArrayList<Subject>();
 		String[] params = {"subname"};
 		String[] paramsValue = {subname};
 		SubjectDb subjectDb=new SubjectDb();
 		String getAllSubjectsQuery = "from Subjects where subjectName =:subname";
+		subjectList = subjectDb.getSubject1(0,getAllSubjectsQuery, params, paramsValue);
+		try {
+			for(int i=0;i<subjectList.size();i++){
+				Subject subject = new Subject();
+				BeanUtils.copyProperties(subject, subjectList.get(i));
+				subjects.add(subject);
+			}
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return subjects;
+	}
+	public List<Subject> getSubjects(int regId){
+		List<com.classapp.db.subject.Subject> subjectList = null;
+		List<Subject> subjects = new ArrayList<Subject>();
+		String[] params = {"regId"};
+		String[] paramsValue = {regId+""};
+		SubjectDb subjectDb = new SubjectDb();
+		String getAllSubjectsQuery = "from Subjects where regId =:regId";
 		subjectList = subjectDb.getSubject(0,getAllSubjectsQuery, params, paramsValue);
 		try {
 			for(int i=0;i<subjectList.size();i++){
@@ -37,7 +55,6 @@ public class GetSubject {
 		}
 		return subjects;
 	}
-	
 	public List getAllClassSubjectcodes(String suggestion){
 		List subjectList = null;
 		List<String> subjects = new ArrayList<String>();
@@ -90,7 +107,21 @@ public class GetSubject {
 		
 		return SubList;
 	}
-	
+		public boolean isSubjectExists(int regId,String subject){
+		boolean isSubjectExist =false;
+		List<Subject> subjectsList = getSubjects(regId);
+		
+		for (int i = 0; i < subjectsList.size(); i++) {
+			Subject subjects = subjectsList.get(i);
+			if(subjects.getSubjectName().equalsIgnoreCase(subject)){
+				isSubjectExist = true;
+				break;
+			}else{
+				isSubjectExist = false;
+			}
+		}
+		return isSubjectExist;
+	}
 	public List<ClassSubjects> getclassSubjects(int subid,int classid){
 		List<ClassSubjects> subjectList = null;
 		List<ClassSubjects> subjects = new ArrayList<ClassSubjects>();
@@ -128,7 +159,7 @@ public class GetSubject {
 		}*/
 		if(subjectsList.size()>0)
 		{
-			int i=subjectsList.get(0).getSubjectCode();
+			int i=subjectsList.get(0).getSubjectId();
 			List<ClassSubjects> classSubjectslist=getclassSubjects(i,regID);
 			if(classSubjectslist.size()>0)
 			{

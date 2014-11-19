@@ -98,10 +98,59 @@
 	function validateFields(){
 		var isValidated = true;
 		var regPhoneNumber = new RegExp('^[0-9]+$');
+		var regStringExpr = new RegExp('/^[a-zA-Z]+$/');
+		var regAddressExpr = new RegExp('\\d+\\s+([a-zA-Z]+|[a-zA-Z]+\\s[a-zA-Z]+)');
+		var regPasswordExpr = new RegExp('^(?=[^\d_].*?\d)\w(\w|[!@#$%]){5,20}');
+
+		if(!regPasswordExpr.test($("#loginpass").val())){
+			isValidated = false;
+			$("#loginpass").addClass("has-error");
+			$('#mandatoryerror ul').append("<li>Password is invalid.</li>");
+		}	
+		if(!$("#loginpass").val()==$("#loginpassre").val()){
+			isValidated = false;
+			$("#loginpassre").addClass("has-error");
+			$('#mandatoryerror ul').append("<li>Password is mismatched.</li>");
+		}		
 		if(!regPhoneNumber.test($("#phone1").val())){
 			isValidated = false;
 			$("#phone1").addClass("has-error");
-			$('#mandatoryerror ul').append("<li>Phone number not valid</li>");
+			$('#mandatoryerror ul').append("<li>Phone number is invalid. Only Numbers are allowed.</li>");
+		}
+		if(!regPhoneNumber.test($("#phone2").val())){
+			isValidated = false;
+			$("#phone12").addClass("has-error");
+			$('#mandatoryerror ul').append("<li>Phone2 number is invalid. Only Numbers are allowed.</li>");
+		}
+		if(!regStringExpr.test($("#fname").val())){
+			isValidated = false;
+			$("#fname").addClass("has-error");
+			$('#mandatoryerror ul').append("<li>First Name is invalid. Only A-Z characters are allowed. </li>");
+		}
+		if(!regStringExpr.test($("#mname").val())){
+			isValidated = false;
+			$("#mname").addClass("has-error");
+			$('#mandatoryerror ul').append("<li>Middle Name is invalid. Only A-Z characters are allowed. </li>");
+		}
+		if(!regStringExpr.test($("#lname").val())){
+			isValidated = false;
+			$("#lname").addClass("has-error");
+			$('#mandatoryerror ul').append("<li>Last Name is invalid. Only A-Z characters are allowed. </li>");
+		}
+		if(!regStringExpr.test($("#classname").val())){
+			isValidated = false;
+			$("#classname").addClass("has-error");
+			$('#mandatoryerror ul').append("<li>Class Name is invalid. Only A-Z characters are allowed. </li>");
+		}
+		if(!regAddressExpr.test($("#addr1").val())){
+			isValidated = false;
+			$("#addr1").addClass("has-error");
+			$('#mandatoryerror ul').append("<li>Address1 is invalid. Special characters are not allowed. </li>");
+		}
+		if(!regAddressExpr.test($("#addr2").val())){
+			isValidated = false;
+			$("#addr2").addClass("has-error");
+			$('#mandatoryerror ul').append("<li>Address2 is invalid. Special characters are not allowed. </li>");
 		}
 		
 		$('#mandatoryerror').show();
@@ -214,28 +263,34 @@
 			<input type="text" class="form-control" name="registerBean.city" id="city" required="required" />
 		</div>
 	</div>
+	
+	<div class="form-group">
+		<label for="country" class="col-sm-2 control-label">*Country</label>
+		<div class="col-sm-10">
+		<input type="text" class="form-control" name="registerBean.country" id="country" required="required" /> 
+			<%-- <select id="country" name="registerBean.country" class="form-control bfh-countries" data-country="US" required="required"></select> --%>
+		</div>
+	</div>
 	<div class="form-group">
 		<label for="state" class="col-sm-2 control-label">*State</label>
 		<div class="col-sm-10">	
 			<input type="text" class="form-control" name="registerBean.state" id="state"  required="required"/>
+			<%-- <select class="form-control bfh-states" data-country="countries_states1" name="registerBean.state" id="state" required="required"></select> --%>
 		</div>	
-	</div>
-	<div class="form-group">
-		<label for="country" class="col-sm-2 control-label">*Country</label>
-		<div class="col-sm-10">
-			<input type="text" class="form-control" name="registerBean.country" id="country" required="required" />
-		</div>
 	</div>
 	<div class="form-group">
 		<label for="phone1" class="col-sm-2 control-label">*Phone 1</label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" name="registerBean.phone1" id="phone1" required="required" />
+		<%-- <select id="countries_phone1" class="form-control bfh-countries" data-country="US"></select> --%>
+		<br><br>
+		<!-- <input type="text" class="form-control bfh-phone" data-country="countries_phone1" name="registerBean.phone1" id="phone1" required="required"> -->
+			<input type="text" class="form-control bfh-phone" name="registerBean.phone1" id="phone1" required="required" /> 
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="phone2" class="col-sm-2 control-label">Phone 2</label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" name="registerBean.phone2" id="phone2"/>
+			<input type="text" class="form-control bfh-phone" name="registerBean.phone2" id="phone2"/>
 		</div>	
 	</div>
 	<div class="form-group" id="divClassname">
@@ -249,6 +304,9 @@
 		<div class="col-sm-10">
 			<input type="text" class="form-control" name="registerBean.loginName" id="loginname" required="required" />
 		</div>
+	</div>
+		<div class="form-group">
+		<label for="passwordCriteria" class="col-sm-12 control-label">*Note :  The length of password must be of 6 to 20 aplhanumeric characters and select special characters. The password also can not start with a digit, underscore or special character and must contain at least one digit.</label>		
 	</div>
 	<div class="form-group">
 		<label for="loginpass" class="col-sm-2 control-label">*Password</label>

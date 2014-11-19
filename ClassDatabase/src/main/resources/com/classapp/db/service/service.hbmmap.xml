@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
  
 <hibernate-mapping>
-    <class name="com.classapp.servicetable.ServiceTable" table="servicetable" catalog="CLASSDB">
+    <class name="com.classapp.servicetable.ServiceTable" table="servicetable" catalog="classdb">
         <id name="serviceId" type="java.lang.Integer">
             <column name="SERVICE_ID" />
             <generator class="identity" />

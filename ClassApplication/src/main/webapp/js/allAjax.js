@@ -91,13 +91,16 @@ var allAjax = {
 			   }
 		});
 	},
-	addBatch :function(regId,batchName,successCallback,errorCallback){
+	addBatch :function(regId,batchName,divisionName,streamName,subjectname,successCallback,errorCallback){
 		$.ajax({
 			   url: "classOwnerServlet",
 			   data: {
 			    	 methodToCall: "addBatch",
 					 regId:regId,
-					 batchName:batchName
+					 batchName:batchName,
+					 divisionName:divisionName,
+					 streamName:streamName,
+					 subjectname:subjectname
 			   		},
 			   type:"POST",
 			   success:function(e){
@@ -162,6 +165,24 @@ var allAjax = {
 			   }
 		});
 	},
+	addclass :function(regId,classname,stream,successCallback,errorCallback){
+		$.ajax({
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "addclass",
+					 regId:regId,
+					 classname:classname,
+					 stream:stream
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   successCallback(e);
+			   	},
+			   error:function(e){
+				   errorCallback(e);
+			   }
+		});
+	},
 	deleteBatch:function(regId,batchName,successCallback,errorCallback){
 		$.ajax({
 			   url: "classOwnerServlet",
@@ -169,6 +190,24 @@ var allAjax = {
 			    	 methodToCall: "deleteBatch",
 					 regId:regId,
 					 batchName:batchName
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   successCallback(e);
+			   	},
+			   error:function(e){
+				   errorCallback(e);
+			   }
+		});
+	},
+	addStudent :function(regId,studentLgName,batchIds,successCallback,errorCallback){
+		$.ajax({
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "addStudent",
+					 regId:regId,
+					 studentLgName:studentLgName,
+					 batchIds:batchIds,					 
 			   		},
 			   type:"POST",
 			   success:function(e){
