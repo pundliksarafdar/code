@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.classapp.db.batch.division.Division" table="DIVISION" catalog="classdb">
+    <class name="com.classapp.db.batch.division.Division" table="division" catalog="classdb">
         <id name="divId" type="java.lang.Integer">
             <column name="DIV_ID" />
             <generator class="increment" />
