@@ -187,10 +187,18 @@
       </action>  
       <action name="viewonlyexam" class="com.exam.ViewOnlyExamAction">
           <result name="success" type="tiles">nonstudent.searchexamnonstudent</result>
+           <result name="error" type="tiles">nonstudent.viewexamerror</result>
       </action> 
       <action name="studentnotes" class="com.notes.StudentNotesAction">
           <result name="success" type="tiles">student.studentnotes</result>
+          <result name="error" type="tiles">nonstudent.viewexamerror</result>
       </action>  
+      
+	<action name="showtimetable" 
+            class="com.timetable.UpdateTimeTableAction" 
+            method="execute">
+            <result name="success" type="tiles">timetable.showtimetable</result>
+      </action>
       
 	  </package>
 </struts>

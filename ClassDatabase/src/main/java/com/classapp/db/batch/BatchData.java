@@ -45,4 +45,8 @@ public class BatchData {
 	public List<BatchDetails> getAllBatchDetailsList(int class_id){
 			return batchDB.getAllBatchesOfClass(class_id);
 	}
+	
+	public List<Batch> getAllRelatedBatchesOfClass(int class_id, int div_id){
+		return batchDB.retriveAllRelatedBatches(class_id, div_id);
+	}
 }

@@ -104,7 +104,6 @@ public class ClassOwnerServlet extends HttpServlet{
 				}
 			}
 			String batchName = (String) req.getParameter("batchName");
-			String streamName=(String) req.getParameter("streamName");
 			/*
 			 * Task Id:11 Added a code to create division
 			 */
@@ -113,13 +112,11 @@ public class ClassOwnerServlet extends HttpServlet{
 			System.out.println("divisionName:"+divisionName);
 			Division division=new Division();
 			division.setDivisionName(divisionName);
-			division.setStream(streamName);
-			boolean isDivisionAdded=divisionTransactions.addUpdateDb(division);
 				
 			Batch batch = new Batch();
 			batch.setBatch_name(batchName);
 			batch.setClass_id(regId);
-			batch.setDiv_id(divisionTransactions.getDivisionID(division));
+			batch.setDiv_id(Integer.parseInt(divisionName));
 			
 			if(subjects.equals("")){
 				respObject.addProperty(STATUS, "error");
@@ -133,14 +130,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				respObject.addProperty(MESSAGE, "Successfully added batch!");
 			}else{
 				respObject.addProperty(STATUS, "error");
-				if(isDivisionAdded){
-					boolean status=divisionTransactions.rollbackDivision(division);
-					if(status){
-						respObject.addProperty(MESSAGE, "Batch is already exist! Removed division which was added for unsuccesffull add batch operationS");
-					}else{
-						respObject.addProperty(MESSAGE, "Batch is already exist! Unable to remove division which is added for unsuccessfull add batch operationS");
-					}
-				}
+				
 			}
 			//printWriter.write(respObject.toString());
 		}else if(Constants.ADD_SUBJECT.equals(methodToCall)){
@@ -228,35 +218,89 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 			//printWriter.write(respObject.toString());
 			
-		}else if(Constants.ADD_STUDENT.equals(methodToCall)){
+		}else if (Constants.ADD_STUDENT.equals(methodToCall)) {
 			Integer regId = null;
-			if(!req.getParameter("regId").equals("")){
+			if (!req.getParameter("regId").equals("")) {
 				regId = Integer.parseInt(req.getParameter("regId"));
-			}else{
-				UserBean userBean = (UserBean) req.getSession().getAttribute("user");
-				if(0 == userBean.getRole() || !"".equals(regId)){
-					if(null == regId){
+			} else {
+				UserBean userBean = (UserBean) req.getSession().getAttribute(
+						"user");
+				if (0 == userBean.getRole() || !"".equals(regId)) {
+					if (null == regId) {
 						regId = userBean.getRegId();
 					}
-				}else{
+				} else {
 					regId = userBean.getRegId();
 				}
 			}
-			
-			String studentLoginName=req.getParameter("studentLgName");
-			String batchIds=req.getParameter("batchIds");
-			Student student=validateStudent(studentLoginName,batchIds,regId, printWriter);
-			if(student!=null){
-				if(studentTransaction.addUpdateDb(student)){
+
+			String studentLoginName = req.getParameter("studentLgName");
+			String batchIds = req.getParameter("batchIds");
+			String divisionName=req.getParameter("divisionName");
+			int divId= divisionTransactions.getDivisionIDByName(divisionName);
+			Student student = validateStudent(studentLoginName, batchIds,divId,
+					regId, printWriter);
+			if (student != null) {
+				if (studentTransaction.addUpdateDb(student)) {
 					respObject.addProperty(STATUS, "success");
-					respObject.addProperty(MESSAGE, "Successfully addded student.");
-				}else{
+					respObject.addProperty(MESSAGE,
+							"Successfully addded student.");
+				} else {
 					respObject.addProperty(STATUS, "error");
-					respObject.addProperty(MESSAGE, "Student with login name "+studentLoginName+" already exists in class!");
+					respObject.addProperty(MESSAGE, "Student with login name "
+							+ studentLoginName + " already exists in class!");
 				}
-				
+
 				//printWriter.write(respObject.toString());
 			}
+		}  else if (Constants.FETCH_BATCHES.equals(methodToCall)) {
+			Integer regId = null;
+			if (!req.getParameter("regId").equals("")) {
+				regId = Integer.parseInt(req.getParameter("regId"));
+			} else {
+				UserBean userBean = (UserBean) req.getSession().getAttribute(
+						"user");
+				if (0 == userBean.getRole() || !"".equals(regId)) {
+					if (null == regId) {
+						regId = userBean.getRegId();
+					}
+				} else {
+					regId = userBean.getRegId();
+				}
+			}
+
+			String divisionName = req.getParameter("divisionName");
+			List<Batch> batches= batchTransactions.getAllBatchesOfDivision(divisionName, regId); 
+			String batchIds="";
+			String batchNames="";
+			
+			for (Batch batch : batches) {
+				if(batchIds.equals("")){
+					batchIds=batch.getBatch_id()+"";
+				}else{
+					batchIds=batchIds+","+batch.getBatch_id()+"";
+				}
+				
+				if(batchNames.equals("")){
+					batchNames=batch.getBatch_name();
+				}else{
+					batchNames=batchNames+","+batch.getBatch_name();
+				}
+			}
+			
+			if (batches != null) {
+				if (batches.size()>0) {
+					respObject.addProperty(STATUS, "success");
+					respObject.addProperty(MESSAGE,
+							"Batches fetched successfully.");
+					respObject.addProperty("batchIds", batchIds);
+					respObject.addProperty("batchNames", batchNames);
+				} else {
+					respObject.addProperty(STATUS, "error");
+					respObject.addProperty(MESSAGE, "No batches found!");
+				}				
+			}
+			//printWriter.write(respObject.toString());
 		}else if(Constants.UPDATE_STUDENT.equalsIgnoreCase(methodToCall)){
 			Integer regId = null;
 			if(!req.getParameter("regId").equals("")){
@@ -312,7 +356,7 @@ public class ClassOwnerServlet extends HttpServlet{
 					respObject.addProperty(MESSAGE, "Student does not exists in class!");
 				}
 				
-				printWriter.write(respObject.toString());
+				//printWriter.write(respObject.toString());
 			}else if(Constants.UPDATE_TEACHER.equalsIgnoreCase(methodToCall)){
 				Integer regId = null;
 				if(!req.getParameter("regId").equals("")){
@@ -503,10 +547,15 @@ public class ClassOwnerServlet extends HttpServlet{
 			String subname=req.getParameter("subname");
 			TeaherTransaction teaherTransaction=new TeaherTransaction();
 			List<Integer> list=teaherTransaction.getSubjectTeacher(subname,regId);
+			String firstname="";
+			String lastname="";
+			String teacherid="";
+			if(list!=null && list.size()>0)
+			{
 			RegisterTransaction registerTransaction=new RegisterTransaction();
 			List<RegisterBean> teacherNames=registerTransaction.getTeacherName(list);
 			int i=0;
-			String firstname="";
+			
 			for(i=0;i<teacherNames.size();i++)
 			{
 				if(i==0)
@@ -516,7 +565,7 @@ public class ClassOwnerServlet extends HttpServlet{
 					firstname=firstname+","+teacherNames.get(i).getFname();
 				}
 			}
-			String lastname="";
+			
 			for(i=0;i<teacherNames.size();i++)
 			{
 				if(i==0)
@@ -526,7 +575,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				lastname=lastname+","+teacherNames.get(i).getLname();
 				}
 			}
-			String teacherid="";
+			
 			for(i=0;i<teacherNames.size();i++)
 			{
 				if(i==0)
@@ -536,7 +585,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				teacherid=teacherid+","+teacherNames.get(i).getRegId();
 				}
 			}
-			
+		}
 			respObject.addProperty("firstname", firstname);
 			respObject.addProperty("lastname", lastname);
 			respObject.addProperty("teacherid", teacherid);
@@ -1337,66 +1386,41 @@ public class ClassOwnerServlet extends HttpServlet{
 		return temphour+":"+tempminute+" "+ampm;
 	}
 	
-	private Student validateStudent(String studentLoginName,String batches,int regId, PrintWriter writer) {
+	private Student validateStudent(String studentLoginName, String batches, int divId,
+			int regId, PrintWriter writer) {
 		JsonObject respObject = new JsonObject();
 		respObject.addProperty(STATUS, "error");
-		int studentId=-1;
-		RegisterBean studentBean=studentData.getStudent(studentLoginName);
-		
-		if(studentBean!=null && batches!=null){
-			BatchHelperBean batchHelper=new BatchHelperBean();
-			batchHelper.setClass_id(regId);
-			List<com.classapp.db.batch.Batch> batchList=batchHelper.getBatches();
-			String[] selectedBatches=batches.split(",");
-			
-			if(selectedBatches.length==0 ||(selectedBatches.length==1 && selectedBatches[0].equals(""))){
+		int studentId = -1;
+		RegisterBean studentBean = studentData.getStudent(studentLoginName);
+
+		if (studentBean != null && batches != null) {
+			String[] selectedBatches = batches.split(",");
+
+			if (selectedBatches.length == 0
+					|| (selectedBatches.length == 1 && selectedBatches[0]
+							.equals(""))) {
 				respObject.addProperty(STATUS, "error");
-				respObject.addProperty(MESSAGE, "Please select atleast one batch for student :"+studentLoginName);
+				respObject.addProperty(MESSAGE,
+						"Please select atleast one batch for student :"
+								+ studentLoginName);
 				writer.write(respObject.toString());
 				return null;
 			}
-			List<String> listOfInvalidBatches=new ArrayList<String>();
-			int count=0;
-			int sizeOfSelectedBatches=selectedBatches.length;
-			int studentDivId=0;
-			studentDivId=studentBean.getDiv_id();
-			if((Integer)studentDivId!=null) {
-				for (int i = 0; i < selectedBatches.length; i++) {
-					for(com.classapp.db.batch.Batch batch:batchList){
-						
-						if((batch.getBatch_id()==Integer.parseInt(selectedBatches[i]))&& batch.getDiv_id()==studentDivId){
-							count++;
-						}
-						if((batch.getBatch_id()==Integer.parseInt(selectedBatches[i]))&& batch.getDiv_id()!=studentDivId){
-							listOfInvalidBatches.add(batch.getBatch_name());
-						}
-					}
-				}
-				
-				studentId=studentBean.getRegId();
-			}
-			if(sizeOfSelectedBatches==count){
-				Student student=new Student();
-				student.setStudent_id(studentId);
-				student.setDiv_id(studentDivId);
-				student.setClass_id(regId);
-				student.setBatch_id(batches);
-				return student;
-			}else if(listOfInvalidBatches.size()>0){
-				StringBuilder builder= new StringBuilder("Student with Login name "+studentLoginName+" can not assigned to batches: ");
-				for (String invalidBatch : listOfInvalidBatches) {
-					builder.append(invalidBatch+",");
-				}
-				respObject.addProperty(STATUS, "error");
-				respObject.addProperty(MESSAGE, builder.toString().substring(0, builder.toString().length()-1));
-			}
-		}else{
+			Student student = new Student();
+			student.setStudent_id(studentBean.getRegId());
+			student.setDiv_id(divId);
+			student.setClass_id(regId);
+			student.setBatch_id(batches);
+			return student;			
+		} else {
 			respObject.addProperty(STATUS, "error");
-			respObject.addProperty(MESSAGE, "Unable to find student with login name : "+studentLoginName);			
+			respObject.addProperty(MESSAGE,
+					"Unable to find student with login name : "
+							+ studentLoginName);
 		}
 		writer.write(respObject.toString());
 		return null;
-		
+
 	}
 	
 	private boolean validateStudentBatch(Student student, String batches,int regId, PrintWriter writer ){

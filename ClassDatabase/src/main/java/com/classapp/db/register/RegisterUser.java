@@ -29,10 +29,6 @@ public class RegisterUser {
 					session.close();
 				}
 			}
-
-			if(success.equals(errorMessage)){
-			session.getTransaction().commit();
-			}
 			return errorMessage;
 	
 	}

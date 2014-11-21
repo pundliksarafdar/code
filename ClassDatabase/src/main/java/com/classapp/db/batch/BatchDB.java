@@ -7,6 +7,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.classapp.db.batch.division.Division;
 import com.classapp.db.batch.division.DivisionDB;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.SubjectDb;
@@ -160,6 +161,7 @@ public class BatchDB {
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Batch where class_id =:class_id");
 			query.setInteger("class_id", class_id);
+			
 			batchList = query.list();
 			
 		}catch(Exception e){
@@ -338,7 +340,73 @@ public List<Batch> retriveAllBatches(List<String> class_id) {
 	}
 	return batchList;
 
+
 }
+	public List<Batch> retriveAllBatchesOfDivision(String divisionName, int class_id){
+	Session session = null;
+	Transaction transaction = null;
+	List<Batch> batchList = null;
+	List<Batch> batches = new ArrayList<Batch>();
 	
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		DivisionDB divisionDB= new DivisionDB();
+ 		Division division=divisionDB.retrive(divisionName);
+		int div_id= division.getDivId();
+		Query query = session.createQuery("from Batch where class_id =:class_id and div_id =:div_id");
+		query.setInteger("class_id", class_id);
+		query.setInteger("div_id", div_id);
+		batchList = query.list();
+		
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	if(null!=batchList){
+		for(int i=0;i<batchList.size();i++){
+			batches.add(batchList.get(i));
+		}
+	}
+	return batches;
+}
+
+public List<Batch> retriveAllRelatedBatches(int class_id, int div_id){
+		Session session = null;
+		Transaction transaction = null;
+		List<Batch> batchList = null;
+		List<Batch> batches = new ArrayList<Batch>();
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from Batch where class_id =:class_id and div_id =:div_id");
+			query.setInteger("class_id", class_id);
+			query.setInteger("div_id", div_id);
+			batchList = query.list();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		if(null!=batchList){
+			for(int i=0;i<batchList.size();i++){
+				batches.add(batchList.get(i));
+			}
+		}
+		return batches;
+	}
 
 }

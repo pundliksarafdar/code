@@ -24,10 +24,16 @@ public class ManageBatchAction extends BaseAction{
 		request.getSession().setAttribute(Constants.BATCHES_LIST, batchHelperBean.getBatchDetailsList());	
 		List<Division> divisions= divisionHelperBean.getListOfDivision();
 		List<String> divisionNames= new ArrayList<String>();
+		List<String> Streams=new ArrayList<String>();
+		List<String> ids=new ArrayList<String>();
 		for (Division division : divisions) {
 			divisionNames.add(division.getDivisionName());
+			Streams.add(division.getStream());
+			ids.add(division.getDivId()+"");
 		}
 		request.setAttribute(Constants.DIVISION_NAMES, divisionNames);
+		request.setAttribute("streams", Streams);
+		request.setAttribute("batcheids", ids);
 		return SUCCESS;
 	}
 }

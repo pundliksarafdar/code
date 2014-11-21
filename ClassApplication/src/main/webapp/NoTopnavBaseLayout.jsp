@@ -38,7 +38,7 @@ body{
 					<br />
 				</div>	
 			</div>
-			<div id="footer" style="background: red;">
+			<div id="footer">
 				<tiles:insertAttribute name="footer" />				
 			</div>
 		</div>

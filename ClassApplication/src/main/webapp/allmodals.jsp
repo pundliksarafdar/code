@@ -1,3 +1,4 @@
+<meta http-equiv="cache-control" content="max-age=0" />
 <%@page import="com.classapp.db.batch.BatchDetails"%>
 <%@page import="com.classapp.db.subject.Subjects"%>
 <%@page import="com.classapp.db.subject.ClassSubjects"%>
@@ -14,6 +15,56 @@
 <%@page import="com.classapp.db.batch.division.Division" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="s" uri="http://java.sun.com/jstl/core"%>
+<script>
+function getBatchesOfDivision(){
+	var divisionName = $('div#addStudentModal').find('#divisionName').val();
+
+	if(!divisionName || divisionName.trim()==""){
+		$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Division name cannot be blank');
+		$('div#addStudentModal .error').show();
+	}else{		
+	  $.ajax({
+	   url: "classOwnerServlet",
+	   data: {
+	    	 methodToCall: "fetchBatchesForDivision",
+			 regId:'',
+			 divisionName:divisionName,						 
+	   		},
+	   type:"POST",
+	   success:function(e){		 
+		   
+		    var resultJson = JSON.parse(e);
+		    
+		      if(resultJson.status != 'error'){
+		   	  	var batchnames=resultJson.batchNames.split(',');
+		   		var batchids=resultJson.batchIds.split(',');
+		   		var i=0;
+		   		while(i<batchnames.length){
+			   		addCheckbox(batchnames[i],batchids[i]);
+		   			i++;
+				   }
+			   } else{
+				   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Error while fetching batches for division');
+					$('div#addStudentModal .error').show();
+			}
+	   	},
+	   error:function(e){
+		   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Error while fetching batches for division');
+			$('div#addStudentModal .error').show();
+	   }
+	   
+});
+	
+}
+}
+
+function addCheckbox(batchname,batchid) {
+	   var container =$('#checkboxes');
+	   $('<input />', { type: 'checkbox', id: batchid, value: batchid, class: "chkBatch" }).appendTo(container);
+	   $('<label />', { 'for': batchid, text: batchname }).appendTo(container);
+	}
+
+ </script>
 	<!-- Search Modal  start-->
 <div class="modal fade" id="ajax-modal">
 <div class="modal-dialog">
@@ -158,14 +209,20 @@
 				<br>
 				Division<!-- <input type="text" class="form-control" id="divisionName" name="divisionName"/> -->
 				<select class="btn btn-default" name="divisionName" id="divisionName">
-					<s:set value="${requestScope.divisionNames}" var="divisionNames"></s:set>
+					
 						<option value="-1">Select Division</option>
-						<s:forEach items="${divisionNames}" var="divisionName">
-							<option value="10"><s:out value="${divisionName}"></s:out></option>
-						</s:forEach>
-					</select>
-				<br>
-				Stream <input type="text" class="form-control" id="streamName" name="streamName"/>
+						<%
+						List<String> divs=(List<String>) request.getAttribute("divisionNames");
+						List<String> streams=(List<String>) request.getAttribute("streams");
+						List<String> ids=(List<String>) request.getAttribute("batcheids");
+						
+						int count=0;
+						if(divs!=null && streams!=null && ids!=null ){
+							for(count=0;count<divs.size();count++){
+						%>
+										<option value="<%=ids.get(count)%>"><%=divs.get(count)+" "+streams.get(count) %></option>
+						<%}} %>
+				</select>
 				<br>
 				<%
 					UserBean user=(UserBean) request.getSession().getAttribute("user");
@@ -245,23 +302,23 @@
         <div class="modal-body" id="">
         	<div class="error alert alert-danger"></div>
 			<div class="form-group">
-				<input type="text" class="form-control" id="studentLoginName"/>
+				Student Login Name <input type="text" class="form-control" id="studentLoginName"/> 
 				<br>
-				<jsp:useBean id="batchHelperBean" class="com.helper.BatchHelperBean">
-				<jsp:setProperty name="batchHelperBean" property="class_id" value="<%=user.getRegId() %>"/>
-				<% 
-				List<Batch> listOfBatches=batchHelperBean.getBatches();
-				pageContext.setAttribute("batchlist", listOfBatches);
-				if(listOfBatches!=null){
-					for(int i=0;i<listOfBatches.size();i++){
-						Batch batch=listOfBatches.get(i);
-						%>
-					<input type="checkbox" class="chkBatch" name="batchId" data-label="<%=batch.getBatch_name() %>" value="<%=batch.getBatch_id() %>"/><%=batch.getBatch_name()%>		
-					<%}
-				}
-				%>
-				 
-				</jsp:useBean>
+				
+				Division<!-- <input type="text" class="form-control" id="divisionName" name="divisionName"/> -->
+				<select class="btn btn-default" name="divisionName" id="divisionName">
+					<s:set value="${requestScope.divisionNames}" var="divisionNames"></s:set>
+						<option value="-1">Select Division</option>
+						<s:forEach items="${divisionNames}" var="divisionName">
+							<option value='<s:out value="${divisionName}"></s:out>'><s:out value="${divisionName}"></s:out></option>
+						</s:forEach>
+					</select>
+				<button type="button" class="btn btn-primary btn-getBatchesForStudent" id="getBatchesForStudent" onclick="getBatchesOfDivision()">Get available batches</button>
+				
+				<br>
+				<div id="checkboxes">
+				
+				</div>
 														
 				<div id="classTimming" class="hide">
 				<div class="container-fluid">
@@ -298,17 +355,11 @@
 						Processing your request Please wait
 					</div>
 			</div>
-			<%
-			List<Batch> lb= (List<Batch>) pageContext.getAttribute("batchlist");
-			if(ls!=null && lb!=null){
-				if(lb.size()>0){%>
-	        <div class="add">
+			<div class="add">
 	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Cancel</button>
 	        <button type="button" class="btn btn-primary btn-addStudent" id="btn-addStudent">Add</button>
 	        </div>
-	        <%}}else{ %>
-	       <font color="RED" ><b>Please Add Subjects And Batch First</b></font>
-	        <%} %>
+	     
 	        <div class="setTimming hide">
 	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Not Now</button>
 	        <button type="button" class="btn btn-primary btn-setTimming" id="btn-setTimming">Done</button>
@@ -326,12 +377,17 @@
         </div>
         <div class="modal-body" id="">
        	<div class="error alert alert-danger"></div>
+       	<jsp:useBean id="batchHelperBean" class="com.helper.BatchHelperBean">
+		<jsp:setProperty name="batchHelperBean" property="class_id" value="<%=user.getRegId() %>"/>
         	<%
         	StudentDetails studentDetails=(StudentDetails)request.getSession().getAttribute("studentSearchResultBatch");
         	if(studentDetails!=null){
-        	List<Batch> listOfBatches=batchHelperBean.getBatches();
+        	
         	List<Batch> currentBatches=studentDetails.getBatches();
-        	if(listOfBatches!=null){
+        	Batch selectedBatch=currentBatches.get(0);
+        	List<Batch> listOfBatches=batchHelperBean.getAllRelatedBatches(selectedBatch.getDiv_id());
+			if(listOfBatches!=null){    	
+        	
         	listOfBatches.removeAll(currentBatches);
         	for(int i=0;i<listOfBatches.size();i++){
 						Batch batch=listOfBatches.get(i);
@@ -352,7 +408,7 @@
         	}
         	}
 				%>
-			
+			</jsp:useBean>
 			<div class="form-group">
 																			
 				<div id="classTimming" class="hide">
@@ -772,8 +828,8 @@
        		
         </div>
         <div class="modal-body" id="">
-             	<%
-        	BatchDetails batchDetails=(BatchDetails)request.getSession().getAttribute("batchSearchResultBatch");
+             	
+        	<%BatchDetails batchDetails=(BatchDetails)request.getSession().getAttribute("batchSearchResultBatch");
         	if(batchDetails!=null){
         	List<Subject> listOfSubjects=subjectHelperBean.getSubjects();
         	List<Subject> currentSubjects=batchDetails.getSubjects();
@@ -783,8 +839,8 @@
 						Subject subject=listOfSubjects.get(i);
 											
 						%>
-					<input type="checkbox" class="chkSubjectBatch" name="subjectBatchId" data-label="<%=subject.getSubjectName() %>" value="<%=subject.getSubjectId() %>"/><%=subject.getSubjectName()%>		
-					<%}
+					<input type="checkbox" class="chkSubjectBatch" name="subjectBatchId" data-label="<%=subject.getSubjectName() %>" value="<%=subject.getSubjectId() %>"/><%= subject.getSubjectName()%>		
+				<%	}
 					}%>
 					
 			

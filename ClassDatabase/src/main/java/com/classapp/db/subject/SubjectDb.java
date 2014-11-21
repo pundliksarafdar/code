@@ -171,9 +171,7 @@ public String getschedulesubject(int subjectid) {
 			e.printStackTrace();
 		}
 		finally{
-			if(null!=session){
-				session.close();
-			}
+			
 		}
 		return query.list();
 	}
@@ -218,9 +216,7 @@ public String getschedulesubject(int subjectid) {
 				e.printStackTrace();
 			}
 			finally{
-				if(null!=session){
-					session.close();
-				}
+				
 			}
 		return query.list();
 	}

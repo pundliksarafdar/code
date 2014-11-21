@@ -174,5 +174,9 @@ public class BatchTransactions {
 		
 	}
 	
+	public List getAllBatchesOfDivision(String divisionName, int class_id){
+		BatchDB batchDB=new BatchDB();
+		return batchDB.retriveAllBatchesOfDivision(divisionName, class_id);
+	}
 
 }

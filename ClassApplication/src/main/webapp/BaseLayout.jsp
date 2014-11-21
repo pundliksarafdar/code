@@ -14,6 +14,11 @@
  <link href="css/admin.css" rel="stylesheet">
  <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
  <link href="css/jquery.autocomplete.css" rel="stylesheet">
+<!-- DataTables, TableTools and Editor CSS 
+<link rel="stylesheet" type="text/css" href="/media/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="/extensions/TableTools/css/dataTables.tableTools.css">
+<link rel="stylesheet" type="text/css" href="/extensions/Editor-1.3.2/css/dataTables.editor.css">-->
+ 
  <style>
 .text-center {
 	text-align: center;
@@ -34,77 +39,50 @@ body{
     padding-left: 0px;
 }
 </style>
-<link href="css/admin.css" rel="stylesheet">
 <style type="text/css">
 html,body {
 	margin: 0;
 	padding: 0;
-	height: 100%;
-}
-
-#container {
-	min-height: 100%;
-	position: relative;
-}
-
-#header {
-	
-}
-
-#body {
-	padding-bottom: 20px; /* Height of the footer */
-}
-
-#footer {
- 	position: fixed;
-    bottom: 0;
-    width: 100%;
-}
-
-.error{
-	color: red;
-}
+		}
 </style>
 <script src="js/jquery-1.10.2.min.js"></script>
 <script src="js/allAjax.js"></script>
 <script src="js/main.js"></script>
-<script src="js/bootstrap.min.js""></script>
+<script src="js/bootstrap.min.js"></script>
 <script src="js/modal/modal.js"></script>
 <script src="js/moment.min.js"></script>
 <script src="js/bootstrap-datetimepicker.min.js"></script>
 <script src="js/jquery.autocomplete.js"></script>
 </head>
 <body>
+
 <%
 UserBean userBean =(UserBean)session.getAttribute("user");
 if(userBean.getRole()<2){
 %>
-<jsp:include page="allmodals.jsp"></jsp:include>
-<% }%>
-	<div id="container">
-		<div id="header">
-			<div class = "hidden-xs">
-			<tiles:insertAttribute name="header" />
-			</div>
-			<br />
-			<div class = "hidden-xs">
-			<hr size="2px" />
-			</div>
-			<tiles:insertAttribute name="topnav" />
-			<br />
-			<hr size="2px" />
-		</div>
-		<div id="body">
-			<div style="padding: 5px;">
-				<tiles:insertAttribute name="body" />
-				<br />
-			</div>
 
-		</div>
-		<div id="footer" style="background: lavender;height: 25px;">
-			<hr size="2px" />
-			<tiles:insertAttribute name="footer" />
-			<br />
+<jsp:include page="allmodals.jsp"></jsp:include>
+<%} %>
+	<div id="outerDiv" align ="center">
+		<div id="innerDiv">
+			<div id="header">
+				<div class = "hidden-xs" style ="height : 100px;">
+					<tiles:insertAttribute name="header" />
+				</div>
+				<div style="height:32px;">				
+					<tiles:insertAttribute name="topnav" />				
+				</div>
+					<br/>							
+			</div>
+			<div id="body" style="padding-top: 10px;">
+				<div>
+					<tiles:insertAttribute name="body" />
+					<br />
+				</div>	
+			</div>
+			<div id="footer">
+				<tiles:insertAttribute name="footer" />				
+			</div>
 		</div>
 	</div>
 </body>

@@ -215,11 +215,9 @@ $(document).ready(function(){
 		var batchname=$("#batchname").val();
 		
 		var date=$("#date").val();
-	
-		if(date!="")
-		{
-			var status=validatedate(date);
-		if(status==true){
+		var valid=validatedate(date);
+		if(date!="" && valid==true)
+			{
 		$.ajax({
 			 
 			   url: "classOwnerServlet",
@@ -246,11 +244,9 @@ $(document).ready(function(){
 					  for (var x=rowCount-1; x>0; x--) {
 						  table1.deleteRow(x);
 					   }
-				  
+				   $(table).border="1";
 				   var actiontr=$(document.getElementById("scheduletr"));
 				   $(actiontr).hide();
-				   if(subjects.length>1){
-					   $(table).border="1";
 				   while(counter<subjects.length)
 					   {
 				   $(table).append("<tr><td>"+subjects[counter]+"</td><td>"+firstname[counter]+" "+lastname[counter]+"</td><td>"+starttime[counter]+
@@ -260,22 +256,12 @@ $(document).ready(function(){
 					   }
 				   $("#edit").show();
 				   $("#update").hide();
-				   }else{
-					   rowCount=table1.rows.length;
-						  for (var x=rowCount-1; x>0; x--) {
-							  table1.deleteRow(x);
-						   }
-					   $("#edit").hide();
-					   $("#lecturenotavailablemodal").modal('toggle');
-					   
-					   $(table).style="display:none"
-				   }
+				   
 				   		   	   },
 			   	error:function(){
 			   		modal.launchAlert("Error","Error");
 			   	}	
-			});}}else{
-				alert("Please Enter Date");
+			});
 			}
 	});
 	
@@ -399,22 +385,6 @@ $(document).ready(function(){
 					$(td).show();
 						state=1;
 			 		}
-			 	
-			 	var startsplit=starttimes.split(" ");
-			 	var endsplit=endtimes.split(" ");
-			 	var startspitagain=startsplit[0].split(":");
-			 	var endsplitagain=endsplit[0].split(":");
-			 	
-			 	/* if(startspitagain[0]>endsplitagain[0] && startsplit[1]==endsplit[1] )
-			 {
-			 		state=1;
-			 }else if(startspitagain[0]=endsplitagain[0] && startspitagain[1]>endsplitagain[1] && startsplit[1]==endsplit[1] )
-				 {
-				 state=1;
-				 }else if( startsplit[1]=='PM' && endsplit[1]=='AM')
-					 {
-					 state=1;
-					 } */
 			 	validatedate(dates);
 			 }
 		 if(state!=1)
@@ -509,8 +479,6 @@ $(document).ready(function(){
 			   		modal.launchAlert("Error","Error");
 			   	}	
 			});
-			 }else{
-				 $("#fielderror").modal('toggle');
 			 }
 	 });
 });
@@ -567,69 +535,10 @@ Select Date
 <th>Start Time</th>
 <th>End Time </th>
 <th>Date</th>
-<th id="scheduletr" style="display:none">Action</th>
  </tr>
 </thead>
 </table>
 </div>
-<div class="container">
-<input value="Edit" type="button" id="edit" class="btn btn-danger" style="display: none" onclick="edit()">
-<input value="Update" type="button" id="update" class="btn btn-danger" style="display: none;">
-</div>
-<div class="modal fade" id="lectureupdatemodal" tabindex="-1" role="dialog" 
-   aria-labelledby="myModalLabel" aria-hidden="true">
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" 
-               aria-hidden="true">×
-            </button>
-            <h4 class="modal-title" id="myModalLabel">
-               Lecture
-            </h4>
-         </div>
-         <div class="modal-body">
-           Lecture Updated Successfully..
-         </div>
-         </div>
-   </div>
-</div>
-<div class="modal fade" id="lecturenotavailablemodal" tabindex="-1" role="dialog" 
-   aria-labelledby="myModalLabel" aria-hidden="true">
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" 
-               aria-hidden="true">×
-            </button>
-            <h4 class="modal-title" id="myModalLabel">
-               Lecture
-            </h4>
-         </div>
-         <div class="modal-body">
-           Schedule Not Available...
-         </div>
-         </div>
-   </div>
-</div>
 
-<div class="modal fade" id="fielderror" tabindex="-1" role="dialog" 
-   aria-labelledby="myModalLabel" aria-hidden="true">
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" 
-               aria-hidden="true">×
-            </button>
-            <h4 class="modal-title" id="myModalLabel">
-               Lecture
-            </h4>
-         </div>
-         <div class="modal-body">
-           Enter All Fields Correctly..
-         </div>
-         </div>
-   </div>
-</div>
 </body>
 </html>

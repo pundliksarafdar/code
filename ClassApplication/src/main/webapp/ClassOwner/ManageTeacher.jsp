@@ -306,12 +306,12 @@ function searchTeacher() {
 		<table class="table table-bordered table-hover" style="background-color: white;" border="1">
 			<thead>
 				<tr>
-					<td></td>
-					<td>Teacher Login Name</td>
-					<td>Student Name</td>
-					<td>Subjects</td>
-					<td></td>
-					<td></td>
+					<th></th>
+					<th>Teacher Login Name</th>
+					<th>Student Name</th>
+					<th>Subjects</th>
+					<th></th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -340,9 +340,9 @@ function searchTeacher() {
 			<thead>
 				<tr>
 					<!--<td> <input type="checkbox" class="chk" name="selectAll" id="selectAll" data-label="selectAll">Select All</<input></td>  -->
-					<td>Teacher Login Name</td>
-					<td>Teacher Name</td>
-					<td>Subjects</td>
+					<th>Teacher Login Name</th>
+					<th>Teacher Name</th>
+					<th>Subjects</th>
 				</tr>
 			</thead>
 			

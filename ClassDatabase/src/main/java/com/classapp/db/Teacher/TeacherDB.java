@@ -8,6 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentDetails;
@@ -271,6 +272,8 @@ public class TeacherDB {
 					
 				Teacher teacher=(Teacher)query.uniqueResult();
 				if(teacher!=null){
+					ScheduleDB db=new ScheduleDB();
+					db.deleteSchedulerelatedtoteacher(user_id, class_id);
 					session.delete(teacher);
 					status=true;					
 				}

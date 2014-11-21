@@ -11,7 +11,7 @@
 	height: 100%;
 	width :100%;
 	border: 2px solid;
-    background: maroon;   	
+    background: #E9E581;   	
 }
 
 #outerDiv{
@@ -22,19 +22,21 @@
 
 #header {
 	width :100%;
-	height: 20%;	
+	height: 20%;
+	/* background: #C63D0F; */	
 }
 
 #body {
 	width :100%;		
 	padding-bottom: 20px; /* Height of the footer */
-	height : 76%;
+	/* background:#E9E581; */
 }
 
 #footer {
  	width: 100%;
- 	height: 4%;
+ 	/*  height: 30%;*/
  	align: "center";
+ 	/* background: #C63D0F */;
 }
 
 .error{

@@ -5,49 +5,49 @@
 
 <tiles-definitions>
 
-   <definition name="baseLayout" template="/BaseLayout.jsp">
-      <put-attribute name="title"  value="Template"/>
-      <put-attribute name="header" value="/header.jsp"/>
-      <put-attribute name="topnav"   value="/admin/menu.jsp"/>
-      <put-attribute name="body"   value="/index.jsp"/>
-      <put-attribute name="footer"   value="/footer.jsp"/>
-   </definition>
-   
-   <definition name="NoTopnavBaseLayout" template="/NoTopnavBaseLayout.jsp">
-      <put-attribute name="title"  value=""/>
-      <put-attribute name="header" value="/header.jsp"/>
-      <put-attribute name="body"   value="/index.jsp"/>
-      <put-attribute name="footer"   value="/footer.jsp"/>
-   </definition>
+	<definition name="baseLayout" template="/BaseLayout.jsp">
+		<put-attribute name="title" value="Template" />
+		<put-attribute name="header" value="/header.jsp" />
+		<put-attribute name="topnav" value="/admin/menu.jsp" />
+		<put-attribute name="body" value="/index.jsp" />
+		<put-attribute name="footer" value="/footer.jsp" />
+	</definition>
 
-   <definition name="syserror" extends="NoTopnavBaseLayout">
-      <put-attribute name="title"  value="System Error"/>
-      <put-attribute name="header" value="System Error"/>
-      <put-attribute name="body"   value="/systemError.jsp"/>
-      <put-attribute name="footer"   value="footer.jsp"/>
-   </definition>
-   
-   <definition name="login" extends="NoTopnavBaseLayout">
-      <put-attribute name="title"  value="Template"/>
-      <put-attribute name="header" value="header.jsp"/>
-      <put-attribute name="body"   value="/index.jsp"/>
-      <put-attribute name="footer"   value="footer.jsp"/>
-   </definition>
-   
-   <definition name="admin.loginsuccess" extends="baseLayout">
-      <put-attribute name="title"  value="Admin"/>
-      <put-attribute name="header"  value="/header.jsp"/>
-      <put-attribute name="topnav"  value="/admin/menu.jsp"/>
-      <put-attribute name="body"   value="/admin/loginSuccess.jsp"/>      
-   </definition>
+	<definition name="NoTopnavBaseLayout" template="/NoTopnavBaseLayout.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="header" value="/header.jsp" />
+		<put-attribute name="body" value="/index.jsp" />
+		<put-attribute name="footer" value="/footer.jsp" />
+	</definition>
 
-   <definition name="classowner.loginsuccess" extends="baseLayout">
-      <put-attribute name="title"  value="Admin"/>
-      <put-attribute name="header"  value="/header.jsp"/>
-      <put-attribute name="topnav"  value="/admin/menu.jsp"/>
-      <put-attribute name="body"   value="/ClassOwner/ClassOwner.jsp"/>      
-   </definition>
-   
+	<definition name="syserror" extends="NoTopnavBaseLayout">
+		<put-attribute name="title" value="System Error" />
+		<put-attribute name="header" value="System Error" />
+		<put-attribute name="body" value="/systemError.jsp" />
+		<put-attribute name="footer" value="footer.jsp" />
+	</definition>
+
+	<definition name="login" extends="NoTopnavBaseLayout">
+		<put-attribute name="title" value="Template" />
+		<put-attribute name="header" value="" />
+		<put-attribute name="body" value="/index.jsp" />
+		<put-attribute name="footer" value="" />
+	</definition>
+
+	<definition name="admin.loginsuccess" extends="baseLayout">
+		<put-attribute name="title" value="Admin" />
+		<put-attribute name="header" value="/header.jsp" />
+		<put-attribute name="topnav" value="/admin/menu.jsp" />
+		<put-attribute name="body" value="/admin/loginSuccess.jsp" />
+	</definition>
+
+	<definition name="classowner.loginsuccess" extends="baseLayout">
+		<put-attribute name="title" value="Admin" />
+		<put-attribute name="header" value="/header.jsp" />
+		<put-attribute name="topnav" value="/admin/menu.jsp" />
+		<put-attribute name="body" value="/ClassOwner/ClassOwner.jsp" />
+	</definition>
+
    <definition name="classteacher.loginsuccess" extends="baseLayout">
       <put-attribute name="title"  value="Admin"/>
       <put-attribute name="header"  value="/header.jsp"/>
@@ -61,128 +61,139 @@
       <put-attribute name="topnav"  value="/student/menu.jsp"/>
       <put-attribute name="body"   value="/admin/loginSuccess.jsp"/>      
    </definition>
-   
+
 	<definition name="unaccepted" extends="NoTopnavBaseLayout">
-      <put-attribute name="title"  value="Register"/>
-      <put-attribute name="header"  value="/header.jsp"/>
-      <put-attribute name="body"   value="/General/NotAccepted.jsp"/>      
-   </definition>
-   
+		<put-attribute name="title" value="Register" />
+		<put-attribute name="header" value="/header.jsp" />
+		<put-attribute name="body" value="/General/NotAccepted.jsp" />
+	</definition>
+
 	<definition name="accessblocked" extends="NoTopnavBaseLayout">
-      <put-attribute name="title"  value="Register"/>
-      <put-attribute name="header"  value="/header.jsp"/>
-      <put-attribute name="body"   value="/General/AccessBlocked.jsp"/>      
-   </definition>
-   
-   <definition name="register" extends="NoTopnavBaseLayout">
-      <put-attribute name="title"  value="Register"/>
-      <put-attribute name="header"  value="/header.jsp"/>
-      <put-attribute name="body"   value="/register.jsp"/>      
-   </definition>
-	
+		<put-attribute name="title" value="Register" />
+		<put-attribute name="header" value="/header.jsp" />
+		<put-attribute name="body" value="/General/AccessBlocked.jsp" />
+	</definition>
+
+	<definition name="register" extends="NoTopnavBaseLayout">
+		<put-attribute name="title" value="Register" />
+		<put-attribute name="header" value="/header.jsp" />
+		<put-attribute name="body" value="/register.jsp" />
+	</definition>
+
 	<definition name="registersuccess" extends="NoTopnavBaseLayout">
-      <put-attribute name="title"  value="Register"/>
-      <put-attribute name="header"  value="/header.jsp"/>
-      <put-attribute name="body"   value="/General/RegisterSuccess.jsp"/>      
-   </definition>
-   
-   <definition name="edituser" extends="NoTopnavBaseLayout">
-      <put-attribute name="title"  value="Edit User"/>
-      <put-attribute name="header"  value="/header.jsp"/>
-      <put-attribute name="body"   value="/General/edituser.jsp"/>      
-   </definition>
-
-	<definition name="edituserreview" extends="NoTopnavBaseLayout">
-      <put-attribute name="title"  value="Edit Review"/>
-      <put-attribute name="header"  value="/header.jsp"/>
-      <put-attribute name="body"   value="/General/edituserreview.jsp"/>      
-   </definition>
-   
-   <definition name="editusersave" extends="NoTopnavBaseLayout">
-      <put-attribute name="title"  value="Save"/>
-      <put-attribute name="header"  value="/header.jsp"/>
-      <put-attribute name="body"   value="/General/editusersave.jsp"/>      
-   </definition>
-   
-   <definition name="editusersuccess" extends="NoTopnavBaseLayout">
-      <put-attribute name="title"  value="Save"/>
-      <put-attribute name="header"  value="/header.jsp"/>
-      <put-attribute name="body"   value="/General/editusersuccess.jsp"/>      
-   </definition>
-
-   <definition name="classowner.addsubject" extends="baseLayout">
-      <put-attribute name="title"  value="Add Subject"/>
-      <put-attribute name="body"   value="/ClassOwner/AddSubject.jsp"/>      
-   </definition>
-
-   <definition name="classowner.addbatchsubject" extends="baseLayout">
-      <put-attribute name="title"  value="Add Subject"/>
-      <put-attribute name="body"   value="/ClassOwner/AddBatchSubject.jsp"/>      
-   </definition>
-    <definition name="classowner.managebatch" extends="baseLayout">
-      <put-attribute name="title"  value="Manage Batch"/>
-      <put-attribute name="body"   value="/ClassOwner/ManageBatch.jsp"/>  
+		<put-attribute name="title" value="Register" />
+		<put-attribute name="header" value="/header.jsp" />
+		<put-attribute name="body" value="/General/RegisterSuccess.jsp" />
 	</definition>
-   <definition name="classowner.managestudent" extends="baseLayout">
-      <put-attribute name="title"  value="Manage Student"/>
-      <put-attribute name="body"   value="/ClassOwner/ManageStudent.jsp"/>  
-   </definition>
-   <definition name="classowner.manageteacher" extends="baseLayout">
-      <put-attribute name="title"  value="Manage Teacher"/>
-      <put-attribute name="body"   value="/ClassOwner/ManageTeacher.jsp"/>  
+
+	<definition name="edituser" extends="baseLayout">
+		<put-attribute name="title" value="Edit User" />
+		<put-attribute name="header" value="/header.jsp" />
+		<put-attribute name="body" value="/General/edituser.jsp" />
 	</definition>
+
+	<definition name="edituserreview" extends="baseLayout">
+		<put-attribute name="title" value="Edit Review" />
+		<put-attribute name="header" value="/header.jsp" />
+		<put-attribute name="body" value="/General/edituserreview.jsp" />
+	</definition>
+
+	<definition name="editusersave" extends="baseLayout">
+		<put-attribute name="title" value="Save" />
+		<put-attribute name="header" value="/header.jsp" />
+		<put-attribute name="body" value="/General/editusersave.jsp" />
+	</definition>
+
+	<definition name="editusersuccess" extends="baseLayout">
+		<put-attribute name="title" value="Save" />
+		<put-attribute name="header" value="/header.jsp" />
+		<put-attribute name="body" value="/General/editusersuccess.jsp" />
+	</definition>
+
+	<definition name="classowner.addsubject" extends="baseLayout">
+		<put-attribute name="title" value="Add Subject" />
+		<put-attribute name="body" value="/ClassOwner/AddSubject.jsp" />
+	</definition>
+
+	<definition name="classowner.addbatchsubject" extends="baseLayout">
+		<put-attribute name="title" value="Add Subject" />
+		<put-attribute name="body" value="/ClassOwner/AddBatchSubject.jsp" />
+	</definition>
+	<definition name="classowner.managebatch" extends="baseLayout">
+		<put-attribute name="title" value="Manage Batch" />
+		<put-attribute name="body" value="/ClassOwner/ManageBatch.jsp" />
+	</definition>
+	<definition name="classowner.managestudent" extends="baseLayout">
+		<put-attribute name="title" value="Manage Student" />
+		<put-attribute name="body" value="/ClassOwner/ManageStudent.jsp" />
+	</definition>
+	<definition name="classowner.manageteacher" extends="baseLayout">
+		<put-attribute name="title" value="Manage Teacher" />
+		<put-attribute name="body" value="/ClassOwner/ManageTeacher.jsp" />
+	</definition>
+
 	<definition name="classowner.manageexams" extends="baseLayout">
-      <put-attribute name="title"  value="Manage Exams"/>
-      <put-attribute name="body"   value="/ClassOwner/ManageExams.jsp"/>  
+		<put-attribute name="title" value="Manage Exams" />
+		<put-attribute name="body" value="/ClassOwner/ManageExams.jsp" />
 	</definition>
-   
-    <definition name="timetable.TimetableOption" extends="baseLayout">
-      <put-attribute name="title"  value="Time Table"/>
-      <put-attribute name="body"   value="/Timetable/TimetableOption.jsp"/>      
-   </definition>
-   
-   <definition name="timetable.CreateTimeTable" extends="baseLayout">
-      <put-attribute name="title"  value="Time Table"/>
-      <put-attribute name="body"   value="/Timetable/CreateTimeTable.jsp"/>      
-   </definition>
-   
-   <definition name="timetable.UpdateTimeTable" extends="baseLayout">
-      <put-attribute name="title"  value="Time Table"/>
-      <put-attribute name="body"   value="/Timetable/UpdateTimeTable.jsp"/>      
-   </definition>
-   
-   <definition name="notes.NotesOption" extends="baseLayout">
-      <put-attribute name="title"  value="Notes"/>
-      <put-attribute name="body"   value="/Notes/NotesOption.jsp"/>      
-   </definition>
-   
-   <definition name="nonstudent.searchexamnonstudent" extends="baseLayout">
-      <put-attribute name="title"  value="View Exams"/>
-      <put-attribute name="body"   value="/ClassOwner/searchexams.jsp"/>      
-   </definition>
-   
-   <definition name="notes.addnotesoption" extends="baseLayout">
-      <put-attribute name="title"  value="Notes"/>
-      <put-attribute name="body"   value="/Notes/AddNotes.jsp"/>      
-   </definition>
-   
-   <definition name="notes.success" extends="baseLayout">
-      <put-attribute name="title"  value="Notes"/>
-      <put-attribute name="body"   value="/Notes/AddNotesSuccess.jsp"/>      
-   </definition>
-   <definition name="seenotes.success" extends="baseLayout">
-      <put-attribute name="title"  value="Notes"/>
-      <put-attribute name="body"   value="/Notes/SeeNotes.jsp"/>      
-   </definition>
-   <definition name="displaynoteslist.success" extends="baseLayout">
-      <put-attribute name="title"  value="Display Notes List"/>
-      <put-attribute name="body"   value="/Notes/DisplayNotesList.jsp"/>      
-   </definition>
-   <definition name="student.studenttimetable" extends="baseLayout">
-      <put-attribute name="title"  value="Student Time Table"/>
-      <put-attribute name="body"   value="/student/StudentTimetable.jsp"/>      
-   </definition>
-   
+
+	<definition name="timetable.TimetableOption" extends="baseLayout">
+		<put-attribute name="title" value="Time Table" />
+		<put-attribute name="body" value="/Timetable/TimetableOption.jsp" />
+	</definition>
+
+	<definition name="timetable.CreateTimeTable" extends="baseLayout">
+		<put-attribute name="title" value="Time Table" />
+		<put-attribute name="body" value="/Timetable/CreateTimeTable.jsp" />
+	</definition>
+
+	<definition name="timetable.UpdateTimeTable" extends="baseLayout">
+		<put-attribute name="title" value="Time Table" />
+		<put-attribute name="body" value="/Timetable/UpdateTimeTable.jsp" />
+	</definition>
+
+	<definition name="notes.NotesOption" extends="baseLayout">
+		<put-attribute name="title" value="Notes" />
+		<put-attribute name="body" value="/Notes/NotesOption.jsp" />
+	</definition>
+
+	<definition name="nonstudent.searchexamnonstudent" extends="baseLayout">
+		<put-attribute name="title" value="View Exams" />
+		<put-attribute name="body" value="/ClassOwner/searchexams.jsp" />
+	</definition>
+
+	<definition name="nonstudent.viewexamnonstudent" extends="baseLayout">
+		<put-attribute name="title" value="View Exams" />
+		<put-attribute name="body" value="/ClassOwner/viewexams.jsp" />
+	</definition>
+
+	<definition name="nonstudent.viewexamerror" extends="baseLayout">
+		<put-attribute name="title" value="Error" />
+		<put-attribute name="body" value="/ClassOwner/searchexams.jsp" />
+	</definition>
+
+	<definition name="notes.addnotesoption" extends="baseLayout">
+		<put-attribute name="title" value="Notes" />
+		<put-attribute name="body" value="/Notes/AddNotes.jsp" />
+	</definition>
+
+	<definition name="notes.success" extends="baseLayout">
+		<put-attribute name="title" value="Notes" />
+		<put-attribute name="body" value="/Notes/AddNotesSuccess.jsp" />
+	</definition>
+	<definition name="seenotes.success" extends="baseLayout">
+		<put-attribute name="title" value="Notes" />
+		<put-attribute name="body" value="/Notes/SeeNotes.jsp" />
+	</definition>
+	<definition name="displaynoteslist.success" extends="baseLayout">
+		<put-attribute name="title" value="Display Notes List" />
+		<put-attribute name="body" value="/Notes/DisplayNotesList.jsp" />
+	</definition>
+	<definition name="student.studenttimetable" extends="baseLayout">
+		<put-attribute name="title" value="Student Time Table" />
+		<put-attribute name="body" value="/student/StudentTimetable.jsp" />
+	</definition>
+
    <definition name="teacher.teachertimetable" extends="baseLayout">
       <put-attribute name="title"  value="Student Time Table"/>
       <put-attribute name="body"   value="/teacher/TeacherTimeTable.jsp"/>      
@@ -192,4 +203,8 @@
       <put-attribute name="title"  value="Student Notes"/>
       <put-attribute name="body"   value="/student/StudentsNotes.jsp"/>      
    </definition>
+   <definition name="timetable.showtimetable" extends="baseLayout">
+		<put-attribute name="title" value="Time Table" />
+		<put-attribute name="body" value="/Timetable/SeeTimeTable.jsp" />
+	</definition>
 </tiles-definitions>

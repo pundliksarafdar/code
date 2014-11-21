@@ -65,5 +65,8 @@ public class DivisionTransactions {
 		
 	}
 	 
+	 public int getDivisionIDByName(String divisionName){
+		 return divisionData.getDivisionId(divisionName);
+	 }
 	 
 }

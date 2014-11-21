@@ -15,9 +15,11 @@ public class ManageTeacherAction extends BaseAction{
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		
+		
 			TeacherHelperBean teacherHelperBean= new TeacherHelperBean();
 			teacherHelperBean.setClass_id(userBean.getRegId());
 			request.getSession().setAttribute(Constants.TEACHER_LIST,teacherHelperBean.getTeachers());
+				
 		return SUCCESS;
 	}
 }

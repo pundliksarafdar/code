@@ -9,16 +9,7 @@
 <%@page import="java.util.List"%>
 <html>
  <head>
- <!-- <link rel="stylesheet" href="../js/jquery-ui/jquery-ui.css" type="text/css" /> -->
- <!-- <link rel="stylesheet" href="../css/jquery-clockpicker.min.css" type="text/css" /> -->
- <link rel="stylesheet" href="../css/bootstrap-datetimepicker.min.css" type="text/css" />
- 
- <script src="../js/jquery-1.10.2.min.js"></script>
- <!-- <script src="../js/jquery-ui/jquery-ui.js"></script> -->
- <!-- <script src="../js/jquery-clockpicker.min.js"></script> -->
- <script src="../js/bootstrap-datetimepicker.min.js"></script>
- <script src="js/bootstrap.min.js"></script>
- <link href="css/bootstrap.min.css" rel="stylesheet">
+
  <style type="text/css">
  body {
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -108,7 +99,6 @@ $('#batchname').change(function(){
 	
 	var table1=document.getElementById("timetablediv");
 		  var rowCount=table1.rows.length;
-		  alert(rowCount);
 		  for (var x=rowCount-1; x>0; x--) {
 			  table1.deleteRow(x);
 		   }
@@ -149,7 +139,7 @@ $('#batchname').change(function(){
  
  function validate(){
 	 
-	 alert(globcounter);
+	 
 	 var subjects="";
 	 var teachers="";
 	 var starttimes="";
@@ -169,9 +159,25 @@ $('#batchname').change(function(){
 	   			$(td).empty();
 	   			$(td).append('<span>Enter All Fields</span>');
 				$(td).show(); */
-				$("#fielderror").modal('toggle');
+				
 					state=1;
 		 		}
+		 	var startsplit=starttimes.split(" ");
+		 	var endsplit=endtimes.split(" ");
+		 	var startspitagain=startsplit[0].split(":");
+		 	var endsplitagain=endsplit[0].split(":");
+		 	
+	/* 	 	if(startspitagain[0]>endsplitagain[0] && startsplit[1]==endsplit[1] )
+		 {
+		 		state=1;
+		 }else if(startspitagain[0]=endsplitagain[0] && startspitagain[1]>endsplitagain[1] && startsplit[1]==endsplit[1] )
+			 {
+			 state=1;
+			 }else if( startsplit[1]=='PM' && endsplit[1]=='AM')
+				 {
+				 state=1;
+				 } */
+		 	
 		 	if(!'undefined'.match(dates)){
 		 	var valid=validatedate(dates);
 		 	if(valid==false)
@@ -251,7 +257,6 @@ $('#batchname').change(function(){
 			   					}else {
 			   					  var table1=document.getElementById("timetablediv");
 			   					  var rowCount=table1.rows.length;
-			   					  alert(rowCount);
 			   					  for (var x=rowCount-1; x>0; x--) {
 			   						  table1.deleteRow(x);
 			   					   }
@@ -277,6 +282,8 @@ $('#batchname').change(function(){
 		   		modal.launchAlert("Error","Error");
 		   	}	
 		});
+		 }else{
+			 $("#fielderror").modal('toggle');
 		 }
  }
  
@@ -325,14 +332,16 @@ input = $('#starttime'+id);
 	               sell1Options[0]= new Option("Select Teacher", "-1");
 	               
 	               var limit=firstname.length;
+	               if(teacherid[0]!=""){
 	               for(var i=0;i<limit;i++)
 	            	   {
 	            	   
 	            	   sell1Options[i+1]= new Option(firstname[i]+" "+lastname[i], teacherid[i]);
 	            	   }
+	               }
 			   	},
 			   error:function(data){
-				   alert("error");
+				   alert("Teacher Not Available");
 			   }
 		});
   }
@@ -507,42 +516,41 @@ input = $('#starttime'+id);
  </script> 
  </head>
  <body>
- <div id="timetable" align="center" class="container">
-
-<%List<Batch> batch=(List<Batch>)request.getAttribute("batch"); 
-int i=0;%>
-<div class="jumbotron">
-<div class="container">
-<div class="col-xs-2">
-Select Batch
-<select name="batchname" id="batchname" class="form-control" width="100px">
-<option>Select Batch</option>
-<%
-while(i<batch.size()){
-%>
-<option value="<%=batch.get(i).getBatch_id()%>"><%=batch.get(i).getBatch_name() %></option>
-<%i++;} %>
-</select>
-</div>
-<div class="col-xs-2">
-<br>
-<button id="add" type="button" class="btn btn-info" onclick="add()" disabled="true">Add lecture</button>
-</div>
-</div>
-</div>
-</div>
+	<div id="timetable" align="center" class="container">	
+		<%List<Batch> batch=(List<Batch>)request.getAttribute("batch"); 
+		int i=0;%>
+		<div class="jumbotron">
+			<div class="container">
+				<div class="col-xs-2">
+					Select Batch : 
+					<select name="batchname" id="batchname" class="form-control" width="100px">
+					<option>Select Batch</option>
+					<%
+					while(i<batch.size()){
+					%>
+					<option value="<%=batch.get(i).getBatch_id()%>"><%=batch.get(i).getBatch_name() %></option>
+					<%i++;} %>
+					</select>
+				</div>
+				<div class="col-xs-4">
+				<br/>
+				<button id="add" type="button" class="btn btn-info" onclick="add()" disabled="true">Add lecture</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 <div id="testdiv" align="center" class="container">
-<table id="timetablediv" border="1" data-toggle="table"  class="table table-bordered" width="600px">
-<tr>
-<th width="100px">Select Subject</th>
-<th width="100px">Select Teacher</th>
-<th width="100px">Start Time</th>
-<th width="100px">End Time</th>
-<th width="100px">Date</th>
-<th width="100px"></th>
-<th width="100px"></th>
-</tr>
+<table id="timetablediv" class="table table-bordered table-hover" style="background-color: white;" data-toggle="table" width="600px">
+	<tr>
+		<th width="100px">Select Subject</th>
+		<th width="100px">Select Teacher</th>
+		<th width="100px">Start Time</th>
+		<th width="100px">End Time</th>
+		<th width="100px">Date</th>
+		<th width="100px"></th>
+		<th width="100px"></th>
+	</tr>	
 </table>
 <a href="#" id="submit"> <button type="button" class="btn btn-info" align="center">Submit</button></a>
 </div>
@@ -579,7 +587,7 @@ while(i<batch.size()){
             </h4>
          </div>
          <div class="modal-body">
-           Enter All Fields..
+           Enter All Fields Correctly..
          </div>
          </div>
    </div>

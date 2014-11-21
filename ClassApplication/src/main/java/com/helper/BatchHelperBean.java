@@ -57,4 +57,7 @@ public class BatchHelperBean {
 		return batchDetailsList;
 	}
 	
+	public List<Batch> getAllRelatedBatches(int div_id){
+		return batchData.getAllRelatedBatchesOfClass(class_id, div_id);
+	}
 }

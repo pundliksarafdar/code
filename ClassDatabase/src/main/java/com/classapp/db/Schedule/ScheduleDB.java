@@ -299,6 +299,29 @@ public HashMap<String, List> getStudentData(Integer studentId){
 	
 }
 
+public List<Schedule> deleteSchedulerelatedtoteacher(int teacherid,int classid) {
+	
+	Session session = null;
+	Transaction transaction = null;
+	List<Schedule> scheduleList = null;
+	Object object = new Object();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("delete FROM Schedule where teacher_id = :teacher_id and class_id =:class_id");
+		//Query query = session.createQuery("FROM Schedule where date = '2014-10-04' and class_id = 34");
+		query.setParameter("teacher_id", teacherid);
+		query.setParameter("class_id", classid);
+		
+	query.executeUpdate();
+		transaction.commit();
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	return scheduleList;
+}
+
 public static void main(String[] args) {
 	ScheduleDB db = new ScheduleDB();
 	//db.getScheduleForDate(68, "2014-09-09");

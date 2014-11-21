@@ -101,7 +101,6 @@ $(document).ready(function(){
 		var regId;
 		batchName = $('div#addBatchModal').find('#batchName').val();
 		getSelectedCheckbox();
-		alert(subjectsname);
 		if(!batchName || batchName.trim()==""){
 			$('div#addBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Batch name cannot be blank');
 			$('div#addBatchModal .error').show();
@@ -116,14 +115,12 @@ $(document).ready(function(){
 						 regId:'',
 						 batchName:batchName,
 						 divisionName: $('div#addBatchModal').find('#divisionName').val(),
-						 streamName: $('div#addBatchModal').find('#streamName').val(),
 						 subjectname:subjectsname
 				   		},
 				   type:"POST",
 				   success:function(e){
 						$('div#addBatchModal .progress').addClass('hide');
 						var resultJson = JSON.parse(e);
-						alert("success");
 						   if(resultJson.status != 'error'){
 							   $('div#addBatchModal').modal('hide');
 							   modal.launchAlert("Success","Batch Added! Page will refresh in 2 sec");
@@ -180,8 +177,7 @@ $(document).ready(function(){
 					    $('div#modifyBatchModal .progress').addClass('hide');
 					   var resultJson = JSON.parse(data);
 					      if(resultJson.status != 'error'){
-					       alert("Success");
-					   	   $('div#modifyBatchModal').modal('hide');
+					       $('div#modifyBatchModal').modal('hide');
 					   	   modal.launchAlert("Success","Batch Updated! Page will refresh in 2 sec");
 					   	   setTimeout(function(){
 					   		   location.reload();
@@ -208,11 +204,11 @@ $(document).ready(function(){
 			$('div#modifyBatchModal .progress').removeClass('hide');
 			$('.add').addClass('hide');
 		}
-		$(".chkSubjectBatch:checked").removeAttr('checked');
-	});
+	$(".chkSubjectBatch:checked").removeAttr('checked');
+});
 
 	$('div#deleteBatchModal').on('click','button#btn-deleteBatch',function(){
-		alert("");
+	
 		var batchId=document.getElementsByName("radioBatch")[0].value;
 		$('div#deleteBatchModal .error').html('');
 		$('div#deleteBatchModal .error').hide();
@@ -293,13 +289,13 @@ $(document).ready(function(){
 		<table class="table table-bordered table-hover" style="background-color: white;" border="1">
 			<thead>
 				<tr>
-					<td></td>
-					<td>Batch Name</td>
-					<td>Division</td>
-					<td>Stream</td>
-					<td>Subjects</td>
-					<td></td>
-					<td></td>
+					<th></th>
+					<th>Batch Name</th>
+					<th>Division</th>
+					<th>Stream</th>
+					<th>Subjects</th>
+					<th></th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>	
@@ -331,10 +327,10 @@ $(document).ready(function(){
 			<thead>
 				<tr>
 					<!--<td> <input type="checkbox" class="chk" name="selectAll" id="selectAll" data-label="selectAll">Select All</<input></td>  -->
-					<td>Batch Name</td>
-					<td>Division</td>
-					<td>Stream</td>
-					<td>Subjects</td>
+					<th>Batch Name</th>
+					<th>Division</th>
+					<th>Stream</th>
+					<th>Subjects</th>
 				</tr>
 			</thead>
 		
@@ -359,7 +355,7 @@ $(document).ready(function(){
 		  			i++;		  
 			  		} 		
 		 		} %>
-		 	</tbody>sss
+		 	</tbody>
 		 </table>
 	</div>
 </body>

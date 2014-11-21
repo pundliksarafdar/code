@@ -289,4 +289,27 @@ public class DivisionDB {
 		return false;
 		
 	}
+	
+	public Division retrive(String divisionName){
+		Session session = null;
+		Transaction transaction = null;
+		Object queryResult=null;
+		String queryString="from Division where divisionName = :div_name";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setString("div_name", divisionName);  
+			queryResult = query.uniqueResult();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		
+		return (Division)queryResult;
+	}
 }

@@ -1,4 +1,4 @@
-
+<meta http-equiv="cache-control" content="max-age=0" />
 <%@page import="com.classapp.db.student.StudentDetails"%>
 <%@page import="com.classapp.db.subject.Subject"%>
 <%@page import="com.classapp.db.batch.Batch"%>
@@ -15,6 +15,7 @@ var selectedStudentIds;
 
 function getSelectedBatchesForStudent(){
 	var batches;
+	batchIds="";
 	batches=$(".chkBatch:checked").map(function(){
 	return this.value;
 	});
@@ -22,7 +23,7 @@ function getSelectedBatchesForStudent(){
 	var i=0;
 	while(i<batches.size()){
 		if(i==0){
-			batchIds=batchIds+batches[0]+"";
+			batchIds=batches[0]+"";
 		}else{
 			batchIds=batchIds+","+batches[i];
 		}
@@ -39,7 +40,7 @@ function getSelectedStudentsToDelete(){
 	var i=0;
 	while(i<studentIds.size()){
 		if(i==0){
-			selectedStudentIds=selectedStudentIds+studentIds[0]+"";
+			selectedStudentIds=studentIds[0]+"";
 		}else{
 			selectedStudentIds=selectedStudentIds+","+studentIds[i];
 		}
@@ -129,10 +130,14 @@ function getSelectedStudentsToDelete(){
 			var studentLgName;
 			
 			studentLgName = $('div#addStudentModal').find('#studentLoginName').val();
-			
+			var divisionName = $('div#addStudentModal').find('#divisionName').val();
+
 			getSelectedBatchesForStudent();		
 			if(!studentLgName || studentLgName.trim()==""){
 				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Student login name cannot be blank');
+				$('div#addStudentModal .error').show();
+			}else if(!divisionName || divisionName.trim()==""){
+				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Division name cannot be blank');
 				$('div#addStudentModal .error').show();
 			}else{
 				$('div#addStudentModal .progress').removeClass('hide');
@@ -143,7 +148,8 @@ function getSelectedStudentsToDelete(){
 				    	 methodToCall: "addStudent",
 						 regId:'',
 						 studentLgName:studentLgName,
-						 batchIds:batchIds,					 
+						 batchIds:batchIds,	
+						 divisionName:divisionName,				 
 				   		},
 				   type:"POST",
 				   success:function(e){
@@ -279,7 +285,7 @@ function getSelectedStudentsToDelete(){
 						   	},1000*3); */
 						   	//successCallbackStudentDelete(e);  
 						   $('div#deleteStudentModal .progress').addClass('hide');
-							var resultJson = JSON.parse(data);
+							var resultJson = JSON.parse(e);
 							   if(resultJson.status != 'error'){
 								   $('div#deleteStudentModal').modal('hide');
 								   modal.launchAlert("Success","Student Deleted! Page will refresh in 2 sec");
@@ -305,7 +311,7 @@ function getSelectedStudentsToDelete(){
 						   $('div#deleteStudentModal .progress').addClass('hide');
 							$('div#deleteStudentModal .add').removeClass('hide');
 							$('div#deleteStudentModal .error').show();
-							var resultJson = JSON.parse(data);
+							var resultJson = JSON.parse(e);
 							if(!resultJson.message){
 								   $('div#deleteStudentModal .error').html('<strong>Error!</strong> Unable to delete');
 							   	}else{
@@ -472,12 +478,12 @@ function getSelectedStudentsToDelete(){
 			<table class="table table-bordered table-hover" style="background-color: white;" border="1">
 				<thead>
 					<tr>
-						<td></td>
-						<td>Student Login Name</td>
-						<td>Student Name</td>
-						<td>Division</td>
-						<td></td>
-						<td></td>
+						<th></th>
+						<th>Student Login Name</th>
+						<th>Student Name</th>
+						<th>Division</th>
+						<th></th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>	
@@ -506,9 +512,9 @@ function getSelectedStudentsToDelete(){
 				<thead>
 					<tr>
 						<!--<td> <input type="checkbox" class="chk" name="selectAll" id="selectAll" data-label="selectAll">Select All</<input></td>  -->
-						<td>Student Login Name</td>
-						<td>Student Name</td>
-						<td>Division</td>
+						<th>Student Login Name</th>
+						<th>Student Name</th>
+						<th>Division</th>
 					</tr>
 				</thead>
 				<%

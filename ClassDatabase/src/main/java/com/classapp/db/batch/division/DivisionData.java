@@ -45,5 +45,8 @@ public boolean deleteDivision(int div_id){
 public List<Division> getAllDivision(){
 	return divisionDB.getAllDivisions();
 }
-
+public int getDivisionId(String divisionName){		
+	int div_id =divisionDB.retrive(divisionName).getDivId();
+	return div_id;
+}
 }
