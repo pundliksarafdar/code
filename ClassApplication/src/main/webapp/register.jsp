@@ -360,11 +360,7 @@
 		<div class="form-group">
 			<label for="loginname" class="col-sm-4 control-label">*Desired Login Name</label>
 			<div class="col-sm-5">
-<<<<<<< .mine
 				<input type="text" class="form-control" name="registerBean.loginName" id="loginname" required="required"  value='<s:property value="registerBean.loginName" />'/>
-=======
-				<input type="text" class="form-control" name="registerBean.loginName" id="loginname" required="required" maxlength="25" />
->>>>>>> .r41
 			</div>
 		</div>
 		<div class="form-group">
