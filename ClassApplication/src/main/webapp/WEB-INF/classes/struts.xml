@@ -5,8 +5,7 @@
 <struts>
 <constant name="struts.devMode" value="true" />
 <constant name="struts.action.excludePattern" value="LoadConfig"/>
-<constant name="struts.action.excludePattern" value="/admajxsrvlt*"/>
-<constant name="struts.action.excludePattern" value="/classOwnerServlet"/>
+<constant name="struts.action.excludePattern" value="/admajxsrvlt,/classOwnerServlet"/>
 <constant name="struts.multipart.maxSize" value="1000000" />
 <constant name="struts.multipart.saveDir" value="C:\\ExamPapers" />
    <package name="classapp" extends="struts-default">

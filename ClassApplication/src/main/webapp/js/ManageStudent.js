@@ -62,10 +62,14 @@ $(document).ready(function(){
 		var studentLgName;
 		
 		studentLgName = $('div#addStudentModal').find('#studentLoginName').val();
-		
+		var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
 		getSelectedBatchesForStudent();		
 		if(!studentLgName || studentLgName.trim()==""){
 			$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Student login name cannot be blank');
+			$('div#addStudentModal .error').show();
+		}else if($("#studentLoginName").val().length<5 || !$("#studentLoginName").val().match(regloginname))
+		{
+			$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Studentsss login name cannot be blank');
 			$('div#addStudentModal .error').show();
 		}else{
 			$('div#addStudentModal .progress').removeClass('hide');

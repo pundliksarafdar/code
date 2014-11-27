@@ -203,7 +203,7 @@ function addCheckbox(batchname,batchid) {
           <h4 class="modal-title" id="">Add Batch</h4>
         </div>
         <div class="modal-body" id="">
-        	
+        	<div class="error alert alert-danger"></div>
 			<div class="form-group">
 				Batch Name <input type="text" class="form-control" id="batchName"/>
 				<br>

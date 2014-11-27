@@ -6,6 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.classapp.db.register.RegisterBean;
 import com.config.BaseAction;
+import com.signon.LoginBean;
+import com.signon.LoginUser;
+import com.transaction.register.RegisterTransaction;
 import com.user.UserBean;
 
 public class EditUserSave extends BaseAction{
@@ -25,8 +28,16 @@ public class EditUserSave extends BaseAction{
 
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
+		RegisterTransaction registerTransaction = new RegisterTransaction();
+		if(registerTransaction.updateUser(registerBean, userBean.getRegId())){
+			LoginUser loginUser = new LoginUser();
+			loginUser.loadBean(userBean, userBean.getLoginBean());
+			return "success";
+		}else{
+			
+			return ERROR;
+		}
 		
-		return "success";
 	}
 	
 }

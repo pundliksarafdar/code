@@ -1,7 +1,13 @@
 <%@page import="com.config.Constants"%>
 <%@taglib prefix="s" uri="/struts-tags"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <script type="text/javascript">
+	$(function () {
+		$('[data-toggle="tooltip"]').attr("title",passwordCriteria); 
+		$('[data-toggle="tooltip"]').tooltip({"html":true});
+	})
+	var passwordCriteria = "Password should be greater than 5 and less than 20 in length <br> Should contain special atleast on character [!@#$%]"
 	$(document).ready(function(){
 		$('#role').val("");
 		$('#phone1,#phone2').keydown(function(e){
@@ -14,7 +20,37 @@
 		    	return true;
 		    }
 		});
+		addRole($('#roleValidation').val())
+		if($("#dobhidden").val()>3){
+			$("#dobfield").val($("#dobhidden").val().substring(0,4)+"-"+$("#dobhidden").val().substring(4,6)+"-"+$("#dobhidden").val().substring(6,8));
+		}
+		
+		$("#phone1").on("blur",function(){
+			allAjax.checkNumberExist($(this).val().trim(),function(e){
+				var resultJson = JSON.parse(e);
+				   if(resultJson.exists == true){
+					   $("#phone1").focus();
+					   alert("Mobile Nuber already registered, Please contact administrator");						   					   	
+				   	}else{
+				   		
+				   	}				
+			});
+		});
+		
+		$("#loginname").on("blur",function(){
+			allAjax.checkUserNameExist($(this).val().trim(),function(e){
+				var resultJson = JSON.parse(e);
+				   if(resultJson.exists == true){
+					   $("#loginname").focus();
+					   alert("User name already registered, Please contact administrator");						   					   	
+				   	}else{
+				   		
+				   	}				
+			});
+		});
 	});
+	
+	
 	var state=1;
 	function validate(){
 		if(validateBlank()){
@@ -67,8 +103,12 @@
 			$('#rolebtn').html('ClassTeacher <span class="caret"></span>');
 			$('#divClassname').hide();
 			$('#divClassname').find('input').removeAttr("required");
-		}else{
+		}else if(role==3){
 			$('#rolebtn').html('Student <span class="caret"></span>');
+			$('#divClassname').hide();
+			$('#divClassname').find('input').removeAttr("required");
+		}else{
+			$('#rolebtn').html('Role <span class="caret"></span>');
 			$('#divClassname').hide();
 			$('#divClassname').find('input').removeAttr("required");
 		}
@@ -78,7 +118,6 @@
 	function go(){
 		if(validate()){
 			$('#regform').submit();
-			alert('hh');
 		}
 	}
 
@@ -103,11 +142,18 @@
 		var regStringExpr = /^[a-zA-Z]+$/;
 		var regAddressExpr = /^[a-zA-Z]+$/;
 		var regPasswordExpr = /^(?=[^\d_].*?\d)\w(\w|[!@#$%]){5,20}/;
-
+		var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
+			//(^[a-z0-9]+[@._]*[a-z0-9]$){5,20}
+		if($("#loginname").val().length<5 || !$("#loginname").val().match(regloginname))
+			{
+			isValidated = false;
+			$("#loginname").addClass("has-error");
+			$('#mandatoryerror ul').append("<li>Username is invalid.</li>");
+			}
 		if(!$("#loginpass").val().match(regPasswordExpr)){
 			isValidated = false;
 			$("#loginpass").addClass("has-error");
-			$('#mandatoryerror ul').append("<li>Password is invalid.</li>");
+			$('#mandatoryerror ul').append("<li>Password is invalid</li>");
 		}	
 		if($("#loginpass").val()==""){
 			isValidated = false;
@@ -180,10 +226,9 @@
 </script>
 <body>
 <br/><br/>
-	<form id="regform" action="/registeruser" method="post" role="form" class="form-horizontal">
-	
+	 <form id="regform" action="/registeruser" method="post" role="form" class="form-horizontal"> 
 		<%if(request.getAttribute(Constants.ERROR_MESSAGE) != null){%>
-			<div class="alert alert-danger" id="mandatoryerror">
+			<div class="alert alert-danger" id="mandatoryerror1">
 				<%=request.getAttribute(Constants.ERROR_MESSAGE)%>
 			</div>
 			<script>
@@ -197,9 +242,12 @@
 		</div>
 		
 		<div class="form-group">
+			
 			<label for="role"  class="col-sm-4 control-label">Select your role</label>
 			<div class="col-sm-5" align="left">
-			<input type="hidden" class="form-control" name="registerBean.role" id="role" value=""  required="required"/>
+			
+			<input type="hidden" class="form-control" name="registerBean.role" id="role" required="required"/>
+			<input type="hidden" id="roleValidation" value='<s:property value="registerBean.role" default="-1"/>' />
 			<div class="btn-group">
 					<button type="button" class="btn btn-default dropdown-toggle"
 						data-toggle="dropdown" id="rolebtn">
@@ -225,23 +273,24 @@
 		<div class="form-group">
 	    	<label for="fname" class="col-sm-4 control-label">*First Name</label>
 	    	<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.fname" id="fname" required="required"/>
+	    		<input type="text" class="form-control" name="registerBean.fname" id="fname" required="required" value='<s:property value="registerBean.fname" />'/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="mname" class="col-sm-4 control-label">Middle Name</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.mname" id="mname"/>
+				<input type="text" class="form-control" name="registerBean.mname" id="mname"  value='<s:property value="registerBean.mname" />'/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="lname" class="col-sm-4 control-label">*Last Name</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.lname" id="lname" required="required"/>
+				<input type="text" class="form-control" name="registerBean.lname" id="lname" required="required"  value='<s:property value="registerBean.lname" />'/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="dob" class="col-sm-4 control-label" >*Date of Birth</label>
+			<input type="hidden" value='<s:property value="registerBean.dob" />' id="dobhidden">
 			<div class="col-sm-5" align="left">
 					<!-- 
 					<div id="datetimepicker" class="input-append date">
@@ -253,7 +302,7 @@
 					
 					<div id="datetimepicker" class="input-group" style="width :250px;">
 						<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
-							type="text"  name="registerBean.dob" required="required"/> <span class="input-group-addon add-on"> <i
+							type="text"  id="dobfield" name="registerBean.dob" required="required"  value='<s:property value="registerBean.dob" />'/> <span class="input-group-addon add-on"> <i
 							class="glyphicon glyphicon-calendar glyphicon-time"></i>
 						</span>
 					</div>
@@ -263,63 +312,76 @@
 		<div class="form-group">
 			<label for="adr1" class="col-sm-4 control-label">*Address1</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.addr1"  id="addr1" required="required" />
+				<input type="text" class="form-control" name="registerBean.addr1"  id="addr1" required="required"  value='<s:property value="registerBean.addr1" />'/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="adr2" class="col-sm-4 control-label">Address2</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.addr2"  id="addr2"/>
+				<input type="text" class="form-control" name="registerBean.addr2"  id="addr2"  value='<s:property value="registerBean.addr2" />'/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="city" class="col-sm-4 control-label">*City</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.city" id="city" required="required" />
+				<input type="text" class="form-control" name="registerBean.city" id="city" required="required"  value='<s:property value="registerBean.city" />'/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="state" class="col-sm-4 control-label">*State</label>
 			<div class="col-sm-5">	
-				<input type="text" class="form-control" name="registerBean.state" id="state"  required="required"/>
+				<input type="text" class="form-control" name="registerBean.state" id="state"  required="required"  value='<s:property value="registerBean.state" />'/>
 			</div>	
 		</div>
 		<div class="form-group">
 			<label for="country" class="col-sm-4 control-label">*Country</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.country" id="country" required="required" />
+				<input type="text" class="form-control" name="registerBean.country" id="country" required="required"  value='<s:property value="registerBean.country" />'/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="phone1" class="col-sm-4 control-label">*Phone 1</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.phone1" id="phone1" required="required" />
+				<input type="text" class="form-control" name="registerBean.phone1" id="phone1" required="required"  value='<s:property value="registerBean.phone1" />'/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="phone2" class="col-sm-4 control-label">Phone 2</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.phone2" id="phone2"/>
+				<input type="text" class="form-control" name="registerBean.phone2" id="phone2"  value='<s:property value="registerBean.phone2" />'/>
 			</div>	
 		</div>
 		<div class="form-group" id="divClassname">
 			<label for="classname" class="col-sm-4 control-label">*Class Name</label>
 			<div class="col-sm-5">	
-				<input type="text" class="form-control" name="registerBean.className" id="classname" required="required" />
+				<input type="text" class="form-control" name="registerBean.className" id="classname" required="required"  value='<s:property value="registerBean.className" />'/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="loginname" class="col-sm-4 control-label">*Desired Login Name</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.loginName" id="loginname" required="required" />
+<<<<<<< .mine
+				<input type="text" class="form-control" name="registerBean.loginName" id="loginname" required="required"  value='<s:property value="registerBean.loginName" />'/>
+=======
+				<input type="text" class="form-control" name="registerBean.loginName" id="loginname" required="required" maxlength="25" />
+>>>>>>> .r41
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="loginpass" class="col-sm-4 control-label">*Password</label>
+			<label for="loginpass" class="col-sm-4 control-label">
+			<!-- <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title=""><i class="glyphicon glyphicon-info-sign"></i></button> -->	
+			<i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="bottom" title="" style="color: red;"></i>*Password</label>
 			<div class="col-sm-5">
-				<input type="password" class="form-control" name="registerBean.loginPass" id="loginpass" required="required" />
+				<div>
+					<input type="password" class="form-control" name="registerBean.loginPass" id="loginpass" required="required" />
+				</div>	
+				</div>
 			</div>
-		</div>
+			<!-- 
+			<div class="col-sm-5">
+				<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title=""><i class="glyphicon glyphicon-info-sign"></i></button>
+			</div>
+			 -->
 		<div class="form-group">
 			<label for="loginpassre" class="col-sm-4 control-label">*Re-Enter Password</label>
 			<div class="col-sm-5">

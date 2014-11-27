@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.classapp.edit.DBUpdate;
 import com.google.gson.JsonObject;
 import com.miscfunction.MiscFunction;
+import com.transaction.register.RegisterTransaction;
 
 public class AdminAjaxServlet extends HttpServlet{
 	@Override
@@ -76,6 +77,26 @@ public class AdminAjaxServlet extends HttpServlet{
 				writer.print(resultJsonStr);
 			}
 				
+		}else if("checkuphonenumber".equalsIgnoreCase(methodeToCall)){
+			String mobileNum = (String)req.getParameter("mobileNumber");
+			System.out.println("MethodeToCall-"+methodeToCall);
+			System.out.println("Registration Id-"+mobileNum);
+			RegisterTransaction registerTransaction = new RegisterTransaction();
+			boolean result = registerTransaction.isMobileExits(mobileNum);
+			JsonObject resultJson = new JsonObject();
+			resultJson.addProperty("exists", result);
+			String resultJsonStr = resultJson.toString();
+			writer.print(resultJsonStr);	
+		}else if("checkusername".equalsIgnoreCase(methodeToCall)){
+			String userName = (String)req.getParameter("userName");
+			System.out.println("MethodeToCall-"+methodeToCall);
+			System.out.println("Registration Id-"+userName);
+			RegisterTransaction registerTransaction = new RegisterTransaction();
+			boolean result = registerTransaction.isUserExits(userName);
+			JsonObject resultJson = new JsonObject();
+			resultJson.addProperty("exists", result);
+			String resultJsonStr = resultJson.toString();
+			writer.print(resultJsonStr);	
 		}
 	}
 }

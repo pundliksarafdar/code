@@ -4,6 +4,12 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <html>
 	<body>
+	<style>
+		input {
+			border: 0px;
+			background: white;
+		}
+	</style>	
 		<c:set var="register" value="${sessionScope.registerbean}"></c:set>
 		<form action="editsave" method="post">		
 			<s:if test="hasActionErrors()">
@@ -11,56 +17,61 @@
 			      <s:actionerror/>
 			   </div>
 			</s:if>
-			<table class="table" style="background-color: white;" border="1">
+			
+			<c:if test="${not empty registerBean.loginPass}">
+				<div class="alert alert-info" role="alert"><i class="glyphicon glyphicon-paperclip"></i>&nbsp;Password Changed by you, On Submit it will changed</div>
+				<input type="hidden" name="registerBean.loginPass" value='<s:property value="registerBean.loginPass" />'/>
+			</c:if>
+			<table class="table" style="background-color: white;" border="0">
 				<tbody>
 					<tr>
 						<td>First Name</td>
-						<td><input type="text" name="registerBean.fname" value="<c:out value="${register.fname}"></c:out>" disabled/></td>
+						<td><input type="text" name="registerBean.fname" value='<s:property value="registerBean.fname" />' readonly="readonly"/></td>
 						
 					</tr>
 					<tr>
 						<td>Middle Name</td>
-						<td><input type="text" name="registerBean.mname" value="<c:out value="${register.mname}"></c:out>" disabled/></td>
+						<td><input type="text" name="registerBean.mname" value='<s:property value="registerBean.mname" />' readonly="readonly"/></td>
 					</tr>
 					<tr>
 						<td>Last Name</td>
-						<td><input type="text" name="registerBean.lname"  value="<c:out value="${register.lname}"></c:out>" disabled/></td>
+						<td><input type="text" name="registerBean.lname"  value='<s:property value="registerBean.lname" />' readonly="readonly"/></td>
 					</tr>
 					<tr>
 						<td>Date of Birth</td>
-						<td><input type="date" name="registerBean.dob"  value="<c:out value="${register.dob}"></c:out>" disabled/></td>
+						<td><input type="text" name="registerBean.dob"  value='<s:property value="registerBean.dob" />' readonly="readonly"/></td>
 					</tr>
 					<tr>
 						<td>*Address1</td>
-						<td><input type="text" name="registerBean.addr1"  value="<c:out value="${register.addr1}"></c:out>" disabled/></td>
+						<td><input type="text" name="registerBean.addr1"  value='<s:property value="registerBean.addr1" />' readonly="readonly"/></td>
 					</tr>
 					<tr>
 						<td>&nbsp;Address2</td>
-						<td><input type="text" name="registerBean.addr2" value="<c:out value="${register.addr2}"></c:out>" disabled/></td>
+						<td><input type="text" name="registerBean.addr2"  value='<s:property value="registerBean.addr2" />' readonly="readonly"/></td>
 					</tr>
 					<tr>
 						<td>*City</td>
-						<td><input type="text" name="registerBean.city" value="<c:out value="${register.city}"></c:out>" disabled/></td>
+						<td><input type="text" name="registerBean.city"  value='<s:property value="registerBean.city" />' readonly="readonly"/></td>
 					</tr>
 					<tr>
 						<td>*State</td>
-						<td><input type="text" name="registerBean.state" value="<c:out value="${register.state}"></c:out>" disabled/></td>
+						<td><input type="text" name="registerBean.state"  value='<s:property value="registerBean.state" />' readonly="readonly"/></td>
 					</tr>
 					<tr>
 						<td>*Country</td>
-						<td><input type="text" name="registerBean.country"  value="<c:out value="${register.country}"></c:out>" disabled/></td>
+						<td><input type="text" name="registerBean.country"  value='<s:property value="registerBean.country" />' readonly="readonly"/></td>
 					</tr>
 					<tr>
 						<td>*Phone 1</td>
-						<td><input type="text" name="registerBean.phone1"  value="<c:out value="${register.phone1}"></c:out>" disabled/></td>
+						<td><input type="text" name="registerBean.phone1"   value='<s:property value="registerBean.phone1" />' readonly="readonly"/></td>
 					</tr>
 					<tr>
 						<td>Phone 2</td>
-						<td><input type="text" name="registerBean.phone2"  value="<c:out value="${register.phone2}"></c:out>"/ disabled></td>
+						<td><input type="text" name="registerBean.phone2"   value='<s:property value="registerBean.phone2" />' readonly="readonly"></td>
 					</tr>
 					<tr>
 						<td>*Desired Login Name</td>
-						<td><input type="text" name="registerBean.loginName" id="loginname"  value="<c:out value="${register.loginName}"></c:out>" disabled/></td>
+						<td><input type="text" name="registerBean.loginName" id="loginname"  value='<s:property value="registerBean.loginName" />' readonly="readonly"/></td>
 					</tr>
 					<tr>
 						<td><button type="submit" value= "submit" class="btn btn-default">Submit</button></td>

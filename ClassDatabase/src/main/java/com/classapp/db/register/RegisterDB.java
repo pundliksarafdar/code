@@ -1,5 +1,6 @@
 package com.classapp.db.register;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -103,5 +104,118 @@ public List getTeachersClassName(List classIDs) {
 			
 		}
 		return subidList.get(0);
+	}
+	
+	/*Pundlik*/
+	public boolean isMobileExists(String mobileNo){
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> list = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from RegisterBean where  phone1 in :mobileno");
+			query.setParameter("mobileno", mobileNo);
+			list = query.list();
+			if(list!=null)
+			{
+				if(list.size()>0){
+					return true;
+				}else{
+					return false;
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}
+		return true;
+	}
+
+	/*Pundlik*/
+	public boolean isUserExits(String loginName) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> list = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from RegisterBean where  loginName in :loginName");
+			query.setParameter("loginName", loginName);
+			list = query.list();
+			if(list!=null)
+			{
+				if(list.size()>0){
+					return true;
+				}else{
+					return false;
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}
+		return true;
+	}
+
+	/*Pundlik*/
+	public boolean updateUser(RegisterBean registerBean,Integer regId) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> list = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			RegisterBean registerBean2 = (RegisterBean) session.get(RegisterBean.class, regId);
+			//RegisterBean regBeanMerged = (RegisterBean) session.merge(registerBean2);
+			//registerBean2.setRegId(regId);
+			merge(registerBean2, registerBean);
+			registerBean2.setRegId(regId);
+			session.update(registerBean2);
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			return false;
+		}
+		return true;
+	}
+	
+	public void merge(Object obj, Object update){
+	    if(!obj.getClass().isAssignableFrom(update.getClass())){
+	        return;
+	    }
+
+	    Method[] methods = obj.getClass().getMethods();
+
+	    for(Method fromMethod: methods){
+	        if(fromMethod.getDeclaringClass().equals(obj.getClass())
+	                && fromMethod.getName().startsWith("get")){
+
+	            String fromName = fromMethod.getName();
+	            String toName = fromName.replace("get", "set");
+	            
+	            if(!"getRole".equals(fromName)){
+	            try {
+	                Method toMetod = obj.getClass().getMethod(toName, fromMethod.getReturnType());
+	                Object value = fromMethod.invoke(update, (Object[])null);
+	                if(value != null){
+	                    toMetod.invoke(obj, value);
+	                }
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            } 
+	            }
+	        }
+	    }
 	}
 }

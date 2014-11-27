@@ -217,5 +217,39 @@ var allAjax = {
 				   errorCallback(e);
 			   }
 		});
+	},
+	checkNumberExist:function(mobileNum,success){
+		$.ajax({
+			   url: "admajxsrvlt",
+			   data: {
+			    	 methodToCall: "checkuphonenumber",
+			    	 mobileNumber:mobileNum
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   success(e);
+				   
+			   		},
+			   error:function(){
+				   modal.launchAlert("Error","Error occured while accepting the user!");
+			   }
+			});
+	},
+	checkUserNameExist:function(loginname,success){
+		$.ajax({
+			   url: "admajxsrvlt",
+			   data: {
+			    	 methodToCall: "checkusername",
+			    	 userName:loginname
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   success(e);
+				   
+			   		},
+			   error:function(){
+				   modal.launchAlert("Error","Error occured while accepting the user!");
+			   }
+			});
 	}
 }

@@ -1,5 +1,6 @@
 package com.transaction.register;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,5 +51,25 @@ public class RegisterTransaction {
 		List<RegisterBean> registerBeans=new ArrayList<RegisterBean>();
 		registerBeans=registerDB.getTeachersClassName(classids);
 		return registerBeans;
+	}
+	
+	public boolean isMobileExits(String mobile){
+		RegisterDB registerDB = new RegisterDB();
+		boolean registered = registerDB.isMobileExists(mobile);
+		return registered;
+	}
+	
+	public boolean isUserExits(String loginName){
+		RegisterDB registerDB = new RegisterDB();
+		boolean registered = registerDB.isUserExits(loginName);
+		return registered;
+	}
+	
+	public boolean updateUser(RegisterBean registerBean,Integer regId){
+		RegisterDB registerDB = new RegisterDB();
+		registerBean.setDob(registerBean.getDob().replace("-", ""));
+		registerBean.setClassName(null==registerBean.getClassName()?"":registerBean.getClassName());
+		registerBean.setLoginPass(null==registerBean.getLoginPass()?registerBean.getLoginPass():registerBean.getLoginPass());
+		return registerDB.updateUser(registerBean, regId);
 	}
 }

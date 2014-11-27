@@ -49,7 +49,7 @@ $(document).ready(function(){
 		
 		getSelectedBatchesForStudent();		
 		if(!studentLgName || studentLgName.trim()==""){
-			$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Student login name cannot be blank');
+			$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Student11 login name cannot be blank');
 			$('div#addStudentModal .error').show();
 		}else{
 			$('div#addStudentModal .progress').removeClass('hide');

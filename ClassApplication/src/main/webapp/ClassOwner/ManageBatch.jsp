@@ -52,9 +52,13 @@ while(i<subjects.size())
 
 function searchBatch() {
 	var batchName=document.getElementById("batchNameSearch").value;
+	var regbatchname=/^[a-zA-z0-9 ]+$/;
 	if(!batchName || batchName.trim()==""||batchName.lenght==0 ){
 		 modal.launchAlert("Error","Error!</strong> Batch name cannot be blank");		
-	}else{
+	}else if(!$("#batchNameSearch").val().match(regbatchname)){
+		 modal.launchAlert("Error","Error!</strong>Invalid Batchname");
+	}
+	else{
 	$.ajax({
 		   url: "classOwnerServlet",
 		    data: {
@@ -92,19 +96,29 @@ function searchBatch() {
 }
 
 $(document).ready(function(){
-
+	$('div#addBatchModal .error').hide();
 	$('div#addBatchModal').on('click','button#btn-addBatch',function(){
 		var batchName = "";
 		subjectsname="";
 		$('div#addBatchModal .error').html('');
 		$('div#addBatchModal .error').hide();
 		var regId;
+		var regbatchname=/^[a-zA-z0-9 ]+$/;
 		batchName = $('div#addBatchModal').find('#batchName').val();
 		getSelectedCheckbox();
 		if(!batchName || batchName.trim()==""){
 			$('div#addBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Batch name cannot be blank');
 			$('div#addBatchModal .error').show();
-		}else{
+		}else if(!$("#batchName").val().match(regbatchname) || $("#batchName").val().length<1){
+			$('div#addBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Invalid Batch name');
+			$('div#addBatchModal .error').show();
+	}else if($("#divisionName").val()=='-1'){
+		$('div#addBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please Select Division');
+		$('div#addBatchModal .error').show();
+	}else if(subjectsname==""){
+		$('div#addBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please Select Atlease One Subject');
+		$('div#addBatchModal .error').show();
+	}else{
 			$('div#addBatchModal .progress').removeClass('hide');
 			$('.add').addClass('hide');
 			

@@ -51,8 +51,15 @@ function getSelectedStudentsToDelete(){
 
 function searchStudent() {
 	var studentLoginName=document.getElementById("studentLoginNameSearch").value;
+	var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
 	if(!studentLoginName || studentLoginName.trim()==""||studentLoginName.lenght==0 ){
 		 modal.launchAlert("Error","Error!</strong> Student login name cannot be blank");		
+	}else if($("#studentLoginNameSearch").val().length<5 || !$("#studentLoginNameSearch").val().match(regloginname))
+	{
+		 modal.launchAlert("Error","Error!</strong>Invalid Student login name");
+	}else if($("#studentLoginNameSearch").val().length<5 || !$("#studentLoginNameSearch").val().match(regloginname))
+	{
+		modal.launchAlert("Error","Error!</strong>Invalid Student login name");
 	}else{
 	$.ajax({
 		   url: "classOwnerServlet",
@@ -128,16 +135,24 @@ function getSelectedStudentsToDelete(){
 			$('div#addStudentModal .error').html('');
 			$('div#addStudentModal .error').hide();
 			var studentLgName;
-			
+			var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
 			studentLgName = $('div#addStudentModal').find('#studentLoginName').val();
-			var divisionName = $('div#addStudentModal').find('#divisionName').val();
+			var divisionName ="";
+			divisionName = $('div#addStudentModal').find('#divisionName').val();
 
 			getSelectedBatchesForStudent();		
 			if(!studentLgName || studentLgName.trim()==""){
 				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Student login name cannot be blank');
 				$('div#addStudentModal .error').show();
+			}else if($("#studentLoginName").val().length<5 || !$("#studentLoginName").val().match(regloginname))
+			{
+				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Invalid Student login');
+				$('div#addStudentModal .error').show();
 			}else if(!divisionName || divisionName.trim()==""){
 				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Division name cannot be blank');
+				$('div#addStudentModal .error').show();
+			}else if(batchIds==""){
+				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>please select atleast one batch');
 				$('div#addStudentModal .error').show();
 			}else{
 				$('div#addStudentModal .progress').removeClass('hide');
@@ -172,14 +187,14 @@ function getSelectedStudentsToDelete(){
 					      	}
 				   	},
 				   error:function(e){
-					   $('div#modifyStudentModal .progress').addClass('hide');
-						$('div#modifyStudentModal .add').removeClass('hide');
-						$('div#modifyStudentModal .error').show();
+					   $('div#addStudentModal .progress').addClass('hide');
+						$('div#addStudentModal .add').removeClass('hide');
+						$('div#addStudentModal .error').show();
 						var resultJson = JSON.parse(e);
 						if(!resultJson.message){
-							   $('div#modifyStudentModal .error').html('<strong>Error!</strong> Unable to update');
+							   $('div#addStudentModal .error').html('<strong>Error!</strong> Unable to update');
 						   	}else{
-						   		$('div#modifyStudentModal .error').html('<strong>Error!</strong>'+resultJson.message);
+						   		$('div#addStudentModal .error').html('<strong>Error!</strong>'+resultJson.message);
 						   	}
 				   }
 				   
@@ -194,6 +209,7 @@ function getSelectedStudentsToDelete(){
 			$('div#modifyStudentModal .error').html('');
 			$('div#modifyStudentModal .error').hide();
 			getSelectedBatchesForStudent();
+			var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
 			if(!batchIds || batchIds.trim()==""){
 				$('div#modifyStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Batch name cannot be blank');
 				$('div#modifyStudentModal .error').show();

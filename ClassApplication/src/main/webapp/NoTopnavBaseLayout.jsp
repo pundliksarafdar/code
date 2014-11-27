@@ -11,7 +11,9 @@
  <link href="css/bootstrap.min.css" rel="stylesheet">
  <link href="css/bootstrap-responsive.css" rel="stylesheet">
  <link href="css/admin.css" rel="stylesheet">
- <link href="css/datetimepicker.css" rel="stylesheet">
+ <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="css/common.css" rel="stylesheet">
+ <!-- <link href="css/datetimepicker.css" rel="stylesheet"> -->
  <style>
  	
 body{
@@ -23,7 +25,10 @@ body{
  <script src="js/jquery-1.10.2.min.js"></script>
  <script src="js/bootstrap.min.js"></script>
  <script src="js/allAjax.js"></script>	
- <script src="js/datepicker.js"></script>
+ <script src="js/modal/modal.js"></script>
+ <script src="js/moment.min.js"></script>
+ <!-- <script src="js/datepicker.js"></script> -->
+ <script src="js/bootstrap-datetimepicker.min.js"></script>
 </head>
 <body>
 	<div id="outerDiv" align ="center">

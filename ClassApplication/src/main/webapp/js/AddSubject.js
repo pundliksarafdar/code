@@ -121,12 +121,21 @@ $(document).ready(function(){
 		$('div#addTeacherModal .error').html('');
 		$('div#addTeacherModal .error').hide();
 		var regId;
+		var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
 		teacherID = $('div#addTeacherModal').find('#teacherID').val();
 		getSelectedCheckbox();
 		if(!teacherID || teacherID.trim()==""){
 			$('div#addTeacherModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Teacher ID cannot be blank');
 			$('div#addTeacherModal .error').show();
-		}else{
+		}else if($("#teacherID").val().length<5 || !$("#teacherID").val().match(regloginname))
+		{
+			$('div#addTeacherModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Invalid Teacher ID');
+			$('div#addTeacherModal .error').show();
+		}else if(subjectsname=="")
+			{
+			$('div#addTeacherModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Please select atleast one subject');
+			$('div#addTeacherModal .error').show();
+			}else{
 			$('div#addTeacherModal .progress').removeClass('hide');
 			$('.add').addClass('hide');
 			allAjax.addTeacher('',subjectsname,teacherID,successCallbackAddTeacher,errorCallbackaddTeacher);

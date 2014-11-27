@@ -46,8 +46,12 @@ function getSelectedSubjectsForTeacher(){
 
 function searchTeacher() {
 	var teacherLoginName=document.getElementById("teacherLoginNameSearch").value;
+	var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
 	if(!teacherLoginName || teacherLoginName.trim()==""|| teacherLoginName.trim().length==0){
 		 modal.launchAlert("Error","Error!</strong> Teacher login name cannot be blank");		
+	}else if($("#teacherLoginNameSearch").val().length<5 || !$("#teacherLoginNameSearch").val().match(regloginname))
+	{
+		 modal.launchAlert("Error","Error!</strong>Invalid Teacher login name");
 	}else{
 	$.ajax({
 		   url: "classOwnerServlet",

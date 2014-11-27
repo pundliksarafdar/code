@@ -13,3 +13,8 @@
 .bs-callout-danger .header{
 	color: #d9534f;
 }
+
+.alert{
+	margin-left: 5px;
+	margin-right: 5px;
+}

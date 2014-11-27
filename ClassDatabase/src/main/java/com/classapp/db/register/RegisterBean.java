@@ -32,7 +32,7 @@ public class RegisterBean implements Serializable{
 	private String endDate;
 	private String renewedDates;
 	private String daysLeft;
-	private Integer role;
+	private Integer role = -1;
 	private Integer div_id;
 	
 	public Integer getDiv_id() {

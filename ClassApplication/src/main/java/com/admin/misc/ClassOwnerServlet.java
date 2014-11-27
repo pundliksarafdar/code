@@ -252,6 +252,10 @@ public class ClassOwnerServlet extends HttpServlet{
 				}
 
 				//printWriter.write(respObject.toString());
+			}else{
+				respObject.addProperty(MESSAGE,
+						"Unable to find student with login name : "
+								+ studentLoginName);
 			}
 		}  else if (Constants.FETCH_BATCHES.equals(methodToCall)) {
 			Integer regId = null;
@@ -1389,7 +1393,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	private Student validateStudent(String studentLoginName, String batches, int divId,
 			int regId, PrintWriter writer) {
 		JsonObject respObject = new JsonObject();
-		respObject.addProperty(STATUS, "error");
+	//	respObject.addProperty(STATUS, "error");
 		int studentId = -1;
 		RegisterBean studentBean = studentData.getStudent(studentLoginName);
 
@@ -1413,12 +1417,12 @@ public class ClassOwnerServlet extends HttpServlet{
 			student.setBatch_id(batches);
 			return student;			
 		} else {
-			respObject.addProperty(STATUS, "error");
+			//respObject.addProperty(STATUS, "error");
 			respObject.addProperty(MESSAGE,
 					"Unable to find student with login name : "
 							+ studentLoginName);
 		}
-		writer.write(respObject.toString());
+		//writer.write(respObject.toString());
 		return null;
 
 	}
