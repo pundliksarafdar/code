@@ -9,6 +9,11 @@
 	})
 	var passwordCriteria = "Password should be greater than 5 and less than 20 in length <br> Should contain special atleast on character [!@#$%]"
 	$(document).ready(function(){
+		$('#datetimepicker').datetimepicker({
+			format : 'YYYY-MM-DD',
+			pickTime : false
+		});
+		
 		$('#role').val("");
 		$('#phone1,#phone2').keydown(function(e){
 		    console.log("loggin :"+e.keyCode+":"+e.which);
@@ -140,7 +145,7 @@
 		var isValidated = true;
 		var regPhoneNumber = /^[0-9]+$/;
 		var regStringExpr = /^[a-zA-Z]+$/;
-		var regAddressExpr = /^[a-zA-Z]+$/;
+		var regAddressExpr = /^[a-zA-Z0-9 ]+$/;
 		var regPasswordExpr = /^(?=[^\d_].*?\d)\w(\w|[!@#$%]){5,20}/;
 		var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
 			//(^[a-z0-9]+[@._]*[a-z0-9]$){5,20}
