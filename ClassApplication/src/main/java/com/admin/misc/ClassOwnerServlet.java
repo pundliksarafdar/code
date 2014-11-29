@@ -907,7 +907,9 @@ public class ClassOwnerServlet extends HttpServlet{
 	
 			String batchname=	req.getParameter("batchname");
 			String date=req.getParameter("date");
+			System.out.println("Date..."+date);
 			String dateString[]=date.split("/");
+			System.out.println("Date Array..."+dateString[0]+":"+dateString[1]+":"+dateString[2]);
 			Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
 			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 			List<Schedule> list=scheduleTransaction.getSchedule(Integer.parseInt(batchname),date2);
