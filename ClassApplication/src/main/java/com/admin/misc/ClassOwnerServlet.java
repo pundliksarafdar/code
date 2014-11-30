@@ -953,7 +953,9 @@ public class ClassOwnerServlet extends HttpServlet{
 				}
 				innercounter++;
 			}
-			SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/YYYY");
+			
+			System.out.println("Before date formatter..............");
+			SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/yyyy");
 			int starthour=list.get(counter).getStart_time().getHours();
 			int startminute=list.get(counter).getStart_time().getMinutes();
 			int endthour=list.get(counter).getEnd_time().getHours();
