@@ -394,4 +394,58 @@ public class StudentDB {
 		
 		return null;
 	}
+	
+	public List<Student> getStudentrelatedtoBatch(String batchname) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List<Student> list=null;
+		String queryString="from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3)";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("batch_id1", batchname+",%");
+			query.setParameter("batch_id2","%,"+batchname+",%");	
+			query.setParameter("batch_id3", "%,"+batchname);
+				list=query.list();
+			if(list!=null)
+			{
+				return list;
+			}
+			
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return null;
+	}
+	
+	public void removebatchfromstudentlist(Student student) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List<Student> list=null;
+		String queryString="from Student where student_id=:student_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("student_id", student.getStudent_id());
+			list=query.list();
+			/*if(list!=null)
+			{
+				return list;
+			}
+			*/
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+	}
 }

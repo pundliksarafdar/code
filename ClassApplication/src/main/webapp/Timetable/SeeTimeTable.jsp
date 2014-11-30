@@ -244,6 +244,7 @@ $(document).ready(function(){
 					  for (var x=rowCount-1; x>0; x--) {
 						  table1.deleteRow(x);
 					   }
+					  if(subjects[0]!=""){
 				   $(table).border="1";
 				   var actiontr=$(document.getElementById("scheduletr"));
 				   $(actiontr).hide();
@@ -256,7 +257,9 @@ $(document).ready(function(){
 					   }
 				   $("#edit").show();
 				   $("#update").hide();
-				   
+					  }else{
+						  modal.launchAlert("Success","Schedule Not Available");
+					  }
 				   		   	   },
 			   	error:function(){
 			   		modal.launchAlert("Error","Error");

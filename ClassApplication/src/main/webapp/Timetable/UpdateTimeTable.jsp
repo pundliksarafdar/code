@@ -15,7 +15,8 @@ function gettime(time,id){
 	 if(time=="date"){
 		 input = $('#date'+id);
 		 input.datetimepicker({
-			    pickTime: false
+			    pickTime: false,
+			    minDate:((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()
 			});
 	 }else{
 	 if(time=="start")
@@ -201,12 +202,9 @@ function validatedate(inputText)
 
 $(document).ready(function(){
 	
-	var tempdate = new Date();
-	
-	
 		  $( "#datetimepicker" ).datetimepicker({
 			  pickTime: false,
-			  startDate: tempdate 
+			  minDate:((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()
 		  }).data("DateTimePicker");
 		  
 
@@ -249,7 +247,7 @@ $(document).ready(function(){
 				  
 				   var actiontr=$(document.getElementById("scheduletr"));
 				   $(actiontr).hide();
-				   if(subjects.length>1){
+				   if(subjects[0]!=""){
 					   $(table).border="1";
 				   while(counter<subjects.length)
 					   {

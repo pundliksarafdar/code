@@ -71,4 +71,34 @@ public class StudentTransaction {
 		return list;
 		
 	}
+	
+	public void removeBatchFromstudentslist(String Batchname) {
+		StudentDB db=new StudentDB();
+		List<Student> students=db.getStudentrelatedtoBatch(Batchname);
+		if(students!=null)
+		{
+			for (int i = 0; i < students.size(); i++) 
+			{
+				String[] batchids=students.get(i).getBatch_id().split(",");
+				String ids="";
+				int index=1;
+				for (int j = 0; j < batchids.length; j++) {
+					
+					if(!batchids[j].equals(Batchname)){
+						if(index==1)
+						{
+							ids=batchids[j];
+						}else{
+							ids=ids+","+batchids[j];
+						}
+						index++;
+					}
+					
+				}
+				students.get(i).setBatch_id(ids);
+				db.updateDb(students.get(i));
+			}
+			
+		}
+	}
 }

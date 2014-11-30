@@ -83,7 +83,8 @@
 	  
 	  function getDate(id) {
 		  $( "#date"+id ).datetimepicker({
-			  pickTime: false
+			  pickTime: false,
+			  minDate:((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()
 		  }).data("DateTimePicker").show();
 		  
 		  }

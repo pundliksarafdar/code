@@ -11,7 +11,8 @@
 		
 		$('#datetimepicker').datetimepicker({
 			format : 'YYYY-MM-DD',
-			pickTime : false
+			pickTime : false,
+			maxDate:((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()
 		});
 		
 		if($("#dobhidden").val()>3){
@@ -44,7 +45,7 @@
 				var resultJson = JSON.parse(e);
 				   if(resultJson.exists == true){
 					   $("#phone1").focus();
-					   alert("Mobile Nuber already registered, Please contact administrator");						   					   	
+					   $("#phoneError").show();		   					   	
 				   	}else{
 				   		
 				   	}				
@@ -58,7 +59,7 @@
 				var resultJson = JSON.parse(e);
 				   if(resultJson.exists == true){
 					   $("#loginname").focus();
-					   alert("User name already registered, Please contact administrator");						   					   	
+					   $("#lgnameError").show();						   					   	
 				   	}else{
 				   		
 				   	}				
@@ -138,6 +139,7 @@
 		var regStringExpr = /^[a-zA-Z]+$/;
 		var regAddressExpr = /^[a-zA-Z0-9]+$/;
 		var regPasswordExpr = /^(?=[^\d_].*?\d)\w(\w|[!@#$%]){5,20}/;
+		var textonly=/^[a-zA-Z]+$/;
 
 		if(!isHidden && !$("#loginpass").val().match(regPasswordExpr)){
 			isValidated = false;
@@ -207,6 +209,24 @@
 			$('#mandatoryerror').append("Address2 is invalid. Special characters are not allowed. <br>");
 		}
 		}
+		/*Pundlik Validation for city,state and country*/
+		if(!$("#city").val().match(textonly)){
+			isValidated = false;
+			$("#city").addClass("has-error");
+			$('#mandatoryerror').append("City name is invalid. Only characters are not allowed. <br>");
+		}
+		
+		if(!$("#state").val().match(textonly)){
+			isValidated = false;
+			$("#state").addClass("has-error");
+			$('#mandatoryerror').append("State name is invalid. Only characters are not allowed. <br>");
+		}
+		
+		if(!$("#country").val().match(textonly)){
+			isValidated = false;
+			$("#country").addClass("has-error");
+			$('#mandatoryerror').append("Country name is invalid. Only characters are not allowed. <br>");
+		}
 		$('#mandatoryerror').show();
 		$("#rolebtn").focus();
 		return isValidated;
@@ -260,7 +280,7 @@
     		<div class="col-sm-5">
 			<div id="datetimepicker" class="input-group" style="width :250px;">
 				<input class="form-control"
-					type="text"  id="dobfield" name="registerBean.dob" required="required"  value='<c:out value="${user.dob}"></c:out>'/> <span class="input-group-addon add-on"> <i
+					type="text"  id="dobfield" name="registerBean.dob" required="required" readonly value='<c:out value="${user.dob}"></c:out>'/> <span class="input-group-addon add-on"> <i
 					class="glyphicon glyphicon-calendar glyphicon-time"></i>
 				</span>
 			</div>
@@ -302,6 +322,7 @@
 			</div>
 		</div>
 		
+		<div id="phoneError" style="display: none;color: red;">This Phone number is already registered</div>
 		<div class="form-group">
     		<label for="inputPhone1" class="col-sm-4 control-label">Phone 1</label>
     		<div class="col-sm-5">
@@ -316,6 +337,7 @@
 			</div>
 		</div>
 		
+		<div id="lgnameError" style="display: none;color: red;">This login name is already registered</div>
 		<div class="form-group">
     		<label for="inputLoginName" class="col-sm-4 control-label">Desired Login Name</label>
     		<div class="col-sm-5">

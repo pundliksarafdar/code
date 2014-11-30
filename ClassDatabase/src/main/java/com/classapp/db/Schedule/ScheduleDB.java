@@ -322,6 +322,27 @@ public List<Schedule> deleteSchedulerelatedtoteacher(int teacherid,int classid) 
 	return scheduleList;
 }
 
+public void deleteschedulerelatedtobatchsubject(int batchid,int subid) {
+	Session session = null;
+	Transaction transaction = null;
+	List<Schedule> scheduleList = null;
+	Object object = new Object();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("delete FROM Schedule where batch_id = :batch_id and sub_id =:sub_id");
+		//Query query = session.createQuery("FROM Schedule where date = '2014-10-04' and class_id = 34");
+		query.setParameter("batch_id", batchid);
+		query.setParameter("sub_id", subid);
+		
+	query.executeUpdate();
+		transaction.commit();
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+}
+
 public static void main(String[] args) {
 	ScheduleDB db = new ScheduleDB();
 	//db.getScheduleForDate(68, "2014-09-09");

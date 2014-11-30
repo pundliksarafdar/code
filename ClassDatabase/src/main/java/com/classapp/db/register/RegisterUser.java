@@ -18,7 +18,7 @@ public class RegisterUser {
 			session.beginTransaction();
 			
 			try{
-				session.saveOrUpdate(registerBeantoSave);
+				session.save(registerBeantoSave);
 				session.getTransaction().commit();
 			}catch(Exception e){
 				session.getTransaction().rollback();

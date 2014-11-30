@@ -11,6 +11,7 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Schedule.ScheduleDB;
+import com.classapp.db.batch.Batch;
 
 public class ScheduleTransaction {
 
@@ -188,5 +189,24 @@ public class ScheduleTransaction {
 			scheduleDst.add(schedule2);
 		}
 		return scheduleDst;
+	}
+	
+	public void deleteschedulerelatedtobatchsubject(Batch batch,String subid) {
+		ScheduleDB db=new ScheduleDB();
+		String[] subids=subid.split(",");
+		String[] batchsubids=batch.getSub_id().split(",");
+		for (int i = 0; i < batchsubids.length; i++) {
+			boolean flag=false;
+			for (int j = 0; j < subids.length; j++) {
+				if(batchsubids[i].equals(subids[j])){
+					flag=true;
+				}	
+			}
+			if(flag==false){
+				db.deleteschedulerelatedtobatchsubject(batch.getBatch_id(), Integer.parseInt(batchsubids[i]));
+			}
+			
+		}
+		
 	}
 }
