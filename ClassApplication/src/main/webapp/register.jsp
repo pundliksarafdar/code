@@ -100,153 +100,93 @@
 	function addState(state){
 		if(state==0){
 			$('#statebtn').html('Andhra Pradesh <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Andhra Pradesh');
 		}else if(state==1){
 			$('#statebtn').html('Arunachal Pradesh <span class="caret"></span>');
-			$('#divClassname').show();
-			$('#divClassname').find('input').attr("required","required");
 			$('#state').val('Arunachal Pradesh');
 		}else if(state==2){
 			$('#statebtn').html('Assam <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Assam');
 		}else if(state==3){
 			$('#statebtn').html('Bihar <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Bihar');
 		}else if(state==4){
 			$('#statebtn').html('Chhattisgarh <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Chhattisgarh');
 		}else if(state==5){
 			$('#statebtn').html('Goa <span class="caret"></span>');
-			$('#divClassname').show();
-			$('#divClassname').find('input').attr("required","required");
 			$('#state').val('Goa');
 		}else if(state==6){
 			$('#statebtn').html('Gujarat <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Gujarat');
 		}else if(state==7){
 			$('#statebtn').html('Haryana <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Haryana');
 		}else if(state==8){
 			$('#statebtn').html('Himachal Pradesh <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Himachal Pradesh');
 		}else if(state==9){
 			$('#statebtn').html('Jammu and Kashmir <span class="caret"></span>');
-			$('#divClassname').show();
-			$('#divClassname').find('input').attr("required","required");
 			$('#state').val('Jammu and Kashmir');
 		}else if(state==10){
 			$('#statebtn').html('Jharkhand <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Jharkhand');
 		}else if(state==11){
 			$('#statebtn').html('Karnataka <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Karnataka');
 		}else if(state==12){
 			$('#statebtn').html('Kerala <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Kerala');
 		}else if(state==13){
 			$('#statebtn').html('Madhya Pradesh <span class="caret"></span>');
-			$('#divClassname').show();
-			$('#divClassname').find('input').attr("required","required");
 			$('#state').val('Madhya Pradesh');
 		}else if(state==14){
 			$('#statebtn').html('Maharashtra <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Maharashtra');
 		}else if(state==15){
 			$('#statebtn').html('Manipur <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Manipur');
 		}else if(state==16){
 			$('#statebtn').html('Meghalaya <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Meghalaya');
 		}else if(state==17){
 			$('#statebtn').html('Mizoram <span class="caret"></span>');
-			$('#divClassname').show();
-			$('#divClassname').find('input').attr("required","required");
 			$('#state').val('Mizoram');
 		}else if(state==18){
 			$('#statebtn').html('Nagaland <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Nagaland');
 		}else if(state==19){
 			$('#statebtn').html('Orissa <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Orissa');
 		}else if(state==20){
 			$('#statebtn').html('Punjab <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Punjab');
 		}else if(state==21){
 			$('#statebtn').html('Rajasthan <span class="caret"></span>');
-			$('#divClassname').show();
-			$('#divClassname').find('input').attr("required","required");
 			$('#state').val('Rajasthan');
 		}else if(state==22){
 			$('#statebtn').html('Sikkim <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Sikkim');
 		}else if(state==23){
 			$('#statebtn').html('Tamil Nadu <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Tamil Nadu');
 		}else if(state==24){
 			$('#statebtn').html('Telangana <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Telangana');
 		}else if(state==25){
 			$('#statebtn').html('Tripura <span class="caret"></span>');
-			$('#divClassname').show();
-			$('#divClassname').find('input').attr("required","required");
 			$('#state').val('Tripura');
 		}else if(state==26){
 			$('#statebtn').html('Uttar Pradesh <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Uttar Pradesh');
 		}else if(state==27){
 			$('#statebtn').html('Uttarakhand <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('Uttarakhand');
 		}else if(state==28){
 			$('#statebtn').html('West Bengal <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('West Bengal');
 		}else{
 			$('#statebtn').html('state <span class="caret"></span>');
-			$('#divClassname').hide();
-			$('#divClassname').find('input').removeAttr("required");
 			$('#state').val('State');
 		}
 		
@@ -399,13 +339,13 @@
 			$("#city").addClass("has-error");
 			$('#mandatoryerror').append("City name is invalid. Only characters are not allowed. <br>");
 		}
-		alert($("#state").val());
+		
 		if($("#state").val()=="State" ){
 			isValidated = false;
 			$("#state").addClass("has-error");
 			$('#mandatoryerror').append("State name is invalid. Only characters are not allowed. <br>");
 		}
-		alert($("#country").val());
+		
 		if(!$("#country").val().match(textonly)){
 			isValidated = false;
 			$("#country").addClass("has-error");
@@ -505,19 +445,19 @@
 		<div class="form-group">
 			<label for="adr1" class="col-sm-4 control-label">*Address1</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.addr1"  id="addr1" required="required"  value='<s:property value="registerBean.addr1" />'/>
+				<input type="text" class="form-control" name="registerBean.addr1"  id="addr1" required="required" maxlength="50" value='<s:property value="registerBean.addr1" />'/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="adr2" class="col-sm-4 control-label">Address2</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.addr2"  id="addr2"  value='<s:property value="registerBean.addr2" />'/>
+				<input type="text" class="form-control" name="registerBean.addr2"  id="addr2" maxlength="50" value='<s:property value="registerBean.addr2" />'/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="city" class="col-sm-4 control-label">*City</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.city" id="city" required="required"  value='<s:property value="registerBean.city" />'/>
+				<input type="text" class="form-control" name="registerBean.city" id="city" required="required" maxlength="20"  value='<s:property value="registerBean.city" />'/>
 			</div>
 		</div>
 		<%-- <div class="form-group">
@@ -584,13 +524,13 @@
 		<div class="form-group">
 			<label for="phone1" class="col-sm-4 control-label">*Phone 1</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.phone1" id="phone1" required="required"  value='<s:property value="registerBean.phone1" />'/>
+				<input type="text" class="form-control" name="registerBean.phone1" id="phone1" required="required" maxlength="10" value='<s:property value="registerBean.phone1" />'/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="phone2" class="col-sm-4 control-label">Phone 2</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.phone2" id="phone2"  value='<s:property value="registerBean.phone2" />'/>
+				<input type="text" class="form-control" name="registerBean.phone2" id="phone2" maxlength="10" value='<s:property value="registerBean.phone2" />'/>
 			</div>	
 		</div>
 		<div class="form-group" id="divClassname">

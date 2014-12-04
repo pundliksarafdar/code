@@ -163,12 +163,12 @@ $('#batchname').change(function(){
 				
 					state=1;
 		 		}
-		 	var startsplit=starttimes.split(" ");
+		 	/* 	 	var startsplit=starttimes.split(" ");
 		 	var endsplit=endtimes.split(" ");
 		 	var startspitagain=startsplit[0].split(":");
 		 	var endsplitagain=endsplit[0].split(":");
 		 	
-	/* 	 	if(startspitagain[0]>endsplitagain[0] && startsplit[1]==endsplit[1] )
+		 	if(startspitagain[0]>endsplitagain[0] && startsplit[1]==endsplit[1] )
 		 {
 		 		state=1;
 		 }else if(startspitagain[0]=endsplitagain[0] && startspitagain[1]>endsplitagain[1] && startsplit[1]==endsplit[1] )
@@ -236,36 +236,56 @@ $('#batchname').change(function(){
 			   var resultJson = JSON.parse(data);
 			   		var teacher=resultJson.teacher.split(",");
 			   		var lecture=resultJson.lecture.split(",");
+			   		var time=resultJson.time;
+			   		var flag=0;
+			   		for(var z=0;z<globcounter;z++)
+			   			{
+			   			var td=$(document.getElementById("error"+z));
+			   			$(td).hide();
+			   			}
+			   		if(time=="" || time=="undefined"){
 			   		for(var i=0;i<globcounter;i++)
 			   			{
 			   			var td=$(document.getElementById("error"+i));
 			   			$(td).empty();
-			   				
+			   			for(var j=0;j<teacher.length;j++){
 			   					if(teacher[i]!="")
 			   						{
-			   						if(teacher[i].split("/")[1]==i+"" && teacher[i].split("/")[0]=="teacher")
+			   						if(teacher[j].split("/")[1]==i+"" && teacher[j].split("/")[0]=="teacher")
 			   							{
+			   							flag=1;
 			   							$(td).append('<span>Teacher is busy</span>');
 			   							$(td).show();
 			   							}
 			   						}
-			   					else if(lecture[i]!=""){
-			   						if(lecture[i].split("/")[1]==i+"" && lecture[i].split("/")[0]=="lecture")
+			   			}
+			   			for(var k=0;k<lecture.length;k++){
+			   				if(lecture[i]!=""){
+			   						if(lecture[k].split("/")[1]==i+"" && lecture[k].split("/")[0]=="lecture")
 										{
+			   							flag=1;
 			   								$(td).append('<span>Lecture Already Exists</span>');
 			   								$(td).show();
 										}			   					
-			   					}else {
-			   					  var table1=document.getElementById("timetablediv");
-			   					  var rowCount=table1.rows.length;
-			   					  for (var x=rowCount-1; x>0; x--) {
-			   						  table1.deleteRow(x);
-			   					   }
-			   					globcounter=0;
-			   						$('#lectureaddedmodal').modal('toggle');
-			   						$(td).hide();
 			   					}
-			   			
+			   			}
+			   			}
+			   		}else{
+			   			flag=1;
+			   			modal.launchAlert("Success","Some lectures timmings are overlapped OR Start time is after end time");
+			   		}
+			   		
+			   		if(flag==0)
+			   			{
+			   		 var table1=document.getElementById("timetablediv");
+  					  var rowCount=table1.rows.length;
+  					  for (var x=rowCount-1; x>0; x--) {
+  						  table1.deleteRow(x);
+  					   }
+  					globcounter=0;
+  						$('#lectureaddedmodal').modal('toggle');
+  						$(td).hide();
+  					
 			   			}
 			   		/* if(status[0]!="")
 			   			{
@@ -362,6 +382,7 @@ input = $('#starttime'+id);
 	  var dateTD=document.createElement("td");
 	  var errorTD=document.createElement("td");
 	  errorTD.id="error"+globcounter;
+	  errorTD.width="100px"
 	  errorTD.style.display="none";
 	  
 	  var select = document.createElement("select");
@@ -542,7 +563,7 @@ input = $('#starttime'+id);
 	</div>
 
 <div id="testdiv" align="center" class="container">
-<table id="timetablediv" class="table table-bordered table-hover" style="background-color: white;" data-toggle="table" width="600px">
+<table id="timetablediv" class="table table-bordered table-hover" style="background-color: white;" data-toggle="table" width="600px" border="1">
 	<tr>
 		<th width="100px">Select Subject</th>
 		<th width="100px">Select Teacher</th>
@@ -550,7 +571,7 @@ input = $('#starttime'+id);
 		<th width="100px">End Time</th>
 		<th width="100px">Date</th>
 		<th width="100px"></th>
-		<th width="100px"></th>
+		<!-- <th width="100px" style="display: none;" id="errorth"></th> -->
 	</tr>	
 </table>
 <a href="#" id="submit"> <button type="button" class="btn btn-info" align="center">Submit</button></a>

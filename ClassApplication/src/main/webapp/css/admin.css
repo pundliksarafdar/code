@@ -7,13 +7,6 @@
     padding: 15px 0px 10px 10px;
 }
 
-#innerDiv {
-	height: 100%;
-	width :100%;
-	border: 2px solid;
-    background: #E9E581;   	
-}
-
 #outerDiv{
   min-height: 665px;
   background: white;

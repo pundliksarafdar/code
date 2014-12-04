@@ -69,6 +69,8 @@ function edit(){
 				  table1.deleteRow(x);
 			   }
 			   var counter=0
+			   
+			   if(scheduleids[0]!=""){
 			   $(table).border="1";
 			   if(subjects.length>0)
 				   {
@@ -116,6 +118,14 @@ function edit(){
 					   $(teacherselect).append("<option value="+ids[subinnercounter]+">"+fnames[subinnercounter]+" "+lnames[subinnercounter]+"</option>");
 					   subinnercounter++;
 						   }
+					   subcounter=0;
+					   while(subcounter<fnames.length){
+						   if(teacherids[counter]==ids[subcounter]){
+							   $(teacherselect).get(0).selectedIndex=subcounter;
+							   break;
+						   }
+						   subcounter++;
+					   }
 					  
 				   
 				   
@@ -123,6 +133,10 @@ function edit(){
 			   counter++;
 				   }
 			   $("#update").show();
+			   }else{
+				   $("#update").hide();
+				   $("#edit").hide();
+			   }
 			   		   	   },
 		   	error:function(){
 		   		modal.launchAlert("Error","Error");
@@ -468,26 +482,46 @@ $(document).ready(function(){
 				   var resultJson = JSON.parse(data);
 				   		var teacher=resultJson.teacher.split(",");
 				   		var lecture=resultJson.lecture.split(",");
-				   		for(var i=0;i<globcounter;i++)
+				   		var time=resultJson.time;
+				   		var flag=0;
+				   		var i=0;
+				   		for(i=0;i<globcounter;i++){
+				   			var td=$(document.getElementById("error"+i));
+				   			$(td).hide();
+				   		}
+				   		
+				   		for(i=0;i<globcounter;i++)
 				   			{
 				   			var td=$(document.getElementById("error"+i));
 				   			$(td).empty();
-				   				
-				   					if(teacher[i]!="")
+				   				for(var j=0;j<teacher.length;j++){
+				   					if(teacher[j]!="")
 				   						{
-				   						if(teacher[i].split("/")[1]==i+"" && teacher[i].split("/")[0]=="teacher")
+				   						if(teacher[j].split("/")[1]==i+"" && teacher[j].split("/")[0]=="teacher")
 				   							{
+				   							flag=1;
 				   							$(td).append('<span>Teacher is busy</span>');
 				   							$(td).show();
 				   							}
 				   						}
-				   					else if(lecture[i]!=""){
-				   						if(lecture[i].split("/")[1]==i+"" && lecture[i].split("/")[0]=="lecture")
+				   				}
+				   				for(var k=0;k<lecture.length;k++){
+				   				if(lecture[k]!=""){
+				   						if(lecture[k].split("/")[1]==i+"" && lecture[k].split("/")[0]=="lecture")
 											{
+				   							flag=1;
 				   								$(td).append('<span>Lecture Already Exists</span>');
 				   								$(td).show();
 											}			   					
-				   					}else {
+				   					}
+				   					} 
+				   			}
+				   		if(time!=""){
+				   			modal.launchAlert("Success","Some lectures timmings are overlapped OR Start time is after end time");
+				   			flag=1;
+				   		}
+				   		
+				   					if(flag==0){
 				   						var table1=document.getElementById("scheduletable");
 				   					  var rowCount=table1.rows.length;
 				   					  for (var x=rowCount-1; x>0; x--) {
@@ -500,7 +534,7 @@ $(document).ready(function(){
 				   						$(td).hide();
 				   					}
 				   			
-				   			}
+				   			
 			   }
 				 ,
 			   	error:function(){

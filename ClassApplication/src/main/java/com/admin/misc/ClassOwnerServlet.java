@@ -321,10 +321,11 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 			
 			int studentId=Integer.parseInt(req.getParameter("studentId"));
-			Student student=studentData.getStudentDetailsFromClass(studentId, regId);
+			Student student=studentData.getStudentDetailsFromClass(studentId, regId);			
 			String batchIds=req.getParameter("batchIds");			
-			boolean validStudent=validateStudentBatch(student,batchIds,regId, printWriter);
-			if(validStudent){
+			student.setBatch_id(batchIds);
+//			boolean validStudent=validateStudentBatch(student,batchIds,regId, printWriter);
+			
 				student.setBatch_id(batchIds);
 				if(studentTransaction.updateStudentDb(student)){
 					respObject.addProperty(STATUS, "success");
@@ -334,7 +335,7 @@ public class ClassOwnerServlet extends HttpServlet{
 					respObject.addProperty(MESSAGE, "Error while updating the student with Id="+studentId+"!");
 				}			
 				//printWriter.write(respObject.toString());
-			}
+			
 		}else if("deleteStudent".equals(methodToCall)){
 			Integer regId = null;
 			if(!req.getParameter("regId").equals("")){
@@ -706,10 +707,12 @@ public class ClassOwnerServlet extends HttpServlet{
 			dateList.add(date);
 				}
 			}
-			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
-			String exists=scheduleTransaction.isExistsLecture(regId+"", batchID, subList, teacherList, stList, edList, dateList);
 			String teacherbusy="";
 			String lectureexists="";
+			if(validatetime(stList, edList,dateList)){
+			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
+			String exists=scheduleTransaction.isExistsLecture(regId+"", batchID, subList, teacherList, stList, edList, dateList);
+			
 			if(exists.equals(""))
 			{
 			scheduleTransaction.addLecture(regId+"", batchID, subList, teacherList, stList, edList, dateList);
@@ -737,8 +740,14 @@ public class ClassOwnerServlet extends HttpServlet{
 				}
 				
 			}
+			respObject.addProperty("time", "");
+			}else{
+				respObject.addProperty("time", "timeoverlapped");
+			}
+			
 			respObject.addProperty("teacher", teacherbusy);
 			respObject.addProperty("lecture", lectureexists);
+			
 			respObject.addProperty(STATUS, "success");	
 			
 		}else if("addnotes".equals(methodToCall)){
@@ -907,9 +916,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	
 			String batchname=	req.getParameter("batchname");
 			String date=req.getParameter("date");
-			System.out.println("Date..."+date);
 			String dateString[]=date.split("/");
-			System.out.println("Date Array..."+dateString[0]+":"+dateString[1]+":"+dateString[2]);
 			Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
 			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 			List<Schedule> list=scheduleTransaction.getSchedule(Integer.parseInt(batchname),date2);
@@ -953,8 +960,6 @@ public class ClassOwnerServlet extends HttpServlet{
 				}
 				innercounter++;
 			}
-			
-			System.out.println("Before date formatter..............");
 			SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/yyyy");
 			int starthour=list.get(counter).getStart_time().getHours();
 			int startminute=list.get(counter).getStart_time().getMinutes();
@@ -1116,10 +1121,12 @@ public class ClassOwnerServlet extends HttpServlet{
 			Date date=new Date(Integer.parseInt(dat[2])-1900, Integer.parseInt(dat[0])-1,Integer.parseInt(dat[1]));
 			dateList.add(date);
 			}
-			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
-			String exists=scheduleTransaction.isTeacherUnavailable(regId+"", batchID, subList, teacherList, stList, edList, dateList);
 			String teacherbusy="";
 			String lectureexists="";
+			if(validatetime(stList, edList, dateList)){
+			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
+			String exists=scheduleTransaction.isTeacherUnavailable(regId+"", batchID, subList, teacherList, stList, edList, dateList,scheduleidsList);
+			
 			if(exists.equals(""))
 			{
 			scheduleTransaction.updateLecture(regId+"", batchID, subList, teacherList, stList, edList, dateList,scheduleidsList);
@@ -1147,6 +1154,13 @@ public class ClassOwnerServlet extends HttpServlet{
 				}
 				
 			}
+			respObject.addProperty("teacher", teacherbusy);
+			respObject.addProperty("lecture", lectureexists);
+			respObject.addProperty("time", "");
+			}else{
+				respObject.addProperty("time", "time");
+			}
+			
 			respObject.addProperty("teacher", teacherbusy);
 			respObject.addProperty("lecture", lectureexists);
 			respObject.addProperty(STATUS, "success");	
@@ -1204,6 +1218,8 @@ public class ClassOwnerServlet extends HttpServlet{
 			String sub_Ids=req.getParameter("subIds");			
 			
 			if(batch!=null){
+				ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
+				scheduleTransaction.deleteschedulerelatedtobatchsubject(batch, sub_Ids);
 				batch.setSub_id(sub_Ids);
 				if(batchTransactions.addUpdateDb(batch)){
 					respObject.addProperty(STATUS, "success");
@@ -1212,7 +1228,6 @@ public class ClassOwnerServlet extends HttpServlet{
 					respObject.addProperty(STATUS, "error");
 					respObject.addProperty(MESSAGE, "Error while updating the batch with Id="+batchId+"!");
 				}
-				
 			//	printWriter.write(respObject.toString());
 			}
 		}else if(Constants.DELETE_BATCH.equals(methodToCall)){
@@ -1232,6 +1247,8 @@ public class ClassOwnerServlet extends HttpServlet{
 			
 			int deleteBatchId=Integer.parseInt(req.getParameter("batchId"));										
 			Batch batch=batchTransactions.getBatch(deleteBatchId);
+			StudentTransaction studentTransaction=new StudentTransaction();
+			studentTransaction.removeBatchFromstudentslist(deleteBatchId+"");
 				if(batchTransactions.deleteBatch(batch)){
 					respObject.addProperty(STATUS, "success");
 					respObject.addProperty(MESSAGE, "Batch Successfully deleted .");
@@ -1371,7 +1388,41 @@ public class ClassOwnerServlet extends HttpServlet{
 		ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 		scheduleTransaction.deleteSchedule(Integer.parseInt(scheduleid));
 			respObject.addProperty(STATUS, "success");
-}
+}/*else if("getstudentsrelatedtobatch".equals(methodToCall)){
+	String batchname=req.getParameter("batchname");
+	StudentTransaction studentTransaction=new StudentTransaction();
+	int count=studentTransaction.getStudentscountrelatedtobatch(batchname);
+	if(count>0){
+		List students=studentTransaction.getStudentsrelatedtobatch(batchname);
+		RegisterTransaction registerTransaction=new RegisterTransaction();
+		List<RegisterBean> registerBeans= registerTransaction.getStudentsInfo(students);
+		if(registerBeans.size()>0)
+		{
+			int counter=0;
+			String studentnames="";
+			String StudentIds="";
+			while(counter<registerBeans.size()){
+				if(counter==0){
+					studentnames=registerBeans.get(counter).getFname()+" "+registerBeans.get(counter).getLname();
+					StudentIds=registerBeans.get(counter).getLoginName();
+				}else{
+					studentnames=studentnames+","+registerBeans.get(counter).getFname()+" "+registerBeans.get(counter).getLname();
+					StudentIds=StudentIds+","+registerBeans.get(counter).getLoginName();
+				}
+				counter++;
+			}
+			respObject.addProperty("studentnames", studentnames);
+			respObject.addProperty("studentids", StudentIds);
+		}
+		respObject.addProperty("count", count);
+		
+	}else{
+		respObject.addProperty("studentnames", "");
+		respObject.addProperty("studentids", "");
+		respObject.addProperty("count", "");
+	}
+	respObject.addProperty(STATUS, "success");
+}*/
 		
 		
 		printWriter.write(respObject.toString());
@@ -1401,7 +1452,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		int studentId = -1;
 		RegisterBean studentBean = studentData.getStudent(studentLoginName);
 
-		if (studentBean != null && batches != null) {
+		if (studentBean != null && batches != null && studentBean.getRole()==3) {
 			String[] selectedBatches = batches.split(",");
 
 			if (selectedBatches.length == 0
@@ -1479,6 +1530,31 @@ public class ClassOwnerServlet extends HttpServlet{
 		}
 		writer.write(respObject.toString());
 		return false;
+	}
+	
+	public boolean validatetime(List<Time> starttime,List<Time> endtime,List<Date> dates) {
+		
+		for (int i = 0; i < starttime.size(); i++) {
+			if(starttime.get(i).getTime()>endtime.get(i).getTime())
+			{
+				return false;
+			}
+			
+			for (int j = 0; j < starttime.size(); j++) {
+				if(i!=j)
+				{
+				if(starttime.get(i).getTime() >= starttime.get(j).getTime() && starttime.get(i).getTime()<endtime.get(j).getTime() && dates.get(i).getTime()==dates.get(j).getTime()){
+					return false;
+				}else if(endtime.get(i).getTime() > starttime.get(j).getTime() && endtime.get(i).getTime()<=endtime.get(j).getTime() && dates.get(i).getTime()==dates.get(j).getTime())
+				{
+					return false;
+				}else if(starttime.get(i).getTime()<starttime.get(j).getTime() && endtime.get(i).getTime()>endtime.get(j).getTime() && dates.get(i).getTime()==dates.get(j).getTime()){
+					return false;
+				}
+			}
+			}
+		}
+		return true;
 	}
 	
 /*	public void test() {

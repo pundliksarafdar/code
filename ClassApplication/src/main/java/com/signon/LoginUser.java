@@ -31,6 +31,9 @@ public class LoginUser extends BaseAction{
 		if(null != loginBean){
 			userBean.setLoginBean(loginBean);
 		    forward = loadBean(userBean, loginBean);
+		}if(null == userBean.getRegId()){
+			addActionError("Invalid Username/Password");
+			forward = ERROR;
 		}else{
 			loginBean = userBean.getLoginBean();
 			if(null != loginBean){

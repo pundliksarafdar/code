@@ -84,7 +84,7 @@ public String isExistsLecture(Schedule schedule) {
 			return "teacher";
 		}
 		else{
-			query = session.createQuery("from Schedule where teacher_id =:teacherid and ((start_time < :starttime and end_time> :starttime) OR (start_time < :endtime and end_time> :endtime)) and date=:date");
+			query = session.createQuery("from Schedule where teacher_id =:teacherid and ((start_time <= :starttime and end_time> :starttime) OR (start_time < :endtime and end_time>= :endtime) OR (start_time > :starttime and end_time< :endtime)) and date=:date");
 			query.setParameter("teacherid", schedule.getTeacher_id());
 			query.setParameter("starttime", schedule.getStart_time());
 			query.setParameter("endtime", schedule.getEnd_time());
@@ -95,7 +95,7 @@ public String isExistsLecture(Schedule schedule) {
 			}
 		}
 		
-		query = session.createQuery("from Schedule where batch_id =:batchid and ((start_time < :starttime and end_time> :starttime) OR (start_time < :endtime and end_time> :endtime)) and date=:date");
+		query = session.createQuery("from Schedule where batch_id =:batchid and ((start_time <= :starttime and end_time> :starttime) OR (start_time < :endtime and end_time>= :endtime) OR (start_time > :starttime and end_time< :endtime)) and date=:date");
 		query.setParameter("batchid", schedule.getBatch_id());
 		query.setParameter("starttime", schedule.getStart_time());
 		query.setParameter("endtime", schedule.getEnd_time());
@@ -136,27 +136,49 @@ public String isTeacherUnavailable(Schedule schedule) {
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
 		transaction = session.beginTransaction();
-		Query query = session.createQuery("from Schedule where teacher_id =:teacherid and start_time=:starttime and end_time=:endtime and date=:date and batch_id !=:batch_id");
+		Query query = session.createQuery("from Schedule where teacher_id =:teacherid and start_time=:starttime and end_time=:endtime and date=:date and schedule_id !=:schedule_id");
 		query.setParameter("teacherid", schedule.getTeacher_id());
 		query.setParameter("starttime", schedule.getStart_time());
 		query.setParameter("endtime", schedule.getEnd_time());
 		query.setParameter("date", schedule.getDate());
-		query.setParameter("batch_id", schedule.getBatch_id());
+		query.setParameter("schedule_id", schedule.getSchedule_id());
 		scheduleList = query.list();
 		if(scheduleList.size()>0){
 			return "teacher";
 		}
 		else{
-			query = session.createQuery("from Schedule where teacher_id =:teacherid and ((start_time < :starttime and end_time> :starttime) OR (start_time < :endtime and end_time> :endtime)) and date=:date and batch_id !=:batch_id");
+			query = session.createQuery("from Schedule where teacher_id =:teacherid and ((start_time <= :starttime and end_time> :starttime) OR (start_time < :endtime and end_time>= :endtime) OR (start_time > :starttime and end_time< :endtime)) and date=:date and schedule_id !=:schedule_id");
 			query.setParameter("teacherid", schedule.getTeacher_id());
 			query.setParameter("starttime", schedule.getStart_time());
 			query.setParameter("endtime", schedule.getEnd_time());
 			query.setParameter("date", schedule.getDate());
-			query.setParameter("batch_id", schedule.getBatch_id());
+			query.setParameter("schedule_id", schedule.getSchedule_id());
 			scheduleList = query.list();
 			if(scheduleList.size()>0){
 				return "teacher";
 			}
+		}
+		query = session.createQuery("from Schedule where batch_id =:batchid and ((start_time <= :starttime and end_time> :starttime) OR (start_time < :endtime and end_time>= :endtime) OR (start_time > :starttime and end_time< :endtime)) and date=:date and schedule_id!=:schedule_id");
+		query.setParameter("batchid", schedule.getBatch_id());
+		query.setParameter("starttime", schedule.getStart_time());
+		query.setParameter("endtime", schedule.getEnd_time());
+		query.setParameter("date", schedule.getDate());
+		query.setParameter("schedule_id", schedule.getSchedule_id());
+		scheduleList = query.list();
+		if(scheduleList.size()>0){
+			return "lecture";
+		}else{
+			query = session.createQuery("from Schedule where batch_id =:batchid and start_time=:starttime and end_time=:endtime and date=:date and schedule_id!=:schedule_id");
+			query.setParameter("batchid", schedule.getBatch_id());
+			query.setParameter("starttime", schedule.getStart_time());
+			query.setParameter("endtime", schedule.getEnd_time());
+			query.setParameter("date", schedule.getDate());
+			query.setParameter("schedule_id", schedule.getSchedule_id());
+			scheduleList = query.list();
+			if(scheduleList.size()>0){
+				return "lecture";
+			}
+			
 		}
 		
 	}catch(Exception e){
