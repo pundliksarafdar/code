@@ -395,12 +395,12 @@ public class StudentDB {
 		return null;
 	}
 	
-	public List<Student> getStudentrelatedtoBatch(String batchname) {
+	public List getStudentrelatedtoBatch(String batchname) {
 		Session session = null;
 		boolean status=false;
 		Transaction transaction = null;
-		List<Student> list=null;
-		String queryString="from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3)";
+		List list=null;
+		String queryString="select student_id from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4)";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
@@ -408,6 +408,7 @@ public class StudentDB {
 			query.setParameter("batch_id1", batchname+",%");
 			query.setParameter("batch_id2","%,"+batchname+",%");	
 			query.setParameter("batch_id3", "%,"+batchname);
+			query.setParameter("batch_id4", batchname);
 				list=query.list();
 			if(list!=null)
 			{
@@ -447,5 +448,33 @@ public class StudentDB {
 		}finally{
 			session.close();
 		}
+	}
+	
+	public Integer getStudentcountrelatedtobatch(String batchname) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List<Long> list=null;
+		String queryString="select count(student_id) from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4)";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("batch_id1", batchname+",%");
+			query.setParameter("batch_id2","%,"+batchname+",%");	
+			query.setParameter("batch_id3", "%,"+batchname);
+			query.setParameter("batch_id4", batchname);
+			list=(List<Long>)query.list();
+			if(list!=null)
+			{
+				return list.get(0).intValue();
+			}
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		return 0;
 	}
 }

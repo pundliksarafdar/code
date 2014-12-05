@@ -43,6 +43,7 @@ import com.classapp.db.student.StudentDetails;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
 import com.classapp.persistence.Constants;
+import com.classapp.servicetable.ServiceMap;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.helper.BatchHelperBean;
@@ -1388,14 +1389,23 @@ public class ClassOwnerServlet extends HttpServlet{
 		ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 		scheduleTransaction.deleteSchedule(Integer.parseInt(scheduleid));
 			respObject.addProperty(STATUS, "success");
-}/*else if("getstudentsrelatedtobatch".equals(methodToCall)){
+}else if("getstudentsrelatedtobatch".equals(methodToCall)){
 	String batchname=req.getParameter("batchname");
+	String pagenumber=req.getParameter("pagenumber");
 	StudentTransaction studentTransaction=new StudentTransaction();
 	int count=studentTransaction.getStudentscountrelatedtobatch(batchname);
+	
+	//Taking data from database
+	int resultPerPage = Integer.parseInt(ServiceMap.getSystemParam(Constants.SERVICE_PAGINATION, "resultsperpage"));
 	if(count>0){
+		int remainder=count%resultPerPage;
+		int pages=count/resultPerPage;
+		if(remainder>0){
+			pages++;
+		}
 		List students=studentTransaction.getStudentsrelatedtobatch(batchname);
 		RegisterTransaction registerTransaction=new RegisterTransaction();
-		List<RegisterBean> registerBeans= registerTransaction.getStudentsInfo(students);
+		List<RegisterBean> registerBeans= registerTransaction.getStudentsInfo(students,Integer.parseInt(pagenumber),resultPerPage);
 		if(registerBeans.size()>0)
 		{
 			int counter=0;
@@ -1415,14 +1425,18 @@ public class ClassOwnerServlet extends HttpServlet{
 			respObject.addProperty("studentids", StudentIds);
 		}
 		respObject.addProperty("count", count);
+		respObject.addProperty("remain", remainder);
+		respObject.addProperty("pages", pages);
 		
 	}else{
 		respObject.addProperty("studentnames", "");
 		respObject.addProperty("studentids", "");
 		respObject.addProperty("count", "");
+		respObject.addProperty("remain", "");
+		respObject.addProperty("pages", "");
 	}
 	respObject.addProperty(STATUS, "success");
-}*/
+}
 		
 		
 		printWriter.write(respObject.toString());

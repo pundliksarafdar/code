@@ -7,6 +7,7 @@ import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentDB;
 import com.classapp.db.student.StudentData;
 import com.classapp.db.student.StudentDetails;
+import com.sun.corba.se.impl.encoding.CodeSetConversion.BTCConverter;
 
 public class StudentTransaction {
 	StudentData studentData;
@@ -100,5 +101,17 @@ public class StudentTransaction {
 			}
 			
 		}
+	}
+	
+	public List getStudentsrelatedtobatch(String batchname) {
+	StudentDB studentDB=new StudentDB();
+	List students =studentDB.getStudentrelatedtoBatch(batchname);
+	return students;
+	}
+	
+	public Integer getStudentscountrelatedtobatch(String batchname) {
+		StudentDB db=new StudentDB();
+		return db.getStudentcountrelatedtobatch(batchname);
+		
 	}
 }

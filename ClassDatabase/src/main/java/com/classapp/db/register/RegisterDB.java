@@ -218,4 +218,31 @@ public List getTeachersClassName(List classIDs) {
 	        }
 	    }
 	}
+	
+public List getStudentInfo(List StudentIDs,int pagenumber, int resultPerPage) {
+		
+		Session session = null;
+		Transaction transaction = null;
+		List subidList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			//Query query = session.createQuery("SELECT  reg.fname,reg.lname,reg.loginName FROM SELECT  :rownum := :rownum + 1 RowNumber, t.fname,t.lname,t.loginName FROM RegisterBean t, (SELECT :rownum := 0) s where regId=:studentids  ORDER BY t.regId reg where reg.RowNumber>:lowerlimit and reg.RowNumber<:upperlimit");
+			
+			Query query = session.createQuery("from RegisterBean where  regId in :studentids order by regId");
+			query.setParameterList("studentids", StudentIDs);
+			query.setFirstResult((pagenumber -1)*resultPerPage);
+			query.setMaxResults(resultPerPage);			
+			subidList = query.list();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}
+		return subidList;
+	}
 }

@@ -12,7 +12,75 @@
 <script>
 var batchIds;
 var selectedStudentIds;
+var noofpages=0;
+function getstudentsrelatedtobatch(pagenumber){
 
+	var batchname=$("#batchselected").val();
+	$.ajax({
+		url:"classOwnerServlet",
+		data:{
+			batchname:batchname,
+			methodToCall:"getstudentsrelatedtobatch",
+			pagenumber:pagenumber
+		},
+		type:"post",
+		success:function(data){
+			//modal.launchalert("success","Yo");
+			var resultJson = JSON.parse(data);
+			var table=document.getElementById("students");
+			  var rowCount=table.rows.length;
+			  for (var x=rowCount-1; x>0; x--) {
+				  table.deleteRow(x);
+			   }
+			var studentnames=resultJson.studentnames.split(',');
+			var studentids=resultJson.studentids.split(',');
+			var count=resultJson.count;
+			var remain=resultJson.remain;
+			var pages=resultJson.pages;
+			if(studentids[0]!=""){
+				var counter=0;
+			while(counter<studentids.length){
+				$("#students").append("<tr><td>"+studentids[counter]+"</td><td>"+studentnames[counter]+"</td></tr>");
+				counter++;
+			}
+			$("#students").show();
+			counter=0;
+			$("#pagest").remove();
+			if(noofpages!=0){
+				while(counter<noofpages){
+					$("#page"+counter).remove();
+					counter++;
+				}
+			}
+			
+			counter=0;
+			if(pagenumber==1)
+			{
+			$("#pagination").append("<li class='disabled' id=pagest><span>&laquo;</span></li>");
+			}else{
+				$("#pagination").append("<li><a href='#' id=pagest onClick=getstudentsrelatedtobatch("+(pagenumber-1)+")><span>&laquo;</span></li>");
+			}
+			while(counter<pages){
+				var temp=counter+1;
+				
+				if(temp==pagenumber){
+					$("#pagination").append("<li class='active' id=page"+counter+"><span>"+temp+"</span></li>");
+				}else{
+				$("#pagination").append("<li><a href='#' id=page"+counter+" onClick=getstudentsrelatedtobatch("+temp+")>"+temp+"</a></li>");
+				}
+				counter++;
+			}
+			
+			noofpages=pages;
+			/* $("#pagination").append("<li><a href='#'>&raquo;</a></li>"): */
+			}
+		},
+		error:function(e){
+			modal.launchalert("error","Yo2");
+		}
+		
+	});
+}
 function getSelectedBatchesForStudent(){
 	var batches;
 	batchIds="";
@@ -121,6 +189,8 @@ function getSelectedStudentsToDelete(){
 }
 
 	$(document).ready(function(){
+		
+		
 	/* 	$('.batchName').tooltip({'placement':'right','html':'true'}).on('click',function(){
 			$(this).tooltip('hide');
 		});
@@ -484,8 +554,35 @@ function getSelectedStudentsToDelete(){
 						<td><input type="text" class="form-control" id="studentLoginNameSearch" size="20"/></td>		
 						<td><button type="button" class="btn btn-info" id="searchStudent" onclick="searchStudent()" >Search Student</button></td>
 					</tr>
+				<tr>
+				<td>Select Batch</td>
+				<%List<Batch> batches=(List<Batch>)request.getAttribute("batches"); %>
+				<td>
+				<select class="form-control" id="batchselected">
+				
+				<option>Select Batch</option>
+				<%for(int counter=0;counter<batches.size();counter++){ %>
+				<option value="<%=batches.get(counter).getBatch_id() %>"><%=batches.get(counter).getBatch_name() %></option>
+				<%} %>
+				</select>
+				</td>
+				<td><button type="button" class="btn btn-info" id="getstudents" onclick="getstudentsrelatedtobatch(1)">Get Student</button></td>
+				</tr>
 				</thead>
 			</table>
+			
+			<div>
+			<table id="students" class="table table-striped" style="background-color: white;display: none;">
+			<thead>
+			<tr>
+			<th>Student ID</th>
+			<th>Student Name</th>
+			</tr>
+			</thead>
+			</table>
+			<ul class="pagination" id="pagination">	</ul>
+			
+			</div>
 		
 			<%StudentDetails studentSearch=(StudentDetails)request.getSession().getAttribute("studentSearchResult");
 			if(studentSearch!=null){

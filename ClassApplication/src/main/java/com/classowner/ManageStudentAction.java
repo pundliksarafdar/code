@@ -13,6 +13,7 @@ import com.classapp.persistence.Constants;
 import com.config.BaseAction;
 import com.helper.DivisionHelperBean;
 import com.helper.StudentHelperBean;
+import com.transaction.batch.BatchTransactions;
 import com.user.UserBean;
 
 public class ManageStudentAction extends BaseAction{
@@ -21,6 +22,9 @@ public class ManageStudentAction extends BaseAction{
 		
 		StudentHelperBean studentHelperBean= new StudentHelperBean();	
 		DivisionHelperBean divisionHelperBean = new DivisionHelperBean();
+		BatchTransactions batchTransactions=new BatchTransactions();
+		List list=batchTransactions.getAllBatches(userBean.getRegId());
+		request.setAttribute("batches", list);
 			studentHelperBean.setClass_id(userBean.getRegId());
 			request.getSession().setAttribute(Constants.STUDENT_LIST, studentHelperBean.getStudents());
 			List<Division> divisions= divisionHelperBean.getListOfDivision();
