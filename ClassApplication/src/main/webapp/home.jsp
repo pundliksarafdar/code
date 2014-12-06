@@ -10,9 +10,14 @@
 function login(){
 	location.href="/login";
 }
+
+function systemreq(){
+	location.href="/sysreq";
+}
 </script>
 </head>
 <body>
 	<input type="submit" onclick="javascript:login()" value="Login" autofocus/>
+	<input type="button" onclick="javascript:systemreq()" value="System Requirement"/>
 </body>
 </html>

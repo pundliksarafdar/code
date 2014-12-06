@@ -40,18 +40,6 @@ ul{
 		});
 	</script>
 
-	<!-- 
-<s:form action="login">
-	<s:if test="hasActionErrors()">
-   	<div class="errors">
-     	 <s:actionerror/>
-   	</div>
-	</s:if>
-	  <s:textfield name="loginBean.loginname" label="Login name" />
- 	  <s:password  name="loginBean.loginpass" label="Password" />
-	  <s:submit value="Login" ></s:submit>
-</s:form>
- -->
 	<div class="panel panel-default">
 		<div class="panel-body">
 

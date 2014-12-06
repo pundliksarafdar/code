@@ -1,5 +1,6 @@
 <%@taglib prefix="s" uri="/struts-tags"%>
 <%@taglib prefix="c" uri="http://tiles.apache.org/tags-tiles"%>
+<%@ taglib prefix="cx" uri="../WEB-INF/customtaglib/switch.tld"%>
 <%@page import="com.user.UserBean"%>
 <%@page import="com.signon.User"%>
 <%
@@ -51,6 +52,7 @@
 	         </ul>
       </li>
       
+      <cx:versionswitch switchId="3">
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Exam <b class="caret"></b></a>
       		<ul class="dropdown-menu">
@@ -58,6 +60,8 @@
 	            <li><a href="searchexamnonstudent">Attempt Exam</a></li>
 	         </ul>
       </li>
+      </cx:versionswitch>
+      
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Time Table <b class="caret"></b></a>
       		<ul class="dropdown-menu">
@@ -67,7 +71,9 @@
 	         </ul>
       </li>
     <%}%>
-    <li><a href="notes">Notes</a></li>
+    <cx:versionswitch switchId="3">
+    	<li><a href="notes">Notes</a></li>
+    </cx:versionswitch>
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <li class="dropdown">

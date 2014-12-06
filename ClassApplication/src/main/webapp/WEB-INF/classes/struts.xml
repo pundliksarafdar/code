@@ -198,6 +198,9 @@
             method="execute">
             <result name="success" type="tiles">timetable.showtimetable</result>
       </action>
-      
+    
+	<action name="sysreq"> 
+         <result type="tiles">systemrequirement</result>
+      </action>
 	  </package>
 </struts>

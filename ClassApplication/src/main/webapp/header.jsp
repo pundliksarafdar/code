@@ -17,9 +17,9 @@
 	<div id = "headerothernav" style="float:right;">
 		<div align="right" style = "height:50px; float:right; width:100%;">
 		<ul class="nav nav-pills" style ="color: aqua;">
-		  <li><a href="#">Home</a></li>
-		  <li><a href="#">About Us</a></li>
-		  <li><a href="#">Contact Us</a></li>
+		  <li><a href="login">Home</a></li>
+		  <li><a href="#" data-toggle="modal" data-target="#aboutUsModal">About Us</a></li>
+		  <li><a href="#" data-toggle="modal" data-target="#contactUsModal">Contact Us</a></li>
 		</ul>
 		</div>
 		<div align="right" style = "height:50px; float:right; width:100%;">

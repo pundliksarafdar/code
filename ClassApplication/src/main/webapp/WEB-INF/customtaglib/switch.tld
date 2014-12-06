@@ -3,7 +3,7 @@
   <jsp-version>2.0</jsp-version>
   <short-name>switch tags</short-name>
   <tag>
-    <name>Switch</name>
+    <name>versionswitch</name>
     <tag-class>com.custom.tags.Switch</tag-class>
     <body-content>scriptless</body-content>
     <attribute>

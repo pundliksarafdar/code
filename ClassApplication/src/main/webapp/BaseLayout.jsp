@@ -70,7 +70,7 @@ if(userBean.getRole()<2){
 				<div class = "hidden-xs" style ="height : 100px;">
 					<tiles:insertAttribute name="header" />
 				</div>
-				<div style="height:32px;">				
+				<div>				
 					<tiles:insertAttribute name="topnav" />				
 				</div>
 					<br/>							

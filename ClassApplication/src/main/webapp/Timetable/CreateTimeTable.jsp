@@ -543,7 +543,7 @@ input = $('#starttime'+id);
 		int i=0;%>
 		<div class="jumbotron">
 			<div class="container">
-				<div class="col-xs-2">
+				<div class="col-md-4">
 					Select Batch : 
 					<select name="batchname" id="batchname" class="form-control" width="100px">
 					<option>Select Batch</option>
@@ -554,10 +554,11 @@ input = $('#starttime'+id);
 					<%i++;} %>
 					</select>
 				</div>
-				<div class="col-xs-4">
+				<div class="col-md-4">
 				<br/>
 				<button id="add" type="button" class="btn btn-info" onclick="add()" disabled="true">Add lecture</button>
 				</div>
+				<div class="col-md-4"></div>
 			</div>
 		</div>
 	</div>

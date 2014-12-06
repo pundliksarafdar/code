@@ -499,7 +499,7 @@ int i=0;%>
 <!-- <div class="col-xs-2" align="right">
 <label>Select Batch</label>
 </div> -->
-<div class="col-xs-2">
+<div class="col-md-4">
 Select Batch
 <select name="batchname" id="batchname" class='form-control'>
 <option>Select Batch</option>
@@ -513,7 +513,7 @@ while(i<batch.size()){
 <!-- <div class="col-xs-2" align="right">
 <label>Select Date</label>
 </div> -->
-<div class="col-xs-2">
+<div class="col-md-2">
 Select Date
 <div id="datetimepicker" class="input-group" style="width :150px;">
 					<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
@@ -522,7 +522,7 @@ Select Date
 					</span>
 				</div>
 				</div>
-<div class="col-xs-2"><br>
+<div class="col-md-6"><br>
 <input value="Submit" type="button" id="submit" class="btn btn-danger">
 </div>
 </div>
