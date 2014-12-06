@@ -22,7 +22,7 @@ public class Switch extends SimpleTagSupport {
 		if(isOn){
 		StringWriter stringWriter = new StringWriter();
 		getJspBody().invoke(stringWriter);
-			getJspContext().getOut().println(stringWriter.toString()+switchId);
+			getJspContext().getOut().println(stringWriter.toString());
 		}
 	}
 	public String getSwitchId() {
