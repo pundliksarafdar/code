@@ -15,9 +15,7 @@
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	font-size: 14px;
 }
-.container {
-    padding: 20px;
-}
+
 </style>
 
   <script>
@@ -119,6 +117,7 @@ $('#batchname').change(function(){
 	 var batchID = $('div#timetable').find('#batchname').val();
 	 if(batchID!='-1')
 	 {
+		 
 	  add();
 	 }else{
 		 alert('Please Select valid Batch');
@@ -131,7 +130,7 @@ $('#batchname').change(function(){
 	 
 	 if(batchID!='-1')
 		 {
-	  validate();
+	  		validate();
 		 }else{
 			 alert('Please Select valid Batch');
 		 }
@@ -178,7 +177,20 @@ $('#batchname').change(function(){
 				 {
 				 state=1;
 				 } */
-		 	
+				 
+				var starttimes=$("#starttime"+i).val();
+				var	endtimes=$("#endtime"+i).val();
+					
+				var startDate = new Date("January 01, 2015 "+starttimes);
+				var endDate = new Date("January 01, 2015 "+endtimes);
+				
+				if(startDate>=endDate){
+					state=2;
+					modal.launchAlert("Error","Start Time Should be less than End Time");
+					$("#starttime"+i).parents("td").addClass("has-error");
+					$("#endtime"+i).parents("td").addClass("has-error");
+				}
+					
 		 	if(!'undefined'.match(dates)){
 		 	var valid=validatedate(dates);
 		 	if(valid==false)
@@ -187,7 +199,8 @@ $('#batchname').change(function(){
 		 		}
 		 	}
 		 }
-	 if(state!=1)
+	 
+	 if(state==0)
 		 {
 	 subjects="";
 	 teachers="";
@@ -203,6 +216,7 @@ $('#batchname').change(function(){
 			teachers=$("#teacher"+i).val();
 			starttimes=$("#starttime"+i).val();
 			endtimes=$("#endtime"+i).val();
+			
 			dates=$("#date"+i).val();
 			}else{
 				subjects=subjects+","+$("#sub"+i).val();
@@ -272,7 +286,7 @@ $('#batchname').change(function(){
 			   			}
 			   		}else{
 			   			flag=1;
-			   			modal.launchAlert("Success","Some lectures timmings are overlapped OR Start time is after end time");
+			   			modal.launchAlert("Error","Some lectures timmings are overlapped OR Start time is after end time");
 			   		}
 			   		
 			   		if(flag==0)
@@ -283,6 +297,7 @@ $('#batchname').change(function(){
   						  table1.deleteRow(x);
   					   }
   					globcounter=0;
+  						$("#testdiv").addClass("hide");
   						$('#lectureaddedmodal').modal('toggle');
   						$(td).hide();
   					
@@ -303,7 +318,7 @@ $('#batchname').change(function(){
 		   		modal.launchAlert("Error","Error");
 		   	}	
 		});
-		 }else{
+		 }else if(state==1){
 			 $("#fielderror").modal('toggle');
 		 }
  }
@@ -315,6 +330,7 @@ $('#batchname').change(function(){
 input = $('#starttime'+id);
 		 }else{
 			 input = $('#endtime'+id);
+			 alert(input.parents("tr").find("#starttime"+id).val());
 		 }
  input.datetimepicker({
      pickDate: false
@@ -369,6 +385,7 @@ input = $('#starttime'+id);
   
   function add()
   {
+	  $("#testdiv").removeClass("hide");
 	  var div=document.getElementById("timetablediv");
 	  var div=document.getElementById("timetablediv");
 	  var subjectTR=document.createElement("tr");
@@ -451,45 +468,9 @@ input = $('#starttime'+id);
   function deleteLecture(id)
   {
 	  document.getElementById("tr"+id).remove();
-		/*  
-		var i=id;
-		var counter=i;
-		var param=i
-		while(i<(globcounter-1))
-			{
-			counter=i+1;
-			 param=i;
-			var sub=document.getElementById("sub"+counter);
-			sub.onchange= undefined;
-			sub.onchange = function(){fillTeacher(param);};		
-			$('#sub'+counter).change(function() { fillTeacher(param); });
-			  var start=document.getElementById("starttime"+counter);
-			var end=document.getElementById("endtime"+counter);
-			var date=document.getElementById("date"+counter);
-			
-			end.onclick=function(){gettime("endtime",param);};;
-			start.onclick=function(){gettime("starttime",param);};;
-			date.onclick=function(){getDate(i);};;  
-			
-			  $('#sub'+counter).attr('id', 'sub'+i);
-			 $('#starttime'+counter).attr('id', 'starttime'+i);
-			 $('#teacher'+counter).attr('id', 'teacher'+i);
-			 $('#endtime'+counter).attr('id', 'endtime'+i);
-			 $('#date'+counter).attr('id', 'date'+i); 
-			 
-			  subjects=$("#sub"+counter);
-			 $(subjects).id="sub"+i;
-				teachers=$("#teacher"+counter);
-			 $(teachers).id="teacher"+i;
-				starttimes=$("#starttime"+counter);
-				$(starttimes).id="starttime"+i;
-				endtimes=$("#endtime"+counter);
-				$(endtimes).id="endtime"+i;
-				dates=$("#date"+counter);
-				$(dates).id="date"+i; 
-			i++;
-			}
-		globcounter--; */
+	  if($("#testdiv").find("tr").length == 1){
+	  	$("#testdiv").addClass("hide");
+	  }
   }
   
   function filldropdown()
@@ -541,10 +522,14 @@ input = $('#starttime'+id);
 	<div id="timetable" align="center" class="container">	
 		<%List<Batch> batch=(List<Batch>)request.getAttribute("batch"); 
 		int i=0;%>
-		<div class="jumbotron">
-			<div class="container">
+		<div class="container bs-callout bs-callout-danger" style="margin-bottom: 5px;">
+			<div class="row">
+				<div class='col-sm-6 header' style="padding-bottom: 10px;">*
+					Create time table for batch here 
+				</div>
+			</div>
+			<div class="row">
 				<div class="col-md-4">
-					Select Batch : 
 					<select name="batchname" id="batchname" class="form-control" width="100px">
 					<option>Select Batch</option>
 					<%
@@ -555,15 +540,14 @@ input = $('#starttime'+id);
 					</select>
 				</div>
 				<div class="col-md-4">
-				<br/>
-				<button id="add" type="button" class="btn btn-info" onclick="add()" disabled="true">Add lecture</button>
+				<button id="add" type="button" class="btn btn-info" disabled="true">Add lecture</button>
 				</div>
 				<div class="col-md-4"></div>
 			</div>
 		</div>
 	</div>
 
-<div id="testdiv" align="center" class="container">
+<div id="testdiv" align="center" class="hide container">
 <table id="timetablediv" class="table table-bordered table-hover" style="background-color: white;" data-toggle="table" width="600px" border="1">
 	<tr>
 		<th width="100px">Select Subject</th>

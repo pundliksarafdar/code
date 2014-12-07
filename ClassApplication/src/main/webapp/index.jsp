@@ -69,16 +69,16 @@ ul{
 							</s:if>
 								
 							<div class="form-group">
-								<label for="lgname" class="col-sm-2 control-label">*Login
+								<label for="lgname" class="col-sm-4 control-label">*Login
 									Name</label>
-								<div class="col-sm-10">
+								<div class="col-sm-8">
 									<input name="loginBean.loginname" type="text"
 										class="form-control" id="lgname" placeholder="Login name" />
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="lgpass" class="col-sm-2 control-label">*Password</label>
-								<div class="col-sm-10">
+								<label for="lgpass" class="col-sm-4 control-label">*Password</label>
+								<div class="col-sm-8">
 									<input name="loginBean.loginpass" type="password"
 										class="form-control" id="lgpass" placeholder="Password" />
 								</div>

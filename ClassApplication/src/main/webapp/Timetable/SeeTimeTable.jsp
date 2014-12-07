@@ -494,13 +494,19 @@ $(document).ready(function(){
 int i=0;%>
 <form role="form" class="form-inline">
 <div class="container">
-<div class="jumbotron">
-<div align="left" class="container">
+<div class="bs-callout bs-callout-danger" style="margin-bottom: 5px;">
+<div class="row">
+		<div class='col-sm-6 header' style="padding-bottom: 10px;">*
+			View time table here
+		</div>
+
+</div>
+
+<div class="row">
 <!-- <div class="col-xs-2" align="right">
 <label>Select Batch</label>
 </div> -->
 <div class="col-md-4">
-Select Batch
 <select name="batchname" id="batchname" class='form-control'>
 <option>Select Batch</option>
 <%
@@ -514,15 +520,14 @@ while(i<batch.size()){
 <label>Select Date</label>
 </div> -->
 <div class="col-md-2">
-Select Date
 <div id="datetimepicker" class="input-group" style="width :150px;">
 					<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
-						type="text" id="date"/> <span class="input-group-addon add-on"> <i
+						type="text" id="date" placeholder="Select Date"/> <span class="input-group-addon add-on"> <i
 						class="glyphicon glyphicon-calendar glyphicon-time"></i>
 					</span>
 				</div>
 				</div>
-<div class="col-md-6"><br>
+<div class="col-md-6">
 <input value="Submit" type="button" id="submit" class="btn btn-danger">
 </div>
 </div>
