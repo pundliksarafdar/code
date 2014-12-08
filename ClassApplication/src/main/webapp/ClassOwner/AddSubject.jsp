@@ -46,9 +46,7 @@
 	
 	
 </script>
-<div>
-	<span class="btn btn-info pull-right addsubject2batch" data-toggle="popover" title="Select menu to add, remove, rename subjects"><i class="glyphicon glyphicon-plus"></i>&nbsp;Subjects</span>
-</div>
+
 <div class="btn-group btn-group-sm">
  
   <button type="button" class="btn btn-info" data-target="#addSubjectModal" data-toggle="modal">Add Subject</button>

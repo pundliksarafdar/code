@@ -28,7 +28,7 @@
 	</definition>
 
 	<definition name="login" extends="NoTopnavBaseLayout">
-		<put-attribute name="title" value="Template" />
+		<put-attribute name="title" value="Welcome" />
 		<put-attribute name="header" value="" />
 		<put-attribute name="body" value="/index.jsp" />
 		<put-attribute name="footer" value="" />
@@ -209,7 +209,7 @@
 	</definition>
 	
    <definition name="systemrequirement" extends="NoTopnavBaseLayout">
-		<put-attribute name="title" value="Template" />
+		<put-attribute name="title" value="System Requirements" />
 		<put-attribute name="header" value="" />
 		<put-attribute name="body" value="/systemrequirement.jsp" />
 		<put-attribute name="footer" value="" />

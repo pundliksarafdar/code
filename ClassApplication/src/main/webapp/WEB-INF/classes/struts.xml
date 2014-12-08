@@ -15,6 +15,7 @@
       </result-types>
       <global-results>
           <result name="syserror" type="tiles">syserror</result>
+          <result name="logout" type="tiles">login</result>
       </global-results>
       
       <action name="login" 

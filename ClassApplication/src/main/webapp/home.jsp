@@ -18,6 +18,6 @@ function systemreq(){
 </head>
 <body>
 	<input type="submit" onclick="javascript:login()" value="Login" autofocus/>
-	<input type="button" onclick="javascript:systemreq()" value="System Requirement"/>
+	<input type="button" onclick="javascript:systemreq()" value="System Requirements"/>
 </body>
 </html>

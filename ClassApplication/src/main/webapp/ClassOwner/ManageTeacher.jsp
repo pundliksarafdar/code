@@ -295,8 +295,8 @@ function searchTeacher() {
 			<thead>
 				<tr>
 					<td><button type="button" class="btn btn-info" data-target="#addTeacherModal" data-toggle="modal">Add Teacher</button></td>
-					<td><input type="text" class="form-control" id="teacherLoginNameSearch" size="20"/></td>					
 					<td><button type="button" class="btn btn-info" id="searchTeacher" onclick="searchTeacher()" >Search Teacher</button></td>
+					<td><input type="text" class="form-control" id="teacherLoginNameSearch" placeholder="Teacher Login Name" size="20"/></td>
 				</tr>
 				<tr></tr>
 				<tr></tr>

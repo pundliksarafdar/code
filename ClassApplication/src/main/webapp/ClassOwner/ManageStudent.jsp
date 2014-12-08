@@ -551,8 +551,8 @@ function getSelectedStudentsToDelete(){
 					<tr>
 						<td><button type="button" class="btn btn-info" data-target="#addStudentModal" data-toggle="modal">Add Student</button></td>
 				 		<!--<td><button type="button" class="btn btn-info" data-target="#deleteSelectedStudentModal" data-toggle="modal">Delete Student</button></td>  -->
-						<td><input type="text" class="form-control" id="studentLoginNameSearch" size="20"/></td>		
 						<td><button type="button" class="btn btn-info" id="searchStudent" onclick="searchStudent()" >Search Student</button></td>
+						<td><input type="text" class="form-control" id="studentLoginNameSearch" placeholder="Student Login Id" size="20"/></td>
 					</tr>
 				<tr>
 				<td>Select Batch</td>

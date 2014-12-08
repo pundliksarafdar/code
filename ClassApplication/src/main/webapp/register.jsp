@@ -15,11 +15,17 @@
 			maxDate:((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()
 		});
 		
+		$("#fname,#mname,#lname").on("keyup",function(){
+			if($(this).val().length==1){
+				$(this).val($(this).val().toUpperCase());
+			}
+		});
+		
 		$('#role').val("");
 		$('#phone1,#phone2').keydown(function(e){
 		    console.log("loggin :"+e.keyCode+":"+e.which);
 		    if(((e.keyCode < 47 || e.keyCode > 57)) && !(e.keyCode == 8 || e.keyCode == 9 || e.keyCode == 46 || e.keyCode ==37 || e.keyCode ==39)){
-		    	if(((e.keyCode < 97 || e.keyCode > 105)) && !(e.keyCode == 8 || e.keyCode == 46 || e.keyCode ==37 || e.keyCode ==39)){
+		    	if(((e.keyCode < 96 || e.keyCode > 105)) && !(e.keyCode == 8 || e.keyCode == 46 || e.keyCode ==37 || e.keyCode ==39)){
 			    	return false;
 			    }
 		    }else{
@@ -231,6 +237,7 @@
 	}
 
 	function isPasswordValid(){
+		/*
 		var ispassvalid = false;
 		if($('#loginpass').val()===$('#loginpassre').val()){
 			ispassvalid = true;
@@ -241,8 +248,8 @@
 			$('#mandatoryerror').append("Reentered password should match<br>");
 			$('#mandatoryerror').show();
 			ispassvalid = false;
-		}
-			return ispassvalid;
+		}*/
+			return true;
 	}
 	
 	function validateFields(){
@@ -255,103 +262,95 @@
 		var textonly=/^[a-zA-Z]+$/;
 			//(^[a-z0-9]+[@._]*[a-z0-9]$){5,20}
 		if($("#role").val()==-1){
+			$("#role").parents(".form-group").prepend("<p style='color:red';>Please select role</p>");
 			$("#role").parents(".form-group").addClass("has-error");
-			$('#mandatoryerror').append("Please select role.<br>");
-		}
+			}
 		if($("#loginname").val().length<5 || !$("#loginname").val().match(regloginname))
 			{
+			$("#loginname").parents(".form-group").prepend("<p style='color:red';>Username is invalid should be more than 5 character</p>");
 			isValidated = false;
 			$("#loginname").addClass("has-error");
-			$('#mandatoryerror').append("Username is invalid.<br>");
 			}
 		if(!$("#loginpass").val().match(regPasswordExpr)){
+			$("#loginpass").parents(".form-group").prepend("<p style='color:red';>Password is invalid please see popup on left for criteria</p>");
+			$('[data-toggle="tooltip"]').tooltip('show');
 			isValidated = false;
 			$("#loginpass").addClass("has-error");
-			$('#mandatoryerror').append("Password is invalid<br>");
-		}	
-		if($("#loginpass").val()==""){
-			isValidated = false;
-			$("#loginpassre").addClass("has-error");
-			$('#mandatoryerror').append("Please Enter Password<br>");
 			
-		}else if($("#loginpassre").val()==""){
+		}	
+		
+		if(!$("#loginpass").val()==$("#loginpassre").val()){
+			$("#loginpassre").parents(".form-group").prepend("<p style='color:red';>Password is mismatched.</p>");
 			isValidated = false;
 			$("#loginpassre").addClass("has-error");
-			$('#mandatoryerror').append("Please Enter Re-Password<br>");	
-		}else if(!$("#loginpass").val()==$("#loginpassre").val()){
-			isValidated = false;
-			$("#loginpassre").addClass("has-error");
-			$('#mandatoryerror').append("Password is mismatched.<br>");
 		}		
 		if(!$("#phone1").val().match(regPhoneNumber)){
+			$("#phone1").parents(".form-group").prepend("<p style='color:red';>Phone number is invalid. Only Numbers are allowed.</p>");
 			isValidated = false;
 			$("#phone1").addClass("has-error");
-			$('#mandatoryerror').append("Phone number is invalid. Only Numbers are allowed.<br>");
 		}
 		if($("#phone2").val()!=""){
 		if(!$("#phone2").val().match(regPhoneNumber)){
+			$("#phone2").parents(".form-group").prepend("<p style='color:red';>Phone2 number is invalid. Only Numbers are allowed</p>");
 			isValidated = false;
-			$("#phone12").addClass("has-error");
-			$('#mandatoryerror').append("Phone2 number is invalid. Only Numbers are allowed.<br>");
+			$("#phone2").addClass("has-error");
 		}
 		}
 		if(!$("#fname").val().match(regStringExpr)){
+			$("#fname").parents(".form-group").prepend("<p style='color:red';>First Name is invalid. Only A-Z characters are allowed.</p>");
 			isValidated = false;
 			$("#fname").addClass("has-error");
-			$('#mandatoryerror').append("First Name is invalid. Only A-Z characters are allowed. <br>");
 		}
-		
 		if($("#mname").val()!=""){
 		if(!$("#mname").val().match(regStringExpr)){
+			$("#mname").parents(".form-group").prepend("<p style='color:red';>Middle Name is invalid. Only A-Z characters are allowed</p>");
 			isValidated = false;
-			$("#mname").addClass("has-error");
-			$('#mandatoryerror').append("Middle Name is invalid. Only A-Z characters are allowed. <br>");
+			$("#mname").addClass("has-error");			
 		}
 		}
 		if(!$("#lname").val().match(regStringExpr)){
+			$("#lname").parents(".form-group").prepend("<p style='color:red';>Last Name is invalid. Only A-Z characters are allowed</p>");
 			isValidated = false;
 			$("#lname").addClass("has-error");
-			$('#mandatoryerror').append("Last Name is invalid. Only A-Z characters are allowed. <br>");
 		}
 		if(rolestate==2){
-		if(!$("#classname").val().match(regStringExpr)){
+		if($("#classname").val().trim().length < 5 && $("#classname").val().trim().length>20){
+			$("#classname").parents(".form-group").prepend("<p style='color:red';>Class Name can have minimum 5 and maximum 20 letters</p>");
 			isValidated = false;
 			$("#classname").addClass("has-error");
-			$('#mandatoryerror').append("Class Name is invalid. Only A-Z characters are allowed. <br>");
 		}
 		}
 		if(!$("#addr1").val().match(regAddressExpr)){
+			$("#addr1").parents(".form-group").prepend("<p style='color:red';>Address1 is invalid. Special characters are not allowed</p>");
 			isValidated = false;
 			$("#addr1").addClass("has-error");
-			$('#mandatoryerror').append("Address1 is invalid. Special characters are not allowed. <br>");
 		}
 		if($("#addr2").val()!=""){
 		if(!$("#addr2").val().match(regAddressExpr)){
+			$("addr2").parents(".form-group").prepend("<p style='color:red';>Address2 is invalid. Special characters are not allowed.</p>");
 			isValidated = false;
 			$("#addr2").addClass("has-error");
-			$('#mandatoryerror').append("Address2 is invalid. Special characters are not allowed. <br>");
 		}
 		}
 		
 		/*Pundlik Validation for city,state and country*/
 		if(!$("#city").val().match(textonly)){
+			$("#city").parents(".form-group").prepend("<p style='color:red';>City name is invalid. Only characters are not allowed</p>");
 			isValidated = false;
 			$("#city").addClass("has-error");
-			$('#mandatoryerror').append("City name is invalid. Only characters are not allowed. <br>");
 		}
 		
 		if($("#state").val()=="State" ){
+			$("#state").parents(".form-group").prepend("<p style='color:red';>State name is invalid. Only characters are not allowed.</p>");
 			isValidated = false;
 			$("#state").addClass("has-error");
-			$('#mandatoryerror').append("State name is invalid. Only characters are not allowed. <br>");
 		}
 		
 		if(!$("#country").val().match(textonly)){
+			$("#country").parents(".form-group").prepend("<p style='color:red';>Country name is invalid. Only characters are not allowed. </p>");
 			isValidated = false;
 			$("#country").addClass("has-error");
-			$('#mandatoryerror').append("Country name is invalid. Only characters are not allowed. <br>");
 		}
-		$('#mandatoryerror').show();
 		$("#rolebtn").focus();
 		return isValidated;
 	}
@@ -368,7 +367,7 @@
 				$("#rolebtn").focus();
 			</script>			
 		<% }%> 			
-	<fieldset>
+	
 		<div class="alert alert-danger" id="mandatoryerror" hidden="hidden">
 			<ul>				
 			</ul>
@@ -406,19 +405,19 @@
 		<div class="form-group">
 	    	<label for="fname" class="col-sm-4 control-label">*First Name</label>
 	    	<div class="col-sm-5">
-	    		<input type="text" class="form-control" name="registerBean.fname" id="fname" required="required" value='<s:property value="registerBean.fname" />'/>
+	    		<input type="text" class="form-control" maxlength="20" name="registerBean.fname" id="fname" required="required" value='<s:property value="registerBean.fname" />'/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="mname" class="col-sm-4 control-label">Middle Name</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.mname" id="mname"  value='<s:property value="registerBean.mname" />'/>
+				<input type="text" class="form-control" maxlength="20" name="registerBean.mname" id="mname"  value='<s:property value="registerBean.mname" />'/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="lname" class="col-sm-4 control-label">*Last Name</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.lname" id="lname" required="required"  value='<s:property value="registerBean.lname" />'/>
+				<input type="text" class="form-control" maxlength="20" name="registerBean.lname" id="lname" required="required"  value='<s:property value="registerBean.lname" />'/>
 			</div>
 		</div>
 		<div class="form-group">
@@ -553,7 +552,7 @@
 			<i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="bottom" title="" style="color: red;"></i>*Password</label>
 			<div class="col-sm-5">
 				<div>
-					<input type="password" class="form-control" name="registerBean.loginPass" id="loginpass" required="required" />
+					<input type="password" maxlength="20" class="form-control" name="registerBean.loginPass" id="loginpass" required="required" />
 				</div>	
 				</div>
 			</div>
@@ -565,7 +564,7 @@
 		<div class="form-group">
 			<label for="loginpassre" class="col-sm-4 control-label">*Re-Enter Password</label>
 			<div class="col-sm-5">
-				<input type="password" class="form-control" name="registerBean.loginPassRe" id="loginpassre" required="required" />
+				<input type="password" maxlength="20" class="form-control" name="registerBean.loginPassRe" id="loginpassre" required="required" />
 			</div>
 		</div>	
 		
@@ -575,7 +574,7 @@
 				<input type="button" onclick="go();" value="Submit" class="btn btn-default"/>
 			</div>
 		</div>
-	</fieldset>
+	
 	</form>
 </body>
 </html>

@@ -33,13 +33,7 @@
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Class Owner <b class="caret"></b></a>
       		<ul class="dropdown-menu">
-	            <li><a href="login">Class Owner</a></li>
 	            <li><a href="addsubject">Add Subject</a></li>
- 				<!-- <li><a href="managestudent">Manage Student</a></li>
-	            <li><a href="manageteacher">Manage Teacher</a></li>
-	            <li><a href="managebatch">Manage Batch</a></li>
-	            <li><a href="manageexams">Manage Exams</a></li>
-	            <li><a href="searchexamnonstudent">Manage</a></li> -->
 	         </ul>
       </li>
       
