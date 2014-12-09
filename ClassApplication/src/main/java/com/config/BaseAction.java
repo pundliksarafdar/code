@@ -31,9 +31,11 @@ public abstract class BaseAction extends ActionSupport{
 			userBean = new UserBean();
 		}
 			forward = performBaseAction(userBean,request,response,session);
-			
-		if(null == userBean.getRegId()){
+		
+		Boolean logout = (Boolean) request.getAttribute("logout");	
+		if(null != logout && logout == true){
 			ActionContext.getContext().getSession().remove("user");
+			ActionContext.getContext().getSession().clear();
 			return "logout";
 		}else{
 			( ActionContext.getContext().getSession()).put("user", userBean);
