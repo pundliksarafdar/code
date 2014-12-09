@@ -2,6 +2,12 @@
 <%@taglib prefix="s" uri="/struts-tags"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
+<style>
+.danger{
+	color:red;
+}
+</style>
+
 <script type="text/javascript">
 	$(function () {
 		$('[data-toggle="tooltip"]').attr("title",passwordCriteria); 
@@ -16,9 +22,8 @@
 		});
 		
 		$("#fname,#mname,#lname").on("keyup",function(){
-			if($(this).val().length==1){
-				$(this).val($(this).val().toUpperCase());
-			}
+			var string = $(this).val();	
+			$(this).val(string.charAt(0).toUpperCase() + string.slice(1));
 		});
 		
 		$('#role').val("");
@@ -62,6 +67,18 @@
 		}).on("focus",function(){
 			   $("#lgnameError").hide();
 		});
+		
+		$("input").keyup(function(){
+			$(this).parents(".form-group").find('.danger').remove();
+			$(this).parents(".form-group").removeClass("has-error");
+		});
+		
+		$("#statebtn").parents(".btn-group").find("li").on("mouseup",function(){
+			$("#statebtn").parents(".form-group").find('.danger').remove();
+			$('#statebtn').html($(this).text()+'&nbsp;<span class="caret"></span>');
+			$('#state').val($(this).text());
+			$("#statebtn").focus();
+		});
 	});
 	
 	
@@ -103,101 +120,6 @@
 		return isValid;
 	}
 	
-	function addState(state){
-		if(state==0){
-			$('#statebtn').html('Andhra Pradesh <span class="caret"></span>');
-			$('#state').val('Andhra Pradesh');
-		}else if(state==1){
-			$('#statebtn').html('Arunachal Pradesh <span class="caret"></span>');
-			$('#state').val('Arunachal Pradesh');
-		}else if(state==2){
-			$('#statebtn').html('Assam <span class="caret"></span>');
-			$('#state').val('Assam');
-		}else if(state==3){
-			$('#statebtn').html('Bihar <span class="caret"></span>');
-			$('#state').val('Bihar');
-		}else if(state==4){
-			$('#statebtn').html('Chhattisgarh <span class="caret"></span>');
-			$('#state').val('Chhattisgarh');
-		}else if(state==5){
-			$('#statebtn').html('Goa <span class="caret"></span>');
-			$('#state').val('Goa');
-		}else if(state==6){
-			$('#statebtn').html('Gujarat <span class="caret"></span>');
-			$('#state').val('Gujarat');
-		}else if(state==7){
-			$('#statebtn').html('Haryana <span class="caret"></span>');
-			$('#state').val('Haryana');
-		}else if(state==8){
-			$('#statebtn').html('Himachal Pradesh <span class="caret"></span>');
-			$('#state').val('Himachal Pradesh');
-		}else if(state==9){
-			$('#statebtn').html('Jammu and Kashmir <span class="caret"></span>');
-			$('#state').val('Jammu and Kashmir');
-		}else if(state==10){
-			$('#statebtn').html('Jharkhand <span class="caret"></span>');
-			$('#state').val('Jharkhand');
-		}else if(state==11){
-			$('#statebtn').html('Karnataka <span class="caret"></span>');
-			$('#state').val('Karnataka');
-		}else if(state==12){
-			$('#statebtn').html('Kerala <span class="caret"></span>');
-			$('#state').val('Kerala');
-		}else if(state==13){
-			$('#statebtn').html('Madhya Pradesh <span class="caret"></span>');
-			$('#state').val('Madhya Pradesh');
-		}else if(state==14){
-			$('#statebtn').html('Maharashtra <span class="caret"></span>');
-			$('#state').val('Maharashtra');
-		}else if(state==15){
-			$('#statebtn').html('Manipur <span class="caret"></span>');
-			$('#state').val('Manipur');
-		}else if(state==16){
-			$('#statebtn').html('Meghalaya <span class="caret"></span>');
-			$('#state').val('Meghalaya');
-		}else if(state==17){
-			$('#statebtn').html('Mizoram <span class="caret"></span>');
-			$('#state').val('Mizoram');
-		}else if(state==18){
-			$('#statebtn').html('Nagaland <span class="caret"></span>');
-			$('#state').val('Nagaland');
-		}else if(state==19){
-			$('#statebtn').html('Orissa <span class="caret"></span>');
-			$('#state').val('Orissa');
-		}else if(state==20){
-			$('#statebtn').html('Punjab <span class="caret"></span>');
-			$('#state').val('Punjab');
-		}else if(state==21){
-			$('#statebtn').html('Rajasthan <span class="caret"></span>');
-			$('#state').val('Rajasthan');
-		}else if(state==22){
-			$('#statebtn').html('Sikkim <span class="caret"></span>');
-			$('#state').val('Sikkim');
-		}else if(state==23){
-			$('#statebtn').html('Tamil Nadu <span class="caret"></span>');
-			$('#state').val('Tamil Nadu');
-		}else if(state==24){
-			$('#statebtn').html('Telangana <span class="caret"></span>');
-			$('#state').val('Telangana');
-		}else if(state==25){
-			$('#statebtn').html('Tripura <span class="caret"></span>');
-			$('#state').val('Tripura');
-		}else if(state==26){
-			$('#statebtn').html('Uttar Pradesh <span class="caret"></span>');
-			$('#state').val('Uttar Pradesh');
-		}else if(state==27){
-			$('#statebtn').html('Uttarakhand <span class="caret"></span>');
-			$('#state').val('Uttarakhand');
-		}else if(state==28){
-			$('#statebtn').html('West Bengal <span class="caret"></span>');
-			$('#state').val('West Bengal');
-		}else{
-			$('#statebtn').html('state <span class="caret"></span>');
-			$('#state').val('State');
-		}
-		
-	}
-	
 	
 	function addRole(role){
 		if(role==0){
@@ -229,6 +151,7 @@
 	}
 	
 	function go(){
+		$("input").parents(".form-group").find('.danger').remove();
 		if(validate()){
 			$('#regform').submit();
 		}else{
@@ -262,92 +185,81 @@
 		var textonly=/^[a-zA-Z]+$/;
 			//(^[a-z0-9]+[@._]*[a-z0-9]$){5,20}
 		if($("#role").val()==-1){
-			$("#role").parents(".form-group").prepend("<p style='color:red';>Please select role</p>");
+			$("#role").parents(".form-group").prepend("<p class='danger' >Please select role</p>");
 			$("#role").parents(".form-group").addClass("has-error");
 			}
 		if($("#loginname").val().length<5 || !$("#loginname").val().match(regloginname))
 			{
-			$("#loginname").parents(".form-group").prepend("<p style='color:red';>Username is invalid should be more than 5 character</p>");
+			$("#loginname").parents(".form-group").prepend("<p class='danger' >Username is invalid should be more than 5 character</p>");
 			isValidated = false;
 			$("#loginname").addClass("has-error");
 			}
 		if(!$("#loginpass").val().match(regPasswordExpr)){
-			$("#loginpass").parents(".form-group").prepend("<p style='color:red';>Password is invalid please see popup on left for criteria</p>");
+			$("#loginpass").parents(".form-group").prepend("<p class='danger' >Password is invalid please see popup on left for criteria</p>");
 			$('[data-toggle="tooltip"]').tooltip('show');
 			isValidated = false;
 			$("#loginpass").addClass("has-error");
 			
 		}	
 		
-		if(!$("#loginpass").val()==$("#loginpassre").val()){
-			$("#loginpassre").parents(".form-group").prepend("<p style='color:red';>Password is mismatched.</p>");
+		if($("#loginpass").val()!=$("#loginpassre").val()){
+			$("#loginpassre").parents(".form-group").prepend("<p class='danger' >Password is mismatched.</p>");
 			isValidated = false;
 			$("#loginpassre").addClass("has-error");
 		}		
 		if(!$("#phone1").val().match(regPhoneNumber)){
-			$("#phone1").parents(".form-group").prepend("<p style='color:red';>Phone number is invalid. Only Numbers are allowed.</p>");
+			$("#phone1").parents(".form-group").prepend("<p class='danger' >Phone number is invalid. Only Numbers are allowed.</p>");
 			isValidated = false;
 			$("#phone1").addClass("has-error");
 		}
 		if($("#phone2").val()!=""){
 		if(!$("#phone2").val().match(regPhoneNumber)){
-			$("#phone2").parents(".form-group").prepend("<p style='color:red';>Phone2 number is invalid. Only Numbers are allowed</p>");
+			$("#phone2").parents(".form-group").prepend("<p class='danger' >Phone2 number is invalid. Only Numbers are allowed</p>");
 			isValidated = false;
 			$("#phone2").addClass("has-error");
 		}
 		}
 		if(!$("#fname").val().match(regStringExpr)){
-			$("#fname").parents(".form-group").prepend("<p style='color:red';>First Name is invalid. Only A-Z characters are allowed.</p>");
+			$("#fname").parents(".form-group").prepend("<p class='danger' >First Name is invalid. Only A-Z characters are allowed.</p>");
 			isValidated = false;
 			$("#fname").addClass("has-error");
 		}
 		if($("#mname").val()!=""){
 		if(!$("#mname").val().match(regStringExpr)){
-			$("#mname").parents(".form-group").prepend("<p style='color:red';>Middle Name is invalid. Only A-Z characters are allowed</p>");
+			$("#mname").parents(".form-group").prepend("<p class='danger' >Middle Name is invalid. Only A-Z characters are allowed</p>");
 			isValidated = false;
 			$("#mname").addClass("has-error");			
 		}
 		}
 		if(!$("#lname").val().match(regStringExpr)){
-			$("#lname").parents(".form-group").prepend("<p style='color:red';>Last Name is invalid. Only A-Z characters are allowed</p>");
+			$("#lname").parents(".form-group").prepend("<p class='danger' >Last Name is invalid. Only A-Z characters are allowed</p>");
 			isValidated = false;
 			$("#lname").addClass("has-error");
 		}
 		if(rolestate==2){
 		if($("#classname").val().trim().length < 5 && $("#classname").val().trim().length>20){
-			$("#classname").parents(".form-group").prepend("<p style='color:red';>Class Name can have minimum 5 and maximum 20 letters</p>");
+			$("#classname").parents(".form-group").prepend("<p class='danger' >Class Name can have minimum 5 and maximum 20 letters</p>");
 			isValidated = false;
 			$("#classname").addClass("has-error");
 		}
 		}
-		if(!$("#addr1").val().match(regAddressExpr)){
-			$("#addr1").parents(".form-group").prepend("<p style='color:red';>Address1 is invalid. Special characters are not allowed</p>");
-			isValidated = false;
-			$("#addr1").addClass("has-error");
-		}
-		if($("#addr2").val()!=""){
-		if(!$("#addr2").val().match(regAddressExpr)){
-			$("addr2").parents(".form-group").prepend("<p style='color:red';>Address2 is invalid. Special characters are not allowed.</p>");
-			isValidated = false;
-			$("#addr2").addClass("has-error");
-		}
-		}
+		
 		
 		/*Pundlik Validation for city,state and country*/
 		if(!$("#city").val().match(textonly)){
-			$("#city").parents(".form-group").prepend("<p style='color:red';>City name is invalid. Only characters are not allowed</p>");
+			$("#city").parents(".form-group").prepend("<p class='danger' >City name is invalid. Only A-Z characters are not allowed</p>");
 			isValidated = false;
 			$("#city").addClass("has-error");
 		}
 		
-		if($("#state").val()=="State" ){
-			$("#state").parents(".form-group").prepend("<p style='color:red';>State name is invalid. Only characters are not allowed.</p>");
+		if($("#state").val()=="-1" ){
+			$("#state").parents(".form-group").prepend("<p class='danger' >Please Select State</p>");
 			isValidated = false;
 			$("#state").addClass("has-error");
 		}
 		
 		if(!$("#country").val().match(textonly)){
-			$("#country").parents(".form-group").prepend("<p style='color:red';>Country name is invalid. Only characters are not allowed. </p>");
+			$("#country").parents(".form-group").prepend("<p class='danger'>Country name is invalid. Only characters are not allowed. </p>");
 			isValidated = false;
 			$("#country").addClass("has-error");
 		}
@@ -357,7 +269,7 @@
 	
 </script>
 <body>
-<br/><br/>
+
 	 <form id="regform" action="/registeruser" method="post" role="form" class="form-horizontal"> 
 		<%if(request.getAttribute(Constants.ERROR_MESSAGE) != null){%>
 			<div class="alert alert-danger" id="mandatoryerror1">
@@ -471,7 +383,7 @@
 			<label for="state"  class="col-sm-4 control-label">*State</label>
 			<div class="col-sm-5" align="left">
 			
-			<input type="hidden" class="form-control" name="registerBean.state" id="state" required="required"/>
+			<input type="hidden" class="form-control" name="registerBean.state" id="state" required="required" value='<s:property value="registerBean.state" default="-1"/>'/>
 			<input type="hidden"  value='<s:property value="registerBean.state" default="-1"/>' />
 			<div class="btn-group">
 					<button type="button" class="btn btn-default dropdown-toggle"
@@ -479,35 +391,35 @@
 						State <span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" role="menu" >
-						<li value="Andhra Pradesh"><a href="javascript:addState('0')">Andhra Pradesh</a></li>
-						<li value="Arunachal Pradesh"><a href="javascript:addState('1')">Arunachal Pradesh</a><li>
-						<li value="Assam"><a href="javascript:addState('2')">Assam</a></li>
-						<li value="Bihar"><a href="javascript:addState('3')">Bihar</a></li>
-						<li value="Chhattisgarh"><a href="javascript:addState('4')">Chhattisgarh</a></li>
-						<li value="Goa"><a href="javascript:addState('5')">Goa</a></li>
-						<li value="Gujarat"><a href="javascript:addState('6')">Gujarat</a></li>
-						<li value="Haryana"><a href="javascript:addState('7')">Haryana</a></li>
-						<li value="Himachal Pradesh"><a href="javascript:addState('8')">Himachal Pradesh</a></li>
-						<li value="Jammu and Kashmir"><a href="javascript:addState('9')">Jammu and Kashmir</a></li>
-						<li value="Jharkhand"><a href="javascript:addState('10')">Jharkhand</a></li>
-						<li value="Karnataka"><a href="javascript:addState('11')">Karnataka</a></li>
-						<li value="Kerala"><a href="javascript:addState('12')">Kerala</a></li>
-						<li><a href="javascript:addState('13')">Madhya Pradesh</a></li>
-						<li><a href="javascript:addState('14')">Maharashtra</a></li>
-						<li><a href="javascript:addState('15')">Manipur</a></li>
-						<li><a href="javascript:addState('16')">Meghalaya</a></li>
-						<li><a href="javascript:addState('17')">Mizoram</a></li>
-						<li><a href="javascript:addState('18')">Nagaland</a></li>
-						<li><a href="javascript:addState('19')">Orissa</a></li>
-						<li><a href="javascript:addState('20')">Punjab</a></li>
-						<li><a href="javascript:addState('21')">Rajasthan</a></li>
-						<li><a href="javascript:addState('22')">Sikkim</a></li>
-						<li><a href="javascript:addState('23')">Tamil Nadu</a></li>
-						<li><a href="javascript:addState('24')">Telangana</a></li>
-						<li><a href="javascript:addState('25')">Tripura</a></li>
-						<li><a href="javascript:addState('26')">Uttar Pradesh</a></li>
-						<li><a href="javascript:addState('27')">Uttarakhand</a></li>
-						<li><a href="javascript:addState('28')">West Bengal</a></li>
+						<li value="Andhra Pradesh"><a href="#">Andhra Pradesh</a></li>
+						<li value="Arunachal Pradesh"><a href="#">Arunachal Pradesh</a><li>
+						<li value="Assam"><a href="#">Assam</a></li>
+						<li value="Bihar"><a href="#">Bihar</a></li>
+						<li value="Chhattisgarh"><a href="#">Chhattisgarh</a></li>
+						<li value="Goa"><a href="#">Goa</a></li>
+						<li value="Gujarat"><a href="#">Gujarat</a></li>
+						<li value="Haryana"><a href="#">Haryana</a></li>
+						<li value="Himachal Pradesh"><a href="#">Himachal Pradesh</a></li>
+						<li value="Jammu and Kashmir"><a href="#">Jammu and Kashmir</a></li>
+						<li value="Jharkhand"><a href="#">Jharkhand</a></li>
+						<li value="Karnataka"><a href="#">Karnataka</a></li>
+						<li value="Kerala"><a href="#">Kerala</a></li>
+						<li><a href="#">Madhya Pradesh</a></li>
+						<li><a href="#">Maharashtra</a></li>
+						<li><a href="#">Manipur</a></li>
+						<li><a href="#">Meghalaya</a></li>
+						<li><a href="#">Mizoram</a></li>
+						<li><a href="#">Nagaland</a></li>
+						<li><a href="#">Orissa</a></li>
+						<li><a href="#">Punjab</a></li>
+						<li><a href="#">Rajasthan</a></li>
+						<li><a href="#">Sikkim</a></li>
+						<li><a href="#">Tamil Nadu</a></li>
+						<li><a href="#">Telangana</a></li>
+						<li><a href="#">Tripura</a></li>
+						<li><a href="#">Uttar Pradesh</a></li>
+						<li><a href="#">Uttarakhand</a></li>
+						<li><a href="#">West Bengal</a></li>
 					</ul>
 			</div>
 			</div>
@@ -535,7 +447,7 @@
 		<div class="form-group" id="divClassname">
 			<label for="classname" class="col-sm-4 control-label">*Class Name</label>
 			<div class="col-sm-5">	
-				<input type="text" class="form-control" name="registerBean.className" id="classname" required="required"  value='<s:property value="registerBean.className" />'/>
+				<input type="text" maxlength="20" class="form-control" name="registerBean.className" id="classname" required="required"  value='<s:property value="registerBean.className" />'/>
 			</div>
 		</div>
 		
@@ -543,7 +455,7 @@
 		<div class="form-group">
 			<label for="loginname" class="col-sm-4 control-label">*Desired Login Name</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.loginName" id="loginname" required="required"  value='<s:property value="registerBean.loginName" />'/>
+				<input type="text" maxlength="20" class="form-control" name="registerBean.loginName" id="loginname" required="required"  value='<s:property value="registerBean.loginName" />'/>
 			</div>
 		</div>
 		<div class="form-group">

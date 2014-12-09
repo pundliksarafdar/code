@@ -33,7 +33,7 @@ body{
 <body>
 	<div id="outerDiv" align ="center">
 		<div id = "innerDiv" >
-			<div id="header">
+			<div id="header" style="height: 100px;">
 				<tiles:insertAttribute name="header" />
 				<br/>							
 			</div>

@@ -30,8 +30,14 @@ public abstract class BaseAction extends ActionSupport{
 		if (null == userBean) {
 			userBean = new UserBean();
 		}
-			forward = performBaseAction(userBean,request,response,session); 
-		( ActionContext.getContext().getSession()).put("user", userBean);
+			forward = performBaseAction(userBean,request,response,session);
+			
+		if(null == userBean.getRegId()){
+			ActionContext.getContext().getSession().remove("user");
+			return "logout";
+		}else{
+			( ActionContext.getContext().getSession()).put("user", userBean);
+		}
 		}catch(Exception e){
 			String errorCode = ServiceMap.getSystemParam("3","show");
 			if(null!=errorCode && "yes".equalsIgnoreCase("yes"))

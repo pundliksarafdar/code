@@ -17,6 +17,7 @@
 <%@taglib prefix="s" uri="http://java.sun.com/jstl/core"%>
 <script>
 function getBatchesOfDivision(){
+	$('div#addStudentModal .error').hide();
 	var divisionName = $('div#addStudentModal').find('#divisionName').val();
 
 	if(!divisionName || divisionName.trim()==""){
@@ -44,7 +45,7 @@ function getBatchesOfDivision(){
 		   			i++;
 				   }
 			   } else{
-				   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Error while fetching batches for division');
+				   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> '+resultJson.message);
 					$('div#addStudentModal .error').show();
 			}
 	   	},

@@ -19,6 +19,7 @@ public class Logout extends BaseAction{
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
 		ActionContext.getContext().getSession().clear();
+		userBean.setRegId(null);
 		return SUCCESS;
 	}
 }
