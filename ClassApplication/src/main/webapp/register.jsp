@@ -13,12 +13,12 @@
 		$('[data-toggle="tooltip"]').attr("title",passwordCriteria); 
 		$('[data-toggle="tooltip"]').tooltip({"html":true});
 	})
-	var passwordCriteria = "Password should be greater than 5 and less than 20 in length <br> Should contain special atleast on character [!@#$%]"
+	var passwordCriteria = "Password should be greater than 5 and less than 20 in length <br> Should contain special atleast on character [!@#$%]<br> Password can not start with special character"
 	$(document).ready(function(){
 		$('#datetimepicker').datetimepicker({
 			format : 'YYYY-MM-DD',
 			pickTime : false,
-			maxDate:((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()
+			maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 		});
 		
 		$("#fname,#mname,#lname").on("keyup",function(){
@@ -247,8 +247,8 @@
 		
 		/*Pundlik Validation for city,state and country*/
 		if(!$("#city").val().match(textonly)){
-			$("#city").parents(".form-group").prepend("<p class='danger' >City name is invalid. Only A-Z characters are not allowed</p>");
-			isValidated = false;
+			$("#city").parents(".form-group").prepend("<p class='danger' >City name is invalid. Only A-Z characters are allowed</p>");
+			isValidated = false;	
 			$("#city").addClass("has-error");
 		}
 		
@@ -345,7 +345,7 @@
 					-->
 					
 					<div id="datetimepicker" class="input-group" style="width :250px;">
-						<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
+						<input class="form-control" data-format="YYYY-MM-DD"
 							type="text"  id="dobfield" name="registerBean.dob" required="required"  readonly value='<s:property value="registerBean.dob" />'/> <span class="input-group-addon add-on"> <i
 							class="glyphicon glyphicon-calendar glyphicon-time"></i>
 						</span>
@@ -435,13 +435,13 @@
 		<div class="form-group">
 			<label for="phone1" class="col-sm-4 control-label">*Phone 1</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.phone1" id="phone1" required="required" maxlength="10" value='<s:property value="registerBean.phone1" />'/>
+				<input type="tel" class="form-control" name="registerBean.phone1" id="phone1" required="required" maxlength="10" value='<s:property value="registerBean.phone1" />'/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="phone2" class="col-sm-4 control-label">Phone 2</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" name="registerBean.phone2" id="phone2" maxlength="10" value='<s:property value="registerBean.phone2" />'/>
+				<input type="tel" class="form-control" name="registerBean.phone2" id="phone2" maxlength="10" value='<s:property value="registerBean.phone2" />'/>
 			</div>	
 		</div>
 		<div class="form-group" id="divClassname">

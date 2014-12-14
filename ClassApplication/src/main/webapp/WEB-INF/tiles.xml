@@ -214,4 +214,18 @@
 		<put-attribute name="body" value="/systemrequirement.jsp" />
 		<put-attribute name="footer" value="" />
 	</definition>
+	
+   <definition name="logoutcomplete" extends="NoTopnavBaseLayout">
+		<put-attribute name="title" value="System Requirements" />
+		<put-attribute name="header" value="" />
+		<put-attribute name="body" value="/logoutcomplete.jsp" />
+		<put-attribute name="footer" value="" />
+	</definition>
+	
+   <definition name="logoutsuccess" extends="NoTopnavBaseLayout">
+		<put-attribute name="title" value="Logged Out" />
+		<put-attribute name="header" value="" />
+		<put-attribute name="body" value="/logoutsuccess.jsp" />
+		<put-attribute name="footer" value="" />
+	</definition>
 </tiles-definitions>

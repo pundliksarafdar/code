@@ -291,17 +291,22 @@ function searchTeacher() {
 <body>
 	<br/><br/>
 	<div class="btn-group btn-group-sm">	
-		<table class="table">
-			<thead>
-				<tr>
-					<td><button type="button" class="btn btn-info" data-target="#addTeacherModal" data-toggle="modal">Add Teacher</button></td>
-					<td><button type="button" class="btn btn-info" id="searchTeacher" onclick="searchTeacher()" >Search Teacher</button></td>
-					<td><input type="text" class="form-control" id="teacherLoginNameSearch" placeholder="Teacher Login Name" size="20"/></td>
-				</tr>
-				<tr></tr>
-				<tr></tr>
-			</thead>
-		</table>
+		<div class="container bs-callout bs-callout-danger" style="margin-bottom: 10px;">
+			<div class="row">
+			<div class="col-md-4">
+			<button type="button" class="btn btn-info" data-target="#addTeacherModal" data-toggle="modal"><i class="glyphicon glyphicon-user"></i>&nbsp;Add Teacher</button>
+			</div>
+			
+			<div class="col-md-4">
+			<div class="input-group">
+				<input type="text" class="form-control" id="teacherLoginNameSearch" placeholder="Teacher Login Name" size="20"/>
+				<span class="input-group-btn">
+				<button type="button" class="btn btn-info" id="searchTeacher" onclick="searchTeacher()" ><i class="glyphicon glyphicon-search"></i>&nbsp;Search Teacher</button>
+				</span>
+			</div>
+			</div>
+		</div>
+		</div>
 		
 		<%TeacherDetails teacherSearch=(TeacherDetails)request.getSession().getAttribute("teacherSearchResult");
 		if(teacherSearch!=null){

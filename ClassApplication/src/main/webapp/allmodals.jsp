@@ -15,57 +15,7 @@
 <%@page import="com.classapp.db.batch.division.Division" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="s" uri="http://java.sun.com/jstl/core"%>
-<script>
-function getBatchesOfDivision(){
-	$('div#addStudentModal .error').hide();
-	var divisionName = $('div#addStudentModal').find('#divisionName').val();
 
-	if(!divisionName || divisionName.trim()==""){
-		$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Division name cannot be blank');
-		$('div#addStudentModal .error').show();
-	}else{		
-	  $.ajax({
-	   url: "classOwnerServlet",
-	   data: {
-	    	 methodToCall: "fetchBatchesForDivision",
-			 regId:'',
-			 divisionName:divisionName,						 
-	   		},
-	   type:"POST",
-	   success:function(e){		 
-		   
-		    var resultJson = JSON.parse(e);
-		    
-		      if(resultJson.status != 'error'){
-		   	  	var batchnames=resultJson.batchNames.split(',');
-		   		var batchids=resultJson.batchIds.split(',');
-		   		var i=0;
-		   		while(i<batchnames.length){
-			   		addCheckbox(batchnames[i],batchids[i]);
-		   			i++;
-				   }
-			   } else{
-				   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> '+resultJson.message);
-					$('div#addStudentModal .error').show();
-			}
-	   	},
-	   error:function(e){
-		   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Error while fetching batches for division');
-			$('div#addStudentModal .error').show();
-	   }
-	   
-});
-	
-}
-}
-
-function addCheckbox(batchname,batchid) {
-	   var container =$('#checkboxes');
-	   $('<input />', { type: 'checkbox', id: batchid, value: batchid, class: "chkBatch" }).appendTo(container);
-	   $('<label />', { 'for': batchid, text: batchname }).appendTo(container);
-	}
-
- </script>
 	<!-- Search Modal  start-->
 <div class="modal fade" id="ajax-modal">
 <div class="modal-dialog">
@@ -284,83 +234,6 @@ function addCheckbox(batchname,batchid) {
 	        <%}else{ %>
 	       <font color="RED" ><b>Please Add Subjects First</b></font>
 	        <%} %>
-	        <div class="setTimming hide">
-	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Not Now</button>
-	        <button type="button" class="btn btn-primary btn-setTimming" id="btn-setTimming">Done</button>
-	        </div>
-      	</div>
-    </div>
-</div>	
-</div>
-
-<div class="modal fade" id="addStudentModal" data-backdrop="static">
-  <div class="modal-dialog">
-      <div class="modal-content">
- 		<div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title" id="">Add Student</h4>
-        </div>
-        <div class="modal-body" id="">
-        	<div class="error alert alert-danger"></div>
-			<div class="form-group">
-				Student Login Name <input type="text" class="form-control" id="studentLoginName"/> 
-				<br>
-				
-				Division<!-- <input type="text" class="form-control" id="divisionName" name="divisionName"/> -->
-				<select class="btn btn-default" name="divisionName" id="divisionName">
-					<s:set value="${requestScope.divisionNames}" var="divisionNames"></s:set>
-						<option value="-1">Select Division</option>
-						<s:forEach items="${divisionNames}" var="divisionName">
-							<option value='<s:out value="${divisionName}"></s:out>'><s:out value="${divisionName}"></s:out></option>
-						</s:forEach>
-					</select>
-				<button type="button" class="btn btn-primary btn-getBatchesForStudent" id="getBatchesForStudent" onclick="getBatchesOfDivision()">Get available batches</button>
-				
-				<br>
-				<div id="checkboxes">
-				
-				</div>
-														
-				<div id="classTimming" class="hide">
-				<div class="container-fluid">
-  				<div class="row">
-  					
-					<div class="col-sm-6">
-					<label for="">Start Time</label>
-					<div class='input-group date' id='fromDate' data-date-format="hh:mm A" style="width: 150px;">
-						<input type='text' class="form-control"/> <span
-							class="input-group-addon"><span
-							class="glyphicon glyphicon-calendar"></span> </span>
-					</div>
-					</div>
-					
-					<div class="col-sm-6">
-					<label for="">End Time</label>
-					<div class='input-group date' id='toDate' data-date-format="hh:mm A" style="width: 150px;">
-						<input type='text' class="form-control"/> <span
-							class="input-group-addon"><span
-							class="glyphicon glyphicon-calendar"></span> </span>
-					</div>
-					</div>
-					
-					
-				</div>
-				</div>
-				</div>				
-			</div>				
-			</div>
-      	<div class="modal-footer">
-	        <div class="progress progress-striped active hide">
-					<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="45"
-						aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-						Processing your request Please wait
-					</div>
-			</div>
-			<div class="add">
-	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Cancel</button>
-	        <button type="button" class="btn btn-primary btn-addStudent" id="btn-addStudent">Add</button>
-	        </div>
-	     
 	        <div class="setTimming hide">
 	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Not Now</button>
 	        <button type="button" class="btn btn-primary btn-setTimming" id="btn-setTimming">Done</button>
@@ -637,7 +510,7 @@ function addCheckbox(batchname,batchid) {
         <div class="modal-body" id="abc">
         	<div class="error alert alert-danger"></div>
 			<div class="form-group" id="abc1">
-			<input type="text" class="form-control" id="subjectName" name="subjectName" placeholder="Enter Subject Name">
+			<input type="text" class="form-control" id="subjectName" name="subjectName" placeholder="Enter Subject Name" maxlength="100">
 				<!-- <input type="text"  id="subjectName" name="subjectName"/> -->
 				<script>
 				$("#subjectName").autocomplete("AutoComplete.jsp");
@@ -940,9 +813,9 @@ function addCheckbox(batchname,batchid) {
         <div class="modal-body" id="">
         	<div class="error alert alert-danger"></div>
 			<div class="form-group" id="">
-				Enter Class:- <input type="tel" class="form-control" id="classname" placeholder="Enter Class Name" name="classname">
+				Enter Class:- <input type="text" class="form-control" id="classname" placeholder="Enter Class Name" name="classname">
 				<!-- <input type="text"  id="classname" name="classname"/></br> -->
-				Enter Stream/Part:-<input type="tel" class="form-control" id="stream" placeholder="Enter Stream/Part" name="stream">
+				Enter Stream/Part:-<input type="text" class="form-control" id="stream" placeholder="Enter Stream/Part" name="stream">
 				<!-- <input type="text"  id="stream" name="stream"/> -->
 				<br>
 				<div id="classTimming" class="hide">
@@ -1067,6 +940,74 @@ function addCheckbox(batchname,batchid) {
       	</div>
     </div>
 </div>	
+</div>
+
+<div class="modal fade" id="ModifysubjectModal" data-backdrop="static" style="display:none;" >
+  <div class="modal-dialog">
+      <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="">Edit Subject</h4>
+        </div>
+        <div class="modal-body" id="">
+        	<div class="error alert alert-danger" hidden="true"></div>
+			<div class="form-group" id="">
+		
+			 <input class="form-control" type="text" id="editsubject" maxlength="100">
+				<input type="hidden" id="hidsubid">
+				<div id="classTimming" class="hide">
+				<div class="container-fluid">
+  				<div class="row">
+  					
+					<div class="col-sm-6">
+					<label for="">Start Time</label>`
+					<div class='input-group date' id='fromDate' data-date-format="hh:mm A" style="width: 150px;">
+						<input type='text' class="form-control"/> <span
+							class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span> </span>
+					</div>
+					</div>
+					
+					<div class="col-sm-6">
+					<label for="">End Time</label>
+					<div class='input-group date' id='toDate' data-date-format="hh:mm A" style="width: 150px;">
+						<input type='text' class="form-control"/> <span
+							class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span> </span>
+					</div>
+					</div>
+				</div>
+				</div>
+				</div>
+			</div>				
+			</div>
+      	<div class="modal-footer">
+	        <div class="progress progress-striped active hide">
+					<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="45"
+						aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+						Processing your request Please wait
+					</div>
+			</div>
+			
+	        <div class="add">
+	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Cancel</button>
+	        <button type="button" class="btn btn-primary btn-add" id="savesubject">Save</button>
+	        </div>
+	        <div class="setTimming hide">
+	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Not Now</button>
+	        <button type="button" class="btn btn-primary btn-setTimming" id="btn-setTimming">Done</button>
+	        </div>
+      	</div>
+    </div>
+</div>	
+</div>
+<div class="modal fade" id="progressGifModal" data-backdrop="static"
+	style="display: none;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<img src="images/ajax-loader.gif">
+		</div>
+	</div>
 </div>
 	<!-- Modal Box End -->
 

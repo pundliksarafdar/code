@@ -11,5 +11,8 @@
         <property name="subjectName" type="java.lang.String">
             <column name="SUB_NAME" />
         </property>
+         <property name="institute_id" type="java.lang.Integer">
+            <column name="institute_id"/>
+        </property> 
     </class>
 </hibernate-mapping>

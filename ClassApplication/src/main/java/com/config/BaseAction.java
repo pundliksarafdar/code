@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import com.classapp.servicetable.ServiceMap;
 import com.opensymphony.xwork2.ActionContext;
@@ -32,11 +33,12 @@ public abstract class BaseAction extends ActionSupport{
 		}
 			forward = performBaseAction(userBean,request,response,session);
 		
-		Boolean logout = (Boolean) request.getAttribute("logout");	
-		if(null != logout && logout == true){
+		ActionMapping mapping = (ActionMapping) request.getAttribute("struts.actionMapping");
+		
+		if("logout".equals(mapping.getName())){
 			ActionContext.getContext().getSession().remove("user");
-			ActionContext.getContext().getSession().clear();
-			return "logout";
+			ActionContext.getContext().setSession(null);
+			return SUCCESS;
 		}else{
 			( ActionContext.getContext().getSession()).put("user", userBean);
 		}

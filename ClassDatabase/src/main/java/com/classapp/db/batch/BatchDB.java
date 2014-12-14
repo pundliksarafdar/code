@@ -108,11 +108,13 @@ public class BatchDB {
 				batchDetails.setDivision(divisionDB.retriveByID(batchList.get(i).getDiv_id()));
 				List<Subject> subjectList= new ArrayList<Subject>();
 				String subjectIds= batchList.get(i).getSub_id();
+				if(!subjectIds.equals("")){
 				for (String  subjectId: subjectIds.split(",")) {
 					Subject subject= subjectDb.retrive(Integer.parseInt(subjectId));
 					if(subject!=null){
 						subjectList.add(subject);
 					}
+				}
 				}
 				batchDetails.setSubjects(subjectList);
 				batchDetailsList.add(batchDetails);
@@ -408,5 +410,34 @@ public List<Batch> retriveAllRelatedBatches(int class_id, int div_id){
 		}
 		return batches;
 	}
+
+public List<Batch> getbachesrelatedtosubject(String subjectid) {
+	Session session = null;
+	Transaction transaction = null;
+	List<Batch> batchList = null;
+	List<Batch> batches = new ArrayList<Batch>();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("from Batch where sub_id LIKE :sub_id1 OR sub_id LIKE :sub_id2 OR sub_id LIKE :sub_id3 OR sub_id = :sub_id4");
+		query.setParameter("sub_id1", subjectid+",%");
+		query.setParameter("sub_id2", "%,"+subjectid);
+		query.setParameter("sub_id3", "%,"+subjectid+",%");
+		query.setParameter("sub_id4", subjectid);
+		
+		batchList = query.list();
+		
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return batchList;
+}
 
 }

@@ -30,16 +30,17 @@
           	</ul>
       </li>
     <%}if(userBean.getRole() < 2 || userBean.getRole() == 10){ %>  
-      <li>
+      <!-- <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Class Owner <b class="caret"></b></a>
       		<ul class="dropdown-menu">
 	            <li><a href="addsubject">Add Subject</a></li>
 	         </ul>
-      </li>
+      </li> -->
       
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Manage <b class="caret"></b></a>
       		<ul class="dropdown-menu">
+      			<li><a href="addsubject">Manage Subject</a></li>
 	            <li><a href="managestudent">Manage Student</a></li>
 	            <li><a href="manageteacher">Manage Teacher</a></li>
 	            <li><a href="managebatch">Manage Batch</a></li>

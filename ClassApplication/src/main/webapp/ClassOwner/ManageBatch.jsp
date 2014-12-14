@@ -283,19 +283,22 @@ $(document).ready(function(){
 <body>
 	<br/><br/>
 	<div class="btn-group btn-group-sm">
-		<table class="table">
-			<thead>
-				<tr>
-					<td><button type="button" class="btn btn-info" data-target="#addBatchModal" data-toggle="modal">Add Batch</button></td>
-					<!--<td><button type="button" class="btn btn-info" data-target="#deleteSelectedBatchModal" data-toggle="modal">Delete batch/es</button></td>-->
-					<td></td>
-					<td></td>
-					<td><input type="text" class="form-control" id="batchNameSearch" size="20"/></td>			
-					<td><button type="button" class="btn btn-info" id="searchBatch" onclick="searchBatch()" >Search Batch</button></td>
-				</tr>
-			</thead>			
-		</table>
-	
+		<div class="container bs-callout bs-callout-danger" style="margin-bottom: 10px;">
+			<div class="row">
+			<div class="col-md-4">
+				<button type="button" class="btn btn-info" data-target="#addBatchModal" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Batch</button>
+			</div>
+		
+			<div class="col-md-4">
+			<div class="input-group">
+				<input type="text" class="form-control" id="batchNameSearch" size="20"/>
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-info" id="searchBatch" onclick="searchBatch()" ><i class="glyphicon glyphicon-search"></i>&nbsp;Search Batch</button>
+				</span>
+			</div>
+			</div>
+			</div>		
+		</div>
 	<%BatchDetails batchSearch=(BatchDetails)request.getSession().getAttribute("batchSearchResult");
 	if(batchSearch!=null){
 		//System.out.println("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());

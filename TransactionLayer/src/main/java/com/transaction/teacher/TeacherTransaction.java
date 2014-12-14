@@ -108,4 +108,38 @@ public List getTeachersClass(int regId) {
 		return registerBeans;
 	}
 	
+	public boolean deletesubjectfromteacherlist(String subjectid) {
+		TeacherDB teacherDB=new TeacherDB();
+		List<Teacher> list=teacherDB.getteacherrelatedtosubject(subjectid);
+		if(list.size()>0){
+			int counter=0;
+			while(list.size()>counter){
+				Teacher teacher=list.get(counter);
+				int innercounter=0;
+				String subids[]= teacher.getSub_ids().split(",");
+				String subjectids="";
+				int position=0;
+				while (subids.length>innercounter) {
+					if(!subids[innercounter].equals(subjectid)){
+						if(position==0){
+							subjectids=subids[innercounter];
+						}else{
+							subjectids=subjectids+","+subids[innercounter];
+						}
+						position++;
+						}
+					innercounter++;
+					}
+				teacher.setSub_ids(subjectids);
+				teacherDB.updateDb(teacher);
+				counter++;
+				}
+				
+			}
+		
+		
+		return true;
+		
+	}
+	
 }

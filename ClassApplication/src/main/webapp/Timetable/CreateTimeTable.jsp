@@ -79,13 +79,6 @@
           });
       });
 	  
-	  function getDate(id) {
-		  $( "#date"+id ).datetimepicker({
-			  pickTime: false,
-			  minDate:((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()
-		  }).data("DateTimePicker").show();
-		  
-		  }
 $('#batchname').change(function(){
 	
 	var batchName = $('div#timetable').find('#batchname').val();
@@ -323,22 +316,35 @@ $('#batchname').change(function(){
 		 }
  }
  
- function gettime(time,id){
-	 var input; 
-	 if(time=="starttime")
-		 {
-input = $('#starttime'+id);
-		 }else{
-			 input = $('#endtime'+id);
-			 alert(input.parents("tr").find("#starttime"+id).val());
-		 }
- input.datetimepicker({
+$(function(){
+	/*$("[id^='starttime']").datetimepicker({
+		pickDate: false
+	}).data("DateTimePicker").show();
+	*/
+	$('#testdiv').on('DOMNodeInserted', "tr", function () {
+      var $that = $(this);
+	  //console.log($(this).find("[id^='endtime']").html());
+			 
+		$(this).find("input[id^='starttime']").datetimepicker({
      pickDate: false
+		}).on("dp.change",function (e) {
+				console.log("sss");
+				var m = e;
+               $that.find("input[id^='endtime']").data("DateTimePicker").setMinDate(e.date);
+			   $that.find("input[id^='endtime']").data("DateTimePicker").setDate(e.date);
  });
- input.data("DateTimePicker").show();
- }
-
   
+		$(this).find("input[id^='endtime']").datetimepicker({
+			pickDate: false
+		});
+		
+		$(this).find("input[id^='date']").datetimepicker({
+			  pickTime: false,
+			  minDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
+		  });
+	});
+})
+ 
   function fillTeacher(id)
   {
 	  var teacherid=document.getElementById("teacher"+id);
@@ -375,6 +381,8 @@ input = $('#starttime'+id);
 	            	   
 	            	   sell1Options[i+1]= new Option(firstname[i]+" "+lastname[i], teacherid[i]);
 	            	   }
+	               }else{
+	            	   modal.launchAlert("Success","Not Available For This Subject");
 	               }
 			   	},
 			   error:function(data){
@@ -422,7 +430,6 @@ input = $('#starttime'+id);
 	  var starttimeTextBox=document.createElement("input");
 	  starttimeTextBox.setAttribute("type", "text");
 	  starttimeTextBox.id= "starttime"+globcounter;
-	  starttimeTextBox.onclick=function(){gettime("starttime",id);};;
 	  starttimeTextBox.setAttribute("class", "form-control");
 	  starttimeTextBox.width=100;
 
@@ -432,7 +439,6 @@ input = $('#starttime'+id);
 	  var endtimeTextBox=document.createElement("input");
 	  endtimeTextBox.setAttribute("type", "text");
 	  endtimeTextBox.id= "endtime"+globcounter;
-	  endtimeTextBox.onclick=function(){gettime("endtime",id);};;
 	  endtimeTextBox.setAttribute("class", "form-control");
 	  endtimeTD.appendChild(endtimeTextBox);
 	  subjectTR.appendChild(endtimeTD);
@@ -443,7 +449,6 @@ input = $('#starttime'+id);
 	  dateTextBox.class="hasDatepicker";
 	  dateTextBox.setAttribute("class","hasDatepicker");
 	  dateTextBox.setAttribute("class", "form-control");
-	  dateTextBox.onclick=function(){getDate(id);};;
 	  dateTD.appendChild(dateTextBox);
 	  subjectTR.appendChild(dateTD);
 	  

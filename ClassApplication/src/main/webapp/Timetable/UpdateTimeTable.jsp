@@ -33,6 +33,51 @@ input.datetimepicker({
 input.data("DateTimePicker").show();
 }
 
+function getsubjectteachers(id){
+	var subjectid=$("#subject"+id).val();
+	alert(subjectid);
+	$.ajax({
+		   url: "classOwnerServlet",
+		    data: {
+		    	 methodToCall: "fetchSubjectTeacher",
+		    	 subname:subjectid
+		   		}, 
+		   type:"POST",
+		   success:function(data){
+			   var resultJson = JSON.parse(data);
+			   var firstname= resultJson.firstname.split(",");
+			   var lastname= resultJson.lastname.split(",");
+			   var teacherid= resultJson.teacherid.split(",");
+			      var counter=1;
+			   var sell1Select = $("#teacher"+id);
+            if(sell1Select.prop) { 
+               var sell1Options = sell1Select.prop("options"); 
+             } else { 
+               var sell1Options = sell1Select.attr("options"); 
+                    } 
+            $("option", sell1Select).remove();  
+            
+            sell1Options[0]= new Option("Select Teacher", "-1");
+            
+            var limit=firstname.length;
+            if(teacherid[0]!=""){
+            for(var i=0;i<limit;i++)
+         	   {
+         	   
+         	   sell1Options[i+1]= new Option(firstname[i]+" "+lastname[i], teacherid[i]);
+         	   }
+            }else{
+         	   modal.launchAlert("Success","Not Available For This Subject");
+            }
+		   	},
+		   error:function(data){
+			   alert("Teacher Not Available");
+		   }
+	});
+	
+	
+}
+
 function edit(){
 	var batchname=$("#batchname").val();
 	var date=$("#date").val();
@@ -82,7 +127,7 @@ function edit(){
 				   {
 				   var innercounter=0;
 				   var ids=allteacherids[counter].split(',');
-			   $(table).append("<tr id="+counter+"><td><select id=subject"+counter+" class='form-control'></select></td><td><select id=teacher"+counter+" class='form-control'></select></td><td><input type='text' id=start"+counter+" class='form-control' onload=settime(); onclick=gettime('start',"+counter+");></td><td><input type='text' id=end"+counter+" class='form-control' onload=settime(); onclick=gettime('end',"+counter+");></td><td><input type='text' id=date"+counter+" class='form-control' onload=settime(); onclick=gettime('date',"+counter+");></td><td><a id="+scheduleids[counter]+" onclick=deleteschedule("+scheduleids[counter]+"); style='cursor: pointer;'>Delete</a> <input type='hidden' value='"+scheduleids[counter]+"' id='schrduleid"+counter+"'></td><td id=error"+counter+" style='display: none'></td></tr>");
+			   $(table).append("<tr id="+counter+"><td><select id=subject"+counter+" class='form-control' onchange=getsubjectteachers("+counter+")></select></td><td><select id=teacher"+counter+" class='form-control'></select></td><td><input type='text' id=start"+counter+" class='form-control' onload=settime(); onclick=gettime('start',"+counter+");></td><td><input type='text' id=end"+counter+" class='form-control' onload=settime(); onclick=gettime('end',"+counter+");></td><td><input type='text' id=date"+counter+" class='form-control' onload=settime(); onclick=gettime('date',"+counter+");></td><td><a id="+scheduleids[counter]+" onclick=deleteschedule("+scheduleids[counter]+"); style='cursor: pointer;'>Delete</a> <input type='hidden' value='"+scheduleids[counter]+"' id='schrduleid"+counter+"'></td><td id=error"+counter+" style='display: none'></td></tr>");
 			   var id=counter;
 			   var start=document.getElementById("start"+id);
 			   var end=document.getElementById("end"+id);

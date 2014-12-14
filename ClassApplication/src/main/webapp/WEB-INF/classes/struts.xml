@@ -15,7 +15,7 @@
       </result-types>
       <global-results>
           <result name="syserror" type="tiles">syserror</result>
-          <result name="logout" type="tiles">login</result>
+          <!-- <result name="logout" type="tiles">login</result>  -->
       </global-results>
       
       <action name="login" 
@@ -34,6 +34,18 @@
 
       <action name="logout" 
             class="com.signon.Logout" 
+            method="execute">
+            <result name="success" type="tiles">logoutcomplete</result>
+      </action>
+      
+      <action name="logoutComplete" 
+            class="com.signon.LogoutCompleteAction" 
+            method="execute">
+            <result name="success" type="tiles">logoutsuccess</result>
+      </action>
+       
+      <action name="logoutsuccess" 
+            class="com.signon.LogoutSuccessAction" 
             method="execute">
             <result name="success" type="tiles">login</result>
       </action>

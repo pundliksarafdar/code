@@ -286,4 +286,61 @@ public String getschedulesubject(int subjectid) {
 		
 		return queryResult;
 	}
+	
+	public Boolean modifySubject(Subject subject ) {
+		Session session = null;
+		Transaction transaction = null;
+		List<Subject> queryResult=null;
+		String queryString="from Subject where subjectName = :subjectName and institute_id=:institute_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("subjectName", subject.getSubjectName()); 
+			query.setParameter("institute_id", subject.getInstitute_id()); 
+			queryResult = query.list();
+			if(queryResult.size()>0){
+				return false;
+			}else {
+			session.saveOrUpdate(subject);	
+			}
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return true;
+		
+	}
+	
+	public boolean deleteSubject(int subid) {
+		Session session = null;
+		Transaction transaction = null;
+		List<Subject> queryResult=null;
+		String queryString="delete Subject where subjectId = :subjectId";
+		String queryString1="delete ClassSubjects where sub_id = :subjectId";
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString1);
+			query.setParameter("subjectId", subid);  
+			 query.executeUpdate();
+			 query = session.createQuery(queryString);
+			query.setParameter("subjectId", subid);
+			 query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		
+		return true;
+	}
 }

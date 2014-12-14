@@ -149,7 +149,7 @@
 	</div>
 	<div id = "headerothernav" style="float:right;">
 		<div align="right" style = "height:50px; float:right; width:100%;">
-		<ul class="nav nav-pills" style ="color: aqua;">
+		<ul class="nav nav-pills pull-right" style ="color: aqua;">
 		  <li><a href="login">Home</a></li>
 		  <li><a href="#" data-toggle="modal" data-target="#aboutUsModal">About Us</a></li>
 		  <li><a href="#" data-toggle="modal" data-target="#contactUsModal">Contact Us</a></li>

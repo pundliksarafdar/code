@@ -242,7 +242,7 @@ public class DivisionDB {
 		Session session = null;
 		Transaction transaction = null;
 		List<Integer> queryResult=null;
-		List<Division> divisions=null;
+		List<Division> divisions = new ArrayList<Division>();
 		String queryString="Select div_id from ClassDivision where class_id=:class_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
@@ -250,7 +250,7 @@ public class DivisionDB {
 			Query query = session.createQuery(queryString);
 			query.setInteger("class_id", regId);
 			queryResult = query.list();
-			if(queryResult!=null){
+			if(queryResult!=null && queryResult.size()!=0){
 				queryString="from Division where divId in (:divId)";
 				query = session.createQuery(queryString);
 				query.setParameterList("divId", queryResult);

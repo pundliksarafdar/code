@@ -73,4 +73,15 @@ public class SubjectTransaction {
 		return subList;
 		
 	}
+	
+	public Boolean modifySubject(Subject subject) {
+		SubjectDb db=new SubjectDb();
+		return db.modifySubject(subject);
+		
+	}
+	public boolean deleteSubject(int subid) {
+		SubjectDb subjectDb=new SubjectDb();
+		subjectDb.deleteSubject(subid);
+		return true;
+	}
 }

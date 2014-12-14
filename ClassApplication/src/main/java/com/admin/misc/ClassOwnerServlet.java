@@ -40,6 +40,7 @@ import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentData;
 import com.classapp.db.student.StudentDetails;
+import com.classapp.db.subject.ClassSubjects;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
 import com.classapp.persistence.Constants;
@@ -154,6 +155,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			com.classapp.db.subject.Subject subject = new com.classapp.db.subject.Subject();
 			/*subject.setRegId(regId);*/
 			subject.setSubjectName(subjectName);
+			subject.setInstitute_id(regId);
 			SubjectTransaction subjectTransaction = new SubjectTransaction();
 			if(subjectTransaction.addUpdateSubjectToDb(subject,regId)){
 				respObject.addProperty(STATUS, "success");
@@ -804,6 +806,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			if(status)
 			{
 				respObject.addProperty(STATUS, "error");
+				respObject.addProperty(MESSAGE, "Class already exist");
 			}else{
 				respObject.addProperty(STATUS, "success");
 			}
@@ -1435,6 +1438,38 @@ public class ClassOwnerServlet extends HttpServlet{
 		respObject.addProperty("remain", "");
 		respObject.addProperty("pages", "");
 	}
+	respObject.addProperty(STATUS, "success");
+}else if("modifysubject".equals(methodToCall)){
+	
+	String subjectname=req.getParameter("subjectname");
+	String subjectid=req.getParameter("subjectid");
+	Subject subject=new Subject();
+	subject.setSubjectId(Integer.parseInt(subjectid));
+	subject.setSubjectName(subjectname);
+	Integer regId = null;
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	regId=userBean.getRegId();
+	subject.setInstitute_id(regId);
+	SubjectTransaction subjectTransaction=new SubjectTransaction();
+	Boolean status=subjectTransaction.modifySubject(subject);
+	if(status==false){
+		respObject.addProperty("added", "false");
+	}else{
+		respObject.addProperty("added", "true");
+	}
+	respObject.addProperty(STATUS, "success");
+}else if("deletesubject".equals(methodToCall)){
+	String subjectid=req.getParameter("subjectid");
+	Subject subject=new Subject();
+	subject.setSubjectId(Integer.parseInt(subjectid));
+	BatchTransactions transactions=new BatchTransactions();
+	boolean batchstatus= transactions.deletesubjectfrombatch(subjectid);
+	TeacherTransaction teacherTransaction=new TeacherTransaction();
+	teacherTransaction.deletesubjectfromteacherlist(subjectid);
+	ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
+	scheduleTransaction.deleteschedulerelatedsubject(Integer.parseInt(subjectid));
+	SubjectTransaction subjectTransaction=new SubjectTransaction();
+	subjectTransaction.deleteSubject(Integer.parseInt(subjectid));
 	respObject.addProperty(STATUS, "success");
 }
 		

@@ -211,4 +211,12 @@ public class ScheduleTransaction {
 		}
 		
 	}
+	
+	public boolean deleteschedulerelatedsubject(int subid) {
+		ScheduleDB scheduleDB=new ScheduleDB();
+		scheduleDB.deleteschedulerelatedsubject(subid);
+		
+		return true;
+		
+	}
 }

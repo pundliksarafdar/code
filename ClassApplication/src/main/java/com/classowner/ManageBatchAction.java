@@ -12,17 +12,21 @@ import com.config.BaseAction;
 import com.config.Constants;
 import com.helper.BatchHelperBean;
 import com.helper.DivisionHelperBean;
+import com.transaction.batch.division.DivisionTransactions;
 import com.user.UserBean;
 
 public class ManageBatchAction extends BaseAction{
+	int divisionSize;
+	
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		BatchHelperBean batchHelperBean= new BatchHelperBean(userBean.getRegId());
 		batchHelperBean.setBatchDetailsList();
-		DivisionHelperBean divisionHelperBean = new DivisionHelperBean();
+		DivisionTransactions divisionTransactions = new DivisionTransactions();
 		System.out.println("Size of batch list :"+batchHelperBean.getBatchDetailsList().size());		
 		request.getSession().setAttribute(Constants.BATCHES_LIST, batchHelperBean.getBatchDetailsList());	
-		List<Division> divisions= divisionHelperBean.getListOfDivision();
+		List<Division> divisions= divisionTransactions.getAllDivisions(userBean.getRegId());
+		setDivisionSize(divisions.size());
 		List<String> divisionNames= new ArrayList<String>();
 		List<String> Streams=new ArrayList<String>();
 		List<String> ids=new ArrayList<String>();
@@ -36,5 +40,15 @@ public class ManageBatchAction extends BaseAction{
 		request.setAttribute("batcheids", ids);
 		return SUCCESS;
 	}
+
+	public int getDivisionSize() {
+		return divisionSize;
+	}
+
+	public void setDivisionSize(int divisionSize) {
+		this.divisionSize = divisionSize;
+	}
+	
+	
 }
 

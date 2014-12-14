@@ -178,5 +178,39 @@ public class BatchTransactions {
 		BatchDB batchDB=new BatchDB();
 		return batchDB.retriveAllBatchesOfDivision(divisionName, class_id);
 	}
+	
+	public boolean deletesubjectfrombatch(String subjectid) {
+		BatchDB batchDB=new BatchDB();
+		List<Batch> batchs=batchDB.getbachesrelatedtosubject(subjectid);
+		if(batchs.size()>0){
+			int counter=0;
+			while(batchs.size()>counter){
+				Batch batch=batchs.get(counter);
+				String subids[]=batch.getSub_id().split(",");
+				String subjectids="";
+				int innercounter=0;
+				int position=0;
+				while(subids.length>innercounter){
+					if(!subids[innercounter].equals(subjectid)){
+						if(position==0){
+							subjectids=subids[innercounter];
+						}else{
+							subjectids=subjectids+","+subids[innercounter];
+						}
+						position++;
+					}
+					innercounter++;	
+				}
+				batch.setSub_id(subjectids);
+				batchDB.updateDb(batch);
+				counter++;
+			}
+		}else{
+			return false;
+		}
+		
+		return true;
+		
+	}
 
 }

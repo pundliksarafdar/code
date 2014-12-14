@@ -153,10 +153,11 @@ public class TeacherDB {
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
-		Query query=session.createQuery("select user_id from Teacher where (sub_ids like :sub_id1 or sub_ids like :sub_id2 or sub_ids like :sub_id3) and class_id=:regId");
+		Query query=session.createQuery("select user_id from Teacher where (sub_ids like :sub_id1 or sub_ids like :sub_id2 or sub_ids like :sub_id3 or sub_ids=:sub_id4 ) and class_id=:regId");
 		query.setParameter("sub_id1", "%,"+subid+",%");
 		query.setParameter("sub_id2", subid+",%");
 		query.setParameter("sub_id3", "%,"+subid);
+		query.setParameter("sub_id4", subid);
 		query.setParameter("regId", regId);
 		list=query.list();
 			}catch(Exception e){
@@ -191,7 +192,11 @@ public class TeacherDB {
 				teacherDetails.setTeacherId(entry.getUser_id());
 				teacherDetails.setSubjectIds(entry.getSub_ids());
 				teacherDetails.setTeacherBean(getTeacherDetailsFromID(entry.getUser_id()));
+				if(!entry.getSub_ids().equals("")){
 				teacherDetails.setSubjects(getAssignedSubjects(entry.getSub_ids().split(",")));
+				}else{
+					teacherDetails.setSubjects(new ArrayList<Subject>());
+				}
 				teachers.add(teacherDetails);
 			}
 			return teachers;
@@ -347,6 +352,31 @@ public Teacher getTeacher(int user_id, int class_id) {
 		}
 		
 		return classids;
+	}
+	
+	public List<Teacher> getteacherrelatedtosubject(String subid) {
+		
+		Transaction transaction=null;
+		Session session=null;
+		List<Teacher> list=new ArrayList<Teacher>();
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query=session.createQuery(" from Teacher where (sub_ids like :sub_id1 or sub_ids like :sub_id2 or sub_ids like :sub_id3 or sub_ids = :sub_id4)");
+		query.setParameter("sub_id1", "%,"+subid+",%");
+		query.setParameter("sub_id2", subid+",%");
+		query.setParameter("sub_id3", "%,"+subid);
+		query.setParameter("sub_id4", subid);
+	//	query.setParameter("regId", regId);
+		list=query.list();
+			}catch(Exception e){
+				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
+			}
+		return list;
 	}
 	
 }

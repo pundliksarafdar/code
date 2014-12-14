@@ -10,7 +10,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.user.UserBean;
 
-public class Logout extends BaseAction{
+public class LogoutCompleteAction extends BaseAction{
 
 	private static final long serialVersionUID = 1L;
 	

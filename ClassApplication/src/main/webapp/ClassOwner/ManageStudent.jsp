@@ -5,16 +5,21 @@
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
 <%@page import="com.config.Constants"%>
+<%@taglib prefix="s" uri="http://java.sun.com/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<html>
 <script type="text/javascript" src="js/ManageStudent.js"></script>
  <%List list = (List)request.getSession().getAttribute(Constants.STUDENT_LIST); %>
 <script>
 var batchIds;
 var selectedStudentIds;
-var noofpages=0;
+var noofpages=0; 
 function getstudentsrelatedtobatch(pagenumber){
-
+	$("#students").hide();
+	$("#pagination").hide();
+	$("#progressModal").modal("show");
+	$("#studentDetailTable").remove();
+	$("#noStudentError").hide();
 	var batchname=$("#batchselected").val();
 	$.ajax({
 		url:"classOwnerServlet",
@@ -25,7 +30,7 @@ function getstudentsrelatedtobatch(pagenumber){
 		},
 		type:"post",
 		success:function(data){
-			//modal.launchalert("success","Yo");
+			$("#progressModal").modal("hide");
 			var resultJson = JSON.parse(data);
 			var table=document.getElementById("students");
 			  var rowCount=table.rows.length;
@@ -37,6 +42,7 @@ function getstudentsrelatedtobatch(pagenumber){
 			var count=resultJson.count;
 			var remain=resultJson.remain;
 			var pages=resultJson.pages;
+			
 			if(studentids[0]!=""){
 				var counter=0;
 			while(counter<studentids.length){
@@ -73,9 +79,16 @@ function getstudentsrelatedtobatch(pagenumber){
 			
 			noofpages=pages;
 			/* $("#pagination").append("<li><a href='#'>&raquo;</a></li>"): */
+			}else{
+				$("#noStudentError").show();
 			}
+			if(noofpages>1){
+				$("#pagination").show();
+			}
+			
 		},
 		error:function(e){
+			$("#progressModal").modal("hide");
 			modal.launchalert("error","Yo2");
 		}
 		
@@ -129,6 +142,9 @@ function searchStudent() {
 	{
 		modal.launchAlert("Error","Error!</strong>Invalid Student login name");
 	}else{
+		
+		$("#progressModal").modal("show");
+		$("#studentDetailTable").remove();
 	$.ajax({
 		   url: "classOwnerServlet",
 		    data: {
@@ -137,7 +153,7 @@ function searchStudent() {
 		   		}, 
 		   type:"POST",
 		   success:function(data){
-			   
+			   $("#progressModal").modal("hide");
 			   var resultJson = JSON.parse(data);   
 
 			   if(resultJson.status != 'error'){
@@ -162,6 +178,7 @@ function searchStudent() {
 			      }			   
 		   	},
 		   error:function(data){
+			   $("#progressModal").modal("hide");
 			   modal.launchAlert("Error","Student with login name : "+studentLoginName+" not found!");
 			   	setTimeout(function(){
 			   		location.reload();
@@ -449,6 +466,10 @@ function getSelectedStudentsToDelete(){
 				$(".chkStudent:checked").removeAttr('checked');
 			
 		});
+		
+		$("#batchselected").change(function(){
+			getstudentsrelatedtobatch(1);
+		});
 	});
 
 	function errorCallbackStudent(e){
@@ -542,37 +563,182 @@ function getSelectedStudentsToDelete(){
 		   	}
 	   	}
 	}
+	
+	function getBatchesOfDivision(){
+		$('#checkboxes').children().remove();
+		$('div#addStudentModal .error').hide();
+		var divisionName = $('div#addStudentModal').find('#divisionName').val();
+
+		if(!divisionName || divisionName.trim()==""){
+			$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Division name cannot be blank');
+			$('div#addStudentModal .error').show();
+		}else{		
+		  $.ajax({
+		   url: "classOwnerServlet",
+		   data: {
+		    	 methodToCall: "fetchBatchesForDivision",
+				 regId:'',
+				 divisionName:divisionName,						 
+		   		},
+		   type:"POST",
+		   success:function(e){		 
+			   
+			    var resultJson = JSON.parse(e);
+			    
+			      if(resultJson.status != 'error'){
+			   	  	var batchnames=resultJson.batchNames.split(',');
+			   		var batchids=resultJson.batchIds.split(',');
+			   		var i=0;
+			   		while(i<batchnames.length){
+				   		addCheckbox(batchnames[i],batchids[i]);
+			   			i++;
+					   }
+				   } else{
+					   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> '+resultJson.message+' <a href="managebatch">Click here</a> to add bacth');
+						$('div#addStudentModal .error').show();
+				}
+		   	},
+		   error:function(e){
+			   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Error while fetching batches for division');
+				$('div#addStudentModal .error').show();
+		   }
+		   
+	});
+		
+	}
+	}
+
+	function addCheckbox(batchname,batchid) {
+		   var container =$('#checkboxes');
+		   $('<input />', { type: 'checkbox', id: batchid, value: batchid, class: "chkBatch" }).appendTo(container);
+		   $('<label />', { 'for': batchid, text: batchname }).appendTo(container);
+		}
 </script>
-	<body>
-		<br/><br/>
-		<div class="btn-group btn-group-sm">
-			<table class="table">
-				<thead>
-					<tr>
-						<td><button type="button" class="btn btn-info" data-target="#addStudentModal" data-toggle="modal">Add Student</button></td>
-				 		<!--<td><button type="button" class="btn btn-info" data-target="#deleteSelectedStudentModal" data-toggle="modal">Delete Student</button></td>  -->
-						<td><button type="button" class="btn btn-info" id="searchStudent" onclick="searchStudent()" >Search Student</button></td>
-						<td><input type="text" class="form-control" id="studentLoginNameSearch" placeholder="Student Login Id" size="20"/></td>
-					</tr>
-				<tr>
-				<td>Select Batch</td>
-				<%List<Batch> batches=(List<Batch>)request.getAttribute("batches"); %>
-				<td>
-				<select class="form-control" id="batchselected">
+
+<div class="modal fade" id="addStudentModal" data-backdrop="static">
+  <div class="modal-dialog">
+      <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="">Add Student</h4>
+        </div>
+        <div class="modal-body" id="">
+        	<div class="error alert alert-danger"></div>
+			<div class="form-group">
+				<s:set value="${requestScope.divisionNames}" var="divisionNames"></s:set>
+				<s:choose>
+				<s:when test="${divisionSize gt 0}">
+				Student Login Name <input type="text" class="form-control" id="studentLoginName"/> 
+				<br>
+				<select class="btn btn-default" name="divisionName" id="divisionName">
+					
+						<option value="-1">Select Division</option>
+						<s:forEach items="${divisionNames}" var="divisionName">
+							<option value='<s:out value="${divisionName}"></s:out>'><s:out value="${divisionName}"></s:out></option>
+						</s:forEach>
+					</select>
+				<button type="button" class="btn btn-primary btn-getBatchesForStudent" id="getBatchesForStudent" onclick="getBatchesOfDivision()">Get available batches</button>
+				</s:when>
+				<s:otherwise>
+					<div style="color: red;">No Divisions <a href="addsubject">Click Here</a> to add division</div>	
+				</s:otherwise>
+				</s:choose>
+				<br>
+				<div id="checkboxes">
 				
-				<option>Select Batch</option>
-				<%for(int counter=0;counter<batches.size();counter++){ %>
-				<option value="<%=batches.get(counter).getBatch_id() %>"><%=batches.get(counter).getBatch_name() %></option>
-				<%} %>
-				</select>
-				</td>
-				<td><button type="button" class="btn btn-info" id="getstudents" onclick="getstudentsrelatedtobatch(1)">Get Student</button></td>
-				</tr>
-				</thead>
-			</table>
+				</div>
+														
+				<div id="classTimming" class="hide">
+				<div class="container-fluid">
+  				<div class="row">
+  					
+					<div class="col-sm-6">
+					<label for="">Start Time</label>
+					<div class='input-group date' id='fromDate' data-date-format="hh:mm A" style="width: 150px;">
+						<input type='text' class="form-control"/> <span
+							class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span> </span>
+					</div>
+					</div>
+					
+					<div class="col-sm-6">
+					<label for="">End Time</label>
+					<div class='input-group date' id='toDate' data-date-format="hh:mm A" style="width: 150px;">
+						<input type='text' class="form-control"/> <span
+							class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span> </span>
+					</div>
+					</div>
+					
+					
+				</div>
+				</div>
+				</div>				
+			</div>				
+			</div>
+      	<div class="modal-footer">
+	        <div class="progress progress-striped active hide">
+					<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="45"
+						aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+						Processing your request Please wait
+					</div>
+			</div>
+			<div class="add">
+	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Cancel</button>
+	        <button type="button" class="btn btn-primary btn-addStudent" id="btn-addStudent">Add</button>
+	        </div>
+	     
+	        <div class="setTimming hide">
+	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Not Now</button>
+	        <button type="button" class="btn btn-primary btn-setTimming" id="btn-setTimming">Done</button>
+	        </div>
+      	</div>
+    </div>
+</div>	
+</div>
+	
+		<div class="container bs-callout bs-callout-danger" style="margin-bottom: 10px;">
+		<div class="row">
+			<div class="col-md-4">
+				<button type="button" class="btn btn-info" data-target="#addStudentModal" data-toggle="modal"><i class="glyphicon glyphicon-user"></i>&nbsp;Add Student</button>
+			</div>
 			
+			<div class="col-md-4">
+			<div class="input-group">
+				<input type="text" class="form-control" id="studentLoginNameSearch" placeholder="Student Login Id" size="20"/>
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-info" id="searchStudent" onclick="searchStudent()" ><i class="glyphicon glyphicon-search"></i>&nbsp;Search</button>
+				</span>
+			</div>
+			</div>
+			
+			<div class="col-md-4">
+				<%List<Batch> batches=(List<Batch>)request.getAttribute("batches"); %>
+				<%if(null != batches && batches.size()!=0) {%>
+				
+					<select class="form-control btn btn-default" id="batchselected" >
+					<option>Select Batch</option>
+					<%for(int counter=0;counter<batches.size();counter++){ %>
+					<option value="<%=batches.get(counter).getBatch_id() %>"><%=batches.get(counter).getBatch_name() %></option>
+					<%} %>
+					</select>
+				<%}else{ %>
+					<div style="color:red">
+						No batches are added for this class <br>
+						<a href="managebatch">Click here</a> to add batch
+					</div>
+				<%} %>
+				
+			</div>
+		</div>
+		</div>
+		
+	<div class="btn-group btn-group-sm">
+			<div id="noStudentError" class="alert alert-danger" style="display:none;">
+				No student for this batch
+			</div>
 			<div>
-			<table id="students" class="table table-striped" style="background-color: white;display: none;">
+			<table id="students" class="table table-bordered searchTable" style="background-color: white;display: none;">
 			<thead>
 			<tr>
 			<th>Student ID</th>
@@ -588,7 +754,7 @@ function getSelectedStudentsToDelete(){
 			if(studentSearch!=null){
 				//System.out.println("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
 			%>
-			<table class="table table-bordered table-hover" style="background-color: white;" border="1">
+			<table class="table table-bordered table-hover" id="studentDetailTable" style="background-color: white;" border="1">
 				<thead>
 					<tr>
 						<th></th>
@@ -620,8 +786,8 @@ function getSelectedStudentsToDelete(){
 			<br><br> -->
 		</div>
 		<br/><br/>
-		<div class="panel-group" id="accordion">
-			<table class="table table-bordered table-hover" style="background-color: white;" border="1">
+		<div class="panel-group hide" id="accordion" >
+			<table class="table table-bordered table-hover" id="" style="background-color: white;" border="1">
 				<thead>
 					<tr>
 						<!--<td> <input type="checkbox" class="chk" name="selectAll" id="selectAll" data-label="selectAll">Select All</<input></td>  -->
@@ -654,5 +820,3 @@ function getSelectedStudentsToDelete(){
 				</tbody>
 			</table>
 		</div>
-	</body>
-</html>

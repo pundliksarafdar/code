@@ -84,12 +84,12 @@ $(document).ready(function(){
 		className = $('div#addclassModal').find('#classname').val();
 		stream= $('div#addclassModal').find('#stream').val();
 		if(!className){
-			$('div#addclassModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Subject name cannot be blank');
+			$('div#addclassModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Class name cannot be blank');
 			$('div#addclassModal .error').show();
 		}else{
 			$('div#addclassModal .progress').removeClass('hide');
 			$('.add').addClass('hide');
-			allAjax.addclass('',className,stream,successCallbackSubject,errorCallbackSubject);
+			allAjax.addclass('',className,stream,successCallbackBatch,errorCallbackBatch);
 		}
 	});
 	
@@ -164,6 +164,15 @@ $(document).ready(function(){
 		$('div#addSubjectModal .setTimming').addClass('hide');
 		$('div#addSubjectModal .add').removeClass('hide');
 		$('div#addSubjectModal .progress').addClass('hide');
+
+	});
+	
+	$('[data-target="#addclassModal"]').on('click',function(){
+		$('#addclassModal').find('.error').hide();
+		$('div#addclassModal #classTimming').addClass('hide');
+		$('div#addclassModal .setTimming').addClass('hide');
+		$('div#addclassModal .add').removeClass('hide');
+		$('div#addclassModal .progress').addClass('hide');
 
 	});
 	
@@ -243,6 +252,35 @@ var resultJson = JSON.parse(e);
    	}
    	}
 }
+
+
+function errorCallbackBatch(e){
+	$('div#addclassModal .progress').addClass('hide');
+	$('div#addclassModal .add').removeClass('hide');
+	$('div#addclassModal .error').show();
+	$('div#addclassModal .error').html('<strong>Error!</strong> Unable to add');
+}
+
+function successCallbackBatch(e){
+$('div#addclassModal .progress').addClass('hide');
+var resultJson = JSON.parse(e);
+   if(resultJson.status != 'error'){
+	   $('div#addclassModal').modal('hide');
+	   modal.launchAlert("Success","Batch Added! Page will refresh in 2 sec");
+	   setTimeout(function(){
+		   location.reload();
+	   },2*1000);		   
+   }else{
+	   $('div#addclassModal .add').removeClass('hide');
+	   $('div#addclassModal .error').show();
+   	if(!resultJson.message){
+	   $('div#addclassModal .error').html('<strong>Error!</strong> Unable to add');
+   	}else{
+   		$('div#addclassModal .error').html('<strong>Error!</strong> '+resultJson.message);
+   	}
+   	}
+}
+
 
 
 function errorCallbackaddTeacher(e){
