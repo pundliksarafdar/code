@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.classapp.db.Schedule.Schedule;
+import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.Teacher.Teacher;
 import com.classapp.db.Teacher.TeacherDB;
 import com.classapp.db.Teacher.TeacherDetails;
@@ -39,7 +40,27 @@ public class TeacherTransaction {
 	}
 
 }
-	public boolean updateTeacher(Teacher teacher){		
+	public boolean updateTeacher(Teacher teacher){
+		Teacher oldteacher=teacherDB.getTeacher(teacher.getUser_id(), teacher.getClass_id() );
+		String[] newsubids=teacher.getSub_ids().split(",");
+		String[] oldsubids=oldteacher.getSub_ids().split(",");
+		int counter=0;
+		while(oldsubids.length>counter){
+			int innercounter=0;
+			boolean flag=false;
+			while(newsubids.length>innercounter){
+				if(oldsubids[counter].equals(newsubids[innercounter])){
+					flag=true;
+				}
+				innercounter++;
+			}
+			if(flag==false){
+				ScheduleDB db=new ScheduleDB();
+				db.deleteschedulerelatedtoteachersubject(teacher.getUser_id(), Integer.parseInt(oldsubids[counter]));
+			}
+			counter++;
+		}
+		
 		return teacherDB.updateDb(teacher);		
 	}
 	
