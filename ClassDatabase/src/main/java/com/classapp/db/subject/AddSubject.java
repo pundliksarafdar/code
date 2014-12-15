@@ -66,7 +66,7 @@ public class AddSubject {
 		boolean status = false;
 		SubjectDb subjectDb=new SubjectDb();
 		GetSubject getSubject=new GetSubject();
-		List<Subjects> list=getSubject.getSubjectid(subject.getSubjectName());
+		List<Subjects> list=getSubject.getSubjectid(subject.getSubjectName(),classid);
 		ClassSubjects classSubjects=new ClassSubjects();
 		classSubjects.setClass_id(classid);
 		classSubjects.setSub_id(list.get(0).getSubjectId());

@@ -40,7 +40,6 @@ function deleteSubject(subid){
 	$(document).ready(function(){
 		$('#savesubject').click(function(){
 			var subjectname=$("#editsubject").val();
-			alert(subjectname.length);
 			if(subjectname.length>0){
 			$('div#ModifysubjectModal .progress').removeClass('hide');
 			$('div#ModifysubjectModal .savesubject').addClass('hide');

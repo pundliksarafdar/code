@@ -170,7 +170,7 @@ public class GetSubject {
 		return isSubjectExist;
 	}
 	
-	public List getSubjectid(String subname){
+	public List getSubjectid(String subname,int classid){
 		Session session = null;
 		Transaction transaction = null;
 		List SubList = null;
@@ -180,7 +180,7 @@ public class GetSubject {
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Subjects where subjectName =:subname and institute_id=:class_id");
 			query.setParameter("subname", subname);
-			query.setParameter("class_id", 34);
+			query.setParameter("class_id", classid);
 			SubList = query.list();
 			
 		}catch(Exception e){

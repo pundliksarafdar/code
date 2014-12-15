@@ -22,8 +22,6 @@ public class SubjectTransaction {
 		if(result=="false"){
 			status = addSubject.addSubject(subject,regID);
 			addSubject.addSubjecttoclass(subject,regID);
-		}else if(result=="patiallytrue"){
-			status=addSubject.addSubjecttoclass(subject,regID);
 		}
 		else{
 			status = false;
