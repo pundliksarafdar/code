@@ -21,7 +21,7 @@ public class GetSubject {
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("Select sub.subjectId from Subjects sub,ClassWithSubjects relclass where sub.subjectName =:subname and sub.subjectId=relclass.sub_id and relclass.class_id=:class_id");
+			Query query = session.createQuery("Select sub.subjectId from Subjects sub where sub.subjectName =:subname and sub.institute_id=:class_id");
 			query.setParameter("subname", subname);
 			query.setParameter("class_id", regID);
 			SubList = query.list();
@@ -61,7 +61,7 @@ public class GetSubject {
 		}
 		return subjects;
 	}
-	public List getAllClassSubjectcodes(String suggestion){
+	/*public List getAllClassSubjectcodes(String suggestion){
 		List subjectList = null;
 		List<String> subjects = new ArrayList<String>();
 		String[] params = {"regId"};
@@ -70,7 +70,7 @@ public class GetSubject {
 		String getAllSubjectsQuery = "select sub_id from ClassSubjects where class_id = :regId";
 		subjectList = subjectDb.getAllClassSubjectcodes(0,getAllSubjectsQuery, params, paramsValue);
 		
-		/*try {
+		try {
 			for(int i=0;i<subjectList.size();i++){
 				String subject="";
 				BeanUtils.copyProperties(subject, "");
@@ -81,14 +81,14 @@ public class GetSubject {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
-		}*/
+		}
 		subjects.add("Chemistry");
 		subjects.add("Physics");
 		return subjectList;
-	}
+	}*/
 	
 	
-	public List getAllClassSubjectsNames(List subids){
+	public List getAllClassSubjectsNames(int regID){
 		Session session = null;
 		Transaction transaction = null;
 		List SubList = null;
@@ -96,8 +96,8 @@ public class GetSubject {
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("from Subjects where subjectCode in :subids");
-			query.setParameterList("subids", subids);
+			Query query = session.createQuery("from Subjects where institute_id = :institute_id");
+			query.setParameter("institute_id", regID);
 			SubList = query.list();
 			
 		}catch(Exception e){
@@ -127,27 +127,6 @@ public class GetSubject {
 			}
 		}
 		return isSubjectExist;
-	}
-	public List<ClassSubjects> getclassSubjects(int subid,int classid){
-		List<ClassSubjects> subjectList = null;
-		List<ClassSubjects> subjects = new ArrayList<ClassSubjects>();
-		String[] params = {"subid","classid"};
-		String[] paramsValue = {subid+"",classid+""};
-		SubjectDb subjectDb=new SubjectDb();
-		String getAllSubjectsQuery = "from ClassSubjects where sub_id =:subid and class_id=:classid";
-		subjectList = subjectDb.getClassSubject(0,getAllSubjectsQuery, params, paramsValue);
-		try {
-			for(int i=0;i<subjectList.size();i++){
-				ClassSubjects subject = new ClassSubjects();
-				BeanUtils.copyProperties(subject, subjectList.get(i));
-				subjects.add(subject);
-			}
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-		return subjects;
 	}
 	
 	public String isSubjectExists(String subject,int regID){

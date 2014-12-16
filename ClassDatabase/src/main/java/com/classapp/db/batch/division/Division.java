@@ -4,7 +4,14 @@ public class Division {
 	private int divId;
 	private String divisionName;
 	private String stream;
+	private int institute_id;
 	
+	public int getInstitute_id() {
+		return institute_id;
+	}
+	public void setInstitute_id(int institute_id) {
+		this.institute_id = institute_id;
+	}
 	public int getDivId() {
 		return divId;
 	}

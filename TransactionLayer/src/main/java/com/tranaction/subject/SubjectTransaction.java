@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.subject.AddSubject;
-import com.classapp.db.subject.ClassSubjects;
 import com.classapp.db.subject.GetSubject;
 import com.classapp.db.subject.SubjectDb;
 import com.classapp.db.subject.Subject;
@@ -17,11 +16,10 @@ public class SubjectTransaction {
 		boolean status = false;
 		AddSubject addSubject = new AddSubject();
 		GetSubject getSubject = new GetSubject();	
-		ClassSubjects classSubjects=new ClassSubjects();
 		String result =getSubject.isSubjectExists(subject.getSubjectName(),regID);
 		if(result=="false"){
 			status = addSubject.addSubject(subject,regID);
-			addSubject.addSubjecttoclass(subject,regID);
+		//	addSubject.addSubjecttoclass(subject,regID);
 		}
 		else{
 			status = false;
@@ -31,9 +29,9 @@ public class SubjectTransaction {
 	
 	public List getAllClassSubjects(int regId){
 		GetSubject getSubject = new GetSubject();
-		List subids=getSubject.getAllClassSubjectcodes(regId+"");
+		//List subids=getSubject.getAllClassSubjectcodes(regId+"");
 		
-		return getSubject.getAllClassSubjectsNames(subids);
+		return getSubject.getAllClassSubjectsNames(regId);
 	}
 	
 	public int getSubjectID(int regID,String subname) {

@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.classapp.db.classwithsubject.ClassWithSubjectsData;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.datalayer.subject.Subject;
@@ -27,7 +26,6 @@ public class AddSubjectAction extends BaseAction{
 		SubjectHelperBean subjectBean=new SubjectHelperBean();
 		subjectBean.setClass_id(userBean.getRegId());
 		request.setAttribute("listOfSubjects", subjectBean.getSubjects());
-		//List subjectList = ClassWithSubjectsData.getAllSubjectsForClassID(userBean.getRegId());
 	request.setAttribute(Constants.BATCH_LIST, list);
 		//request.setAttribute(Constants.SUBJECT_LIST, subjectList);
 		return SUCCESS;

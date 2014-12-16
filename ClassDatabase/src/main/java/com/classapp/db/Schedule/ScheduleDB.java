@@ -19,7 +19,7 @@ public void addLecture(Schedule schedule) {
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
 		transaction = session.beginTransaction();
-		Query query = session.createQuery("select max(schedule_id)+1 from Schedule");
+		Query query = session.createQuery("select IFNULL(max(schedule_id),0)+1 from Schedule");
 		List<Integer> schedule_id=query.list();
 		schedule.setSchedule_id(schedule_id.get(0));
 		session.saveOrUpdate(schedule);

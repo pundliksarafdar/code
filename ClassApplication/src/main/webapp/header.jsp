@@ -16,7 +16,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">Ã—</button>
+					aria-hidden="true">×</button>
 				<h4 class="modal-title" id="myModalLabel">About Us</h4>
 			</div>
 			<div class="modal-body">
@@ -131,7 +131,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">Ã—</button>
+					aria-hidden="true">×</button>
 				<h4 class="modal-title" id="myModalLabel">Contact Us</h4>
 			</div>
 			<div class="modal-body">
@@ -144,7 +144,7 @@
 	
 
 	<div id="headersEle" align="left" style="float: left; width: 50%;">
-		<span><a href="login"><img src="images/cxlogo.jpg" alt="cxlogo" style="height: 100px;" class="img-rounded hide"/></a></span>
+		<span><a href="login"><img src="images/cxlogo.jpg" alt="cxlogo" style="height: 100px;" class="img-rounded"/></a></span>
 		<!-- <span><b style="font-size: 40px;">CoreX - <tiles:insertAttribute name="title" ignore="true" /></b></span>-->
 	</div>
 	<div id = "headerothernav" style="float:right;">

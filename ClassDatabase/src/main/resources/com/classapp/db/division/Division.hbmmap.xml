@@ -14,5 +14,9 @@
         <property name="stream" type="java.lang.String">
             <column name="STREAM" length="100" not-null="false" unique="true"/>
         </property>
+        <property name="institute_id" type="java.lang.Integer">
+            <column name="institute_id" not-null="false" />
+        </property>
+  
     </class>
 </hibernate-mapping>

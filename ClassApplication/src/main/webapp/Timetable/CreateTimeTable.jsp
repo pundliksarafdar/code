@@ -9,7 +9,7 @@
 <%@page import="java.util.List"%>
 <html>
  <head>
-
+ 
  <style type="text/css">
  body {
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -382,7 +382,7 @@ $(function(){
 	            	   sell1Options[i+1]= new Option(firstname[i]+" "+lastname[i], teacherid[i]);
 	            	   }
 	               }else{
-	            	   modal.launchAlert("Success","Not Available For This Subject");
+	            	   modal.launchAlert("Teacher","Teacher Not Available For This Subject");
 	               }
 			   	},
 			   error:function(data){

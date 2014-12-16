@@ -52,31 +52,4 @@ public class AddSubject {
 		return status;
 	}
 	
-	public boolean addSubjecttoclass(Subject subject,int classid){
-		Subjects subjects = new Subjects();
-		try {
-			BeanUtils.copyProperties(subjects, subject);
-		} catch (IllegalAccessException e) {
-			System.out.println("In AddSubject IllegalAccessException......");
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			System.out.println("In AddSubject InvocationTargetException......");
-			e.printStackTrace();
-		} 
-		boolean status = false;
-		SubjectDb subjectDb=new SubjectDb();
-		GetSubject getSubject=new GetSubject();
-		List<Subjects> list=getSubject.getSubjectid(subject.getSubjectName(),classid);
-		ClassSubjects classSubjects=new ClassSubjects();
-		classSubjects.setClass_id(classid);
-		classSubjects.setSub_id(list.get(0).getSubjectId());
-		String statusCode = subjectDb.updateclasssubDb(classSubjects);
-		if(!"0".equals(statusCode)){
-			status = false;
-		}else{
-			status = true;
-		}
-		return status;
-	}
-	
 }

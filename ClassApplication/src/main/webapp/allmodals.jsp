@@ -1,7 +1,7 @@
 <meta http-equiv="cache-control" content="max-age=0" />
 <%@page import="com.classapp.db.batch.BatchDetails"%>
 <%@page import="com.classapp.db.subject.Subjects"%>
-<%@page import="com.classapp.db.subject.ClassSubjects"%>
+<%-- <%@page import="com.classapp.db.subject.ClassSubjects"%> --%>
 <%@page import="com.classapp.db.Teacher.TeacherDetails"%>
 <%@page import="com.classapp.db.student.StudentDetails"%>
 <%@page import="com.helper.SubjectHelperBean"%>

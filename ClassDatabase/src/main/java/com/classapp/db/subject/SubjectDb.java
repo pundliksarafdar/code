@@ -56,7 +56,7 @@ public class SubjectDb {
 		return status;
 	}
 	
-	public String updateclasssubDb(ClassSubjects subjects){
+	/*public String updateclasssubDb(ClassSubjects subjects){
 		String status = "0";
 		Session session = null;
 		Transaction transaction = null;
@@ -77,7 +77,7 @@ public class SubjectDb {
 			}
 		}
 		return status;
-	}
+	}*/
 	
 public List getSubjects(List subids) {
 		
@@ -176,7 +176,7 @@ public String getschedulesubject(int subjectid) {
 		return query.list();
 	}
 	
-	public List<ClassSubjects> getAllClassSubjectcodes(int queryType,String queryStr,String[] params,String[] paramValues){
+	/*public List<ClassSubjects> getAllClassSubjectcodes(int queryType,String queryStr,String[] params,String[] paramValues){
 		Query query =null;
 		Session session =null;
 		try{
@@ -219,7 +219,7 @@ public String getschedulesubject(int subjectid) {
 				
 			}
 		return query.list();
-	}
+	}*/
 	public List<Subject> getSubject(int queryType,String queryStr,String[] params,String[] paramValues){
 		Query query =null;
 		Session session =null;
@@ -267,17 +267,17 @@ public String getschedulesubject(int subjectid) {
 			return (Subject)queryResult;
 		}
 	
-	public List<Subject> retrive(List sub_id){
+	public List<Subject> retrivesublist(int institute_id){
 		
 		Session session = null;
 		Transaction transaction = null;
 		List<Subject> queryResult=null;
-		String queryString="from Subject where sub_id in :sub_id";
+		String queryString="from Subject where institute_id in :institute_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
-			query.setParameterList("sub_id", sub_id);  
+			query.setParameter("institute_id", institute_id);  
 			queryResult = query.list();
 			transaction.commit();
 		}catch(Exception e){
@@ -321,15 +321,15 @@ public String getschedulesubject(int subjectid) {
 		Transaction transaction = null;
 		List<Subject> queryResult=null;
 		String queryString="delete Subject where subjectId = :subjectId";
-		String queryString1="delete ClassSubjects where sub_id = :subjectId";
+	//	String queryString1="delete ClassSubjects where sub_id = :subjectId";
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery(queryString1);
+		/*	Query query = session.createQuery(queryString1);
 			query.setParameter("subjectId", subid);  
 			 query.executeUpdate();
-			 query = session.createQuery(queryString);
+		*/	Query query = session.createQuery(queryString);
 			query.setParameter("subjectId", subid);
 			 query.executeUpdate();
 			transaction.commit();

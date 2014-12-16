@@ -3,7 +3,6 @@ package com.transaction.batch.division;
 import java.util.List;
 
 import com.classapp.db.batch.division.AddDivision;
-import com.classapp.db.batch.division.ClassDivision;
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.batch.division.DivisionDB;
 import com.classapp.db.batch.division.DivisionData;
@@ -44,18 +43,9 @@ public class DivisionTransactions {
 		 if(!divisionDB.isDivisionExists(division))
 		 {
 			 divisionDB.updateDb(division);
+			 return false;
 		 }
-		 int div_id=divisionDB.getdivisionID(division);
-		 ClassDivision classDivision=new ClassDivision();
-			classDivision.setClass_id(classid);
-			classDivision.setDiv_id(div_id);
-			if(divisionDB.isclassDivisionExists(classDivision))
-			{
 		 return true;
-			}else{
-				divisionDB.addclassdivision(classDivision);
-				return false;
-			}
 	}
 
 	public List<Division> getAllDivisions(Integer regId) {

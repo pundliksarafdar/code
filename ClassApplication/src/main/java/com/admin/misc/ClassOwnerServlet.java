@@ -34,13 +34,11 @@ import com.classapp.db.Teacher.TeacherDetails;
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.BatchDB;
 import com.classapp.db.batch.BatchDetails;
-import com.classapp.db.batch.division.ClassDivision;
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentData;
 import com.classapp.db.student.StudentDetails;
-import com.classapp.db.subject.ClassSubjects;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
 import com.classapp.persistence.Constants;
@@ -800,7 +798,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			Division division=new Division();
 			division.setDivisionName(classname);
 			division.setStream(stream);
-			
+			division.setInstitute_id(regId);
 			DivisionTransactions divisionTransactions=new DivisionTransactions();
 			boolean status=divisionTransactions.addDivision(division, regId);
 			if(status)

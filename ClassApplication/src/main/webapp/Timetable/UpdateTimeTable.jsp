@@ -67,7 +67,7 @@ function getsubjectteachers(id){
          	   sell1Options[i+1]= new Option(firstname[i]+" "+lastname[i], teacherid[i]);
          	   }
             }else{
-         	   modal.launchAlert("Success","Not Available For This Subject");
+         	   modal.launchAlert("Teacher","Teacher Not Available For This Subject");
             }
 		   	},
 		   error:function(data){

@@ -165,31 +165,6 @@ public class DivisionDB {
 			return (Division)queryResult;
 	}
 	
-	public boolean isclassDivisionExists(ClassDivision division) {
-		Session session = null;
-		Transaction transaction = null;
-		List queryResult=null;
-		String queryString="from ClassDivision where div_id = :div_id and class_id=:class_id";
-		try{
-			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
-			Query query = session.createQuery(queryString);
-			query.setInteger("div_id", division.getDiv_id()); 
-			query.setInteger("class_id", division.getClass_id());
-			queryResult = query.list();
-			if(queryResult.size()>0)
-			{
-				return true;
-			}
-			
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return false;
-		
-	}
-	
 	
 	public int getdivisionID(Division division) {
 		Session session = null;
@@ -214,48 +189,19 @@ public class DivisionDB {
 		
 		return 0;
 	}
-	
-	public static String addclassdivision(ClassDivision division){
-		String status = "0";
-		Session session = null;
-		Transaction transaction = null;
-		try{
-			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
-			session.saveOrUpdate(division);
-			transaction.commit();
-		}catch(Exception e){
-			status = "1";
-			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-		}finally{
-			if(null!=session){
-				session.close();
-			}
-		}
-		return status;
-	}
 
 	public List<Division> getAllDivision(Integer regId) {
 		Session session = null;
 		Transaction transaction = null;
 		List<Integer> queryResult=null;
 		List<Division> divisions = new ArrayList<Division>();
-		String queryString="Select div_id from ClassDivision where class_id=:class_id";
+		String queryString="from Division where institute_id=:institute_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
-			query.setInteger("class_id", regId);
-			queryResult = query.list();
-			if(queryResult!=null && queryResult.size()!=0){
-				queryString="from Division where divId in (:divId)";
-				query = session.createQuery(queryString);
-				query.setParameterList("divId", queryResult);
-				divisions = query.list();
-			}
+			query.setInteger("institute_id", regId);
+			divisions = query.list();
 			
 		}catch(Exception e){
 			e.printStackTrace();
