@@ -16,7 +16,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">×</button>
+					aria-hidden="true">x</button>
 				<h4 class="modal-title" id="myModalLabel">About Us</h4>
 			</div>
 			<div class="modal-body">
@@ -131,7 +131,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">×</button>
+					aria-hidden="true">x</button>
 				<h4 class="modal-title" id="myModalLabel">Contact Us</h4>
 			</div>
 			<div class="modal-body">
