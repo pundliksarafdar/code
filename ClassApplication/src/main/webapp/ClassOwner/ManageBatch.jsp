@@ -6,7 +6,7 @@
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
 <%@page import="com.config.Constants"%>
-
+<%@taglib prefix="s" uri="http://java.sun.com/jstl/core"%>
 <html>
 <script type="text/javascript" src="js/ManageStudent.js"></script>
  <%List list = (List)request.getSession().getAttribute(Constants.BATCHES_LIST); %>
@@ -73,7 +73,7 @@ function searchBatch() {
 			  // var studentId= resultJson.studentId;
 			   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
 			    if(resultJson.status != 'error'){
-				modal.launchAlert("Success","Found Batch! Page will refresh in 2 sec");
+				modal.launchAlert("Success","Found Batch! Page will refresh in soon");
 						   setTimeout(function(){
 							   location.reload();
 						   },2*1000);
@@ -137,7 +137,7 @@ $(document).ready(function(){
 						var resultJson = JSON.parse(e);
 						   if(resultJson.status != 'error'){
 							   $('div#addBatchModal').modal('hide');
-							   modal.launchAlert("Success","Batch Added! Page will refresh in 2 sec");
+							   modal.launchAlert("Success","Batch Added! Page will refresh in soon");
 							   setTimeout(function(){
 								   location.reload();
 							   },2*1000);		   
@@ -192,7 +192,7 @@ $(document).ready(function(){
 					   var resultJson = JSON.parse(data);
 					      if(resultJson.status != 'error'){
 					       $('div#modifyBatchModal').modal('hide');
-					   	   modal.launchAlert("Success","Batch Updated! Page will refresh in 2 sec");
+					   	   modal.launchAlert("Success","Batch Updated! Page will refresh in soon");
 					   	   setTimeout(function(){
 					   		   location.reload();
 					   	   },2*1000);		   
@@ -249,7 +249,7 @@ $(document).ready(function(){
 					   var resultJson = JSON.parse(data);
 					      if(resultJson.status != 'error'){
 					   	   $('div#deleteBatchModal').modal('hide');
-					   	   modal.launchAlert("Success","Batch Deleted! Page will refresh in 2 sec");
+					   	   modal.launchAlert("Success","Batch Deleted! Page will refresh in soon");
 					   	   setTimeout(function(){
 					   		   location.reload();
 					   	   },2*1000);		   
@@ -339,6 +339,9 @@ $(document).ready(function(){
 		<button type="button" class="btn btn-info" data-target="#deleteSelectedBatchModal" data-toggle="modal">Delete batch/es</button>
 	</div> -->
 	<br/><br/>
+	
+	<s:choose>
+	<s:when test="${teacherListSize gt 0}">
 	<div class="panel-group" id="accordion">
 		<table class="table table-bordered table-hover" style="background-color: white;" border="1">
 			<thead>
@@ -375,5 +378,10 @@ $(document).ready(function(){
 		 	</tbody>
 		 </table>
 	</div>
+	</s:when>
+	<s:otherwise>
+		<span class="alert alert-info">No Batches added yet</span>
+	</s:otherwise>
+	</s:choose>
 </body>
 </html>

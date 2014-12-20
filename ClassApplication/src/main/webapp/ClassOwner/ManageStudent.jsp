@@ -161,7 +161,7 @@ function searchStudent() {
 			   var lastname= resultJson.studentLname;
 			   var studentId= resultJson.studentId;
 			   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
-				modal.launchAlert("Success","Found "+firstname+" "+lastname+" with Student id ="+studentId+"! Page will refresh in 2 sec");
+				modal.launchAlert("Success","Found "+firstname+" "+lastname+" with Student id ="+studentId+"! Page will refresh in soon");
 						   setTimeout(function(){
 							   location.reload();
 						   },2*1000);
@@ -226,7 +226,7 @@ function getSelectedStudentsToDelete(){
 			studentLgName = $('div#addStudentModal').find('#studentLoginName').val();
 			var divisionName ="";
 			divisionName = $('div#addStudentModal').find('#divisionName').val();
-
+			alert(divisionName);
 			getSelectedBatchesForStudent();		
 			if(!studentLgName || studentLgName.trim()==""){
 				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Student login name cannot be blank');
@@ -235,8 +235,8 @@ function getSelectedStudentsToDelete(){
 			{
 				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Invalid Student login');
 				$('div#addStudentModal .error').show();
-			}else if(!divisionName || divisionName.trim()==""){
-				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Division name cannot be blank');
+			}else if(!divisionName || divisionName.trim()=="" || divisionName == -1){
+				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Please select division');
 				$('div#addStudentModal .error').show();
 			}else if(batchIds==""){
 				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>please select atleast one batch');
@@ -259,7 +259,7 @@ function getSelectedStudentsToDelete(){
 					   var resultJson = JSON.parse(e);
 					      if(resultJson.status != 'error'){
 					   	   $('div#addStudentModal').modal('hide');
-					   	   modal.launchAlert("Success","Student Added! Page will refresh in 2 sec");
+					   	   modal.launchAlert("Success","Student Added! Page will refresh in soon");
 					   	   setTimeout(function(){
 					   		   location.reload();
 					   	   },2*1000);		   
@@ -316,7 +316,7 @@ function getSelectedStudentsToDelete(){
 							var resultJson = JSON.parse(data);
 							   if(resultJson.status != 'error'){
 								   $('div#modifyStudentModal').modal('hide');
-								   modal.launchAlert("Success","Student Updated! Page will refresh in 2 sec");
+								   modal.launchAlert("Success","Student Updated! Page will refresh in soon");
 								   setTimeout(function(){
 									   location.reload();
 								   },2*1000);		   
@@ -391,7 +391,7 @@ function getSelectedStudentsToDelete(){
 							var resultJson = JSON.parse(e);
 							   if(resultJson.status != 'error'){
 								   $('div#deleteStudentModal').modal('hide');
-								   modal.launchAlert("Success","Student Deleted! Page will refresh in 2 sec");
+								   modal.launchAlert("Success","Student Deleted! Page will refresh in soon");
 								   setTimeout(function(){
 									   location.reload();
 								   },2*1000);		   
@@ -484,7 +484,7 @@ function getSelectedStudentsToDelete(){
 	var resultJson = JSON.parse(e);
 	   if(resultJson.status != 'error'){
 		   $('div#addStudentModal').modal('hide');
-		   modal.launchAlert("Success","Student Added! Page will refresh in 2 sec");
+		   modal.launchAlert("Success","Student Added! Page will refresh in soon");
 		   setTimeout(function(){
 			   location.reload();
 		   },2*1000);		   
@@ -517,7 +517,7 @@ function getSelectedStudentsToDelete(){
 	var resultJson = JSON.parse(e);
 	   if(resultJson.status != 'error'){
 		   $('div#modifyStudentModal').modal('hide');
-		   modal.launchAlert("Success","Student Updated! Page will refresh in 2 sec");
+		   modal.launchAlert("Success","Student Updated! Page will refresh in soon");
 		   setTimeout(function(){
 			   location.reload();
 		   },2*1000);		   
@@ -549,7 +549,7 @@ function getSelectedStudentsToDelete(){
 	var resultJson = JSON.parse(e);
 	   if(resultJson.status != 'error'){
 		   $('div#deleteStudentModal').modal('hide');
-		   modal.launchAlert("Success","Student Deleted! Page will refresh in 2 sec");
+		   modal.launchAlert("Success","Student Deleted! Page will refresh in soon");
 		   setTimeout(function(){
 			   location.reload();
 		   },2*1000);		   
@@ -569,8 +569,8 @@ function getSelectedStudentsToDelete(){
 		$('div#addStudentModal .error').hide();
 		var divisionName = $('div#addStudentModal').find('#divisionName').val();
 
-		if(!divisionName || divisionName.trim()==""){
-			$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Division name cannot be blank');
+		if(!divisionName || divisionName.trim()=="" || divisionName == -1){
+			$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please select a division');
 			$('div#addStudentModal .error').show();
 		}else{		
 		  $.ajax({

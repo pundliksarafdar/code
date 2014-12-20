@@ -147,7 +147,7 @@ function successCallback(e){
 	var resultJson = JSON.parse(e);
 	   if(resultJson.status != 'error'){
 		   $('div#addBatchModal').modal('hide');
-		   modal.launchAlert("Success","Batch Added! Page will refresh in 2 sec");
+		   modal.launchAlert("Success","Batch Added! Page will refresh in soon");
 		   setTimeout(function(){
 			   location.reload();
 		   },2*1000);		   
@@ -174,7 +174,7 @@ $('div#addSubjectModal .progress').addClass('hide');
 var resultJson = JSON.parse(e);
    if(resultJson.status != 'error'){
 	   $('div#addSubjectModal').modal('hide');
-	   modal.launchAlert("Success","Subject Added! Page will refresh in 2 sec");
+	   modal.launchAlert("Success","Subject Added! Page will refresh in soon");
 	   setTimeout(function(){
 		   location.reload();
 	   },2*1000);		   
@@ -202,7 +202,7 @@ $('div#addTeacherModal .progress').addClass('hide');
 var resultJson = JSON.parse(e);
    if(resultJson.status != 'error'){
 	   $('div#addTeacherModal').modal('hide');
-	   modal.launchAlert("Success","Teacher Added! Page will refresh in 2 sec");
+	   modal.launchAlert("Success","Teacher Added! Page will refresh in soon");
 	   setTimeout(function(){
 		   location.reload();
 	   },2*1000);		   
@@ -229,7 +229,7 @@ function successCallbackBatchTimming(e){
 	var resultJson = JSON.parse(e);
 	   if(resultJson.status != 'error'){
 		   $('div#addBatchModal').modal('hide');
-		   modal.launchAlert("Success","Batch Added! Page will refresh in 2 sec");
+		   modal.launchAlert("Success","Batch Added! Page will refresh in soon");
 		   setTimeout(function(){
 			   location.reload();
 		   },2*1000);

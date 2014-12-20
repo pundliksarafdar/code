@@ -2,9 +2,20 @@
 <%@taglib prefix="s" uri="/struts-tags"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <html>
+<style>
+.danger{
+	color:red;
+}
+</style>
+
 <script>
 	var isHidden = true;
-
+	$(function () {
+		$('[data-toggle="tooltip"]').attr("title",passwordCriteria); 
+		$('[data-toggle="tooltip"]').tooltip({"html":true});
+	})
+	var passwordCriteria = "Password should be greater than 5 and less than 20 in length <br> Should contain atleast one special character [!@#$%], one lowercase letter, one uppercase letter and one digit<br> "
+	
 	$(document).ready(function() {
 		var currentPhone = $("#phone1").val();
 		var currentLogin = 	$("#loginname").val();
@@ -12,7 +23,7 @@
 		$('#datetimepicker').datetimepicker({
 			format : 'YYYY-MM-DD',
 			pickTime : false,
-			maxDate:((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()
+			maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 		});
 		
 		if($("#dobhidden").val()>3){
@@ -34,7 +45,10 @@
 					$("#loginpassre").val("");
 					$that.find("i").removeClass("glyphicon-circle-arrow-up");
 					$that.find("i").addClass("glyphicon-circle-arrow-down");
+					$("#loginpass,#loginpassre").parents(".form-group").removeClass("has-error");
+					$("#loginpass,#loginpassre").parents(".form-group").find(".danger").remove();
 					isHidden = true;
+					
 				}
 			});	
 		});
@@ -67,6 +81,23 @@
 			}
 		});
 		
+		$("input").keyup(function(){
+			$(this).parents(".form-group").find('.danger').remove();
+			$(this).parents(".form-group").removeClass("has-error");
+		});
+		
+		$("#statebtn").parents(".btn-group").find("li").on("mouseup",function(){
+			$("#statebtn").parents(".form-group").find('.danger').remove();
+			$('#statebtn').html($(this).text()+'&nbsp;<span class="caret"></span>');
+			$('#state').val($(this).text());
+			$("#statebtn").focus();
+		});
+		
+		var stateName = $("#state").val();
+		if(stateName != "-1"){
+			$('#statebtn').html(stateName+'&nbsp;<span class="caret"></span>');
+		}
+		
 	});
 	
 	function validateBlank(){
@@ -95,13 +126,13 @@
 	var state=1;
 	function validate(){
 		if(validateBlank()){
-			if(isPasswordValid() && validateFields()){
+			if(validateFields()){
 				return true;	
 			}else{
 				return false;	
 			}
 		}else{
-			isPasswordValid();
+			
 			validateFields();
 			return false;			
 		}		
@@ -113,121 +144,92 @@
 		}
 	}
 	
-	function isPasswordValid(){
-		
-		var ispassvalid = false;
-		if(isHidden){
-			return true;
-		}
-		
-		if($('#loginpass').val()===$('#loginpassre').val()){
-			ispassvalid = true;
-		}else{
-			$('#loginpass').val("");
-			$('#loginpassre').val("");
-			$('#loginpass').parents('.form-group').addClass('has-error');
-			$('#mandatoryerror').append("Reentered password should match<br>");
-			$('#mandatoryerror').show();
-			ispassvalid = false;
-		}
-			return ispassvalid;
-	}
 	
 	function validateFields(){
 		var isValidated = true;
 		var regPhoneNumber = /^[0-9]+$/;
 		var regStringExpr = /^[a-zA-Z]+$/;
-		var regAddressExpr = /^[a-zA-Z0-9]+$/;
-		var regPasswordExpr = /^(?=[^\d_].*?\d)\w(\w|[!@#$%]){5,20}/;
+		var regAddressExpr = /^[a-zA-Z0-9 ]+$/;
+		var regPasswordExpr = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%]).{5,20}/;
+		var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
 		var textonly=/^[a-zA-Z]+$/;
-
-		if(!isHidden && !$("#loginpass").val().match(regPasswordExpr)){
-			isValidated = false;
-			$("#loginpass").addClass("has-error");
-			$('#mandatoryerror').append("Password is invalid<br>");
-		}	
+			//(^[a-z0-9]+[@._]*[a-z0-9]$){5,20}
+			
 		if(!isHidden && $("#loginpass").val()==""){
 			isValidated = false;
-			$("#loginpassre").addClass("has-error");
-			$('#mandatoryerror').append("Please Enter Password<br>");
+			$("#loginpass").parents(".form-group").addClass("has-error");
+			$('#loginpass').parents(".form-group").prepend("<p class='danger' >Please Enter Password</p>");
 			
 		}else if(!isHidden && $("#loginpassre").val()==""){
 			isValidated = false;
-			$("#loginpassre").addClass("has-error");
-			$('#mandatoryerror').append("Please Enter Re-Password<br>");	
+			$("#loginpassre").parents(".form-group").addClass("has-error");
+			$('#loginpassre').parents(".form-group").prepend("<p class='danger' >Please Enter Re-Password</p>");	
 		}else if(!isHidden && !$("#loginpass").val()==$("#loginpassre").val()){
 			isValidated = false;
-			$("#loginpassre").addClass("has-error");
-			$('#mandatoryerror').append("Password is mismatched.<br>");
-		}		
+			$("#loginpassre").parents(".form-group").addClass("has-error");
+			$('#loginpassre').parents(".form-group").prepend("<p class='danger' >Password is mismatched.</p>");
+		}else if(!isHidden && !$("#loginpass").val().match(regPasswordExpr)){
+			isValidated = false;
+			$("#loginpass").parents(".form-group").addClass("has-error");
+			$('#loginpass').parents(".form-group").prepend("<p class='danger' >Password is invalid, Please see flyout for criteria</p>");
+			$('[data-toggle="tooltip"]').tooltip('show');
+		}
+		
+		if($("#loginname").val().length<5 || !$("#loginname").val().match(regloginname))
+			{
+			$("#loginname").parents(".form-group").prepend("<p class='danger' >Username is invalid should be more than 5 character</p>");
+			isValidated = false;
+			$("#loginname").addClass("has-error");
+			}
+		
 		if(!$("#phone1").val().match(regPhoneNumber)){
+			$("#phone1").parents(".form-group").prepend("<p class='danger' >Phone number is invalid. Only Numbers are allowed.</p>");
 			isValidated = false;
 			$("#phone1").addClass("has-error");
-			$('#mandatoryerror').append("Phone number is invalid. Only Numbers are allowed.<br>");
 		}
 		if($("#phone2").val()!=""){
 		if(!$("#phone2").val().match(regPhoneNumber)){
+			$("#phone2").parents(".form-group").prepend("<p class='danger' >Phone2 number is invalid. Only Numbers are allowed</p>");
 			isValidated = false;
-			$("#phone12").addClass("has-error");
-			$('#mandatoryerror').append("Phone2 number is invalid. Only Numbers are allowed.<br>");
+			$("#phone2").addClass("has-error");
 		}
 		}
 		if(!$("#fname").val().match(regStringExpr)){
+			$("#fname").parents(".form-group").prepend("<p class='danger' >First Name is invalid. Only A-Z characters are allowed.</p>");
 			isValidated = false;
 			$("#fname").addClass("has-error");
-			$('#mandatoryerror').append("First Name is invalid. Only A-Z characters are allowed. <br>");
 		}
-		
 		if($("#mname").val()!=""){
 		if(!$("#mname").val().match(regStringExpr)){
+			$("#mname").parents(".form-group").prepend("<p class='danger' >Middle Name is invalid. Only A-Z characters are allowed</p>");
 			isValidated = false;
-			$("#mname").addClass("has-error");
-			$('#mandatoryerror').append("Middle Name is invalid. Only A-Z characters are allowed. <br>");
+			$("#mname").addClass("has-error");			
 		}
 		}
 		if(!$("#lname").val().match(regStringExpr)){
+			$("#lname").parents(".form-group").prepend("<p class='danger' >Last Name is invalid. Only A-Z characters are allowed</p>");
 			isValidated = false;
 			$("#lname").addClass("has-error");
-			$('#mandatoryerror').append("Last Name is invalid. Only A-Z characters are allowed. <br>");
-		}
-		if(state==2){
-		if(!$("#classname").val().match(regStringExpr)){
-			isValidated = false;
-			$("#classname").addClass("has-error");
-			$('#mandatoryerror').append("Class Name is invalid. Only A-Z characters are allowed. <br>");
-		}
-		}
-		if(!$("#addr1").val().match(regAddressExpr)){
-			isValidated = false;
-			$("#addr1").addClass("has-error");
-			$('#mandatoryerror').append("Address1 is invalid. Special characters are not allowed. <br>");
-		}
-		if($("#addr2").val()!=""){
-		if(!$("#addr2").val().match(regAddressExpr)){
-			isValidated = false;
-			$("#addr2").addClass("has-error");
-			$('#mandatoryerror').append("Address2 is invalid. Special characters are not allowed. <br>");
-		}
-		}
-		/*Pundlik Validation for city,state and country*/
-		if(!$("#city").val().match(textonly)){
-			isValidated = false;
-			$("#city").addClass("has-error");
-			$('#mandatoryerror').append("City name is invalid. Only characters are not allowed. <br>");
 		}
 		
-		if(!$("#state").val().match(textonly)){
+		/*Pundlik Validation for city,state and country*/
+		if(!$("#city").val().match(textonly)){
+			$("#city").parents(".form-group").prepend("<p class='danger' >City name is invalid. Only A-Z characters are allowed</p>");
+			isValidated = false;	
+			$("#city").addClass("has-error");
+		}
+		
+		if($("#state").val()=="-1" ){
+			$("#state").parents(".form-group").prepend("<p class='danger' >Please Select State</p>");
 			isValidated = false;
 			$("#state").addClass("has-error");
-			$('#mandatoryerror').append("State name is invalid. Only characters are not allowed. <br>");
 		}
 		
 		if(!$("#country").val().match(textonly)){
+			$("#country").parents(".form-group").prepend("<p class='danger'>Country name is invalid. Only characters are not allowed. </p>");
 			isValidated = false;
 			$("#country").addClass("has-error");
-			$('#mandatoryerror').append("Country name is invalid. Only characters are not allowed. <br>");
 		}
-		$('#mandatoryerror').show();
 		$("#rolebtn").focus();
 		return isValidated;
 	}
@@ -308,17 +310,67 @@
 			</div>
 		</div>
 		
+		<!-- 
 		<div class="form-group">
     		<label for="inputState" class="col-sm-4 control-label">State</label>
     		<div class="col-sm-5">
 				<input type="text" class="form-control" id="state" name="registerBean.state" value="<c:out value="${user.state}"></c:out>"/>
 			</div>
 		</div>
+		 -->
+		 
+		<div class="form-group">
+			
+			<label for="state"  class="col-sm-4 control-label">*State</label>
+			<div class="col-sm-5" align="left">
+			
+			<input type="hidden" class="form-control" name="registerBean.state" id="state" required="required" value='<c:out value="${user.state}"></c:out>'/>
+			<input type="hidden"  value='<s:property value="registerBean.state" default="-1"/>' />
+			<div class="btn-group">
+					<button type="button" class="btn btn-default dropdown-toggle"
+						data-toggle="dropdown" id="statebtn">
+						State <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu" >
+						<li value="Andhra Pradesh"><a href="#">Andhra Pradesh</a></li>
+						<li value="Arunachal Pradesh"><a href="#">Arunachal Pradesh</a><li>
+						<li value="Assam"><a href="#">Assam</a></li>
+						<li value="Bihar"><a href="#">Bihar</a></li>
+						<li value="Chhattisgarh"><a href="#">Chhattisgarh</a></li>
+						<li value="Goa"><a href="#">Goa</a></li>
+						<li value="Gujarat"><a href="#">Gujarat</a></li>
+						<li value="Haryana"><a href="#">Haryana</a></li>
+						<li value="Himachal Pradesh"><a href="#">Himachal Pradesh</a></li>
+						<li value="Jammu and Kashmir"><a href="#">Jammu and Kashmir</a></li>
+						<li value="Jharkhand"><a href="#">Jharkhand</a></li>
+						<li value="Karnataka"><a href="#">Karnataka</a></li>
+						<li value="Kerala"><a href="#">Kerala</a></li>
+						<li><a href="#">Madhya Pradesh</a></li>
+						<li><a href="#">Maharashtra</a></li>
+						<li><a href="#">Manipur</a></li>
+						<li><a href="#">Meghalaya</a></li>
+						<li><a href="#">Mizoram</a></li>
+						<li><a href="#">Nagaland</a></li>
+						<li><a href="#">Orissa</a></li>
+						<li><a href="#">Punjab</a></li>
+						<li><a href="#">Rajasthan</a></li>
+						<li><a href="#">Sikkim</a></li>
+						<li><a href="#">Tamil Nadu</a></li>
+						<li><a href="#">Telangana</a></li>
+						<li><a href="#">Tripura</a></li>
+						<li><a href="#">Uttar Pradesh</a></li>
+						<li><a href="#">Uttarakhand</a></li>
+						<li><a href="#">West Bengal</a></li>
+					</ul>
+			</div>
+			</div>
+		</div>
+		
 		
 		<div class="form-group">
     		<label for="inputCountry" class="col-sm-4 control-label">Country</label>
     		<div class="col-sm-5">
-				<input type="text" class="form-control" id="country" name="registerBean.country"  value="<c:out value="${user.country}"></c:out>"/>
+				<input type="text" class="form-control" id="country" disabled="disabled" name="registerBean.country"  value="India"/>
 			</div>
 		</div>
 		
@@ -326,14 +378,14 @@
 		<div class="form-group">
     		<label for="inputPhone1" class="col-sm-4 control-label">Phone 1</label>
     		<div class="col-sm-5">
-				<input type="text" class="form-control" id="phone1" name="registerBean.phone1"  value="<c:out value="${user.phone1}"></c:out>"/>
+				<input type="text" class="form-control" id="phone1" maxlength="10" name="registerBean.phone1"  value="<c:out value="${user.phone1}"></c:out>"/>
 			</div>
 		</div>
 		
 		<div class="form-group">
     		<label for="inputPhone2" class="col-sm-4 control-label">Phone 2</label>
     		<div class="col-sm-5">
-				<input type="text" class="form-control" id="phone2" name="registerBean.phone2"  value="<c:out value="${user.phone2}"></c:out>"/>
+				<input type="text" class="form-control" id="phone2" maxlength="10" name="registerBean.phone2"  value="<c:out value="${user.phone2}"></c:out>"/>
 			</div>
 		</div>
 		
@@ -356,7 +408,8 @@
 		
 		<div id="passwords">
 		<div class="form-group">
-    		<label for="loginpass" class="col-sm-4 control-label">Password</label>
+    		<label for="loginpass" class="col-sm-4 control-label">
+    		<i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="bottom" title="" style="color: red;"></i>*Password</label>
     		<div class="col-sm-5">
 				<input type="password" class="form-control" id="loginpass" name="registerBean.loginPass"/>
 			</div>

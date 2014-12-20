@@ -7,6 +7,7 @@ import java.util.List;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.register.RegisterDB;
+import com.classapp.db.register.RegisterUser;
 import com.classapp.db.student.Student;
 
 public class RegisterTransaction {
@@ -77,5 +78,18 @@ public class RegisterTransaction {
 		registerBean.setClassName(null==registerBean.getClassName()?"":registerBean.getClassName());
 		registerBean.setLoginPass(null==registerBean.getLoginPass()?registerBean.getLoginPass():registerBean.getLoginPass());
 		return registerDB.updateUser(registerBean, regId);
+	}
+	
+	public String registerUser(String registerRequest,String username,String mobileNo){
+		RegisterUser registerUser = new RegisterUser();
+		
+		if (isUserExits(username)) {
+			return "User already registered";
+		} else if (isMobileExits(mobileNo)) {
+			return "Mobile number already registered";
+		} else {
+			String status = registerUser.registerUser(registerRequest);
+			return status;
+		}
 	}
 }

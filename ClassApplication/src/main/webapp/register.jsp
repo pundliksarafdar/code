@@ -13,7 +13,7 @@
 		$('[data-toggle="tooltip"]').attr("title",passwordCriteria); 
 		$('[data-toggle="tooltip"]').tooltip({"html":true});
 	})
-	var passwordCriteria = "Password should be greater than 5 and less than 20 in length <br> Should contain special atleast on character [!@#$%]<br> Password can not start with special character"
+	var passwordCriteria = "Password should be greater than 5 and less than 20 in length <br> Should contain atleast one special character [!@#$%], one lowercase letter, one uppercase letter and one digit<br> "
 	$(document).ready(function(){
 		$('#datetimepicker').datetimepicker({
 			format : 'YYYY-MM-DD',
@@ -26,7 +26,7 @@
 			$(this).val(string.charAt(0).toUpperCase() + string.slice(1));
 		});
 		
-		$('#role').val("");
+		$('#roleValidation').val("");
 		$('#phone1,#phone2').keydown(function(e){
 		    console.log("loggin :"+e.keyCode+":"+e.which);
 		    if(((e.keyCode < 47 || e.keyCode > 57)) && !(e.keyCode == 8 || e.keyCode == 9 || e.keyCode == 46 || e.keyCode ==37 || e.keyCode ==39)){
@@ -79,6 +79,11 @@
 			$('#state').val($(this).text());
 			$("#statebtn").focus();
 		});
+		
+		var stateName = $("#state").val();
+		if(stateName != "-1"){
+			$('#statebtn').html(stateName+'&nbsp;<span class="caret"></span>');
+		}
 	});
 	
 	
@@ -147,7 +152,7 @@
 			$('#divClassname').hide();
 			$('#divClassname').find('input').removeAttr("required");
 		}
-		$('#role').val(role);
+		$('#roleValidation').val(role);
 	}
 	
 	function go(){
@@ -180,13 +185,14 @@
 		var regPhoneNumber = /^[0-9]+$/;
 		var regStringExpr = /^[a-zA-Z]+$/;
 		var regAddressExpr = /^[a-zA-Z0-9 ]+$/;
-		var regPasswordExpr = /^(?=[^\d_].*?\d)\w(\w|[!@#$%]){5,20}/;
+		var regPasswordExpr = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%]).{5,20}/;
 		var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
 		var textonly=/^[a-zA-Z]+$/;
 			//(^[a-z0-9]+[@._]*[a-z0-9]$){5,20}
-		if($("#role").val()==-1){
-			$("#role").parents(".form-group").prepend("<p class='danger' >Please select role</p>");
-			$("#role").parents(".form-group").addClass("has-error");
+		if($('#roleValidation').val()==-1){
+			isValidated = false;
+			$("#rolebtn").parents(".form-group").prepend("<p class='danger' >Please select role</p>");
+			$("#rolebtn").parents(".form-group").addClass("has-error");
 			}
 		if($("#loginname").val().length<5 || !$("#loginname").val().match(regloginname))
 			{
@@ -290,8 +296,8 @@
 			<label for="role"  class="col-sm-4 control-label">Select your role</label>
 			<div class="col-sm-5" align="left">
 			
-			<input type="hidden" class="form-control" name="registerBean.role" id="role" required="required"/>
-			<input type="hidden" id="roleValidation" value='<s:property value="registerBean.role" default="-1"/>' />
+			<!-- <input type="hidden" class="form-control" name="registerBean.role" id="role" required="required"/> -->
+			<input type="hidden" id="roleValidation" value='<s:property value="registerBean.role" default="-1"/>' required="required" name="registerBean.role" />
 			<div class="btn-group">
 					<button type="button" class="btn btn-default dropdown-toggle"
 						data-toggle="dropdown" id="rolebtn">

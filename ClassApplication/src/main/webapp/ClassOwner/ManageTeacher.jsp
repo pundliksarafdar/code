@@ -6,6 +6,7 @@
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
 <%@page import="com.config.Constants"%>
+<%@taglib prefix="s" uri="http://java.sun.com/jstl/core"%>
 <html>
 <script type="text/javascript" src="js/ManageTeacher.js"></script>
 <script type="text/javascript" src="js/AddSubject.js"></script>
@@ -69,7 +70,7 @@ function searchTeacher() {
 				   var teacherId= resultJson.teacherId;
 				   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
 				
-					modal.launchAlert("Success","Found "+firstname+" "+lastname+" with teacher id ="+teacherId+"! Page will refresh in 2 sec");
+					modal.launchAlert("Success","Found "+firstname+" "+lastname+" with teacher id ="+teacherId+"! Page will refresh in soon");
 					 setTimeout(function(){
 						   location.reload();
 					   },2*1000);	   
@@ -121,7 +122,7 @@ function searchTeacher() {
 							   var resultJson = JSON.parse(e);
 							      if(resultJson.status != 'error'){
 							   	   $('div#addTeacherModal').modal('hide');
-							   	   modal.launchAlert("Success","Teacher Added! Page will refresh in 2 sec");
+							   	   modal.launchAlert("Success","Teacher Added! Page will refresh in soon");
 							   	   setTimeout(function(){
 							   		   location.reload();
 							   	   },2*1000);		   
@@ -189,7 +190,7 @@ function searchTeacher() {
 						   var resultJson = JSON.parse(data);
 						      if(resultJson.status != 'error'){
 						   	   $('div#modifyTeacherModal').modal('hide');
-						   	   modal.launchAlert("Success","Teacher Updated! Page will refresh in 2 sec");
+						   	   modal.launchAlert("Success","Teacher Updated! Page will refresh in soon");
 						   	   setTimeout(function(){
 						   		   location.reload();
 						   	   },2*1000);		   
@@ -252,7 +253,7 @@ function searchTeacher() {
 						   var resultJson = JSON.parse(data);
 						      if(resultJson.status != 'error'){
 						   	   $('div#deleteTeacherModal').modal('hide');
-						   	   modal.launchAlert("Success","Teacher Deleted! Page will refresh in 2 sec");
+						   	   modal.launchAlert("Success","Teacher Deleted! Page will refresh in soon");
 						   	   setTimeout(function(){
 						   		   location.reload();
 						   	   },2*1000);		   
@@ -344,6 +345,9 @@ function searchTeacher() {
 		 <br><br> -->
 	</div>
 	<br/><br/>
+	
+	<s:choose>
+	<s:when test="${teacherListSize gt 0}">
 	<div class="panel-group" id="accordion">
 		<table class="table table-bordered table-hover" style="background-color: white;" border="1">
 			<thead>
@@ -381,5 +385,10 @@ function searchTeacher() {
 			 </tbody>
 		</table>
 	</div>
+	</s:when>
+	<s:otherwise>
+		<span class="alert alert-info">No teacher added yet</span>
+	</s:otherwise>
+	</s:choose>
 </body>
 </html>

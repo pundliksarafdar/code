@@ -76,7 +76,7 @@ function uploadExamFile(){
 				  success:function(e){				 
 					   var resultJson = JSON.parse(e);
 					      if(resultJson.status != 'error'){					   	 
-					   	   modal.launchAlert("Success","Exam Added! Page will refresh in 2 sec");
+					   	   modal.launchAlert("Success","Exam Added! Page will refresh in soon");
 					   	   setTimeout(function(){
 					   		   location.reload();
 					   	   },2*1000);		   

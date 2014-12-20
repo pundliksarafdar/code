@@ -66,7 +66,7 @@ $('div#addStudentModal .progress').addClass('hide');
 var resultJson = JSON.parse(e);
    if(resultJson.status != 'error'){
 	   $('div#addStudentModal').modal('hide');
-	   modal.launchAlert("Success","Student Added! Page will refresh in 2 sec");
+	   modal.launchAlert("Success","Student Added! Page will refresh in soon");
 	   setTimeout(function(){
 		   location.reload();
 	   },2*1000);		   
@@ -99,7 +99,7 @@ $('div#modifyStudentModal .progress').addClass('hide');
 var resultJson = JSON.parse(e);
    if(resultJson.status != 'error'){
 	   $('div#modifyStudentModal').modal('hide');
-	   modal.launchAlert("Success","Student Updated! Page will refresh in 2 sec");
+	   modal.launchAlert("Success","Student Updated! Page will refresh in soon");
 	   setTimeout(function(){
 		   location.reload();
 	   },2*1000);		   
@@ -131,7 +131,7 @@ $('div#deleteStudentModal .progress').addClass('hide');
 var resultJson = JSON.parse(e);
    if(resultJson.status != 'error'){
 	   $('div#deleteStudentModal').modal('hide');
-	   modal.launchAlert("Success","Student Deleted! Page will refresh in 2 sec");
+	   modal.launchAlert("Success","Student Deleted! Page will refresh in soon");
 	   setTimeout(function(){
 		   location.reload();
 	   },2*1000);		   

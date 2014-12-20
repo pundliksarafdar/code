@@ -13,6 +13,7 @@ import com.config.Constants;
 import com.google.gson.Gson;
 import com.signon.LoginBean;
 import com.signon.LoginUser;
+import com.transaction.register.RegisterTransaction;
 import com.user.UserBean;
 
 public class RegisterUserAction extends BaseAction{
@@ -40,7 +41,9 @@ public class RegisterUserAction extends BaseAction{
 		registerBean.setDob(registerBean.getDob().replace("-", ""));
 		registerBean.setRegistrationDate(formatedDate);
 		String registerReq = gson.toJson(registerBean);
-		String status = registerUser.registerUser(registerReq);
+		
+		RegisterTransaction registerTransaction = new RegisterTransaction();
+		String status =  registerTransaction.registerUser(registerReq,registerBean.getLoginName(), registerBean.getPhone1());
 		System.out.println("In Register user action - Register User Status..."+status);
 		if("success".equals(status)){
 			LoginBean loginBean = new LoginBean();

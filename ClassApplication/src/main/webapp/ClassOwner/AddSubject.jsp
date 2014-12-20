@@ -27,7 +27,7 @@ function deleteSubject(subid){
 	    	 subjectid:subid
         },
         success: function(){
-        	modal.launchAlert("Success","Subject Deleted! Page will refresh in 2 sec");
+        	modal.launchAlert("Success","Subject Deleted! Page will refresh in soon");
  		   setTimeout(function(){
  			   location.reload();
  		   },2*1000);
@@ -61,7 +61,7 @@ function deleteSubject(subid){
 	                  		$('div#ModifysubjectModal .error').html('<strong>Error!</strong> Subject Already Present');
 	                	}else{
 	                	$('#ModifysubjectModal').modal('hide');
-	                	modal.launchAlert("Success","Subject Modified! Page will refresh in 2 sec");
+	                	modal.launchAlert("Success","Subject Modified! Page will refresh in soon");
 	         		   setTimeout(function(){
 	         			   location.reload();
 	         		   },2*1000);
