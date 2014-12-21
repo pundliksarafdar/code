@@ -6,16 +6,15 @@
 <%
 	UserBean userBean = (UserBean)session.getAttribute("user"); 	
 %>
-<nav class="navbar navbar-default" role="navigation">
+<nav class="navbar navbar-apple-custom" role="navigation">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" style="border-color: white;border-width: 1px;">
+      <i class="glyphicon glyphicon-th-large"></i>
     </button>
-    <a class="navbar-brand" href="login">CoreX</a>
+    <a class="navbar-brand" href="login">
+	<img src="images/cxlogo.jpg" alt="cxlogo" style="height: 20px;" class="img-rounded"/>
+	CoreX</a>
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->
@@ -71,6 +70,13 @@
     </cx:versionswitch>
     </ul>
     <ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-phone-alt"></i> <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+    	  <li><a href="#" data-toggle="modal" data-target="#aboutUsModal">About Us</a></li>
+		  <li><a href="#" data-toggle="modal" data-target="#contactUsModal">Contact Us</a></li>
+	    </ul>
+      </li>
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=userBean.getFirstname() %> <b class="caret"></b></a>
         <ul class="dropdown-menu">

@@ -14,6 +14,7 @@ public class EditUserConfirm extends BaseAction{
 
 	private static final long serialVersionUID = 1L;
 	private RegisterBean registerBean = new RegisterBean();
+	String oldPassword;
 	
 	public RegisterBean getRegisterBean() {
 		return registerBean;
@@ -22,11 +23,24 @@ public class EditUserConfirm extends BaseAction{
 	public void setRegisterBean(RegisterBean registerBean) {
 		this.registerBean = registerBean;
 	}
+	
+	public String getOldPassword() {
+		return oldPassword;
+	}
+
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
+	}
 
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		System.out.println(registerBean);
 		ActionContext.getContext().getSession().put("registerbean", registerBean);
+		getActionErrors().clear();
+		if(oldPassword==null || (!"".equals(oldPassword.trim()) && !oldPassword.equals(userBean.getLoginBean().getLoginpass()))){
+			addActionError("Old password is wrong");
+			return ERROR;
+		}
 		return Constants.SUCCESS;
 	}
 	

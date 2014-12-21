@@ -1,3 +1,7 @@
+.navbar {
+	border-radius: 0px;
+}
+
 .bs-callout {
 	padding: 20px;
 	margin: auto;
@@ -17,4 +21,37 @@
 .alert{
 	margin-left: 5px;
 	margin-right: 5px;
+}
+
+.navbar-apple-custom{
+	background:rgba(0,0,0,0.6);
+	color:#FFFFFF;
+}
+
+.navbar-apple-custom a{
+	color:#FFFFFF;
+}
+
+.nav .open>a, .nav .open>a:hover, .nav .open>a:focus {
+	background: rgba(255, 255, 255, 0);
+	color:#DDDDDD;
+}
+
+.nav>li>a:hover, .nav>li>a:focus{
+	background: rgba(255, 255, 255, 0);
+	color:#DDDDDD;
+}
+
+.nav .caret,.nav a:hover .caret {
+	border-top-color: #DDDDDD;
+	border-bottom-color: #DDDDDD;
+}
+
+.nav .open>a .caret, .nav .open>a:hover .caret, .nav .open>a:focus .caret {
+	border-top-color: #DDDDDD;
+	border-bottom-color: #DDDDDD;
+}
+
+.nav .open .dropdown-menu{
+	background: #DDDDDD;
 }

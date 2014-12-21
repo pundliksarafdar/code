@@ -42,11 +42,11 @@
 					isHidden = false;
 				}else{
 					$("#loginpass").val("");
-					$("#loginpassre").val("");
+					$("#loginpassre,#oldpass").val("");
 					$that.find("i").removeClass("glyphicon-circle-arrow-up");
 					$that.find("i").addClass("glyphicon-circle-arrow-down");
-					$("#loginpass,#loginpassre").parents(".form-group").removeClass("has-error");
-					$("#loginpass,#loginpassre").parents(".form-group").find(".danger").remove();
+					$("#oldpass,#loginpass,#loginpassre").parents(".form-group").removeClass("has-error");
+					$("#oldpass,#loginpass,#loginpassre").parents(".form-group").find(".danger").remove();
 					isHidden = true;
 					
 				}
@@ -155,11 +155,14 @@
 		var textonly=/^[a-zA-Z]+$/;
 			//(^[a-z0-9]+[@._]*[a-z0-9]$){5,20}
 			
-		if(!isHidden && $("#loginpass").val()==""){
+		if(!isHidden && $("#oldpass").val()==""){
+			isValidated = false;
+			$("#oldpass").parents(".form-group").addClass("has-error");
+			$('#oldpass').parents(".form-group").prepend("<p class='danger' >Please Enter Password</p>");
+		}else if(!isHidden && $("#loginpass").val()==""){
 			isValidated = false;
 			$("#loginpass").parents(".form-group").addClass("has-error");
 			$('#loginpass').parents(".form-group").prepend("<p class='danger' >Please Enter Password</p>");
-			
 		}else if(!isHidden && $("#loginpassre").val()==""){
 			isValidated = false;
 			$("#loginpassre").parents(".form-group").addClass("has-error");
@@ -239,7 +242,7 @@
 <c:set var="user" value="${sessionScope.user}"></c:set>
 <form id="frEditUser" class="form-horizontal" role="form" action="editconfirm" method="post">
 	<s:if test="hasActionErrors()">
-		<div class="errors">
+		<div class="alert alert-danger">
 			<s:actionerror/>
 		</div>
 	</s:if>
@@ -407,6 +410,13 @@
 		</div>
 		
 		<div id="passwords">
+		<div class="form-group">
+    		<label for="loginpass" class="col-sm-4 control-label">*Old Password</label>
+    		<div class="col-sm-5">
+				<input type="password" class="form-control" id="oldpass" name="oldPassword"/>
+			</div>
+		</div>
+		
 		<div class="form-group">
     		<label for="loginpass" class="col-sm-4 control-label">
     		<i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="bottom" title="" style="color: red;"></i>*Password</label>

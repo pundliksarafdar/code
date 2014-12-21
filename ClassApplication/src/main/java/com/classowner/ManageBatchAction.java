@@ -30,6 +30,7 @@ public class ManageBatchAction extends BaseAction{
 		List<String> divisionNames= new ArrayList<String>();
 		List<String> Streams=new ArrayList<String>();
 		List<String> ids=new ArrayList<String>();
+		divisionSize = divisions.size();
 		for (Division division : divisions) {
 			divisionNames.add(division.getDivisionName());
 			Streams.add(division.getStream());

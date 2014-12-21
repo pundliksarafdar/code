@@ -66,13 +66,12 @@
             class="com.edit.EditUserAction" 
             method="execute">
             <result name="success" type="tiles">edituser</result>
-            <result name="error" type="tiles">register</result>
       </action>
 	  <action name="editconfirm" 
             class="com.edit.EditUserConfirm" 
             method="execute">
             <result name="success" type="tiles">edituserreview</result>
-            <result name="error" type="tiles">register</result>
+            <result name="error" type="tiles">edituser</result>
       </action>
       <action name="editsave" 
             class="com.edit.EditUserSave" 

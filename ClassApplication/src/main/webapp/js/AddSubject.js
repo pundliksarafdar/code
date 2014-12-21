@@ -266,7 +266,7 @@ $('div#addclassModal .progress').addClass('hide');
 var resultJson = JSON.parse(e);
    if(resultJson.status != 'error'){
 	   $('div#addclassModal').modal('hide');
-	   modal.launchAlert("Success","Batch Added! Page will refresh in soon");
+	   modal.launchAlert("Success","Class Added! Page will refresh in soon");
 	   setTimeout(function(){
 		   location.reload();
 	   },2*1000);		   

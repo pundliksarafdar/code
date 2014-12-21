@@ -18,7 +18,7 @@ response.setHeader("Expires", "0");
  <link href="css/admin.css" rel="stylesheet">
  <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
  <link href="css/jquery.autocomplete.css" rel="stylesheet">
- <link href="css/common.css" rel="stylesheet">
+<link href="css/common.css" rel="stylesheet">	 
 <!-- DataTables, TableTools and Editor CSS 
 <link rel="stylesheet" type="text/css" href="/media/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href="/extensions/TableTools/css/dataTables.tableTools.css">
@@ -71,7 +71,7 @@ if(userBean.getRole()<2){
 	<div id="outerDiv" align ="center">
 		<div id="innerDiv">
 			<div id="header">
-				<div class = "hidden-xs" style ="height : 100px;">
+				<div class = "hide" style ="height : 100px;">
 					<tiles:insertAttribute name="header" />
 				</div>
 				<div>				
@@ -85,7 +85,7 @@ if(userBean.getRole()<2){
 					<br />
 				</div>	
 			</div>
-			<div id="footer">
+			<div id="footer" class="hide">
 				<tiles:insertAttribute name="footer" />				
 			</div>
 		</div>

@@ -341,7 +341,7 @@ $(document).ready(function(){
 	<br/><br/>
 	
 	<s:choose>
-	<s:when test="${teacherListSize gt 0}">
+	<s:when test="${divisionSize gt 0}">
 	<div class="panel-group" id="accordion">
 		<table class="table table-bordered table-hover" style="background-color: white;" border="1">
 			<thead>
