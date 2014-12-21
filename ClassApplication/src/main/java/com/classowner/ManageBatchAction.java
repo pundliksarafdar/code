@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.classapp.db.batch.BatchDetails;
 import com.classapp.db.batch.division.Division;
 import com.config.BaseAction;
 import com.config.Constants;
@@ -17,20 +18,23 @@ import com.user.UserBean;
 
 public class ManageBatchAction extends BaseAction{
 	int divisionSize;
+	int batchSize;
 	
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		BatchHelperBean batchHelperBean= new BatchHelperBean(userBean.getRegId());
 		batchHelperBean.setBatchDetailsList();
 		DivisionTransactions divisionTransactions = new DivisionTransactions();
-		System.out.println("Size of batch list :"+batchHelperBean.getBatchDetailsList().size());		
-		request.getSession().setAttribute(Constants.BATCHES_LIST, batchHelperBean.getBatchDetailsList());	
+		List<BatchDetails> batchList = batchHelperBean.getBatchDetailsList();
+				
+		request.getSession().setAttribute(Constants.BATCHES_LIST, batchList);	
 		List<Division> divisions= divisionTransactions.getAllDivisions(userBean.getRegId());
 		setDivisionSize(divisions.size());
 		List<String> divisionNames= new ArrayList<String>();
 		List<String> Streams=new ArrayList<String>();
 		List<String> ids=new ArrayList<String>();
 		divisionSize = divisions.size();
+		batchSize = batchList.size();
 		for (Division division : divisions) {
 			divisionNames.add(division.getDivisionName());
 			Streams.add(division.getStream());
@@ -48,6 +52,14 @@ public class ManageBatchAction extends BaseAction{
 
 	public void setDivisionSize(int divisionSize) {
 		this.divisionSize = divisionSize;
+	}
+
+	public int getBatchSize() {
+		return batchSize;
+	}
+
+	public void setBatchSize(int batchSize) {
+		this.batchSize = batchSize;
 	}
 	
 	
