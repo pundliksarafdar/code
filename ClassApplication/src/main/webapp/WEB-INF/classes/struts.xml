@@ -210,6 +210,12 @@
             method="execute">
             <result name="success" type="tiles">timetable.showtimetable</result>
       </action>
+      
+      <action name="manageclass" 
+            class="com.classowner.ManageClassAction" 
+            method="execute">
+            <result name="success" type="tiles">classowner.manageclass</result>
+      </action>
     
 	<action name="sysreq"> 
          <result type="tiles">systemrequirement</result>

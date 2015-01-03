@@ -2,12 +2,15 @@ package com.transaction.student;
 
 import java.util.List;
 
+import com.classapp.db.batch.Batch;
+import com.classapp.db.batch.BatchDB;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentDB;
 import com.classapp.db.student.StudentData;
 import com.classapp.db.student.StudentDetails;
 import com.sun.corba.se.impl.encoding.CodeSetConversion.BTCConverter;
+import com.transaction.batch.BatchTransactions;
 
 public class StudentTransaction {
 	StudentData studentData;
@@ -103,9 +106,16 @@ public class StudentTransaction {
 		}
 	}
 	
+	
+	public boolean removebatchfromstudentlist(int classid) {
+		StudentDB db=new StudentDB();
+		db.deletestudentrelatedtoclass(classid);
+	return true;
+	}
+	
 	public List getStudentsrelatedtobatch(String batchname) {
 	StudentDB studentDB=new StudentDB();
-	List students =studentDB.getStudentrelatedtoBatch(batchname);
+	List students =studentDB.getStudentIDSrelatedtoBatch(batchname);
 	return students;
 	}
 	

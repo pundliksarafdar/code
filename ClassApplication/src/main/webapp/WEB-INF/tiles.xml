@@ -207,6 +207,10 @@
 		<put-attribute name="title" value="Time Table" />
 		<put-attribute name="body" value="/Timetable/SeeTimeTable.jsp" />
 	</definition>
+	<definition name="classowner.manageclass" extends="baseLayout">
+		<put-attribute name="title" value="Manage Class" />
+		<put-attribute name="body" value="/ClassOwner/ManageClass.jsp" />
+	</definition>
 	
    <definition name="systemrequirement" extends="NoTopnavBaseLayout">
 		<put-attribute name="title" value="System Requirements" />

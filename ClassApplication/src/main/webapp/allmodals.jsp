@@ -201,8 +201,8 @@
 				%>
 				 
 				</jsp:useBean>
-			
-			</div>				
+  					
+				</div>				
 			</div>
       	<div class="modal-footer">
 	        <div class="progress progress-striped active hide">
@@ -800,9 +800,9 @@
         <div class="modal-body" id="">
         	<div class="error alert alert-danger"></div>
 			<div class="form-group" id="">
-				Enter Class:- <input type="text" class="form-control" id="classname" placeholder="Enter Class Name" name="classname">
+				Enter Class:- <input type="text" class="form-control" id="classname" placeholder="Enter Class Name" name="classname" maxlength="50">
 				<!-- <input type="text"  id="classname" name="classname"/></br> -->
-				Enter Stream/Part:-<input type="text" class="form-control" id="stream" placeholder="Enter Stream/Part" name="stream">
+				Enter Stream/Part:-<input type="text" class="form-control" id="stream" placeholder="Enter Stream/Part" name="stream" maxlength="50">
 				<!-- <input type="text"  id="stream" name="stream"/> -->
 				<br>
 				<div id="classTimming" class="hide">
@@ -1126,6 +1126,66 @@
 		</div>
 	</div>
 </div>
-
+<div class="modal fade" id="ModifyClassModal" data-backdrop="static" style="display:none;" >
+  <div class="modal-dialog">
+      <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="">Edit Class</h4>
+        </div>
+        <div class="modal-body" id="">
+        	<div class="error alert alert-danger" hidden="true"></div>
+			<div class="form-group" id="">
+		
+			 <input class="form-control" type="text" id="editclassname" maxlength="50">
+			 <br>
+			 <input class="form-control" type="text" id="editstream" maxlength="50">
+				<input type="hidden" id="hidclassid">
+				<div id="classTimming" class="hide">
+				<div class="container-fluid">
+  				<div class="row">
+  					
+					<div class="col-sm-6">
+					<label for="">Start Time</label>`
+					<div class='input-group date' id='fromDate' data-date-format="hh:mm A" style="width: 150px;">
+						<input type='text' class="form-control"/> <span
+							class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span> </span>
+					</div>
+					</div>
+					
+					<div class="col-sm-6">
+					<label for="">End Time</label>
+					<div class='input-group date' id='toDate' data-date-format="hh:mm A" style="width: 150px;">
+						<input type='text' class="form-control"/> <span
+							class="input-group-addon"><span
+							class="glyphicon glyphicon-calendar"></span> </span>
+					</div>
+					</div>
+				</div>
+				</div>
+				</div>
+			</div>				
+			</div>
+      	<div class="modal-footer">
+	        <div class="progress progress-striped active hide">
+					<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="45"
+						aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+						Processing your request Please wait
+					</div>
+			</div>
+			
+	        <div class="add">
+	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Cancel</button>
+	        <button type="button" class="btn btn-primary btn-add" id="saveclass">Save</button>
+	        </div>
+	        <div class="setTimming hide">
+	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Not Now</button>
+	        <button type="button" class="btn btn-primary btn-setTimming" id="btn-setTimming">Done</button>
+	        </div>
+      	</div>
+    </div>
+</div>	
+</div>
 	<!-- Modal Box End -->
 

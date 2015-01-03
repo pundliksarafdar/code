@@ -212,5 +212,12 @@ public class BatchTransactions {
 		return true;
 		
 	}
+	
+	public boolean deletebatchrelatdtoclass(int classid) {
+		BatchDB batchDB=new BatchDB();
+		batchDB.deletebatchrelatedtoclass(classid);
+		return true;
+		
+	}
 
 }

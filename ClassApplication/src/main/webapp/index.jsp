@@ -37,6 +37,14 @@ ul{
 					$(".frontenderror").removeClass("hide");
 				}
 			});
+			
+			$("#showPass").on("mousedown",function(){
+				$(this).parents(".input-group").find("input").attr("type","text");
+			});
+			
+			$("#showPass").on("mouseleave",function(){
+				$(this).parents(".input-group").find("input").attr("type","password");
+			});
 		});
 	</script>
 
@@ -79,8 +87,11 @@ ul{
 							<div class="form-group">
 								<label for="lgpass" class="col-sm-4 control-label">*Password</label>
 								<div class="col-sm-8">
+								<div class="input-group">
 									<input name="loginBean.loginpass" type="password"
 										class="form-control" id="lgpass" placeholder="Password" />
+									<span class="input-group-addon" id="showPass"><i class="glyphicon glyphicon-hand-left"></i></span>	
+								</div>
 								</div>
 							</div>
 

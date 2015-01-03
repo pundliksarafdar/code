@@ -119,7 +119,7 @@ function deleteSubject(subid){
 <div class="btn-group btn-group-sm">
  
   <button type="button" class="btn btn-info" data-target="#addSubjectModal" data-toggle="modal">Add Subject</button>
-  <button data-target="#addclassModal" type="button" class="btn btn-info" data-toggle="modal">Add Class</button>
+  
  </div>
 <br><br>
 <%List<Subject> list=(List<Subject>)request.getAttribute("listOfSubjects"); %>

@@ -40,6 +40,7 @@
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Manage <b class="caret"></b></a>
       		<ul class="dropdown-menu">
       			<li><a href="addsubject">Manage Subject</a></li>
+      			<li><a href="manageclass">Manage Class</a></li>
 	            <li><a href="managestudent">Manage Student</a></li>
 	            <li><a href="manageteacher">Manage Teacher</a></li>
 	            <li><a href="managebatch">Manage Batch</a></li>
@@ -60,8 +61,8 @@
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Time Table <b class="caret"></b></a>
       		<ul class="dropdown-menu">
 	            <li><a href="createtimetable">Create Time Table</a></li>
-	            <li><a href="updatetimetable">Update Time Table</a></li>
-	            <li><a href="showtimetable">See Time Table</a></li>
+	            <li><a href="updatetimetable">View & Update Time Table</a></li>
+	            <!-- <li><a href="showtimetable">See Time Table</a></li>  -->
 	         </ul>
       </li>
     <%}%>
@@ -70,7 +71,7 @@
     </cx:versionswitch>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-    <li class="dropdown">
+      <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-phone-alt"></i> <b class="caret"></b></a>
         <ul class="dropdown-menu">
     	  <li><a href="#" data-toggle="modal" data-target="#aboutUsModal">About Us</a></li>

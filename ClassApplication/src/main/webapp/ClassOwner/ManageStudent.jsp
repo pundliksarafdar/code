@@ -226,7 +226,7 @@ function getSelectedStudentsToDelete(){
 			studentLgName = $('div#addStudentModal').find('#studentLoginName').val();
 			var divisionName ="";
 			divisionName = $('div#addStudentModal').find('#divisionName').val();
-			alert(divisionName);
+
 			getSelectedBatchesForStudent();		
 			if(!studentLgName || studentLgName.trim()==""){
 				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Student login name cannot be blank');

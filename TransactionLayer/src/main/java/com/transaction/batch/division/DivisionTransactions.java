@@ -59,4 +59,20 @@ public class DivisionTransactions {
 		 return divisionData.getDivisionId(divisionName);
 	 }
 	 
+	 public boolean updateClass(Division division) {
+		 DivisionDB db=new DivisionDB();
+		 if(!db.isDivisionExists(division)){
+			 
+			 db.updateDb(division);
+			 return false;
+		 }
+		return true;
+	}
+	 
+	 public boolean deletedivision(int classid) {
+		 DivisionDB db=new DivisionDB();
+		 db.deletedivision(classid);
+		 return true;
+	}
+	 
 }

@@ -440,4 +440,53 @@ public List<Batch> getbachesrelatedtosubject(String subjectid) {
 	return batchList;
 }
 
+public List<Batch> getbachesrelatedtoclass(int classid) {
+	Session session = null;
+	Transaction transaction = null;
+	List<Batch> batchList = null;
+	List<Batch> batches = new ArrayList<Batch>();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("from Batch where div_id=:div_id ");
+		query.setParameter("div_id", classid);		
+		batchList = query.list();
+		
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return batchList;
+}
+
+public boolean deletebatchrelatedtoclass(int classid) {
+	Session session = null;
+	Transaction transaction = null;
+	List<Batch> batchList = null;
+	List<Batch> batches = new ArrayList<Batch>();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("DELETE from Batch where div_id=:div_id");
+		query.setParameter("div_id", classid);
+		query.executeUpdate();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return true;
+}
+
 }

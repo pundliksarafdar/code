@@ -6,6 +6,12 @@
 .danger{
 	color:red;
 }
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
 </style>
 
 <script type="text/javascript">
@@ -396,7 +402,7 @@
 						data-toggle="dropdown" id="statebtn">
 						State <span class="caret"></span>
 					</button>
-					<ul class="dropdown-menu" role="menu" >
+					<ul class="dropdown-menu scrollable-menu" role="menu" >
 						<li value="Andhra Pradesh"><a href="#">Andhra Pradesh</a></li>
 						<li value="Arunachal Pradesh"><a href="#">Arunachal Pradesh</a><li>
 						<li value="Assam"><a href="#">Assam</a></li>

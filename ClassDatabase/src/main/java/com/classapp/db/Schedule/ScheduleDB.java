@@ -408,6 +408,27 @@ public boolean deleteschedulerelatedtoteachersubject(int teacherid,int sub_id) {
 	return true;
 	
 }
+public boolean deleteschedulerelatedtoclass(int classid) {
+	
+	Session session = null;
+	Transaction transaction = null;
+	List<Schedule> scheduleList = null;
+	Object object = new Object();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("delete FROM Schedule where div_id = :classid");
+		//Query query = session.createQuery("FROM Schedule where date = '2014-10-04' and class_id = 34");
+		query.setParameter("classid", classid);	
+		query.executeUpdate();
+		transaction.commit();
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	return true;
+	
+}
 
 public static void main(String[] args) {
 	ScheduleDB db = new ScheduleDB();

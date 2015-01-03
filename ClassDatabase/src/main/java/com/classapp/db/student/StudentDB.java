@@ -400,7 +400,7 @@ public class StudentDB {
 		boolean status=false;
 		Transaction transaction = null;
 		List list=null;
-		String queryString="select student_id from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4)";
+		String queryString="from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4)";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
@@ -477,4 +477,56 @@ public class StudentDB {
 		}
 		return 0;
 	}
+	
+	public List getStudentIDSrelatedtoBatch(String batchname) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List list=null;
+		String queryString="select student_id from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4)";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("batch_id1", batchname+",%");
+			query.setParameter("batch_id2","%,"+batchname+",%");	
+			query.setParameter("batch_id3", "%,"+batchname);
+			query.setParameter("batch_id4", batchname);
+				list=query.list();
+			if(list!=null)
+			{
+				return list;
+			}
+			
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return null;
+	}
+	
+	public boolean deletestudentrelatedtoclass(int classid) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List list=null;
+		String queryString="DELETE from Student where div_id=:div_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("div_id", classid);
+			query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+				e.printStackTrace();
+			}finally{
+				session.close();
+			}
+		return true;
+	}
+	
 }

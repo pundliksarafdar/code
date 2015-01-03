@@ -219,7 +219,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 			//printWriter.write(respObject.toString());
 			
-		}else if (Constants.ADD_STUDENT.equals(methodToCall)) {
+ 		}else if (Constants.ADD_STUDENT.equals(methodToCall)) {
 			Integer regId = null;
 			if (!req.getParameter("regId").equals("")) {
 				regId = Integer.parseInt(req.getParameter("regId"));
@@ -1468,6 +1468,35 @@ public class ClassOwnerServlet extends HttpServlet{
 	scheduleTransaction.deleteschedulerelatedsubject(Integer.parseInt(subjectid));
 	SubjectTransaction subjectTransaction=new SubjectTransaction();
 	subjectTransaction.deleteSubject(Integer.parseInt(subjectid));
+	respObject.addProperty(STATUS, "success");
+}else if("modifyclass".equals(methodToCall)){
+	String classname=req.getParameter("classname");
+	String stream=req.getParameter("stream");
+	String classid=req.getParameter("classid");
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	Division division=new Division();
+	division.setDivId(Integer.parseInt(classid));
+	division.setDivisionName(classname);
+	division.setStream(stream);
+	division.setInstitute_id(userBean.getRegId());
+	DivisionTransactions divisionTransactions=new DivisionTransactions();
+	if(divisionTransactions.updateClass(division)){
+		respObject.addProperty("updated", "false");
+	}else{
+		respObject.addProperty("updated", "true");
+	}
+	respObject.addProperty(STATUS, "success");
+
+}else if("deleteclass".equals(methodToCall)){
+	String classid=req.getParameter("classid");
+	ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
+	scheduleTransaction.deleteschedulerelatedtoclass(Integer.parseInt(classid));
+	StudentTransaction studentTransaction=new StudentTransaction();
+	studentTransaction.removebatchfromstudentlist(Integer.parseInt(classid));
+	BatchTransactions batchTransactions=new BatchTransactions();
+	batchTransactions.deletebatchrelatdtoclass(Integer.parseInt(classid));
+	DivisionTransactions divisionTransactions=new DivisionTransactions();
+	divisionTransactions.deletedivision(Integer.parseInt(classid));
 	respObject.addProperty(STATUS, "success");
 }
 		
