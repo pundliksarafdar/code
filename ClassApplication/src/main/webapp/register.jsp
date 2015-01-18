@@ -186,6 +186,16 @@
 			return true;
 	}
 	
+	function validateEmail(sEmail) {
+		var filter = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+		if (filter.test(sEmail)) {
+		return true;
+		}
+		else {
+		return false;
+		}
+		}
+	
 	function validateFields(){
 		var isValidated = true;
 		var regPhoneNumber = /^[0-9]+$/;
@@ -275,6 +285,13 @@
 			isValidated = false;
 			$("#country").addClass("has-error");
 		}
+		
+		if(!validateEmail($("#email").val())){
+			$("#email").parents(".form-group").prepend("<p class='danger'>Invalid Email ID. </p>");
+			isValidated = false;
+			$("#email").addClass("has-error");
+		}
+		
 		$("#rolebtn").focus();
 		return isValidated;
 	}
@@ -460,6 +477,13 @@
 			<label for="classname" class="col-sm-4 control-label">*Class Name</label>
 			<div class="col-sm-5">	
 				<input type="text" maxlength="20" class="form-control" name="registerBean.className" id="classname" required="required"  value='<s:property value="registerBean.className" />'/>
+			</div>
+		</div>
+		
+		<div class="form-group" id="divemail">
+			<label for="email" class="col-sm-4 control-label">*Email ID</label>
+			<div class="col-sm-5">	
+				<input type="text" maxlength="100" class="form-control" name="registerBean.email" id="email" required="required"  value='<s:property value="registerBean.email" />'/>
 			</div>
 		</div>
 		

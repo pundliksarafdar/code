@@ -67,6 +67,8 @@ public class LoginUser extends BaseAction{
 			userBean.setStartdate(gson.fromJson(userBeanJson, UserBean.class).getStartdate());
 			userBean.setEnddate(gson.fromJson(userBeanJson, UserBean.class).getEnddate());
 			userBean.setRegId(gson.fromJson(userBeanJson, UserBean.class).getRegId());
+			userBean.setActivationcode(gson.fromJson(userBeanJson, UserBean.class).getActivationcode());
+			userBean.setStatus(gson.fromJson(userBeanJson, UserBean.class).getStatus());
 			userBean.setLoginBean(loginBean);
 
 			
@@ -83,8 +85,14 @@ public class LoginUser extends BaseAction{
 			
 			if (null != userBean.getRole() && 0 != userBean.getRole()
 					&& 10 != userBean.getRole()) {
+				if(!userBean.getActivationcode().equals("")){
+					return Constants.ACTIVATION;
+				}else if(userBean.getStatus()!=null){
+					if(userBean.getStatus().equals("F"))
+					return Constants.RESET_PASSWORD;
+				}
 				if (null != userBean.getStartdate()) {
-
+					
 					if (null != userBean.getRole() && 9 < userBean.getRole()) {
 						return Constants.ACCESSBLOCKED;
 					}

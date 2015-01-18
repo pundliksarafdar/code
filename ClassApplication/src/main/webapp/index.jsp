@@ -99,6 +99,9 @@ ul{
 								<input type="button" class="btn btn-default submit" value="Login" /> <a
 									href="register" class="btn btn-default">Register</a>
 							</div>
+							<div>
+								<a href="forgot">Forgot Password</a>
+							</div>
 						</form>
 					</div>
 				</div>

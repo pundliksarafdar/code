@@ -48,4 +48,6 @@ public class Constants {
 	public static final String EXAM_DATA_LENGTH = "examDataLength";
 	public static final String QUESTION_DATA = "questionData";
 	public static String DIVISION_NAMES="divisionNames";
+	public static String ACTIVATION="activation";
+	public static String RESET_PASSWORD="resetpassword";
 }

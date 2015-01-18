@@ -16,7 +16,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -1498,9 +1507,100 @@ public class ClassOwnerServlet extends HttpServlet{
 	DivisionTransactions divisionTransactions=new DivisionTransactions();
 	divisionTransactions.deletedivision(Integer.parseInt(classid));
 	respObject.addProperty(STATUS, "success");
-}
-		
-		
+}else if("forgotpassword".equals(methodToCall)){
+	String email=req.getParameter("email");
+	String mobile=req.getParameter("mobile");
+	RegisterTransaction registerTransaction=new RegisterTransaction();
+	if(registerTransaction.isEmailAndMobileValid(email, mobile)){
+		String pass=registerTransaction.getPassword(email, mobile);
+	// Common variables
+	String to = email;//change accordingly
+
+    // Sender's email ID needs to be mentioned
+    String from = "mycorex2015@gmail.com";//change accordingly
+    final String username = "mycorex2015";//change accordingly
+    final String password = "corex2015";//change accordingly
+
+    // Assuming you are sending email through relay.jangosmtp.net
+    String host = "smtp.gmail.com";
+
+    Properties props = new Properties();
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.starttls.enable", "true");
+    props.put("mail.smtp.host", host);
+    props.put("mail.smtp.port", "587");
+
+    // Get the Session object.
+    Session session = Session.getInstance(props,
+    new javax.mail.Authenticator() {
+       protected PasswordAuthentication getPasswordAuthentication() {
+          return new PasswordAuthentication(username, password);
+       }
+    });
+
+    try {
+    	try {
+			
+    		InternetAddress internetAddress=new InternetAddress(to);
+        	internetAddress.validate();
+		} catch (AddressException e) {
+			// TODO: handle exception
+			System.out.println("Invalid Address");
+		}
+    	
+       // Create a default MimeMessage object.
+       Message message = new MimeMessage(session);
+
+       // Set From: header field of the header.
+       message.setFrom(new InternetAddress(from));
+
+       // Set To: header field of the header.
+       message.setRecipients(Message.RecipientType.TO,
+       InternetAddress.parse(to));
+
+       // Set Subject: header field
+       message.setSubject("Forgot Password");
+
+       // Now set the actual message
+       message.setText("Hello, Your Password is "
+          + pass);
+
+       	
+       // Send message
+     Transport.send(message);
+
+       System.out.println("Sent message successfully....");
+
+    } catch (MessagingException e) {
+    	System.out.println("Invalid Internet Address");
+          throw new RuntimeException(e);
+    }
+	
+	respObject.addProperty(STATUS, "success");
+	}else{
+		respObject.addProperty(STATUS, "invalid");
+	}
+}else if("activation".equals(methodToCall)){
+	String code=req.getParameter("code");
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	int regID=userBean.getRegId();
+	RegisterTransaction registerTransaction=new RegisterTransaction();
+	if(registerTransaction.ActivationCodeValidation(regID, code)){
+		registerTransaction.removeActivationCode(regID);
+		respObject.addProperty(STATUS, "success");	
+	}else{
+		respObject.addProperty(STATUS, "fail");
+	}
+	
+}else if("resetpassword".equals(methodToCall)){
+	String password=req.getParameter("password");
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	int regID=userBean.getRegId();
+	RegisterTransaction registerTransaction=new RegisterTransaction();
+	registerTransaction.resetpassword(regID, password);
+	respObject.addProperty(STATUS, "success");
+	
+}		
 		printWriter.write(respObject.toString());
 	}
 	

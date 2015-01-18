@@ -30,6 +30,8 @@
             <result name="accessblocked" type="tiles">accessblocked</result>
             <result name="error"  type="tiles">login</result>
             <result name="input" type="tiles">login</result>
+            <result name="activation" type="tiles">activation</result>
+             <result name="resetpassword" type="tiles">resetpassword</result>
       </action>
 
       <action name="logout" 
@@ -216,7 +218,11 @@
             method="execute">
             <result name="success" type="tiles">classowner.manageclass</result>
       </action>
-    
+
+	<action name="forgot">
+            <result name="success" type="tiles">forgotpassword</result>
+      </action>
+          
 	<action name="sysreq"> 
          <result type="tiles">systemrequirement</result>
       </action>

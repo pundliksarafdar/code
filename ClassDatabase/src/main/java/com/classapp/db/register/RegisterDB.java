@@ -245,4 +245,134 @@ public List getStudentInfo(List StudentIDs,int pagenumber, int resultPerPage) {
 		}
 		return subidList;
 	}
+
+	public boolean isEmailAndMobileValid(String email,String phone) {
+		Session session = null;
+		Transaction transaction = null;
+		List subidList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from RegisterBean where  email = :email and phone1=:phone");
+			query.setParameter("email", email);
+			query.setParameter("phone", phone);
+			subidList = query.list();
+			if(subidList.size()>0){
+				return true;
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}
+		return false;
+	}
+	
+	public boolean ActivationCodeValidation(int regID,String code) {
+		Session session = null;
+		Transaction transaction = null;
+		List subidList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from RegisterBean where  regId = :regId and activationcode=:activationcode");
+			query.setParameter("regId", regID);
+			query.setParameter("activationcode", code);
+			subidList = query.list();
+			if(subidList.size()>0){
+				return true;
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}
+		return false;
+	}
+	
+	public void removeActivationCode(int regID) {
+		Session session = null;
+		Transaction transaction = null;
+		List subidList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update RegisterBean set activationcode='' where  regId = :regId");
+			query.setParameter("regId", regID);
+			query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}
+	}
+	
+	public String getPassword(String email,String phone) {
+		Session session = null;
+		Transaction transaction = null;
+		List subidList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("select loginPass from RegisterBean where  email = :email and phone1=:phone");
+			query.setParameter("email", email);
+			query.setParameter("phone", phone);
+			subidList = query.list();
+			if(subidList.size()>0){
+				query = session.createQuery("update RegisterBean set status='F' where  email = :email and phone1=:phone");
+				query.setParameter("email", email);
+				query.setParameter("phone", phone);
+				query.executeUpdate();
+				transaction.commit();
+				return subidList.get(0).toString();
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}
+		return "";
+	}
+	
+	public void resetpassword(int regID,String password) {
+		Session session = null;
+		Transaction transaction = null;
+		List subidList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update RegisterBean set loginPass=:pass where  regId = :regId");
+			query.setParameter("regId", regID);
+			query.setParameter("pass", password);
+			query.executeUpdate();
+			query = session.createQuery("update RegisterBean set status='' where  regId = :regId");
+			query.setParameter("regId", regID);
+			query.executeUpdate();
+			transaction.commit();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}
+	}
 }

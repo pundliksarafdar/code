@@ -68,6 +68,15 @@
         </property> 
         <property name="div_id" type="java.lang.Integer">
             <column name="DIV_ID" not-null="false" unique="false" />
-        </property>        
+        </property>   
+        <property name="email" type="string">
+            <column name="email" length="100" not-null="false" unique="false" />
+        </property> 
+        <property name="activationcode" type="string">
+            <column name="Activation_code" length="100" not-null="false" unique="false" />
+        </property>
+        <property name="status" type="string">
+            <column name="status" length="1" not-null="false" unique="false" />
+        </property>     
         </class>
 </hibernate-mapping>

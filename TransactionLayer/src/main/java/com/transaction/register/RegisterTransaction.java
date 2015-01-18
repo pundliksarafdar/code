@@ -92,4 +92,29 @@ public class RegisterTransaction {
 			return status;
 		}
 	}
+	
+	public boolean isEmailAndMobileValid(String email,String phone) {
+		RegisterDB registerDB=new RegisterDB();
+		return registerDB.isEmailAndMobileValid(email, phone);
+	}
+	
+	public boolean ActivationCodeValidation(int regID,String code) {
+		RegisterDB registerDB=new RegisterDB();
+		return registerDB.ActivationCodeValidation(regID, code);
+		
+	}
+	
+	public void removeActivationCode(int regID) {
+		RegisterDB registerDB=new RegisterDB();
+		registerDB.removeActivationCode(regID);
+	}
+	public String getPassword(String email,String phone) {
+		RegisterDB registerDB=new RegisterDB();
+		return registerDB.getPassword(email, phone);
+		
+	}
+	public void resetpassword(int regID,String password) {
+		RegisterDB db=new RegisterDB();
+		db.resetpassword(regID, password);
+	}
 }

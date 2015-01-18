@@ -21,7 +21,21 @@ public class UserBean{
 	private String startdate;
 	private String enddate;
 	private Integer regId;
+	private String activationcode;
+	private String status;
 	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getActivationcode() {
+		return activationcode;
+	}
+	public void setActivationcode(String activationcode) {
+		this.activationcode = activationcode;
+	}
 	public String getDob() {
 		return dob;
 	}

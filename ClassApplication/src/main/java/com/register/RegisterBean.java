@@ -35,8 +35,28 @@ public class RegisterBean implements Serializable{
 	private String renewedDates;
 	private String daysLeft;
 	private Integer role;
+	private String email;
+	private String activationcode;
+	private String status;
 	
-	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getActivationcode() {
+		return activationcode;
+	}
+	public void setActivationcode(String activationcode) {
+		this.activationcode = activationcode;
+	}	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	public String getClassName() {
 		return className;
 	}
