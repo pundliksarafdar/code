@@ -52,12 +52,14 @@ function validateMobile(mobile){
 	
 $(document).ready(function(){
 	$("#successdiv").hide();
+	
 $("#submit").click(function(){
 	$("#emailspan").html("");
 	$("#mobilespan").html("");
 	var email=$("#email").val();
 	var phone=$("#mobile").val();
 	if(formvalidation()){
+		$("#submit").attr("disabled","disable");
 	$.ajax({
 		url: "classOwnerServlet",
 		data: {
@@ -72,11 +74,13 @@ $("#submit").click(function(){
 					  $("#forgotdiv").hide();
 					  $("#successdiv").show();
 				  }else{
+					  $("#submit").removeAttr("disabled");
 					  alert("Invalid Email/Mobile No");
 				  }
 			   	},
 			   error:function(e){
-				   errorCallback(e);
+				   $("#submit").removeAttr("disabled");
+				   
 			   }
 	});
 	}

@@ -3,11 +3,12 @@ package com.classapp.db.login;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
+import com.classapp.db.register.AllUserId;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.user.UserBean;
 import com.classapp.persistence.HibernateUtil;
@@ -61,4 +62,17 @@ public class LoginCheck implements Serializable{
 		}
 		
 	}
+	
+	public void updateIdForUser(Integer regId,String googleId, String deviceId){
+		Session session = HibernateUtil.getSessionfactory().openSession();
+		Transaction transaction = session.beginTransaction();
+		AllUserId allUserId = new AllUserId();
+		allUserId.setDeviceId(deviceId);
+		allUserId.setGoogleId(googleId);
+		allUserId.setRegId(regId);
+		//Query query = session.createQuery("from AllUserId where regId = :regId");
+		session.saveOrUpdate(allUserId);
+		transaction.commit();
+	}
+		
 }

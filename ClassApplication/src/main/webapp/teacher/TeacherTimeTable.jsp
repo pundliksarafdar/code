@@ -80,10 +80,11 @@ Select Class
 <option>Select Class</option>
 <%
 int counter=0;
+if(list!=null){
 while(list.size()>counter){ %>
 <option value="<%=list.get(counter).getRegId()%>"><%=list.get(counter).getClassName() %></option>
 <%counter++;
-} %>
+} }%>
 </select>
 </div>
 

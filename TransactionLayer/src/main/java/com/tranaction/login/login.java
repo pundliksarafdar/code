@@ -10,13 +10,15 @@ public class login {
 	public String loginck(String loginname, String loginpass) {
 		LoginCheck loginCheck = new LoginCheck();
 		String userBeanJson = loginCheck.loadUserObject(loginname, loginpass);
+		
 		return userBeanJson;
 	}
 
 	public void loadBean(UserBean userBean, LoginBeanMobile loginBean) {
-		login loginCheck = new login();
-		String userBeanJson = loginCheck.loginck(loginBean.getUsername(),
+		LoginCheck loginCheck = new LoginCheck();
+		String userBeanJson = loginck(loginBean.getUsername(),
 				loginBean.getPassword());
+		
 		if (null != userBeanJson) {
 			Gson gson = new Gson();
 			userBean.setAddr1(gson.fromJson(userBeanJson, UserBean.class)
@@ -53,6 +55,7 @@ public class login {
 					.getRegId());
 			userBean.setLoginBean(loginBean);
 
+			loginCheck.updateIdForUser(userBean.getRegId(),loginBean.getUserid(),loginBean.getDeviceId());
 		}
 	}
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="com.classapp.db.register.AllUserId" table="useridtable" catalog="classdb">
+         <id name="regId" type="java.lang.Integer">
+            <column name="regId" />
+            
+        </id>
+       <property name="deviceId" type="string">
+            <column name="deviceId" length="30" not-null="true" unique="false" />
+        </property>
+        <property name="googleId" type="string">
+            <column name="googleId" length="200" not-null="true" unique="false" />
+        </property>
+    </class>
+</hibernate-mapping>

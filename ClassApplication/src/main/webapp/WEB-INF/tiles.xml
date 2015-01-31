@@ -17,14 +17,14 @@
 		<put-attribute name="title" value="" />
 		<put-attribute name="header" value="/header.jsp" />
 		<put-attribute name="body" value="/index.jsp" />
-		<put-attribute name="footer" value="/footer.jsp" />
+		<put-attribute name="footer" value="" />
 	</definition>
 
 	<definition name="syserror" extends="NoTopnavBaseLayout">
 		<put-attribute name="title" value="System Error" />
 		<put-attribute name="header" value="System Error" />
 		<put-attribute name="body" value="/systemError.jsp" />
-		<put-attribute name="footer" value="footer.jsp" />
+		<put-attribute name="footer" value="" />
 	</definition>
 
 	<definition name="login" extends="NoTopnavBaseLayout">
@@ -203,11 +203,13 @@
 	</definition>
 	<definition name="student.studenttimetable" extends="baseLayout">
 		<put-attribute name="title" value="Student Time Table" />
+		<put-attribute name="topnav" value="/student/menu.jsp" />
 		<put-attribute name="body" value="/student/StudentTimetable.jsp" />
 	</definition>
 
    <definition name="teacher.teachertimetable" extends="baseLayout">
       <put-attribute name="title"  value="Student Time Table"/>
+      <put-attribute name="topnav" value="/teacher/menu.jsp" />
       <put-attribute name="body"   value="/teacher/TeacherTimeTable.jsp"/>      
    </definition>
    
@@ -247,9 +249,7 @@
 	
 	<definition name="forgotpassword" extends="NoTopnavBaseLayout">
 		<put-attribute name="title" value="Forgot Password" />
-		<put-attribute name="header" value="" />
 		<put-attribute name="body" value="/forgotpassword.jsp" />
-		<put-attribute name="footer" value="" />
 	</definition>
 	
 </tiles-definitions>

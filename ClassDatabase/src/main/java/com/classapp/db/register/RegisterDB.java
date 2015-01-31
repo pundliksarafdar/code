@@ -375,4 +375,32 @@ public List getStudentInfo(List StudentIDs,int pagenumber, int resultPerPage) {
 			
 		}
 	}
+	
+	public boolean isEmailExists(String email) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> list = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from RegisterBean where  email in :email");
+			query.setParameter("email", email);
+			list = query.list();
+			if(list!=null)
+			{
+				if(list.size()>0){
+					return true;
+				}else{
+					return false;
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}
+		return true;
+	}
 }

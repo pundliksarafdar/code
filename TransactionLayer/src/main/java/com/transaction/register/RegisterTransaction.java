@@ -80,14 +80,16 @@ public class RegisterTransaction {
 		return registerDB.updateUser(registerBean, regId);
 	}
 	
-	public String registerUser(String registerRequest,String username,String mobileNo){
+	public String registerUser(String registerRequest,String username,String mobileNo,String email){
 		RegisterUser registerUser = new RegisterUser();
 		
 		if (isUserExits(username)) {
 			return "User already registered";
 		} else if (isMobileExits(mobileNo)) {
 			return "Mobile number already registered";
-		} else {
+		}else if (isEmailExists(email)) {
+			return "Email ID already registered";	
+		}else {
 			String status = registerUser.registerUser(registerRequest);
 			return status;
 		}
@@ -116,5 +118,10 @@ public class RegisterTransaction {
 	public void resetpassword(int regID,String password) {
 		RegisterDB db=new RegisterDB();
 		db.resetpassword(regID, password);
+	}
+	public boolean isEmailExists(String email) {
+		RegisterDB db=new RegisterDB();
+		return db.isEmailExists(email);
+		
 	}
 }

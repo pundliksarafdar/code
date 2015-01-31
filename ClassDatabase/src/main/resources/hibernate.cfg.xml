@@ -11,7 +11,7 @@
         <property name="hibernate.connection.username">admin7wiv5Ys</property>
         <property name="hibernate.connection.password">ReVSpsgcVdXl</property>
         <property name="hibernate.connection.url">jdbc:mysql://127.6.14.2:3306/classdb</property>
-         	 
+        
         <!-- comment for openshiftdeployment  -->
          <!-- 
         <property name="hibernate.connection.username">root</property>
@@ -33,9 +33,10 @@
         <mapping resource="com/classapp/db/Schedule/Schedule.hbmmap.xml"></mapping>
         <mapping resource="com/classapp/db/Notes/Notes.hbmmap.xml"></mapping>
         <!-- <mapping resource="com/classapp/db/division/ClassDivision.hbmmap.xml"></mapping> -->
-	  <mapping resource="com/classapp/db/subject/subjects.hbmmap.xml"></mapping>
-	  <mapping resource="com/classapp/db/student/Student.hbmmap.xml"></mapping>
- <mapping resource="com/classapp/db/exams/exams.hbmmap.xml"></mapping>
+	  	<mapping resource="com/classapp/db/subject/subjects.hbmmap.xml"></mapping>
+	  	<mapping resource="com/classapp/db/student/Student.hbmmap.xml"></mapping>
+ 		<mapping resource="com/classapp/db/exams/exams.hbmmap.xml"></mapping>
+ 		<mapping resource="com/classapp/db/register/alluserid.hbmmap.xml"></mapping>
        <!--  <mapping resource="com/classapp/db/classwithsubjects/ClassWithSubjects.hbmmap.xml"></mapping> --> 
     </session-factory>
 </hibernate-configuration>

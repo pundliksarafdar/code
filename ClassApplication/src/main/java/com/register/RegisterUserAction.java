@@ -2,6 +2,7 @@ package com.register;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Properties;
 
@@ -51,10 +52,11 @@ public class RegisterUserAction extends BaseAction{
 		registerBean.setRegistrationDate(formatedDate);
 		Long activationcode=new Date().getTime();
 		registerBean.setActivationcode(activationcode.toString());
+		registerBean.setStartDate(dateFormat.format(new Date()));
 		String registerReq = gson.toJson(registerBean);
 		
 		RegisterTransaction registerTransaction = new RegisterTransaction();
-		String status =  registerTransaction.registerUser(registerReq,registerBean.getLoginName(), registerBean.getPhone1());
+		String status =  registerTransaction.registerUser(registerReq,registerBean.getLoginName(), registerBean.getPhone1(),registerBean.getEmail());
 		System.out.println("In Register user action - Register User Status..."+status);
 		if("success".equals(status)){
 			sendEmail(registerBean);
