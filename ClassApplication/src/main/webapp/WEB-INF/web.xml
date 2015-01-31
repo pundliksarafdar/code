@@ -29,6 +29,10 @@
   	<servlet-name>ClassOwnerServlet</servlet-name>
   	<servlet-class>com.admin.misc.ClassOwnerServlet</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>NotificationServlet</servlet-name>
+  	<servlet-class>com.admin.misc.NotificationServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>AdminAjaxServlet</servlet-name>
     <url-pattern>/admajxsrvlt</url-pattern>
@@ -36,6 +40,10 @@
   <servlet-mapping>
     <servlet-name>ClassOwnerServlet</servlet-name>
     <url-pattern>/classOwnerServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>NotificationServlet</servlet-name>
+    <url-pattern>/notificationServlet</url-pattern>
   </servlet-mapping>
     
   <context-param>

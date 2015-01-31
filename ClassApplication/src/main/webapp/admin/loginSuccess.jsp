@@ -25,6 +25,22 @@ $(document).ready(function(){
 	
 	
 	$('a').tooltip({'html':true});
+	
+	$("#sendMessage").click(function(){
+		var messageToSend = $("#message").val();
+		
+		$.ajax({
+			   url: "notificationServlet",
+			   data: {
+			    	 methodToCall: "notifyall",
+			    	 message:messageToSend
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   		console.log(e);
+			   		}
+			});		
+	});
 });
 
 function acceptClass(regId,that){
@@ -171,4 +187,10 @@ function acceptClass(regId,that){
 	<input type="hidden" name="classSearchForm.currentPage" id="currentPage" value="<%=currentPage%>">
 	<input type="hidden" name="classSearchForm.task" class="task" value="next">
 </form>
+
+<div>
+<h3>Notify All</h3>
+<input type="text" placeholder="Message" id="message"/>
+<a href="#" class="btn btn-default" id="sendMessage">Notify</a>
+</div>
 </html>

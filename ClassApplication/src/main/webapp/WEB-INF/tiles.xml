@@ -64,14 +64,14 @@
       <put-attribute name="title"  value="Admin"/>
       <put-attribute name="header"  value="/header.jsp"/>
       <put-attribute name="topnav"  value="/teacher/menu.jsp"/>
-      <put-attribute name="body"   value="/admin/loginSuccess.jsp"/>      
+      <put-attribute name="body"   value="/loginSuccess.jsp"/>      
    </definition>
 
    <definition name="student.loginsuccess" extends="baseLayout">
       <put-attribute name="title"  value="Student"/>
       <put-attribute name="header"  value="/header.jsp"/>
       <put-attribute name="topnav"  value="/student/menu.jsp"/>
-      <put-attribute name="body"   value="/admin/loginSuccess.jsp"/>      
+      <put-attribute name="body"   value="/loginSuccess.jsp"/>      
    </definition>
 
 	<definition name="unaccepted" extends="NoTopnavBaseLayout">
