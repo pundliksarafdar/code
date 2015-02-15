@@ -58,6 +58,7 @@ html,body {
 <script src="js/moment.min.js"></script>
 <script src="js/bootstrap-datetimepicker.min.js"></script>
 <script src="js/jquery.autocomplete.js"></script>
+<script src="js/global.js"></script>
 </head>
 <body>
 

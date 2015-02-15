@@ -13,7 +13,7 @@
         <property name="hibernate.connection.url">jdbc:mysql://127.6.14.2:3306/classdb</property>
         
         <!-- comment for openshiftdeployment  -->
-         <!-- 
+        <!-- 
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">gaurav26</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/classdb</property>
@@ -37,6 +37,7 @@
 	  	<mapping resource="com/classapp/db/student/Student.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/exams/exams.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/register/alluserid.hbmmap.xml"></mapping>
+ 		<mapping resource="com/classapp/db/feedback/Feedback.hbmmap.xml"></mapping>
        <!--  <mapping resource="com/classapp/db/classwithsubjects/ClassWithSubjects.hbmmap.xml"></mapping> --> 
     </session-factory>
 </hibernate-configuration>

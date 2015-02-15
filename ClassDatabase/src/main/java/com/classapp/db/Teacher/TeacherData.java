@@ -1,5 +1,6 @@
 package com.classapp.db.Teacher;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TeacherData {
@@ -19,8 +20,15 @@ TeacherDB teacherDB;
 		
 	}
 	public List getSubjectTeacher(String subid,int regId) {
-		List list=teacherDB.getSubjectTeacher(subid,regId);
-		return list;		
+		List<Teacher> list=teacherDB.getSubjectTeacher(subid,regId);
+		List teacherids=new ArrayList();
+		int index=0;
+		while (list.size()>index) {
+			
+			teacherids.add(list.get(index).getUser_id());
+			index++;	
+		}
+		return teacherids;		
 	}
 	
 	public Teacher getTeacher(int user_id, int class_id){		

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.Feedbacks.Feedback" table="feedback" catalog="classdb">
+    <id name="feedid" type="int">
+            <column name="feed_id" />
+            <generator class="increment" />
+        </id>
+        <property name="name" type="string">
+            <column name="name"/>
+        </property>
+        <property name="email" type="string">
+            <column name="email"/>
+        </property>
+        <property name="feedback" type="string">
+            <column name="feedback"/>
+        </property>
+    </class>
+</hibernate-mapping>

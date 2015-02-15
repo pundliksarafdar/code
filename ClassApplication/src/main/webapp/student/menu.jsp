@@ -55,7 +55,7 @@
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-phone-alt"></i> <b class="caret"></b></a>
         <ul class="dropdown-menu">
     	  <li><a href="#" data-toggle="modal" data-target="#aboutUsModal">About Us</a></li>
-		  <li><a href="#" data-toggle="modal" data-target="#contactUsModal">Contact Us</a></li>
+		  <li><a href="#" data-toggle="modal" data-target="#contactUsModal" id="contactuslink">Contact Us</a></li>
 	    </ul>
       </li>
       <li class="dropdown">

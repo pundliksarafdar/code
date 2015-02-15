@@ -861,8 +861,8 @@
         <div class="modal-body" id="">
         	<div class="error alert alert-danger"></div>
 			<div class="form-group" id="">
-			 <input type="tel" class="form-control" id="teacherID" placeholder="Enter Teacher ID" name="teacherID">
-			
+			 <input type="tel" class="form-control" id="teacherID" placeholder="Enter Teacher ID" name="teacherID"><br>
+			 <input type="text" class="form-control" id="suffix" placeholder="Suffix" name="suffix" maxlength="5" rel="tooltip" title="This is optional field.You can use this field when you have more than one teachers with same name. eg Amitab Bachhan JR. ">
 				<br>
 				
 				<jsp:setProperty name="subjectHelperBean" property="class_id" value="<%=user.getRegId() %>"/>
@@ -1121,7 +1121,43 @@
 				<h4 class="modal-title" id="myModalLabel">Contact Us</h4>
 			</div>
 			<div class="modal-body">
-				Contact Us
+			<div class="container">
+			<div class="col-sm-5">
+			<blockquote>Thank you for your interest in us. We look forward to your suggestions and feedback. If you have any query you can contact us.
+			<br><img alt="" src="/images/contact.jpg" width="50px">  9766120685</blockquote>
+			</div>
+			
+			</div>
+			<div class="container">
+			<h5><strong>Suggestion/Feedback:</strong></h5><br>
+			<form class="form-horizontal" role="form" action="javascript:void(0);" id="form">
+		<div class="form-group has-error">
+			<label for="Name" class="col-sm-2 control-label">Name : </label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" name="Name" placeholder="Enter your Name" id="feedbackname"/><br>
+				<span name="namespan" id="namespan"></span>
+			</div>
+		</div>
+		<div class="form-group has-error">
+			<label for="Email" class="col-sm-2 control-label">Email : </label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" name="Email" placeholder="Enter your Email" id="feedbackemail"/><br>
+				<span id="emailspan"></span>
+			</div>
+		</div>
+		<div class="form-group has-error">
+			<label for="comments" class="col-sm-2 control-label">Comments : </label>
+			<div class="col-sm-3">
+				<textarea type="text" class="form-control" name="comments" placeholder="Enter comments here" maxlength="100" id="comment"></textarea>
+				<span id="commentspan"></span>
+			</div>
+		</div>
+		<div class="col-sm-10 col-sm-offset-2">
+			<input type="submit" class="btn btn-success" value="Submit" id="submitfeedback"/>
+		</div>
+	</form>
+	<div id="feedbacksuccess" style="display: none;">Thanks For Your Valuable Suggestion/Feedback.</div>
+			</div>
 			</div>
 		</div>
 	</div>

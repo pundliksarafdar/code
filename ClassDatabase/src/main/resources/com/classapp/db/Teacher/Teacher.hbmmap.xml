@@ -11,6 +11,9 @@
 		</composite-id>
 		<property name="sub_ids" type="string">
             <column name="sub_ids" length="100" not-null="false" unique="false" />
+        </property> 
+        <property name="suffix" type="string">
+            <column name="suffix" length="5"/>
         </property>  
      </class>
 </hibernate-mapping>

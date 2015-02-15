@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+import com.classapp.db.Feedbacks.Feedback;
 /*import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -58,6 +59,7 @@ import com.helper.BatchHelperBean;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
+import com.transaction.feedback.feedbackTransaction;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.schedule.ScheduleTransaction;
 import com.transaction.teacher.TeaherTransaction;
@@ -464,6 +466,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				}else if("addTeacher".equals(methodToCall)){
 			Integer regId = null;
 			String subjects=req.getParameter("subjects");
+			String suffix=req.getParameter("suffix");
 			try{
 				regId = Integer.parseInt(req.getParameter("regId"));
 			}catch(Exception e){
@@ -479,7 +482,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 			String teacherID = req.getParameter("teacherID");
 			TeaherTransaction teaherTransaction=new TeaherTransaction();
-			String stat=teaherTransaction.addTeacher(teacherID,regId,subjects);
+			String stat=teaherTransaction.addTeacher(teacherID,regId,subjects,suffix);
 			if("added".equals(stat))
 			{
 				respObject.addProperty(STATUS, "success");
@@ -561,15 +564,39 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 			String subname=req.getParameter("subname");
 			TeaherTransaction teaherTransaction=new TeaherTransaction();
-			List<Integer> list=teaherTransaction.getSubjectTeacher(subname,regId);
+			List<Teacher> list=teaherTransaction.getSubjectTeacher(subname,regId);
+			List teacheridlist=new ArrayList();
+			int index=0;
+			while (list.size()>index) {
+				
+				teacheridlist.add(list.get(index).getUser_id());
+				index++;	
+			}
 			String firstname="";
 			String lastname="";
 			String teacherid="";
+			String suffixs="";
 			if(list!=null && list.size()>0)
 			{
 			RegisterTransaction registerTransaction=new RegisterTransaction();
-			List<RegisterBean> teacherNames=registerTransaction.getTeacherName(list);
+			List<RegisterBean> teacherNames=registerTransaction.getTeacherName(teacheridlist);
 			int i=0;
+			for ( i = 0; i < list.size(); i++) {
+				if(i==0){
+					if(list.get(i).getSuffix()==null){
+						suffixs="";
+					}else{
+					suffixs=list.get(i).getSuffix();
+					}
+				}else{
+					if(list.get(i).getSuffix()==null){
+						suffixs=suffixs+","+"";
+					}else{
+					suffixs=suffixs+","+list.get(i).getSuffix();
+					}
+				}
+				
+			}
 			
 			for(i=0;i<teacherNames.size();i++)
 			{
@@ -604,6 +631,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			respObject.addProperty("firstname", firstname);
 			respObject.addProperty("lastname", lastname);
 			respObject.addProperty("teacherid", teacherid);
+			respObject.addProperty("suffix", suffixs);
 			respObject.addProperty(STATUS, "success");
 			
 			
@@ -834,7 +862,10 @@ public class ClassOwnerServlet extends HttpServlet{
 			}else{
 				regId = userBean.getRegId();
 			}
-			
+			int studentclass=0;
+			if(userBean.getRole()==3){
+				studentclass=Integer.parseInt(req.getParameter("classid"));
+			}
 			String batchname=	req.getParameter("batchname");
 			String date=req.getParameter("date");
 			String dateString[]=date.split("/");
@@ -845,6 +876,13 @@ public class ClassOwnerServlet extends HttpServlet{
 			List<String> subjectList= subjectTransaction.getScheduleSubject(list);
 			RegisterTransaction registerTransaction=new RegisterTransaction();
 			List<RegisterBean> teacherlist=registerTransaction.getScheduleTeacher(list);
+			TeacherTransaction teacherTransaction=new TeacherTransaction();
+			List<String> prefixs=new ArrayList<String>();
+			if(userBean.getRole()==3){
+				prefixs=teacherTransaction.getTeachersPrefix(list, studentclass);
+			}else{
+				prefixs=teacherTransaction.getTeachersPrefix(list, regId);
+			}
 			
 			String subjects="";
 			String tfirstname="";
@@ -852,7 +890,19 @@ public class ClassOwnerServlet extends HttpServlet{
 			String starttime="";
 			String endtime="";
 			String dates="";
+			String prefix="";
+			
 			int counter=0;
+			
+			while (prefixs.size()>counter) {
+				if (counter==0) {
+					prefix=prefixs.get(counter);
+				}else{
+					prefix=prefix+","+prefixs.get(counter);
+				}
+				counter++;
+			}
+			counter=0;
 			while(counter<list.size())
 			{
 				int starthour=list.get(counter).getStart_time().getHours();
@@ -888,6 +938,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			respObject.addProperty("starttime", starttime);
 			respObject.addProperty("endtime", endtime);
 			respObject.addProperty("dates", dates);
+			respObject.addProperty("prefix", prefix);
 			respObject.addProperty(STATUS, "success");
 		}else if("geteditschedule".equals(methodToCall)){
 			Integer regId = null;
@@ -937,7 +988,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			List<RegisterBean> teacherlist=registerTransaction.getScheduleTeacher(list);
 			TeaherTransaction teaherTransaction=new TeaherTransaction();
 			List<List<RegisterBean>> teacherlists=teaherTransaction.getScheduleTeacher(list, regId);
-			
+			List<List<String>> suffix=teaherTransaction.getScheduleTeacherSuffix(list, regId);
 			String subjects="";
 			String tfirstname="";
 			String tlastname="";
@@ -952,6 +1003,8 @@ public class ClassOwnerServlet extends HttpServlet{
 			String alllastnames="";
 			String allIds="";
 			String scheduleids="";
+			String teacherssuffix="";
+			String allSuffix="";
 			int counter=0;
 			while(counter<list.size())
 			{
@@ -964,10 +1017,12 @@ public class ClassOwnerServlet extends HttpServlet{
 					TeacherFirstNames=teacherlists.get(counter).get(innercounter).getFname();
 					TeacherlastNames=teacherlists.get(counter).get(innercounter).getLname();
 					Teacherids=teacherlists.get(counter).get(innercounter).getRegId()+"";
+					teacherssuffix=suffix.get(counter).get(innercounter);
 				}else{
 					TeacherFirstNames=TeacherFirstNames+","+teacherlists.get(counter).get(innercounter).getFname();
 					TeacherlastNames=TeacherlastNames+","+teacherlists.get(counter).get(innercounter).getLname();
 					Teacherids=Teacherids+","+teacherlists.get(counter).get(innercounter).getRegId();
+					teacherssuffix=teacherssuffix+","+suffix.get(counter).get(innercounter);
 				}
 				innercounter++;
 			}
@@ -991,7 +1046,7 @@ public class ClassOwnerServlet extends HttpServlet{
 					alllastnames=TeacherlastNames;
 					allIds=Teacherids;
 					scheduleids=list.get(counter).getSchedule_id()+"";
-					
+					allSuffix=teacherssuffix;
 				}else{
 					subjects=subjects+","+subjectList.get(counter);
 					tfirstname=tfirstname+","+teacherlist.get(counter).getFname();
@@ -1004,6 +1059,7 @@ public class ClassOwnerServlet extends HttpServlet{
 					alllastnames=alllastnames+"/"+TeacherlastNames;
 					allIds=allIds+"/"+Teacherids;
 					scheduleids=scheduleids+","+list.get(counter).getSchedule_id()+"";
+					allSuffix=allSuffix+"/"+teacherssuffix;
 				}
 				
 				counter++;
@@ -1020,6 +1076,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			respObject.addProperty("allteachersfirstname", allFirstnames);
 			respObject.addProperty("allteacherlastname", alllastnames);
 			respObject.addProperty("allteacherids", allIds);
+			respObject.addProperty("allSuffix", allSuffix);
 			respObject.addProperty(STATUS, "success");
 		
 			respObject.addProperty("Batchsubjects", subjectnames);
@@ -1598,6 +1655,18 @@ public class ClassOwnerServlet extends HttpServlet{
 	int regID=userBean.getRegId();
 	RegisterTransaction registerTransaction=new RegisterTransaction();
 	registerTransaction.resetpassword(regID, password);
+	respObject.addProperty(STATUS, "success");
+	
+}else if("addfeedback".equals(methodToCall)){
+	String name=req.getParameter("name");
+	String email=req.getParameter("email");
+	String comment=req.getParameter("comment");
+	Feedback feedback=new Feedback();
+	feedback.setEmail(email);
+	feedback.setFeedback(comment);
+	feedback.setName(name);
+	feedbackTransaction feedbackTransaction=new feedbackTransaction();
+	feedbackTransaction.addFeedback(feedback);
 	respObject.addProperty(STATUS, "success");
 	
 }		

@@ -147,14 +147,15 @@ var allAjax = {
 			   }
 		});
 	},
-	addTeacher :function(regId,subjects,teacherID,successCallback,errorCallback){
+	addTeacher :function(regId,subjects,teacherID,suffix,successCallback,errorCallback){
 		$.ajax({
 			   url: "classOwnerServlet",
 			   data: {
 			    	 methodToCall: "addTeacher",
 					 regId:regId,
 					 teacherID:teacherID,
-					 subjects:subjects
+					 subjects:subjects,
+					 suffix:suffix
 			   		},
 			   type:"POST",
 			   success:function(e){

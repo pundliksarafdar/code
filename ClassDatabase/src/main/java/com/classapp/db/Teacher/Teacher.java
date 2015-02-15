@@ -5,6 +5,13 @@ import java.io.Serializable;
 public class Teacher implements Serializable{
 int user_id;
 int class_id;
+String suffix;
+public String getSuffix() {
+	return suffix;
+}
+public void setSuffix(String suffix) {
+	this.suffix = suffix;
+}
 String sub_ids;
 public String getSub_ids() {
 	return sub_ids;
