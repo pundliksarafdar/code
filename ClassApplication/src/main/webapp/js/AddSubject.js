@@ -40,7 +40,7 @@ var batchName;
 $(document).ready(function(){
 	
 	/*$('div#abc1').find('#subjectName').autocomplete("AutoComplete.jsp");*/
-	
+	 $('input[title]').tooltip({placement:'bottom'});
 	
 	$('div#addBatchModal').on('click','button#btn-add',function(){
 		batchName = "";
@@ -118,6 +118,7 @@ $(document).ready(function(){
 	$('div#addTeacherModal').on('click','button#btn-add',function(){
 		subjectsname="";
 		batchName = "";
+		var suffix=$("#suffix").val();
 		$('div#addTeacherModal .error').html('');
 		$('div#addTeacherModal .error').hide();
 		var regId;
@@ -138,7 +139,7 @@ $(document).ready(function(){
 			}else{
 			$('div#addTeacherModal .progress').removeClass('hide');
 			$('.add').addClass('hide');
-			allAjax.addTeacher('',subjectsname,teacherID,successCallbackAddTeacher,errorCallbackaddTeacher);
+			allAjax.addTeacher('',subjectsname,teacherID,suffix,successCallbackAddTeacher,errorCallbackaddTeacher);
 		}
 	});
 	

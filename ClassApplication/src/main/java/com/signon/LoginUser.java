@@ -1,14 +1,20 @@
 package com.signon;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.classapp.db.login.LoginCheck;
+import com.classapp.db.register.RegisterBean;
+import com.classapp.db.student.Student;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.google.gson.Gson;
 import com.tranaction.login.login;
+import com.transaction.register.RegisterTransaction;
+import com.transaction.student.StudentTransaction;
+import com.transaction.teacher.TeacherTransaction;
 import com.user.UserBean;
 
 public class LoginUser extends BaseAction{
@@ -30,7 +36,7 @@ public class LoginUser extends BaseAction{
 		String forward = null;
 		if(null != loginBean){
 			userBean.setLoginBean(loginBean);
-		    forward = loadBean(userBean, loginBean);
+		    forward = loadBean(userBean, loginBean,response,session);
 		}if(null == userBean.getRegId()){
 			addActionError("Invalid Username/Password");
 			forward = ERROR;
@@ -38,7 +44,7 @@ public class LoginUser extends BaseAction{
 			loginBean = userBean.getLoginBean();
 			if(null != loginBean){
 				userBean.setLoginBean(loginBean);
-			    forward = loadBean(userBean, loginBean);
+			    forward = loadBean(userBean, loginBean,response,session);
 			}else{
 				forward = ERROR;
 			}
@@ -46,7 +52,7 @@ public class LoginUser extends BaseAction{
 		return forward;
 	}
 	
-	public String loadBean(UserBean userBean,LoginBean loginBean){
+	public String loadBean(UserBean userBean,LoginBean loginBean,HttpServletResponse response,Map<String, Object> session){
 		login loginCheck=new login();
 		String userBeanJson = loginCheck.loginck(loginBean.getLoginname(), loginBean.getLoginpass());
 		if(null!=userBeanJson){
@@ -103,9 +109,19 @@ public class LoginUser extends BaseAction{
 						return Constants.CLASSOWNER;
 					} else if ((null != userBean.getRole())
 							&& 2 == userBean.getRole()) {
+						TeacherTransaction teacherTransaction=new TeacherTransaction();
+						List classids=teacherTransaction.getTeachersClass(userBean.getRegId());
+						RegisterTransaction registerTransaction=new RegisterTransaction();
+						List<RegisterBean> classbeanes=registerTransaction.getTeachersclassNames(classids);
+						session.put("classes", classbeanes);
 						return Constants.CLASSTEACHER;
 					} else if ((null != userBean.getRole())
 							&& 3 == userBean.getRole()) {
+						StudentTransaction studentTransaction=new StudentTransaction();
+						List<Student> list=studentTransaction.getStudent(userBean.getRegId());
+						RegisterTransaction registerTransaction=new RegisterTransaction();
+						List<RegisterBean> beans= registerTransaction.getclassNames(list);
+						session.put("classes", beans);
 						return Constants.CLASSSTUDENT;
 					} else {
 						return ERROR;

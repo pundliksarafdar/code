@@ -67,7 +67,7 @@ public class RegisterUserAction extends BaseAction{
 			String forward = "success";
 			if(null != loginBean){
 				userBean.setLoginBean(loginBean);
-			    loginUser.loadBean(userBean, loginBean);
+			    loginUser.loadBean(userBean, loginBean,response,session);
 			}
 			
 			return forward;

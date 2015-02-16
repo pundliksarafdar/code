@@ -861,8 +861,8 @@
         <div class="modal-body" id="">
         	<div class="error alert alert-danger"></div>
 			<div class="form-group" id="">
-			 <input type="tel" class="form-control" id="teacherID" placeholder="Enter Teacher ID" name="teacherID">
-			
+			 <input type="tel" class="form-control" id="teacherID" placeholder="Enter Teacher ID" name="teacherID"><br>
+			 <input type="text" class="form-control" id="suffix" placeholder="Suffix" name="suffix" maxlength="5" rel="tooltip" title="This is optional field.You can use this field when you have more than one teachers with same name. eg Amitab Bachhan JR. ">
 				<br>
 				
 				<jsp:setProperty name="subjectHelperBean" property="class_id" value="<%=user.getRegId() %>"/>

@@ -24,7 +24,7 @@ public class TeacherTransaction {
 		teacherDB = new TeacherDB();
 	}
 
-	public String addTeacher(String teacherLoginName, int regID, String subjects) {
+/*	public String addTeacher(String teacherLoginName, int regID, String subjects) {
 		if (teacherDB.isTeacherRegistered(teacherLoginName)) {
 			if (!teacherDB.isTeacherExists(teacherLoginName, regID)) {
 				teacherDB.add(teacherLoginName, regID, subjects);
@@ -38,7 +38,7 @@ public class TeacherTransaction {
 			return "false";
 		}
 
-	}
+	}*/
 
 	public boolean updateTeacher(Teacher teacher) {
 		Teacher oldteacher = teacherDB.getTeacher(teacher.getUser_id(),
@@ -89,8 +89,15 @@ public class TeacherTransaction {
 	public List getSubjectTeacher(String subid, int regId) {
 
 		TeacherDB teacherDB = new TeacherDB();
-		List list = teacherDB.getSubjectTeacher(subid, regId);
-		return list;
+		List<Teacher> list = teacherDB.getSubjectTeacher(subid, regId);
+		List teacherids=new ArrayList();
+		int index=0;
+		while (list.size()>index) {
+			
+			teacherids.add(list.get(index).getUser_id());
+			index++;	
+		}
+		return teacherids;
 
 	}
 
@@ -107,8 +114,15 @@ public class TeacherTransaction {
 	}
 
 	public List getSubjectTeacherFromClass(String subid) {
-		List list = teacherDB.getSubjectTeacher(subid, class_id);
-		return list;
+		List<Teacher> list = teacherDB.getSubjectTeacher(subid, class_id);
+		List teacherids=new ArrayList();
+		int index=0;
+		while (list.size()>index) {
+			
+			teacherids.add(list.get(index).getUser_id());
+			index++;	
+		}
+		return teacherids;
 	}
 
 	public com.classapp.db.Teacher.Teacher getTeacher(int user_id) {
@@ -121,12 +135,19 @@ public class TeacherTransaction {
 		int counter = 0;
 		List<List<RegisterBean>> registerBeans = new ArrayList<List<RegisterBean>>();
 		while (counter < Schedulelist.size()) {
-			List list = teacherDB.getSubjectTeacher(Schedulelist.get(counter)
+			List<Teacher> list = teacherDB.getSubjectTeacher(Schedulelist.get(counter)
 					.getSub_id() + "", regId);
+			List teacherids=new ArrayList();
+			int index=0;
+			while (list.size()>index) {
+				
+				teacherids.add(list.get(index).getUser_id());
+				index++;	
+			}
 			RegisterBean bean = new RegisterBean();
 			RegisterTransaction registerTransaction = new RegisterTransaction();
 			List<RegisterBean> teachers = registerTransaction
-					.getTeacherName(list);
+					.getTeacherName(teacherids);
 			registerBeans.add(teachers);
 			counter++;
 		}
@@ -164,4 +185,16 @@ public class TeacherTransaction {
 		return true;
 	}
 
+	public List<String> getTeachersPrefix(List<Schedule> schedules,int regID) {
+		TeacherDB db=new TeacherDB();
+		List<String> prefixs=new ArrayList<String>();
+		int counter=0;
+		while(schedules.size()>counter)
+		{
+			String pre=db.getTeachersPrefix(schedules.get(counter).getTeacher_id(), regID);
+			prefixs.add(pre);
+			counter++;
+		}
+		return prefixs;
+	}
 }

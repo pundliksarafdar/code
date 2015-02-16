@@ -8,6 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
@@ -88,7 +89,7 @@ public class TeacherDB {
 	}
 	
 	
-	public Boolean add(String teacherLoginName,int regid,String subjects) {
+	public Boolean add(String teacherLoginName,int regid,String subjects,String suffix) {
 		Transaction transaction=null;
 		Session session=null;
 		List<RegisterBean> list=null;
@@ -106,6 +107,7 @@ public class TeacherDB {
 				teacher.setClass_id(regid);
 				teacher.setUser_id(bean.getRegId());
 				teacher.setSub_ids(subjects);
+				teacher.setSuffix(suffix);
 				session.save(teacher);
 				transaction.commit();
 				//session.close();
@@ -148,12 +150,12 @@ public class TeacherDB {
 	public List getSubjectTeacher(String subid,int regId) {
 		Transaction transaction=null;
 		Session session=null;
-		List<RegisterBean> list=null;
+		List list=null;
 		List<Teacher> list2=null;
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
-		Query query=session.createQuery("select user_id from Teacher where (sub_ids like :sub_id1 or sub_ids like :sub_id2 or sub_ids like :sub_id3 or sub_ids=:sub_id4 ) and class_id=:regId");
+		Query query=session.createQuery("from Teacher where (sub_ids like :sub_id1 or sub_ids like :sub_id2 or sub_ids like :sub_id3 or sub_ids=:sub_id4 ) and class_id=:regId");
 		query.setParameter("sub_id1", "%,"+subid+",%");
 		query.setParameter("sub_id2", subid+",%");
 		query.setParameter("sub_id3", "%,"+subid);
@@ -379,4 +381,29 @@ public Teacher getTeacher(int user_id, int class_id) {
 		return list;
 	}
 	
+	public String getTeachersPrefix(int teacherID,int regID){
+		Transaction transaction=null;
+		Session session=null;
+		List<String> list=new ArrayList<String>();
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query=session.createQuery("select suffix from Teacher where user_id=:teacherID and class_id=:regID");
+		query.setParameter("teacherID", teacherID);
+		query.setParameter("regID", regID);
+		
+	//	query.setParameter("regId", regId);
+		list=query.list();
+		if(list.size()>0){
+			return list.get(0);
+		}
+			}catch(Exception e){
+				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
+			}
+		return "";
+	}
 }

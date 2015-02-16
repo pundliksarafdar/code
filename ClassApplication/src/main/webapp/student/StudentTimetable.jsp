@@ -15,16 +15,18 @@ $(document).ready(function(){
 	  
 	  $("#submit").click(function(){
 			var batchname=$("#batch").val();
-			
+			var classid=$("#classname").val();
 			var date=$("#date").val();
+			if(batchname!="-1" && classid!="-1" && date!="")
+				{
 			$.ajax({
 				 
 				   url: "classOwnerServlet",
 				   data: {
 				    	 methodToCall: "getschedule",
 				    	 batchname:batchname,
-				    	 date:date
-				    	
+				    	 date:date,
+				    	 classid:classid
 				   		},
 				   type:"POST",
 				   success:function(data){
@@ -36,6 +38,7 @@ $(document).ready(function(){
 					   var starttime=resultJson.starttime.split(',');
 					   var endtime=resultJson.endtime.split(',');
 					   var dates=resultJson.dates.split(',');
+					   var prefix=resultJson.prefix.split(',');
 					   var table=$(document.getElementById("scheduletable"));
 					   var counter=0
 					   var table1=document.getElementById("scheduletable");
@@ -44,13 +47,20 @@ $(document).ready(function(){
 							  table1.deleteRow(x);
 						   }
 					   $(table).border="1";
+					   if(subjects[0]!=""){
 					   while(counter<subjects.length)
 						   {
-					   $(table).append("<tr><td>"+subjects[counter]+"</td><td>"+firstname[counter]+" "+lastname[counter]+"</td><td>"+starttime[counter]+
+						   if(prefix[counter]=="null"){
+							   prefix[counter]="";
+						   }
+					   $(table).append("<tr><td>"+subjects[counter]+"</td><td>"+firstname[counter]+" "+lastname[counter]+" "+prefix[counter]+"</td><td>"+starttime[counter]+
 					"</td><td>"+endtime[counter]+"</td><td>"+dates[counter]+"</td></tr>");
 					   $(table).show();
 					   counter++;
 						   }
+					   }else{
+						   $("#lecturenotavailablemodal").modal('toggle');
+					   }
 					   $("#edit").show();
 					   
 					   		   	   },
@@ -58,6 +68,9 @@ $(document).ready(function(){
 				   		modal.launchAlert("Error","Error");
 				   	}	
 				});
+				}else{
+					alert("Please Select Valid Class/Batch");
+				}
 		});
 	  
 	
@@ -65,7 +78,9 @@ $(document).ready(function(){
 		
 		var classid=$("#classname").val();
 		var date=$("#date").val();
-		
+		$("#batch").empty();
+		$("#batch").append("<option value='-1'>Select Batch</option>")
+		if(classid!="-1"){
 		
 		$.ajax({
 			   url: "classOwnerServlet",
@@ -91,6 +106,7 @@ $(document).ready(function(){
 				   alert("error");
 			   }
 		});
+		}
 	});
 	
 	
@@ -107,7 +123,7 @@ $(document).ready(function(){
 Select Class
 <%List<RegisterBean> list=(List<RegisterBean>)request.getAttribute("Classes"); %>
 <select id="classname" class='form-control'>
-<option>Select Class</option>
+<option value="-1">Select Class</option>
 <%
 int counter=0;
 while(list.size()>counter){ %>
@@ -117,7 +133,7 @@ while(list.size()>counter){ %>
 </select>
 </div>
 <div class="col-xs-2">
-				Select Batch:<select id="batch" class='form-control'><option>select Batch</option></select>
+				Select Batch:<select id="batch" class='form-control'><option value="-1">Select Batch</option></select>
 </div>
 <div class="col-xs-2">
 Select Date
@@ -153,6 +169,24 @@ Select Date
  </tr>
 </thead>
 </table>
+</div>
+<div class="modal fade" id="lecturenotavailablemodal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" 
+               aria-hidden="true">×
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               Lecture
+            </h4>
+         </div>
+         <div class="modal-body">
+           Schedule Not Available...
+         </div>
+         </div>
+   </div>
 </div>
 </body>
 </html>

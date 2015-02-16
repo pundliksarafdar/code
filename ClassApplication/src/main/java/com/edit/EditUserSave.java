@@ -31,7 +31,7 @@ public class EditUserSave extends BaseAction{
 		RegisterTransaction registerTransaction = new RegisterTransaction();
 		if(registerTransaction.updateUser(registerBean, userBean.getRegId())){
 			LoginUser loginUser = new LoginUser();
-			loginUser.loadBean(userBean, userBean.getLoginBean());
+			loginUser.loadBean(userBean, userBean.getLoginBean(),response,session);
 			return "success";
 		}else{
 			
