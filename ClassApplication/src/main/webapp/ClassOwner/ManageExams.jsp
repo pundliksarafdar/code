@@ -50,7 +50,7 @@ function uploadExamFile(){
 			getSelectedExamSubjects();			
 			var formdata = new FormData();
 			formdata.append("uploadFile", file);
-			alert(divisionName +" "+teacherName+" "+ subjectIds);
+			
 			if(!divisionName || divisionName.trim()==""){
 				 modal.launchAlert("Error","Error! division name cannot be blank.");
 			}else if(!teacherName || teacherName.trim()==""){
@@ -60,7 +60,7 @@ function uploadExamFile(){
 			}else if(!file){
 				modal.launchAlert("Error"," Error! Please choose the file to upload");				
 			}else{
-				alert("before calling ajax");				
+							
 			$.ajax({
 				type:"POST",
 				url: "classOwnerServlet",

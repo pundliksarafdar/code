@@ -44,7 +44,7 @@ public abstract class BaseAction extends ActionSupport{
 		}
 		}catch(Exception e){
 			String errorCode = ServiceMap.getSystemParam("3","show");
-			if(null!=errorCode && "yes".equalsIgnoreCase("yes"))
+			if(null!=errorCode && "yes".equalsIgnoreCase(errorCode))
 				forward = "syserror";
 			else
 				throw e;

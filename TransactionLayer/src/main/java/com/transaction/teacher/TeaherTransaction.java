@@ -14,7 +14,7 @@ import com.transaction.register.RegisterTransaction;
 
 public class TeaherTransaction {
 	
-	public String addTeacher(String teacherID,int regID,String subjects,String suffix) {
+	public String addTeacher(String teacherID,int regID,String subjects) {
 		TeacherDB teacherDB=new TeacherDB();
 		com.classapp.db.Teacher.Teacher teacherbean=new com.classapp.db.Teacher.Teacher();
 		
@@ -23,7 +23,7 @@ public class TeaherTransaction {
 			{
 				if(!teacherDB.isTeacherExists(teacherID,regID))
 				{
-					teacherDB.add(teacherID,regID,subjects,suffix);
+					teacherDB.add(teacherID,regID,subjects);
 					return "added";
 				}else{
 					return "exists";
@@ -39,7 +39,7 @@ public class TeaherTransaction {
 	public List getSubjectTeacher(String subid,int regId) {
 		
 		TeacherDB teacherDB=new TeacherDB();
-		List<com.classapp.db.Teacher.Teacher> list=teacherDB.getSubjectTeacher(subid,regId);
+		List list=teacherDB.getSubjectTeacher(subid,regId);
 		return list;
 		
 	}
@@ -50,41 +50,15 @@ public class TeaherTransaction {
 		List<List<RegisterBean>> registerBeans=new ArrayList<List<RegisterBean>>();
 		while(counter<Schedulelist.size())
 		{
-		List<com.classapp.db.Teacher.Teacher> list=teacherDB.getSubjectTeacher(Schedulelist.get(counter).getSub_id()+"",regId);
-		List teacherids=new ArrayList();
-		int index=0;
-		while (list.size()>index) {
-			
-			teacherids.add(list.get(index).getUser_id());
-			index++;	
-		}
+		List list=teacherDB.getSubjectTeacher(Schedulelist.get(counter).getSub_id()+"",regId);
 		RegisterBean bean=new RegisterBean();
 		RegisterTransaction registerTransaction=new RegisterTransaction();
-		List<RegisterBean> teachers=registerTransaction.getTeacherName(teacherids);
+		List<RegisterBean> teachers=registerTransaction.getTeacherName(list);
 		registerBeans.add(teachers);
 		counter++;
 		}
 		return registerBeans;
 	}
 	
-	public List<List<String>> getScheduleTeacherSuffix(List<Schedule> Schedulelist,int regId) {
-		TeacherDB teacherDB=new TeacherDB();
-		int counter=0;
-		List<List<String>> teachers=new ArrayList<List<String>>();
-		while(counter<Schedulelist.size())
-		{
-		List<com.classapp.db.Teacher.Teacher> list=teacherDB.getSubjectTeacher(Schedulelist.get(counter).getSub_id()+"",regId);
-		List teachersuffix=new ArrayList();
-		int index=0;
-		while (list.size()>index) {
-			
-			teachersuffix.add(list.get(index).getSuffix());
-			index++;	
-		}
-		teachers.add(teachersuffix);
-		counter++;
-		}
-		return teachers;
-	}
 	
 }

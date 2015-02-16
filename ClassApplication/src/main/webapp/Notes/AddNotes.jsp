@@ -17,7 +17,7 @@
 function validate()
 {
 var file=document.getElementByID("myFile");
-alert(file);
+
 	return false;
 }
 $(document).ready(function(){

@@ -363,7 +363,6 @@ $(function(){
 				   var firstname= resultJson.firstname.split(",");
 				   var lastname= resultJson.lastname.split(",");
 				   var teacherid= resultJson.teacherid.split(",");
-				   var suffix=resultJson.suffix.split(",");
 				      var counter=1;
 				   var sell1Select = $("#teacher"+id);
 	               if(sell1Select.prop) { 
@@ -379,10 +378,8 @@ $(function(){
 	               if(teacherid[0]!=""){
 	               for(var i=0;i<limit;i++)
 	            	   {
-	            	   if(suffix[i]==null){
-	            		   suffix[i]="";
-	            	   }
-	            	   sell1Options[i+1]= new Option(firstname[i]+" "+lastname[i]+" "+suffix[i], teacherid[i]);
+	            	   
+	            	   sell1Options[i+1]= new Option(firstname[i]+" "+lastname[i], teacherid[i]);
 	            	   }
 	               }else{
 	            	   modal.launchAlert("Teacher","Teacher Not Available For This Subject");

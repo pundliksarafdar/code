@@ -35,13 +35,13 @@
 	</definition>
 
 	<definition name="activation" extends="NoTopnavBaseLayout">
-		<put-attribute name="title" value="Admin" />
+		<put-attribute name="title" value="Activation" />
 		<put-attribute name="header" value="/header.jsp" />
 		<put-attribute name="body" value="/admin/activation.jsp" />
 	</definition>
 	
 	<definition name="resetpassword" extends="NoTopnavBaseLayout">
-		<put-attribute name="title" value="Admin" />
+		<put-attribute name="title" value="Reset Password" />
 		<put-attribute name="header" value="/header.jsp" />
 		<put-attribute name="body" value="/admin/resetpassword.jsp" />
 	</definition>
@@ -54,14 +54,14 @@
 	</definition>
 
 	<definition name="classowner.loginsuccess" extends="baseLayout">
-		<put-attribute name="title" value="Admin" />
+		<put-attribute name="title" value="Class Owner" />
 		<put-attribute name="header" value="/header.jsp" />
 		<put-attribute name="topnav" value="/admin/menu.jsp" />
 		<put-attribute name="body" value="/ClassOwner/ClassOwner.jsp" />
 	</definition>
 
    <definition name="classteacher.loginsuccess" extends="baseLayout">
-      <put-attribute name="title"  value="Admin"/>
+      <put-attribute name="title"  value="Class Teacher"/>
       <put-attribute name="header"  value="/header.jsp"/>
       <put-attribute name="topnav"  value="/teacher/menu.jsp"/>
       <put-attribute name="body"   value="/loginSuccess.jsp"/>      
@@ -75,13 +75,13 @@
    </definition>
 
 	<definition name="unaccepted" extends="NoTopnavBaseLayout">
-		<put-attribute name="title" value="Register" />
+		<put-attribute name="title" value="Unaccepted" />
 		<put-attribute name="header" value="/header.jsp" />
 		<put-attribute name="body" value="/General/NotAccepted.jsp" />
 	</definition>
 
 	<definition name="accessblocked" extends="NoTopnavBaseLayout">
-		<put-attribute name="title" value="Register" />
+		<put-attribute name="title" value="Access Blocked" />
 		<put-attribute name="header" value="/header.jsp" />
 		<put-attribute name="body" value="/General/AccessBlocked.jsp" />
 	</definition>
@@ -117,7 +117,7 @@
 	</definition>
 
 	<definition name="editusersuccess" extends="baseLayout">
-		<put-attribute name="title" value="Save" />
+		<put-attribute name="title" value="Save Success" />
 		<put-attribute name="header" value="/header.jsp" />
 		<put-attribute name="body" value="/General/editusersuccess.jsp" />
 	</definition>
@@ -128,7 +128,7 @@
 	</definition>
 
 	<definition name="classowner.addbatchsubject" extends="baseLayout">
-		<put-attribute name="title" value="Add Subject" />
+		<put-attribute name="title" value="Add Batch" />
 		<put-attribute name="body" value="/ClassOwner/AddBatchSubject.jsp" />
 	</definition>
 	<definition name="classowner.managebatch" extends="baseLayout">
@@ -155,12 +155,12 @@
 	</definition>
 
 	<definition name="timetable.CreateTimeTable" extends="baseLayout">
-		<put-attribute name="title" value="Time Table" />
+		<put-attribute name="title" value="Create Time Table" />
 		<put-attribute name="body" value="/Timetable/CreateTimeTable.jsp" />
 	</definition>
 
 	<definition name="timetable.UpdateTimeTable" extends="baseLayout">
-		<put-attribute name="title" value="Time Table" />
+		<put-attribute name="title" value="Update Time Table" />
 		<put-attribute name="body" value="/Timetable/UpdateTimeTable.jsp" />
 	</definition>
 
@@ -170,7 +170,7 @@
 	</definition>
 
 	<definition name="nonstudent.searchexamnonstudent" extends="baseLayout">
-		<put-attribute name="title" value="View Exams" />
+		<put-attribute name="title" value="Search Exams" />
 		<put-attribute name="body" value="/ClassOwner/searchexams.jsp" />
 	</definition>
 
@@ -185,12 +185,12 @@
 	</definition>
 
 	<definition name="notes.addnotesoption" extends="baseLayout">
-		<put-attribute name="title" value="Notes" />
+		<put-attribute name="title" value="Add Notes" />
 		<put-attribute name="body" value="/Notes/AddNotes.jsp" />
 	</definition>
 
 	<definition name="notes.success" extends="baseLayout">
-		<put-attribute name="title" value="Notes" />
+		<put-attribute name="title" value="Add Notes Success" />
 		<put-attribute name="body" value="/Notes/AddNotesSuccess.jsp" />
 	</definition>
 	<definition name="seenotes.success" extends="baseLayout">
@@ -208,7 +208,7 @@
 	</definition>
 
    <definition name="teacher.teachertimetable" extends="baseLayout">
-      <put-attribute name="title"  value="Student Time Table"/>
+      <put-attribute name="title"  value="Time Table"/>
       <put-attribute name="topnav" value="/teacher/menu.jsp" />
       <put-attribute name="body"   value="/teacher/TeacherTimeTable.jsp"/>      
    </definition>
@@ -234,7 +234,7 @@
 	</definition>
 	
    <definition name="logoutcomplete" extends="NoTopnavBaseLayout">
-		<put-attribute name="title" value="System Requirements" />
+		<put-attribute name="title" value="Log out" />
 		<put-attribute name="header" value="" />
 		<put-attribute name="body" value="/logoutcomplete.jsp" />
 		<put-attribute name="footer" value="" />

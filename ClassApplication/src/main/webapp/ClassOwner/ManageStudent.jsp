@@ -89,7 +89,7 @@ function getstudentsrelatedtobatch(pagenumber){
 		},
 		error:function(e){
 			$("#progressModal").modal("hide");
-			modal.launchalert("error","Yo2");
+			//modal.launchalert("error","Yo2");
 		}
 		
 	});

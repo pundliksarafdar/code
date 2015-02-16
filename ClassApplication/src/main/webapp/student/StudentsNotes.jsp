@@ -14,7 +14,7 @@ $(document).ready(function(){
 		  pickTime: false
 	  }).data("DateTimePicker");
 	  $("classname").change(function(){
-		  alert("suraj");
+		  
 		  
 		  
 		  

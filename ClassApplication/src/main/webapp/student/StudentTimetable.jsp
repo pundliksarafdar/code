@@ -15,7 +15,7 @@ $(document).ready(function(){
 	  
 	  $("#submit").click(function(){
 			var batchname=$("#batch").val();
-			var classid=$("#classname").val();
+			
 			var date=$("#date").val();
 			$.ajax({
 				 
@@ -23,8 +23,8 @@ $(document).ready(function(){
 				   data: {
 				    	 methodToCall: "getschedule",
 				    	 batchname:batchname,
-				    	 date:date,
-				    	 classid:classid
+				    	 date:date
+				    	
 				   		},
 				   type:"POST",
 				   success:function(data){
@@ -36,7 +36,6 @@ $(document).ready(function(){
 					   var starttime=resultJson.starttime.split(',');
 					   var endtime=resultJson.endtime.split(',');
 					   var dates=resultJson.dates.split(',');
-					   var prefix=resultJson.prefix.split(',');
 					   var table=$(document.getElementById("scheduletable"));
 					   var counter=0
 					   var table1=document.getElementById("scheduletable");
@@ -47,10 +46,7 @@ $(document).ready(function(){
 					   $(table).border="1";
 					   while(counter<subjects.length)
 						   {
-						   if(prefix[counter]=="null"){
-							   prefix[counter]="";
-						   }
-					   $(table).append("<tr><td>"+subjects[counter]+"</td><td>"+firstname[counter]+" "+lastname[counter]+" "+prefix[counter]+"</td><td>"+starttime[counter]+
+					   $(table).append("<tr><td>"+subjects[counter]+"</td><td>"+firstname[counter]+" "+lastname[counter]+"</td><td>"+starttime[counter]+
 					"</td><td>"+endtime[counter]+"</td><td>"+dates[counter]+"</td></tr>");
 					   $(table).show();
 					   counter++;
@@ -69,7 +65,7 @@ $(document).ready(function(){
 		
 		var classid=$("#classname").val();
 		var date=$("#date").val();
-		alert(classid);
+		
 		
 		$.ajax({
 			   url: "classOwnerServlet",

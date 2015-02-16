@@ -35,6 +35,7 @@ input.data("DateTimePicker").show();
 
 function getsubjectteachers(id){
 	var subjectid=$("#subject"+id).val();
+	
 	$.ajax({
 		   url: "classOwnerServlet",
 		    data: {
@@ -47,7 +48,6 @@ function getsubjectteachers(id){
 			   var firstname= resultJson.firstname.split(",");
 			   var lastname= resultJson.lastname.split(",");
 			   var teacherid= resultJson.teacherid.split(",");
-			   var suffix=resultJson.suffix.split(",");
 			      var counter=1;
 			   var sell1Select = $("#teacher"+id);
             if(sell1Select.prop) { 
@@ -64,7 +64,7 @@ function getsubjectteachers(id){
             for(var i=0;i<limit;i++)
          	   {
          	   
-         	   sell1Options[i+1]= new Option(firstname[i]+" "+lastname[i]+" "+suffix[i], teacherid[i]);
+         	   sell1Options[i+1]= new Option(firstname[i]+" "+lastname[i], teacherid[i]);
          	   }
             }else{
          	   modal.launchAlert("Teacher","Teacher Not Available For This Subject");
@@ -108,7 +108,6 @@ function edit(){
 			   var allteacherlastname=resultJson.allteacherlastname.split('/');
 			   var allteacherids=resultJson.allteacherids.split('/');
 			   var subids=resultJson.BatchsubjectsIds.split(',');
-			   var allSuffix=resultJson.allSuffix.split('/');
 			   var table=$(document.getElementById("scheduletable"));
 			   var table1=document.getElementById("scheduletable");
 			  var rowCount=table1.rows.length;
@@ -159,14 +158,10 @@ function edit(){
 			
 					   var fnames=allteachersfirstname[counter].split(',');
 					   var lnames=allteacherlastname[counter].split(',');
-					   var Suffix=allSuffix[counter].split(',');
 					   var subinnercounter=0;
 					   while(fnames.length>subinnercounter)
 						   {
-						   if(Suffix[subinnercounter]=="null"){
-							   Suffix[subinnercounter]="";
-						   }
-					   $(teacherselect).append("<option value="+ids[subinnercounter]+">"+fnames[subinnercounter]+" "+lnames[subinnercounter]+" "+Suffix[subinnercounter]+"</option>");
+					   $(teacherselect).append("<option value="+ids[subinnercounter]+">"+fnames[subinnercounter]+" "+lnames[subinnercounter]+"</option>");
 					   subinnercounter++;
 						   }
 					   subcounter=0;
@@ -302,7 +297,6 @@ $(document).ready(function(){
 				   var starttime=resultJson.starttime.split(',');
 				   var endtime=resultJson.endtime.split(',');
 				   var dates=resultJson.dates.split(',');
-				   var prefix=resultJson.prefix.split(',');
 				   var table=$(document.getElementById("scheduletable"));
 				   var counter=0
 				   var table1=document.getElementById("scheduletable");
@@ -317,11 +311,7 @@ $(document).ready(function(){
 					   $(table).border="1";
 				   while(counter<subjects.length)
 					   {
-					   var pre="";
-					   if(prefix[counter]=="null"){
-						   prefix[counter]="";
-					   }
-				   $(table).append("<tr><td>"+subjects[counter]+"</td><td>"+firstname[counter]+" "+lastname[counter]+" "+prefix[counter]+"</td><td>"+starttime[counter]+
+				   $(table).append("<tr><td>"+subjects[counter]+"</td><td>"+firstname[counter]+" "+lastname[counter]+"</td><td>"+starttime[counter]+
 				"</td><td>"+endtime[counter]+"</td><td>"+dates[counter]+"</td></tr>");
 				   $(table).show();
 				   counter++;

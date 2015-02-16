@@ -34,6 +34,8 @@ $(document).ready(function(){
 					   var starttime=resultJson.starttime.split(",");
 					   var endtime=resultJson.endtime.split(",");
 					   var subject=resultJson.subject.split(",");
+					   
+					
 					   var table=$(document.getElementById("scheduletable"));
 					   var counter=0
 					   var table1=document.getElementById("scheduletable");

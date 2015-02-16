@@ -64,7 +64,8 @@ html,body {
 
 <%
 UserBean userBean =(UserBean)session.getAttribute("user");
-if(userBean.getRole()<2){
+/*if(userBean.getRole()<2){*/
+	if(true){
 %>
 
 <jsp:include page="allmodals.jsp"></jsp:include>
