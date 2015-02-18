@@ -45,4 +45,9 @@ public class Batch {
 		}
 		return false;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 }

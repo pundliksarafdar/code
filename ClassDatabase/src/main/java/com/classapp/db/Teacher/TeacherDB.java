@@ -28,8 +28,9 @@ public class TeacherDB {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session
-					.createQuery("from RegisterBean where loginName=:userid and role=2");
+					.createQuery("from RegisterBean where loginName=:userid and role=:role");
 			query.setParameter("userid", teacherLoginName);
+			query.setParameter("role", 2);
 			list = query.list();
 		} catch (Exception e) {
 			e.printStackTrace();

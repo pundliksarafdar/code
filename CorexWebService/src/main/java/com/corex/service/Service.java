@@ -42,6 +42,9 @@ public class Service implements IService {
 		LoginBeanMobile beanMobile = request.getLoginBeanMobile();
 		UserBean userBean = new UserBean();
 		login.loadBean(userBean, beanMobile);
+		if(null == userBean.getUsername()){
+			loginResponse.setCode("401", "unauthorised");
+		}else{
 		loginResponse.setUserBean(userBean);
 		
 		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
@@ -49,6 +52,7 @@ public class Service implements IService {
 				.getRegId());
 		
 		loginResponse.setStudentScheduleData(studentData);
+		}
 		return loginResponse;
 	}
 
