@@ -219,5 +219,11 @@ public class BatchTransactions {
 		return true;
 		
 	}
+	
+	public Integer getBatchCount(int regID) {
+		
+		BatchDB batchDB=new BatchDB();
+		return batchDB.getBatchCount(regID);
+	}
 
 }

@@ -124,4 +124,9 @@ public class StudentTransaction {
 		return db.getStudentcountrelatedtobatch(batchname);
 		
 	}
+	
+	public Integer getStudentCount(int regID){
+		StudentDB db=new StudentDB();
+		return db.getStudentCount(regID);
+	}
 }

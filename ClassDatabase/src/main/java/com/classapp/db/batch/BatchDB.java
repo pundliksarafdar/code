@@ -489,4 +489,30 @@ public boolean deletebatchrelatedtoclass(int classid) {
 	return true;
 }
 
+public Integer getBatchCount(int class_id){
+	
+	Session session = null;
+	Transaction transaction = null;
+	List<Batch> batchList = null;
+	List<Long> batches = new ArrayList<Long>();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("select count(*) from Batch where class_id=:class_id");
+		query.setParameter("class_id", class_id);
+	batches=query.list();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return batches.get(0).intValue();
 }
+}
+
+

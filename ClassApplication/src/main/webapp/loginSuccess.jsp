@@ -9,7 +9,8 @@
 <title>Loged In</title>
 </head>
 <body>
-<div align="left">
+
+<div align="left" >
 
 <%List<RegisterBean> registerBean =(List<RegisterBean>)session.getAttribute("classes"); 
 if(registerBean.size()>0){
@@ -28,6 +29,9 @@ counter++;
 <%}else{ %>
 <h3>You are not linked with any Class</h3><Br>
 <%} %>
+</div>
+<div>
+<img alt="temp" src="images\background.jpg" height="400px" width="800px">
 </div>
 </body>
 </html>

@@ -15,7 +15,7 @@ $(document).ready(function(){
 	  
 	  $("#submit").click(function(){
 			var batchname=$("#batch").val();
-			var classid=$("#classname").val();
+			var classid=$("#classnameSelect").val();
 			var date=$("#date").val();
 			if(batchname!="-1" && classid!="-1" && date!="")
 				{
@@ -74,14 +74,12 @@ $(document).ready(function(){
 		});
 	  
 	
-	$("#classname").change(function(){
-		
-		var classid=$("#classname").val();
+	$("#classnameSelect").on("change",function(){
+		var classid=$("#classnameSelect").val();
 		var date=$("#date").val();
 		$("#batch").empty();
 		$("#batch").append("<option value='-1'>Select Batch</option>")
 		if(classid!="-1"){
-		
 		$.ajax({
 			   url: "classOwnerServlet",
 			    data: {
@@ -121,9 +119,9 @@ $(document).ready(function(){
 <div align="left" class="container">
 <div class="col-xs-2">
 Select Class
-<%List<RegisterBean> list=(List<RegisterBean>)request.getAttribute("Classes"); %>
-<select id="classname" class='form-control'>
+<select id="classnameSelect" class='form-control'>
 <option value="-1">Select Class</option>
+<%List<RegisterBean> list=(List<RegisterBean>)request.getAttribute("Classes"); %>
 <%
 int counter=0;
 while(list.size()>counter){ %>

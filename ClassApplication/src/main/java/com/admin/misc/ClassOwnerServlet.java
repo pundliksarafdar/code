@@ -14,6 +14,7 @@ import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -53,9 +54,13 @@ import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
 import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;
+import com.config.ClassException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.helper.BatchHelperBean;
+import com.mails.AllMail;
+import com.opensymphony.xwork2.ActionContext;
+import com.signon.User;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
@@ -499,6 +504,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				regId = Integer.parseInt(req.getParameter("regId"));
 			}catch(Exception e){
 				e.printStackTrace();
+				
 			}
 			UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 			if(0 == userBean.getRole() || !"".equals(regId)){
@@ -852,6 +858,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				regId = Integer.parseInt(req.getParameter("regId"));
 			}catch(Exception e){
 				e.printStackTrace();
+				
 			}
 			UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 		
@@ -1570,7 +1577,15 @@ public class ClassOwnerServlet extends HttpServlet{
 	RegisterTransaction registerTransaction=new RegisterTransaction();
 	if(registerTransaction.isEmailAndMobileValid(email, mobile)){
 		String pass=registerTransaction.getPassword(email, mobile);
-	// Common variables
+	
+		HashMap<String, String> dataMap = new HashMap();
+		dataMap.put("password", pass);
+		dataMap.put("HEADER", "Password Recovery!!!");
+		dataMap.put("classLink", "http://jbdev-mycorex.rhcloud.com/login");
+		AllMail allMail = new AllMail();
+		allMail.sendMail(email, dataMap, "forgotPassHtml.html", "Your Password");
+	/*	
+		// Common variables
 	String to = email;//change accordingly
 
     // Sender's email ID needs to be mentioned
@@ -1632,7 +1647,7 @@ public class ClassOwnerServlet extends HttpServlet{
     	System.out.println("Invalid Internet Address");
           throw new RuntimeException(e);
     }
-	
+	*/
 	respObject.addProperty(STATUS, "success");
 	}else{
 		respObject.addProperty(STATUS, "invalid");
@@ -1648,6 +1663,19 @@ public class ClassOwnerServlet extends HttpServlet{
 	}else{
 		respObject.addProperty(STATUS, "fail");
 	}
+}else if("resendActivation".equals(methodToCall)){
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	AllMail allMail = new AllMail();
+	HashMap<String, String> hashMap = new  HashMap();
+	hashMap.put("HEADER", "Activation Code");
+	hashMap.put("classLink", "http://jbdev-mycorex.rhcloud.com/login");
+	hashMap.put("ACTIVATION_CODE", userBean.getActivationcode());	
+	hashMap.put("NAME", userBean.getFirstname());
+	boolean result = allMail.sendMail(userBean.getEmail(), hashMap, "registerSuccess.html","ClassApp - Resend Activation");
+	if(result)
+		respObject.addProperty(STATUS, "success");
+	else
+		respObject.addProperty(STATUS, "error");
 	
 }else if("resetpassword".equals(methodToCall)){
 	String password=req.getParameter("password");

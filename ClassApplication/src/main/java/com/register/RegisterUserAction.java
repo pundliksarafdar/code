@@ -3,6 +3,7 @@ package com.register;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -21,6 +22,7 @@ import com.classapp.db.register.RegisterUser;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.google.gson.Gson;
+import com.mails.AllMail;
 import com.signon.LoginBean;
 import com.signon.LoginUser;
 import com.transaction.register.RegisterTransaction;
@@ -59,7 +61,13 @@ public class RegisterUserAction extends BaseAction{
 		String status =  registerTransaction.registerUser(registerReq,registerBean.getLoginName(), registerBean.getPhone1(),registerBean.getEmail());
 		System.out.println("In Register user action - Register User Status..."+status);
 		if("success".equals(status)){
-			sendEmail(registerBean);
+			AllMail allMail = new AllMail();
+			HashMap<String, String> hashMap = new  HashMap();
+			hashMap.put("HEADER", "Register!!!");
+			hashMap.put("classLink", "http://jbdev-mycorex.rhcloud.com/login");
+			hashMap.put("ACTIVATION_CODE", registerBean.getActivationcode());	
+			hashMap.put("NAME", registerBean.getFname());
+			allMail.sendMail(registerBean.getEmail(), hashMap, "registerSuccess.html","ClassApp - Registered");
 			LoginBean loginBean = new LoginBean();
 			loginBean.setLoginname(registerBean.getLoginName());
 			loginBean.setLoginpass(registerBean.getLoginPass());

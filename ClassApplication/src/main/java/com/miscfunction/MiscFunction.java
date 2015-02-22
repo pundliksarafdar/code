@@ -1,9 +1,14 @@
 package com.miscfunction;
 
+import javax.servlet.ServletContext;
+
+import org.apache.struts2.ServletActionContext;
+
 public class MiscFunction {
 	/*
 	 * Function to change the date format from yyyyMMdd to yyyy-MM-dd
 	 */
+	private static ServletContext servletContext;
 	private MiscFunction(){
 		
 	}
@@ -29,5 +34,16 @@ public class MiscFunction {
 		}else{
 			return "Student";
 		}
+	}
+	
+	public static ServletContext getServletContext(){
+		if(null == servletContext){
+			servletContext = ServletActionContext.getServletContext();
+		}
+		return servletContext;
+	}
+	
+	public static void setServletContext(ServletContext context){
+		servletContext = context;
 	}
 }

@@ -12,6 +12,7 @@ import com.config.BaseAction;
 import com.config.Constants;
 import com.google.gson.Gson;
 import com.tranaction.login.login;
+import com.transaction.batch.BatchTransactions;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.student.StudentTransaction;
 import com.transaction.teacher.TeacherTransaction;
@@ -75,6 +76,7 @@ public class LoginUser extends BaseAction{
 			userBean.setRegId(gson.fromJson(userBeanJson, UserBean.class).getRegId());
 			userBean.setActivationcode(gson.fromJson(userBeanJson, UserBean.class).getActivationcode());
 			userBean.setStatus(gson.fromJson(userBeanJson, UserBean.class).getStatus());
+			userBean.setEmail(gson.fromJson(userBeanJson, UserBean.class).getEmail());
 			userBean.setLoginBean(loginBean);
 
 			
@@ -106,6 +108,15 @@ public class LoginUser extends BaseAction{
 						return SUCCESS;
 					} else if ((null != userBean.getRole())
 							&& 1 == userBean.getRole()) {
+						TeacherTransaction teacherTransaction=new TeacherTransaction();
+						int teachercount=teacherTransaction.getTeacherCount(userBean.getRegId());
+						StudentTransaction studentTransaction=new StudentTransaction();
+						int studentcount=studentTransaction.getStudentCount(userBean.getRegId());
+						BatchTransactions batchTransactions=new BatchTransactions();
+						int batchcount=batchTransactions.getBatchCount(userBean.getRegId());
+						session.put(Constants.BATCHCOUNT, batchcount);
+						session.put(Constants.TEACHERCOUNT, teachercount);
+						session.put(Constants.STUDENTCOUNT, studentcount);
 						return Constants.CLASSOWNER;
 					} else if ((null != userBean.getRole())
 							&& 2 == userBean.getRole()) {

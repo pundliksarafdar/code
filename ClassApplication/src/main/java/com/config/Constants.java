@@ -44,6 +44,9 @@ public class Constants {
 	
 	public static String EXAM_SEARCH_RESULT = "examSearchResult";
 	public static final String EXAM_DATA = "examData";
+	public static String BATCHCOUNT="batchcount";
+	public static String STUDENTCOUNT="studentcount";
+	public static String TEACHERCOUNT="teachercount";
 	
 	public static final String EXAM_DATA_LENGTH = "examDataLength";
 	public static final String QUESTION_DATA = "questionData";

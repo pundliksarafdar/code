@@ -42,7 +42,27 @@ $(document).ready(function() {
 			alert("Invalid Activation Code");
 		}
 	});
-	
+
+	$("#resendActivation").on("click",function(){
+		$.ajax({
+			url:"classOwnerServlet",
+			data:{
+				methodToCall:"resendActivation"
+			},
+			type:"POST",
+			success:function(data){
+				var result=JSON.parse(data);
+				if(result.status=="success"){
+					alert("Activation Code sent to you");
+				}else{
+					alert("Error occured, Please try after some time");
+				}
+			},
+			error:function(){
+				alert("Error occured, Please try after some time");
+			}
+		});
+	});
 });
 </script>
 </head>
@@ -72,6 +92,9 @@ $(document).ready(function() {
         <div class="form-group">
           <button type="submit" class="btn btn-primary btn-block" id="submit">
             Submit
+          </button>
+          <button type="submit" class="btn btn-primary btn-block" id="resendActivation">
+            Resend Activation
           </button>
         </div>
       </fieldset>

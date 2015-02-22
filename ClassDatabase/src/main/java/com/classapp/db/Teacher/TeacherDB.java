@@ -407,4 +407,27 @@ public Teacher getTeacher(int user_id, int class_id) {
 			}
 		return "";
 	}
+	
+	public Integer getTeacherCount(int regID){
+		Transaction transaction=null;
+		Session session=null;
+		List<Long> list=new ArrayList<Long>();
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query=session.createQuery("select count(*) from Teacher where class_id=:class_id");
+		query.setParameter("class_id", regID);
+		list=query.list();
+		if(list.size()>0){
+			return list.get(0).intValue();
+		}
+			}catch(Exception e){
+				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
+			}
+		return list.get(0).intValue();
+	}
 }

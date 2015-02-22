@@ -2,23 +2,28 @@ package com.config;
 
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import com.classapp.servicetable.ServiceMap;
+import com.miscfunction.MiscFunction;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.config.entities.Parameterizable;
 import com.user.UserBean;
 
 
-public abstract class BaseAction extends ActionSupport{
+public abstract class BaseAction extends ActionSupport implements Parameterizable{
 	UserBean userBean;
 	HttpServletRequest request;
 	HttpServletResponse response;
 	Map<String, Object> session;
+	Map<String, String> params;
 	String forward;
+	String sessionMessageError;
 	public abstract String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session);
 	@Override
 	public String execute() throws Exception{
@@ -27,7 +32,16 @@ public abstract class BaseAction extends ActionSupport{
 		response = ServletActionContext.getResponse();
 		session = ServletActionContext.getContext().getSession();
 		
+		ServletContext servletContext = ServletActionContext.getServletContext();
+		MiscFunction.setServletContext(servletContext);
+		
 		userBean = (UserBean) ActionContext.getContext().getSession().get("user");
+		if((null == userBean || null == userBean.getUsername()) && !(params.containsKey("ignoresession")/* && "true".equals(params.get("ignoresession"))*/)){
+			sessionMessageError = "You session expired, Please login again";
+			return "logoutglobal";
+		}
+		
+		//userBean = (UserBean) ActionContext.getContext().getSession().get("user");
 		if (null == userBean) {
 			userBean = new UserBean();
 		}
@@ -40,7 +54,7 @@ public abstract class BaseAction extends ActionSupport{
 			ActionContext.getContext().setSession(null);
 			return SUCCESS;
 		}else{
-			( ActionContext.getContext().getSession()).put("user", userBean);
+			(ActionContext.getContext().getSession()).put("user", userBean);
 		}
 		}catch(Exception e){
 			String errorCode = ServiceMap.getSystemParam("3","show");
@@ -51,4 +65,30 @@ public abstract class BaseAction extends ActionSupport{
 		}
 		return forward;
 	}
+	
+	
+	@Override
+	public void setParams(Map<String, String> params) {
+		this.params = params;
+	}
+	
+	@Override
+	public void addParam(String arg0, String arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Map<String, String> getParams() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getSessionMessageError() {
+		return sessionMessageError;
+	}
+	public void setSessionMessageError(String sessionMessageError) {
+		this.sessionMessageError = sessionMessageError;
+	}
+
+	
 }

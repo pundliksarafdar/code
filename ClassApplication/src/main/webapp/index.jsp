@@ -66,6 +66,12 @@ ul{
 							<div class="hide alert alert-danger frontenderror">
 									
 							</div>
+							<s:set var="varMsg" value="%{sessionMessageError}" />
+							<s:if test="%{#varMsg!=null}">
+							<div class="alert alert-danger">
+							<s:property value="varMsg" />
+							</div>
+							</s:if>
 							
 							<s:set value="loginBean.loginname" name="usename"></s:set>	
 							<s:if test="%{#usename!=null}">

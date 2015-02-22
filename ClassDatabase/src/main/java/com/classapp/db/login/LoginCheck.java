@@ -57,6 +57,7 @@ public class LoginCheck implements Serializable{
 			userBean.setActivationcode(registerBean.getActivationcode());
 			userBean.setStatus(registerBean.getStatus());
 			userBean.setUsername(registerBean.getLoginName());
+			userBean.setEmail(registerBean.getEmail());
 			return gson.toJson(userBean);
 		}catch(Exception ex){
 			return null;

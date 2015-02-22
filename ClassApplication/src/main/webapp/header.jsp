@@ -125,7 +125,6 @@
 	</div>
 </div>
 
-<!-- Pundlik Contact us modal -->
 <div class="modal fade" id="contactUsModal">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -135,7 +134,42 @@
 				<h4 class="modal-title" id="myModalLabel">Contact Us</h4>
 			</div>
 			<div class="modal-body">
-				Contact Us
+			<div class="container" align="left">
+			<div class="col-sm-5">
+			<blockquote>Thank you for your interest in us. We look forward to your suggestions and feedback. If you have any query you can contact us.
+			<br><img alt="" src="/images/contact.jpg" width="50px">  9766120685</blockquote>
+			</div>
+			
+			</div>
+			<div class="container" align="left">
+			<h5><strong>Suggestion/Feedback:</strong></h5><br>
+			<form class="form-horizontal" role="form" action="javascript:void(0);" id="form">
+		<div class="form-group has-error">
+			<label for="Name" class="col-sm-2 control-label">Name : </label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" name="Name" placeholder="Enter your Name" id="feedbackname"/><br>
+				<span name="namespan" id="namespan"></span>
+			</div>
+		</div>
+		<div class="form-group has-error">
+			<label for="Email" class="col-sm-2 control-label">Email : </label>
+			<div class="col-sm-3">
+				<input type="text" class="form-control" name="Email" placeholder="Enter your Email" id="feedbackemail"/><br>
+				<span id="emailspan"></span>
+			</div>
+		</div>
+		<div class="form-group has-error">
+			<label for="comments" class="col-sm-2 control-label">Comments : </label>
+			<div class="col-sm-3">
+				<textarea type="text" class="form-control" name="comments" placeholder="Enter comments here" maxlength="100" id="comment"></textarea>
+				<span id="commentspan"></span>
+			</div>
+		</div>
+		<div class="col-sm-10 col-sm-offset-2">
+			<input type="submit" class="btn btn-success" value="Submit" id="submitfeedback"/>
+		</div>
+	</form>
+			</div>
 			</div>
 		</div>
 	</div>
@@ -143,21 +177,32 @@
 
 	
 
-	<div id="headersEle" align="left" style="float: left; width: 50%;">
-		<span><a href="login"><img src="images/cxlogo.jpg" alt="cxlogo" style="height: 100px;" class="img-rounded"/></a></span>
-		<!-- <span><b style="font-size: 40px;">CoreX - <tiles:insertAttribute name="title" ignore="true" /></b></span>-->
-	</div>
-	<div id = "headerothernav" style="float:right;">
-		<div align="right" style = "height:50px; float:right; width:100%;">
-		<ul class="nav nav-pills pull-right" style ="color: aqua;">
-		  <li><a href="login">Home</a></li>
-		  <li><a href="#" data-toggle="modal" data-target="#aboutUsModal">About Us</a></li>
-		  <li><a href="#" data-toggle="modal" data-target="#contactUsModal">Contact Us</a></li>
-		</ul>
-		</div>
-		<div align="right" style = "height:50px; float:right; width:100%;">
-		<span class="label"></span>
-		</div>
-	</div>
+	<nav class="navbar navbar-apple-custom" role="navigation">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" style="border-color: white;border-width: 1px;">
+      <i class="glyphicon glyphicon-th-large"></i>
+    </button>
+    <a class="navbar-brand" href="login">
+	<img src="images/cxlogo.jpg" alt="cxlogo" style="height: 20px;" class="img-rounded"/>
+	CoreX</a>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav navbar-right">
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-phone-alt"></i> <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+    	  <li><a href="#" data-toggle="modal" data-target="#aboutUsModal">About Us</a></li>
+		  <li><a href="#" data-toggle="modal" data-target="#contactUsModal" id="contactuslink">Contact Us</a></li>
+	    </ul>
+      </li>
+    </ul>
+  </div><!-- /.navbar-collapse -->
+</nav>
+
+
+
 </body>
 </html>

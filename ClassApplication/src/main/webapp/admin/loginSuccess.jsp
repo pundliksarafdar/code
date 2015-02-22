@@ -193,4 +193,7 @@ function acceptClass(regId,that){
 <input type="text" placeholder="Message" id="message"/>
 <a href="#" class="btn btn-default" id="sendMessage">Notify</a>
 </div>
+<div>
+<img alt="temp" src="..\images\background.jpg" height="400px" width="800px">
+</div>
 </html>

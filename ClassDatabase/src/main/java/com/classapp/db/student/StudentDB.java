@@ -529,4 +529,32 @@ public class StudentDB {
 		return true;
 	}
 	
+	public Integer getStudentCount(int regID) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List<Long> list=new ArrayList<Long>();
+		String queryString="select count(*) from Student where class_id=:class_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("class_id", regID);
+			
+				list=(List<Long>) query.list();
+			if(list!=null)
+			{
+				return list.get(0).intValue();
+			}
+			
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return list.get(0).intValue();
+	}
+	
 }

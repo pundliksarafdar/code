@@ -15,8 +15,9 @@ $(document).ready(function(){
 	  
 	  $("#submit").click(function(){
 			var classid=$("#classname").val();
-			
 			var date=$("#date").val();
+			if(classid!="-1" && date!="")
+				{
 			$.ajax({
 				 
 				   url: "classOwnerServlet",
@@ -59,6 +60,9 @@ $(document).ready(function(){
 				   		modal.launchAlert("Error","Error");
 				   	}	
 				});
+				}else{
+					alert("Select Valid Class/Date");
+				}
 		});
 	  
 	
@@ -75,7 +79,7 @@ $(document).ready(function(){
 Select Class
 <%List<RegisterBean> list=(List<RegisterBean>)request.getAttribute("Classes"); %>
 <select id="classname"  class='form-control'>
-<option>Select Class</option>
+<option value="-1">Select Class</option>
 <%
 int counter=0;
 if(list!=null){

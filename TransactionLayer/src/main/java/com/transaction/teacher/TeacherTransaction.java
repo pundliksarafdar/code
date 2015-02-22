@@ -197,4 +197,10 @@ public class TeacherTransaction {
 		}
 		return prefixs;
 	}
+	
+	public Integer getTeacherCount(int regID){
+		TeacherDB db=new TeacherDB();
+		return db.getTeacherCount(regID);
+	}
+	
 }
