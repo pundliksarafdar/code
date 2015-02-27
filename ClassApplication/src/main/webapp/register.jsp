@@ -74,6 +74,19 @@
 			   $("#lgnameError").hide();
 		});
 		
+		$("#email").on("blur",function(){
+			allAjax.checkEmailExist($(this).val().trim(),function(e){
+				var resultJson = JSON.parse(e);
+				   if(resultJson.exists == true){
+					   $("#emailError").show();						   					   	
+				   	}else{
+				   		
+				   	}				
+			});
+		}).on("focus",function(){
+			   $("#emailError").hide();
+		});
+		
 		$("input").keyup(function(){
 			$(this).parents(".form-group").find('.danger').remove();
 			$(this).parents(".form-group").removeClass("has-error");
@@ -480,6 +493,7 @@
 			</div>
 		</div>
 		
+		<div id="emailError" style="display: none;color: red;">This Email id is already registered</div>
 		<div class="form-group" id="divemail">
 			<label for="email" class="col-sm-4 control-label">*Email ID</label>
 			<div class="col-sm-5">	

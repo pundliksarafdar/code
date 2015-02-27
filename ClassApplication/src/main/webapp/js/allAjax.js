@@ -252,5 +252,22 @@ var allAjax = {
 				   modal.launchAlert("Error","Error occured while accepting the user!");
 			   }
 			});
+	},
+	checkEmailExist:function(email,success){
+		$.ajax({
+			   url: "admajxsrvlt",
+			   data: {
+			    	 methodToCall: "checkemail",
+			    	 emailId:email
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   success(e);
+				   
+			   		},
+			   error:function(){
+				   modal.launchAlert("Error","Error occured");
+			   }
+			});
 	}
 }

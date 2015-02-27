@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -21,7 +22,10 @@ public class GCMSender {
 	public String sendMessage(String message,ArrayList<String> userIds){
 		List<String> strings = userIds;
 		Data data = new Data();
-		
+		HashSet<String> hashSet = new HashSet<String>();
+		hashSet.addAll(userIds);
+		userIds.clear();
+		userIds.addAll(hashSet);
 		data.setMessage(message);
 		GCMMessageApi gcmMessageApi = new GCMMessageApi();
 		gcmMessageApi.setData(data);

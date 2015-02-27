@@ -97,6 +97,16 @@ public class AdminAjaxServlet extends HttpServlet{
 			resultJson.addProperty("exists", result);
 			String resultJsonStr = resultJson.toString();
 			writer.print(resultJsonStr);	
+		}else if("checkemail".equalsIgnoreCase(methodeToCall)){
+			String email = (String)req.getParameter("emailId");
+			System.out.println("MethodeToCall-"+methodeToCall);
+			System.out.println("Email Id-"+email);
+			RegisterTransaction registerTransaction = new RegisterTransaction();
+			boolean result = registerTransaction.isEmailExists(email);
+			JsonObject resultJson = new JsonObject();
+			resultJson.addProperty("exists", result);
+			String resultJsonStr = resultJson.toString();
+			writer.print(resultJsonStr);	
 		}
 	}
 }

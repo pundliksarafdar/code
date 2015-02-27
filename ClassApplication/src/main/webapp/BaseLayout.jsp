@@ -59,14 +59,36 @@ html,body {
 <script src="js/bootstrap-datetimepicker.min.js"></script>
 <script src="js/jquery.autocomplete.js"></script>
 <script src="js/global.js"></script>
+<script>
+$( document ).ajaxStart(function() {
+	  $("#loaderModal").modal("show")
+});
+
+$( document ).ajaxStop(function() {
+	  $("#loaderModal").modal("hide")
+});
+</script>
 </head>
 <body>
 
-<%
-UserBean userBean =(UserBean)session.getAttribute("user");
-/*if(userBean.getRole()<2){*/
-	if(true){
-%>
+	<div class="modal fade" id="loaderModal">
+		<div class="modal-dialog">
+			
+				<div class="progress progress-striped active">
+					<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="45"
+						aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+						Please wait....
+					</div>
+			</div>	
+			
+		</div>
+	</div>
+
+	<%
+		UserBean userBean = (UserBean) session.getAttribute("user");
+		/*if(userBean.getRole()<2){*/
+		if (true) {
+	%>
 
 <jsp:include page="allmodals.jsp"></jsp:include>
 <%} %>
