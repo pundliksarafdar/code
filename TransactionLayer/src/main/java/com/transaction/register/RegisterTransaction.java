@@ -9,6 +9,7 @@ import com.classapp.db.register.RegisterBean;
 import com.classapp.db.register.RegisterDB;
 import com.classapp.db.register.RegisterUser;
 import com.classapp.db.student.Student;
+import com.classapp.servicetable.ServiceMap;
 
 public class RegisterTransaction {
 
@@ -83,11 +84,14 @@ public class RegisterTransaction {
 	public String registerUser(String registerRequest,String username,String mobileNo,String email){
 		RegisterUser registerUser = new RegisterUser();
 		
+		/*if debugging or testing user are able to use same email id*/
+		String isDebugging = ServiceMap.getSystemParam("6", "isdebug");
+		boolean isDebuggingBool = null!=isDebugging && isDebugging.equals("yes");
 		if (isUserExits(username)) {
 			return "User already registered";
 		} else if (isMobileExits(mobileNo)) {
 			return "Mobile number already registered";
-		}else if (isEmailExists(email)) {
+		}else if (isEmailExists(email) && !isDebuggingBool) {
 			return "Email ID already registered";	
 		}else {
 			String status = registerUser.registerUser(registerRequest);

@@ -146,12 +146,12 @@
 	
 	
 	function addRole(role){
-		if(role==0){
+		/*if(role==0){
 			rolestate=1;
 			$('#rolebtn').html('Admin <span class="caret"></span>');
 			$('#divClassname').hide();
 			$('#divClassname').find('input').removeAttr("required");
-		}else if(role==1){
+		}else*/ if(role==1){
 			rolestate=2;
 			$('#rolebtn').html('ClassOwner <span class="caret"></span>');
 			$('#divClassname').show();
@@ -340,7 +340,7 @@
 						Role <span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" role="menu">
-						<li><a href="javascript:addRole('0')">Admin</a></li>
+						<!-- <li><a href="javascript:addRole('0')">Admin</a></li> -->
 						<li><a href="javascript:addRole('1')">Class Owner</a></li>
 						<li><a href="javascript:addRole('2')">Class Teacher</a></li>
 						<li><a href="javascript:addRole('3')">Student</a></li>
