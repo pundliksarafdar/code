@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
+import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;
 import com.miscfunction.MiscFunction;
 import com.opensymphony.xwork2.ActionContext;
@@ -57,7 +58,7 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 			(ActionContext.getContext().getSession()).put("user", userBean);
 		}
 		}catch(Exception e){
-			String errorCode = ServiceMap.getSystemParam("3","show");
+			String errorCode = ServiceMap.getSystemParam(Constants.SHOW_STACK_TRACE,"show");
 			if(null!=errorCode && "yes".equalsIgnoreCase(errorCode))
 				forward = "syserror";
 			else

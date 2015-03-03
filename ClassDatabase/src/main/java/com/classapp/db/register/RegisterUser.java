@@ -3,6 +3,7 @@ package com.classapp.db.register;
 import org.hibernate.Session;
 
 import com.classapp.db.register.RegisterBean;
+import com.classapp.persistence.Constants;
 import com.classapp.persistence.HibernateUtil;
 import com.classapp.servicetable.ServiceMap;
 import com.google.gson.Gson;
@@ -37,7 +38,7 @@ public class RegisterUser {
 	public String formatMessage(String message){
 		String errorMessage = "";
 		String duplicate = "Duplicate";
-		String isDebugging = ServiceMap.getSystemParam("6", "isdebug");
+		String isDebugging = ServiceMap.getSystemParam(Constants.DEBUGGING_MODE, "isdebug");
 		boolean isDebuggingBool = null!=isDebugging && isDebugging.equals("yes");
 		
 		if (message.contains("UNI_PHONE1") && message.contains(duplicate)) {

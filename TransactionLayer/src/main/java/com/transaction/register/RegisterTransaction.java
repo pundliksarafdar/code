@@ -9,6 +9,7 @@ import com.classapp.db.register.RegisterBean;
 import com.classapp.db.register.RegisterDB;
 import com.classapp.db.register.RegisterUser;
 import com.classapp.db.student.Student;
+import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;
 
 public class RegisterTransaction {
@@ -85,7 +86,7 @@ public class RegisterTransaction {
 		RegisterUser registerUser = new RegisterUser();
 		
 		/*if debugging or testing user are able to use same email id*/
-		String isDebugging = ServiceMap.getSystemParam("6", "isdebug");
+		String isDebugging = ServiceMap.getSystemParam(Constants.DEBUGGING_MODE, "isdebug");
 		boolean isDebuggingBool = null!=isDebugging && isDebugging.equals("yes");
 		if (isUserExits(username)) {
 			return "User already registered";

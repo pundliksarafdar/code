@@ -1,6 +1,7 @@
 package com.classapp.db.register;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -40,11 +41,15 @@ public List getTeachersClassName(List classIDs) {
 		List subidList = null;
 		
 		try{
+			if(null!=classIDs && classIDs.size()!=0){
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean where  regId in :teacherids");
 			query.setParameterList("teacherids", classIDs);
 			subidList = query.list();
+			}else{
+				subidList = new ArrayList();
+			}
 			
 		}catch(Exception e){
 			e.printStackTrace();

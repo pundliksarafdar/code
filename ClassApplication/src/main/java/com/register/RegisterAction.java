@@ -17,7 +17,7 @@ public class RegisterAction extends BaseAction{
 	
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
-		String isDebugging = ServiceMap.getSystemParam("6", "isdebug");
+		String isDebugging = ServiceMap.getSystemParam(com.classapp.persistence.Constants.DEBUGGING_MODE, "isdebug");
 		boolean isDebuggingBool = null!=isDebugging && isDebugging.equals("yes");
 		if(isDebuggingBool){
 		request = ServletActionContext.getRequest();
