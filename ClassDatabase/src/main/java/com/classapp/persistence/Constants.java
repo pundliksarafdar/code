@@ -41,6 +41,9 @@ private Constants(){
 	public static final String BATCH_LIST = "batchList";
 	public static final String DIVISION_LIST = "divisionList";
 	public static final String CLASS_LIST = "classList";
+	public static final String DIVISION_STREAM = "divisionStream";
+	public static final String DIVISION_ID = "divisionId";
+	public static final String DIVISIONS = "divisions";
 	
 	
 }

@@ -33,12 +33,19 @@ public class ManageStudentAction extends BaseAction{
 			request.getSession().setAttribute(Constants.STUDENT_LIST, studentHelperBean.getStudents());
 			List<Division> divisions= divisionTransactions.getAllDivisions(userBean.getRegId());
 			List<String> divisionNames= new ArrayList<String>();
+			List<Integer> divisionId= new ArrayList<Integer>();
+			List<String> divisionStream= new ArrayList<String>();
 			if(null!=divisions){
 			for (Division division : divisions) {
 				divisionNames.add(division.getDivisionName());
+				divisionStream.add(division.getStream());
+				divisionId.add(division.getDivId());
 			}
 			setDivisionSize(divisionNames.size());
 			request.setAttribute(Constants.DIVISION_NAMES, divisionNames);
+			request.setAttribute(Constants.DIVISION_STREAM, divisionStream);
+			request.setAttribute(Constants.DIVISION_ID, divisionId);
+			request.setAttribute(Constants.DIVISIONS, divisions);
 			}
 		return SUCCESS;
 	}

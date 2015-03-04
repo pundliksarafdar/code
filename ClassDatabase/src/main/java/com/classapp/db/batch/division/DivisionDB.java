@@ -259,6 +259,28 @@ public class DivisionDB {
 		return (Division)queryResult;
 	}
 	
+	public Division retriveByDivisionId(String divisionId){
+		Session session = null;
+		Transaction transaction = null;
+		Object queryResult=null;
+		String queryString="from Division where divId = :div_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setString("div_id", divisionId);  
+			queryResult = query.uniqueResult();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		
+		return (Division)queryResult;
+	}
 	public boolean deletedivision(int classid) {
 		Session session = null;
 		Transaction transaction = null;

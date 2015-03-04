@@ -225,7 +225,7 @@ function getSelectedStudentsToDelete(){
 			var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
 			studentLgName = $('div#addStudentModal').find('#studentLoginName').val();
 			var divisionName ="";
-			divisionName = $('div#addStudentModal').find('#divisionName').val();
+			divisionId = $('div#addStudentModal').find('#divisionName').val();
 
 			getSelectedBatchesForStudent();		
 			if(!studentLgName || studentLgName.trim()==""){
@@ -235,7 +235,7 @@ function getSelectedStudentsToDelete(){
 			{
 				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Invalid Student login');
 				$('div#addStudentModal .error').show();
-			}else if(!divisionName || divisionName.trim()=="" || divisionName == -1){
+			}else if(!divisionId || divisionId.trim()=="" || divisionId == -1){
 				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Please select division');
 				$('div#addStudentModal .error').show();
 			}else if(batchIds==""){
@@ -251,7 +251,7 @@ function getSelectedStudentsToDelete(){
 						 regId:'',
 						 studentLgName:studentLgName,
 						 batchIds:batchIds,	
-						 divisionName:divisionName,				 
+						 divisionId:divisionId,				 
 				   		},
 				   type:"POST",
 				   success:function(e){
@@ -567,9 +567,9 @@ function getSelectedStudentsToDelete(){
 	function getBatchesOfDivision(){
 		$('#checkboxes').children().remove();
 		$('div#addStudentModal .error').hide();
-		var divisionName = $('div#addStudentModal').find('#divisionName').val();
+		var divisionId = $('div#addStudentModal').find('#divisionName').val();
 
-		if(!divisionName || divisionName.trim()=="" || divisionName == -1){
+		if(!divisionId || divisionId.trim()=="" || divisionId == -1){
 			$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please select a division');
 			$('div#addStudentModal .error').show();
 		}else{		
@@ -578,7 +578,7 @@ function getSelectedStudentsToDelete(){
 		   data: {
 		    	 methodToCall: "fetchBatchesForDivision",
 				 regId:'',
-				 divisionName:divisionName,						 
+				 divisionId:divisionId,						 
 		   		},
 		   type:"POST",
 		   success:function(e){		 
@@ -626,6 +626,9 @@ function getSelectedStudentsToDelete(){
         	<div class="error alert alert-danger"></div>
 			<div class="form-group">
 				<s:set value="${requestScope.divisionNames}" var="divisionNames"></s:set>
+				<s:set value="${requestScope.divisionStream}" var="divisionStream"></s:set>
+				<s:set value="${requestScope.divisionId}" var="divisionId"></s:set>
+				<s:set value="${requestScope.divisions}" var="divisions"></s:set>
 				<s:choose>
 				<s:when test="${divisionSize gt 0}">
 				Student Login Name <input type="text" class="form-control" id="studentLoginName"/> 
@@ -633,8 +636,8 @@ function getSelectedStudentsToDelete(){
 				<select class="btn btn-default" name="divisionName" id="divisionName">
 					
 						<option value="-1">Select Division</option>
-						<s:forEach items="${divisionNames}" var="divisionName">
-							<option value='<s:out value="${divisionName}"></s:out>'><s:out value="${divisionName}"></s:out></option>
+						<s:forEach items="${divisions}" var="division">
+							<option value='<s:out value="${division.divId}"></s:out>'><s:out value="${division.divisionName}"></s:out> &nbsp; <s:out value="${division.stream}"></s:out></option>
 						</s:forEach>
 					</select>
 				<button type="button" class="btn btn-primary btn-getBatchesForStudent" id="getBatchesForStudent" onclick="getBatchesOfDivision()">Get available batches</button>

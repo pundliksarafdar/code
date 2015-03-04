@@ -256,8 +256,9 @@ public class ClassOwnerServlet extends HttpServlet{
 
 			String studentLoginName = req.getParameter("studentLgName");
 			String batchIds = req.getParameter("batchIds");
-			String divisionName=req.getParameter("divisionName");
-			int divId= divisionTransactions.getDivisionIDByName(divisionName);
+			String divisionId=req.getParameter("divisionId");
+			//int divId= divisionTransactions.getDivisionIDByName(divisionName);
+			int divId= Integer.parseInt(divisionId);
 			Student student = validateStudent(studentLoginName, batchIds,divId,
 					regId, printWriter);
 			if (student != null) {
@@ -293,8 +294,8 @@ public class ClassOwnerServlet extends HttpServlet{
 				}
 			}
 
-			String divisionName = req.getParameter("divisionName");
-			List<Batch> batches= batchTransactions.getAllBatchesOfDivision(divisionName, regId); 
+			String divisionId = req.getParameter("divisionId");
+			List<Batch> batches= batchTransactions.getAllBatchesOfDivision(divisionId, regId); 
 			String batchIds="";
 			String batchNames="";
 			

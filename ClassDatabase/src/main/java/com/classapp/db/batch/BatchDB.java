@@ -344,7 +344,7 @@ public List<Batch> retriveAllBatches(List<String> class_id) {
 
 
 }
-	public List<Batch> retriveAllBatchesOfDivision(String divisionName, int class_id){
+	public List<Batch> retriveAllBatchesOfDivision(String divisionId, int class_id){
 	Session session = null;
 	Transaction transaction = null;
 	List<Batch> batchList = null;
@@ -354,7 +354,8 @@ public List<Batch> retriveAllBatches(List<String> class_id) {
 		session = HibernateUtil.getSessionfactory().openSession();
 		transaction = session.beginTransaction();
 		DivisionDB divisionDB= new DivisionDB();
- 		Division division=divisionDB.retrive(divisionName);
+ 		//Division division=divisionDB.retrive(divisionId);
+		Division division=divisionDB.retriveByDivisionId(divisionId);
 		int div_id= division.getDivId();
 		Query query = session.createQuery("from Batch where class_id =:class_id and div_id =:div_id");
 		query.setInteger("class_id", class_id);

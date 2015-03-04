@@ -174,9 +174,9 @@ public class BatchTransactions {
 		
 	}
 	
-	public List getAllBatchesOfDivision(String divisionName, int class_id){
+	public List getAllBatchesOfDivision(String divisionId, int class_id){
 		BatchDB batchDB=new BatchDB();
-		return batchDB.retriveAllBatchesOfDivision(divisionName, class_id);
+		return batchDB.retriveAllBatchesOfDivision(divisionId, class_id);
 	}
 	
 	public boolean deletesubjectfrombatch(String subjectid) {
