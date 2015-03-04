@@ -69,8 +69,9 @@ body{
 		});
 	</script>
 	<script>
-		$(document).ajaxStart(function() {
+		$(document).ajaxStart(function(e) {
 			$("#loaderModal").modal("show")
+			console.log(e);
 		});
 
 		$(document).ajaxStop(function() {

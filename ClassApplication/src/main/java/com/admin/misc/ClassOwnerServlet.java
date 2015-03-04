@@ -141,7 +141,10 @@ public class ClassOwnerServlet extends HttpServlet{
 			
 			batch.setSub_id(subjects);
 			
-			if(batchTransactions.addUpdateDb(batch)){
+			if(batchTransactions.isBatchExist(batch)){
+				respObject.addProperty(STATUS, "error");
+				respObject.addProperty(MESSAGE, "Batch already exists.");
+			}else if(batchTransactions.addUpdateDb(batch)){
 				respObject.addProperty(STATUS, "success");
 				respObject.addProperty(MESSAGE, "Successfully added batch!");
 			}else{
@@ -903,7 +906,10 @@ public class ClassOwnerServlet extends HttpServlet{
 			
 			while (prefixs.size()>counter) {
 				if (counter==0) {
+					if(prefixs.get(counter)!=null)
+					{
 					prefix=prefixs.get(counter);
+					}
 				}else{
 					prefix=prefix+","+prefixs.get(counter);
 				}

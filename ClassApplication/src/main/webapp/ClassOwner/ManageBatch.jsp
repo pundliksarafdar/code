@@ -116,7 +116,7 @@ $(document).ready(function(){
 		$('div#addBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please Select Division');
 		$('div#addBatchModal .error').show();
 	}else if(subjectsname==""){
-		$('div#addBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please Select Atlease One Subject');
+		$('div#addBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please Select Atleast One Subject');
 		$('div#addBatchModal .error').show();
 	}else{
 			$('div#addBatchModal .progress').removeClass('hide');

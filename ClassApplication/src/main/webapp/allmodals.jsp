@@ -184,14 +184,23 @@
 										<option value="<%=ids.get(count)%>"><%=divs.get(count)+" "+streams.get(count) %></option>
 						<%}} %>
 				</select>
-				<br>
+				<br/>
+				<br/>
+				<div class="row">
 				<%
 				pageContext.setAttribute("sublist", listOfSubject);
 				if(listOfSubject!=null){
 					for(int i=0;i<listOfSubject.size();i++){
 						Subject subject=listOfSubject.get(i);
 						%>
-					<input type="checkbox" class="chkSubject" name="subjectname" id="subjectname" data-label="<%=subject.getSubjectName() %>" value="<%=subject.getSubjectId() %>"/><%=subject.getSubjectName()%>		
+						 <div class="col-lg-12">
+						<div class="input-group">
+      					<span class="input-group-addon">
+							<input type="checkbox" class="chkSubject" name="subjectname" id="subjectname" data-label="<%=subject.getSubjectName() %>" value="<%=subject.getSubjectId() %>"/>
+						</span>
+							<input type="text" value="<%=subject.getSubjectName()%>" class="form-control" disabled="disabled"/>
+						</div>			
+						</div>
 					<%}}
 				}else{%>
 				
@@ -199,7 +208,7 @@
 				<%	
 				}
 				%>
-				 
+				 </div>
 				</jsp:useBean>
   					
 				</div>				

@@ -108,7 +108,11 @@ function edit(){
 			   var allteacherlastname=resultJson.allteacherlastname.split('/');
 			   var allteacherids=resultJson.allteacherids.split('/');
 			   var subids=resultJson.BatchsubjectsIds.split(',');
-			   var allSuffix=resultJson.allSuffix.split('/');
+			   var allSuffix={};
+			   
+			   if(resultJson.allSuffix){
+				   allSuffix=resultJson.allSuffix.split('/');
+			   }
 			   var table=$(document.getElementById("scheduletable"));
 			   var table1=document.getElementById("scheduletable");
 			  var rowCount=table1.rows.length;
@@ -159,11 +163,15 @@ function edit(){
 			
 					   var fnames=allteachersfirstname[counter].split(',');
 					   var lnames=allteacherlastname[counter].split(',');
-					   var Suffix=allSuffix[counter].split(',');
+					   var Suffix=new Object();
+					   
+					   if(allSuffix[counter]!=null && allSuffix[counter]!=undefined){
+						   Suffix=allSuffix[counter].split(',');
+					   }
 					   var subinnercounter=0;
 					   while(fnames.length>subinnercounter)
 						   {
-						   if(Suffix[subinnercounter]=="null"){
+						   if(Suffix[subinnercounter]=="null" || Suffix[subinnercounter]== undefined){
 							   Suffix[subinnercounter]="";
 						   }
 					   $(teacherselect).append("<option value="+ids[subinnercounter]+">"+fnames[subinnercounter]+" "+lnames[subinnercounter]+" "+Suffix[subinnercounter]+"</option>");
@@ -302,7 +310,11 @@ $(document).ready(function(){
 				   var starttime=resultJson.starttime.split(',');
 				   var endtime=resultJson.endtime.split(',');
 				   var dates=resultJson.dates.split(',');
-				   var prefix=resultJson.prefix.split(',');
+				   var prefix = new Object();
+				   
+				   if(resultJson.prefix != null){
+					   prefix=resultJson.prefix.split(',');
+				   }
 				   var table=$(document.getElementById("scheduletable"));
 				   var counter=0
 				   var table1=document.getElementById("scheduletable");
@@ -318,7 +330,7 @@ $(document).ready(function(){
 				   while(counter<subjects.length)
 					   {
 					   var pre="";
-					   if(prefix[counter]=="null"){
+					   if(prefix[counter]=="null" || prefix[counter] == undefined){
 						   prefix[counter]="";
 					   }
 				   $(table).append("<tr><td>"+subjects[counter]+"</td><td>"+firstname[counter]+" "+lastname[counter]+" "+prefix[counter]+"</td><td>"+starttime[counter]+
