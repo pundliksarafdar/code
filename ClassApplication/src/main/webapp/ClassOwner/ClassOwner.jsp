@@ -12,6 +12,6 @@ int teachercount=(Integer)session.getAttribute("teachercount");
 <li>No Of Student :- <%=studentcount %></li>
 </ul>
 </div>
-<img alt="temp" src="..\images\background.jpg" height="400px" width="800px">
+<img alt="temp" src="../images/background.png" height="400px" width="800px">
 </div>
 </html>

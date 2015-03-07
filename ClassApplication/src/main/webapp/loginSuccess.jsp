@@ -31,7 +31,7 @@ counter++;
 <%} %>
 </div>
 <div>
-<img alt="temp" src="images\background.jpg" height="400px" width="800px">
+<img alt="temp" src="images/background.png" height="400px" width="800px">
 </div>
 </body>
 </html>

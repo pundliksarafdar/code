@@ -52,6 +52,7 @@ import com.classapp.db.student.StudentData;
 import com.classapp.db.student.StudentDetails;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
+import com.classapp.notification.AllUserId;
 import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;
 import com.config.ClassException;
@@ -65,6 +66,7 @@ import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.feedback.feedbackTransaction;
+import com.transaction.notification.NotificationGlobalTransation;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.schedule.ScheduleTransaction;
 import com.transaction.teacher.TeaherTransaction;
@@ -764,6 +766,9 @@ public class ClassOwnerServlet extends HttpServlet{
 			if(exists.equals(""))
 			{
 			scheduleTransaction.addLecture(regId+"", batchID, subList, teacherList, stList, edList, dateList);
+			Batch batch=batchTransactions.getBatch(Integer.parseInt(batchID));
+			NotificationGlobalTransation notificationGlobalTransation=new NotificationGlobalTransation();
+			notificationGlobalTransation.sendAddLectureNotification(batch.getBatch_name(),batchID);
 			}else{
 				String error[]= exists.split(",");
 				for(i=0;i<error.length;i++)
@@ -1212,6 +1217,10 @@ public class ClassOwnerServlet extends HttpServlet{
 			if(exists.equals(""))
 			{
 			scheduleTransaction.updateLecture(regId+"", batchID, subList, teacherList, stList, edList, dateList,scheduleidsList);
+			BatchTransactions batchTransactions=new BatchTransactions();
+			Batch batch=batchTransactions.getBatch(Integer.parseInt(batchID));
+			NotificationGlobalTransation notificationGlobalTransation=new NotificationGlobalTransation();
+			notificationGlobalTransation.sendUpdateLectureNotification(batch.getBatch_name(),batchID);
 			}else{
 				String error[]= exists.split(",");
 				for(i=0;i<error.length;i++)

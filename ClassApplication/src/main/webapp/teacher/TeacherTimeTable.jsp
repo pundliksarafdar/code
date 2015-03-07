@@ -14,7 +14,7 @@ $(document).ready(function(){
 	  }).data("DateTimePicker");
 	  
 	  $("#submit").click(function(){
-			var classid=$("#classname").val();
+			var classid=$("#teacherTimeTableClassnameDropDown").val();
 			var date=$("#date").val();
 			if(classid!="-1" && date!="")
 				{
@@ -78,7 +78,7 @@ $(document).ready(function(){
 <div class="col-xs-2">
 Select Class
 <%List<RegisterBean> list=(List<RegisterBean>)request.getAttribute("Classes"); %>
-<select id="classname"  class='form-control'>
+<select id="teacherTimeTableClassnameDropDown"  class='form-control'>
 <option value="-1">Select Class</option>
 <%
 int counter=0;

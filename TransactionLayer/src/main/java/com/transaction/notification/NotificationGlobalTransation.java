@@ -52,6 +52,22 @@ public class NotificationGlobalTransation {
 		return userIds;
 	}
 	
+	public Boolean sendUpdateLectureNotification(String batchname,String Batchid) {
+		AllUserIdDb allUserIdDb=new AllUserIdDb();
+		List<String> list=allUserIdDb.getAllUserIdrelatedtoBatch(Batchid);
+		GCMSender gcmSender = new GCMSender();
+		String responce = gcmSender.sendMessage("Lectures of batch "+batchname+" has been updated", (ArrayList<String>) list);
+		return true;
+	}
+	
+	public Boolean sendAddLectureNotification(String batchname,String Batchid) {
+		AllUserIdDb allUserIdDb=new AllUserIdDb();
+		List<String> list=allUserIdDb.getAllUserIdrelatedtoBatch(Batchid);
+		GCMSender gcmSender = new GCMSender();
+		String responce = gcmSender.sendMessage("Lectures of batch "+batchname+" has been added", (ArrayList<String>) list);
+		return true;
+	}
+	
 	public static void main(String[] args) {
 		NotificationGlobalTransation notificationGlobalTransation = new NotificationGlobalTransation();
 		notificationGlobalTransation.notificationToAll("Hi");
