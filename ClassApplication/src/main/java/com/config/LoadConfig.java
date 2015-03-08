@@ -29,6 +29,9 @@ public class LoadConfig extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 		throws ServletException, IOException {
+		init();
+		System.out.println("Session timeout"+req.getSession().getMaxInactiveInterval());
+		req.getSession().setMaxInactiveInterval(10);
 		resp.getWriter().write("Loaded successfully");
 		
 	}

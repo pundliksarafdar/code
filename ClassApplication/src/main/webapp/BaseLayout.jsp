@@ -1,3 +1,4 @@
+<%@page import="java.util.Map"%>
 <%@page import="com.user.UserBean"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -92,6 +93,30 @@ $( document ).ajaxStop(function() {
 
 <jsp:include page="allmodals.jsp"></jsp:include>
 <%} %>
+
+<%
+		Map<String, String> map = (Map<String, String>)request.getAttribute("param");
+		String ignoresession = map.get("ignoresession");
+		if("true".equals(ignoresession)){
+			%>
+			<script>
+				var timeout = 60;
+				
+				setMessage();
+				function setMessage(){
+					setTimeout(function(){
+						timeout = timeout-1;
+						console.log(timeout);
+						if(timeout!=0){
+							setMessage();
+						}
+					},1);
+				}
+			</script>
+			<%
+		}
+
+%>
 	<div id="outerDiv" align ="center">
 		<div id="innerDiv">
 			<div id="header">

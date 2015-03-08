@@ -162,10 +162,24 @@ function searchTeacher() {
 			subjectIds="";
 			$('div#modifyTeacherModal .error').html('');
 			$('div#modifyTeacherModal .error').hide();
-			getSelectedSubjectsForTeacher();
 			
+			var subjects=$(".chkSubjectTeacher:checked").map(function(){
+				return this.value;
+				});
+				
+				var i=0;
+				while(i<subjects.size()){
+					if(i==0){
+						subjectIds=subjectIds+subjects[0]+"";
+					}else{
+						subjectIds=subjectIds+","+subjects[i];
+					}
+					i++;
+				}
+			//getSelectedSubjectsForTeacher();
+			console.log(subjectIds);	
 			if(!subjectIds || subjectIds.trim()==""){
-				$('div#modifyTeacherModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Subject name cannot be blank');
+				$('div#modifyTeacherModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Please select a subject');
 				$('div#modifyTeacherModal .error').show();
 			}else{
 				

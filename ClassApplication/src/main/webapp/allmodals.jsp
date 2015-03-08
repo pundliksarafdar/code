@@ -390,10 +390,13 @@
   <div class="modal-dialog">
       <div class="modal-content">
  		<div class="modal-header">
+ 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+ 			<h4>Modify Teacher</h4>
  		 </div>
         <div class="modal-body" id="">  
-       
-        	<jsp:setProperty name="subjectHelperBean" property="class_id" value="<%=user.getRegId() %>"/>
+       		<div class="error alert alert-danger"></div>	
+        	
+			<jsp:setProperty name="subjectHelperBean" property="class_id" value="<%=user.getRegId() %>"/>
 				<% 
 				TeacherDetails teacherSearch=(TeacherDetails)request.getSession().getAttribute("teacherSearchResultSubjects");
 				
@@ -405,13 +408,23 @@
 					for(int i=0;i<listOfSubject.size();i++){
 						Subject subject=listOfSubject.get(i);						
 						%>
-					<input type="checkbox" class="chkSubjectTeacher" name="subjectnameTeacher" id="subjectnameTeacher" data-label="<%=subject.getSubjectName() %>" value="<%=subject.getSubjectId() %>"/><%=subject.getSubjectName()%>		
+					<div class="input-group">
+					<span class="input-group-addon">
+						<input type="checkbox" class="chkSubjectTeacher" name="subjectnameTeacher" id="subjectnameTeacher" data-label="<%=subject.getSubjectName() %>" value="<%=subject.getSubjectId() %>"/>
+					</span>
+					<input type="text" value="<%=subject.getSubjectName()%>" class="form-control" disabled="disabled">
+					</div>
 					<%}
 				}if(currentAssignedSubjects!=null){
 					for(int i=0;i<currentAssignedSubjects.size();i++){
 						Subject subject=currentAssignedSubjects.get(i);
 				%>
-				<input type="checkbox" class="chkSubjectTeacher" name="subjectnameTeacher" id="subjectnameTeacher" data-label="<%=subject.getSubjectName() %>" value="<%=subject.getSubjectId() %>" checked="checked"/><%=subject.getSubjectName()%>		
+					<div class="input-group">
+					<span class="input-group-addon">
+						<input type="checkbox" class="chkSubjectTeacher" name="subjectnameTeacher" id="subjectnameTeacher" data-label="<%=subject.getSubjectName() %>" value="<%=subject.getSubjectId() %>" checked="checked"/>
+					</span>
+					<input type="text" value="<%=subject.getSubjectName()%>" class="form-control" disabled="disabled">
+					</div>
 					<%}
 					}
 					
@@ -865,13 +878,13 @@
       <div class="modal-content">
  		<div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title" id="">Enter Teacher ID</h4>
+          <h4 class="modal-title" id="">Add Teacher</h4>
         </div>
         <div class="modal-body" id="">
         	<div class="error alert alert-danger"></div>
 			<div class="form-group" id="">
 			 <input type="tel" class="form-control" id="teacherID" placeholder="Enter Teacher ID" name="teacherID"><br>
-			 <input type="text" class="form-control" id="suffix" placeholder="Suffix" name="suffix" maxlength="5" rel="tooltip" title="This is optional field.You can use this field when you have more than one teachers with same name. eg Amitab Bachhan JR. ">
+			 <input type="text" class="form-control" id="suffix" placeholder="Suffix" name="suffix" maxlength="5" rel="tooltip" title="This is optional field.You can use this field when you have more than one teachers with same name. eg Ajay Bhatt JR. ">
 				<br>
 				
 				<jsp:setProperty name="subjectHelperBean" property="class_id" value="<%=user.getRegId() %>"/>
@@ -881,7 +894,12 @@
 					for(int i=0;i<listOfSubject.size();i++){
 						Subject subject=listOfSubject.get(i);
 						%>
-					<input type="checkbox" class="chk" name="subjectname" id="subjectname" data-label="<%=subject.getSubjectName() %>" value="<%=subject.getSubjectId() %>"/><%=subject.getSubjectName()%>		
+					<div class="input-group">
+					<span class="input-group-addon">	
+						<input type="checkbox" class="chk" name="subjectname" id="subjectname" data-label="<%=subject.getSubjectName() %>" value="<%=subject.getSubjectId() %>"/>
+					</span>
+						<input type="text" value="<%=subject.getSubjectName()%>" class="form-control" disabled="disabled"/>
+					</div>	
 					<%}
 				}
 				%>

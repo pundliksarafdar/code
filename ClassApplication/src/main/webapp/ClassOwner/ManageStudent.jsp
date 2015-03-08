@@ -610,8 +610,15 @@ function getSelectedStudentsToDelete(){
 
 	function addCheckbox(batchname,batchid) {
 		   var container =$('#checkboxes');
-		   $('<input />', { type: 'checkbox', id: batchid, value: batchid, class: "chkBatch" }).appendTo(container);
-		   $('<label />', { 'for': batchid, text: batchname }).appendTo(container);
+		   var inputGroupDiv ='<div class="input-group" id="'+batchid+'"><div>';
+		   var inputGroupSpan = '<span class="input-group-addon" id="'+batchid+'"></span>';
+		   var label = '<input type="text" class="form-control" disabled="disabled">';
+		   container.append(inputGroupDiv);
+		   container.find("div#"+batchid).html(inputGroupSpan);
+		   var inputGroupSpan = container.find("div#"+batchid).find("span");
+		   $('<input />', { type: 'checkbox', id: batchid, value: batchid, class: "chkBatch" }).appendTo(inputGroupSpan);
+		   var inputGroupLable = container.find("div#"+batchid)
+		   $('<input />', { type: 'text', value: batchname,disabled:'disabled',class:'form-control' }).appendTo(inputGroupLable);
 		}
 </script>
 

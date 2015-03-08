@@ -5,6 +5,8 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
@@ -32,10 +34,14 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 		request = ServletActionContext.getRequest();
 		response = ServletActionContext.getResponse();
 		session = ServletActionContext.getContext().getSession();
+
+		HttpSession sessionHttp = request.getSession();
+		sessionHttp.setMaxInactiveInterval(60);
 		
 		ServletContext servletContext = ServletActionContext.getServletContext();
 		MiscFunction.setServletContext(servletContext);
 		
+		request.setAttribute("param", params);
 		userBean = (UserBean) ActionContext.getContext().getSession().get("user");
 		if((null == userBean || null == userBean.getUsername()) && !(params.containsKey("ignoresession")/* && "true".equals(params.get("ignoresession"))*/)){
 			sessionMessageError = "You session expired, Please login again";
