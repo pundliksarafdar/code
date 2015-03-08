@@ -1199,9 +1199,10 @@
         <div class="modal-body" id="">
         	<div class="error alert alert-danger" hidden="true"></div>
 			<div class="form-group" id="">
-		
+			 Class Name:	
 			 <input class="form-control" type="text" id="editclassname" maxlength="50">
 			 <br>
+			 Stream:
 			 <input class="form-control" type="text" id="editstream" maxlength="50">
 				<input type="hidden" id="hidclassid">
 				<div id="classTimming" class="hide">
