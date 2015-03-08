@@ -129,4 +129,13 @@ public class RegisterTransaction {
 		return db.isEmailExists(email);
 		
 	}
+	
+	public List<RegisterBean> getAllLogins(){
+		List<RegisterBean> registerBeans;
+		RegisterDB registerDB = new RegisterDB();
+		registerBeans = registerDB.getAllRegisters();
+		
+		return registerBeans;
+		
+	}
 }

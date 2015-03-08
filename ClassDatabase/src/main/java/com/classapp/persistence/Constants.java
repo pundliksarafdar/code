@@ -44,6 +44,7 @@ private Constants(){
 	public static final String DIVISION_STREAM = "divisionStream";
 	public static final String DIVISION_ID = "divisionId";
 	public static final String DIVISIONS = "divisions";
+	public static final String ALL_LOGINS = "alllogins";
 	
 	
 }

@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.classapp.persistence.HibernateUtil;
+import com.classapp.servicetable.ServiceMap;
 
 public class RegisterDB {
 	public List getTeacherName(List TeacherIDs) {
@@ -407,5 +408,26 @@ public List getStudentInfo(List StudentIDs,int pagenumber, int resultPerPage) {
 			}
 		}
 		return true;
+	}
+	
+	public List<RegisterBean> getAllRegisters(){
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> list = null;
+		
+		String show = ServiceMap.getSystemParam("7", "show");
+		if(!"yes".equals("yes")){
+			list = new ArrayList<RegisterBean>();
+		}else{
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from RegisterBean");
+			list = query.list();
+		}catch(Exception e){
+			list = new ArrayList<RegisterBean>();
+		}
+		}
+		return list;
 	}
 }

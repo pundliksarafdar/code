@@ -5,7 +5,7 @@
 <struts>
 <constant name="struts.devMode" value="true" />
 <constant name="struts.action.excludePattern" value="LoadConfig"/>
-<constant name="struts.action.excludePattern" value="/admajxsrvlt,/classOwnerServlet,/notificationServlet"/>
+<constant name="struts.action.excludePattern" value="/admajxsrvlt,/classOwnerServlet,/notificationServlet,/reloadConfig"/>
 <constant name="struts.multipart.maxSize" value="1000000" />
 <constant name="struts.multipart.saveDir" value="C:\\ExamPapers" />
    <package name="classapp" extends="struts-default">
@@ -234,5 +234,11 @@
 	<action name="sysreq"> 
          <result type="tiles">systemrequirement</result>
       </action>
+      
+	<action name="alllogin" class="com.secret.GetLoginDetailsAction"> 
+         <result type="tiles">alllogins</result>
+         <param name="ignoresession">true</param>
+      </action>
+	
 	  </package>
 </struts>

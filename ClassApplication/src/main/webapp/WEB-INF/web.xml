@@ -33,6 +33,11 @@
   	<servlet-name>NotificationServlet</servlet-name>
   	<servlet-class>com.admin.misc.NotificationServlet</servlet-class>
   </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>LoadConfig</servlet-name>
+    <url-pattern>/reloadConfig</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>AdminAjaxServlet</servlet-name>
     <url-pattern>/admajxsrvlt</url-pattern>
