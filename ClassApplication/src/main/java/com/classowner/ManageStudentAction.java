@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.student.StudentData;
+import com.classapp.db.student.StudentDetails;
 import com.classapp.persistence.Constants;
 import com.config.BaseAction;
 import com.helper.DivisionHelperBean;
@@ -30,7 +31,8 @@ public class ManageStudentAction extends BaseAction{
 		List list=batchTransactions.getAllBatches(userBean.getRegId());
 		request.setAttribute("batches", list);
 			studentHelperBean.setClass_id(userBean.getRegId());
-			request.getSession().setAttribute(Constants.STUDENT_LIST, studentHelperBean.getStudents());
+			List<StudentDetails> studentList = studentHelperBean.getStudents();
+			request.getSession().setAttribute(Constants.STUDENT_LIST, studentList);
 			List<Division> divisions= divisionTransactions.getAllDivisions(userBean.getRegId());
 			List<String> divisionNames= new ArrayList<String>();
 			List<Integer> divisionId= new ArrayList<Integer>();

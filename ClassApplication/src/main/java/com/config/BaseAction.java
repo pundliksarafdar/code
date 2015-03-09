@@ -35,8 +35,10 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 		response = ServletActionContext.getResponse();
 		session = ServletActionContext.getContext().getSession();
 
+		/*
 		HttpSession sessionHttp = request.getSession();
 		sessionHttp.setMaxInactiveInterval(60);
+		*/
 		
 		ServletContext servletContext = ServletActionContext.getServletContext();
 		MiscFunction.setServletContext(servletContext);

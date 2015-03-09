@@ -226,6 +226,14 @@ public class ClassOwnerServlet extends HttpServlet{
 					respObject.addProperty("studentId", student.getStudentId());
 					respObject.addProperty("studentFname", student.getStudentUserBean().getFname());
 					respObject.addProperty("studentLname", student.getStudentUserBean().getLname());
+					StringBuilder batchName = new StringBuilder();
+					for(Batch batch:student.getBatches()){
+						 batchName.append(batch.getBatch_name()+","); 
+						respObject.addProperty("studentBatch", "");
+					}
+					
+					batchName.deleteCharAt(batchName.length()-1);
+					req.getSession().setAttribute("studentBatch", batchName);
 					found=true;
 					break;
 				}

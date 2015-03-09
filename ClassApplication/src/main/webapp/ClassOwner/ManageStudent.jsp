@@ -771,6 +771,7 @@ function getSelectedStudentsToDelete(){
 						<th>Student Login Name</th>
 						<th>Student Name</th>
 						<th>Division</th>
+						<th>Batches</th>
 						<th></th>
 						<th></th>
 					</tr>
@@ -781,6 +782,7 @@ function getSelectedStudentsToDelete(){
 						<td><%=studentSearch.getStudentUserBean().getLoginName() %></td>
 						<td><%= studentSearch.getStudentUserBean().getFname()%> <%= studentSearch.getStudentUserBean().getLname()%></td>
 						<td><%= studentSearch.getDivision().getDivisionName()%>  </td>
+						<td><%= request.getSession().getAttribute("studentBatch")%></td>
 						<td><button type="button" class="btn btn-info" data-target="#modifyStudentModal" data-toggle="modal">Modify Student Batch</button></td>
 						<td><button type="button" class="btn btn-info" data-target="#deleteStudentModal" data-toggle="modal">Delete Student</button></td>
 					</tr>
