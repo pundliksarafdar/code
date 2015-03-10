@@ -45,7 +45,9 @@ public class TeacherTransaction {
 				teacher.getClass_id());
 		String[] newsubids = teacher.getSub_ids().split(",");
 		String[] oldsubids = oldteacher.getSub_ids().split(",");
+		ScheduleDB db = new ScheduleDB();
 		int counter = 0;
+		if(!oldsubids[0].equals("")){
 		while (oldsubids.length > counter) {
 			int innercounter = 0;
 			boolean flag = false;
@@ -56,12 +58,12 @@ public class TeacherTransaction {
 				innercounter++;
 			}
 			if (flag == false) {
-				ScheduleDB db = new ScheduleDB();
+			
 				db.deleteschedulerelatedtoteachersubject(teacher.getUser_id(),
 						Integer.parseInt(oldsubids[counter]));
 			}
 			counter++;
-		}
+		}}
 
 		return teacherDB.updateDb(teacher);
 	}

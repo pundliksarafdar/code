@@ -197,6 +197,7 @@ public class ScheduleTransaction {
 		ScheduleDB db=new ScheduleDB();
 		String[] subids=subid.split(",");
 		String[] batchsubids=batch.getSub_id().split(",");
+		if(!batchsubids[0].equals("")){
 		for (int i = 0; i < batchsubids.length; i++) {
 			boolean flag=false;
 			for (int j = 0; j < subids.length; j++) {
@@ -208,6 +209,7 @@ public class ScheduleTransaction {
 				db.deleteschedulerelatedtobatchsubject(batch.getBatch_id(), Integer.parseInt(batchsubids[i]));
 			}
 			
+		}
 		}
 		
 	}
