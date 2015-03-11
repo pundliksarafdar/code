@@ -6,7 +6,30 @@
 <%
 	UserBean userBean = (UserBean)session.getAttribute("user"); 	
 %>
-<nav class="navbar navbar-apple-custom" role="navigation">
+
+<div ng-app = "siteMapApp">
+<script>
+var siteMapData = <%=session.getAttribute("sitemapdata")%>
+console.log(siteMapData);
+
+function chunk(arr, size) {
+  var newArr = [];
+  for (var i=0; i<arr.length; i+=size) {
+    newArr.push(arr.slice(i, i+size));
+  }
+  return newArr;
+}
+
+var siteMapApp = angular.module("siteMapApp",[]);
+siteMapApp.controller("SiteMapController",function($scope){
+	$scope.siteMapDatas = siteMapData;
+	$scope.SiteMap = "Site Map";
+	$scope.chunkedData = chunk(siteMapData, 3);
+});
+
+</script>
+
+<nav class="navbar navbar-apple-custom" role="navigation" ng-controller="SiteMapController">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" style="border-color: white;border-width: 1px;">
@@ -70,15 +93,23 @@
     	<li><a href="notes">Notes</a></li>
     </cx:versionswitch>
     </ul>
-    <ul class="nav navbar-nav navbar-right">
-      <li class="dropdown">
+	<ul class="nav navbar-nav navbar-right">
+      <li>
+		<form class="navbar-form navbar-left" role="search">
+			<div class="form-group">
+			  <input type="text" class="form-control" ng-model="searchSiteMap" placeholder="Search">
+			</div>
+      	</form>	
+	  </li>
+	  <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-phone-alt"></i> <b class="caret"></b></a>
         <ul class="dropdown-menu">
     	  <li><a href="#" data-toggle="modal" data-target="#aboutUsModal">About Us</a></li>
 		  <li><a href="#" data-toggle="modal" data-target="#contactUsModal" id="contactuslink">Contact Us</a></li>
 	    </ul>
       </li>
-      <li class="dropdown">
+      
+	  <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=userBean.getFirstname() %> <b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li><a href="edit">Edit</a></li>
@@ -87,6 +118,21 @@
       </li>
     </ul>
   </div><!-- /.navbar-collapse -->
+  
+  <div ng-show="searchSiteMap.length">
+		<h3>{{SiteMap}}</h3>
+	<div class="row" ng-repeat="siteMapDataRows in chunkedData">
+		<div class="col-sm-4" ng-repeat="siteMapData in siteMapDataRows | filter:searchSiteMap">
+			<a href="#" style="color: #428bca;">{{siteMapData.linkName}}</a>
+		</div>
+	</div>
+	<div ng-hide="(chunkedData| filter:searchSiteMap).length">
+			No Result
+	</div>	
+	</div>
+	
+
 </nav>
+</div>
 
 

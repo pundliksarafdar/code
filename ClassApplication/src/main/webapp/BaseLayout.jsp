@@ -60,6 +60,7 @@ html,body {
 <script src="js/bootstrap-datetimepicker.min.js"></script>
 <script src="js/jquery.autocomplete.js"></script>
 <script src="js/global.js"></script>
+<script src="js/angular.min.js"></script>
 <script>
 $( document ).ajaxStart(function() {
 	  $("#loaderModal").modal("show")
@@ -68,6 +69,8 @@ $( document ).ajaxStart(function() {
 $( document ).ajaxStop(function() {
 	  $("#loaderModal").modal("hide")
 });
+
+
 </script>
 </head>
 <body>
@@ -92,6 +95,7 @@ $( document ).ajaxStop(function() {
 	%>
 
 <jsp:include page="allmodals.jsp"></jsp:include>
+
 <%} %>
 
 <%

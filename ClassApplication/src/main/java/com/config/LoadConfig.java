@@ -34,5 +34,6 @@ public class LoadConfig extends HttpServlet{
 		req.getSession().setMaxInactiveInterval(10);
 		resp.getWriter().write("Loaded successfully");
 		
+		
 	}
 }

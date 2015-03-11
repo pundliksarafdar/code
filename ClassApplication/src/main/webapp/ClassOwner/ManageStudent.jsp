@@ -565,6 +565,7 @@ function getSelectedStudentsToDelete(){
 	}
 	
 	function getBatchesOfDivision(){
+		$(".chkBatch:checked").removeAttr('checked');
 		$('#checkboxes').children().remove();
 		$('div#addStudentModal .error').hide();
 		var divisionId = $('div#addStudentModal').find('#divisionName').val();

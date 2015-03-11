@@ -1,5 +1,6 @@
 package com.config;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -12,6 +13,9 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;
+import com.classapp.servicetable.SiteMap;
+import com.classapp.servicetable.SiteMapData;
+import com.google.gson.Gson;
 import com.miscfunction.MiscFunction;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
@@ -42,6 +46,11 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 		
 		ServletContext servletContext = ServletActionContext.getServletContext();
 		MiscFunction.setServletContext(servletContext);
+		
+		List<SiteMapData> siteMapDatas = SiteMap.getSiteMapList();
+		Gson gson = new Gson();
+		String siteMapData = gson.toJson(siteMapDatas);
+		(ActionContext.getContext().getSession()).put("sitemapdata", siteMapData);
 		
 		request.setAttribute("param", params);
 		userBean = (UserBean) ActionContext.getContext().getSession().get("user");
