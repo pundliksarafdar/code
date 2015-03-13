@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.servicetable.SiteMapData" table="sitemap" catalog="classdb">
+    <id name="srno" type="int">
+            <column name="srno" />
+            <generator class="increment" />
+        </id>
+        <property name="title" type="string">
+            <column name="title"/>
+        </property>
+        <property name="linkName" type="string">
+            <column name="linkName"/>
+        </property>
+        <property name="href" type="string">
+            <column name="href"/>
+        </property>
+        <property name="searchString" type="string">
+            <column name="searchString"/>
+        </property>
+        <property name="role" type="string">
+            <column name="role"/>
+        </property>
+        <property name="enable" type="string">
+            <column name="enable"/>
+        </property>
+    </class>
+</hibernate-mapping>

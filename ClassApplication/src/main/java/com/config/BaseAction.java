@@ -47,11 +47,6 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 		ServletContext servletContext = ServletActionContext.getServletContext();
 		MiscFunction.setServletContext(servletContext);
 		
-		List<SiteMapData> siteMapDatas = SiteMap.getSiteMapList();
-		Gson gson = new Gson();
-		String siteMapData = gson.toJson(siteMapDatas);
-		(ActionContext.getContext().getSession()).put("sitemapdata", siteMapData);
-		
 		request.setAttribute("param", params);
 		userBean = (UserBean) ActionContext.getContext().getSession().get("user");
 		if((null == userBean || null == userBean.getUsername()) && !(params.containsKey("ignoresession")/* && "true".equals(params.get("ignoresession"))*/)){
@@ -65,6 +60,18 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 		}
 			forward = performBaseAction(userBean,request,response,session);
 		
+			Integer role = userBean.getRole();
+			Integer roleInt;
+			if(null==role){
+				roleInt = -1;
+			}else{
+				roleInt = role;
+			}
+			List<SiteMapData> siteMapDatas = SiteMap.getSiteMapList(roleInt.toString());
+			Gson gson = new Gson();
+			String siteMapData = gson.toJson(siteMapDatas);
+			(ActionContext.getContext().getSession()).put("sitemapdata", siteMapData);
+			
 		ActionMapping mapping = (ActionMapping) request.getAttribute("struts.actionMapping");
 		
 		if("logout".equals(mapping.getName())){

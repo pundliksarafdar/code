@@ -7,7 +7,7 @@
 	UserBean userBean = (UserBean)session.getAttribute("user"); 	
 %>
 
-<div ng-app = "siteMapApp">
+<div ng-app = "siteMapApp" ng-cloak>
 <script>
 var siteMapData = <%=session.getAttribute("sitemapdata")%>
 console.log(siteMapData);
@@ -97,7 +97,7 @@ siteMapApp.controller("SiteMapController",function($scope){
       <li>
 		<form class="navbar-form navbar-left" role="search">
 			<div class="form-group">
-			  <input type="text" class="form-control" ng-model="searchSiteMap" placeholder="Search">
+			  <input type="text" class="form-control" ng-model="searchSiteMap.searchString" placeholder="Search">
 			</div>
       	</form>	
 	  </li>
@@ -119,15 +119,15 @@ siteMapApp.controller("SiteMapController",function($scope){
     </ul>
   </div><!-- /.navbar-collapse -->
   
-  <div ng-show="searchSiteMap.length">
+  <div ng-show="searchSiteMap.searchString.length">
 		<h3>{{SiteMap}}</h3>
 	<div class="row" ng-repeat="siteMapDataRows in chunkedData">
 		<div class="col-sm-4" ng-repeat="siteMapData in siteMapDataRows | filter:searchSiteMap">
-			<a href="#" style="color: #428bca;">{{siteMapData.linkName}}</a>
+			<a href="{{siteMapData.href}}" style="color: #428bca;" title="{{siteMapData.title}}" >{{siteMapData.linkName}}</a>
 		</div>
 	</div>
 	<div ng-hide="(chunkedData| filter:searchSiteMap).length">
-			No Result
+			<div style="color:red;">No Result</div>
 	</div>	
 	</div>
 	

@@ -1,15 +1,18 @@
 package com.classapp.servicetable;
 
 public class SiteMapData {
-	private String srno;
+	private int srno;
 	private String title;
 	private String href;
 	private String linkName;
+	private String searchString;
+	private String role;
+	private String enable;
 	
-	public String getSrno() {
+	public int getSrno() {
 		return srno;
 	}
-	public void setSrno(String srno) {
+	public void setSrno(int srno) {
 		this.srno = srno;
 	}
 	public String getTitle() {
@@ -29,6 +32,24 @@ public class SiteMapData {
 	}
 	public void setLinkName(String linkName) {
 		this.linkName = linkName;
+	}
+	public String getSearchString() {
+		return searchString;
+	}
+	public void setSearchString(String searchString) {
+		this.searchString = searchString;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
+	public String getEnable() {
+		return enable;
+	}
+	public void setEnable(String enable) {
+		this.enable = enable;
 	}
 	
 	
