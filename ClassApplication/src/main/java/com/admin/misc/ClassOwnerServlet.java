@@ -531,6 +531,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			String batchID=req.getParameter("batchName");
 			BatchTransactions batchTransactions=new BatchTransactions();
 			List<Subjects> Batchsubjects=(List<Subjects>)batchTransactions.getBatcheSubject(batchID);
+			if(Batchsubjects!=null){
 			String subjectnames="";
 			String subjectids="";
 			for(int i=0;i<Batchsubjects.size();i++)
@@ -550,6 +551,10 @@ public class ClassOwnerServlet extends HttpServlet{
 			
 			respObject.addProperty("Batchsubjects", subjectnames);
 			respObject.addProperty("BatchsubjectsIds", subjectids);
+			respObject.addProperty("subjectstatus", "");
+			}else{
+			respObject.addProperty("subjectstatus", "notavailable");
+			}
 			respObject.addProperty(STATUS, "success");
 			respObject.remove(STATUS);
 			/*String teacherID = req.getParameter("teacherID");
@@ -1346,6 +1351,8 @@ public class ClassOwnerServlet extends HttpServlet{
 			
 			int deleteBatchId=Integer.parseInt(req.getParameter("batchId"));										
 			Batch batch=batchTransactions.getBatch(deleteBatchId);
+			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
+			scheduleTransaction.deleteSchedulerelatedoBatch(batch);
 			StudentTransaction studentTransaction=new StudentTransaction();
 			studentTransaction.removeBatchFromstudentslist(deleteBatchId+"");
 				if(batchTransactions.deleteBatch(batch)){
@@ -1374,6 +1381,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				Student student= studentTransaction.getclassStudent(regId,Integer.parseInt(classid));		
 				BatchTransactions batchTransactions=new BatchTransactions();
 				ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
+				if(!student.getBatch_id().equals("")){
 				int counter =0;
 				String batchids[]=student.getBatch_id().split(",");
 				String batchnames="";
@@ -1393,7 +1401,11 @@ public class ClassOwnerServlet extends HttpServlet{
 					counter++;	
 				}
 				respObject.addProperty("batchids", batchid);
-			respObject.addProperty("batchnames", batchnames);	
+			respObject.addProperty("batchnames", batchnames);
+			respObject.addProperty("nobatch", "");
+				}else{
+					respObject.addProperty("nobatch", "nobatch");
+				}
 			respObject.addProperty(STATUS, "success");
 		}else if("getteacherschedule".equals(methodToCall)){
 			Integer regId = null;

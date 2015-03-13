@@ -98,6 +98,8 @@ $('#batchname').change(function(){
 		if(batchName!='-1')
 			{
 	add();
+			}else{
+				$("#testdiv").addClass("hide");
 			}
 	prev=batchName;
 		
@@ -470,7 +472,7 @@ $(function(){
 	  var button=document.getElementById("add");
 	  button.disabled=false;
 	  filldropdown(); 
-	  
+	 
   }
   
   function deleteLecture(id)
@@ -494,9 +496,11 @@ $(function(){
 		   type:"POST",
 		   success:function(data){
 			   var resultJson = JSON.parse(data);
+			   var subjectstatus=resultJson.subjectstatus;
+			   if(subjectstatus==""){
 			   var subjectnames= resultJson.Batchsubjects.split(",");
 			   var subjectids= resultJson.BatchsubjectsIds.split(",");
-			   
+			  
 			      var counter=1;
 			   var sell1Select = $("#"+"sub"+globcounter);
                if(sell1Select.prop) { 
@@ -509,12 +513,20 @@ $(function(){
                sell1Options[0]= new Option("Select Subject", "-1");
                
                var limit=subjectnames.length;
+               
                for(var i=0;i<limit;i++)
             	   {
             	   
             	   sell1Options[i+1]= new Option(subjectnames[i], subjectids[i]);
             	   }
                globcounter++;
+			   }else{
+				   var button=document.getElementById("add");
+					  button.disabled=true;
+					  $("#nosubjecterror").modal('toggle');
+					  $("#testdiv").addClass("hide");
+			   }
+               
 		   	},
 		   error:function(data){
 			   alert("error");
@@ -539,7 +551,7 @@ $(function(){
 			<div class="row">
 				<div class="col-md-4">
 					<select name="batchname" id="batchname" class="form-control" width="100px">
-					<option>Select Batch</option>
+					<option value="-1">Select Batch</option>
 					<%
 					while(i<batch.size()){
 					%>
@@ -557,7 +569,7 @@ $(function(){
 
 <div id="testdiv" align="center" class="hide container">
 <table id="timetablediv" class="table table-bordered table-hover" style="background-color: white;" data-toggle="table" width="600px" border="1">
-	<tr>
+	<tr style="background-color: rgb(0, 148, 255);">
 		<th width="100px">Select Subject</th>
 		<th width="100px">Select Teacher</th>
 		<th width="100px">Start Time</th>
@@ -608,5 +620,23 @@ $(function(){
    </div>
 </div>
 
+<div class="modal fade" id="nosubjecterror" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" 
+               aria-hidden="true">×
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               Subject
+            </h4>
+         </div>
+         <div class="modal-body">
+           Please add subjects in batch...
+         </div>
+         </div>
+   </div>
+</div>
 </body>
  </html>

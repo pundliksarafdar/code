@@ -9,6 +9,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.classapp.db.batch.Batch;
 import com.classapp.persistence.Constants;
 import com.classapp.persistence.HibernateUtil;
 
@@ -420,6 +421,28 @@ public boolean deleteschedulerelatedtoclass(int classid) {
 		Query query = session.createQuery("delete FROM Schedule where div_id = :classid");
 		//Query query = session.createQuery("FROM Schedule where date = '2014-10-04' and class_id = 34");
 		query.setParameter("classid", classid);	
+		query.executeUpdate();
+		transaction.commit();
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	return true;
+	
+}
+
+public boolean deleteschedulerelatedtoBatch(Batch batch) {
+	
+	Session session = null;
+	Transaction transaction = null;
+	List<Schedule> scheduleList = null;
+	Object object = new Object();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("delete FROM Schedule where batch_id = :batch_id");
+		//Query query = session.createQuery("FROM Schedule where date = '2014-10-04' and class_id = 34");
+		query.setParameter("batch_id", batch.getBatch_id());	
 		query.executeUpdate();
 		transaction.commit();
 		}catch(Exception e)

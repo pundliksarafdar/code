@@ -646,7 +646,7 @@ while(i<batch.size()){
 <div class="col-md-2">
 <div id="datetimepicker" class="input-group" style="width :150px;">
 					<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
-						type="text" id="date" placeholder="Select Date"/> <span class="input-group-addon add-on"> <i
+						type="text" id="date" placeholder="Select Date" readonly/> <span class="input-group-addon add-on"> <i
 						class="glyphicon glyphicon-calendar glyphicon-time"></i>
 					</span>
 				</div>
@@ -661,7 +661,7 @@ while(i<batch.size()){
 <div class="container">
 <table id="scheduletable" class="table table-bordered table-hover" style="background-color: white; display:none;">
 <thead>
-<tr >
+<tr style="background-color: rgb(0, 148, 255);">
 <th>Subject</th>
 <th>Teacher</th>
 <th>Start Time</th>

@@ -149,6 +149,7 @@ public class BatchTransactions {
 		BatchDB batchDB=new BatchDB();
 		List Subjects=batchDB.getBatchSubjects(batchID);
 		String subject=(String) Subjects.get(0);
+		if(!subject.equals("")){
 		String[] subjectids=subject.split(",");
 		List subidsList = new ArrayList();
 		for(int i=0;i<subjectids.length;i++)
@@ -159,7 +160,8 @@ public class BatchTransactions {
 		List Batchsubjects=db.getSubjects(subidsList);
 		
 		return Batchsubjects;
-		
+		}
+		return null;
 	}
 	public List<Batch> getTeachersBatch(List<Schedule> schedules) {
 		List<Batch>  batchs=new ArrayList<Batch>();

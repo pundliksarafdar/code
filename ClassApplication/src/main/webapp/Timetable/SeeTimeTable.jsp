@@ -522,7 +522,7 @@ while(i<batch.size()){
 <div class="col-md-2">
 <div id="datetimepicker" class="input-group" style="width :150px;">
 					<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
-						type="text" id="date" placeholder="Select Date"/> <span class="input-group-addon add-on"> <i
+						type="text" id="date" placeholder="Select Date" readonly/> <span class="input-group-addon add-on"> <i
 						class="glyphicon glyphicon-calendar glyphicon-time"></i>
 					</span>
 				</div>

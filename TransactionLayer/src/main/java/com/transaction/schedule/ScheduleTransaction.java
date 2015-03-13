@@ -12,12 +12,15 @@ import org.apache.commons.beanutils.BeanUtils;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.batch.Batch;
+import com.transaction.batch.BatchTransactions;
+import com.transaction.batch.division.DivisionTransactions;
 
 public class ScheduleTransaction {
 
 	public String addLecture(String class_id,String batch_id,List sub_id,List teacher_id,
 			List start_time,List end_time,List date) {
-		
+		BatchTransactions batchTransactions=new BatchTransactions();
+		Batch batch=batchTransactions.getBatch(Integer.parseInt(batch_id));
 		int i=0;
 		for(i=0;i<sub_id.size();i++)
 		{
@@ -26,7 +29,7 @@ public class ScheduleTransaction {
 		schedule.setClass_id(Integer.parseInt(class_id));
 		schedule.setDate((Date)date.get(i));
 		schedule.setDay_id(2);
-		schedule.setDiv_id(1);
+		schedule.setDiv_id(batch.getDiv_id());
 		schedule.setEnd_time((Time)end_time.get(i));
 		schedule.setStart_time((Time)start_time.get(i));
 		schedule.setSub_id(Integer.parseInt((String)sub_id.get(i)));
@@ -227,5 +230,11 @@ public class ScheduleTransaction {
 		
 		return true;
 		
+	}
+	
+	public boolean deleteSchedulerelatedoBatch(Batch batch) {
+		ScheduleDB scheduleDB=new ScheduleDB();
+		scheduleDB.deleteschedulerelatedtoBatch(batch);
+		return true;
 	}
 }

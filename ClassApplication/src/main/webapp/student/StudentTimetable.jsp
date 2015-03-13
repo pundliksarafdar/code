@@ -90,6 +90,8 @@ $(document).ready(function(){
 			   type:"POST",
 			   success:function(data){
 				   var resultJson = JSON.parse(data);
+				   var nobatch=resultJson.nobatch;
+				   if(nobatch==""){
 				   var batchnames=resultJson.batchnames.split(',');
 				   var batchids=resultJson.batchids.split(',');
 				   var select=$(document.getElementById("batch"));
@@ -99,6 +101,10 @@ $(document).ready(function(){
 					   	$(select).append("<option value="+batchids[counter]+">"+batchnames[counter]+"</option>")
 					   	counter++;
 					   }
+				   }else{
+					   $("#notallocated").modal('toggle');
+					   
+				   }
 			   	},
 			   error:function(data){
 				   alert("error");
@@ -137,7 +143,7 @@ while(list.size()>counter){ %>
 Select Date
 <div id="datetimepicker" class="input-group" style="width :150px;">
 					<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
-						type="text" id="date"/> <span class="input-group-addon add-on"> <i
+						type="text" id="date" readonly/> <span class="input-group-addon add-on"> <i
 						class="glyphicon glyphicon-calendar glyphicon-time"></i>
 					</span>
 				</div>
@@ -158,7 +164,7 @@ Select Date
 <div class="container">
 <table id="scheduletable" border="1" style="display:none" class="table table-bordered">
 <thead>
-<tr>
+<tr style="background-color: rgb(0, 148, 255);">
 <th>Subject</th>
 <th>Teacher</th>
 <th>Start Time</th>
@@ -182,6 +188,25 @@ Select Date
          </div>
          <div class="modal-body">
            Schedule Not Available...
+         </div>
+         </div>
+   </div>
+</div>
+
+<div class="modal fade" id="notallocated" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" 
+               aria-hidden="true">×
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               Batch
+            </h4>
+         </div>
+         <div class="modal-body">
+           You are not allocated in any batch of this class...
          </div>
          </div>
    </div>

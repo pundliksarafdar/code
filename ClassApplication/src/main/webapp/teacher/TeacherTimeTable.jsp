@@ -94,7 +94,7 @@ while(list.size()>counter){ %>
 Select Date
 <div id="datetimepicker" class="input-group" style="width :150px;">
 					<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
-						type="text" id="date"/> <span class="input-group-addon add-on"> <i
+						type="text" id="date" readonly/> <span class="input-group-addon add-on"> <i
 						class="glyphicon glyphicon-calendar glyphicon-time"></i>
 					</span>
 				</div>
@@ -111,7 +111,7 @@ Select Date
 <div class="container">
 <table id="scheduletable" border="1" style="display:none" class="table table-bordered">
 <thead>
-<tr>
+<tr style="background-color: rgb(0, 148, 255);">
 <th>Batch</th>
 <th>Subject</th>
 <th>Start Time</th>

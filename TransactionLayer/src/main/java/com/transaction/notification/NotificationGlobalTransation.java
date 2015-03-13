@@ -64,7 +64,9 @@ public class NotificationGlobalTransation {
 		AllUserIdDb allUserIdDb=new AllUserIdDb();
 		List<String> list=allUserIdDb.getAllUserIdrelatedtoBatch(Batchid);
 		GCMSender gcmSender = new GCMSender();
+		if(list.size()>0){
 		String responce = gcmSender.sendMessage("Lectures of batch "+batchname+" has been added", (ArrayList<String>) list);
+		}
 		return true;
 	}
 	
