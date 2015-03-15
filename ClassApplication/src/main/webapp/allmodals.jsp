@@ -163,6 +163,7 @@
 				<jsp:setProperty name="subjectHelperBean" property="class_id" value="<%=user.getRegId() %>"/>
 				
 				<%List<Subject> listOfSubject=subjectHelperBean.getSubjects();
+				pageContext.setAttribute("sublist", listOfSubject);
 				List<String> divs=(List<String>) request.getAttribute("divisionNames");
 				List<String> streams=(List<String>) request.getAttribute("streams");
 				List<String> ids=(List<String>) request.getAttribute("batcheids");
@@ -189,7 +190,7 @@
 				<br/>
 				<div class="row">
 				<%
-				pageContext.setAttribute("sublist", listOfSubject);
+				
 				if(listOfSubject!=null){
 					for(int i=0;i<listOfSubject.size();i++){
 						Subject subject=listOfSubject.get(i);
@@ -228,12 +229,13 @@
 			</div>
 			<%List<Subject> ls=(List<Subject>)pageContext.getAttribute("sublist"); 
 			if(ls!=null){
+				if(ls.size()>0){
 			%>
 	        <div class="add">
 	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Cancel</button>
 	        <button type="button" class="btn btn-primary btn-addBatch" id="btn-addBatch">Add</button>
 	        </div>
-	        <%}else{ %>
+	        <%}}else{ %>
 	       <!-- <font color="RED" ><b>Please Add Subjects First</b></font> -->
 	        <%} %>
 	        <div class="setTimming hide">
@@ -893,6 +895,10 @@
           <h4 class="modal-title" id="">Add Teacher</h4>
         </div>
         <div class="modal-body" id="">
+        <% 
+			if(ls!=null){
+				if(ls.size()>0){
+				%>
         	<div class="error alert alert-danger"></div>
 			<div class="form-group" id="">
 			 <input type="tel" class="form-control" id="teacherID" placeholder="Enter Teacher ID" name="teacherID"><br>
@@ -942,7 +948,13 @@
 				</div>
 				</div>
 				</div>
-			</div>				
+			</div>		
+			<%}else{
+			%>
+			<p style="color: red;">Please add subjects first <a href="addsubject">click here</a> to add subject</p>
+			<%	
+			}} %>		
+			
 			</div>
       	<div class="modal-footer">
 	        <div class="progress progress-striped active hide">
@@ -951,14 +963,16 @@
 						Processing your request Please wait
 					</div>
 			</div>
-			<%if(ls!=null){ %>
+			<% 
+			if(ls!=null){
+				if(ls.size()>0){
+				%>
+			
 	        <div class="add">
 	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Cancel</button>
 	        <button type="button" class="btn btn-primary btn-add" id="btn-add">Add</button>
 	        </div>
-	        <%}else{ %>
-	        <font color="RED" ><b>Please Add Subjects First</b></font>
-	        <%} %>
+	        <%}} %>
 	        <div class="setTimming hide">
 	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Not Now</button>
 	        <button type="button" class="btn btn-primary btn-setTimming" id="btn-setTimming">Done</button>

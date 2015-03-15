@@ -55,3 +55,7 @@
 .nav .open .dropdown-menu{
 	background: #DDDDDD;
 }
+
+div[class^="col-"]{
+	  margin-bottom: 5px;
+}
