@@ -194,6 +194,6 @@ function acceptClass(regId,that){
 <a href="#" class="btn btn-default" id="sendMessage">Notify</a>
 </div>
 <div>
-<img alt="temp" src="../images/background.png" height="400px" width="800px">
+<img alt="temp" src="../images/background.png" height="100%" width="100%">
 </div>
 </html>
