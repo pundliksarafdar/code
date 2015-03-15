@@ -123,11 +123,14 @@ function deleteSubject(subid){
  </div>
 <br><br>
 <%List<Subject> list=(List<Subject>)request.getAttribute("listOfSubjects"); %>
-<table class="table table-bordered table-hover" style="background-color: white;" data-toggle="table">
 <%
 int counter=0;
-if(list!=null){%>
-<tr>
+if(list!=null){
+if(list.size()>0){
+%>
+<table class="table table-bordered table-hover" style="background-color: white;" data-toggle="table">
+
+<tr style="background-color: rgb(0, 148, 255);">
 <th>SR No.</th>
 <th>Subject Name</th>
 <th>Edit</th>
@@ -140,12 +143,14 @@ if(list!=null){%>
 <td><a href="#" id="<%=list.get(counter).getSubjectId()%>" onclick="getSubject(<%=list.get(counter).getSubjectId()%>)">Edit</a></td>
 <td><a href="#" id="<%=list.get(counter).getSubjectId()%>" onclick="deleteSubject(<%=list.get(counter).getSubjectId()%>)">Delete</a></td>
 </tr>
-<%counter++;}}else{ %>
-<tr>
-<th>Till You Havn't Added any subject</th>
-</tr>
-<%} %>
+<%counter++;}
+%>
 </table>
-
+<%}else{
+	%>
+	<span class="alert alert-info">No Subject added yet</span>
+	<%
+}
+}%>
 </body>
 </html>

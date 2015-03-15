@@ -75,4 +75,9 @@ public class DivisionTransactions {
 		 return true;
 	}
 	 
+	 public Division getDidvisionByID(int divID) {
+		DivisionDB db=new DivisionDB();
+		return db.retriveByID(divID);
+	}
+	 
 }

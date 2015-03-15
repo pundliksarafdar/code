@@ -163,7 +163,11 @@
 				<jsp:setProperty name="subjectHelperBean" property="class_id" value="<%=user.getRegId() %>"/>
 				
 				<%List<Subject> listOfSubject=subjectHelperBean.getSubjects();
-				
+				List<String> divs=(List<String>) request.getAttribute("divisionNames");
+				List<String> streams=(List<String>) request.getAttribute("streams");
+				List<String> ids=(List<String>) request.getAttribute("batcheids");
+				if(divs!=null){
+					if(divs.size()>0){
 				if(listOfSubject.size()>0){
 				%>
 				Batch Name <input type="text" class="form-control" id="batchName"/>
@@ -173,9 +177,6 @@
 					
 						<option value="-1">Select Division</option>
 						<%
-						List<String> divs=(List<String>) request.getAttribute("divisionNames");
-						List<String> streams=(List<String>) request.getAttribute("streams");
-						List<String> ids=(List<String>) request.getAttribute("batcheids");
 						
 						int count=0;
 						if(divs!=null && streams!=null && ids!=null ){
@@ -204,8 +205,13 @@
 					<%}}
 				}else{%>
 				
-					<p style="color: red;">Please add subjects first<a href="addsubject">click here</a> to add subject</p> 
+					<p style="color: red;">Please add subjects first <a href="addsubject">click here</a> to add subject</p> 
 				<%	
+				}
+					}else{
+						%>
+						<p style="color: red;">Please add Class first <a href="manageclass">click here</a> to add class</p>
+					<%}
 				}
 				%>
 				 </div>
@@ -228,7 +234,7 @@
 	        <button type="button" class="btn btn-primary btn-addBatch" id="btn-addBatch">Add</button>
 	        </div>
 	        <%}else{ %>
-	       <font color="RED" ><b>Please Add Subjects First</b></font>
+	       <!-- <font color="RED" ><b>Please Add Subjects First</b></font> -->
 	        <%} %>
 	        <div class="setTimming hide">
 	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Not Now</button>
@@ -254,20 +260,26 @@
         	if(studentDetails!=null){
         	
         	List<Batch> currentBatches=studentDetails.getBatches();
-        	Batch selectedBatch=currentBatches.get(0);
-        	List<Batch> listOfBatches=batchHelperBean.getAllRelatedBatches(selectedBatch.getDiv_id());
+        //	Batch selectedBatch=currentBatches.get(0);
+        	List<Batch> listOfBatches=batchHelperBean.getAllRelatedBatches(studentDetails.getDivID());
+        	if(listOfBatches.size()==0){
+        		%>
+        		<h4>Batches for <%=studentDetails.getDivision().getDivisionName() %> are not available</h4>
+        		<%
+        	}
 			if(listOfBatches!=null){    	
-        	
+        	if(currentBatches!=null){
         	listOfBatches.removeAll(currentBatches);
+        	}
         	for(int i=0;i<listOfBatches.size();i++){
 						Batch batch=listOfBatches.get(i);
 											
 						%>
 					<input type="checkbox" class="chkBatch" name="batchId" data-label="<%=batch.getBatch_name() %>" value="<%=batch.getBatch_id() %>"/><%=batch.getBatch_name()%>		
-					<%}}%>
-					
+					<%}}else{%>
+					<h4>Batches for <%=studentDetails.getDivision().getDivisionName() %> are not available</h4>
 			
-			<%		
+			<%}		
 			if(currentBatches!=null){
 			for(Batch batch: currentBatches){
 						%>

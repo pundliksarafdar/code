@@ -329,7 +329,7 @@ function searchTeacher() {
 		%> 
 		<table class="table table-bordered table-hover" style="background-color: white;" border="1">
 			<thead>
-				<tr>
+				<tr style="background-color: rgb(0, 148, 255);">
 					<th></th>
 					<th>Teacher Login Name</th>
 					<th>Student Name</th>
@@ -365,7 +365,7 @@ function searchTeacher() {
 	<div class="panel-group" id="accordion">
 		<table class="table table-bordered table-hover" style="background-color: white;" border="1">
 			<thead>
-				<tr>
+				<tr style="background-color: rgb(0, 148, 255);">
 					<!--<td> <input type="checkbox" class="chk" name="selectAll" id="selectAll" data-label="selectAll">Select All</<input></td>  -->
 					<th>Teacher Login Name</th>
 					<th>Teacher Name</th>

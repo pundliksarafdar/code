@@ -129,4 +129,9 @@ public class StudentTransaction {
 		StudentDB db=new StudentDB();
 		return db.getStudentCount(regID);
 	}
+	
+	public Student getStudentByStudentID(String studentID,int class_id) {
+		StudentDB studentDB=new StudentDB();
+		return studentDB.getStudentByStudentID(studentID,class_id);
+	}
 }

@@ -15,12 +15,14 @@ var batchIds;
 var selectedStudentIds;
 var noofpages=0; 
 function getstudentsrelatedtobatch(pagenumber){
-	$("#students").hide();
-	$("#pagination").hide();
-	$("#progressModal").modal("show");
-	$("#studentDetailTable").remove();
-	$("#noStudentError").hide();
+	
 	var batchname=$("#batchselected").val();
+	if(batchname!="-1"){
+		$("#students").hide();
+		$("#pagination").hide();
+		$("#progressModal").modal("show");
+		$("#studentDetailTable").remove();
+		$("#noStudentError").hide();
 	$.ajax({
 		url:"classOwnerServlet",
 		data:{
@@ -93,6 +95,9 @@ function getstudentsrelatedtobatch(pagenumber){
 		}
 		
 	});
+	}else{
+		$("#noStudentError").hide();
+	}
 }
 function getSelectedBatchesForStudent(){
 	var batches;
@@ -169,7 +174,7 @@ function searchStudent() {
 				 	 if(!resultJson.message){
 				 		modal.launchAlert("Error","Error while searching student!");
 			   	   	}else{
-			   	   		modal.launchAlert("Error","Error while searching student!"+resultJson.message);
+			   	   		modal.launchAlert("Error",resultJson.message);
 			   	   		
 			   	   	}
 				 	setTimeout(function(){
@@ -728,7 +733,7 @@ function getSelectedStudentsToDelete(){
 				<%if(null != batches && batches.size()!=0) {%>
 				
 					<select class="form-control btn btn-default" id="batchselected" >
-					<option>Select Batch</option>
+					<option value="-1">Select Batch</option>
 					<%for(int counter=0;counter<batches.size();counter++){ %>
 					<option value="<%=batches.get(counter).getBatch_id() %>"><%=batches.get(counter).getBatch_name() %></option>
 					<%} %>
@@ -751,7 +756,7 @@ function getSelectedStudentsToDelete(){
 			<div>
 			<table id="students" class="table table-bordered searchTable" style="background-color: white;display: none;">
 			<thead>
-			<tr>
+			<tr style="background-color: rgb(0, 148, 255);">
 			<th>Student ID</th>
 			<th>Student Name</th>
 			</tr>
@@ -767,7 +772,7 @@ function getSelectedStudentsToDelete(){
 			%>
 			<table class="table table-bordered table-hover" id="studentDetailTable" style="background-color: white;" border="1">
 				<thead>
-					<tr>
+					<tr style="background-color: rgb(0, 148, 255);">
 						<th></th>
 						<th>Student Login Name</th>
 						<th>Student Name</th>
@@ -802,7 +807,7 @@ function getSelectedStudentsToDelete(){
 		<div class="panel-group hide" id="accordion" >
 			<table class="table table-bordered table-hover" id="" style="background-color: white;" border="1">
 				<thead>
-					<tr>
+					<tr style="background-color: rgb(0, 148, 255);">
 						<!--<td> <input type="checkbox" class="chk" name="selectAll" id="selectAll" data-label="selectAll">Select All</<input></td>  -->
 						<th>Student Login Name</th>
 						<th>Student Name</th>
@@ -833,3 +838,4 @@ function getSelectedStudentsToDelete(){
 				</tbody>
 			</table>
 		</div>
+		

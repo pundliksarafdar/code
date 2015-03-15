@@ -110,7 +110,7 @@ $( document ).ajaxStop(function() {
 				function setMessage(){
 					setTimeout(function(){
 						timeout = timeout-1;
-						console.log(timeout);
+						//console.log(timeout);
 						if(timeout!=0){
 							setMessage();
 						}
@@ -124,9 +124,6 @@ $( document ).ajaxStop(function() {
 	<div id="outerDiv" align ="center">
 		<div id="innerDiv">
 			<div id="header">
-				<div class = "hide" style ="height : 100px;">
-					<tiles:insertAttribute name="header" />
-				</div>
 				<div>				
 					<tiles:insertAttribute name="topnav" />				
 				</div>

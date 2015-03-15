@@ -91,15 +91,23 @@ $(document).ready(function(){
 <button data-target="#addclassModal" type="button" class="btn btn-info" data-toggle="modal">Add Class</button>
 </div>
 <br>
+<%List<Division> list=(List<Division>)request.getAttribute("classes"); 
+if(list!=null)
+{
+if(list.size()>0)
+{
+%>
+
+<div>
 <table class="table table-bordered table-hover" style="background-color: white;" data-toggle="table">
-<tr>
+<tr style="background-color: rgb(0, 148, 255);">
 <th>Sr.</th>
 <th>Class Name</th>
 <th>Stream/Part</th>
 <th>Edit</th>
 <th>Delete</th>
 </tr>
-<%List<Division> list=(List<Division>)request.getAttribute("classes");
+<%
 int counter=0;
 while(list.size()>counter)
 {
@@ -116,5 +124,13 @@ counter++;
 }
 %>
 </table>
+</div>
+<%}else{
+%>
+<span class="alert alert-info">No Class added yet</span>
+<%	
+}
+
+} %>
 </body>
 </html>

@@ -12,7 +12,13 @@ public class StudentDetails {
 	private String batcheIds;
 	private Division division;
 	private List<Batch> batches;	
-	
+	private int divID;
+	public int getDivID() {
+		return divID;
+	}
+	public void setDivID(int divID) {
+		this.divID = divID;
+	}
 	public int getStudentId() {
 		return studentId;
 	}

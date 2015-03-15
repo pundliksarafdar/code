@@ -99,7 +99,7 @@ public class LoginUser extends BaseAction{
 					if(userBean.getStatus().equals("F"))
 					return Constants.RESET_PASSWORD;
 				}
-				if (null != userBean.getStartdate()) {
+				//if (null != userBean.getStartdate()) {
 					
 					if (null != userBean.getRole() && 9 < userBean.getRole()) {
 						return Constants.ACCESSBLOCKED;
@@ -137,10 +137,10 @@ public class LoginUser extends BaseAction{
 					} else {
 						return ERROR;
 					}
-				} else {
+				/*} else {
 					//return Constants.UNACCEPTED;
 					return Constants.SUCCESS;
-				}
+				}*/
 			} else {
 				return SUCCESS;
 			}

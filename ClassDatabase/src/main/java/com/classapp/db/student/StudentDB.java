@@ -557,4 +557,29 @@ public class StudentDB {
 		return list.get(0).intValue();
 	}
 	
+	public Student getStudentByStudentID(String studentID,int class_id) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List<Student> list=new ArrayList<Student>();
+		String queryString=" from Student where student_id=(select regId from RegisterBean where loginName=:studentID) and class_id=:class_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("studentID", studentID);
+			query.setParameter("class_id", class_id);
+				list= query.list();
+			if(list.size()>0){
+				return list.get(0);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return null;
+	}
+	
 }

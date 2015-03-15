@@ -430,4 +430,30 @@ public List getStudentInfo(List StudentIDs,int pagenumber, int resultPerPage) {
 		}
 		return list;
 	}
+	
+	public RegisterBean getRegistereduser(int regID) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> subidList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from RegisterBean where  regId = :regID");
+			query.setParameter("regID", regID);
+			subidList = query.list();
+			if(subidList!=null)
+			{
+				return subidList.get(0);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}
+		return null;
+		
+	}
 }

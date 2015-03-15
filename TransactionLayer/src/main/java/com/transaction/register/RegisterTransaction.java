@@ -138,4 +138,9 @@ public class RegisterTransaction {
 		return registerBeans;
 		
 	}
+	
+	public RegisterBean getregistereduser(int regID) {
+		RegisterDB registerDB=new RegisterDB();
+		return registerDB.getRegistereduser(regID);
+	}
 }

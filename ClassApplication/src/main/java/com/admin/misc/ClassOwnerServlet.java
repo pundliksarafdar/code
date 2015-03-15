@@ -209,34 +209,49 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 			printWriter.write(respObject.toString());
 		}*/else if(Constants.SEARCH_STUDENT.equals(methodToCall)){
-			
+			StringBuilder batchName = new StringBuilder();
+			UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 			String studentLoginName=req.getParameter("studentLgName");
 			if(studentLoginName.equals("")){
 				respObject.addProperty(STATUS, "error");
 				respObject.addProperty(MESSAGE, "Login name can not be blank! Please enter login name of Student. ");											
 			}else{
-			List<StudentDetails> students=(List<StudentDetails>) req.getSession().getAttribute(Constants.STUDENT_LIST);
-			
+			/*List<StudentDetails> students=(List<StudentDetails>) req.getSession().getAttribute(Constants.STUDENT_LIST);*/
+			StudentTransaction studentTransaction=new StudentTransaction();
+			Student student=studentTransaction.getStudentByStudentID(studentLoginName,userBean.getRegId());
 			req.getSession().setAttribute("studentSearchResult", null);
 			boolean found=false;
-			for (StudentDetails student :students) {
-				if(student.getStudentUserBean().getLoginName().equals(studentLoginName)){
-					req.getSession().setAttribute("studentSearchResult", student);
-					req.getSession().setAttribute("studentSearchResultBatch", student);
-					respObject.addProperty("studentId", student.getStudentId());
-					respObject.addProperty("studentFname", student.getStudentUserBean().getFname());
-					respObject.addProperty("studentLname", student.getStudentUserBean().getLname());
-					StringBuilder batchName = new StringBuilder();
-					for(Batch batch:student.getBatches()){
-						 batchName.append(batch.getBatch_name()+","); 
-						respObject.addProperty("studentBatch", "");
-					}
-					
-					batchName.deleteCharAt(batchName.length()-1);
-					req.getSession().setAttribute("studentBatch", batchName);
-					found=true;
-					break;
+			if(student!=null){
+				RegisterTransaction registerTransaction=new RegisterTransaction();
+				RegisterBean registerBean=registerTransaction.getregistereduser(student.getStudent_id());
+				StudentDetails studentDetails=new StudentDetails();
+				studentDetails.setBatcheIds(student.getBatch_id());
+				studentDetails.setStudentId(student.getStudent_id());
+				DivisionTransactions divisionTransactions=new DivisionTransactions();
+				Division  division=divisionTransactions.getDidvisionByID(student.getDiv_id());
+				List<Batch> batchs=new ArrayList<Batch>();
+				if(!student.getBatch_id().equals("")){
+				String batchids[]=student.getBatch_id().split(",");
+				for (int i = 0; i < batchids.length; i++) {
+					Batch batch=batchTransactions.getBatch(Integer.parseInt(batchids[i]));
+					batchs.add(batch);
+					batchName.append(batch.getBatch_name()+",");
 				}
+				batchName.deleteCharAt(batchName.length()-1);
+				}else{
+					batchName.append("");
+				}
+				studentDetails.setBatches(batchs);
+				req.getSession().setAttribute("studentBatch", batchName);
+				studentDetails.setDivision(division);
+				studentDetails.setDivID(student.getDiv_id());
+				studentDetails.setStudentUserBean(registerBean);
+				req.getSession().setAttribute("studentSearchResult", studentDetails);
+				req.getSession().setAttribute("studentSearchResultBatch", studentDetails);
+				respObject.addProperty("studentId", student.getStudent_id());
+				respObject.addProperty("studentFname", registerBean.getFname());
+				respObject.addProperty("studentLname", registerBean.getLname());
+				found=true;
 			}
 			
 			if(!found){
