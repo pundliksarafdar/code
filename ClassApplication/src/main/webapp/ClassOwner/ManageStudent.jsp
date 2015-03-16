@@ -770,10 +770,11 @@ function getSelectedStudentsToDelete(){
 			if(studentSearch!=null){
 				//System.out.println("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
 			%>
-			<table class="table table-bordered table-hover" id="studentDetailTable" style="background-color: white;" border="1">
+			
+			<table class="hidden-xs hidden-sm table table-bordered table-hover" id="studentDetailTable" style="background-color: white;" border="1">
 				<thead>
 					<tr style="background-color: rgb(0, 148, 255);">
-						<th></th>
+						
 						<th>Student Login Name</th>
 						<th>Student Name</th>
 						<th>Division</th>
@@ -784,7 +785,7 @@ function getSelectedStudentsToDelete(){
 				</thead>
 				<tbody>	
 					<tr>
-						<td><INPUT TYPE="radio" NAME="radioStudent" VALUE="<%=studentSearch.getStudentId() %>" CHECKED></td>
+						<INPUT TYPE="hidden" NAME="radioStudent" VALUE="<%=studentSearch.getStudentId() %>" CHECKED>
 						<td><%=studentSearch.getStudentUserBean().getLoginName() %></td>
 						<td><%= studentSearch.getStudentUserBean().getFname()%> <%= studentSearch.getStudentUserBean().getLname()%></td>
 						<td><%= studentSearch.getDivision().getDivisionName()%>  </td>
@@ -793,7 +794,33 @@ function getSelectedStudentsToDelete(){
 						<td><button type="button" class="btn btn-info" data-target="#deleteStudentModal" data-toggle="modal">Delete Student</button></td>
 					</tr>
 				</tbody>
-			</table>		
+			</table>
+
+			<table class="visible-xs visible-sm table table-bordered table-hover" id="studentDetailTable" style="background-color: white;" border="1">
+					<tr>
+						<td>Student Login Name</td>
+						<td><%=studentSearch.getStudentUserBean().getLoginName() %></td>
+					</tr>
+					<tr>		
+						<td>Student Name</td>
+						<td><%= studentSearch.getStudentUserBean().getFname()%> <%= studentSearch.getStudentUserBean().getLname()%></td>
+					</tr>
+					<tr>		
+						<td>Division</td>
+						<td><%= studentSearch.getDivision().getDivisionName()%>  </td>
+					</tr>
+					<tr>		
+						<td>Batches</td>
+						<td><%= request.getSession().getAttribute("studentBatch")%></td>
+					</tr>		
+					<tr>
+						<td></td>
+						<td>
+							<button type="button" class="btn btn-info" data-target="#modifyStudentModal" data-toggle="modal">Modify Student Batch</button>
+							<button type="button" class="btn btn-info" data-target="#deleteStudentModal" data-toggle="modal">Delete Student</button>
+						</td>
+					</tr>
+			</table>			
 			<%
 			request.getSession().setAttribute("studentSearchResult",null);	
 			}
@@ -805,7 +832,7 @@ function getSelectedStudentsToDelete(){
 		</div>
 		<br/><br/>
 		<div class="panel-group hide" id="accordion" >
-			<table class="table table-bordered table-hover" id="" style="background-color: white;" border="1">
+			<table class="table table-bordered table-hover " id="" style="background-color: white;" border="1">
 				<thead>
 					<tr style="background-color: rgb(0, 148, 255);">
 						<!--<td> <input type="checkbox" class="chk" name="selectAll" id="selectAll" data-label="selectAll">Select All</<input></td>  -->
