@@ -69,6 +69,13 @@
 						<td>Phone 2</td>
 						<td><input type="text" name="registerBean.phone2"   value='<s:property value="registerBean.phone2" />' readonly="readonly"></td>
 					</tr>
+					
+					<c:if test="${not empty registerBean.className && registerBean.role eq 1}">
+					<tr>
+						<td>Class Name</td>
+						<td><input type="text" name="registerBean.className"   value='<s:property value="registerBean.className" />' readonly="readonly"></td>
+					</tr>
+					</c:if>
 					<tr>
 						<td>*Desired Login Name</td>
 						<td><input type="text" name="registerBean.loginName" id="loginname"  value='<s:property value="registerBean.loginName" />' readonly="readonly"/></td>

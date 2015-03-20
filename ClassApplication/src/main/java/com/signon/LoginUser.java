@@ -77,6 +77,7 @@ public class LoginUser extends BaseAction{
 			userBean.setActivationcode(gson.fromJson(userBeanJson, UserBean.class).getActivationcode());
 			userBean.setStatus(gson.fromJson(userBeanJson, UserBean.class).getStatus());
 			userBean.setEmail(gson.fromJson(userBeanJson, UserBean.class).getEmail());
+			userBean.setClassName(gson.fromJson(userBeanJson, UserBean.class).getClassName());
 			userBean.setLoginBean(loginBean);
 
 			

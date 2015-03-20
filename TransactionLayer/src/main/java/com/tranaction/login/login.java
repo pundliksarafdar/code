@@ -53,6 +53,8 @@ public class login {
 					.getEnddate());
 			userBean.setRegId(gson.fromJson(userBeanJson, UserBean.class)
 					.getRegId());
+			userBean.setClassName(gson.fromJson(userBeanJson, UserBean.class)
+					.getClassName());
 			userBean.setLoginBean(loginBean);
 
 			loginCheck.updateIdForUser(userBean.getRegId(),loginBean.getUserid(),loginBean.getDeviceId());

@@ -67,6 +67,7 @@
 			}
 		});
 		
+		
 		$("#loginname").on("blur",function(){
 			if(currentLogin != $(this).val().trim()){
 			allAjax.checkUserNameExist($(this).val().trim(),function(e){
@@ -373,7 +374,7 @@
 		<div class="form-group">
     		<label for="inputCountry" class="col-sm-4 control-label">Country</label>
     		<div class="col-sm-5">
-				<input type="text" class="form-control" id="country" disabled="disabled" name="registerBean.country"  value="India"/>
+				<input type="text" class="form-control" id="country" readonly="readonly" name="registerBean.country"  value="India"/>
 			</div>
 		</div>
 		
@@ -391,6 +392,16 @@
 				<input type="text" class="form-control" id="phone2" maxlength="10" name="registerBean.phone2"  value="<c:out value="${user.phone2}"></c:out>"/>
 			</div>
 		</div>
+		
+		<c:if test="${user.role eq 1}">
+		<div id="classNameError" style="display: none;color: red;">Class name can not be empty</div>
+		<div class="form-group">
+    		<label for="className" class="col-sm-4 control-label">Class Name</label>
+    		<div class="col-sm-5">
+				<input type="text" class="form-control" required="required" id="className" maxlength="10" name="registerBean.className"  value="<c:out value="${user.className}"></c:out>"/>
+			</div>
+		</div>
+		</c:if>
 		
 		<div id="lgnameError" style="display: none;color: red;">This login name is already registered</div>
 		<div class="form-group">

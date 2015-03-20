@@ -215,7 +215,7 @@ public class DivisionDB {
 		Session session = null;
 		Transaction transaction = null;
 		List queryResult=null;
-		String queryString="from Division where div_name = :div_name and stream=:stream and institute_id=:institute_id";
+		String queryString="from Division where div_name = :div_name and stream=:stream and institute_id=:institute_id and divId!=:divId";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
@@ -223,6 +223,7 @@ public class DivisionDB {
 			query.setString("div_name", division.getDivisionName()); 
 			query.setString("stream", division.getStream());
 			query.setInteger("institute_id", division.getInstitute_id());
+			query.setInteger("divId", division.getDivId());
 			queryResult = query.list();
 			if(queryResult.size()>0)
 			{

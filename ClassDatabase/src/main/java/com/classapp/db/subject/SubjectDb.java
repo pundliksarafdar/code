@@ -291,13 +291,14 @@ public String getschedulesubject(int subjectid) {
 		Session session = null;
 		Transaction transaction = null;
 		List<Subject> queryResult=null;
-		String queryString="from Subject where subjectName = :subjectName and institute_id=:institute_id";
+		String queryString="from Subject where subjectName = :subjectName and institute_id=:institute_id and subjectId != :subjectId";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("subjectName", subject.getSubjectName()); 
 			query.setParameter("institute_id", subject.getInstitute_id()); 
+			query.setParameter("subjectId", subject.getSubjectId()); 
 			queryResult = query.list();
 			if(queryResult.size()>0){
 				return false;

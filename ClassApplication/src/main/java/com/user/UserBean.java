@@ -24,6 +24,8 @@ public class UserBean{
 	private String activationcode;
 	private String status;
 	private String email;
+	private String className;
+	
 	
 	public String getEmail() {
 		return email;
@@ -155,6 +157,12 @@ public class UserBean{
 	}
 	public void setRegId(Integer regId) {
 		this.regId = regId;
+	}
+	public String getClassName() {
+		return className;
+	}
+	public void setClassName(String className) {
+		this.className = className;
 	}
 	
 	

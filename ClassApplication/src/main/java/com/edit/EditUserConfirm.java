@@ -35,6 +35,7 @@ public class EditUserConfirm extends BaseAction{
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		System.out.println(registerBean);
+		registerBean.setRole(userBean.getRole());
 		ActionContext.getContext().getSession().put("registerbean", registerBean);
 		getActionErrors().clear();
 		if(oldPassword==null || (!"".equals(oldPassword.trim()) && !oldPassword.equals(userBean.getLoginBean().getLoginpass()))){

@@ -23,6 +23,7 @@ public class UserBean{
 	private String enddate;
 	private Integer regId;
 	private HashMap<String, List> studentData;
+	private String className;
 	
 	public String getDob() {
 		return dob;
@@ -143,6 +144,11 @@ public class UserBean{
 	public void setStudentData(HashMap<String, List> studentData) {
 		this.studentData = studentData;
 	}
-	
+	public String getClassName() {
+		return className;
+	}
+	public void setClassName(String className) {
+		this.className = className;
+	}
 	
 }
