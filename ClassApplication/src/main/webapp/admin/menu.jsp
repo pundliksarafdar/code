@@ -28,6 +28,11 @@ siteMapApp.controller("SiteMapController",function($scope){
 });
 
 </script>
+<style>
+	.className:hover{
+		color:white;
+	}
+</style>
 
 <nav class="navbar navbar-apple-custom" role="navigation" ng-controller="SiteMapController">
   <!-- Brand and toggle get grouped for better mobile display -->
@@ -101,6 +106,15 @@ siteMapApp.controller("SiteMapController",function($scope){
 			</div>
       	</form>	
 	  </li>
+	  <% if(userBean.getRole() == 1 ){ %>
+	  <li>
+	  <form class="navbar-form navbar-left">
+			<div class="form-group">
+	  			<a href="#" class="btn btn-default className" style="background: transparent;"><%=userBean.getClassName()%></a>
+	  		</div>
+	  	</form>
+	  	</li>	
+	  <%} %>
 	  <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-phone-alt"></i> <b class="caret"></b></a>
         <ul class="dropdown-menu">

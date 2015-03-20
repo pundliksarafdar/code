@@ -15,23 +15,23 @@
 <%List<RegisterBean> registerBean =(List<RegisterBean>)session.getAttribute("classes"); 
 if(registerBean.size()>0){
 %>
-<h3>You are linked with Following Classes:-</h3><Br>
-<ul>
+<div class="alert alert-info">You are linked with Following Classes</div>><Br>
+
+<div class="btn-group-vertical" role="group" aria-label="...">
 <%int counter=0;
 while(counter<registerBean.size()){
 %>
-
-<li><%=registerBean.get(counter).getClassName() %></li>
+<button type="button" class="btn btn-default"><%=registerBean.get(counter).getClassName() %></button>
 <%
 counter++;
 } %>
-</ul>
+</div>
 <%}else{ %>
-<h3>You are not linked with any Class</h3><Br>
+<div class="alert alert-error">You are not linked with any Class</div><Br>
 <%} %>
 </div>
 <div>
-<img alt="temp" src="images/background.png" height="400px" width="800px">
+<img alt="temp" src="images/background.png" height="100%" width="100%">
 </div>
 </body>
 </html>
