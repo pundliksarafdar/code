@@ -43,6 +43,7 @@ response.setHeader("Expires", "0");
 body{
     padding-right: 0px;
     padding-left: 0px;
+    font-family: cursive;
 }
 </style>
 <style type="text/css">

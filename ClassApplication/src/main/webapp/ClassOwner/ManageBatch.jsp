@@ -12,6 +12,9 @@
  <%List list = (List)request.getSession().getAttribute(Constants.BATCHES_LIST); %>
 <script>
 var subjectIds;
+function canceledit(){
+	$("#batchtomodify").remove();
+}
 function getSelectedSubjectsForBatch(){
 	var subjects;
 	subjects=$(".chkSubjectBatch:checked").map(function(){
@@ -50,6 +53,43 @@ while(i<subjects.size())
 
 }
 
+
+function searchbatchthroughtable(batchName) {
+	$.ajax({
+		   url: "classOwnerServlet",
+		    data: {
+		    	 methodToCall: "searchBatch",
+		    		 batchName:batchName
+		   		}, 
+		   type:"POST",
+		   success:function(data){
+			   var resultJson = JSON.parse(data);   
+			   // var firstname= resultJson.studentFname;
+			  // var lastname= resultJson.studentLname;
+			  // var studentId= resultJson.studentId;
+			   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
+			    if(resultJson.status != 'error'){
+				modal.launchAlert("Success","Found Batch! Page will refresh in soon");
+						   setTimeout(function(){
+							   location.reload();
+						   },2*1000);
+			    }else{
+			    	 modal.launchAlert("Error","Batch with batch name : "+batchName+" not found!");
+					   	setTimeout(function(){
+					   		location.reload();
+					   	},1000*3);
+					}		   
+		   	},
+		   error:function(data){
+			   modal.launchAlert("Error","Batch with batch name : "+batchName+" not found!");
+			   	setTimeout(function(){
+			   		location.reload();
+			   	},1000*3);
+		   }
+			   
+	});
+	
+}
 function searchBatch() {
 	var batchName=document.getElementById("batchNameSearch").value;
 	var regbatchname=/^[a-zA-z0-9 ]+$/;
@@ -97,6 +137,10 @@ function searchBatch() {
 
 $(document).ready(function(){
 	$('div#addBatchModal .error').hide();
+	$("#batchName").on("keyup",function(){
+		var string = $(this).val();	
+		$(this).val(string.charAt(0).toUpperCase() + string.slice(1));
+	});
 	$('div#addBatchModal').on('click','button#btn-addBatch',function(){
 		var batchName = "";
 		subjectsname="";
@@ -303,7 +347,7 @@ $(document).ready(function(){
 	if(batchSearch!=null){
 		//System.out.println("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
 	%>
-		<table class="table table-bordered table-hover" style="background-color: white;" border="1">
+		<table class="table table-bordered table-hover" style="background-color: white;" border="1" id="batchtomodify">
 			<thead>
 				<tr style="background-color: rgb(0, 148, 255);">
 					<th></th>
@@ -311,6 +355,7 @@ $(document).ready(function(){
 					<th>Division</th>
 					<th>Stream</th>
 					<th>Subjects</th>
+					<th></th>
 					<th></th>
 					<th></th>
 				</tr>
@@ -324,6 +369,7 @@ $(document).ready(function(){
 					<td> <%= batchSearch.getSubjectNames()%>  </td>
 					<td><button type="button" class="btn btn-info" data-target="#modifyBatchModal" data-toggle="modal">Modify Batch Subjects</button></td>
 					<td> <button type="button" class="btn btn-info" data-target="#deleteBatchModal" data-toggle="modal">Delete Batch</button></td>
+					<td><button type="button" class="btn btn-info" onclick="canceledit()" >Cancel</button></td>
 				</tr>
 			</tbody>
 		</table>
@@ -351,6 +397,7 @@ $(document).ready(function(){
 					<th>Division</th>
 					<th>Stream</th>
 					<th>Subjects</th>
+					<th>Edit</th>
 				</tr>
 			</thead>
 		
@@ -370,6 +417,7 @@ $(document).ready(function(){
 					  <td> <%= batchDetails.getDivision().getDivisionName()%> </td>
 					  <td> <%= batchDetails.getDivision().getStream()%> </td>
 					  <td> <%= batchDetails.getSubjectNames()%>  </td>
+					  <td><button type="button" class="btn btn-info" onclick="searchbatchthroughtable('<%=batchDetails.getBatch().getBatch_name()%>')" >Edit</button></td>
 				  </tr>
 				<%
 		  			i++;		  

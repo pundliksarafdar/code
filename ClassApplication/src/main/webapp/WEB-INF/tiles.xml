@@ -256,5 +256,14 @@
 		<put-attribute name="title" value="All Logins" />
 		<put-attribute name="body" value="/secret/alllogins.jsp" />
 	</definition>
-		
+
+	<definition name="allurlssetaccess" extends="baseLayout">
+		<put-attribute name="title" value="Set Access" />
+		<put-attribute name="body" value="/admin/setURLAccess.jsp" />
+	</definition>
+	<definition name="unauthorised" extends="NoTopnavBaseLayout">
+		<put-attribute name="title" value="Set Access" />
+		<put-attribute name="body" value="/unauthorised.jsp" />
+	</definition>
+			
 </tiles-definitions>

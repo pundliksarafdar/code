@@ -42,6 +42,10 @@ function deleteclass(classid){
 }
 
 $(document).ready(function(){
+	$("#classname,#stream").on("keyup",function(){
+		var string = $(this).val();	
+		$(this).val(string.charAt(0).toUpperCase() + string.slice(1));
+	});
 	$('#saveclass').click(function(){
 		var classname=$("#editclassname").val();
 		var stream=$("#editstream").val();

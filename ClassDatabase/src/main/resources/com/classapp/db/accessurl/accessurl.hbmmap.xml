@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="com.classapp.db.urlaccess.PathAccess" table="pathaccess" catalog="classdb">
+        <id name="paths" type="string">
+            <column name="pathname" length="30" not-null="true" unique="false"/>
+        </id>
+        <property name="access" type="string">
+            <column name="pathaccess" length="30" not-null="true" unique="false" />
+        </property>
+    </class>
+</hibernate-mapping>

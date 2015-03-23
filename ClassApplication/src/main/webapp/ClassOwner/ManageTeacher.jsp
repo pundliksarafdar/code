@@ -13,6 +13,12 @@
  <%List list = (List)request.getSession().getAttribute(Constants.TEACHER_LIST); %>
 <script>
 var subjectIds;
+
+function canceledit(){
+	//alert(batchID+" "+pagenumber);
+	$('#teachertomodify').remove(); 
+	
+}
 function getSelectedSubjectsForAddTeacher(){
 	var subjects=$(".chkSubjectAddTeacher:checked").map(function(){
 	return this.value;
@@ -44,6 +50,51 @@ function getSelectedSubjectsForTeacher(){
 		i++;
 	}
 }
+
+
+function searchTeacherthroughtable(teacherLoginName) {
+	$.ajax({
+		   url: "classOwnerServlet",
+		    data: {
+		    	 methodToCall: "searchTeacher",
+		    	 teacherLgName:teacherLoginName
+		   		}, 
+		   type:"POST",
+		   success:function(data){
+			   var resultJson = JSON.parse(data);
+
+			   if(resultJson.status != 'error'){
+				   var firstname= resultJson.teacherFname;
+				   var lastname= resultJson.teacherLname;
+				   var teacherId= resultJson.teacherId;
+				   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
+				
+					modal.launchAlert("Success","Found "+firstname+" "+lastname+" with teacher id ="+teacherId+"! Page will refresh in soon");
+					 setTimeout(function(){
+						   location.reload();
+					   },2*1000);	   
+			      }else{
+				 	 if(!resultJson.message){
+				 		modal.launchAlert("Error","Error while searching teacher!");
+			   	   	}else{
+			   	   		modal.launchAlert("Error","Error while searching teacher!"+resultJson.message);
+			   	   	}
+				 	setTimeout(function(){
+				   		location.reload();
+				   	},1000*3);
+			      }				   
+		   	},
+		   error:function(data){
+			   var resultJson = JSON.parse(data);
+			   modal.launchAlert("Error","Teacher with login name : "+teacherLoginName+" not found!");
+			   	setTimeout(function(){
+			   		location.reload();
+			   	},2*1000);
+		   }
+	});
+	
+}
+
 
 function searchTeacher() {
 	var teacherLoginName=document.getElementById("teacherLoginNameSearch").value;
@@ -327,13 +378,14 @@ function searchTeacher() {
 		if(teacherSearch!=null){
 		//System.out.println("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
 		%> 
-		<table class="table table-bordered table-hover" style="background-color: white;" border="1">
+		<table id="teachertomodify" class="table table-bordered table-hover" style="background-color: white;" border="1">
 			<thead>
 				<tr style="background-color: rgb(0, 148, 255);">
 					<th></th>
 					<th>Teacher Login Name</th>
 					<th>Student Name</th>
 					<th>Subjects</th>
+					<th></th>
 					<th></th>
 					<th></th>
 				</tr>
@@ -346,6 +398,7 @@ function searchTeacher() {
 					<td><%=teacherSearch.getSubjectNames() %></td>
 					<td><button type="button" class="btn btn-info" data-target="#modifyTeacherModal" data-toggle="modal">Modify Teacher Subjects</button></td>
 					<td> <button type="button" class="btn btn-info" data-target="#deleteTeacherModal" data-toggle="modal">Delete Teacher</button></td>
+					<td> <a onclick="canceledit()"><button type="button" class="btn btn-info">Cancel</button></a></td>
 				</tr>
 			</tbody>
 		</table>
@@ -370,6 +423,7 @@ function searchTeacher() {
 					<th>Teacher Login Name</th>
 					<th>Teacher Name</th>
 					<th>Subjects</th>
+					<th>Edit</th>
 				</tr>
 			</thead>
 			
@@ -385,8 +439,9 @@ function searchTeacher() {
 				<tr>
 					<!-- <td>  <input type="checkbox" class="chk" name="teachername" id="teachername" data-label="<%=teacher.getTeacherBean().getLoginName() %>" value="<%=teacher.getTeacherId() %>"/></td> -->
 					<td><%=teacher.getTeacherBean().getLoginName() %></td>
-					<td><%=teacher.getTeacherBean().getFname() %> </td>
+					<td><%=teacher.getTeacherBean().getFname() %> <%=teacher.getTeacherBean().getLname() %> </td>
 					<td><%=teacher.getSubjectNames() %> </td>
+					<td><button type="button" class="btn btn-info" onclick="searchTeacherthroughtable('<%=teacher.getTeacherBean().getLoginName() %>')" >Edit</button></td>
 				</tr>
 			<%	}
 			}else{

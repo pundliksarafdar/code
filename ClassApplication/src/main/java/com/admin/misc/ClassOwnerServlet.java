@@ -212,6 +212,10 @@ public class ClassOwnerServlet extends HttpServlet{
 			StringBuilder batchName = new StringBuilder();
 			UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 			String studentLoginName=req.getParameter("studentLgName");
+			String batchID=req.getParameter("batchID");
+			String pagenumber=req.getParameter("pagenumber");
+			req.getSession().setAttribute("pagenumber",pagenumber);
+			req.getSession().setAttribute("batchID",batchID);
 			if(studentLoginName.equals("")){
 				respObject.addProperty(STATUS, "error");
 				respObject.addProperty(MESSAGE, "Login name can not be blank! Please enter login name of Student. ");											
@@ -365,7 +369,8 @@ public class ClassOwnerServlet extends HttpServlet{
 					regId = userBean.getRegId();
 				}
 			}
-			
+			String pagenumber=(String) req.getSession().getAttribute("pagenumber");
+			String batchID=(String) req.getSession().getAttribute("batchID");
 			int studentId=Integer.parseInt(req.getParameter("studentId"));
 			Student student=studentData.getStudentDetailsFromClass(studentId, regId);			
 			String batchIds=req.getParameter("batchIds");			
@@ -375,6 +380,8 @@ public class ClassOwnerServlet extends HttpServlet{
 				student.setBatch_id(batchIds);
 				if(studentTransaction.updateStudentDb(student)){
 					respObject.addProperty(STATUS, "success");
+					respObject.addProperty("pagenumber", pagenumber);
+					respObject.addProperty("batchID", batchID);
 					respObject.addProperty(MESSAGE, "Successfully updated student.");
 				}else{
 					respObject.addProperty(STATUS, "error");
@@ -1527,6 +1534,9 @@ public class ClassOwnerServlet extends HttpServlet{
 		int pages=count/resultPerPage;
 		if(remainder>0){
 			pages++;
+		}
+		if(Integer.parseInt(pagenumber)>pages){
+			pagenumber=pages+"";
 		}
 		List students=studentTransaction.getStudentsrelatedtobatch(batchname);
 		RegisterTransaction registerTransaction=new RegisterTransaction();

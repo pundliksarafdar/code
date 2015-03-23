@@ -20,6 +20,7 @@ import com.miscfunction.MiscFunction;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.config.entities.Parameterizable;
+import com.transaction.urlaccess.URLTransaction;
 import com.user.UserBean;
 
 
@@ -54,7 +55,6 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 			return "logoutglobal";
 		}
 		
-		//userBean = (UserBean) ActionContext.getContext().getSession().get("user");
 		if (null == userBean) {
 			userBean = new UserBean();
 		}
@@ -73,7 +73,9 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 			(ActionContext.getContext().getSession()).put("sitemapdata", siteMapData);
 			
 		ActionMapping mapping = (ActionMapping) request.getAttribute("struts.actionMapping");
-		
+		if(isHavingAccess(mapping.getName(), roleInt) && !params.containsKey("ignoresession")){
+			return "UNAUTHRISED";
+		}
 		if("logout".equals(mapping.getName())){
 			ActionContext.getContext().getSession().remove("user");
 			ActionContext.getContext().setSession(null);
@@ -115,5 +117,9 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 		this.sessionMessageError = sessionMessageError;
 	}
 
-	
+	public boolean isHavingAccess(String action,int role){
+		boolean allowed = false;
+		URLTransaction urlTransaction = new URLTransaction();
+		return urlTransaction.isAcessible(action, role);
+	}
 }

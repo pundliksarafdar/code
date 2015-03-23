@@ -7,13 +7,13 @@
         <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <!-- Uncomment for openshiftdeployment  -->
-         
+        
         <property name="hibernate.connection.username">admin7wiv5Ys</property>
         <property name="hibernate.connection.password">ReVSpsgcVdXl</property>
         <property name="hibernate.connection.url">jdbc:mysql://127.6.14.2:3306/classdb</property>
         
         <!-- comment for openshiftdeployment  -->
-         <!--
+        <!-- 
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">gaurav26</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/classdb</property>
@@ -39,6 +39,7 @@
  		<mapping resource="com/classapp/db/register/alluserid.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/feedback/Feedback.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/sitemap/sitemap.hbmmap.xml"></mapping>
+ 		<mapping resource="com/classapp/db/accessurl/accessurl.hbmmap.xml"></mapping>
        <!--  <mapping resource="com/classapp/db/classwithsubjects/ClassWithSubjects.hbmmap.xml"></mapping> --> 
     </session-factory>
 </hibernate-configuration>

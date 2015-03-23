@@ -38,6 +38,10 @@ function deleteSubject(subid){
 });
 }
 	$(document).ready(function(){
+		$("#subjectName").on("keyup",function(){
+			var string = $(this).val();	
+			$(this).val(string.charAt(0).toUpperCase() + string.slice(1));
+		});
 		$('#savesubject').click(function(){
 			var subjectname=$("#editsubject").val();
 			if(subjectname.length>0){

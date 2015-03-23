@@ -19,6 +19,7 @@
 body{
     padding-right: 0px;
     padding-left: 0px;
+    font-family: cursive;
 }
  
  </style>

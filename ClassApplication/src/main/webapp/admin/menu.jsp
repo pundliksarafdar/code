@@ -51,8 +51,9 @@ siteMapApp.controller("SiteMapController",function($scope){
     <%if(userBean.getRole() == 0 || userBean.getRole() == 10) {%>
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
-      		<ul class="dropdown-menu">
+      		<ul class="dropdown-menu">	
 	            <li><a href="login">Admin</a></li>
+	            <li><a href="getallpaths">URL Access</a></li>
 	            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#ajax-modal">Class List</a></li>
           	</ul>
       </li>
