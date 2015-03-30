@@ -329,7 +329,7 @@
 		
 		<div class="form-group">
 			
-			<label for="role"  class="col-sm-4 control-label">Select your role</label>
+			<label for="role"  class="col-sm-4 control-label">*Select your role</label>
 			<div class="col-sm-5" align="left">
 			
 			<!-- <input type="hidden" class="form-control" name="registerBean.role" id="role" required="required"/> -->

@@ -286,10 +286,15 @@ $(document).ready(function(){
 		var batchname=$("#batchname").val();
 		
 		var date=$("#date").val();
-	
+		var status=true;
+		if(batchname=="-1"){
+			status=false;
+		alert("Please Enter Valid Batch")	
+		}else{
 		if(date!="")
 		{
-			var status=validatedate(date);
+				status=validatedate(date);
+			
 		if(status==true){
 		$.ajax({
 			 
@@ -357,6 +362,7 @@ $(document).ready(function(){
 			});}}else{
 				alert("Please Enter Date");
 			}
+		}
 	});
 	
 	
@@ -632,7 +638,7 @@ int i=0;%>
 <div class="col-md-4">
 
 <select name="batchname" id="batchname" class='form-control'>
-<option>Select Batch</option>
+<option value="-1">Select Batch</option>
 <%
 while(i<batch.size()){
 %>
@@ -651,8 +657,13 @@ while(i<batch.size()){
 					</span>
 				</div>
 				</div>
-<div class="col-md-6">
+<div class="col-md-3">
 <input value="Submit" type="button" id="submit" class="btn btn-danger">
+</div>
+<div class="col-md-3">
+<%if(i==0) {%>
+<div class="header">No batch is added please add batch first </div>
+<%} %>
 </div>
 </div>
 </div>

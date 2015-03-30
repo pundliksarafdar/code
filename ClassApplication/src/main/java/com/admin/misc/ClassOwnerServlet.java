@@ -262,7 +262,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				respObject.addProperty(STATUS, "error");
 				respObject.addProperty(MESSAGE, "Student with login name "+studentLoginName+" does not exists in class!");
 			}else{
-				respObject.addProperty(STATUS, "success");				
+				respObject.addProperty(STATUS, "success");
 			}
 			}
 			//printWriter.write(respObject.toString());
@@ -433,9 +433,10 @@ public class ClassOwnerServlet extends HttpServlet{
 				int teacherId=Integer.parseInt(req.getParameter("teacherId"));
 				Teacher teacher=teacherTransaction.getTeacher(teacherId, regId);
 				String sub_Ids=req.getParameter("subIds");			
-				
+				String suffix=req.getParameter("suffix");
 				if(teacher!=null){
 					teacher.setSub_ids(sub_Ids);
+					teacher.setSuffix(suffix);
 					if(teacherTransaction.updateTeacher(teacher)){
 						respObject.addProperty(STATUS, "success");
 						respObject.addProperty(MESSAGE, "Successfully updated teacher.");

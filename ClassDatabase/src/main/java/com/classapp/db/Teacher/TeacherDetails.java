@@ -11,7 +11,15 @@ public class TeacherDetails {
 	private List<Subject> subjects;
 	private int teacherId;
 	private String subjectIds;
+	private String suffix;
 	
+	
+	public String getSuffix() {
+		return suffix;
+	}
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
+	}
 	public RegisterBean getTeacherBean() {
 		return teacherBean;
 	}

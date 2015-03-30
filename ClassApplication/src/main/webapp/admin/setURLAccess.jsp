@@ -95,7 +95,7 @@
 	
 	
 </script>
-<c:set value="${requestScope.actionUrl}" var="allURLs"></c:set>
+<c:set value="${sessionScope.actionUrl}" var="allURLs"></c:set>
 <h3>Set Access you URL</h3>
 <div>
 	<a class="btn btn-success">Access ON</a>&nbsp;

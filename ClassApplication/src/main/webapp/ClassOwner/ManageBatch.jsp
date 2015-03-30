@@ -69,7 +69,7 @@ function searchbatchthroughtable(batchName) {
 			  // var studentId= resultJson.studentId;
 			   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
 			    if(resultJson.status != 'error'){
-				modal.launchAlert("Success","Found Batch! Page will refresh in soon");
+				//modal.launchAlert("Success","Found Batch! Page will refresh in soon");
 						   setTimeout(function(){
 							   location.reload();
 						   },2*1000);

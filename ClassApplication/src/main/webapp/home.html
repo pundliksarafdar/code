@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="homepageapp">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Home</title>
@@ -8,38 +8,58 @@
  <link href="css/bootstrap-responsive.css" rel="stylesheet">
  <link href="css/common.css" rel="stylesheet">
  <style>
- /*body { padding-bottom: 70px; }*/
- /*.navbar li {
-	float: left;
-	}
-	*/
+ .pageContent{
+  position: relative;
+  bottom: 70px;
+  left: 0px;
+  height: 100px;
+  z-index: -1;
+ }
+ 
+ .carousel img{
+	margin: auto;
+ }
  </style>
  <script src="js/jquery-1.10.2.min.js"></script>
  <script src="js/bootstrap.min.js"></script>
  <script src="js/moment.min.js"></script>
  <script src="js/bootstrap-datetimepicker.min.js"></script>
+ <script src="js/angular.min.js"></script>
+ <script src="js/homecontroller.js"></script>
+ <script src="js/homeapp.js"></script>
  <script>
  $(document).ready(function(){
-	$("#header").load("home_head.html");
+	/*
+	$('.carousel').carousel({
+		interval: 2000
+	});
+	*/
+	var add = (function () {
+		var counter = 0;
+		return function () {
+			if(counter!=3){	
+				return counter += 1;
+			}else{
+				counter = 0;
+				return counter;
+			}
+			
+			}
+	})();
+	
+	setInterval(function(){
+		var counter = add();
+		$('.carousel').carousel(counter);
+	},5000);
  });
  </script>
 </head>
-<body>
-
-	<div id="outerDiv" align ="center">
-		<div id = "innerDiv" >
-			<div id="header" style="height: 100px;">
-
-			</div>
-			<div id="body">
-				<div style="padding: 5px;">
-
-				</div>	
-			</div>
-			<div id="footer">
-
-			</div>
-		</div>
+<body ng-controller="myhomecontroller">
+	<div id="header">
+		<div ng-include="headerUrl"></div>
+	</div>
+	<div class="pageContent">
+		<div ng-include="carousel"></div>
 	</div>
 </body>
 </html>

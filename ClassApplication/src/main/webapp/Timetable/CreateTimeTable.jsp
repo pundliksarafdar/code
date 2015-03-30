@@ -85,7 +85,7 @@ $('#batchname').change(function(){
 	var conf=true;
 	if(prev!="" && prev!='-1')
 		{
-	 conf=confirm('If you change Batch your previous data will get lost Are You sure to Change Batch?');
+	 conf=confirm('Your previous data will get lost. sure to change batch?');
 		}
 	if(conf==true){
 	
@@ -562,7 +562,13 @@ $(function(){
 				<div class="col-md-4">
 				<button id="add" type="button" class="btn btn-info" disabled="true">Add lecture</button>
 				</div>
-				<div class="col-md-4"></div>
+				<div class="col-md-4">
+				<%
+				if(i==0){
+				%>
+				<div class="header">No batch is added please add batch first </div>
+				<%} %>
+				</div>
 			</div>
 		</div>
 	</div>

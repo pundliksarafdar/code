@@ -80,7 +80,7 @@ $(document).ready(function() {
     </i>
     Activation
     <br>
-   Please Enter Your Activation Code:
+   Please Enter Your Activation Code which is sent to registered email id:
   <div style="padding: 20px;" id="form-olvidado">
       <fieldset>
         <div class="form-group input-group">

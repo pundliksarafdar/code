@@ -123,6 +123,7 @@ $(document).ready(function(){
 		$('div#addTeacherModal .error').hide();
 		var regId;
 		var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
+		var suffixregex=/^[A-Za-z]*$/;
 		teacherID = $('div#addTeacherModal').find('#teacherID').val();
 		getSelectedCheckbox();
 		if(!teacherID || teacherID.trim()==""){
@@ -136,6 +137,9 @@ $(document).ready(function(){
 			{
 			$('div#addTeacherModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Please select atleast one subject');
 			$('div#addTeacherModal .error').show();
+			}else if(!suffix.match(suffixregex)){
+				$('div#addTeacherModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Please Enter valid suffix');
+				$('div#addTeacherModal .error').show();
 			}else{
 			$('div#addTeacherModal .progress').removeClass('hide');
 			$('.add').addClass('hide');

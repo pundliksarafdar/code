@@ -69,7 +69,7 @@ function searchTeacherthroughtable(teacherLoginName) {
 				   var teacherId= resultJson.teacherId;
 				   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
 				
-					modal.launchAlert("Success","Found "+firstname+" "+lastname+" with teacher id ="+teacherId+"! Page will refresh in soon");
+					//modal.launchAlert("Success","Found "+firstname+" "+lastname+" with teacher id ="+teacherId+"! Page will refresh in soon");
 					 setTimeout(function(){
 						   location.reload();
 					   },2*1000);	   
@@ -121,7 +121,7 @@ function searchTeacher() {
 				   var teacherId= resultJson.teacherId;
 				   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
 				
-					modal.launchAlert("Success","Found "+firstname+" "+lastname+" with teacher id ="+teacherId+"! Page will refresh in soon");
+					modal.launchAlert("Success","Found "+firstname+" "+lastname+"! Page will refresh in soon");
 					 setTimeout(function(){
 						   location.reload();
 					   },2*1000);	   
@@ -229,8 +229,13 @@ function searchTeacher() {
 				}
 			//getSelectedSubjectsForTeacher();
 			console.log(subjectIds);	
+			var suffixregex=/^[A-Za-z]*$/;
+			var suffix=$("#modifysuffix").val();
 			if(!subjectIds || subjectIds.trim()==""){
 				$('div#modifyTeacherModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Please select a subject');
+				$('div#modifyTeacherModal .error').show();
+			}else if(!suffix.match(suffixregex)){
+				$('div#modifyTeacherModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Invalid Suffix');
 				$('div#modifyTeacherModal .error').show();
 			}else{
 				
@@ -240,7 +245,8 @@ function searchTeacher() {
 					    	 methodToCall: "updateTeacher",
 							 regId:'',
 							 subIds:subjectIds,
-							 teacherId:teacherId
+							 teacherId:teacherId,
+							 suffix:suffix
 					   		},
 					   type:"POST",
 					   success:function(data){
@@ -396,7 +402,7 @@ function searchTeacher() {
 					<td><%=teacherSearch.getTeacherBean().getLoginName() %></td>
 					<td><%=teacherSearch.getTeacherBean().getFname() %> </td>
 					<td><%=teacherSearch.getSubjectNames() %></td>
-					<td><button type="button" class="btn btn-info" data-target="#modifyTeacherModal" data-toggle="modal">Modify Teacher Subjects</button></td>
+					<td><button type="button" class="btn btn-info" data-target="#modifyTeacherModal" data-toggle="modal">Modify Teacher</button></td>
 					<td> <button type="button" class="btn btn-info" data-target="#deleteTeacherModal" data-toggle="modal">Delete Teacher</button></td>
 					<td> <a onclick="canceledit()"><button type="button" class="btn btn-info">Cancel</button></a></td>
 				</tr>

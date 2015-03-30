@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.urlaccess.PathAccess;
 import com.config.BaseAction;
+import com.config.Constants;
 import com.transaction.urlaccess.URLTransaction;
 import com.user.UserBean;
 
@@ -31,6 +32,7 @@ public class SaveAuthenticationAction extends BaseAction{
 		
 		URLTransaction urlTransaction = new URLTransaction();
 		urlTransaction.setURLAccessBatch(listPathAccesses);
+		request.getSession().setAttribute(Constants.ACTION_URLS, listPathAccesses);
 		return SUCCESS;
 	}
 	public String[] getLinkname() {

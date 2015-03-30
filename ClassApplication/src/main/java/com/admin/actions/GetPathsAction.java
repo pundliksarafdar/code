@@ -27,7 +27,8 @@ public class GetPathsAction extends BaseAction{
 		}
 		URLTransaction urlTransaction = new URLTransaction();
 		List<PathAccess> pathAccessesMerged = urlTransaction.getURLAndAccess(pathAccesses);
-		request.setAttribute(Constants.ACTION_URLS, pathAccessesMerged);
+		
+		request.getSession().setAttribute(Constants.ACTION_URLS, pathAccessesMerged);
 		return SUCCESS;
 	}
 }

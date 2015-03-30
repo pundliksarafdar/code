@@ -151,7 +151,7 @@
       <div class="modal-content">
  		<div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title" id="">Add Batch</h4>
+          <strong>Add Batch</strong>
         </div>
         <div class="modal-body" id="">
         	<div class="error alert alert-danger"></div>
@@ -206,12 +206,12 @@
 					<%}}
 				}else{%>
 				
-					<p style="color: red;">Please add subjects first <a href="addsubject">click here</a> to add subject</p> 
+					<p style="color: red;">Please add subjects first. <a href="addsubject">Click here</a> to add subject</p> 
 				<%	
 				}
 					}else{
 						%>
-						<p style="color: red;">Please add Class first <a href="manageclass">click here</a> to add class</p>
+						<p style="color: red;">Please add Class first.<a href="manageclass">Click here</a> to add class</p>
 					<%}
 				}
 				%>
@@ -228,8 +228,9 @@
 					</div>
 			</div>
 			<%List<Subject> ls=(List<Subject>)pageContext.getAttribute("sublist"); 
-			if(ls!=null){
-				if(ls.size()>0){
+			List<String> divs=(List<String>) request.getAttribute("divisionNames");
+			if(ls!=null && divs != null){
+				if(ls.size()>0 && divs.size()>0){
 			%>
 	        <div class="add">
 	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Cancel</button>
@@ -251,7 +252,7 @@
   <div class="modal-dialog">
       <div class="modal-content">
  		<div class="modal-header">
-       		
+       		<strong>Modify Student</strong>
         </div>
         <div class="modal-body" id="">
        	<div class="error alert alert-danger"></div>
@@ -405,7 +406,7 @@
       <div class="modal-content">
  		<div class="modal-header">
  			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
- 			<h4>Modify Teacher</h4>
+ 			<strong>Modify Teacher</strong>
  		 </div>
         <div class="modal-body" id="">  
        		<div class="error alert alert-danger"></div>	
@@ -417,6 +418,10 @@
 				if(teacherSearch!=null){
 				List<Subject> currentAssignedSubjects=teacherSearch.getSubjects();
 				List<Subject> listOfSubject=subjectHelperBean.getSubjects();
+				%>
+				<input type="text" name="modifysuffix" id="modifysuffix" class="form-control" value="<%=teacherSearch.getSuffix()%>" placeholder="Suffix" maxlength="5">
+				<br>
+				<%
 				if(listOfSubject!=null){
 				listOfSubject.removeAll(currentAssignedSubjects);
 					for(int i=0;i<listOfSubject.size();i++){
@@ -528,7 +533,7 @@
       <div class="modal-content">
  		<div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title" id="">Add Subject</h4>
+          <strong>Add Subject</strong>
         </div>
         <div class="modal-body" id="abc">
         	<div class="error alert alert-danger"></div>
@@ -722,7 +727,7 @@
   <div class="modal-dialog">
       <div class="modal-content">
  		<div class="modal-header">
-       		
+       		<strong>Modify Batch</strong>
         </div>
         <div class="modal-body" id="">
              	
@@ -831,7 +836,7 @@
       <div class="modal-content">
  		<div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title" id="">Add Class</h4>
+          <strong>Add Class</strong>
         </div>
         <div class="modal-body" id="">
         	<div class="error alert alert-danger"></div>
@@ -892,7 +897,7 @@
       <div class="modal-content">
  		<div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title" id="">Add Teacher</h4>
+          <strong>Add Teacher</strong>
         </div>
         <div class="modal-body" id="">
         <% 
@@ -951,7 +956,7 @@
 			</div>		
 			<%}else{
 			%>
-			<p style="color: red;">Please add subjects first <a href="addsubject">click here</a> to add subject</p>
+			<p style="color: red;">Please add subjects first. <a href="addsubject">Click here</a> to add subject</p>
 			<%	
 			}} %>		
 			
@@ -987,7 +992,7 @@
       <div class="modal-content">
  		<div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title" id="">Edit Subject</h4>
+          <strong>Edit Subject</strong>
         </div>
         <div class="modal-body" id="">
         	<div class="error alert alert-danger" hidden="true"></div>
@@ -1220,7 +1225,7 @@
       <div class="modal-content">
  		<div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title" id="">Edit Class</h4>
+          <strong>Edit Class</strong>
         </div>
         <div class="modal-body" id="">
         	<div class="error alert alert-danger" hidden="true"></div>

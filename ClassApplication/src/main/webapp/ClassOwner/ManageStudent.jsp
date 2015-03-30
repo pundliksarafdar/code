@@ -176,7 +176,7 @@ function searchStudent() {
 			   var lastname= resultJson.studentLname;
 			   var studentId= resultJson.studentId;
 			   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
-				modal.launchAlert("Success","Found "+firstname+" "+lastname+" with Student id ="+studentId+"! Page will refresh in soon");
+				modal.launchAlert("Success","Found "+firstname+" "+lastname+"! Page will refresh in soon");
 						   setTimeout(function(){
 							   location.reload();
 						   },2*1000);
@@ -218,7 +218,7 @@ function searchStudentthroughtable(studentLoginName) {
 		   		}, 
 		   type:"POST",
 		   success:function(data){
-			   $("#progressModal").modal("hide");
+			 //  $("#progressModal").modal("hide");
 			   var resultJson = JSON.parse(data);   
 
 			   if(resultJson.status != 'error'){
@@ -226,7 +226,7 @@ function searchStudentthroughtable(studentLoginName) {
 			   var lastname= resultJson.studentLname;
 			   var studentId= resultJson.studentId;
 			   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
-				modal.launchAlert("Success","Found "+firstname+" "+lastname+" with Student id ="+studentId+"! Page will refresh in soon");
+				//modal.launchAlert("Success","Found "+firstname+" "+lastname+"! Page will refresh in soon");
 						   setTimeout(function(){
 							   location.reload();
 						   },2*1000);
@@ -703,7 +703,7 @@ function getSelectedStudentsToDelete(){
       <div class="modal-content">
  		<div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title" id="">Add Student</h4>
+          <strong>Add Student</strong>
         </div>
         <div class="modal-body" id="">
         	<div class="error alert alert-danger"></div>

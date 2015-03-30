@@ -195,6 +195,11 @@ public class TeacherDB {
 				teacherDetails.setTeacherId(entry.getUser_id());
 				teacherDetails.setSubjectIds(entry.getSub_ids());
 				teacherDetails.setTeacherBean(getTeacherDetailsFromID(entry.getUser_id()));
+				if(entry.getSuffix()!=null){
+				teacherDetails.setSuffix(entry.getSuffix());
+				}else{
+					teacherDetails.setSuffix("");	
+				}
 				if(!entry.getSub_ids().equals("")){
 				teacherDetails.setSubjects(getAssignedSubjects(entry.getSub_ids().split(",")));
 				}else{
