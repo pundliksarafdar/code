@@ -227,6 +227,10 @@
 		<action name="uploadadd" class="com.admin.actions.UploadAddAction">
 			<result type="tiles">uploadadd</result>
 		</action>
-				
+
+		<action name="sessionreload" class="com.config.SessionReloadAction">
+			<result type="tiles">uploadadd</result>
+		</action>
+						
 	</package>
 </struts>

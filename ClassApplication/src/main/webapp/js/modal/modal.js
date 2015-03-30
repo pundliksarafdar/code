@@ -92,4 +92,38 @@ Modal.prototype.modalConfirm = function(heading, question, cancelButtonTxt, okBu
 			}
 	}
 	
+	Modal.prototype.sessionTimeout = function(heading, question, cancelButtonTxt, okButtonTxt,callbackCancel,paramsCancel,callBackOk,paramsOk) {
+		
+	    var sessionTimeoutModal = 
+	      $('<div class="modal fade sessionTimeoutModal"><div class="modal-dialog"><div class="modal-content">' +    
+	          '<div class="modal-header">' +
+	            '<h4>' + heading +'</h4>' +
+	          '</div>' +
+
+	          '<div class="modal-body">' +
+	            '<p>' + question + '</p>' +
+	          '</div>' +
+
+	          '<div class="modal-footer">' +
+	            '<a href="#" id="cancelButton" class="btn btn-default" data-dismiss="modal">' + 
+	              cancelButtonTxt + 
+	            '</a>' +
+	            '<a href="#" id="okButton" class="btn btn-primary" data-dismiss="modal">' + 
+	              okButtonTxt + 
+	            '</a>' +
+	          '</div>' +
+	        '</div></div></div>');
+
+	    	sessionTimeoutModal.find('#okButton').click(function(event) {
+	    		callBackOk.apply(undefined,paramsOk);
+		    	sessionTimeoutModal.modal('hide');
+	    	});
+	    	
+	    	sessionTimeoutModal.find('#cancelButton').click(function(event) {
+	  	      	callbackCancel.apply(undefined,paramsCancel);
+		    	sessionTimeoutModal.modal('hide');
+		    });
+
+	    	sessionTimeoutModal.modal('show');
+	  }
 	

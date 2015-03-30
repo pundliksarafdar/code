@@ -106,10 +106,10 @@ $( document ).ajaxStop(function() {
 <%
 		Map<String, String> map = (Map<String, String>)request.getAttribute("param");
 		String ignoresession = map.get("ignoresession");
-		if("true".equals(ignoresession)){
+		if(!"true".equals(ignoresession)){
 			%>
 			<script>
-				var timeout = 60;
+				var timeout = <%=request.getSession().getMaxInactiveInterval()%>;
 				
 				setMessage();
 				function setMessage(){
@@ -119,8 +119,32 @@ $( document ).ajaxStop(function() {
 						if(timeout!=0){
 							setMessage();
 						}
-					},1);
+						$(".sessionTimeoutModal #seconds").text(timeout);
+						if(timeout == 60){
+							modal.sessionTimeout("Session Timeout", "Your session is about to expire in <span id='seconds'></span> seconds", "Continue", "Logout"
+							,function(){
+									$.ajax({
+										url:"sessionreload",
+										type:"POST",
+										success:function(data){
+											timeout = <%=request.getSession().getMaxInactiveInterval()%>;
+										},
+										error:function(){
+											
+										}
+									});
+							},["paramsCancel"],function(){
+								location.href="logout";	
+							},["paramsOk"]);	
+							
+							}
+							
+						if(timeout == 0){
+							location.href="logout";
+						}		
+					},1000);
 				}
+				
 			</script>
 			<%
 		}

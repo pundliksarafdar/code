@@ -69,7 +69,6 @@ public class LoadConfig extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 		throws ServletException, IOException {
 		init();
-		req.getSession().setMaxInactiveInterval(10);
 		resp.getWriter().write("Loaded successfully");
 		
 		
