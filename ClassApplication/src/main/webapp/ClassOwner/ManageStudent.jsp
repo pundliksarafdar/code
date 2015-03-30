@@ -29,7 +29,6 @@ function getstudentsrelatedtobatch(pagenumber){
 	if(batchname!="-1"){
 		$("#students").hide();
 		$("#pagination").hide();
-		$("#progressModal").modal("show");
 		$("#studentDetailTable").remove();
 		$("#noStudentError").hide();
 		pno=pagenumber;
@@ -42,7 +41,6 @@ function getstudentsrelatedtobatch(pagenumber){
 		},
 		type:"post",
 		success:function(data){
-			$("#progressModal").modal("hide");
 			var resultJson = JSON.parse(data);
 			var table=document.getElementById("students");
 			  var rowCount=table.rows.length;
@@ -100,7 +98,6 @@ function getstudentsrelatedtobatch(pagenumber){
 			
 		},
 		error:function(e){
-			$("#progressModal").modal("hide");
 			//modal.launchalert("error","Yo2");
 		}
 		
@@ -157,8 +154,6 @@ function searchStudent() {
 	{
 		modal.launchAlert("Error","Error!</strong>Invalid Student login name");
 	}else{
-		
-		$("#progressModal").modal("show");
 		$("#studentDetailTable").remove();
 	$.ajax({
 		   url: "classOwnerServlet",
@@ -168,7 +163,6 @@ function searchStudent() {
 		   		}, 
 		   type:"POST",
 		   success:function(data){
-			   $("#progressModal").modal("hide");
 			   var resultJson = JSON.parse(data);   
 
 			   if(resultJson.status != 'error'){
@@ -193,7 +187,6 @@ function searchStudent() {
 			      }			   
 		   	},
 		   error:function(data){
-			   $("#progressModal").modal("hide");
 			   modal.launchAlert("Error","Student with login name : "+studentLoginName+" not found!");
 			   	setTimeout(function(){
 			   		location.reload();
@@ -206,7 +199,6 @@ function searchStudent() {
 
 function searchStudentthroughtable(studentLoginName) {
 		var batchname=$("#batchselected").val();
-		$("#progressModal").modal("show");
 		$("#studentDetailTable").remove();
 	$.ajax({
 		   url: "classOwnerServlet",
@@ -218,15 +210,12 @@ function searchStudentthroughtable(studentLoginName) {
 		   		}, 
 		   type:"POST",
 		   success:function(data){
-			 //  $("#progressModal").modal("hide");
 			   var resultJson = JSON.parse(data);   
 
 			   if(resultJson.status != 'error'){
 			    var firstname= resultJson.studentFname;
 			   var lastname= resultJson.studentLname;
 			   var studentId= resultJson.studentId;
-			   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
-				//modal.launchAlert("Success","Found "+firstname+" "+lastname+"! Page will refresh in soon");
 						   setTimeout(function(){
 							   location.reload();
 						   },2*1000);
@@ -243,7 +232,6 @@ function searchStudentthroughtable(studentLoginName) {
 			      }			   
 		   	},
 		   error:function(data){
-			   $("#progressModal").modal("hide");
 			   modal.launchAlert("Error","Student with login name : "+studentLoginName+" not found!");
 			   	setTimeout(function(){
 			   		location.reload();

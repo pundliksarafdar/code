@@ -223,6 +223,10 @@
 		<action name="saveurlauthentication" class="com.admin.actions.SaveAuthenticationAction">
 			<result type="tiles">allurlssetaccess</result>
 		</action>
-		
+
+		<action name="uploadadd" class="com.admin.actions.UploadAddAction">
+			<result type="tiles">uploadadd</result>
+		</action>
+				
 	</package>
 </struts>

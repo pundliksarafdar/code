@@ -54,6 +54,7 @@ siteMapApp.controller("SiteMapController",function($scope){
       		<ul class="dropdown-menu">	
 	            <li><a href="login">Admin</a></li>
 	            <li><a href="getallpaths">URL Access</a></li>
+	            <li><a href="uploadadd">Upload Advertise</a></li>
 	            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#ajax-modal">Class List</a></li>
           	</ul>
       </li>

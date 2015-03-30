@@ -272,5 +272,9 @@
 		<put-attribute name="title" value="Set Access" />
 		<put-attribute name="body" value="/unauthorised.jsp" />
 	</definition>
-		
+	<definition name="uploadadd" extends="baseLayout">
+		<put-attribute name="title" value="Upload Add" />
+		<put-attribute name="body" value="/admin/htmleditor.html" />
+	</definition>
+			
 </tiles-definitions>

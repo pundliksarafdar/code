@@ -2,6 +2,7 @@ package com.admin.misc;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.classapp.edit.DBUpdate;
 import com.google.gson.JsonObject;
 import com.miscfunction.MiscFunction;
+import com.transaction.addtransaction.AdvertiseTransaction;
 import com.transaction.register.RegisterTransaction;
 
 public class AdminAjaxServlet extends HttpServlet{
@@ -105,6 +107,30 @@ public class AdminAjaxServlet extends HttpServlet{
 			boolean result = registerTransaction.isEmailExists(email);
 			JsonObject resultJson = new JsonObject();
 			resultJson.addProperty("exists", result);
+			String resultJsonStr = resultJson.toString();
+			writer.print(resultJsonStr);	
+		}else if("getAllCountries".equalsIgnoreCase(methodeToCall)){
+			AdvertiseTransaction advertiseTransaction = new AdvertiseTransaction();
+			List<String> allCountries = advertiseTransaction.getAllCounrty();
+			JsonObject resultJson = new JsonObject();
+			resultJson.addProperty("countryList", allCountries.toString());
+			String resultJsonStr = resultJson.toString();
+			writer.print(resultJsonStr);	
+		}else if("getStateInCountries".equalsIgnoreCase(methodeToCall)){
+			AdvertiseTransaction advertiseTransaction = new AdvertiseTransaction();
+			String country = (String)req.getParameter("country");
+			List<String> allStates = advertiseTransaction.getAllStateInCountry(country);
+			JsonObject resultJson = new JsonObject();
+			resultJson.addProperty("stateList", allStates.toString());
+			String resultJsonStr = resultJson.toString();
+			writer.print(resultJsonStr);	
+		}else if("getCityInStateAndCountries".equalsIgnoreCase(methodeToCall)){
+			AdvertiseTransaction advertiseTransaction = new AdvertiseTransaction();
+			String country = (String)req.getParameter("country");
+			String state = (String)req.getParameter("state");
+			List<String> allCities = advertiseTransaction.getAllCityInStateAndCountry(country, state);
+			JsonObject resultJson = new JsonObject();
+			resultJson.addProperty("cityList", allCities.toString());
 			String resultJsonStr = resultJson.toString();
 			writer.print(resultJsonStr);	
 		}

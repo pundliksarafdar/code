@@ -13,7 +13,10 @@
  <link href="css/admin.css" rel="stylesheet">
  <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 <link href="css/common.css" rel="stylesheet">
- <!-- <link href="css/datetimepicker.css" rel="stylesheet"> -->
+<link rel="icon" 
+      type="image/jpeg" 
+      href="images/cxlogowhite.jpg">
+ 
  <style>
  	
 body{

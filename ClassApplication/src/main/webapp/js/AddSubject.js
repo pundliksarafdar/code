@@ -191,12 +191,10 @@ function deleteBatch(batchName){
 }
 
 function deleteBatchConfirm(batchName){
-	$('#progressModal').modal('show');
 	allAjax.deleteBatch("",batchName,successCallBackDeleteBatch,errorcallBackDeleteBacth);
 }
 
 function successCallBackDeleteBatch(){
-	$('#progressModal').modal('hide');
 	location.reload();
 }
 

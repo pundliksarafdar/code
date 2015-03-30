@@ -20,14 +20,6 @@ public class URLTransaction {
 		URLAccessDB accessDB = new URLAccessDB();
 		List<com.classapp.db.urlaccess.PathAccess> pathAccessesDb = accessDB.getURLAndAccess();
 		List<PathAccess> pathAccesses = new ArrayList<PathAccess>();
-		/*
-		try {
-			BeanUtils.copyProperties(pathAccesses, pathAccessesDb);
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}*/
 		pathAccesses = mergeList(pathAccessesDb, strutsActions);
 		//Merge url if it don't have urls in the database
 		return pathAccesses; 
@@ -53,15 +45,17 @@ public class URLTransaction {
 	public List<PathAccess> mergeList(List<com.classapp.db.urlaccess.PathAccess> dbUrl,List<PathAccess> pathAccesses){
 		List<PathAccess> mergedList = new ArrayList<PathAccess>();
 		for(com.classapp.db.urlaccess.PathAccess pathAccessDb:dbUrl){
+			if(null==dbUrl || dbUrl.size()==0){
+				
+			}else{
 			for(PathAccess pathAccess:pathAccesses){
 				if (pathAccessDb.getPaths().equalsIgnoreCase(pathAccess.getPaths())){
 					pathAccess.setAccess(pathAccessDb.getAccess());
 					break;
 				}else{
 					mergedList.add(pathAccess);
-					//pathAccesses.remove(pathAccess);
-					//dbUrl.remove(pathAccessDb);
 				}
+			}
 			}
 		}
 		return pathAccesses;
