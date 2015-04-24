@@ -1,40 +1,27 @@
-<%@page import="com.classapp.db.batch.division.Division"%>
-<%@page import="com.classapp.db.subject.Subjects"%>
+<%@page import="com.classapp.db.register.RegisterBean"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
- <style type="text/css">
- .error{
-     color: red;
-    margin-left: 10px;
-}      
-
- </style>
 <script type="text/javascript">
-function validate()
-{
-var file=document.getElementByID("myFile");
-alert(file);
-	return false;
-}
 var globalnotesid="";
 var globaldivision="";
 var globalsubject="";
+var globalclass="";
 
-function fetchnotes(){
-
+function fetchteachernotes(){
 	$.ajax({
 		 
 		   url: "classOwnerServlet",
 		   data: {
-		    	 methodToCall: "fetchnotes",
+		    	 methodToCall: "fetchteachernotes",
 		    	 division: globaldivision,
-		    	 subject:globalsubject
+		    	 subject:globalsubject,
+		    	 classes:globalclass
 		   		},
 		   type:"POST",
 		   success:function(data){
@@ -42,6 +29,8 @@ function fetchnotes(){
 			   var notesname=resultJson.notesnames.split(",");
 			   var notesids=resultJson.notesids.split(",");
 			   var notespaths=resultJson.notespaths.split(",");
+			   var addedbyteacher=resultJson.addedbyteacher.split(",");
+			   
 			   var table=document.getElementById("notestable");
 				  var rowCount=table.rows.length;
 				  for (var x=rowCount-1; x>0; x--) {
@@ -51,8 +40,22 @@ function fetchnotes(){
 				 
 				  var notestable=$("#notestable");
 				  if(notesids[0]!=""){
+					  var j=1;
 					  while(notesids.length>i){
-						  notestable.append("<tr><td>"+(i+1)+"</td><td>"+notesname[i]+"</td><td><a href='shownotes.action?notesid="+notesids[i]+"'>Click me</a></td><td><button class='btn btn-info' id='edit' onclick='editnotes("+notesids[i]+")'>Edit</button></td><td><button class='btn btn-info' id='edit' onclick='deletenotes("+notesids[i]+")'>Delete</button></td></tr>");
+						  if(addedbyteacher[i]=="true")
+							  {
+						  notestable.append("<tr><td>"+j+"</td><td>"+notesname[i]+"</td><td><a href='shownotes.action?notesid="+notesids[i]+"'>Click me</a></td><td><button class='btn btn-info' id='edit' onclick='editnotes("+notesids[i]+")'>Edit</button></td><td><button class='btn btn-info' id='edit' onclick='deletenotes("+notesids[i]+")'>Delete</button></td></tr>");
+							 	j++;
+							  }
+						  i++;
+					  }
+					  i=0;
+					  while(notesids.length>i){
+						  if(addedbyteacher[i]=="false")
+							  {
+						  notestable.append("<tr><td>"+j+"</td><td>"+notesname[i]+"</td><td><a href='shownotes.action?notesid="+notesids[i]+"'>Click me</a></td><td><button class='btn btn-info' id='edit' disabled>Edit</button></td><td><button class='btn btn-info' id='edit' disabled>Delete</button></td></tr>");
+							  j++;
+							  }
 						  i++;
 					  }
 					  $("#notestable").show();
@@ -71,12 +74,14 @@ function fetchnotes(){
 
 function editnotes(notesid){
 	globalnotesid=notesid;
+	var classes = $('#classnameselect').val();
 	$.ajax({
 		 
 		   url: "classOwnerServlet",
 		   data: {
 		    	 methodToCall: "editnotesinformation",
-		    	 notesid: notesid
+		    	 notesid: notesid,
+		    	 classes:classes
 		    	 
 		   		},
 		   type:"POST",
@@ -127,7 +132,7 @@ function deletenotes(notesid){
 		   type:"POST",
 		   success:function(data){
 			   var resultJson = JSON.parse(data);
-			   fetchnotes();
+			   fetchteachernotes();
 			   $("#deletenotesalert").modal('toggle');
 		   },
 			error:function(){
@@ -136,66 +141,7 @@ function deletenotes(notesid){
 		   });
 }
 
-
-$(document).ready(function(){
-	$("#submit").click(function(){
-		$("#subjecterror").html("");
-		$("#divisionerror").html("");
-		var subject=$("#subject").val();
-		var division=$("#division").val();
-		var flag=true;
-		if(subject=="-1"){
-			$("#subjecterror").html("Please select Subject");
-			flag=false;
-		}
-		if(division=="-1"){
-			$("#divisionerror").html("Please select Division");
-			flag=false;
-		}
-		if(flag==true){
-			globaldivision=division;
-			globalsubject=subject;
-			
-		$.ajax({
-			 
-			   url: "classOwnerServlet",
-			   data: {
-			    	 methodToCall: "fetchnotes",
-			    	 division: division,
-			    	 subject:subject
-			   		},
-			   type:"POST",
-			   success:function(data){
-				   var resultJson = JSON.parse(data);
-				   var notesname=resultJson.notesnames.split(",");
-				   var notesids=resultJson.notesids.split(",");
-				   var notespaths=resultJson.notespaths.split(",");
-				   var table=document.getElementById("notestable");
-					  var rowCount=table.rows.length;
-					  for (var x=rowCount-1; x>0; x--) {
-						  table.deleteRow(x);
-					   }
-					  var i=0;
-					 
-					  var notestable=$("#notestable");
-					  if(notesids[0]!=""){
-						  while(notesids.length>i){
-							  notestable.append("<tr><td>"+(i+1)+"</td><td>"+notesname[i]+"</td><td><a href='shownotes.action?notesid="+notesids[i]+"'>Click me</a></td><td><button class='btn btn-info' id='edit' onclick='editnotes("+notesids[i]+")'>Edit</button></td><td><button class='btn btn-info' id='edit' onclick='deletenotes("+notesids[i]+")'>Delete</button></td></tr>");
-							  i++;
-						  }
-						  $("#notestable").show();
-						  
-					  }else{
-						  $("#notesnotavailable").modal('toggle');
-						  $("#notestable").hide();
-					  }
-			   },
-				error:function(){
-			   		modal.launchAlert("Error","Error");
-			   	}
-			   });
-		}
-	});
+$(document).ready(function() {
 	
 	$("#savenotes").click(function(){
 		var notesname=$("#notesname").val();
@@ -240,7 +186,7 @@ $(document).ready(function(){
 			   type:"POST",
 			   success:function(data){
 				   $("#editnotes").modal('hide');
-				   fetchnotes();
+				   fetchteachernotes();
 				  $("#notesupdated").modal('toggle');
 				   
 			   },
@@ -252,54 +198,224 @@ $(document).ready(function(){
 		}
 	});
 	
+	
+	$("#submit").click(function(){
+		$("#subjecterror").html("");
+		$("#divisionerror").html("");
+		var subject=$("#subject").val();
+		var division=$("#division").val();
+		var classes = $('#classnameselect').val();
+		var flag=true;
+		if(subject=="-1"){
+			$("#subjecterror").html("Please select Subject");
+			flag=false;
+		}
+		if(division=="-1"){
+			$("#divisionerror").html("Please select Division");
+			flag=false;
+		}
+		if(classes=="-1"){
+			$("#classnameerror").html("Please select Class");
+			flag=false;
+		}
+		if(flag==true){
+		
+			globaldivision=division;
+			globalsubject=subject;
+			globalclass=classes;
+		$.ajax({
+			 
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "fetchteachernotes",
+			    	 division: division,
+			    	 subject:subject,
+			    	 classes:classes
+			   		},
+			   type:"POST",
+			   success:function(data){
+				   var resultJson = JSON.parse(data);
+				   var notesname=resultJson.notesnames.split(",");
+				   var notesids=resultJson.notesids.split(",");
+				   var notespaths=resultJson.notespaths.split(",");
+				   var addedbyteacher=resultJson.addedbyteacher.split(",");
+				   
+				   var table=document.getElementById("notestable");
+					  var rowCount=table.rows.length;
+					  for (var x=rowCount-1; x>0; x--) {
+						  table.deleteRow(x);
+					   }
+					  var i=0;
+					 
+					  var notestable=$("#notestable");
+					  if(notesids[0]!=""){
+						  var j=1;
+						  while(notesids.length>i){
+							  if(addedbyteacher[i]=="true")
+								  {
+							  notestable.append("<tr><td>"+j+"</td><td>"+notesname[i]+"</td><td><a href='shownotes.action?notesid="+notesids[i]+"'>Click me</a></td><td><button class='btn btn-info' id='edit' onclick='editnotes("+notesids[i]+")'>Edit</button></td><td><button class='btn btn-info' id='edit' onclick='deletenotes("+notesids[i]+")'>Delete</button></td></tr>");
+								 j++;
+								  }
+							  i++;
+						  }
+						  i=0;
+						  while(notesids.length>i){
+							  if(addedbyteacher[i]=="false")
+								  {
+							  notestable.append("<tr><td>"+j+"</td><td>"+notesname[i]+"</td><td><a href='shownotes.action?notesid="+notesids[i]+"'>Click me</a></td><td><button class='btn btn-info' id='edit' disabled>Edit</button></td><td><button class='btn btn-info' id='edit' disabled>Delete</button></td></tr>");
+								  j++;
+								  }
+							  i++;
+						  }
+						  $("#notestable").show();
+						  
+					  }else{
+						  $("#notesnotavailable").modal('toggle');
+						  $("#notestable").hide();
+					  }
+			   },
+				error:function(){
+			   		modal.launchAlert("Error","Error");
+			   	}
+			   });
+		}
+	});
+	
+	$('#classnameselect').change(function(){
+		var classes = $('#classnameselect').val();
+		var flag=true;
+		
+		if(classes=="-1"){
+			 var divisionselect=$('#division');
+			   $("#divisionerror").html("");
+			   divisionselect.empty();
+			   divisionselect.append("<option value='-1'>Select Division</option>");
+			   $("#subjecterror").html("");
+			   var subjectselect=$('#subject');
+			   subjectselect.empty();
+			   subjectselect.append("<option value='-1'>Select Subject</option>");
+			flag=false;
+		}
+		if(flag==true){
+		$.ajax({
+			 
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "getsubjectsanddivisions",
+			    	 classes: classes
+			   		},
+			   type:"POST",
+			   success:function(data){
+				   var resultJson = JSON.parse(data);
+				   var subjectnames=resultJson.subjectnames.split(",");
+				   var subjectids=resultJson.subjectids.split(",");
+				   var divisionnames=resultJson.divisionnames.split(",");
+				   var divisionids=resultJson.divisionids.split(",");
+				   $("#subjecterror").html("");
+				   var subjectselect=$('#subject');
+				   subjectselect.empty();
+				   subjectselect.append("<option value='-1'>Select Subject</option>");
+				   if(subjectids[0]!=""){
+					   var i=0;
+					   while(i<subjectids.length){
+						   subjectselect.append("<option value="+subjectids[i]+">"+subjectnames[i]+"</option>");
+						   i++;
+					   }
+					   
+				   }else{
+					   $("#subjecterror").html("No subjects assigned to you");
+				   }
+				   
+				   var divisionselect=$('#division');
+				   $("#divisionerror").html("");
+				   divisionselect.empty();
+				   divisionselect.append("<option value='-1'>Select Division</option>");
+				   if(divisionids[0]!=""){
+					   var i=0;
+					   while(i<divisionids.length){
+						   divisionselect.append("<option value="+divisionids[i]+">"+divisionnames[i]+"</option>");
+						   i++;
+					   }
+					   
+				   }else{
+					   $("#divisionerror").html("No Division present");
+				   }
+				   
+			   },
+				error:function(){
+			   		modal.launchAlert("Error","Error");
+			   	}
+			   });
+		}
+		
+	});
+	
+	
 });
+
 </script>
 </head>
 <body>
-<div class="container">
-<div class="form-group">
-      <label for="notesname"  class="col-sm-4 control-label">Select Subject:</label>
+	<%
+		List<RegisterBean> list=(List<RegisterBean>)request.getAttribute("Classes");
+	%>
+	<div class="container">
+	<div class="form-group">
+		<label for="classnameselect" class="col-sm-4 control-label">Select
+			Class :</label>
+		<div class="col-sm-5" align="left">
+			<select id="classnameselect" class='form-control'>
+				<option value="-1">Select Class</option>
+				<%
+					int counter=0;
+				if(list!=null){
+				while(list.size()>counter){
+				%>
+				<option value="<%=list.get(counter).getRegId()%>"><%=list.get(counter).getClassName()%></option>
+				<%
+					counter++;
+				} }
+				%>
+			</select>
+		</div>
+		<div class="col-sm-2" align="left">
+			<span class="error" id="classnameerror" name="classnameerror"></span>
+		</div>
+	</div>
+	
+	<div class="form-group">
+	<label for="subject"  class="col-sm-4 control-label">Select Subject :</label>
       <div class="col-sm-5" align="left">
-      <select name="subject" class="form-control" id="subject">
+	<select name="subject" class="form-control" id="subject">
       <option value="-1">Select one</option>
-      <%List<Subjects> list=(List<Subjects>)request.getAttribute("subjects"); 
-      for(int i=0;i<list.size();i++)
-      {
-      %>
-      <option value="<%=list.get(i).getSubjectId() %>"><%=list.get(i).getSubjectName()%></option>
-      <%} %>
       </select>
-      </div>
-       <div class="col-sm-2" align="left">
-	<span class="error" id="subjecterror" name="batcherror"></span>
+  	</div>
+  	<div class="col-sm-2" align="left">
+	<span class="error" id="subjecterror" name="subjecterror"></span>
 	</div>
-      </div>
+  	</div>
+      
       <div class="form-group">
-      <label for="notesname"  class="col-sm-4 control-label">Select Division :</label>
-     <div class="col-sm-5" align="left">
-      <select name="division" class="form-control" id="division">
+	<label for="division"  class="col-sm-4 control-label">Select Division :</label>
+      <div class="col-sm-5" align="left">
+	<select name="division" class="form-control" id="division">
       <option value="-1">Select one</option>
-      <%List<Division> divisions=(List<Division>)request.getAttribute("divisions"); 
-      for(int i=0;i<divisions.size();i++)
-      {
-      %>
-      <option value="<%=divisions.get(i).getDivId() %>"><%=divisions.get(i).getDivisionName()%>  <%=divisions.get(i).getStream() %></option>
-      <%} %>
       </select>
-    </div>
-     <div class="col-sm-2" align="left">
-	<span class="error" id="divisionerror" name="batcherror"></span>
+  	</div>
+  	<div class="col-sm-2" align="left">
+	<span class="error" id="divisionerror" name="divisionerror"></span>
 	</div>
-    </div>
-      <div class="form-group">
-       <div class="col-sm-4" align="left"></div>
-       <div class="col-sm-5" align="left">
+</div>
+
+<div class="form-group">
+  	  <label for="role"  class="col-sm-4 control-label"></label>
+  	<div class="col-sm-5" align="left">
       <button type="submit" class="btn btn-info" id="submit">Submit</button>
       </div>
- 	</div>   
- 	</div>
- 	<hr>
-   <div id="notesdiv" class="container">
+     </div>
+     </div>
+     <hr>
+     <div id="notesdiv" class="container">
    <table id="notestable" class="table table-bordered table-hover" style="background-color: white; display:none;">
    <thead style="background-color: rgb(0, 148, 255);">
    	<tr>
@@ -307,32 +423,12 @@ $(document).ready(function(){
    	<th>Name</th>
    	<th></th>
    	<th></th>
-  <th></th> 	
+   	<th></th>
    	</tr>
    </thead>
    </table>
    </div>
-   
-   <div class="modal fade" id="notesnotavailable" tabindex="-1" role="dialog" 
-   aria-labelledby="myModalLabel" aria-hidden="true">
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" 
-               aria-hidden="true">×
-            </button>
-            <h4 class="modal-title" id="myModalLabel">
-               Notes
-            </h4>
-         </div>
-         <div class="modal-body">
-           Notes not available for this subject
-         </div>
-         </div>
-   </div>
-</div>
-
-<div class="modal fade" id="notesupdated" tabindex="-1" role="dialog" 
+   <div class="modal fade" id="notesupdated" tabindex="-1" role="dialog" 
    aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog">
       <div class="modal-content">

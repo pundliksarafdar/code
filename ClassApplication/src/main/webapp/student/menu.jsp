@@ -46,9 +46,9 @@
       <li><a href="#">Students</a></li>
        <li><a href="studenttimetable">Time Table</a></li>
     <%}%>      
-     <cx:versionswitch switchId="3">
+     <%-- <cx:versionswitch switchId="3"> --%>
     <li><a href="studentnotes">Notes</a></li>
-    </cx:versionswitch>
+    <%-- </cx:versionswitch> --%>
     </ul>
     <ul class="nav navbar-nav navbar-right">
     <li class="dropdown">

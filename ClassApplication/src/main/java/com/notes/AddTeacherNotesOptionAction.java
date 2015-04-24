@@ -10,9 +10,11 @@ import com.classapp.db.batch.division.Division;
 import com.config.BaseAction;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.division.DivisionTransactions;
+import com.transaction.register.RegisterTransaction;
+import com.transaction.teacher.TeacherTransaction;
 import com.user.UserBean;
 
-public class AddNotesOptionAction extends BaseAction{
+public class AddTeacherNotesOptionAction extends BaseAction{
 
 	@Override
 	public String performBaseAction(UserBean userBean,
@@ -21,12 +23,14 @@ public class AddNotesOptionAction extends BaseAction{
 		// TODO Auto-generated method stub
 		String notes=(String) request.getParameter("notesadded");
 		SubjectTransaction subjectTransaction=new SubjectTransaction();
-		List list=subjectTransaction.getAllClassSubjects(userBean.getRegId());
-		request.setAttribute("subjects", list);
-		DivisionTransactions divisionTransactions=new DivisionTransactions();
-		List<Division> divisions=divisionTransactions.getAllDivisions(userBean.getRegId());
+		TeacherTransaction teacherTransaction=new TeacherTransaction();
+		List classids=teacherTransaction.getTeachersClass(userBean.getRegId());
+		RegisterTransaction registerTransaction=new RegisterTransaction();
+		List classes=registerTransaction.getTeachersclassNames(classids);
+		request.setAttribute("classes", classes);
+		
 		request.setAttribute("notes", notes);
-		request.setAttribute("divisions", divisions);
+		
 		return SUCCESS;
 	}
 

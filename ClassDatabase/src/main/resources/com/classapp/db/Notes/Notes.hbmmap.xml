@@ -23,5 +23,14 @@
         <property name="name" type="java.lang.String">
             <column name="name" length="100" not-null="true" unique="true"/>
         </property>
+         <property name="batch" type="java.lang.String">
+            <column name="batches" length="100" not-null="true" unique="true"/>
+        </property>
+        <property name="time">
+            <column name="time"/>
+        </property>
+          <property name="addedby" type="java.lang.Integer">
+            <column name="addedby" length="100" not-null="false" unique="true"/>
+        </property>
     </class>
 </hibernate-mapping>

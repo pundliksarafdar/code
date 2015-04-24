@@ -151,9 +151,9 @@
 		<put-attribute name="body" value="/ClassOwner/ManageTeacher.jsp" />
 	</definition>
 
-	<definition name="classowner.manageexams" extends="baseLayout">
+	<definition name="classowner.uploadexams" extends="baseLayout">
 		<put-attribute name="title" value="Manage Exams" />
-		<put-attribute name="body" value="/ClassOwner/ManageExams.jsp" />
+		<put-attribute name="body" value="/ClassOwner/UploadExams.jsp" />
 	</definition>
 
 	<definition name="timetable.TimetableOption" extends="baseLayout">
@@ -200,6 +200,15 @@
 		<put-attribute name="title" value="Add Notes Success" />
 		<put-attribute name="body" value="/Notes/AddNotesSuccess.jsp" />
 	</definition>
+	<definition name="notes.teachernotes" extends="baseLayout">
+		<put-attribute name="title" value="Add Notes Success" />
+		<put-attribute name="body" value="/Notes/AddTeacherNotesSuccess.jsp" />
+	</definition>
+	<definition name="notes.seeteachernotes" extends="baseLayout">
+		<put-attribute name="title" value="See Notes " />
+		<put-attribute name="topnav" value="/teacher/menu.jsp" />
+		<put-attribute name="body" value="/Notes/SeeTeacherNotes.jsp" />
+	</definition>
 	<definition name="seenotes.success" extends="baseLayout">
 		<put-attribute name="title" value="Notes" />
 		<put-attribute name="body" value="/Notes/SeeNotes.jsp" />
@@ -219,9 +228,15 @@
       <put-attribute name="topnav" value="/teacher/menu.jsp" />
       <put-attribute name="body"   value="/teacher/TeacherTimeTable.jsp"/>      
    </definition>
+   <definition name="notes.addteachernotesoption" extends="baseLayout">
+      <put-attribute name="title"  value="Time Table"/>
+      <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/Notes/AddTeacherNotes.jsp"/>      
+   </definition>
    
    <definition name="student.studentnotes" extends="baseLayout">
       <put-attribute name="title"  value="Student Notes"/>
+      <put-attribute name="topnav" value="/student/menu.jsp" />
       <put-attribute name="body"   value="/student/StudentsNotes.jsp"/>      
    </definition>
    <definition name="timetable.showtimetable" extends="baseLayout">
@@ -274,7 +289,12 @@
 	</definition>
 	<definition name="uploadadd" extends="baseLayout">
 		<put-attribute name="title" value="Upload Add" />
-		<put-attribute name="body" value="/admin/htmleditor.html" />
+		<put-attribute name="body" value="/admin/htmleditor.jsp" />
+	</definition>
+	
+	<definition name="classowner.startuploadingexam" extends="baseLayout">
+		<put-attribute name="title" value="Start Uploading Exam" />
+		<put-attribute name="body" value="/ClassOwner/startuploadingexam.jsp" />
 	</definition>
 			
 </tiles-definitions>

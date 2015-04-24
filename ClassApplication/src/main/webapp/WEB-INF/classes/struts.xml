@@ -163,11 +163,12 @@
 			<result name="error" type="tiles">register</result>
 		</action>
 
-		<action name="manageexams" class="com.classowner.ManageExamsAction"
+		<action name="uploadexams" class="com.classowner.UploadExamsAction"
 			method="execute">
-			<result name="success" type="tiles">classowner.manageexams</result>
-			<result name="error" type="tiles">register</result>
+			<result name="success" type="tiles">classowner.uploadexams</result>
+			<result name="startuploadingexam" type="tiles">classowner.startuploadingexam</result>
 		</action>
+		
 		<action name="uploadExamAction" class="com.classowner.MCQUploadAction">
 			<interceptor-ref name="defaultStack"></interceptor-ref>
 			<result name="success" type="tiles">classowner.manageexams</result>
@@ -189,7 +190,10 @@
 		</action>
 		<action name="studentnotes" class="com.notes.StudentNotesAction">
 			<result name="success" type="tiles">student.studentnotes</result>
-			<result name="error" type="tiles">nonstudent.viewexamerror</result>
+		</action>
+		
+		<action name="seeteachernotes" class="com.notes.SeeTeacherNotesAction">
+			<result name="success" type="tiles">notes.seeteachernotes</result>
 		</action>
 
 		<action name="showtimetable" class="com.timetable.UpdateTimeTableAction"
@@ -231,6 +235,12 @@
 		<action name="sessionreload" class="com.config.SessionReloadAction">
 			<result type="tiles">uploadadd</result>
 		</action>
-						
+
+		<action name="saveadaction" class="com.admin.actions.SaveAddAction">
+			<result type="tiles" name="input">uploadadd</result>
+			<result type="tiles" name="success">uploadadd</result>
+		</action>
+
+										
 	</package>
 </struts>

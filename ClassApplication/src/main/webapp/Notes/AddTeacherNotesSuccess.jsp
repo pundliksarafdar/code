@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 <script language="javascript">
 function redirect(){
-    window.location.href = "addnotesoption.action?notesadded='success'";
+    window.location.href = "addteachernotesoption.action?notesadded='success'";
 }
 </script>
 </head>

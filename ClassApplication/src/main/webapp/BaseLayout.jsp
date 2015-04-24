@@ -15,7 +15,7 @@ response.setHeader("Expires", "0");
 <title><tiles:insertAttribute name="title" ignore="true" /></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="css/bootstrap.min.css" rel="stylesheet">
- <link href="css/bootstrap-responsive.css" rel="stylesheet">
+<!-- <link href="css/bootstrap-responsive.css" rel="stylesheet"> --> 
  <link href="css/admin.css" rel="stylesheet">
  <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
  <link href="css/jquery.autocomplete.css" rel="stylesheet">
@@ -45,8 +45,8 @@ response.setHeader("Expires", "0");
 }
 
 body{
-    padding-right: 0px;
-    padding-left: 0px;
+    padding-right: 5px;
+    padding-left: 5px;
     font-family: cursive;
 }
 </style>
@@ -75,7 +75,12 @@ $( document ).ajaxStop(function() {
 	  $("#loaderModal").modal("hide")
 });
 
-
+var eventOccuredSience;
+$(document).ready(function(){
+	$("body").on("mousemove",function(){
+		eventOccuredSience = new Date();
+	});
+});
 </script>
 </head>
 <body>
@@ -109,34 +114,29 @@ $( document ).ajaxStop(function() {
 		if(!"true".equals(ignoresession)){
 			%>
 			<script>
-				var timeout = <%=request.getSession().getMaxInactiveInterval()%>;
+			var timeout = <%=request.getSession().getMaxInactiveInterval()%>;
 				
 				setMessage();
 				function setMessage(){
 					setTimeout(function(){
 						timeout = timeout-1;
-						//console.log(timeout);
 						if(timeout!=0){
 							setMessage();
 						}
 						$(".sessionTimeoutModal #seconds").text(timeout);
+						
 						if(timeout == 60){
-							modal.sessionTimeout("Session Timeout", "Your session is about to expire in <span id='seconds'></span> seconds", "Continue", "Logout"
-							,function(){
-									$.ajax({
-										url:"sessionreload",
-										type:"POST",
-										success:function(data){
-											timeout = <%=request.getSession().getMaxInactiveInterval()%>;
-										},
-										error:function(){
-											
-										}
-									});
-							},["paramsCancel"],function(){
-								location.href="logout";	
-							},["paramsOk"]);	
-							
+							var lastActivity = (new Date()-eventOccuredSience)/1000;
+							if(lastActivity<60){
+								reloadSession();
+								timeout = <%=request.getSession().getMaxInactiveInterval()%>;
+							}else{
+								modal.sessionTimeout("Session Timeout", "Your session is about to expire in <span id='seconds'></span> seconds", "Continue", "Logout"
+								,reloadSession
+								,["paramsCancel"],function(){
+									location.href="logout";	
+								},["paramsOk"]);	
+							}
 							}
 							
 						if(timeout == 0){
@@ -145,20 +145,32 @@ $( document ).ajaxStop(function() {
 					},1000);
 				}
 				
+				var reloadSession = function(){
+							$.ajax({
+								url:"sessionreload",
+								type:"POST",
+								success:function(data){
+									timeout = <%=request.getSession().getMaxInactiveInterval()%>;
+								},
+								error:function(){
+									
+								}
+							});
+					}
 			</script>
 			<%
 		}
 
 %>
-	<div id="outerDiv" align ="center">
+	<div id="outerDiv">
 		<div id="innerDiv">
 			<div id="header">
 				<div>				
 					<tiles:insertAttribute name="topnav" />				
 				</div>
-					<br/>							
+							
 			</div>
-			<div id="body" style="padding-top: 10px;">
+			<div id="body" style="padding: 10px;">
 				<div>
 					<tiles:insertAttribute name="body" />
 					<br />

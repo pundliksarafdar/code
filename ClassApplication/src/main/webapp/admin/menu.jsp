@@ -81,7 +81,7 @@ siteMapApp.controller("SiteMapController",function($scope){
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Exam <b class="caret"></b></a>
       		<ul class="dropdown-menu">
-	            <li><a href="manageexams">Add Exam</a></li>
+	            <li><a href="uploadexams">Add Exam</a></li>
 	            <li><a href="searchexamnonstudent">Attempt Exam</a></li>
 	         </ul>
       </li>
@@ -96,9 +96,15 @@ siteMapApp.controller("SiteMapController",function($scope){
 	         </ul>
       </li>
     <%}%>
-    <cx:versionswitch switchId="3">
-    	<li><a href="notes">Notes</a></li>
-    </cx:versionswitch>
+<%--     <cx:versionswitch switchId="3"> --%>
+    	<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
+    	<ul class="dropdown-menu">
+	            <li><a href="addnotesoption">Add Notes</a></li>
+	            <li><a href="seenotes">See/Update All Notes</a></li>  
+	         </ul>
+    	
+    	</li>
+    <%-- </cx:versionswitch> --%>
     </ul>
 	<ul class="nav navbar-nav navbar-right">
       <li>

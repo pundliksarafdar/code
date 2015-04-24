@@ -9,6 +9,7 @@ import com.classapp.db.Teacher.Teacher;
 import com.classapp.db.Teacher.TeacherDB;
 import com.classapp.db.Teacher.TeacherDetails;
 import com.classapp.db.register.RegisterBean;
+import com.classapp.db.subject.Subject;
 import com.transaction.register.RegisterTransaction;
 
 public class TeacherTransaction {
@@ -203,6 +204,11 @@ public class TeacherTransaction {
 	public Integer getTeacherCount(int regID){
 		TeacherDB db=new TeacherDB();
 		return db.getTeacherCount(regID);
+	}
+	
+	public List<Subject> getTeacherSubject(int teacherid,int classid) {
+		TeacherDB db=new TeacherDB();
+		return db.getTeacherSubjects(teacherid, classid);
 	}
 	
 }

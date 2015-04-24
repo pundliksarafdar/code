@@ -435,4 +435,40 @@ public Teacher getTeacher(int user_id, int class_id) {
 			}
 		return list.get(0).intValue();
 	}
+	
+	public List<Subject> getTeacherSubjects(int teacherID,int classID){
+		Transaction transaction=null;
+		Session session=null;
+		List<Subject> list=new ArrayList<Subject>();
+		List<String> subjectids=new ArrayList<String>();
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query=session.createQuery("select sub_ids from Teacher where user_id=:teacher_id and class_id=:class_id");
+		query.setParameter("class_id", classID);
+		query.setParameter("teacher_id", teacherID);
+		subjectids=query.list();
+		List<Integer> subids=new ArrayList<Integer>();
+		if(subjectids.size()>0){
+			String[] ids= subjectids.get(0).split(",");
+			int i=0;
+			while(i<ids.length){
+				subids.add(Integer.parseInt(ids[i]));
+				i++;
+			}
+			query=session.createQuery("from Subject where subjectId in :subjectId");
+			query.setParameterList("subjectId", subids);
+			list=query.list();
+		}
+		
+			}catch(Exception e){
+				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
+			}
+		return list;
+	}
+	
 }

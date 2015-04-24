@@ -1,5 +1,7 @@
 package com.classapp.db.Notes;
 
+import java.sql.Timestamp;
+
 public class Notes {
 int notesid;
 String notespath;
@@ -7,7 +9,28 @@ int classid;
 int divid;
 int subid;
 String name;
+String batch;
+Timestamp time;
+int addedby;
 
+public int getAddedby() {
+	return addedby;
+}
+public void setAddedby(int addedby) {
+	this.addedby = addedby;
+}
+public Timestamp getTime() {
+	return time;
+}
+public void setTime(Timestamp time) {
+	this.time = time;
+}
+public String getBatch() {
+	return batch;
+}
+public void setBatch(String batch) {
+	this.batch = batch;
+}
 public String getName() {
 	return name;
 }

@@ -30,8 +30,8 @@ public class DisplayNotesAction extends BaseAction{
 		String path=notesTransaction.getNotepathById(Integer.parseInt(notesid));
 		if(userBean.getRegId()!=null)
 		{
-		
-		File file = new File(path);
+		String path1=	ServletActionContext.getServletContext().getRealPath("/"+path);
+		File file = new File(ServletActionContext.getServletContext().getRealPath("/"+path));
         response.setHeader("Content-Type", ServletActionContext.getServletContext().getMimeType(file.getName()));
         response.setHeader("Content-Length", String.valueOf(file.length()));
        

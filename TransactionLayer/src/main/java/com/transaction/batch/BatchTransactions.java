@@ -227,5 +227,10 @@ public class BatchTransactions {
 		BatchDB batchDB=new BatchDB();
 		return batchDB.getBatchCount(regID);
 	}
+	
+	public List<Batch> getBatchRelatedtoDivision(int division) {
+		BatchDB batchDB=new BatchDB();
+		return batchDB.getbachesrelatedtoclass(division);
+	}
 
 }

@@ -1,3 +1,4 @@
+<%@page import="com.classapp.db.register.RegisterBean"%>
 <%@page import="com.classapp.db.batch.division.Division"%>
 <%@page import="com.classapp.db.subject.Subjects"%>
 <%@page import="java.util.List"%>
@@ -24,6 +25,7 @@
  </style>
 <script type="text/javascript">
 var allbatches="";
+var globalflag=false;
 
 function validate()
 {
@@ -42,9 +44,64 @@ $(document).ready(function(){
         }
     });
 	
+	$('#classes').change(function(){
+		var classes = $('#classes').val();
+		$.ajax({
+			 
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "getsubjectsanddivisions",
+			    	 classes: classes
+			   		},
+			   type:"POST",
+			   success:function(data){
+				   var resultJson = JSON.parse(data);
+				   var subjectnames=resultJson.subjectnames.split(",");
+				   var subjectids=resultJson.subjectids.split(",");
+				   var divisionnames=resultJson.divisionnames.split(",");
+				   var divisionids=resultJson.divisionids.split(",");
+				   $("#subjecterror").html("");
+				   var subjectselect=$('#subject');
+				   subjectselect.empty();
+				   subjectselect.append("<option value='-1'>Select Subject</option>");
+				   if(subjectids[0]!=""){
+					   var i=0;
+					   while(i<subjectids.length){
+						   subjectselect.append("<option value="+subjectids[i]+">"+subjectnames[i]+"</option>");
+						   i++;
+					   }
+					   
+				   }else{
+					   $("#subjecterror").html("No subjects assigned to you");
+				   }
+				   
+				   var divisionselect=$('#division');
+				   $("#divisionerror").html("");
+				   divisionselect.empty();
+				   divisionselect.append("<option value='-1'>Select Division</option>");
+				   if(divisionids[0]!=""){
+					   var i=0;
+					   while(i<divisionids.length){
+						   divisionselect.append("<option value="+divisionids[i]+">"+divisionnames[i]+"</option>");
+						   i++;
+					   }
+					   
+				   }else{
+					   $("#divisionerror").html("No Division present");
+				   }
+				   
+			   },
+				error:function(){
+			   		modal.launchAlert("Error","Error");
+			   	}
+			   });
+		
+	});
+	
 	
 	$('#division').change(function(){
 		var division = $('#division').val();
+		if(division!="-1"){
 		$.ajax({
 			 
 			   url: "classOwnerServlet",
@@ -76,6 +133,11 @@ $(document).ready(function(){
 			   		modal.launchAlert("Error","Error");
 			   	}
 			   });
+		}else{
+			$("#batcherror").html("");
+			   var batchselect=$('#batch');
+			   batchselect.empty();
+		}
 	});
 	
 	$("#submit").click(function(){
@@ -86,6 +148,7 @@ $(document).ready(function(){
 		var subject=$("#subject").val();
 		var validforbatch=$("#validforbatch:checked").val();
 		var batch=$("#batch").val();
+		var classes = $('#classes').val();
 		var notesnameerror=$("#notesnameerror");
 		var divisionerror=$("#divisionerror");
 		var subjecterror=$("#subjecterror");
@@ -103,7 +166,7 @@ $(document).ready(function(){
 			flag=false;
 		}else{
 			var filesize=document.getElementById("myfile").files[0].size/1024/1024;
-			if(filesize > 2){
+			if(filesize > 5){
 				fileerror.html("File size should be less than 5 MB");
 				flag=false;
 			}
@@ -121,7 +184,8 @@ $(document).ready(function(){
 				   url: "classOwnerServlet",
 				   data: {
 				    	 methodToCall: "validatenotesname",
-				    	 notes: notesname
+				    	 notes: notesname,
+				    	 classes:classes
 				   		},
 				   		async: false,
 				   type:"POST",
@@ -152,17 +216,16 @@ $(document).ready(function(){
 			subjecterror.html("Please select subject");
 			flag=false;
 		}
-		var allbatch=$("#allbatches").val();
-		if(allbatch==""){
-			 $("#batcherror").html("No Batch Present");
-			 flag=false;
-		}
-		
 		if(validforbatch=="specific"){
 			if(batch==null){
 				batcherror.html("Please select atleast one batch");
 				flag=false;
 			}
+		}
+		var allbatch=$("#allbatches").val();
+		if(allbatch==""){
+			 $("#batcherror").html("No Batch Present");
+			 flag=false;
 		}
 		
 		if(flag==false){
@@ -258,36 +321,41 @@ if(notes!=null){
       </div>
       
       <div class="form-group">
-	<label for="subject"  class="col-sm-4 control-label">Select Subject:</label> 
+	<label for="classes"  class="col-sm-4 control-label">Select Class:</label> 
     <div class="col-sm-5" align="left">
-      <select class="form-control" name="subject" id="subject">
+      <select class="form-control" name="classes" id="classes">
       <option value="-1">Select one</option>
-      <%List<Subjects> list=(List<Subjects>)request.getAttribute("subjects"); 
+      <%List<RegisterBean> list=(List<RegisterBean>)request.getAttribute("classes"); 
       if(list!=null){
       for(int i=0;i<list.size();i++)
       {
       %>
-      <option value="<%=list.get(i).getSubjectId() %>"><%=list.get(i).getSubjectName()%></option>
+      <option value="<%=list.get(i).getRegId()%>"><%=list.get(i).getClassName()%></option>
       <%} }%>
       </select>
       </div>
       <div class="col-sm-2" align="left">
-	<span class="error" id="subjecterror" name="subjecterror"></span>
+	<span class="error" id="classerror" name="classerror"></span>
 	</div>
       </div>
+      
+       <div class="form-group">
+	<label for="subject"  class="col-sm-4 control-label">Select Subject :</label>
+      <div class="col-sm-5" align="left">
+	<select name="subject" class="form-control" id="subject">
+      <option value="-1">Select one</option>
+      </select>
+  	</div>
+  	<div class="col-sm-2" align="left">
+	<span class="error" id="subjecterror" name="subjecterror"></span>
+	</div>
+  	</div>
       
       <div class="form-group">
 	<label for="division"  class="col-sm-4 control-label">Select Division :</label>
       <div class="col-sm-5" align="left">
 	<select name="division" class="form-control" id="division">
       <option value="-1">Select one</option>
-      <%List<Division> divisions=(List<Division>)request.getAttribute("divisions");
-      if(divisions!=null){
-      for(int i=0;i<divisions.size();i++)
-      {
-      %>
-      <option value="<%=divisions.get(i).getDivId() %>"><%=divisions.get(i).getDivisionName()%>  <%=divisions.get(i).getStream() %></option>
-      <%} }%>
       </select>
   	</div>
   	<div class="col-sm-2" align="left">

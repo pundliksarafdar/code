@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.sql.Date;
 import java.sql.Time;
 import java.text.ParseException;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -32,8 +34,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts2.ServletActionContext;
+
 
 import com.classapp.db.Feedbacks.Feedback;
+import com.classapp.db.Notes.Notes;
 /*import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -66,6 +71,7 @@ import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.feedback.feedbackTransaction;
+import com.transaction.notes.NotesTransaction;
 import com.transaction.notification.NotificationGlobalTransation;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.schedule.ScheduleTransaction;
@@ -1399,7 +1405,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				
 				String classid=req.getParameter("classid");
 				String date=req.getParameter("date");
-				String dateString[]=date.split("/");
+			//	String dateString[]=date.split("/");
 				//Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
 				Student student= studentTransaction.getclassStudent(regId,Integer.parseInt(classid));		
 				BatchTransactions batchTransactions=new BatchTransactions();
@@ -1759,7 +1765,253 @@ public class ClassOwnerServlet extends HttpServlet{
 	feedbackTransaction.addFeedback(feedback);
 	respObject.addProperty(STATUS, "success");
 	
-}		
+}else if("getbatches".equals(methodToCall)){
+	String division=req.getParameter("division");
+	BatchTransactions batchTransactions=new BatchTransactions();
+	List<Batch> batchs=batchTransactions.getBatchRelatedtoDivision(Integer.parseInt(division));
+	StringBuilder batchids=new StringBuilder();
+	StringBuilder batchnames=new StringBuilder();
+	int i=0;
+	if(batchs.size()>0){
+	while(batchs.size()>i){
+		batchids.append(batchs.get(i).getBatch_id()+",");
+		batchnames.append(batchs.get(i).getBatch_name()+",");
+		i++;
+	}
+	batchnames.deleteCharAt(batchnames.length()-1);
+	batchids.deleteCharAt(batchids.length()-1);
+	}else{
+		batchnames.append("");
+		batchids.append("");
+	}
+	respObject.addProperty("batchnames", batchnames.toString());
+	respObject.addProperty("batchids", batchids.toString());
+	respObject.addProperty(STATUS, "success");
+	
+}else if("validatenotesname".equals(methodToCall)){
+	String notes=req.getParameter("notes");
+	String classes=req.getParameter("classes");
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	NotesTransaction notesTransaction=new NotesTransaction();
+	int classid=userBean.getRegId();
+	if(classes!="" && classes !=null){
+		classid=Integer.parseInt(classes);
+	}
+	boolean flag=notesTransaction.validatenotesname(notes, classid);
+	if(flag){
+		respObject.addProperty("notesname", "available");
+	}else{
+		respObject.addProperty("notesname", "notavailable");
+	}
+	respObject.addProperty(STATUS, "success");
+	
+}else if("getsubjectsanddivisions".equals(methodToCall)){
+	String classid=req.getParameter("classes");
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	TeacherTransaction teacherTransaction=new TeacherTransaction();
+	List<Subject> subjectlist=teacherTransaction.getTeacherSubject(userBean.getRegId(), Integer.parseInt(classid));
+	DivisionTransactions divisionTransactions=new DivisionTransactions();
+	List<Division> divisions=divisionTransactions.getAllDivisions(Integer.parseInt(classid));
+	StringBuilder subjectnames=new StringBuilder();
+	StringBuilder subjectsids=new StringBuilder();
+	StringBuilder divisionnames=new StringBuilder();
+	StringBuilder divisionids=new StringBuilder();
+	int i=0;
+	if(subjectlist.size()>0){
+		while(subjectlist.size()>i){
+			subjectnames.append(subjectlist.get(i).getSubjectName()+",");
+			subjectsids.append(subjectlist.get(i).getSubjectId()+",");
+			i++;
+		}
+		subjectnames.deleteCharAt(subjectnames.length()-1);
+		subjectsids.deleteCharAt(subjectsids.length()-1);
+		}else{
+			subjectnames.append("");
+			subjectsids.append("");
+		}
+		i=0;
+		if(divisions.size()>0){
+			while(divisions.size()>i){
+				divisionnames.append(divisions.get(i).getDivisionName()+",");
+				divisionids.append(divisions.get(i).getDivId()+",");
+				i++;
+			}
+			divisionnames.deleteCharAt(divisionnames.length()-1);
+			divisionids.deleteCharAt(divisionids.length()-1);
+			}else{
+				divisionnames.append("");
+				divisionids.append("");
+			}
+	
+		respObject.addProperty("subjectnames", subjectnames.toString());
+		respObject.addProperty("subjectids", subjectsids.toString());
+		respObject.addProperty("divisionnames", divisionnames.toString());
+		respObject.addProperty("divisionids", divisionids.toString());
+	respObject.addProperty(STATUS, "success");
+	
+}else if("fetchnotes".equals(methodToCall)){
+	String subject=(String) req.getParameter("subject");
+	String division=(String) req.getParameter("division");
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	NotesTransaction notesTransaction=new NotesTransaction();
+	List<Notes> noteslist =notesTransaction.getNotesPath(Integer.parseInt(division), Integer.parseInt(subject), userBean.getRegId());
+	StringBuilder notesname=new StringBuilder();
+	StringBuilder notesids=new StringBuilder();
+	StringBuilder notespaths=new StringBuilder();
+	
+	int i=0;
+	if(noteslist.size()>0){
+		while(noteslist.size()>i){
+			notesname.append(noteslist.get(i).getName()+",");
+			notesids.append(noteslist.get(i).getNotesid()+",");
+			notespaths.append(noteslist.get(i).getNotespath()+"");
+			i++;
+		}
+		notesname.deleteCharAt(notesname.length()-1);
+		notesids.deleteCharAt(notesids.length()-1);
+		notespaths.deleteCharAt(notespaths.length()-1);
+		}else{
+			notesname.append("");
+			notesids.append("");
+			notespaths.append("");
+		}
+	respObject.addProperty("notesnames", notesname.toString());
+	respObject.addProperty("notesids", notesids.toString());
+	respObject.addProperty("notespaths", notespaths.toString());
+	respObject.addProperty(STATUS, "success");
+	
+}else if("getstudentnotes".equals(methodToCall)){
+	String subject=(String) req.getParameter("subject");
+	String classid=(String) req.getParameter("classid");
+	String batch=(String) req.getParameter("batch");
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	NotesTransaction notesTransaction=new NotesTransaction();
+	List<Notes> noteslist =notesTransaction.getStudentNotesPath(batch, Integer.parseInt(subject), Integer.parseInt(classid));
+	StringBuilder notesname=new StringBuilder();
+	StringBuilder notesids=new StringBuilder();
+	StringBuilder notespaths=new StringBuilder();
+	
+	int i=0;
+	if(noteslist.size()>0){
+		while(noteslist.size()>i){
+			notesname.append(noteslist.get(i).getName()+",");
+			notesids.append(noteslist.get(i).getNotesid()+",");
+			notespaths.append(noteslist.get(i).getNotespath()+"");
+			i++;
+		}
+		notesname.deleteCharAt(notesname.length()-1);
+		notesids.deleteCharAt(notesids.length()-1);
+		notespaths.deleteCharAt(notespaths.length()-1);
+		}else{
+			notesname.append("");
+			notesids.append("");
+			notespaths.append("");
+		}
+	respObject.addProperty("notesnames", notesname.toString());
+	respObject.addProperty("notesids", notesids.toString());
+	respObject.addProperty("notespaths", notespaths.toString());
+	respObject.addProperty(STATUS, "success");
+	
+}else if("fetchteachernotes".equals(methodToCall)){
+	String subject=(String) req.getParameter("subject");
+	String division=(String) req.getParameter("division");
+	String classid=(String) req.getParameter("classes");
+	
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	NotesTransaction notesTransaction=new NotesTransaction();
+	List<Notes> noteslist =notesTransaction.getNotesPath(Integer.parseInt(division), Integer.parseInt(subject), Integer.parseInt(classid));
+	StringBuilder notesname=new StringBuilder();
+	StringBuilder notesids=new StringBuilder();
+	StringBuilder notespaths=new StringBuilder();
+	StringBuilder addedbyteacher=new StringBuilder();
+	int i=0;
+	if(noteslist.size()>0){
+		while(noteslist.size()>i){
+			notesname.append(noteslist.get(i).getName()+",");
+			notesids.append(noteslist.get(i).getNotesid()+",");
+			notespaths.append(noteslist.get(i).getNotespath()+",");
+			if(userBean.getRegId()==noteslist.get(i).getAddedby()){
+				addedbyteacher.append("true,");
+			}else{
+				addedbyteacher.append("false,");
+			}
+			
+			i++;
+		}
+		notesname.deleteCharAt(notesname.length()-1);
+		notesids.deleteCharAt(notesids.length()-1);
+		notespaths.deleteCharAt(notespaths.length()-1);
+		addedbyteacher.deleteCharAt(addedbyteacher.length()-1);
+		}else{
+			notesname.append("");
+			notesids.append("");
+			notespaths.append("");
+			addedbyteacher.append("");
+		}
+	respObject.addProperty("notesnames", notesname.toString());
+	respObject.addProperty("notesids", notesids.toString());
+	respObject.addProperty("notespaths", notespaths.toString());
+	respObject.addProperty("addedbyteacher", addedbyteacher.toString());
+	respObject.addProperty(STATUS, "success");
+	
+}else if("editnotesinformation".equals(methodToCall)){
+	String notesid=(String) req.getParameter("notesid");
+	String classes=(String) req.getParameter("classes");
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	NotesTransaction notesTransaction=new NotesTransaction();
+	Notes notes=notesTransaction.getNotesById(Integer.parseInt(notesid));
+	BatchTransactions batchTransactions=new BatchTransactions();
+	List<Batch> list=new ArrayList<Batch>();
+	if(classes!=null){		
+		list=batchTransactions.getAllBatchesOfDivision(notes.getDivid()+"", Integer.parseInt(classes));
+	}else{
+	list=batchTransactions.getAllBatchesOfDivision(notes.getDivid()+"", userBean.getRegId());
+	}
+	StringBuilder allbatchnames=new StringBuilder();
+	StringBuilder allbatchids=new StringBuilder();
+	
+	
+	int i=0;
+	if(list.size()>0){
+		while(list.size()>i){
+			allbatchnames.append(list.get(i).getBatch_name()+",");
+			allbatchids.append(list.get(i).getBatch_id()+",");
+			
+			i++;
+		}
+		allbatchnames.deleteCharAt(allbatchnames.length()-1);
+		allbatchids.deleteCharAt(allbatchids.length()-1);
+		
+		}else{
+			allbatchnames.append("");
+			allbatchids.append("");
+		}
+	respObject.addProperty("allbatchnames", allbatchnames.toString());
+	respObject.addProperty("allbatchids", allbatchids.toString());
+	respObject.addProperty("notesname", notes.getName());
+	respObject.addProperty("notesbatches", notes.getBatch());
+	respObject.addProperty(STATUS, "success");
+	
+}else if("updatenotes".equals(methodToCall)){
+	String notesid=(String) req.getParameter("notesid");
+	String batchids=(String) req.getParameter("batchids");
+	String notesname=(String) req.getParameter("notesname");
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	NotesTransaction notesTransaction=new NotesTransaction();
+	notesTransaction.updatenotes(notesname, Integer.parseInt(notesid), batchids);
+	respObject.addProperty(STATUS, "success");
+	
+}else if("deletenotes".equals(methodToCall)){
+	String notesid=(String) req.getParameter("notesid");
+	NotesTransaction notesTransaction=new NotesTransaction();
+	String path=notesTransaction.getNotepathById(Integer.parseInt(notesid));
+	String realpath=	req.getSession().getServletContext().getRealPath("/"+path);
+	File file = new File(realpath);
+	  file.delete();
+	  notesTransaction.deleteNotes(Integer.parseInt(notesid));
+	respObject.addProperty(STATUS, "success");
+	
+}
 		printWriter.write(respObject.toString());
 	}
 	

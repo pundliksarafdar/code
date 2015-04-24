@@ -45,9 +45,13 @@
     <%}if(userBean.getRole() == 2 || userBean.getRole() == 10){ %>  
        <li><a href="teachertimetable">Time Table</a></li>
     <%}%>      
-     <cx:versionswitch switchId="3">
-    <li><a href="notes">Notes</a></li>
-    </cx:versionswitch>
+   
+   <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
+    	<ul class="dropdown-menu">
+	            <li><a href="addteachernotesoption">Add Notes</a></li>
+	            <li><a href="seeteachernotes">See/Update Notes</a></li>  
+	     </ul>
+    
     </ul>
     <ul class="nav navbar-nav navbar-right">
     <li class="dropdown">

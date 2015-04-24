@@ -26,6 +26,7 @@
 .navbar-apple-custom{
 	background:rgba(0,0,0,0.6);
 	color:#FFFFFF;
+	margin-bottom: 0px; 
 }
 
 .navbar-apple-custom a{
