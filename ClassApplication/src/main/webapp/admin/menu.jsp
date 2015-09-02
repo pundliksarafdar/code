@@ -79,9 +79,20 @@ siteMapApp.controller("SiteMapController",function($scope){
       
       <cx:versionswitch switchId="3">
       <li>
+      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Questions <b class="caret"></b></a>
+      		<ul class="dropdown-menu">
+	            <li><a href="choosesubject?forwardAction=listquestionbankquestionaction">Add Questions</a></li>
+	            <li><a href="subjectchooseaction?successaction=editexam">Search/Edit Questions</a></li>
+	            <li><a href="searchexamnonstudent">Attempt Exam</a></li>
+	         </ul>
+      </li>
+      </cx:versionswitch>
+      <cx:versionswitch switchId="3">
+      <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Exam <b class="caret"></b></a>
       		<ul class="dropdown-menu">
-	            <li><a href="uploadexams">Add Exam</a></li>
+	            <li><a href="choosesubject?forwardAction=listquestionbankquestionaction">Add Exam</a></li>
+	            <li><a href="choosesubject?forwardAction=listExam">Search Exam</a></li>
 	            <li><a href="searchexamnonstudent">Attempt Exam</a></li>
 	         </ul>
       </li>
@@ -99,12 +110,13 @@ siteMapApp.controller("SiteMapController",function($scope){
 <%--     <cx:versionswitch switchId="3"> --%>
     	<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
     	<ul class="dropdown-menu">
-	            <li><a href="addnotesoption">Add Notes</a></li>
+	            <li><a href="choosesubject?forwardAction=addnotesoption">Add Notes</a></li>
 	            <li><a href="seenotes">See/Update All Notes</a></li>  
 	         </ul>
     	
     	</li>
     <%-- </cx:versionswitch> --%>
+    <li><a href="sendmessage">Send Message</b></a></li>
     </ul>
 	<ul class="nav navbar-nav navbar-right">
       <li>

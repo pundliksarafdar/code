@@ -53,6 +53,12 @@ public class Constants {
 	
 	public static final String EXAM_DATA_LENGTH = "examDataLength";
 	public static final String QUESTION_DATA = "questionData";
+	public static final String USER_STATIC = "userstatic";
+	public static final String DIVISION = "division";
+	public static final String SUBJECT = "subject";
+	public static final String BATCH = "batch";
+	public static final String CLASSNAME = "classname";
+	
 	public static String DIVISION_NAMES="divisionNames";
 	public static String ACTIVATION="activation";
 	public static String RESET_PASSWORD="resetpassword";
@@ -60,4 +66,6 @@ public class Constants {
 	/*Action URL*/
 	public static List<String> ALL_ACTION_URLs = new ArrayList<String>();
 	public static String ACTION_URLS="actionUrl";
+	
+	public static String STORAGE_PATH = "";
 }

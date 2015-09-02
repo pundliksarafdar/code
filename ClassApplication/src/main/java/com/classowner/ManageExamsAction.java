@@ -19,8 +19,8 @@ public class ManageExamsAction extends BaseAction{
 		if(request.getSession().getAttribute(Constants.MCQS_LIST)==null){
 			MCQDataHelper dataHelper= new MCQDataHelper();			
 			dataHelper.setClass_id(userBean.getRegId());
-			List<MCQDetails> mcqDetail = dataHelper.getListOfMCQs();
-			request.getSession().setAttribute(Constants.MCQS_LIST, mcqDetail);		
+//			List<MCQDetails> mcqDetail = dataHelper.getListOfMCQs();
+	//		request.getSession().setAttribute(Constants.MCQS_LIST, mcqDetail);		
 		}
 		return SUCCESS;
 	}	

@@ -307,7 +307,7 @@ public class MCQUploadAction extends BaseAction implements ServletContextAware {
 		mcqData.setUpload_path(filePath.concat("\\"+fileName));
 		
 		ExamTransaction transaction= new ExamTransaction();
-		transaction.addUpdateDb(mcqData);
+//		transaction.addUpdateDb(mcqData);
 	}
 
 }

@@ -66,4 +66,9 @@ public void updatenotes(String notesname,int notesid,String batchids) {
 	NotesDB db=new NotesDB();
 	db.updatenotes(notesname, notesid, batchids);
 }
+
+public boolean validatenotesnamebyID(String notesname,int regID,int notesID) {
+	NotesDB db=new NotesDB();
+	return db.validatenotesnamebyID(notesname, regID, notesID);
+}
 }

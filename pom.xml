@@ -14,6 +14,6 @@
 	<module>DataLayer</module>
 	<module>ClassDatabase</module>
     <module>ClassApplication</module>
-	<module>CorexWebService</module>
+	<!-- <module>CorexWebService</module> -->
   </modules> 
 </project>

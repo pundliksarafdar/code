@@ -2,15 +2,11 @@ package com.transaction.student;
 
 import java.util.List;
 
-import com.classapp.db.batch.Batch;
-import com.classapp.db.batch.BatchDB;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentDB;
 import com.classapp.db.student.StudentData;
 import com.classapp.db.student.StudentDetails;
-import com.sun.corba.se.impl.encoding.CodeSetConversion.BTCConverter;
-import com.transaction.batch.BatchTransactions;
 
 public class StudentTransaction {
 	StudentData studentData;

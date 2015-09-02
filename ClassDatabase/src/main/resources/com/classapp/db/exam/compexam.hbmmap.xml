@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 18 Jul, 2014 11:15:40 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.exam.CompExam" table="compexam_lkup" catalog="classdb">
+     <id name="compexam_id" type="java.lang.Integer">
+            <column name="compexam_id" />
+            <generator class="increment" />
+        </id>
+        <property name="compexam_name" type="string">
+            <column name="compexam_name" length="50" not-null="true" unique="false" />
+        </property>
+        <property name="year" type="java.lang.Integer">
+            <column name="year" length="50" not-null="true" unique="false" />
+        </property>
+       
+</class>
+</hibernate-mapping>

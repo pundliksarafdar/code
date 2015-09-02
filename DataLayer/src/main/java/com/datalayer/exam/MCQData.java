@@ -14,7 +14,8 @@ public class MCQData {
 	private int teacher_id;
 	
 	private Date create_date;
-
+	private String batches;
+	
 	public int getExam_id() {
 		return exam_id;
 	}
@@ -69,5 +70,14 @@ public class MCQData {
 
 	public void setCreate_date(Date create_date) {
 		this.create_date = create_date;
+	}
+
+	public String getBatches() {
+		return batches;
+	}
+
+	public void setBatches(String batches) {
+		this.batches = batches;
 	}	
+	
 }

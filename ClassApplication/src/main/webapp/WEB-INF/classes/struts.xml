@@ -115,6 +115,11 @@
 			<result name="success" type="tiles">notes.addnotesoption</result>
 		</action>
 
+		<action name="addteachernotesoption" class="com.notes.AddTeacherNotesOptionAction"
+			method="execute">
+			<result name="success" type="tiles">notes.addteachernotesoption</result>
+		</action>
+		
 		<action name="upload" class="com.notes.AddNotesAction" method="execute">
 			<result name="success" type="tiles">notes.success</result>
 		</action>
@@ -167,6 +172,9 @@
 			method="execute">
 			<result name="success" type="tiles">classowner.uploadexams</result>
 			<result name="startuploadingexam" type="tiles">classowner.startuploadingexam</result>
+			<result name="examlandingpage" type="tiles">classowner.uploadexamcomplete</result>
+			<result name="questioneditsuccess" type="tiles">classowner.questioneditsuccess</result>
+			<result name="cancleuploading" type="tiles">classowner.questioneditsuccess</result>
 		</action>
 		
 		<action name="uploadExamAction" class="com.classowner.MCQUploadAction">
@@ -174,6 +182,7 @@
 			<result name="success" type="tiles">classowner.manageexams</result>
 			<result name="error" type="tiles">register</result>
 			<result name="input" type="tiles">classowner.manageexams</result>
+			
 		</action>
 		<action name="searchexamnonstudent" class="com.classowner.SearchExamsAction">
 			<result name="success" type="tiles">nonstudent.searchexamnonstudent
@@ -232,6 +241,12 @@
 			<result type="tiles">uploadadd</result>
 		</action>
 
+		<!-- 
+		<action name="sendmessage" class="com.classowner.SendMessageAction">
+			<result type="tiles">classowner.sendmessage</result>
+		</action>
+		 -->
+		 
 		<action name="sessionreload" class="com.config.SessionReloadAction">
 			<result type="tiles">uploadadd</result>
 		</action>
@@ -240,7 +255,92 @@
 			<result type="tiles" name="input">uploadadd</result>
 			<result type="tiles" name="success">uploadadd</result>
 		</action>
+		
+		<action name="subjectchooseaction" class="com.classowner.ChooseSubjectAction"
+			method="execute">
+			<result name="success" type="tiles">subjectchoose</result>
+		</action>
 
-										
+		<action name="subjectchooseforward" class="com.classowner.ChooseSubjectForward"
+			method="execute">
+			<result name="uploadexams" type="chain">uploadexams</result>
+			<result name="editexam" type="chain">editexam</result>
+		</action>
+		<action name="editexam" class="com.classowner.EditExamAction"
+			method="execute">
+			<result name="success" type="tiles">editexamlist</result>
+		</action>
+		
+		<action name="studentchoosesubject" class="com.exam.StudentChooseSubjectAction">
+			<result name="success" type="tiles">student.studentchoosesubject</result>
+		</action>
+		
+		<action name="studentchoosesubjectforward" class="com.exam.StudentChooseSubjectForwardAction">
+			<result name="studentchooseexam" type="chain">studentchooseexam</result>
+		</action>
+				
+		<action name="studentchooseexam" class="com.exam.StudentChooseExam">
+			<result name="success" type="chain">student.studentchoosexam</result>
+		</action>
+		
+		<action name="choosesubject" class="com.commoncomponent.actions.ChooseSubjectAction" method="execute">
+			<result name="success" type="tiles">commoncomponent.subjectchoose</result>
+			<param name="ignoresession">true</param>
+		</action>
+		
+		<action name="listquestionbankquestionaction" class="com.corex.exam.ChooseQuestionBank" method="execute">
+			<result name="success" type="tiles">classowner.listquestionbankquestion</result>
+			<param name="ignoresession">true</param>
+		</action>
+		
+		<action name="searchQuestion" class="com.corex.exam.SearchQuestionAction" method="execute">
+			<result name="success" type="tiles">classowner.listquestionbankquestion</result>
+			<param name="ignoresession">true</param>
+		</action>
+		<action name="paginateQuestion" class="com.corex.exam.SearchQuestionAction" method="execute">
+			<result name="success" type="tiles">classowner.listquestionbankquestion</result>
+			<param name="ignoresession">true</param>
+		</action>
+		
+		<action name="examaction" class="com.corex.exam.ExamAction" method="execute">
+			<result name="success" type="tiles">classowner.exam</result>
+			<param name="ignoresession">true</param>
+		</action>
+		
+		<action name="examcriteriaaction" class="com.corex.exam.ExamCriteriaAction" method="execute">
+			<result name="success" type="tiles">classowner.examcriteria</result>
+			<param name="ignoresession">true</param>
+		</action>
+		
+		<action name="generateexamaction" class="com.corex.exam.GenerateExamAction" method="execute">
+			<result name="success" type="tiles">classowner.generateexam</result>
+			<param name="ignoresession">true</param>
+		</action>
+
+		<action name="editquestion" class="com.classowner.UploadExamsAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.uploadexams</result>
+			<result name="startuploadingexam" type="tiles">classowner.startuploadingexam</result>
+			<result name="examlandingpage" type="tiles">classowner.uploadexamcomplete</result>
+			<result name="questioneditsuccess" type="tiles">classowner.questioneditsuccess</result>
+		</action>
+		
+		<action name="deletequestion" class="com.classowner.UploadExamsAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.uploadexams</result>
+			<result name="startuploadingexam" type="tiles">classowner.startuploadingexam</result>
+			<result name="examlandingpage" type="tiles">classowner.uploadexamcomplete</result>
+			<result name="questiondelete" type="tiles">classowner.questioneditsuccess</result>
+		</action>
+		
+		<action name="listExam" class="com.exam.SearchExamResultAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.editexamlist</result>
+		</action>
+		
+		<action name="deleteExam" class="com.corex.exam.DeleteExamAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.questioneditsuccess</result>
+		</action>
 	</package>
 </struts>

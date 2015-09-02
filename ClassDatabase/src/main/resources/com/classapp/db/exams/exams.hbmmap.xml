@@ -28,5 +28,14 @@
          <property name="create_date" type="java.util.Date">
             <column name="CREATE_DATE" />
         </property>
+        <property name="publish" type="boolean">
+            <column name="IS_PUBLISH" />
+        </property>
+        <property name="totalMarks" type="int">
+            <column name="TOTAL_MARKS" />
+        </property>
+        <property name="batches" type="java.lang.String">
+            <column name="batches" />
+        </property>
     </class>
 </hibernate-mapping>

@@ -19,7 +19,7 @@ public class ViewAllExamsAction extends BaseAction{
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
 		/*ExamTransaction examTransaction = new ExamTransaction();
-		List<MCQData> examData = examTransaction.getExamData(userBean.getRegId().toString());
+		List<ExamData> examData = examTransaction.getExamData(userBean.getRegId().toString());
 		request.setAttribute(Constants.MCQS_LIST, examData);*/
 		return SUCCESS;
 	}

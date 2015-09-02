@@ -1,43 +1,23 @@
-<style>
-.padding-bottom-0{
-	padding:10px 10px 5px 10px;
-}
-</style>
-
-<nav class="navbar navbar-apple-custom">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Brand</a>
+<div class="navbar navbar-apple-custom navbar-fixed-top" >
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Rayansh</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="home.html">HOME</a></li>
+                    <li><a href="/login">CLASS APPLICATION</a></li>
+                    <li><a href="#just-intro">CONTACT</a></li>
+                     <li><a href="#just-intro">ABOUT COMPANY</a></li>
+                    <li><a href="#just-intro">OUR LOCATION</a></li>
+                      
+                </ul>
+            </div>
+           
+        </div>
     </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li class="">
-			<a href="#" ng-click="showMenuData('classapplication')">Class Application <span class="sr-only">(current)</span></a>
-		</li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Customer</span></a>
-        </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="login">Login</a></li>
-        
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-  <div class="padding-bottom-0" ng-if="showdivurl!=null">
-	  <span ng-if="showdivurl!=null">
-		<i class="glyphicon glyphicon-remove" ng-click="clearMenu()"> </i>
-	  </span>
-	  <div ng-include="showdivurl">
-		
-	  </div>
-  </div>
-</nav>

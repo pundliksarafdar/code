@@ -7,6 +7,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.classapp.db.batch.Batch;
 import com.classapp.persistence.HibernateUtil;
 
 public class DivisionDB {
@@ -210,6 +211,7 @@ public class DivisionDB {
 		return divisions;
 		
 	}
+	
 	
 	public boolean isDivisionExists(Division division) {
 		Session session = null;

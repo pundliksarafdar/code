@@ -361,7 +361,8 @@ function searchTeacher() {
 	
 </script>
 <body>
-	<br/><br/>
+	<h3><font face="cursive">Manage Teacher</font></h3>
+<hr>
 	<div class="btn-group btn-group-sm">	
 		<div class="container bs-callout bs-callout-danger" style="margin-bottom: 10px;">
 			<div class="row">

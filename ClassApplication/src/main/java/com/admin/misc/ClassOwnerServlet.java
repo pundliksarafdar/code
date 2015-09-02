@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ import org.apache.struts2.ServletActionContext;
 
 import com.classapp.db.Feedbacks.Feedback;
 import com.classapp.db.Notes.Notes;
+
 /*import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -51,6 +53,7 @@ import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.BatchDB;
 import com.classapp.db.batch.BatchDetails;
 import com.classapp.db.batch.division.Division;
+import com.classapp.db.notificationpkg.Notification;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentData;
@@ -70,9 +73,11 @@ import com.signon.User;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
+import com.transaction.exams.ExamTransaction;
 import com.transaction.feedback.feedbackTransaction;
 import com.transaction.notes.NotesTransaction;
 import com.transaction.notification.NotificationGlobalTransation;
+import com.transaction.notification.NotificationTransaction;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.schedule.ScheduleTransaction;
 import com.transaction.teacher.TeaherTransaction;
@@ -1998,7 +2003,12 @@ public class ClassOwnerServlet extends HttpServlet{
 	String notesname=(String) req.getParameter("notesname");
 	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 	NotesTransaction notesTransaction=new NotesTransaction();
+	
+	if(!notesTransaction.validatenotesnamebyID(notesname, userBean.getRegId(), Integer.parseInt(notesid))){
 	notesTransaction.updatenotes(notesname, Integer.parseInt(notesid), batchids);
+	}else{
+		respObject.addProperty("duplicate", "true");
+	}
 	respObject.addProperty(STATUS, "success");
 	
 }else if("deletenotes".equals(methodToCall)){
@@ -2011,7 +2021,156 @@ public class ClassOwnerServlet extends HttpServlet{
 	  notesTransaction.deleteNotes(Integer.parseInt(notesid));
 	respObject.addProperty(STATUS, "success");
 	
-}
+}else if("sendmessage".equals(methodToCall)){
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	String message=(String) req.getParameter("message");
+	String batch=(String) req.getParameter("batch");
+	String date=(String) req.getParameter("date");
+	String batchname=(String) req.getParameter("batchname");
+	String dateString[]=date.split("/");
+	Date msgdate=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
+	NotificationGlobalTransation notificationGlobalTransation=new NotificationGlobalTransation();
+	String batcharr[]=batch.split(",");
+	Notification notification=new Notification();
+	if(batcharr.length>1){
+		notification.setBatch("ALL");
+	}else{
+	notification.setBatch(batch);
+	}
+	notification.setInstitute_id(userBean.getRegId());
+	notification.setMessage(message);
+	notification.setMsg_date(msgdate);
+	notification.setBatch_name(batchname);
+	NotificationTransaction transaction=new NotificationTransaction();
+	transaction.add(notification);		
+	int i=0;
+	while(i<batcharr.length){
+		notificationGlobalTransation.sendMessage(message, batcharr[i]);
+		i++;
+	}
+	respObject.addProperty(STATUS, "success");
+	
+	}else if("getsubjectofbatch".equalsIgnoreCase(methodToCall)){
+		respObject.addProperty(STATUS, "success");
+		SubjectTransaction subjectTransaction = new SubjectTransaction();
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId = null;
+		if(0 == userBean.getRole() || !"".equals(regId)){
+			if(null == regId){
+				regId = userBean.getRegId();
+			}
+		}else{
+			regId = userBean.getRegId();
+		}
+		String batchId = req.getParameter("batchId");
+		List<com.datalayer.subject.Subject> subjectName = subjectTransaction.getSubjectsOfBatch(Integer.parseInt(batchId));
+		Gson gson = new Gson();
+		respObject.addProperty("subjectofbatch", gson.toJson(subjectName));
+	}else if("getSubjectOfDivision".equalsIgnoreCase(methodToCall)){
+		respObject.addProperty(STATUS, "success");
+		SubjectTransaction subjectTransaction = new SubjectTransaction();
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId = null;
+		if(0 == userBean.getRole() || !"".equals(regId)){
+			if(null == regId){
+				regId = userBean.getRegId();
+			}
+		}else{
+			regId = userBean.getRegId();
+		}
+		String divisionId = req.getParameter("divisionId");
+		List<Subject> subjects = subjectTransaction.getSubjectRelatedToDiv(Integer.parseInt(divisionId), regId);
+		
+		StringBuilder subjectids=new StringBuilder();
+		StringBuilder subjectnames=new StringBuilder();
+		int i=0;
+		if(null!=subjects && subjects.size()>0){
+		while(subjects.size()>i){
+			Subject subject = subjects.get(i);
+			subjectids.append(subject.getSubjectId()+",");
+			subjectnames.append(subject.getSubjectName()+",");
+			i++;
+		}
+		subjectnames.deleteCharAt(subjectnames.length()-1);
+		subjectids.deleteCharAt(subjectids.length()-1);
+		}else{
+			subjectnames.append("");
+			subjectids.append("");
+		}
+		
+		respObject.addProperty("subjectnames", subjectnames.toString());
+		respObject.addProperty("subjectids", subjectids.toString());
+		
+	}else if("getBatchesByDivisionNSubject".equalsIgnoreCase(methodToCall)){
+		respObject.addProperty(STATUS, "success");
+		SubjectTransaction subjectTransaction = new SubjectTransaction();
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId = null;
+		if(0 == userBean.getRole() || !"".equals(regId)){
+			if(null == regId){
+				regId = userBean.getRegId();
+			}
+		}else{
+			regId = userBean.getRegId();
+		}
+		String divisionId = req.getParameter("divisionId");
+		String subjectid = req.getParameter("subjectId");
+		BatchTransactions batchTransactions = new BatchTransactions();
+		List<Batch> list = batchTransactions.getbachesrelatedtodivandsubject(subjectid, Integer.parseInt(divisionId), regId);
+		Gson gson = new Gson();
+		respObject.addProperty("batchlist", gson.toJson(list));
+	}else if("publishExam".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId=userBean.getRegId();;
+		String divisionId = req.getParameter("division");
+		String subjectid = req.getParameter("subject");
+		String examID = req.getParameter("examID");
+		String starttime = req.getParameter("starttime");
+		String endtime = req.getParameter("endtime");
+		SimpleDateFormat displayFormat = new SimpleDateFormat("HH:mm:ss");
+	       SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
+	       Timestamp startTimestamp=new Timestamp(0000000000);
+	       Timestamp endTimestamp=new Timestamp(0000000000);
+		if(!"".equals(starttime)){
+			String[] startarray=starttime.split(" ");	
+			String finalStarttime=startarray[0].split("/")[2]+"-"+startarray[0].split("/")[0]+"-"+startarray[0].split("/")[1];
+			java.util.Date startdate;
+			try {
+				startdate = parseFormat.parse(startarray[1]+" "+startarray[2]);
+				finalStarttime=finalStarttime+" "+displayFormat.format(startdate);
+				startTimestamp=Timestamp.valueOf(finalStarttime);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		if(!"".equals(endtime)){
+			String[] endarray=endtime.split(" ");
+			String finalEndtime=endarray[0].split("/")[2]+"-"+endarray[0].split("/")[0]+"-"+endarray[0].split("/")[1];	
+		       try {
+				java.util.Date enddate=     parseFormat.parse(endarray[1]+" "+endarray[2]);
+				finalEndtime=finalEndtime+" "+displayFormat.format(enddate);
+				endTimestamp=Timestamp.valueOf(finalEndtime);
+		       } catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		ExamTransaction examTransaction=new ExamTransaction();
+		examTransaction.publishExam(Integer.parseInt(examID), 1, 11, 111, startTimestamp, endTimestamp);
+		respObject.addProperty(STATUS, "success");
+	}else if("disableExam".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId=userBean.getRegId();;
+		String divisionId = req.getParameter("division");
+		String subjectid = req.getParameter("subject");
+		String examID = req.getParameter("examID");
+		ExamTransaction examTransaction=new ExamTransaction();
+		examTransaction.disableExam(Integer.parseInt(examID), 1, 11, 111);
+		respObject.addProperty(STATUS, "success");
+	}
 		printWriter.write(respObject.toString());
 	}
 	

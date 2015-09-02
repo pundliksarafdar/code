@@ -1,6 +1,7 @@
 package com.config;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -9,6 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -57,6 +59,31 @@ public class LoadConfig extends HttpServlet{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		{
+		ServletContext servletContext = getServletContext();
+		String servletPath = getServletContext().getRealPath("/");
+		File file = new File(servletPath);
+		String parent = "";
+		do{
+			parent = file.getParent();
+			file = new File(parent);
+		}while(!parent.endsWith("standalone"));
+		parent = file.getParent();
+		
+		try{
+		file = new File(parent+"/storage");
+		if(!file.exists()){
+			file.mkdir();
+		}
+		
+		Constants.STORAGE_PATH = file.getAbsolutePath();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		}
+		
 	}
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)

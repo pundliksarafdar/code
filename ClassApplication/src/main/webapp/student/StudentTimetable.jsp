@@ -119,6 +119,8 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
+<h3><font face="cursive">Timetable</font></h3>
+<hr>
 <form role="form" class="form-inline">
 <div class="container">
 <div class="jumbotron">

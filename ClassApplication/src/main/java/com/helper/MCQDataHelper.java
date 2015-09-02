@@ -17,8 +17,10 @@ public class MCQDataHelper {
 	public void setClass_id(int class_id) {
 		this.class_id = class_id;
 	}
+	/*
 	public List<MCQDetails> getListOfMCQs() {
+
 		ExamTransaction examTransaction=new ExamTransaction(class_id);
 		return examTransaction.getAllExamPapersDetailsFromID();
-	}
+	}*/
 }

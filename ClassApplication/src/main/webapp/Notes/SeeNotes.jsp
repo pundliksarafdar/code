@@ -239,10 +239,15 @@ $(document).ready(function(){
 			   		},
 			   type:"POST",
 			   success:function(data){
+				   var resultJson = JSON.parse(data);
+				   var duplicate=resultJson.duplicate;
+				   if(duplicate==null){
 				   $("#editnotes").modal('hide');
 				   fetchnotes();
 				  $("#notesupdated").modal('toggle');
-				   
+				   }else{
+					   notesnameerror.html("Please enter different notes name");
+				   }
 			   },
 			   error:function(){
 			   		modal.launchAlert("Error","Error");
@@ -256,12 +261,24 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
-<div class="container">
-<div class="form-group">
-      <label for="notesname"  class="col-sm-4 control-label">Select Subject:</label>
-      <div class="col-sm-5" align="left">
-      <select name="subject" class="form-control" id="subject">
-      <option value="-1">Select one</option>
+<h3><font face="cursive">Search/Update Notes</font></h3>
+<hr>
+<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+		<div class="row">
+				<div class='col-sm-6 header' style="padding-bottom: 10px;" align="left">*
+					Search/Edit Notes 
+				</div>
+			</div>
+	<div class="row">
+		<div class="alert alert-danger" style="padding-bottom: 10px;display:none">
+			 
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-3">
+		<select name="subject" class="form-control" id="subject">
+      <option value="-1">Select Subject</option>
       <%List<Subjects> list=(List<Subjects>)request.getAttribute("subjects"); 
       for(int i=0;i<list.size();i++)
       {
@@ -269,16 +286,11 @@ $(document).ready(function(){
       <option value="<%=list.get(i).getSubjectId() %>"><%=list.get(i).getSubjectName()%></option>
       <%} %>
       </select>
-      </div>
-       <div class="col-sm-2" align="left">
-	<span class="error" id="subjecterror" name="batcherror"></span>
-	</div>
-      </div>
-      <div class="form-group">
-      <label for="notesname"  class="col-sm-4 control-label">Select Division :</label>
-     <div class="col-sm-5" align="left">
-      <select name="division" class="form-control" id="division">
-      <option value="-1">Select one</option>
+		<span class="error" id="subjecterror" name="subjecterror"></span>
+		</div>
+		<div class="col-md-3">
+		<select name="division" class="form-control" id="division">
+      <option value="-1">Select Division</option>
       <%List<Division> divisions=(List<Division>)request.getAttribute("divisions"); 
       for(int i=0;i<divisions.size();i++)
       {
@@ -286,18 +298,13 @@ $(document).ready(function(){
       <option value="<%=divisions.get(i).getDivId() %>"><%=divisions.get(i).getDivisionName()%>  <%=divisions.get(i).getStream() %></option>
       <%} %>
       </select>
-    </div>
-     <div class="col-sm-2" align="left">
-	<span class="error" id="divisionerror" name="batcherror"></span>
-	</div>
-    </div>
-      <div class="form-group">
-       <div class="col-sm-4" align="left"></div>
-       <div class="col-sm-5" align="left">
+		<span class="error" id="divisionerror" name="divisionerror"></span>
+		</div>
+		<div class="col-md-3">
       <button type="submit" class="btn btn-info" id="submit">Submit</button>
       </div>
- 	</div>   
- 	</div>
+		</div>
+</div>		
  	<hr>
    <div id="notesdiv" class="container">
    <table id="notestable" class="table table-bordered table-hover" style="background-color: white; display:none;">
@@ -383,7 +390,7 @@ $(document).ready(function(){
             </h4>
          </div>
          <div class="modal-body" align="left">
-		Notes Name :- <input type="text" id="notesname" class="form-control"> <br>
+		Notes Name :- <input type="text" id="notesname" class="form-control" maxlength="50"> <br>
 		<span id="notesnameerror" class="error"></span><br>
 		This Notes is applicatble for following batches:- <br>
 		<div id="batchesdiv"> 

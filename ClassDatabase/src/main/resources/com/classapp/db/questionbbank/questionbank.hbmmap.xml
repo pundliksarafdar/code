@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 18 Jul, 2014 11:15:40 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.question.Questionbank" table="question_bank" catalog="classdb">
+    	<composite-id>
+    	<key-property name="inst_id" column="inst_id"></key-property>
+		<key-property name="div_id" column="div_id"></key-property>
+		<key-property name="sub_id" column="sub_id"></key-property>
+		<key-property name="que_id" column="que_id"></key-property>
+    	</composite-id>
+        <property name="added_by" type="int">
+            <column name="added_by" />
+        </property>
+        <property name="modified_by" type="int">
+            <column name="modified_by" />
+        </property>
+        <property name="created_dt" type="date">
+            <column name="created_dt" />
+        </property>
+        <property name="modified_dt" type="date">
+            <column name="modified_dt" />
+        </property>
+         <property name="rep" type="int">
+            <column name="rep" />
+        </property>
+        <property name="marks" type="int">
+            <column name="marks" />
+        </property>
+        <property name="ans_id" type="java.lang.String">
+            <column name="ans_id" />
+        </property>
+        <property name="exam_rep" type="java.lang.String">
+            <column name="exam_rep" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -21,9 +21,28 @@ public class MCQData implements Serializable {
 	private int class_id;
 	private int div_id;
 	private int teacher_id;
-	
+	private boolean publish;
+	private int totalMarks;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date create_date;
+	private String batches;
+	
+	
+	public String getBatches() {
+		return batches;
+	}
+
+	public void setBatches(String batches) {
+		this.batches = batches;
+	}
+
+	public int getTotalMarks() {
+		return totalMarks;
+	}
+
+	public void setTotalMarks(int totalMarks) {
+		this.totalMarks = totalMarks;
+	}
 
 	public int getExam_id() {
 		return exam_id;
@@ -79,6 +98,14 @@ public class MCQData implements Serializable {
 
 	public void setCreate_date(Date create_date) {
 		this.create_date = create_date;
+	}
+
+	public boolean isPublish() {
+		return publish;
+	}
+
+	public void setPublish(boolean publish) {
+		this.publish = publish;
 	}
 	
 	

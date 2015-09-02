@@ -1,12 +1,16 @@
 package com.classapp.db.subject;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.classapp.db.subject.Subject;
+import com.classapp.db.subject.Subjects;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.classapp.db.Schedule.Schedule;
+import com.classapp.db.batch.Batch;
 import com.classapp.persistence.HibernateUtil;
 
 public class SubjectDb {
@@ -83,14 +87,14 @@ public List getSubjects(List subids) {
 		
 		Session session = null;
 		Transaction transaction = null;
-		List batchList = null;
+		List subjectList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Subjects where subjectId in :subids");
 			query.setParameterList("subids", subids);
-			batchList = query.list();
+			subjectList = query.list();
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -103,8 +107,36 @@ public List getSubjects(List subids) {
 				session.close();
 			}
 		}
-		return batchList;
+		return subjectList;
 	}
+
+public List<Subject> getSubjectList(List subids) {
+	
+	Session session = null;
+	Transaction transaction = null;
+	List subjectList = null;
+	
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("from Subject where subjectId in :subids");
+		query.setParameterList("subids", subids);
+		subjectList = query.list();
+		
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return subjectList;
+}
+
 
 public List getSubjectID(String subname) {
 	
@@ -343,5 +375,44 @@ public String getschedulesubject(int subjectid) {
 		}
 		
 		return true;
+	}
+	
+	public List<Subject> getSubjectRelatedToDiv(int div_id,int inst_id) {
+		Session session = null;
+		Transaction transaction = null;
+		List<Batch> queryResult=null;
+		List<Integer> subjectIds=null;
+		List<Subject> subjectlist=null;
+		String queryString="from Batch where class_id = :inst_id and div_id=:div_id";
+	
+		try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery(queryString);
+		query.setParameter("inst_id", inst_id);	
+		query.setParameter("div_id", div_id);	
+		queryResult=query.list();
+		if(queryResult!=null){
+			subjectIds=new ArrayList<Integer>();
+			for (int i = 0; i < queryResult.size(); i++) {
+				String ids[]=queryResult.get(i).getSub_id().split(",");
+				for (int j = 0; j < ids.length; j++) {
+					if(!subjectIds.contains(ids[j])){
+						subjectIds.add(Integer.parseInt(ids[j]));
+					}
+				}
+			}
+			subjectlist=getSubjectList(subjectIds);
+			
+		}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		
+		return subjectlist;
 	}
 }

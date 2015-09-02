@@ -185,9 +185,15 @@ $(document).ready(function() {
 			   		},
 			   type:"POST",
 			   success:function(data){
+				   var resultJson = JSON.parse(data);
+				   var duplicate=resultJson.duplicate;
+				   if(duplicate==null){
 				   $("#editnotes").modal('hide');
 				   fetchteachernotes();
 				  $("#notesupdated").modal('toggle');
+				   }else{
+					   notesnameerror.html("Please enter different notes name");
+				   }
 				   
 			   },
 			   error:function(){
@@ -356,6 +362,8 @@ $(document).ready(function() {
 </script>
 </head>
 <body>
+<h3><font face="cursive">Search/Update Notes</font></h3>
+<hr>
 	<%
 		List<RegisterBean> list=(List<RegisterBean>)request.getAttribute("Classes");
 	%>
@@ -479,7 +487,7 @@ $(document).ready(function() {
             </h4>
          </div>
          <div class="modal-body" align="left">
-		Notes Name :- <input type="text" id="notesname" class="form-control"> <br>
+		Notes Name :- <input type="text" id="notesname" class="form-control" maxlength="50"> <br>
 		<span id="notesnameerror" class="error"></span><br>
 		This Notes is applicatble for following batches:- <br>
 		<div id="batchesdiv"> 

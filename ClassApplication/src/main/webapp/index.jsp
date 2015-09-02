@@ -14,7 +14,7 @@ ul{
 </style>
 	<script>
 		$(document).ready(function() {
-			$("input.submit").on("click", function() {
+			$("input.submit").on("click", function(e) {
 				$(".frontenderror").addClass("hide");
 				$(".frontenderror").html("");
 				
@@ -34,6 +34,7 @@ ul{
 				if(!hasError){
 					$("form").submit();
 				}else{
+					e.preventDefault();
 					$(".frontenderror").removeClass("hide");
 				}
 			});
@@ -102,7 +103,7 @@ ul{
 							</div>
 
 							<div class="btn-group form-group" role="group">
-								<input type="button" class="btn btn-default submit" value="Login" /> <a
+								<input type="submit" class="btn btn-default submit" value="Login" /> <a
 									href="register" class="btn btn-default">Register</a>
 							</div>
 							<div>

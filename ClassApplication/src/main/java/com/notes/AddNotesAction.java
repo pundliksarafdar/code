@@ -17,6 +17,7 @@ import org.apache.struts2.ServletActionContext;
 import com.classapp.db.Notes.Notes;
 import com.config.BaseAction;
 import com.transaction.notes.NotesTransaction;
+import com.transaction.notification.NotificationGlobalTransation;
 import com.user.UserBean;
 
 public class AddNotesAction extends BaseAction{
@@ -93,14 +94,25 @@ public class AddNotesAction extends BaseAction{
 	    	 notes.setSubid(Integer.parseInt(subject));
 	    	 notes.setName(notesname);
 	    	 notes.setAddedby(userBean.getRegId());
-	    	 if(validforbatch.equals("all")){
+	    	 /*if(validforbatch.equals("all")){
 	    		 batch=allbatches;
-	    	 }
+	    	 }*/
 	    	 notes.setBatch(batch);
 	    	 notes.setTime(new Timestamp(new Date().getTime()));
 	    	 NotesTransaction notesTransaction=new NotesTransaction();
 	    	 notesTransaction.addNotes(notes);
-	  
+	    	 String batchids[]=batch.split(",");
+	    	 int i=0;
+	    	 NotificationGlobalTransation notificationGlobalTransation=new NotificationGlobalTransation();
+	    	 while(i<batchids.length)
+	    	 {
+	    		 notificationGlobalTransation.sendAddNotesNotification(subject, batchids[i]);
+	    		 i++;
+	    	 }
+	    	 request.setAttribute("division", division);
+	    	 request.setAttribute("subject", subject);
+	    	 request.setAttribute("batch", batch);
+	    	 request.setAttribute("notes", "notes");
 	      }catch(IOException e){
 	         e.printStackTrace();
 	         return ERROR;

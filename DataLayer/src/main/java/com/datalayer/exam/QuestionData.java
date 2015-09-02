@@ -1,17 +1,18 @@
 package com.datalayer.exam;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class QuestionData {
-	private Double questionNumber;
+public class QuestionData implements Serializable{
+	private int questionNumber;
 	private String question;
 	private List<String> answers;
 	private List<String> options;
 	private int marks;
-	public Double getQuestionNumber() {
+	public int getQuestionNumber() {
 		return questionNumber;
 	}
-	public void setQuestionNumber(Double questionNumber) {
+	public void setQuestionNumber(int questionNumber) {
 		this.questionNumber = questionNumber;
 	}
 	public String getQuestion() {

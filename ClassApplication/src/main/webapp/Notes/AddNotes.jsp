@@ -2,6 +2,7 @@
 <%@page import="com.classapp.db.subject.Subjects"%>
 <%@page import="java.util.List"%>
 <%@taglib uri="/struts-tags" prefix="s" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -19,6 +20,13 @@
  .error{
      color: red;
     margin-left: 10px;
+}
+
+.div {
+    border-radius: 25px;
+    border: 2px solid ;
+    padding: 20px; 
+   
 }      
 
  </style>
@@ -36,9 +44,11 @@ $(document).ready(function(){
 	$('input[type=radio][name=validforbatch]').change(function() {
         if (this.value == 'all') {
         	$( "#batch" ).prop( "disabled", true );
+        	$("#batchdiv").fadeOut();
         }
         else if (this.value == 'specific') {
         	$( "#batch" ).prop( "disabled", false );
+        	$("#batchdiv").fadeIn();
         }
     });
 	
@@ -59,12 +69,15 @@ $(document).ready(function(){
 				   var batchnames=resultJson.batchnames.split(",");
 				   $("#batcherror").html("");
 				   var batchselect=$('#batch');
+				   var fieldset=$('#fieldset');
+				   fieldset.empty();
 				   batchselect.empty();
 				   $("#allbatches").val(batchids);
 				   if(batchids[0]!=""){
 					   var i=0;
 					   while(i<batchids.length){
-						   batchselect.append("<option value="+batchids[i]+">"+batchnames[i]+"</option>");
+						//   batchselect.append("<option value="+batchids[i]+">"+batchnames[i]+"</option>");
+						   fieldset.append("<input type='checkbox' name='batch' id='batch' value='"+batchids[i]+"' >"+batchnames[i]+"<br>");
 						   i++;
 					   }
 					   
@@ -78,14 +91,14 @@ $(document).ready(function(){
 			   });
 	});
 	
-	$("#submit").click(function(){
-		
+	$("#submit").click(function(event){
+	//	event.preventDefault();
 		var file=document.getElementById("myfile").value;
 		var notesname=$("#notesname").val();
 		var division=$("#division").val();
 		var subject=$("#subject").val();
 		var validforbatch=$("#validforbatch:checked").val();
-		var batch=$("#batch").val();
+		//var batch=$("#batch").val();
 		var notesnameerror=$("#notesnameerror");
 		var divisionerror=$("#divisionerror");
 		var subjecterror=$("#subjecterror");
@@ -97,7 +110,25 @@ $(document).ready(function(){
 		divisionerror.html("");
 		notesnameerror.html("");
 		fileerror.html("");
+		var batchidmap;
+		var batch="";
 		var flag=true;
+		batchidmap=$("input[name='batch']:checked").map(function() {
+			return this.value;
+		});
+		
+		var j=0;
+		while(j<batchidmap.size())
+			{
+			if(j==0)
+				{
+				batch=batch+batchidmap[0]+"";
+				}else{
+					batch=batch+","+batchidmap[j];
+				}
+			j++;
+			}
+		alert(batch);
 		if(file==""){
 			fileerror.html("Please select file");
 			flag=false;
@@ -159,7 +190,7 @@ $(document).ready(function(){
 		}
 		
 		if(validforbatch=="specific"){
-			if(batch==null){
+			if(batch==null || batch==""){
 				batcherror.html("Please select atleast one batch");
 				flag=false;
 			}
@@ -209,7 +240,9 @@ function showalert(){
 </script>
 </head>
 <body onload="showalert()">
-<div align="center">
+<h3><font face="cursive">Add Notes</font></h3>
+<hr>
+<div>
 <%
 String notes=(String)request.getAttribute("notes");
 if(notes!=null){
@@ -235,93 +268,46 @@ if(notes!=null){
 
 </div>
 <%} %>
-
+<div class="container" style="margin-bottom: 5px">
+	<a type="button" class="btn btn-primary" href="choosesubject?forwardAction=addnotesoption" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
+</div>
 <form action="upload" method="post" enctype="multipart/form-data" role="form" id="form">
-	<div class="form-group">
-	<label for="notesname"  class="col-sm-4 control-label">Notes Name :</label>
-	<div class="col-sm-5" align="left">
-	<input type="text" name="notesname" class="form-control" id="notesname" maxlength="50">
-	</div>
-	<div class="col-sm-2" align="left">
-	<span class="error" id="notesnameerror" name="notesnameerror"></span>
-	</div>
+<input type="hidden" id="batch" name="batch" value="<c:out value="${batch}" ></c:out>">
+<input type="hidden" id="division" name="division" value="<c:out value="${division}" ></c:out>">
+<input type="hidden" id="subject" name="subject" value="<c:out value="${subject}" ></c:out>">
+<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+		<div class="row">
+				<div class='col-sm-6 header' style="padding-bottom: 10px;" align="left">*
+					Upload Your Notes 
+				</div>
+			</div>
+	<div class="row">
+		<div class="alert alert-danger" style="padding-bottom: 10px;display:none">
+			 
+		</div>
 	</div>
 	
-	<div class="form-group">
-	<label for="myFile"  class="col-sm-4 control-label">Upload your file</label>
-	<div class="col-sm-5" align="left">
-      <input type="file" name="myFile" accept=".pdf" class="form-control"  size="100px" id="myfile">
+	<div class="row">
+		<div class="col-md-3">
+		<label for="notesname"  class="control-label" align="right">Notes Name :</label>
+		<input type="text" name="notesname" class="form-control" id="notesname" maxlength="50">
+		<span class="error" id="notesnameerror" name="notesnameerror"></span>
+		</div>
+		<div class="col-md-3">
+		<label for="myFile"  class="control-label" align="right">Upload your file :</label>
+		<input type="file" name="myFile" accept=".pdf" class="form-control"  size="100px" id="myfile">
+		<span id="fileerror" class="error"></span>
+		</div>
+		<div class="col-md-3">
+      <button type="submit" class="btn btn-info" id="submit" style="margin-top: 22px">Submit</button>
       </div>
-      <div class="col-sm-2" align="left">
-      <span id="fileerror" class="error"></span>
-      </div>
-      </div>
-      
-      <div class="form-group">
-	<label for="subject"  class="col-sm-4 control-label">Select Subject:</label> 
-    <div class="col-sm-5" align="left">
-      <select class="form-control" name="subject" id="subject">
-      <option value="-1">Select one</option>
-      <%List<Subjects> list=(List<Subjects>)request.getAttribute("subjects"); 
-      if(list!=null){
-      for(int i=0;i<list.size();i++)
-      {
-      %>
-      <option value="<%=list.get(i).getSubjectId() %>"><%=list.get(i).getSubjectName()%></option>
-      <%} }%>
-      </select>
-      </div>
-      <div class="col-sm-2" align="left">
-	<span class="error" id="subjecterror" name="subjecterror"></span>
-	</div>
-      </div>
-      
-      <div class="form-group">
-	<label for="division"  class="col-sm-4 control-label">Select Division :</label>
-      <div class="col-sm-5" align="left">
-	<select name="division" class="form-control" id="division">
-      <option value="-1">Select one</option>
-      <%List<Division> divisions=(List<Division>)request.getAttribute("divisions");
-      if(divisions!=null){
-      for(int i=0;i<divisions.size();i++)
-      {
-      %>
-      <option value="<%=divisions.get(i).getDivId() %>"><%=divisions.get(i).getDivisionName()%>  <%=divisions.get(i).getStream() %></option>
-      <%} }%>
-      </select>
-  	</div>
-  	<div class="col-sm-2" align="left">
-	<span class="error" id="divisionerror" name="divisionerror"></span>
-	</div>
-  	</div>
-  	<br>
-  	<div class="form-group">
-  	<div class="col-sm-5" align="right">
-  	 <input type="radio" name="validforbatch" value="all" checked="checked" id="validforbatch">All batches
-  	 <input type="hidden" name="allbatches" id="allbatches"> 
-  	 </div>
-  	 <div class="col-sm-6" align="left">
-  	  <input type="radio" name="validforbatch" value="specific" id="validforbatch">If you want to restrict the access of this notes to specific batches then use this multi-select
-     </div>
-     </div>
-  	<br>  	
-  	 <div class="form-group">
-  	  <label for="role"  class="col-sm-4 control-label">Select Batch</label>
-  	<div class="col-sm-5" align="left">
-      <select id="batch" name="batch" class="form-control" multiple="multiple" disabled="disabled">
-      </select>
-      </div>
-      <div class="col-sm-2" align="left">
-	<span class="error" id="batcherror" name="batcherror"></span>
-	</div>
-     </div>
-  	  <div class="form-group">
-  	  <label for="role"  class="col-sm-4 control-label"></label>
-  	<div class="col-sm-5" align="left">
-      <button type="submit" class="btn btn-info" id="submit">Submit</button>
-      </div>
-     </div>
-     </form>
-   </div>
+		</div>
+		<%-- <div class="row">
+		<div class="col-md-3" align="left">
+		<b><u><a href="choosesubject?forwardAction=addnotesoption"><span class="glyphicon glyphicon-arrow-left"></span> Go Back</a></u></b>
+		</div>
+		</div> --%>
+</div>		
+</form>		
 </body>
 </html>

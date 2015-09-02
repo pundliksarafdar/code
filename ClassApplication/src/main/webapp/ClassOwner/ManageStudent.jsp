@@ -685,7 +685,8 @@ function getSelectedStudentsToDelete(){
 		   $('<input />', { type: 'text', value: batchname,disabled:'disabled',class:'form-control' }).appendTo(inputGroupLable);
 		}
 </script>
-
+<h3><font face="cursive">Manage Student</font></h3>
+<hr>
 <div class="modal fade" id="addStudentModal" data-backdrop="static">
   <div class="modal-dialog">
       <div class="modal-content">

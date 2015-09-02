@@ -514,6 +514,37 @@ public Integer getBatchCount(int class_id){
 	}
 	return batches.get(0).intValue();
 }
+
+public List<Batch> getbachesrelatedtodivandsubject(String subjectid,int divId,int class_id) {
+	Session session = null;
+	Transaction transaction = null;
+	List<Batch> batchList = null;
+	List<Batch> batches = new ArrayList<Batch>();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("from Batch where div_id=:div_id and class_id=:class_id and (sub_id LIKE :sub_id1 OR sub_id LIKE :sub_id2 OR sub_id LIKE :sub_id3 OR sub_id = :sub_id4)");
+		query.setParameter("sub_id1", subjectid+",%");
+		query.setParameter("sub_id2", "%,"+subjectid);
+		query.setParameter("sub_id3", "%,"+subjectid+",%");
+		query.setParameter("sub_id4", subjectid);
+		query.setParameter("div_id", divId);
+		query.setParameter("class_id", class_id);
+		
+		batchList = query.list();
+		
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return batchList;
+}
 }
 
 

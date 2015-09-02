@@ -624,12 +624,13 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
-
+<h3><font face="cursive">Update Timetable</font></h3>
+<hr>
 <%List<Batch> batch=(List<Batch>)request.getAttribute("batch"); 
 int i=0;%>
 <form role="form" class="form-inline">
 <div class="container">
-<div class="container bs-callout bs-callout-danger" style="margin-bottom: 5px;">
+<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
 	<div class="row">
 		<div class='col-sm-6 header' style="padding-bottom: 10px;">*
 			Update time table for batch here</div>

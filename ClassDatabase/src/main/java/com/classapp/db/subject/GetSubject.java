@@ -88,10 +88,10 @@ public class GetSubject {
 	}*/
 	
 	
-	public List getAllClassSubjectsNames(int regID){
+	public List<Subjects> getAllClassSubjectsNames(int regID){
 		Session session = null;
 		Transaction transaction = null;
-		List SubList = null;
+		List<Subjects> SubList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();

@@ -115,6 +115,30 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid) {
 		
 	}
 	
+	public  boolean validatenotesnamebyID(String notesname,int regID,int notesID) {
+		Session session = null;
+		Transaction transaction = null;
+		List<Notes> notesList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from Notes where name=:notesname and notesid!=:notesid" );
+			query.setParameter("notesname", notesname);
+			query.setParameter("notesid", notesID);
+			notesList = query.list();
+			if (notesList.size()>0) {
+				return true;
+			}
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		return false;
+		
+	}
+	
+	
 	public  void updatenotes(String notesname,int notesid,String batchids) {
 		Session session = null;
 		Transaction transaction = null;

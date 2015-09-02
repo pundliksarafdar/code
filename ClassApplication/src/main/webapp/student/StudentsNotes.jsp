@@ -156,6 +156,8 @@
 </script>
 </head>
 <body>
+<h3><font face="cursive">Search Notes</font></h3>
+<hr>
 	<div class="container">
 		<div class="form-group">
 			<label for="classname" class="col-sm-4 control-label">Select

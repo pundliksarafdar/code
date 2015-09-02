@@ -70,6 +70,26 @@ public class NotificationGlobalTransation {
 		return true;
 	}
 	
+	public Boolean sendMessage(String message,String Batchid) {
+		AllUserIdDb allUserIdDb=new AllUserIdDb();
+		List<String> list=allUserIdDb.getAllUserIdrelatedtoBatch(Batchid);
+		GCMSender gcmSender = new GCMSender();
+		if(list.size()>0){
+		String responce = gcmSender.sendMessage(message, (ArrayList<String>) list);
+		}
+		return true;
+	}
+	
+	public Boolean sendAddNotesNotification(String subject,String Batchid) {
+		AllUserIdDb allUserIdDb=new AllUserIdDb();
+		List<String> list=allUserIdDb.getAllUserIdrelatedtoBatch(Batchid);
+		GCMSender gcmSender = new GCMSender();
+		if(list.size()>0){
+		String responce = gcmSender.sendMessage("New Notes for "+subject+" has been added", (ArrayList<String>) list);
+		}
+		return true;
+	}
+	
 	public static void main(String[] args) {
 		NotificationGlobalTransation notificationGlobalTransation = new NotificationGlobalTransation();
 		notificationGlobalTransation.notificationToAll("Hi");

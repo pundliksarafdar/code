@@ -120,6 +120,8 @@ function deleteSubject(subid){
 </script>
 </head>
 <body>
+<h3><font face="cursive">Manage Subject</font></h3>
+<hr>
 <div class="btn-group btn-group-sm">
  
   <button type="button" class="btn btn-info" data-target="#addSubjectModal" data-toggle="modal">Add Subject</button>

@@ -91,6 +91,8 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
+<h3><font face="cursive">Manage Class</font></h3>
+<hr>
 <div class="container bs-callout bs-callout-danger" style="margin-bottom: 10px;">
 <button data-target="#addclassModal" type="button" class="btn btn-info" data-toggle="modal">Add Class</button>
 </div>

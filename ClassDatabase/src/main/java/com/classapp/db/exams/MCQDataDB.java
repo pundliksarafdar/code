@@ -42,122 +42,33 @@ public class MCQDataDB {
 		return status;
 	}
 	
-	public List<MCQData> getExamPapers(int class_id){
-		Session session = null;
-		Transaction transaction = null;
-		List queryResultList=null;
-		String queryString="from MCQData where class_id = : class_id";
-		
-		List<MCQData> listOfPapers=new ArrayList<MCQData>();
-		try{
-			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
-			Query query = session.createQuery(queryString);
-			query.setInteger("class_id", class_id);  
-			queryResultList = query.list();
-			transaction.commit();
-			Iterator itr= queryResultList.iterator();
-			
-			while(itr.hasNext()){
-				MCQData entry= (MCQData)itr.next();
-				listOfPapers.add(entry);
-			}
-			
-		}catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			session.close();
-		}
-		return listOfPapers;
-	}
 	
-	public List<MCQDetails> getAllExamPapersDetails(int class_id){
-		Session session = null;
-		Transaction transaction = null;
-		List queryResultList=null;
-		String queryString="from MCQData where class_id = :class_id";
-		
-		List<MCQDetails> listOfExamPapers=new ArrayList<MCQDetails>();
-		try{
-			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
-			Query query = session.createQuery(queryString);
-			query.setInteger("class_id", class_id);  
-			queryResultList = query.list();
-			transaction.commit();
-			Iterator itr= queryResultList.iterator();
-			DivisionDB divisionDB=new DivisionDB();
-			SubjectDb subjectDb= new SubjectDb();
-			TeacherDB teacherDB= new TeacherDB();
-			while(itr.hasNext()){
-				MCQData entry= (MCQData)itr.next();
-				MCQDetails mcqDetails=new MCQDetails();
-				mcqDetails.setExam_id(entry.getExam_id());
-				mcqDetails.setDivision(divisionDB.retriveByID(entry.getDiv_id()));
-				mcqDetails.setTeacher(teacherDB.getTeacherDetailsFromID(entry.getTeacher_id()));
-				mcqDetails.setClass_id(class_id);
-				mcqDetails.setSubject(subjectDb.retrive(entry.getSubject_id()));
-				mcqDetails.setCreationDate(entry.getCreate_date());
-				mcqDetails.setUpload_path(entry.getUpload_path());
-				listOfExamPapers.add(mcqDetails);
-			}
-			
-		}catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			session.close();
-		}
-		return listOfExamPapers;
-	}
-	
-	public MCQData getMCQPaperFromClass(int exam_id, int class_id){
-		Session session = null;
-		Transaction transaction = null;
-		List queryResultList=null;
-		String queryString="from MCQData where exam_id = :exam_id and class_id = :class_id";
-		MCQData mcqData=null;
-		try{
-			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
-			Query query = session.createQuery(queryString);
-			query.setInteger("exam_id", exam_id);
-			query.setInteger("class_id", class_id);  
-			queryResultList = query.list();
-			transaction.commit();
-			if(queryResultList.size()>0){
-				mcqData=(MCQData) queryResultList.get(0);
-			}
-			
-		}catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			session.close();
-		}
-		return mcqData;
-	}
 	
 	/*
 	 * Search Exams based on date,batch,teacher and division 
 	 * Parameter set as they are useful for query
 	 * */
-	public List<MCQData> searchExam(int class_id,int subject,int teacher,int division,String startDate,String endDate){
+	public List<MCQData> searchExam(int classId,Date startDate,Date endDate,Integer divId,Boolean publish,Integer subjectId,Integer teacherId,Integer examId,String batch){
 		Session session = null;
 		Transaction transaction = null;
 		List queryResultList=null;
 		String SPACE = " ";
 		String QUERY = "from MCQData where class_id = :class_id";
-		//String queryString="from MCQData where class_id = :class_id and subject_id = :subject and div_id = :division and teacher_id = :teacher and (create_date between :startDate and :endDate)";
 		
-		if(subject>0){
+		if(subjectId!=null){
 			QUERY+= SPACE + "and subject_id = :subject";
 		}
 		
-		if (teacher>0) {
+		if (divId!=null) {
 			QUERY+= SPACE + "and div_id = :division";
 		}
 		
-		if (division>0) {
+		if (teacherId != null) {
 			QUERY+= SPACE+ "and teacher_id = :teacher";
+		}
+		
+		if(batch != null){
+			QUERY+= SPACE+ "and batches like :batches";
 		}
 		
 		QUERY +=SPACE+"and (create_date between :startDate and :endDate)";
@@ -168,27 +79,30 @@ public class MCQDataDB {
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(QUERY);
 
-			if(subject>0){
-				query.setInteger("subject", subject);
+			if(subjectId!=null){
+				query.setInteger("subject", subjectId);
 			}
 			
-			if (teacher>0) {
-				query.setInteger("teacher", teacher);
+			if (teacherId!=null) {
+				query.setInteger("teacher", teacherId);
 			}
 			
-			if (division>0) {
-				query.setInteger("division", division);	
+			if (divId!=null) {
+				query.setInteger("division", divId);	
+			}
+
+			if(batch != null){
+				query.setString("batches", batch);
 			}
 			
-			
-			if (null!=startDate && startDate.trim().length()!=0) {
+			if (null!=startDate) {
 				query.setString("startDate", startDate+" 00:00:00");
 			}else{
 				query.setString("startDate", "%");
 			}
-				
-			
-			if (null!=endDate && endDate.trim().length()!=0) {
+
+
+			if (null!=endDate) {
 				query.setString("endDate", endDate+" 23:59:59");
 			}else{
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -196,7 +110,8 @@ public class MCQDataDB {
 				query.setString("endDate", dateTodays);
 			}
 			
-			query.setInteger("class_id", class_id);
+			
+			query.setInteger("class_id", classId);
 			queryResultList = query.list();
 			transaction.commit();
 			Iterator itr= queryResultList.iterator();

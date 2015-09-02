@@ -232,5 +232,13 @@ public class BatchTransactions {
 		BatchDB batchDB=new BatchDB();
 		return batchDB.getbachesrelatedtoclass(division);
 	}
+	
+	public List<Batch> getbachesrelatedtodivandsubject(String subjectid,int divId,int class_id) {
+		List<Batch> batchs = new ArrayList<Batch>();
+		BatchDB batchDB=new BatchDB();
+		batchs = batchDB.getbachesrelatedtodivandsubject(subjectid, divId, class_id);
+		return batchs;
+		
+	}
 
 }

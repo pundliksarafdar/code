@@ -1,5 +1,6 @@
 package com.user;
 
+import com.classapp.login.UserStatic;
 import com.signon.LoginBean;
 
 public class UserBean{
@@ -25,7 +26,7 @@ public class UserBean{
 	private String status;
 	private String email;
 	private String className;
-	
+	private UserStatic userStatic;
 	
 	public String getEmail() {
 		return email;
@@ -163,6 +164,12 @@ public class UserBean{
 	}
 	public void setClassName(String className) {
 		this.className = className;
+	}
+	public UserStatic getUserStatic() {
+		return userStatic;
+	}
+	public void setUserStatic(UserStatic userStatic) {
+		this.userStatic = userStatic;
 	}
 	
 	

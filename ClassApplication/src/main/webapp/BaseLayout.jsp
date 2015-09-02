@@ -15,11 +15,13 @@ response.setHeader("Expires", "0");
 <title><tiles:insertAttribute name="title" ignore="true" /></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="css/bootstrap.min.css" rel="stylesheet">
-<!-- <link href="css/bootstrap-responsive.css" rel="stylesheet"> --> 
+ <link href="css/bootstrap-responsive.css" rel="stylesheet">
  <link href="css/admin.css" rel="stylesheet">
  <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
  <link href="css/jquery.autocomplete.css" rel="stylesheet">
-<link href="css/common.css" rel="stylesheet">	 
+<link href="css/common.css" rel="stylesheet">	
+<link href="assets/css/style.css" rel="stylesheet" /> 
+<link href="assets/css/font-awesome.min.css" rel="stylesheet" />
 <link rel="icon" 
       type="image/jpeg" 
       href="images/cxlogowhite.jpg">
@@ -49,6 +51,15 @@ body{
     padding-left: 5px;
     font-family: cursive;
 }
+
+.white-back{
+background-color: white;
+}
+
+/* #footer-sec{
+padding-bottom: 20px;
+padding-top: 10px;
+} */
 </style>
 <style type="text/css">
 html,body {
@@ -66,6 +77,8 @@ html,body {
 <script src="js/jquery.autocomplete.js"></script>
 <script src="js/global.js"></script>
 <script src="js/angular.min.js"></script>
+<script type="text/javascript" src="js/Chart.min.js"></script>
+<script src="js/plugins.js"></script>
 <script>
 $( document ).ajaxStart(function() {
 	  $("#loaderModal").modal("show")
@@ -75,12 +88,7 @@ $( document ).ajaxStop(function() {
 	  $("#loaderModal").modal("hide")
 });
 
-var eventOccuredSience;
-$(document).ready(function(){
-	$("body").on("mousemove",function(){
-		eventOccuredSience = new Date();
-	});
-});
+
 </script>
 </head>
 <body>
@@ -136,7 +144,7 @@ $(document).ready(function(){
 								,["paramsCancel"],function(){
 									location.href="logout";	
 								},["paramsOk"]);	
-							}
+				}
 							}
 							
 						if(timeout == 0){
@@ -168,16 +176,17 @@ $(document).ready(function(){
 				<div>				
 					<tiles:insertAttribute name="topnav" />				
 				</div>
-							
+					<br/>							
 			</div>
-			<div id="body" style="padding: 10px;">
+			<div id="body" style="margin: 10px;" class="well">
 				<div>
 					<tiles:insertAttribute name="body" />
 					<br />
 				</div>	
 			</div>
-			<div id="footer" class="hide">
-				<tiles:insertAttribute name="footer" />				
+			<div id="footer">
+				<tiles:insertAttribute name="footer" />		
+				
 			</div>
 		</div>
 	</div>

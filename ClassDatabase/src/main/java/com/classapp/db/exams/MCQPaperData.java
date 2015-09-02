@@ -12,7 +12,7 @@ public class MCQPaperData {
 		this.mcqDataDB.updateDb(mcqData);
 	}
 
-	
+/*	
 	public List<MCQDetails> getAllExamPapersDetailsFromID(int class_id){
 		return this.mcqDataDB.getAllExamPapersDetails(class_id);
 	}
@@ -24,4 +24,5 @@ public class MCQPaperData {
 	public MCQData getMCQPaperFromClass(int exam_id,int class_id){
 		return this.mcqDataDB.getMCQPaperFromClass(exam_id, class_id);
 	}
+	*/
 }

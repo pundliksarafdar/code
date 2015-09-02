@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="com.classapp.db.notificationpkg.Notification" table="notifications" catalog="classdb">
+    <id name="msg_sid" type="java.lang.Integer">
+            <column name="msg_sid" />
+             <generator class="increment" />
+        </id>
+        <property name="institute_id" type="int">
+            <column name="institute_id"/>
+        </property>
+        <property name="message" type="string">
+            <column name="message"/>
+        </property>
+        <property name="batch" type="string">
+            <column name="batch"/>
+        </property>
+        <property name="msg_date">
+            <column name="msg_date"/>
+        </property> 
+        <property name="batch_name">
+            <column name="batch_name"/>
+        </property>     
+        </class>
+</hibernate-mapping>

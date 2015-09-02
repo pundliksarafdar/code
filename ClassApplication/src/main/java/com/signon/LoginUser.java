@@ -1,18 +1,23 @@
 package com.signon;
 
+import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.classapp.db.login.LoginCheck;
+import com.classapp.db.notificationpkg.Notification;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
+import com.classapp.login.UserStatic;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.google.gson.Gson;
 import com.tranaction.login.login;
 import com.transaction.batch.BatchTransactions;
+import com.transaction.notification.NotificationTransaction;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.student.StudentTransaction;
 import com.transaction.teacher.TeacherTransaction;
@@ -46,6 +51,7 @@ public class LoginUser extends BaseAction{
 			if(null != loginBean){
 				userBean.setLoginBean(loginBean);
 			    forward = loadBean(userBean, loginBean,response,session);
+			    loadUserStaticData(userBean,session);
 			}else{
 				forward = ERROR;
 			}
@@ -115,6 +121,9 @@ public class LoginUser extends BaseAction{
 						int studentcount=studentTransaction.getStudentCount(userBean.getRegId());
 						BatchTransactions batchTransactions=new BatchTransactions();
 						int batchcount=batchTransactions.getBatchCount(userBean.getRegId());
+						NotificationTransaction notificationTransaction=new NotificationTransaction();
+						List<Notification> notifications=notificationTransaction.getMessageforOwner(userBean.getRegId());
+						session.put("notifications", notifications);
 						session.put(Constants.BATCHCOUNT, batchcount);
 						session.put(Constants.TEACHERCOUNT, teachercount);
 						session.put(Constants.STUDENTCOUNT, studentcount);
@@ -133,6 +142,17 @@ public class LoginUser extends BaseAction{
 						List<Student> list=studentTransaction.getStudent(userBean.getRegId());
 						RegisterTransaction registerTransaction=new RegisterTransaction();
 						List<RegisterBean> beans= registerTransaction.getclassNames(list);
+						NotificationTransaction notificationTransaction=new NotificationTransaction();
+						List<Notification> notifications=new ArrayList<Notification>();
+						for (int i = 0; i < list.size(); i++) {
+							List<Notification> notificationsList=  notificationTransaction.getMessageforStudent(list.get(i));
+							if(notificationsList!=null){
+								for (int j = 0; j < notificationsList.size(); j++) {
+									notifications.add(notificationsList.get(j));
+								}
+							}
+						}
+						session.put("notifications", notifications);
 						session.put("classes", beans);
 						return Constants.CLASSSTUDENT;
 					} else {
@@ -148,5 +168,66 @@ public class LoginUser extends BaseAction{
 		}else{
 			return ERROR;
 		}
+	}
+	
+	public void loadUserStaticData(UserBean userBean, Map<String, Object> session){
+		UserStatic userStatic = new UserStatic();
+		String storagePath = Constants.STORAGE_PATH+File.separator+userBean.getRegId();
+		userStatic.setStorageSpace(storagePath);
+		
+		boolean isSuccessFull = provisionDirectories(storagePath);
+		
+		if(!isSuccessFull){
+			userStatic.getAlarms().add("Error cause while creating space");
+		}
+		
+		double totalStorage = 150.0; //set to default
+		double examSize = getFolderSize(new File(storagePath+File.separator+"exam"))/(1024.0*1024.0);
+		double noteSize = getFolderSize(new File(storagePath+File.separator+"notes"))/(1024.0*1024.0);
+		double usedSize = examSize+noteSize;
+		
+		userStatic.setTotalStorage(totalStorage);
+		userStatic.setUsedSpace(usedSize);
+		userStatic.setRemainingSpace(totalStorage-usedSize);
+		userStatic.setExamSpace(examSize);
+		
+		userStatic.setNotesSpace(noteSize);
+		//session.put(Constants.USER_STATIC, userStatic);
+		userBean.setUserStatic(userStatic);
+	}
+	
+	public boolean provisionDirectories(String storagePath){
+		boolean isSuccessFull = true;
+		try{
+			File storageData = new File(storagePath);
+			if(!storageData.exists()){
+				storageData.mkdir();
+			}
+			
+			File storageNotes = new File(storagePath+File.separator+"notes");
+			if(!storageNotes.exists()){
+				storageNotes.mkdir();
+			}
+			
+			File storageExam = new File(storagePath+File.separator+"exam");
+			if(!storageExam.exists()){
+				storageExam.mkdir();
+			}
+		}catch(Exception e){
+			isSuccessFull = false;
+			e.printStackTrace();
+		}
+		return isSuccessFull;
+	}
+	
+	public long getFolderSize(File directory) {
+	    long length = 0;
+	    for (File file : directory.listFiles()) {
+	        if (file.isFile())
+	            length += file.length();
+	        else
+	            length += getFolderSize(file);
+	    }
+	    return length;
 	}
 }

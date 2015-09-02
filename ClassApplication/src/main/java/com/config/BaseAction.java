@@ -42,7 +42,7 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 
 		
 		HttpSession sessionHttp = request.getSession();
-		sessionHttp.setMaxInactiveInterval(180);
+		sessionHttp.setMaxInactiveInterval(10*60);
 		
 		
 		//HttpSession sessionHttp = request.getSession();
@@ -86,6 +86,7 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 			(ActionContext.getContext().getSession()).put("user", userBean);
 		}
 		}catch(Exception e){
+			e.printStackTrace();
 			String errorCode = ServiceMap.getSystemParam(Constants.SHOW_STACK_TRACE,"show");
 			if(null!=errorCode && "yes".equalsIgnoreCase(errorCode))
 				forward = "syserror";
