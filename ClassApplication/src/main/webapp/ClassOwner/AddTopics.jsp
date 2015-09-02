@@ -55,7 +55,7 @@ $(document).ready(function(){
 </div>
 		<div class="container">
   <h2><font face="cursive">Topics</font> </h2>            
-  <table class="table table-striped">
+  <table class="table table-striped" id="topictable">
     <thead>
       <tr>
         <th>Sr No.</th>
