@@ -139,6 +139,7 @@ if(list.size()>0){
 <tr style="background-color: rgb(0, 148, 255);">
 <th>SR No.</th>
 <th>Subject Name</th>
+<th>Topics/Chapters</th>
 <th>Edit</th>
 <th>Delete</th>
 </tr>
@@ -146,6 +147,7 @@ if(list.size()>0){
 <tr>
 <td><%=counter+1 %></td>
 <td><%=list.get(counter).getSubjectName() %><input type="hidden" id="sub<%=list.get(counter).getSubjectId()%>" value="<%=list.get(counter).getSubjectName()%>"></td>
+<td><a href="addtopics?actionname=initiate&subid=<%=list.get(counter).getSubjectId() %>&subname=<%=list.get(counter).getSubjectName() %>" id="<%=list.get(counter).getSubjectId()%>">Add Subject Topics/Chapters</a></td>
 <td><a href="#" id="<%=list.get(counter).getSubjectId()%>" onclick="getSubject(<%=list.get(counter).getSubjectId()%>)">Edit</a></td>
 <td><a href="#" id="<%=list.get(counter).getSubjectId()%>" onclick="deleteSubject(<%=list.get(counter).getSubjectId()%>)">Delete</a></td>
 </tr>
@@ -158,5 +160,24 @@ if(list.size()>0){
 	<%
 }
 }%>
+
+<div class="modal fade" id="addTopicModal">
+    <div class="modal-dialog">
+    <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="myModalLabel">Small modal</h4>
+        </div>
+        <div class="modal-body" id="mymodalmessage">
+          
+        </div>
+      	<div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+      	</div>
+    </div>
+</div>
+</div>
+
 </body>
 </html>

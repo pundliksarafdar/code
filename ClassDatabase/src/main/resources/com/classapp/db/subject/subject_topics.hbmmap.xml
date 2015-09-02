@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 18 Jul, 2014 11:15:40 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.subject.Topics" table="subject_topics" catalog="classdb">
+    	<composite-id>
+    	<key-property name="topic_id" column="topic_id"></key-property>
+		<key-property name="inst_id" column="inst_id"></key-property>
+		<key-property name="div_id" column="div_id"></key-property>
+		<key-property name="sub_id" column="sub_id"></key-property>
+    	</composite-id>
+    	<property name="topic_name" type="java.lang.String">
+            <column name="topic_name" />
+        </property>
+    </class>
+</hibernate-mapping>

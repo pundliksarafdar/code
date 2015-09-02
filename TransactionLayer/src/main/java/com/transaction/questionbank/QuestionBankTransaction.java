@@ -43,4 +43,14 @@ public class QuestionBankTransaction {
 		questionbankDB.deleteQuestion(que_id, inst_id, sub_id, div_id);
 		return true;
 	}
+	
+	public Questionbank getQuestion(int que_id,int inst_id,int sub_id,int div_id) {
+	QuestionbankDB questionbankDB=new QuestionbankDB();
+	return questionbankDB.getQuestion(que_id, inst_id, sub_id, div_id);
+	}
+	
+	public List<Integer> getQuestionMarks(int inst_id,int sub_id,int div_id,List<Integer> que_id) {
+		QuestionbankDB db=new QuestionbankDB();
+		return db.getQuestionMarks(inst_id, sub_id, div_id, que_id);
+	}
 }

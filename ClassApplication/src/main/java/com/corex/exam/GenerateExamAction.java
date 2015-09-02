@@ -9,75 +9,33 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang3.StringUtils;
-import org.omg.CORBA.Request;
 
 import com.config.BaseAction;
-import com.config.Constants;
 import com.datalayer.exam.QuestionSearchRequest;
-import com.transaction.exams.ExamTransaction;
 import com.user.UserBean;
 
 public class GenerateExamAction extends BaseAction{
-	private Integer[] questioncount;
-	private Integer[] marks;
-	private Integer division,subject;
-	private Integer[] bacth;
-	private Integer passingmarks;
-	private String examname;
+
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
-		ExamTransaction examTransaction = new ExamTransaction();
-		List<QuestionSearchRequest> questionSearchRequestList = new ArrayList();
 		
-		for(int index=0;index<questioncount.length;index++){
-			QuestionSearchRequest questionSearchRequest = new QuestionSearchRequest();
-			questionSearchRequest.setCount(questioncount[index]);
-			questionSearchRequest.setMarks(marks[index]);
-			questionSearchRequestList.add(questionSearchRequest);
-		}
-		
-		List<QuestionSearchRequest> exam = null;
-		List<String> answerId = new ArrayList<String>();
-		boolean valid = validateCriteria(subject,division, userBean.getRegId(), questionSearchRequestList);
-		if(valid){
-			 exam = generateExam(subject,division, userBean.getRegId(), questionSearchRequestList);
-			 String questionId = "";
-			 String questionAnswerId = "";
-			 //Extract questionids
-			 List<List<Integer>> questionIdListsList = new ArrayList<List<Integer>>();
-			 List<List<String>> questionAnswerIdListsList = new ArrayList<List<String>>();
-			 for (QuestionSearchRequest questionSearchRequest:exam) {
-				List<Integer> questionList = questionSearchRequest.getQuestionId();
-				List<String> answersId = examTransaction.getAnswers(subject, userBean.getRegId(), division, questionList);
-				questionIdListsList.add(questionList);
-				questionAnswerIdListsList.add(answersId);
-			}
-			 
-		}
-		System.out.println(exam);
-		//examTransaction.saveExam(examname, in, subId, divId, totalMarks, passMarks, creatorId, questionId, batchId, ansId)
 		return SUCCESS;
 	}
 	
-	public boolean validateCriteria(Integer sub_id,Integer div_id,int classId,List<QuestionSearchRequest> list){
-		ExamTransaction examTransaction = new ExamTransaction();
-		return examTransaction.validateSearchCriteria(sub_id, classId, div_id, list);
+	public List<QuestionSearchRequest> getAvailibility(List<QuestionSearchRequest> questionSearchRequestList){
+		return questionSearchRequestList;
 	}
 	
-	public List<QuestionSearchRequest> getQuestionId(Integer sub_id,Integer div_id,int classId,List<QuestionSearchRequest> questionSearchRequestList){
-		ExamTransaction examTransaction = new ExamTransaction();
-		return examTransaction.getCriteriaQuestion(sub_id, classId, div_id, questionSearchRequestList);
-
-	}
-	
-	private List<QuestionSearchRequest> generateExam(Integer sub_id,Integer div_id,int classId,List<QuestionSearchRequest> questionSearchRequestList){
-		questionSearchRequestList = getQuestionId(sub_id,div_id,classId,questionSearchRequestList);
+	private List<QuestionSearchRequest> generateExam(List<QuestionSearchRequest> questionSearchRequestList) throws Exception{
+		
+		questionSearchRequestList = getAvailibility(questionSearchRequestList);
 		for (QuestionSearchRequest questionSearchRequest:questionSearchRequestList) {
+			if(questionSearchRequest.getAvailiblityCount()<0 || questionSearchRequest.getCount()>questionSearchRequest.getAvailiblityCount()){
+				throw new Exception("Please check availibility first"+this.getClass()); 
+			}
+			
 			List<Integer> searchRequest = generateRandomQuestionId(questionSearchRequest.getQuestionId(), questionSearchRequest.getCount());
 			questionSearchRequest.setQuestionId(searchRequest);
 		}
@@ -98,64 +56,6 @@ public class GenerateExamAction extends BaseAction{
 		return questionId;
 	}
 	
-	
-	
-	public Integer[] getQuestioncount() {
-		return questioncount;
-	}
-
-	public void setQuestioncount(Integer[] questioncount) {
-		this.questioncount = questioncount;
-	}
-
-	public Integer[] getMarks() {
-		return marks;
-	}
-
-	public void setMarks(Integer[] marks) {
-		this.marks = marks;
-	}
-	
-	public Integer getDivision() {
-		return division;
-	}
-
-	public void setDivision(Integer division) {
-		this.division = division;
-	}
-
-	public Integer getSubject() {
-		return subject;
-	}
-
-	public void setSubject(Integer subject) {
-		this.subject = subject;
-	}
-
-	public Integer[] getBacth() {
-		return bacth;
-	}
-
-	public void setBacth(Integer[] bacth) {
-		this.bacth = bacth;
-	}
-	
-	public Integer getPassingmarks() {
-		return passingmarks;
-	}
-
-	public void setPassingmarks(Integer passingmarks) {
-		this.passingmarks = passingmarks;
-	}
-
-	public String getExamname() {
-		return examname;
-	}
-
-	public void setExamname(String examname) {
-		this.examname = examname;
-	}
-
 	public static void main(String[] args) {
 		GenerateExamAction action = new GenerateExamAction();
 		/*
@@ -237,7 +137,6 @@ public class GenerateExamAction extends BaseAction{
 		
 		questionSearchRequests.add(questionSearchRequest);
 
-		/*
 		try {
 			List<QuestionSearchRequest> list = action.generateExam(questionSearchRequests);
 			for(QuestionSearchRequest questionSearchRequest2 : list){
@@ -247,7 +146,6 @@ public class GenerateExamAction extends BaseAction{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		*/
 	}
 	
 }

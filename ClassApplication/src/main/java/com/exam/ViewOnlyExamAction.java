@@ -31,7 +31,7 @@ public class ViewOnlyExamAction extends BaseAction{
 			Map<String, Object> session) {
 		
 		if(null == methodToCall || "".equals(methodToCall)){
-			/*Session object is set in GenerateExamAction*/
+			/*Session object is set in SearchExamAction*/
 			List<MCQData> exams = (List<MCQData>) request.getSession().getAttribute(Constants.EXAM_SEARCH_RESULT);
 			for (MCQData exam:exams) {
 				if (null!=examId && examId.equals(exam.getExam_id()+"")) {

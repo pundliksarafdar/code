@@ -342,5 +342,22 @@
 			method="execute">
 			<result name="success" type="tiles">classowner.questioneditsuccess</result>
 		</action>
+		
+		<action name="attemptexamlist" class="com.exam.AttemptExamList"
+			method="execute">
+			<result name="success" type="tiles">classowner.attemptexamlist</result>
+		</action>
+		
+		<action name="attemptExam" class="com.exam.AttemptExamAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.attemptexam</result>
+			<result name="examresult" type="tiles">classowner.examresult</result>
+		</action>
+		
+		<action name="addtopics" class="com.classowner.AddTopicAction"
+			method="execute">
+			<result name="addtopicinitiate" type="tiles">classowner.addtopicinitiate</result>
+			<result name="examresult" type="tiles">classowner.examresult</result>
+		</action>
 	</package>
 </struts>

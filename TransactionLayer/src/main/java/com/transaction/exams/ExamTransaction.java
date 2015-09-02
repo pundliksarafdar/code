@@ -14,40 +14,11 @@ import com.classapp.db.exam.ExamDB;
 import com.classapp.db.exams.MCQData;
 import com.classapp.db.exams.MCQDataDB;
 import com.classapp.db.question.QuestionbankDB;
-import com.datalayer.exam.QuestionSearchRequest;
 import com.datalayer.exambean.ExamData;
 
 
-/**
- * @author Server
- *
- */
-/**
- * @author Server
- *
- */
-/**
- * @author Server
- *
- */
-/**
- * @author Server
- *
- */
-/**
- * @author Server
- *
- */
-/**
- * @author Server
- *
- */
 public class ExamTransaction {
 	
-	/**
-	 * @deprecated
-	 * 
-	 */
 	public void saveExam(ExamData examData) {
 		MCQDataDB mcqDataDB = new MCQDataDB();
 		MCQData mcqData = new MCQData();
@@ -94,6 +65,12 @@ public class ExamTransaction {
 		
 	}
 	
+	public Exam getExamToAttempt(int inst_id,int sub_id,int div_id,int examID) {
+		ExamDB db=new ExamDB();
+	  return db.getExam(examID, inst_id, sub_id, div_id);
+		
+	}
+	
 	public int getExamCount(int inst_id,int sub_id,int div_id,String exam_status) {
 		ExamDB db=new ExamDB();
 		return db.getExamListCount(inst_id, sub_id, div_id, exam_status);		
@@ -109,54 +86,6 @@ public class ExamTransaction {
 		ExamDB examDB=new ExamDB();
 		examDB.disableExam(exam_id, inst_id, sub_id, div_id);
 	return true;
-	}
-	
-	public List<QuestionSearchRequest> getCriteriaQuestionCount(int sub_id,int inst_id,int div_id,List<QuestionSearchRequest> list){
-		QuestionbankDB questionbankDB = new QuestionbankDB();
-		return questionbankDB.getCriteriaQuestionCount(sub_id, inst_id, div_id, list);
-	}
-	
-	public List<QuestionSearchRequest> getCriteriaQuestion(int sub_id,int inst_id,int div_id,List<QuestionSearchRequest> list){
-		QuestionbankDB questionbankDB = new QuestionbankDB();
-		return questionbankDB.getCriteriaQuestion(sub_id, inst_id, div_id, list);
-	}
-	
-	public boolean validateSearchCriteria(int sub_id,int inst_id,int div_id,List<QuestionSearchRequest> list){
-		boolean result = true;
-		List<QuestionSearchRequest> listQuestionSearchCount = getCriteriaQuestionCount(sub_id, inst_id, div_id, list);
-		for(QuestionSearchRequest questionSearchRequest:listQuestionSearchCount){
-			if(questionSearchRequest.getAvailiblityCount()<questionSearchRequest.getCount()){
-				result = false;
-			}
-		}
-		return result;
-	}
-	
-	
-	/**
-	 * @param questionId - coma seaparatted
-	 * @param batchId - coma seaparatted
-	 * @param ansId - coma seaparatted
-	 */
-	public void saveExam(String examName,int instituteId,int subId,int divId,int totalMarks,int passMarks,int creatorId,List<Integer> questionId,List<Integer> batchId,List<Integer> ansId){
-		Exam exam = new Exam();
-		ExamDB examDB = new ExamDB();
-		int examId = examDB.getNextExamID(instituteId, divId, subId);
-		exam.setExam_id(examId);
-		exam.setExam_name(examName);
-		exam.setInstitute_id(instituteId);
-		exam.setDiv_id(divId);
-		exam.setSub_id(subId);
-		exam.setTotal_marks(totalMarks);
-		exam.setPass_marks(passMarks);
-		exam.setCreated_by(creatorId);
-		
-		examDB.saveExam(exam);
-	}
-	
-	public List<String> getAnswers(int sub_id,int inst_id,int div_id,List<Integer> que_ids){
-		QuestionbankDB questionbankDB = new QuestionbankDB();
-		return questionbankDB.getAnswerId(sub_id, inst_id, div_id, que_ids);
 	}
 	public static void main(String[] args) {
 		/*

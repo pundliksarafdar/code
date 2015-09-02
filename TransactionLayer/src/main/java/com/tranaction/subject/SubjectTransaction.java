@@ -17,6 +17,7 @@ import com.classapp.db.subject.GetSubject;
 import com.classapp.db.subject.SubjectDb;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
+import com.classapp.db.subject.Topics;
 import com.mysql.jdbc.StringUtils;
 import com.sun.org.apache.bcel.internal.generic.LSTORE;
 
@@ -131,6 +132,12 @@ public class SubjectTransaction {
 	public Subject getSubject(int subid) {
 		SubjectDb db=new SubjectDb();
 		return db.retrive(subid);
+	}
+	
+	public List<Topics> getTopics(int inst_id,int sub_id,int div_id) {
+	SubjectDb subjectDb=new SubjectDb();
+	return subjectDb.GetSubjectTopics(inst_id, sub_id, div_id);
+		
 	}
 	
 	public static void main(String[] args) {

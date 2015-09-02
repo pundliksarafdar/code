@@ -60,6 +60,7 @@ import com.classapp.db.student.StudentData;
 import com.classapp.db.student.StudentDetails;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
+import com.classapp.db.subject.Topics;
 import com.classapp.notification.AllUserId;
 import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;
@@ -2169,6 +2170,29 @@ public class ClassOwnerServlet extends HttpServlet{
 		String examID = req.getParameter("examID");
 		ExamTransaction examTransaction=new ExamTransaction();
 		examTransaction.disableExam(Integer.parseInt(examID), 1, 11, 111);
+		respObject.addProperty(STATUS, "success");
+	}else if("getDivisionsTopics".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId=userBean.getRegId();;
+		String divisionId = req.getParameter("divisionID");
+		String subjectid = req.getParameter("subID");
+		SubjectTransaction subjectTransaction=new SubjectTransaction();
+		List<Topics> topics=subjectTransaction.getTopics(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId));
+		String topic_names="";
+		String topic_ids="";
+		if(topics!=null){
+		for (int i = 0; i < topics.size(); i++) {
+			if(i==0){
+				topic_names=topics.get(i).getTopic_name();
+				topic_ids=topics.get(i).getTopic_id()+"";
+			}else{
+				topic_names=topic_names+","+topics.get(i).getTopic_id();
+				topic_ids=topic_ids+","+topics.get(i).getTopic_id();
+			}
+		}
+		}
+		respObject.addProperty("topic_ids",topic_ids);
+		respObject.addProperty("topic_names", topic_names);
 		respObject.addProperty(STATUS, "success");
 	}
 		printWriter.write(respObject.toString());

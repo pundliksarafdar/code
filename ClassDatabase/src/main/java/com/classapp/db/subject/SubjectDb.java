@@ -5,12 +5,16 @@ import java.util.List;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.batch.Batch;
+import com.classapp.db.exam.Exam;
 import com.classapp.persistence.HibernateUtil;
 
 public class SubjectDb {
@@ -414,5 +418,39 @@ public String getschedulesubject(int subjectid) {
 		}
 		
 		return subjectlist;
+	}
+	
+	public List<Topics> GetSubjectTopics(int inst_id,int sub_id,int div_id) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Criteria criteria = session.createCriteria(Topics.class);
+		Criterion criterion = Restrictions.eq("inst_id", inst_id);
+		criteria.add(criterion);
+		
+		criterion = Restrictions.eq("sub_id", sub_id);
+		criteria.add(criterion);
+	
+		
+		criterion = Restrictions.eq("div_id", div_id);
+		criteria.add(criterion);
+	
+		
+		List<Topics> topicList = criteria.list();
+		transaction.commit();
+		session.close();
+		return  topicList;
+	}
+	
+	public boolean saveorupdateTopic(Topics topic) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		session.saveOrUpdate(topic);
+		transaction.commit();
+		session.close();
+		return  true;
 	}
 }

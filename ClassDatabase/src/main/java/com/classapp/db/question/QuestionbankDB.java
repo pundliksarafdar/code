@@ -109,17 +109,18 @@ public HashMap<Integer, Integer> getQuestionIds(int inst_id,int sub_id,int div_i
 return quesids;
 }
 
-public List<Integer> getQuestionMarks(int inst_id,int sub_id,int div_id) {
+public List<Integer> getQuestionMarks(int inst_id,int sub_id,int div_id,List<Integer> que_id) {
 	Transaction transaction=null;
 	Session session=null;
 	List<Integer> list = null;
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
 		transaction = session.beginTransaction();
-		Query query = session.createQuery("select marks from Questionbank where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id");
+		Query query = session.createQuery("select marks from Questionbank where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id in :que_id");
 		query.setParameter("inst_id", inst_id);
 		query.setParameter("div_id", div_id);
 		query.setParameter("sub_id", sub_id);
+		query.setParameterList("que_id", que_id);
 		list = query.list();
 	}catch(Exception e){
 		e.printStackTrace();
@@ -283,9 +284,9 @@ public List<QuestionSearchRequest> getCriteriaQuestionCount(int sub_id,int inst_
 			criteria.add(Restrictions.eq("marks", list.get(i).getMarks()));
 		}
 		if(list.get(i).getMaximumRepeatation()!=-1){
-			criteria.add(Restrictions.le("rep", list.get(i).getMaximumRepeatation()));
+			criteria.add(Restrictions.le("maximumRepeatation", list.get(i).getMaximumRepeatation()));
 		}
-		list.get(i).setAvailiblityCount((Long) criteria.uniqueResult());
+		list.get(i).setAvailiblityCount((Integer) criteria.uniqueResult());
 	}
 
 	//List<Integer> questionList = criteria.list();
@@ -322,7 +323,7 @@ public List<QuestionSearchRequest> getCriteriaQuestion(int sub_id,int inst_id,in
 return list;
 }
 
-public List<String> getAnswerId(int sub_id,int inst_id,int div_id,List<Integer> que_ids) {
+public List<String> getQuestionAnsIds(int sub_id,int inst_id,int div_id,List<Integer> que_ids) {
 	Exam exam=new Exam();
 	Transaction transaction=null;
 	Session session=null;

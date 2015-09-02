@@ -93,7 +93,7 @@ siteMapApp.controller("SiteMapController",function($scope){
       		<ul class="dropdown-menu">
 	            <li><a href="choosesubject?forwardAction=listquestionbankquestionaction">Add Exam</a></li>
 	            <li><a href="choosesubject?forwardAction=listExam">Search Exam</a></li>
-	            <li><a href="searchexamnonstudent">Attempt Exam</a></li>
+	            <li><a href="choosesubject?forwardAction=attemptexamlist">Attempt Exam</a></li>
 	         </ul>
       </li>
       </cx:versionswitch>

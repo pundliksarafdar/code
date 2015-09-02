@@ -1,6 +1,7 @@
 package com.classapp.db.login;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -8,6 +9,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.classapp.db.exam.ExamDB;
+import com.classapp.db.question.QuestionbankDB;
 import com.classapp.db.register.AllUserId;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.user.UserBean;

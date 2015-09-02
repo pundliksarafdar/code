@@ -54,7 +54,7 @@ public class UploadExamsAction extends BaseAction{
 		if(null == actionname){
 			actionname="submitquestions";
 			return "startuploadingexam";
-		}else if("submitquestions".equals(actionname) || "SavenSubmit".equals(actionname)){
+		}else if("submitquestions".equals(actionname)){
 			/*if(null != request.getSession().getAttribute("questionNumber")){
 				questionNumber = (Integer) request.getSession().getAttribute("questionNumber");
 			}else{
@@ -129,27 +129,6 @@ public class UploadExamsAction extends BaseAction{
 			if(divbean!=null){
 				divisionName=divbean.getDivisionName();
 			}
-			/*if("editquestion".equals(actionname)){
-				
-				String examPath = userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionNumber; 
-				File file = new File(examPath);
-				String[] files = file.list();
-				
-				int totalQuestionNumbers = files.length;
-				int examMarks = 0;
-				for (String filename:files) {
-					QuestionData questionData = (QuestionData) readObject(new File(examPath+File.separator+filename));
-					examMarks+=questionData.getMarks();
-				}
-				
-				request.getSession().setAttribute("examname",examname);
-				request.getSession().setAttribute("uploadedMarks",examMarks);
-				request.getSession().setAttribute("exammarks",examMarks);
-				request.getSession().setAttribute("totalQuestion",totalQuestionNumbers);
-				
-				questionNumber = 1;
-				
-			}*/
 			examname = (String) request.getSession().getAttribute("examname");
 			String examPath = userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionNumber;
 			//uploadedMarks = (Integer) request.getSession().getAttribute("uploadedMarks");
@@ -170,6 +149,52 @@ public class UploadExamsAction extends BaseAction{
 			request.setAttribute("questionData", questionData);
 			actionname="SavenSubmit";
 			String result = "startuploadingexam";
+			return result;
+		}else if("SavenSubmit".equals(actionname)){
+			SubjectTransaction subjectTransaction=new SubjectTransaction();
+			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
+			if(subbean!=null){
+				subjectname=subbean.getSubjectName();
+			}
+			DivisionTransactions divisionTransactions=new DivisionTransactions();
+			Division divbean= divisionTransactions.getDidvisionByID(Integer.parseInt(division));
+			if(divbean!=null){
+				divisionName=divbean.getDivisionName();
+			}
+			//request.getSession().setAttribute("questionNumber", ++questionNumber);
+			
+			QuestionData questionData = new QuestionData();
+			questionData.setMarks(questionmarks);
+			List<String> listOption = new ArrayList<String>();
+			if(null!=answersOptionText){
+				listOption = Arrays.asList(answersOptionText);
+			}
+			
+			if(null!=answersOptionCheckBox){
+				questionData.setAnswers(Arrays.asList(answersOptionCheckBox.split(",")));
+			}
+			questionData.setOptions(listOption);
+			questionData.setQuestion(question);
+			questionData.setQuestionNumber(questionNumber);
+		
+			//Create separate file for each question and join them in the save and submit
+			UserStatic userStatic = userBean.getUserStatic();
+			String examPath = userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionNumber;
+			File file = new File(examPath);
+			
+			if(!file.getParentFile().exists()){
+				file.getParentFile().mkdirs();
+				try {file.createNewFile();} catch (IOException e) {	e.printStackTrace();}
+			}
+			writeObject(examPath, questionData);
+			QuestionBankTransaction questionBankTransaction=new QuestionBankTransaction();
+			Questionbank questionbank=questionBankTransaction.getQuestion(questionNumber, userBean.getRegId(),Integer.parseInt(subject), Integer.parseInt(division));
+			questionbank.setAns_id(answersOptionCheckBox.toString());
+			questionbank.setMarks(questionmarks);
+			questionBankTransaction.saveQuestion(questionbank);
+			
+			actionname="SavenSubmit";
+			String result = "questioneditsuccess";
 			return result;
 		}else if("deletequestion".equals(actionname)){
 			UserStatic userStatic = userBean.getUserStatic();

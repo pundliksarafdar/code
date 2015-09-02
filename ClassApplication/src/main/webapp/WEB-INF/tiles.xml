@@ -26,6 +26,13 @@
 		<put-attribute name="body" value="/index.jsp" />
 		<put-attribute name="footer" value="" />
 	</definition>
+	
+	<definition name="NoLinkBaseLayout" template="/NoLinkBaseLayout.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="header" value="/blankMenu.jsp" />
+		<put-attribute name="body" value="/index.jsp" />
+		<put-attribute name="footer" value="" />
+	</definition>
 
 	<definition name="syserror" extends="NoTopnavBaseLayout">
 		<put-attribute name="title" value="System Error" />
@@ -322,6 +329,21 @@
 		<put-attribute name="body" value="/ClassOwner/ExamList.jsp" />
 	</definition>
 	
+	<definition name="classowner.attemptexamlist" extends="baseLayout">
+		<put-attribute name="title" value="Choose Subject" />
+		<put-attribute name="body" value="/ClassOwner/AttemptExamList.jsp" />
+	</definition>
+	
+	 <definition name="classowner.attemptexam" extends="NoLinkBaseLayout">
+		<put-attribute name="title" value="Choose Subject" />
+		<put-attribute name="body" value="/ClassOwner/AttemptExam.jsp" />
+	</definition> 
+	
+	<definition name="classowner.examresult" extends="NoLinkBaseLayout">
+		<put-attribute name="title" value="Choose Subject" />
+		<put-attribute name="body" value="/ClassOwner/ResultPage.jsp" />
+	</definition>
+	
 	<definition name="student.studentchoosesubject" extends="baseLayout">
       <put-attribute name="title"  value="Choose Subject"/>
       <put-attribute name="topnav" value="/student/menu.jsp" />
@@ -353,11 +375,10 @@
       <put-attribute name="title"  value="Criteria"/>
       <put-attribute name="body"   value="/ClassOwner/ExamCriteria.jsp"/>      
    </definition>
-   
-	<definition name="classowner.generateexam" extends="baseLayout">
+	
+	<definition name="classowner.addtopicinitiate" extends="baseLayout">
       <put-attribute name="title"  value="Criteria"/>
-      <put-attribute name="body"   value="/ClassOwner/generateexam.jsp"/>      
+      <put-attribute name="body"   value="/ClassOwner/AddTopics.jsp"/>      
    </definition>
-	
-	
+   
 </tiles-definitions>

@@ -42,7 +42,7 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 
 		
 		HttpSession sessionHttp = request.getSession();
-		sessionHttp.setMaxInactiveInterval(10*60);
+		sessionHttp.setMaxInactiveInterval(180);
 		
 		
 		//HttpSession sessionHttp = request.getSession();
