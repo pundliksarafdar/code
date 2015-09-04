@@ -18,8 +18,6 @@ import com.classapp.db.subject.SubjectDb;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
 import com.classapp.db.subject.Topics;
-import com.mysql.jdbc.StringUtils;
-import com.sun.org.apache.bcel.internal.generic.LSTORE;
 
 
 public class SubjectTransaction {

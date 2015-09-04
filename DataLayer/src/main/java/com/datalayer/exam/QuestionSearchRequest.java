@@ -5,10 +5,10 @@ import java.util.List;
 public class QuestionSearchRequest {
 	private int marks;
 	private int count;
-	private int maximumRepeatation;
+	private int maximumRepeatation = -1;
 	
 	//Defaults to -1 can identify that exam search is not happend for this class
-	private int availiblityCount = -1;
+	private long availiblityCount = -1;
 	private List<Integer> questionId;
 	
 	public int getMarks() {
@@ -29,10 +29,10 @@ public class QuestionSearchRequest {
 	public void setMaximumRepeatation(int maximumRepeatation) {
 		this.maximumRepeatation = maximumRepeatation;
 	}
-	public int getAvailiblityCount() {
+	public long getAvailiblityCount() {
 		return availiblityCount;
 	}
-	public void setAvailiblityCount(int availiblityCount) {
+	public void setAvailiblityCount(long availiblityCount) {
 		this.availiblityCount = availiblityCount;
 	}
 	public List<Integer> getQuestionId() {

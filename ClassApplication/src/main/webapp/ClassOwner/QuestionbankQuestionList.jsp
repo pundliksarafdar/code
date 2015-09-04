@@ -11,7 +11,9 @@
 var ROOT = "#QuestionBankQuestionList";
 var EXAM_MODAL = ROOT +"CreateExamhModal";
 var EXAM_MODAL_CHOOSE_MARKS_ADD = ROOT+"ChooseMarksAdd";
-
+var EXAM_MODAL_OK = EXAM_MODAL+"Ok";
+var EXAM_MODAL_EXAM_NAME = EXAM_MODAL+"ExamName";
+var EXAM_MODAL_EXAM_PASSING_MARKS = EXAM_MODAL + "PassingMarks";
 $(function () {
 		$('[data-toggle="tooltip"]').attr("title",$("#tooltipdata").html()); 
 		$('[data-toggle="tooltip"]').tooltip({"html":true});
@@ -21,6 +23,7 @@ $(function () {
 });
 
 $(document).ready(function(){
+	
 	$("#uploadexams").on("click",function(){
 		$("#uploadform").attr("action","uploadexams");
 		$("#uploadform").submit();
@@ -58,18 +61,94 @@ $(document).ready(function(){
 		$("#actionname").val("deletequestion");
 		$("#actionform").submit();
 	});
+	
+	$("#QuestionBankQuestionListCreateExamhModalChooseMarksAdd").on("click",addQuestionCriteria);
+	$(EXAM_MODAL_OK).on("click",function(){
+		var passingmarks = $(EXAM_MODAL_EXAM_PASSING_MARKS).val();
+		var examName = $(EXAM_MODAL_EXAM_NAME).val();
+		$("#QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria").find("[name='passingmarks']").val(passingmarks);
+		$("#QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria").find("[name='examname']").val(examName);
+		$("#QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria").submit();
+	});
+	$("[data-target='#QuestionBankQuestionListCreateExamhModal']").on("click",resetForm);
 });
+
+//Object is storing the value of the table
+var marksObj = {};
+var addQuestionCriteria = function(){
+	$(".alert").alert('close');
+	var examMarks = $(this).parents("form").find("#QuestionBankQuestionListCreateExamhModalMarks").val();
+	var numberOfQuestions = $(this).parents("form").find("#QuestionBankQuestionListCreateExamhModalNoOfQuestion").val();
+	
+	if(marksObj[examMarks]){
+		showError("Question for "+examMarks+" marks are already added, Click ok to continue or cancel to cancel",examMarks,numberOfQuestions);
+	}else{
+		marksObj[examMarks] = numberOfQuestions;
+	}	
+	
+	var tableObj = displayTable("#QuestionBankQuestionListCreateExamhModalTable",marksObj);
+	tableObj.find("tr").find(".remove").off("click").on("click",function(){
+				var dataId = $(this).attr("data-id").trim();
+				$(this).parents("tr").remove();
+				delete marksObj[dataId];
+				tableObj = displayTable("#QuestionBankQuestionListCreateExamhModalTable",marksObj);
+	});
+}
+
+function showError(message,examMarks,numberOfQuestions){
+	errorMessage = $('<div class="alert alert-warning alert-dismissible fade in" role="alert">'+
+		  '<div id="QuestionBankQuestionListCreateExamhModalAlertMessage"></div>'+
+		  '<input type="button" class="btn btn-success btn-xs" value="Ok" data-dismiss="alert" />'+
+		  '<input type="button" class="btn btn-default btn-xs" data-dismiss="alert" value="Cancel"/>'+
+		  
+		'</div>');	
+		errorMessage.find("#QuestionBankQuestionListCreateExamhModalAlertMessage").html(message);
+		
+		$("#QuestionBankQuestionListCreateExamhModalErrorBox").html(errorMessage);
+		errorMessage.find(".btn-success").off("click").on("click",function(){
+			marksObj[examMarks]	= numberOfQuestions;
+			var tableObj = displayTable("#QuestionBankQuestionListCreateExamhModalTable",marksObj);
+			
+			tableObj.find("tr").find(".remove").on("click",function(){
+				var dataId = $(this).attr("data-id").trim();
+				$(this).parents("tr").remove();
+				delete marksObj[dataId];
+				tableObj = displayTable("#QuestionBankQuestionListCreateExamhModalTable",marksObj);
+			});
+		});
+}
+
+
+function displayTable(tableId,rowObj){
+	var tableObj = $(tableId).find("tbody");	
+		tableObj.empty();
+		var totalMarks = 0;
+		var totalQuestion = 0;
+		for(key in rowObj){
+			tableObj.append('<tr><td class="remove glyphicon glyphicon-trash" data-id="'+key+'"><input type="hidden" value="'+rowObj[key]+'" name="questioncount"><input type="hidden" value="'+key+'" name="marks"></td><td>'+key+'</td><td>'+rowObj[key]+'</td><td>'+rowObj[key]*key+'</td></tr>');
+			totalMarks += parseInt(key)*parseInt(rowObj[key]);
+			totalQuestion += parseInt(rowObj[key]);
+		}	
+		tableObj.append('<tr class="success"><td></td><td>Total</td><td>'+totalQuestion+'</td><td>'+totalMarks+'</td></tr>');
+		return tableObj;
+}
 
 var selectMarks = function(){
 	
 };
+
+function resetForm(){
+	//Reset marks object
+	marksObj = {};
+	$("#QuestionBankQuestionListCreateExamhModal").find("form")[0].reset();
+	var tableObj = $("#QuestionBankQuestionListCreateExamhModalTable").find("tbody");	
+		tableObj.empty();
+}
 </script>
 </head>
 <body>
-			<div class="container" style="margin-bottom: 5px">
-			<a type="button" class="btn btn-primary" href="choosesubject?forwardAction=listquestionbankquestionaction" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
-			</div>
-			<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+
+			<a type="button" class="btn btn-primary" href="choosesubject?forwardAction=listquestionbankquestionaction" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Back</a>
 			<div class="btn-group" role="group" aria-label="..." style="width:90%">
 			<form action="" id="uploadform" method="post">
 			<input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
@@ -81,7 +160,6 @@ var selectMarks = function(){
 			  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#QuestionBankQuestionListQuestionSearchModal">Search</button>
 			  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#QuestionBankQuestionListCreateExamhModal">Create Exam</button>
 			</form>
-			</div>
 			</div>
 			<c:if test="${(questionDataList != null) && (totalPages!=0)}">
 	<div class="container">
@@ -206,8 +284,9 @@ var selectMarks = function(){
       	</div>
 
     </div>
+	</div>
+	</div>
 
-	
     
     <div class="modal fade" id="QuestionBankQuestionListCreateExamhModal">
  	<div class="modal-dialog">
@@ -217,39 +296,68 @@ var selectMarks = function(){
           <h4 class="modal-title" id="myModalLabel">Search</h4>
         </div>
         <div class="modal-body" >
+		<div id="QuestionBankQuestionListCreateExamhModalErrorBox">
+			
+		</div>
 		<form>
+		<div class="form-group">
+		<label for="QuestionBankQuestionListCreateExamhModalNoOfQuestion">Exam name</label>	<br/>
+		  <input type="text" id="QuestionBankQuestionListCreateExamhModalExamName" class="form-control">
+		</div>
+		<div class="form-group">
+		<label for="QuestionBankQuestionListCreateExamhModalNoOfQuestion">Passing marks</label>	<br/>
+		  <input type="number" id="QuestionBankQuestionListCreateExamhModalPassingMarks" class="form-control">
+		</div>
+		
 		<div class="row">
 			<div class="col-xs-4">
 			<div class="form-group">
-			<label for="">Marks</label>	
-			  <select class="btn btn-default">
+			<label for="QuestionBankQuestionListCreateExamhModalMarks">Marks</label>	<br/>
+			  <select class="btn btn-default" id="QuestionBankQuestionListCreateExamhModalMarks">
 				<option>Select</option>
+				<c:forEach items="${marks}" var="item">
+					<option value="<c:out value="${item}"></c:out>"><c:out value="${item}"></c:out></option>
+				</c:forEach>
 			  </select>
 			</div>
 			</div>
 			
 			<div class="col-xs-4">
 			<div class="form-group">
-			<label for="">Number of question</label>	
-			  <select class="btn btn-default">
-				<option>Select</option>
-			  </select>
+			<label for="QuestionBankQuestionListCreateExamhModalNoOfQuestion">Number of question</label>	<br/>
+			  <input type="number" id="QuestionBankQuestionListCreateExamhModalNoOfQuestion" class="form-control">
 			</div>
 			</div>
 			
 			<div class="col-xs-4">
 			<div class="form-group">
-			<label for="">Number of question</label>	
+			<label for="QuestionBankQuestionListCreateExamhModalChooseMarksAdd">&nbsp;</label>	<br/>
 			  <input type="button" class="btn btn-default" value="Add" id="QuestionBankQuestionListCreateExamhModalChooseMarksAdd"/>
 			</div>
 			</div>  
 		</div>
 		</form>
+		<form id="QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria" action="generateexamaction">
+			<input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
+			<input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
+			<input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
+			<input type="hidden" name="passingmarks"/>
+			<input type="hidden" name="examname">
+		<table id="QuestionBankQuestionListCreateExamhModalTable" class="table table-hover">
+			
+			<thead>
+				<tr><th></th><th>Marks</th><th>Count</th></tr>
+			</thead>
+			<tbody>
+			
+			</tbody>
+		</table>
+		</form>
         </div>
 
       	<div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+	        <button type="button" class="btn btn-default" id="QuestionBankQuestionListCreateExamhModalClose" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal" id="QuestionBankQuestionListCreateExamhModalOk">Ok</button>
       	</div>
 
     </div>

@@ -119,6 +119,6 @@ public class URLAccessDB {
 		if(null!=list && list.size()<1){
 			result = true;
 		}
-		return false;
+		return result;
 	}
 }
