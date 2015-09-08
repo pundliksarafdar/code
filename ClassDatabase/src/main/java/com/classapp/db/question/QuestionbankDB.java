@@ -220,7 +220,7 @@ public int getSearchedQuestionCount(int rep,String compexam_id,int marks,int sub
 		criteria.add(criterion);
 	}
 	
-	criteria.setMaxResults(10);
+	//criteria.setMaxResults(10);
 	List<Questionbank> questionList = criteria.list();
 	transaction.commit();
 	session.close();

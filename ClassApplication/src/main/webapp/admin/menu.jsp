@@ -52,10 +52,10 @@ siteMapApp.controller("SiteMapController",function($scope){
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
       		<ul class="dropdown-menu">	
-	            <li><a href="login">Admin</a></li>
-	            <li><a href="getallpaths">URL Access</a></li>
-	            <li><a href="uploadadd">Upload Advertise</a></li>
-	            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#ajax-modal">Class List</a></li>
+	            <li><a class="menuoptions" href="login">Admin</a></li>
+	            <li><a class="menuoptions" href="getallpaths">URL Access</a></li>
+	            <li><a class="menuoptions" href="uploadadd">Upload Advertise</a></li>
+	            <li><a class="menuoptions" href="javascript:void(0)" data-toggle="modal" data-target="#ajax-modal">Class List</a></li>
           	</ul>
       </li>
     <%}if(userBean.getRole() < 2 || userBean.getRole() == 10){ %>  
@@ -69,11 +69,11 @@ siteMapApp.controller("SiteMapController",function($scope){
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Manage <b class="caret"></b></a>
       		<ul class="dropdown-menu">
-      			<li><a href="addsubject">Manage Subject</a></li>
-      			<li><a href="manageclass">Manage Class</a></li>
-	            <li><a href="managestudent">Manage Student</a></li>
-	            <li><a href="manageteacher">Manage Teacher</a></li>
-	            <li><a href="managebatch">Manage Batch</a></li>
+      			<li><a class="menuoptions" href="addsubject">Manage Subject</a></li>
+      			<li><a class="menuoptions" href="manageclass">Manage Class</a></li>
+	            <li><a class="menuoptions" href="managestudent">Manage Student</a></li>
+	            <li><a class="menuoptions" href="manageteacher">Manage Teacher</a></li>
+	            <li><a class="menuoptions" href="managebatch">Manage Batch</a></li>
 	         </ul>
       </li>
       
@@ -81,9 +81,9 @@ siteMapApp.controller("SiteMapController",function($scope){
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Questions <b class="caret"></b></a>
       		<ul class="dropdown-menu">
-	            <li><a href="choosesubject?forwardAction=listquestionbankquestionaction">Add Questions</a></li>
-	            <li><a href="subjectchooseaction?successaction=editexam">Search/Edit Questions</a></li>
-	            <li><a href="searchexamnonstudent">Attempt Exam</a></li>
+	            <li><a class="menuoptions" href="choosesubject?forwardAction=listquestionbankquestionaction">Add Questions</a></li>
+	            <li><a class="menuoptions" href="subjectchooseaction?successaction=editexam">Search/Edit Questions</a></li>
+	            <li><a class="menuoptions" href="searchexamnonstudent">Attempt Exam</a></li>
 	         </ul>
       </li>
       </cx:versionswitch>
@@ -91,9 +91,10 @@ siteMapApp.controller("SiteMapController",function($scope){
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Exam <b class="caret"></b></a>
       		<ul class="dropdown-menu">
-	            <li><a href="choosesubject?forwardAction=listquestionbankquestionaction">Add Exam</a></li>
-	            <li><a href="choosesubject?forwardAction=listExam">Search Exam</a></li>
-	            <li><a href="choosesubject?forwardAction=attemptexamlist">Attempt Exam</a></li>
+	            <li><a class="menuoptions" href="choosesubject?forwardAction=listquestionbankquestionaction">Add Exam</a></li>
+	            <li><a class="menuoptions" href="choosesubject?forwardAction=manualexam">Add Manual Exam</a></li>
+	            <li><a class="menuoptions" href="choosesubject?forwardAction=listExam">Search Exam</a></li>
+	            <li><a class="menuoptions" href="choosesubject?forwardAction=attemptexamlist">Attempt Exam</a></li>
 	         </ul>
       </li>
       </cx:versionswitch>
@@ -101,8 +102,8 @@ siteMapApp.controller("SiteMapController",function($scope){
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Time Table <b class="caret"></b></a>
       		<ul class="dropdown-menu">
-	            <li><a href="createtimetable">Create Time Table</a></li>
-	            <li><a href="updatetimetable">View & Update Time Table</a></li>
+	            <li><a class="menuoptions" href="createtimetable">Create Time Table</a></li>
+	            <li><a class="menuoptions" href="updatetimetable">View & Update Time Table</a></li>
 	            <!-- <li><a href="showtimetable">See Time Table</a></li>  -->
 	         </ul>
       </li>
@@ -110,13 +111,13 @@ siteMapApp.controller("SiteMapController",function($scope){
 <%--     <cx:versionswitch switchId="3"> --%>
     	<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
     	<ul class="dropdown-menu">
-	            <li><a href="choosesubject?forwardAction=addnotesoption">Add Notes</a></li>
-	            <li><a href="seenotes">See/Update All Notes</a></li>  
+	            <li><a class="menuoptions" href="choosesubject?forwardAction=addnotesoption">Add Notes</a></li>
+	            <li><a class="menuoptions" href="seenotes">See/Update All Notes</a></li>  
 	         </ul>
     	
     	</li>
     <%-- </cx:versionswitch> --%>
-    <li><a href="sendmessage">Send Message</b></a></li>
+    <li><a href="sendmessage" class="menuoptions">Send Message</b></a></li>
     </ul>
 	<ul class="nav navbar-nav navbar-right">
       <li>
@@ -146,8 +147,8 @@ siteMapApp.controller("SiteMapController",function($scope){
 	  <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=userBean.getFirstname() %> <b class="caret"></b></a>
         <ul class="dropdown-menu">
-          <li><a href="edit">Edit</a></li>
-          <li><a href="logout">Logout</a></li>
+          <li><a href="edit" class="menuoptions">Edit</a></li>
+          <li><a href="logout" class="menuoptions">Logout</a></li>
         </ul>
       </li>
     </ul>

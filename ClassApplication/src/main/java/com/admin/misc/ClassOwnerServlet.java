@@ -2080,6 +2080,11 @@ public class ClassOwnerServlet extends HttpServlet{
 			regId = userBean.getRegId();
 		}
 		String divisionId = req.getParameter("divisionId");
+	String institute=	req.getParameter("institute");
+	if(userBean.getRole()==2){
+		regId=Integer.parseInt(institute);
+	}
+	
 		List<Subject> subjects = subjectTransaction.getSubjectRelatedToDiv(Integer.parseInt(divisionId), regId);
 		
 		StringBuilder subjectids=new StringBuilder();
@@ -2116,6 +2121,10 @@ public class ClassOwnerServlet extends HttpServlet{
 		}
 		String divisionId = req.getParameter("divisionId");
 		String subjectid = req.getParameter("subjectId");
+		String institute = req.getParameter("institute");
+		if(userBean.getRole()==2){
+			regId=Integer.parseInt(institute);
+		}
 		BatchTransactions batchTransactions = new BatchTransactions();
 		List<Batch> list = batchTransactions.getbachesrelatedtodivandsubject(subjectid, Integer.parseInt(divisionId), regId);
 		Gson gson = new Gson();
@@ -2186,7 +2195,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				topic_names=topics.get(i).getTopic_name();
 				topic_ids=topics.get(i).getTopic_id()+"";
 			}else{
-				topic_names=topic_names+","+topics.get(i).getTopic_id();
+				topic_names=topic_names+","+topics.get(i).getTopic_name();
 				topic_ids=topic_ids+","+topics.get(i).getTopic_id();
 			}
 		}
@@ -2194,7 +2203,71 @@ public class ClassOwnerServlet extends HttpServlet{
 		respObject.addProperty("topic_ids",topic_ids);
 		respObject.addProperty("topic_names", topic_names);
 		respObject.addProperty(STATUS, "success");
+	}else if("deleteTopics".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId=userBean.getRegId();;
+		String divisionId = req.getParameter("divisionID");
+		String subjectid = req.getParameter("subID");
+		String topicid=req.getParameter("topicid");
+		SubjectTransaction subjectTransaction=new SubjectTransaction();
+		subjectTransaction.deleteTopics(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId),Integer.parseInt(topicid));
+		respObject.addProperty(STATUS, "success");
+	}else if("addTopic".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId=userBean.getRegId();;
+		String divisionId = req.getParameter("divisionID");
+		String subjectid = req.getParameter("subID");
+		String topicname=req.getParameter("topicname");
+		SubjectTransaction subjectTransaction=new SubjectTransaction();
+		boolean status=false;
+		status=	subjectTransaction.isTopicExists(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId),topicname);
+		if(status==true){
+			respObject.addProperty("topicexists", "true");
+		}else{
+			subjectTransaction.addTopic(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId),topicname);
+			respObject.addProperty("topicexists", "");
+		}
+		respObject.addProperty(STATUS, "success");
+	}else if("TopicExists".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId=userBean.getRegId();;
+		String divisionId = req.getParameter("divisionID");
+		String subjectid = req.getParameter("subID");
+		String topicname=req.getParameter("topicname").trim();
+		SubjectTransaction subjectTransaction=new SubjectTransaction();
+		
+		boolean status=false;
+		if(!topicname.equals("")){	
+		status=	subjectTransaction.isTopicExists(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId),topicname);
+		if(status==true){
+			respObject.addProperty("topicexists", "true");
+		}else{
+			respObject.addProperty("topicexists", "");
+		}
+		}else{
+			respObject.addProperty("topicexists", "blank");
+		}
+		
+		respObject.addProperty(STATUS, "success");
+	}else if("edittopic".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId=userBean.getRegId();;
+		String divisionId = req.getParameter("divisionID");
+		String subjectid = req.getParameter("subID");
+		String topicname=req.getParameter("topicname");
+		String topicid=req.getParameter("edittopicid");
+		SubjectTransaction subjectTransaction=new SubjectTransaction();
+		boolean status=false;
+		status=	subjectTransaction.isEditTopicExists(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId),topicname,Integer.parseInt(topicid));
+		if(status==true){
+			respObject.addProperty("topicexists", "true");
+		}else{
+			subjectTransaction.updateTopic(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId),topicname,Integer.parseInt(topicid));
+			respObject.addProperty("topicexists", "");
+		}
+		respObject.addProperty(STATUS, "success");
 	}
+		
 		printWriter.write(respObject.toString());
 	}
 	
@@ -2326,6 +2399,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		}
 		return true;
 	}
+	
 	
 /*	public void test() {
 		try {

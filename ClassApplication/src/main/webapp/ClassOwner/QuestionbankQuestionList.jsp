@@ -147,8 +147,17 @@ function resetForm(){
 </script>
 </head>
 <body>
-
-			<a type="button" class="btn btn-primary" href="choosesubject?forwardAction=listquestionbankquestionaction" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Back</a>
+			<div class="container" style="margin-bottom: 5px">
+			<c:choose>
+			<c:when test="${institute ne null }">
+			<a type="button" class="btn btn-primary" href="teachercommoncomponent?forwardAction=searchQuestion" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
+			</c:when>
+			<c:otherwise>
+			<a type="button" class="btn btn-primary" href="choosesubject?forwardAction=listquestionbankquestionaction" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
+			</c:otherwise>
+			</c:choose>
+			</div>
+			<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
 			<div class="btn-group" role="group" aria-label="..." style="width:90%">
 			<form action="" id="uploadform" method="post">
 			<input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
@@ -201,6 +210,7 @@ function resetForm(){
   <input type="hidden" name="searchedRep" value='<c:out value="${searchedRep}"></c:out>'>
   <input type="hidden" name="questionNumber" id="questionNumber" value='<c:out value="${questionNumber}"></c:out>'>
   <input type="hidden" name="actionname" id="actionname">
+  <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
   </form>
   <form action="paginateQuestion" id="paginateform">
   <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
@@ -211,6 +221,7 @@ function resetForm(){
   <input type="hidden" name="searchedMarks" value='<c:out value="${searchedMarks}"></c:out>'>
   <input type="hidden" name="searchedExam" value='<c:out value="${searchedExam}"></c:out>'>
   <input type="hidden" name="searchedRep" value='<c:out value="${searchedRep}"></c:out>'>
+  <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
   <ul class="pagination">
   <li><a class="start" >&laquo;</a></li>
   <c:forEach var="item" begin="1" end="${totalPages}">
@@ -241,6 +252,7 @@ function resetForm(){
 		<input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
 			<input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
 			<input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
+			<input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
 		<div class="form-group">
 		<label for="exampleInputEmail1">Search word</label>
           <input type="text" placeholder="Search word" class="form-control"/>

@@ -1,4 +1,4 @@
-package com.notes;
+package com.commoncomponent.actions;
 
 import java.util.List;
 import java.util.Map;
@@ -14,11 +14,8 @@ import com.transaction.register.RegisterTransaction;
 import com.transaction.teacher.TeacherTransaction;
 import com.user.UserBean;
 
-public class AddTeacherNotesOptionAction extends BaseAction{
-	private String division;
-	private String subject;
-	private String batch;
-	private String institute;
+public class TeacherCommonComponentAction extends BaseAction{
+	String forwardAction;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -36,29 +33,11 @@ public class AddTeacherNotesOptionAction extends BaseAction{
 		
 		return SUCCESS;
 	}
-	public String getDivision() {
-		return division;
+	public String getForwardAction() {
+		return forwardAction;
 	}
-	public void setDivision(String division) {
-		this.division = division;
-	}
-	public String getSubject() {
-		return subject;
-	}
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-	public String getBatch() {
-		return batch;
-	}
-	public void setBatch(String batch) {
-		this.batch = batch;
-	}
-	public String getInstitute() {
-		return institute;
-	}
-	public void setInstitute(String institute) {
-		this.institute = institute;
+	public void setForwardAction(String forwardAction) {
+		this.forwardAction = forwardAction;
 	}
 	
 	

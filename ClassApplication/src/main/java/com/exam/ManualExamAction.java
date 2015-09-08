@@ -1,18 +1,23 @@
-package com.corex.exam;
+package com.exam;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.exam.CompExam;
+import com.classapp.db.exam.Exam;
 
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.subject.Subject;
@@ -26,7 +31,7 @@ import com.transaction.exams.ExamTransaction;
 import com.transaction.questionbank.QuestionBankTransaction;
 import com.user.UserBean;
 
-public class SearchQuestionAction extends BaseAction{
+public class ManualExamAction extends BaseAction{
 	String division,batch,subject;
 	List<CompExam> compExams;
 	List<Integer> marks;
@@ -44,6 +49,12 @@ public class SearchQuestionAction extends BaseAction{
 	String searchedRep;
 	String questionedit;
 	String actionname;
+	List<Integer> questionIds;
+	String addedIds;
+	String removedIds;
+	int totalmarks;
+	int noofquestions;
+	String forwardhref;
 	String institute;
 	@Override
 	public String performBaseAction(UserBean userBean,
@@ -56,12 +67,36 @@ public class SearchQuestionAction extends BaseAction{
 			userStatic.setStorageSpace(storagePath);
 			inst_id=Integer.parseInt(institute);
 		}
+		HashMap<Integer, String> questionIdsMap=(HashMap<Integer, String>) session.get("questionsIds");
+		if(questionIdsMap==null){
+			questionIdsMap=new HashMap<Integer, String>();
+		}
+		if(!"".equals(addedIds) && addedIds !=null){
+			String addedIdsarr[]=addedIds.split(",");
+					for (int i = 0; i < addedIdsarr.length; i++) {
+						if (!addedIdsarr[i].equals("")) {
+							questionIdsMap.put(Integer.parseInt(addedIdsarr[i]), addedIdsarr[i]);
+						}
+					}
+		}
+		
+		if(!"".equals(removedIds) && removedIds != null){
+			String removedIdsarr[]=removedIds.split(",");
+					for (int i = 0; i < removedIdsarr.length; i++) {
+						if (!removedIdsarr[i].equals("")) {
+							questionIdsMap.remove(Integer.parseInt(removedIdsarr[i]));
+						}
+					}
+		}
+		
+		session.put("questionsIds",questionIdsMap);
+		noofquestions=questionIdsMap.size();
 		ExamTransaction examTransaction=new ExamTransaction();
 		QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
 		compExams=examTransaction.getAllCompExamList();
 		marks=bankTransaction.getDistinctQuestionMarks(Integer.parseInt(subject), Integer.parseInt(division), inst_id);
 		repeatation=bankTransaction.getDistinctQuestionRep(Integer.parseInt(subject), Integer.parseInt(division), inst_id);
-		if(!"cancleuploading".equals(actionname)){
+		if("advancesearch".equals(actionname)){
 		SubjectTransaction subjectTransaction=new SubjectTransaction();
 		Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
 		if(subbean!=null){
@@ -110,19 +145,139 @@ public class SearchQuestionAction extends BaseAction{
 		String questionPath = "";
 		if(questionbanks!=null)
 		{
+			questionIds=new ArrayList<Integer>();
 			questionDataList=new ArrayList<QuestionData>();
 			for (int i = 0; i < questionbanks.size(); i++) {
 				questionPath=userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionbanks.get(i).getQue_id();
+				if (questionIdsMap.containsKey(questionbanks.get(i).getQue_id())) {
+					questionIds.add(1);
+				}else {
+					questionIds.add(0);
+				}
 				QuestionData questionData=(QuestionData) readObject(new File(questionPath));
 				questionDataList.add(questionData);
 			}
 		}
 		
+		}else if("showaddedquestions".equals(actionname)){
+			SubjectTransaction subjectTransaction=new SubjectTransaction();
+			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
+			if(subbean!=null){
+				subjectname=subbean.getSubjectName();
+			}
+			DivisionTransactions divisionTransactions=new DivisionTransactions();
+			Division divbean= divisionTransactions.getDidvisionByID(Integer.parseInt(division));
+			if(divbean!=null){
+				divisionName=divbean.getDivisionName();
+			}
+			if(questionIdsMap!=null){
+				questionDataList=new ArrayList<QuestionData>();
+				UserStatic userStatic = userBean.getUserStatic();
+				String questionPath = "";
+				//Set<Integer> keys=questionIdsMap.keySet();
+				for (Integer key:questionIdsMap.keySet()) {
+					questionPath=userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionIdsMap.get(key);
+					QuestionData questionData=(QuestionData) readObject(new File(questionPath));
+					questionDataList.add(questionData);
+				}
+			}
+			currentPage=0;
+		}else if("createexam".equals(actionname)){
+			
+		}else if("submitexam".equals(actionname)){
+			if(questionIdsMap!=null){
+				questionIds=new ArrayList<Integer>();
+				for (Integer key:questionIdsMap.keySet()) {
+					questionIds.add(key);
+				}
+				
+				List<Integer> ansIdsList=bankTransaction.getQuestionMarks(inst_id, Integer.parseInt(subject), Integer.parseInt(division), questionIds);
+				String ansIds="";
+				if (ansIdsList!=null) {
+					for (int i = 0; i < ansIdsList.size(); i++) {
+						if(i==0){
+							ansIds=ansIdsList.get(i)+"";
+						}else{
+							ansIds=ansIds+","+ansIdsList.get(i);
+						}
+					}
+				}
+				Exam exam=new Exam();
+				//examTransaction
+			}
+		}else if("autosubmit".equals(actionname)){
+			session.put("questionsIds",null);
+			return "autosubmit";
+		}else{
+
+			SubjectTransaction subjectTransaction=new SubjectTransaction();
+			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
+			if(subbean!=null){
+				subjectname=subbean.getSubjectName();
+			}
+			DivisionTransactions divisionTransactions=new DivisionTransactions();
+			Division divbean= divisionTransactions.getDidvisionByID(Integer.parseInt(division));
+			if(divbean!=null){
+				divisionName=divbean.getDivisionName();
+			}
+			if(currentPage==0){
+				searchedExam=selectedExamID;
+				searchedMarks=selectedMarks;
+				searchedRep=selectedRep;
+			}
+			
+			if(currentPage==0){
+				int totalCount=bankTransaction.getTotalSearchedQuestionCount(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division));
+				if(totalCount>0){
+					int remainder=totalCount%2;
+					totalPages=totalCount/2;
+					if(remainder>0){
+						totalPages++;
+					}
+				}	
+				currentPage=1;
+				}
+				if("true".equals(questionedit)){
+					int totalCount=bankTransaction.getTotalSearchedQuestionCount(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division));
+					if(totalCount>0){
+						int remainder=totalCount%2;
+						totalPages=totalCount/2;
+						if(remainder>0){
+							totalPages++;
+						}
+					}else{
+						totalPages=0;
+					}	
+				}
+				if(totalPages<currentPage){
+					currentPage--;
+				}
+			
+			List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage);
+			UserStatic userStatic = userBean.getUserStatic();
+			String questionPath = "";
+			if(questionbanks!=null)
+			{
+				questionIds=new ArrayList<Integer>();
+				questionDataList=new ArrayList<QuestionData>();
+				for (int i = 0; i < questionbanks.size(); i++) {
+					questionPath=userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionbanks.get(i).getQue_id();
+					if (questionIdsMap.containsKey(questionbanks.get(i).getQue_id())) {
+						questionIds.add(1);
+					}else {
+						questionIds.add(0);
+					}
+					QuestionData questionData=(QuestionData) readObject(new File(questionPath));
+					questionDataList.add(questionData);
+				}
+			}
+			
+			actionname="";
 		}
 		if(userBean.getRole()==2){
-			return "teacherquestionsearch";
+			return "teachermanualexam";
 		}
-		return SUCCESS;
+		return "addmanualexam";
 	}
 	
 	private Object readObject(File file) {
@@ -275,6 +430,54 @@ public class SearchQuestionAction extends BaseAction{
 
 	public void setActionname(String actionname) {
 		this.actionname = actionname;
+	}
+
+	public List<Integer> getQuestionIds() {
+		return questionIds;
+	}
+
+	public void setQuestionIds(List<Integer> questionIds) {
+		this.questionIds = questionIds;
+	}
+
+	public String getAddedIds() {
+		return addedIds;
+	}
+
+	public void setAddedIds(String addedIds) {
+		this.addedIds = addedIds;
+	}
+
+	public String getRemovedIds() {
+		return removedIds;
+	}
+
+	public void setRemovedIds(String removedIds) {
+		this.removedIds = removedIds;
+	}
+
+	public int getTotalmarks() {
+		return totalmarks;
+	}
+
+	public void setTotalmarks(int totalmarks) {
+		this.totalmarks = totalmarks;
+	}
+
+	public int getNoofquestions() {
+		return noofquestions;
+	}
+
+	public void setNoofquestions(int noofquestions) {
+		this.noofquestions = noofquestions;
+	}
+
+	public String getForwardhref() {
+		return forwardhref;
+	}
+
+	public void setForwardhref(String forwardhref) {
+		this.forwardhref = forwardhref;
 	}
 
 	public String getInstitute() {

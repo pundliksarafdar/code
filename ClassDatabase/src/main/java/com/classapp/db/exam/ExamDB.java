@@ -179,7 +179,7 @@ public class ExamDB {
 		return  true;
 	}
 	
-	public List<Exam> getExamList(int inst_id,int sub_id,int div_id,String exam_status,int currentPage) {
+	public List<Exam> getExamList(int inst_id,int sub_id,int div_id,String exam_status,int currentPage,String batchid) {
 		Exam exam=new Exam();
 		Transaction transaction=null;
 		Session session=null;
@@ -202,6 +202,11 @@ public class ExamDB {
 		}
 		if (currentPage!=1 && currentPage!=0) {
 			criteria.setFirstResult((currentPage-1)*2);
+		}
+		if(!"-1".equals(batchid)){
+			
+			criterion=Restrictions.or(Restrictions.like("batch_id", batchid+",%"),Restrictions.like("batch_id","%,"+batchid),Restrictions.like("batch_id", "%,"+batchid+",%"),Restrictions.eq("batch_id", batchid));
+			criteria.add(criterion);
 		}
 		criteria.setMaxResults(2);
 		List<Exam> examList = criteria.list();
@@ -239,7 +244,7 @@ public class ExamDB {
 		return  examList;
 	}
 	
-	public int getExamListCount(int inst_id,int sub_id,int div_id,String exam_status) {
+	public int getExamListCount(int inst_id,int sub_id,int div_id,String exam_status,String batchid) {
 		Exam exam=new Exam();
 		Transaction transaction=null;
 		Session session=null;
@@ -258,6 +263,11 @@ public class ExamDB {
 		}
 		if(exam_status!="-1"){
 			criterion = Restrictions.eq("exam_status", exam_status);
+			criteria.add(criterion);
+		}
+		if(!"-1".equals(batchid)){
+			
+			criterion=Restrictions.or(Restrictions.like("batch_id", batchid+",%"),Restrictions.like("batch_id","%,"+batchid),Restrictions.like("batch_id", "%,"+batchid+",%"),Restrictions.eq("batch_id", batchid));
 			criteria.add(criterion);
 		}
 		long examListCount =  (Long) criteria.uniqueResult();

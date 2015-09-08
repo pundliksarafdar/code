@@ -209,7 +209,7 @@
 	</definition>
 	<definition name="notes.teachernotes" extends="baseLayout">
 		<put-attribute name="title" value="Add Notes Success" />
-		<put-attribute name="body" value="/Notes/AddTeacherNotesSuccess.jsp" />
+		<put-attribute name="body" value="/Notes/AddTeacherNotes.jsp" />
 	</definition>
 	<definition name="notes.seeteachernotes" extends="baseLayout">
 		<put-attribute name="title" value="See Notes " />
@@ -235,16 +235,25 @@
       <put-attribute name="topnav" value="/teacher/menu.jsp" />
       <put-attribute name="body"   value="/teacher/TeacherTimeTable.jsp"/>      
    </definition>
+   <definition name="teacher.commoncomponent" extends="baseLayout">
+      <put-attribute name="title"  value="Add Notes"/>
+      <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/Notes/teachercommoncomponent.jsp"/>      
+   </definition>
    <definition name="notes.addteachernotesoption" extends="baseLayout">
       <put-attribute name="title"  value="Add Notes"/>
       <put-attribute name="topnav" value="/teacher/menu.jsp" />
       <put-attribute name="body"   value="/Notes/AddTeacherNotes.jsp"/>      
    </definition>
-   
    <definition name="student.studentnotes" extends="baseLayout">
       <put-attribute name="title"  value="Student Notes"/>
       <put-attribute name="topnav" value="/student/menu.jsp" />
       <put-attribute name="body"   value="/student/StudentsNotes.jsp"/>      
+   </definition>
+   <definition name="student.commoncomponent" extends="baseLayout">
+      <put-attribute name="title"  value="Student Notes"/>
+      <put-attribute name="topnav" value="/student/menu.jsp" />
+      <put-attribute name="body"   value="/commoncomponent/studentcommoncomponent.jsp"/>      
    </definition>
    <definition name="timetable.showtimetable" extends="baseLayout">
 		<put-attribute name="title" value="Time Table" />
@@ -308,7 +317,11 @@
 		<put-attribute name="title" value="Start Uploading Exam" />
 		<put-attribute name="body" value="/ClassOwner/startuploadingexam.jsp" />
 	</definition>
-	
+	<definition name="teacher.teacheraddquestion" extends="baseLayout">
+		<put-attribute name="title" value="Start Uploading Exam" />
+		<put-attribute name="topnav" value="/teacher/menu.jsp" />
+		<put-attribute name="body" value="/ClassOwner/startuploadingexam.jsp" />
+	</definition>
 	<definition name="classowner.questioneditsuccess" extends="baseLayout">
 		<put-attribute name="title" value="Start Uploading Exam" />
 		<put-attribute name="body" value="/ClassOwner/QuestionEditSuccess.jsp" />
@@ -332,6 +345,12 @@
 	<definition name="classowner.attemptexamlist" extends="baseLayout">
 		<put-attribute name="title" value="Choose Subject" />
 		<put-attribute name="body" value="/ClassOwner/AttemptExamList.jsp" />
+	</definition>
+	
+	<definition name="student.studentexamlist" extends="baseLayout">
+		<put-attribute name="title" value="Choose Subject" />
+		<put-attribute name="topnav" value="/student/menu.jsp" />
+		<put-attribute name="body" value="/student/StudentChooseExam.jsp" />
 	</definition>
 	
 	 <definition name="classowner.attemptexam" extends="NoLinkBaseLayout">
@@ -370,7 +389,13 @@
       <put-attribute name="title"  value="Choose Subject"/>
       <put-attribute name="body"   value="/ClassOwner/QuestionbankQuestionList.jsp"/>      
    </definition>
-	
+
+   <definition name="teacher.teacherquestionsearch" extends="baseLayout">
+      <put-attribute name="title"  value="Choose Subject"/>
+      <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/ClassOwner/QuestionbankQuestionList.jsp"/>      
+   </definition>
+
 	<definition name="classowner.examcriteria" extends="baseLayout">
       <put-attribute name="title"  value="Criteria"/>
       <put-attribute name="body"   value="/ClassOwner/ExamCriteria.jsp"/>      
@@ -380,5 +405,17 @@
       <put-attribute name="title"  value="Criteria"/>
       <put-attribute name="body"   value="/ClassOwner/AddTopics.jsp"/>      
    </definition>
-   
+   <definition name="classowner.addmanualexam" extends="baseLayout">
+      <put-attribute name="title"  value="Manual Exam"/>
+      <put-attribute name="body"   value="/ClassOwner/AddManualExam.jsp"/>      
+   </definition>
+   <definition name="classowner.autosubmit" extends="baseLayout">
+      <put-attribute name="title"  value="Manual Exam"/>
+      <put-attribute name="body"   value="/ClassOwner/AutoSubmit.jsp"/>      
+   </definition>
+	<definition name="teacher.teachermanualexam" extends="baseLayout">
+      <put-attribute name="title"  value="Manual Exam"/>
+      <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/ClassOwner/AddManualExam.jsp"/>      
+   </definition>
 </tiles-definitions>

@@ -47,11 +47,11 @@
        <li><a href="studenttimetable">Time Table</a></li>
     <%}%>      
      <%-- <cx:versionswitch switchId="3"> --%>
-    <li><a href="studentnotes">Notes</a></li>
+    <li><a href="studentcommoncomponent?forwardAction=studentnotes">Notes</a></li>
     <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Exam<b class="caret"></b></a>
       		<ul class="dropdown-menu">
-	            <li><a href="studentchoosesubject?successforward=studentchooseexam">Solve Exam</a></li>
+	            <li><a href="studentcommoncomponent?forwardAction=attemptexamlist">Solve Exam</a></li>
           	</ul>
       </li>
     <%-- </cx:versionswitch> --%>

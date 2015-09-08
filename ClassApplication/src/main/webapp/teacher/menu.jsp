@@ -48,11 +48,24 @@
    
    <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
     	<ul class="dropdown-menu">
-	            <li><a href="addteachernotesoption">Add Notes</a></li>
+	            <li><a href="teachercommoncomponent?forwardAction=addteachernotesoption">Add Notes</a></li>
 	            <li><a href="seeteachernotes">See/Update Notes</a></li>  
 	     </ul>
-    
+  </li>
+    <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Question <b class="caret"></b></a>
+    	<ul class="dropdown-menu">
+	            <li><a href="teachercommoncomponent?forwardAction=uploadexams">Add Questions</a></li>
+	            <li><a href="teachercommoncomponent?forwardAction=searchQuestion">Search Question</a></li>  
+	     </ul>
+   </li>
+	<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Exam <b class="caret"></b></a>
+    	<ul class="dropdown-menu">
+	            <li><a href="teachercommoncomponent?forwardAction=manualexam">Add Manual Exam</a></li>
+	            <li><a href="teachercommoncomponent?forwardAction=searchQuestion">Search Exam</a></li>  
+	     </ul>
+   </li>     
     </ul>
+    
     <ul class="nav navbar-nav navbar-right">
     <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-phone-alt"></i> <b class="caret"></b></a>

@@ -443,6 +443,22 @@ public String getschedulesubject(int subjectid) {
 		return  topicList;
 	}
 	
+	public boolean deleteTopics(int inst_id,int sub_id,int div_id,int topicid) {
+		Topics topic=new Topics();
+		topic.setTopic_id(topicid);
+		topic.setInst_id(inst_id);
+		topic.setDiv_id(div_id);
+		topic.setSub_id(sub_id);
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		session.delete(topic);
+		transaction.commit();
+		session.close();
+		return  true;
+	}
+	
 	public boolean saveorupdateTopic(Topics topic) {
 		Transaction transaction=null;
 		Session session=null;
@@ -452,5 +468,88 @@ public String getschedulesubject(int subjectid) {
 		transaction.commit();
 		session.close();
 		return  true;
+	}
+	
+	public int getNextTopicID(int inst_id,int div_id,int sub_id) {
+		Transaction transaction=null;
+		Session session=null;
+		List<Integer> list = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("select max(topic_id)+1 from Topics where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("sub_id", sub_id);
+			list = query.list();
+			if(list!=null){
+				return list.get(0);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}
+	return 1;
+	}
+	
+	public boolean isTopicExists(int inst_id,int div_id,int sub_id,String topic_name) {
+		Transaction transaction=null;
+		Session session=null;
+		List<Integer> list = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from Topics where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and topic_name=:topic_name");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("sub_id", sub_id);
+			query.setParameter("topic_name", topic_name);
+			list = query.list();
+			if(list!=null){
+				if (list.size()>0) {
+					return true;	
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}
+	return false;
+	}
+	
+	public boolean isEditTopicExists(int inst_id,int div_id,int sub_id,String topic_name,int topicid) {
+		Transaction transaction=null;
+		Session session=null;
+		List<Integer> list = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from Topics where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and topic_name=:topic_name and topic_id != :topic_id");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("sub_id", sub_id);
+			query.setParameter("topic_name", topic_name);
+			query.setParameter("topic_id", topicid);
+			
+			list = query.list();
+			if(list!=null){
+				if (list.size()>0) {
+					return true;	
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}
+	return false;
 	}
 }

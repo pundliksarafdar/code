@@ -24,6 +24,7 @@ import com.classapp.db.question.Questionbank;
 import com.classapp.db.subject.Subject;
 import com.classapp.login.UserStatic;
 import com.config.BaseAction;
+import com.config.Constants;
 import com.datalayer.exam.ExamData;
 import com.datalayer.exam.QuestionData;
 import com.tranaction.subject.SubjectTransaction;
@@ -47,12 +48,22 @@ public class UploadExamsAction extends BaseAction{
 	String searchedMarks;
 	String searchedExam;
 	String searchedRep;
+	String institute;
 	
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
-		
+		int inst_id=userBean.getRegId();
+		if(institute!=null && !"".equals(institute)){
+			UserStatic userStatic = userBean.getUserStatic();
+			String storagePath = Constants.STORAGE_PATH+File.separator+institute;
+			userStatic.setStorageSpace(storagePath);
+			inst_id=Integer.parseInt(institute);
+		}
 		if(null == actionname){
 			actionname="submitquestions";
+			if(userBean.getRole()==2){
+				return "teacheraddquestion";
+			}
 			return "startuploadingexam";
 		}else if("submitquestions".equals(actionname)){
 			/*if(null != request.getSession().getAttribute("questionNumber")){
@@ -61,8 +72,9 @@ public class UploadExamsAction extends BaseAction{
 				questionNumber = 0;
 			}*/
 			QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
+			
 			if("submitquestions".equals(actionname)){
-			questionNumber=bankTransaction.getNextQuestionID(userBean.getRegId(),Integer.parseInt(subject), Integer.parseInt(division));
+			questionNumber=bankTransaction.getNextQuestionID(inst_id,Integer.parseInt(subject), Integer.parseInt(division));
 			}
 			SubjectTransaction subjectTransaction=new SubjectTransaction();
 			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
@@ -90,7 +102,9 @@ public class UploadExamsAction extends BaseAction{
 			questionData.setQuestion(question);
 			questionData.setQuestionNumber(questionNumber);
 			String result = "startuploadingexam";
-		
+			if(userBean.getRole()==2){
+				result= "teacheraddquestion";
+			}
 			//Create separate file for each question and join them in the save and submit
 			UserStatic userStatic = userBean.getUserStatic();
 			String examPath = userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionNumber;
@@ -107,7 +121,7 @@ public class UploadExamsAction extends BaseAction{
 			questionbank.setCreated_dt(new Date(2015, 7, 13));
 			questionbank.setDiv_id(Integer.parseInt(division));
 			questionbank.setExam_rep("1");
-			questionbank.setInst_id(userBean.getRegId());
+			questionbank.setInst_id(inst_id);
 			questionbank.setMarks(questionmarks);
 			questionbank.setQue_id(questionNumber);
 			questionbank.setRep(0);
@@ -149,6 +163,9 @@ public class UploadExamsAction extends BaseAction{
 			request.setAttribute("questionData", questionData);
 			actionname="SavenSubmit";
 			String result = "startuploadingexam";
+			if(userBean.getRole()==2){
+				result= "teacheraddquestion";
+			}
 			return result;
 		}else if("SavenSubmit".equals(actionname)){
 			SubjectTransaction subjectTransaction=new SubjectTransaction();
@@ -188,7 +205,7 @@ public class UploadExamsAction extends BaseAction{
 			}
 			writeObject(examPath, questionData);
 			QuestionBankTransaction questionBankTransaction=new QuestionBankTransaction();
-			Questionbank questionbank=questionBankTransaction.getQuestion(questionNumber, userBean.getRegId(),Integer.parseInt(subject), Integer.parseInt(division));
+			Questionbank questionbank=questionBankTransaction.getQuestion(questionNumber, inst_id,Integer.parseInt(subject), Integer.parseInt(division));
 			questionbank.setAns_id(answersOptionCheckBox.toString());
 			questionbank.setMarks(questionmarks);
 			questionBankTransaction.saveQuestion(questionbank);
@@ -220,7 +237,7 @@ public class UploadExamsAction extends BaseAction{
 				}
 			}
 			QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
-			bankTransaction.deleteQuestion(questionNumber, userBean.getRegId(), Integer.parseInt(subject), Integer.parseInt(division));
+			bankTransaction.deleteQuestion(questionNumber, inst_id, Integer.parseInt(subject), Integer.parseInt(division));
 			
 			return "questiondelete";
 		}else if("cancleuploading".equals(actionname)){
@@ -539,6 +556,14 @@ public class UploadExamsAction extends BaseAction{
 
 	public void setSearchedRep(String searchedRep) {
 		this.searchedRep = searchedRep;
+	}
+
+	public String getInstitute() {
+		return institute;
+	}
+
+	public void setInstitute(String institute) {
+		this.institute = institute;
 	}
 	
 	

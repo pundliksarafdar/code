@@ -32,7 +32,7 @@ public class AddNotesAction extends BaseAction{
 	   private String validforbatch;
 	   private String allbatches;
 	   private String classes;
-	   
+	   private String institute;
 	public String getClasses() {
 		return classes;
 	}
@@ -73,8 +73,8 @@ public class AddNotesAction extends BaseAction{
 	      destPath=  ServletActionContext.getServletContext().getRealPath("/"+userBean.getRegId())+"/Notes/"+division+"/"+subject+"/";
 	      String DBPAth=userBean.getRegId()+"/Notes/"+division+"/"+subject+"/";
 	      if(userBean.getRole()==2){
-	    	  destPath=  ServletActionContext.getServletContext().getRealPath("/"+classes)+"/Notes/"+division+"/"+subject+"/";
-		       DBPAth=classes+"/Notes/"+division+"/"+subject+"/";
+	    	  destPath=  ServletActionContext.getServletContext().getRealPath("/"+institute)+"/Notes/"+division+"/"+subject+"/";
+		       DBPAth=institute+"/Notes/"+division+"/"+subject+"/";
 	      }
 	      
 	      
@@ -85,7 +85,7 @@ public class AddNotesAction extends BaseAction{
 	     	 File destFile  = new File(destPath, myFileFileName);
 	    	 FileUtils.copyFile(myFile, destFile);
 	    	 if(userBean.getRole()==2){
-	    		 notes.setClassid(Integer.parseInt(classes));
+	    		 notes.setClassid(Integer.parseInt(institute));
 	    	 }else{
 	    	 notes.setClassid(userBean.getRegId());
 	    	 }
@@ -159,5 +159,12 @@ public class AddNotesAction extends BaseAction{
 	public void setDivision(String division) {
 		this.division = division;
 	}
+	public String getInstitute() {
+		return institute;
+	}
+	public void setInstitute(String institute) {
+		this.institute = institute;
+	}
+	
 	
 }

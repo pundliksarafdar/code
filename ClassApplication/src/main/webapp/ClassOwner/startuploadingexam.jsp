@@ -102,7 +102,16 @@ $(document).ready(function(){
   </div>
 </div>
 <div>
+<c:choose>
+<c:when test="${(institute != null) && (currentPage eq 0)}">
+<a type="button" class="btn btn-primary" href="teachercommoncomponent?forwardAction=uploadexams" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Back</a>
+</c:when>
+<c:when test="${(institute == null) && (currentPage eq 0)}"></c:when>
+<c:when test="${(institute != null) && (currentPage ne 0)}"></c:when>
+<c:otherwise>
 <a type="button" class="btn btn-primary" href="choosesubject?forwardAction=listquestionbankquestionaction" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Back</a>
+ </c:otherwise>
+ </c:choose>
  <form action="uploadexams" method="post" enctype="multipart/form-data" id="uploadexams" >
  <input type="hidden" id="batch" name="batch" value="<c:out value="${batch}" ></c:out>">
 <input type="hidden" id="division" name="division" value="<c:out value="${division}" ></c:out>">
@@ -117,6 +126,7 @@ $(document).ready(function(){
 	<input type="hidden" name="actionname" value='<c:out value="${actionname }"></c:out>' id="actionname"/>
 	<input type="hidden" name="examname" value="<c:out value="${requestScope.examname}"></c:out>"/>
 	<input type="hidden" name="uploadedMarks" value="<c:out value="${sessionScope.uploadedMarks}"></c:out>"/>
+	<input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
 		<div>
 			<div class="form-group">
 				<label for="examname">Question </label>

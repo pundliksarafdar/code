@@ -3,6 +3,7 @@
 <%@page import="com.classapp.db.subject.Subjects"%>
 <%@page import="java.util.List"%>
 <%@taglib uri="/struts-tags" prefix="s" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -333,6 +334,10 @@ if(notes!=null){
 <%} %>
 
 <form action="upload" method="post" enctype="multipart/form-data" role="form" id="form">
+	<input type="hidden" id="batch" name="batch" value='<c:out value="${batch}" ></c:out>'>
+	<input type="hidden" id="division" name="division" value='<c:out value="${division}" ></c:out>'>
+	<input type="hidden" id="subject" name="subject" value='<c:out value="${subject}" ></c:out>'>
+	<input type="hidden" id="institute" name="institute" value='<c:out value="${institute}" ></c:out>'>
 	<div class="form-group">
 	<label for="notesname"  class="col-sm-4 control-label" align="right">Notes Name :</label>
 	<div class="col-sm-5" align="left">
@@ -353,74 +358,8 @@ if(notes!=null){
       </div>
       </div>
       
-      <div class="form-group">
-	<label for="classes"  class="col-sm-4 control-label" align="right">Select Class :</label> 
-    <div class="col-sm-5" align="left">
-      <select class="form-control" name="classes" id="classes">
-      <option value="-1">Select one</option>
-      <%List<RegisterBean> list=(List<RegisterBean>)request.getAttribute("classes"); 
-      if(list!=null){
-      for(int i=0;i<list.size();i++)
-      {
-      %>
-      <option value="<%=list.get(i).getRegId()%>"><%=list.get(i).getClassName()%></option>
-      <%} }%>
-      </select>
-      </div>
-      <div class="col-sm-2" align="left">
-	<span class="error" id="classerror" name="classerror"></span>
-	</div>
-      </div>
-      
-       <div class="form-group">
-	<label for="subject"  class="col-sm-4 control-label" align="right">Select Subject :</label>
-      <div class="col-sm-5" align="left">
-	<select name="subject" class="form-control" id="subject">
-      <option value="-1">Select one</option>
-      </select>
-  	</div>
-  	<div class="col-sm-2" align="left">
-	<span class="error" id="subjecterror" name="subjecterror"></span>
-	</div>
-  	</div>
-      
-      <div class="form-group">
-	<label for="division"  class="col-sm-4 control-label" align="right">Select Division :</label>
-      <div class="col-sm-5" align="left">
-	<select name="division" class="form-control" id="division">
-      <option value="-1">Select one</option>
-      </select>
-  	</div>
-  	<div class="col-sm-2" align="left">
-	<span class="error" id="divisionerror" name="divisionerror"></span>
-	</div>
-  	</div>
-  	<br>
-  	<div class="form-group">
-  	<label for="division"  class="col-sm-4 control-label" align="right">This Notes is applicable for :</label>
-  	<div class="col-sm-2" align="left">
-  	 <input type="radio" name="validforbatch" value="all" checked="checked" id="validforbatch">All batches
-  	 <input type="hidden" name="allbatches" id="allbatches"> 
-  	 </div>
-  	 <div class="col-sm-6" align="left">
-  	  <input type="radio" name="validforbatch" value="specific" id="validforbatch">If you want to restrict the access of this notes to specific batches then use this multi-select
-     </div>
-     </div>
-     <br>  	
-  	 <div class="form-group" style="display: none" id="batchdiv">
-  	  <label for="role"  class="col-sm-4 control-label" align="right">Select Batch</label>
-  	<div class="col-sm-5 div" align="left" >
-  	<fieldset id="fieldset" style="border: 1em;">
-  	</fieldset>
-     <%--  <select id="batch" name="batch" class="form-control" multiple="multiple" disabled="disabled">
-      </select> --%>
-      </div>
-      <div class="col-sm-2" align="left">
-	<span class="error" id="batcherror" name="batcherror"></span>
-	</div>
-     </div>
-  	  <div class="form-group">
-  	  <label for="role"  class="col-sm-4 control-label"></label>
+     <div class="form-group">
+  	 <label for="role"  class="col-sm-4 control-label"></label>
   	<div class="col-sm-5" align="left">
       <button type="submit" class="btn btn-info" id="submit">Submit</button>
       </div>

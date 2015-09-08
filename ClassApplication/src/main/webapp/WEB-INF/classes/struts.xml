@@ -120,8 +120,14 @@
 			<result name="success" type="tiles">notes.addteachernotesoption</result>
 		</action>
 		
+		<action name="teachercommoncomponent" class="com.commoncomponent.actions.TeacherCommonComponentAction"
+			method="execute">
+			<result name="success" type="tiles">teacher.commoncomponent</result>
+		</action>
+		
 		<action name="upload" class="com.notes.AddNotesAction" method="execute">
 			<result name="success" type="tiles">notes.success</result>
+			<result name="teachernotes" type="tiles">notes.teachernotes</result>
 		</action>
 		<action name="seenotes" class="com.notes.SeeNotesAction"
 			method="execute">
@@ -175,6 +181,7 @@
 			<result name="examlandingpage" type="tiles">classowner.uploadexamcomplete</result>
 			<result name="questioneditsuccess" type="tiles">classowner.questioneditsuccess</result>
 			<result name="cancleuploading" type="tiles">classowner.questioneditsuccess</result>
+			<result name="teacheraddquestion" type="tiles">teacher.teacheraddquestion</result>
 		</action>
 		
 		<action name="uploadExamAction" class="com.classowner.MCQUploadAction">
@@ -199,6 +206,10 @@
 		</action>
 		<action name="studentnotes" class="com.notes.StudentNotesAction">
 			<result name="success" type="tiles">student.studentnotes</result>
+		</action>
+		
+		<action name="studentcommoncomponent" class="com.commoncomponent.actions.StudentCommonComponent">
+			<result name="success" type="tiles">student.commoncomponent</result>
 		</action>
 		
 		<action name="seeteachernotes" class="com.notes.SeeTeacherNotesAction">
@@ -295,10 +306,12 @@
 		
 		<action name="searchQuestion" class="com.corex.exam.SearchQuestionAction" method="execute">
 			<result name="success" type="tiles">classowner.listquestionbankquestion</result>
+			<result name="teacherquestionsearch" type="tiles">teacher.teacherquestionsearch</result>
 			<param name="ignoresession">true</param>
 		</action>
 		<action name="paginateQuestion" class="com.corex.exam.SearchQuestionAction" method="execute">
 			<result name="success" type="tiles">classowner.listquestionbankquestion</result>
+			<result name="teacherquestionsearch" type="tiles">teacher.teacherquestionsearch</result>
 			<param name="ignoresession">true</param>
 		</action>
 		
@@ -323,6 +336,7 @@
 			<result name="startuploadingexam" type="tiles">classowner.startuploadingexam</result>
 			<result name="examlandingpage" type="tiles">classowner.uploadexamcomplete</result>
 			<result name="questioneditsuccess" type="tiles">classowner.questioneditsuccess</result>
+			<result name="teacheraddquestion" type="tiles">teacher.teacheraddquestion</result>
 		</action>
 		
 		<action name="deletequestion" class="com.classowner.UploadExamsAction"
@@ -346,6 +360,7 @@
 		<action name="attemptexamlist" class="com.exam.AttemptExamList"
 			method="execute">
 			<result name="success" type="tiles">classowner.attemptexamlist</result>
+			<result name="studentexamlist" type="tiles">student.studentexamlist</result>
 		</action>
 		
 		<action name="attemptExam" class="com.exam.AttemptExamAction"
@@ -358,6 +373,13 @@
 			method="execute">
 			<result name="addtopicinitiate" type="tiles">classowner.addtopicinitiate</result>
 			<result name="examresult" type="tiles">classowner.examresult</result>
+		</action>
+		
+		<action name="manualexam" class="com.exam.ManualExamAction"
+			method="execute">
+			<result name="addmanualexam" type="tiles">classowner.addmanualexam</result>
+			<result name="autosubmit" type="tiles">classowner.autosubmit</result>
+			<result name="teachermanualexam" type="tiles">teacher.teachermanualexam</result>
 		</action>
 	</package>
 </struts>

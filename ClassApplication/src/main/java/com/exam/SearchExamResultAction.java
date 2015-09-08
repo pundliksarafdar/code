@@ -24,7 +24,7 @@ public class SearchExamResultAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
 		ExamTransaction examTransaction = new ExamTransaction();
-		int totalCount=examTransaction.getExamCount(1, 11, 111, "-1");
+		int totalCount=examTransaction.getExamCount(1, 11, 111, "-1",batch);
 		if(totalCount>0){
 			int remainder=totalCount%2;
 			totalPages=totalCount/2;
@@ -40,7 +40,7 @@ public class SearchExamResultAction extends BaseAction {
 		if(currentPage==0){
 			currentPage++;
 		}
-		examlist=examTransaction.getExam(1, 11, 111, "-1",currentPage);
+		examlist=examTransaction.getExam(1, 11, 111, "-1",currentPage,batch);
 		return SUCCESS;
 	}
 	public String getBatch() {

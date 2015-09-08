@@ -2,7 +2,7 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -12,7 +12,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		
-		$("#submit").click(function(){
+		$("#submitbtn").click(function(){
 			var classid=$("#classnameselect").val();
 			var batch = $("#batch").val();
 			var subject = $("#subject").val();
@@ -33,7 +33,8 @@
 				flag=false;
 			}
 			if(flag==true){
-			$.ajax({
+				$("#commonform")[0].submit();
+			/* $.ajax({
 				   url: "classOwnerServlet",
 				    data: {
 				    	 methodToCall: "getstudentnotes",
@@ -70,7 +71,7 @@
 				   error:function(data){
 					   alert("error");
 				   }
-			});
+			}); */
 			}
 				   
 		});
@@ -157,33 +158,70 @@
 </script>
 </head>
 <body>
-<div class="container">
-<a type="button" class="btn btn-primary" href="studentcommoncomponent?forwardAction=studentnotes" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
-</div>
+
+	<form method="post" action="<c:out value="${forwardAction}" ></c:out>" id="commonform">
+<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+	<div class="row">
+		<div class="alert alert-danger" style="padding-bottom: 10px;display:none">
+			 
+		</div>
+		</div>
+		<div class="row">
+		<div class="col-md-3">
+				<%
+					List<RegisterBean> list=(List<RegisterBean>)request.getAttribute("Classes");
+				%>
+				<select id="classnameselect" class="form-control" name="institute">
+					<option value="-1">Select Institute</option>
+					<%
+						int counter=0;
+					while(list.size()>counter){
+					%>
+					<option value="<%=list.get(counter).getRegId()%>"><%=list.get(counter).getClassName()%></option>
+					<%
+						counter++;
+					}
+					%>
+				</select>
+				<span class="error" id="classerror" name="classerror"></span>
+			</div>
+			
+				
+			
+		<div class="col-md-3">
+			
+				<select id="batch" class="form-control" name="batch"><option value="-1">Select Batch</option></select>
+		
+				<span class="error" id="batcherror" name="batcherror"></span>
+			
+		</div>
+		
+		<div class="col-md-3">
+			
+				<select id="subject" class="form-control" name="subject"><option value="-1">Select Subject</option></select>
+			
+				<span class="error" id="subjecterror" name="subjecterror"></span>
+			
+		</div>
+		<div class="col-md-3">
+			
+				<button type="button" class="btn btn-primary"
+					data-loading-text="Loading..." id="submitbtn">Submit</button>
+			
+		</div>
+	</div>
+	</div>
+	</form>
 	<div id="notesdiv" class="container">
-	<c:if test="${notesavailable ne 'no' }">
-   <table id="notestable" class="table table-bordered table-hover" style="background-color: white;">
+   <table id="notestable" class="table table-bordered table-hover" style="background-color: white; display:none;">
    <thead style="background-color: rgb(0, 148, 255);">
    	<tr>
    	<th>Sr No.</th>
    	<th>Name</th>
    	<th></th>
-   	</tr>	
-   	</thead>
-   	<tbody>
-   	<c:forEach items="${noteslist}" var="notes" varStatus="counter">
-   	<tr>
-   	<td><c:out value="${counter.count}"></c:out></td>
-   	<td><c:out value="${notes.name}"></c:out></td>
-   	<td><button id="<c:out value="${notes.notesid}"></c:out>">Read Me</button></td>
    	</tr>
-   	</c:forEach>
-   	</tbody>
+   </thead>
    </table>
-   </c:if>
-   <c:if test="${notesavailable eq 'no' }">
-  <div class="alert alert-info">	Notes Not Available For Selected Subject</div>
-   </c:if>
    </div>
 	
 	<div class="modal fade" id="notallocated" tabindex="-1" role="dialog" 

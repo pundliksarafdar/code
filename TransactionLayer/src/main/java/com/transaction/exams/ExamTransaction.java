@@ -60,9 +60,9 @@ public class ExamTransaction {
 		return db.getAllCompExam();
 	}
 	
-	public List<Exam> getExam(int inst_id,int sub_id,int div_id,String exam_status,int currentPage) {
+	public List<Exam> getExam(int inst_id,int sub_id,int div_id,String exam_status,int currentPage,String batchid) {
 		ExamDB db=new ExamDB();
-	  return db.getExamList(inst_id, sub_id, div_id, exam_status,currentPage);
+	  return db.getExamList(inst_id, sub_id, div_id, exam_status,currentPage,batchid);
 		
 	}
 	
@@ -72,9 +72,9 @@ public class ExamTransaction {
 		
 	}
 	
-	public int getExamCount(int inst_id,int sub_id,int div_id,String exam_status) {
+	public int getExamCount(int inst_id,int sub_id,int div_id,String exam_status,String batch_id) {
 		ExamDB db=new ExamDB();
-		return db.getExamListCount(inst_id, sub_id, div_id, exam_status);		
+		return db.getExamListCount(inst_id, sub_id, div_id, exam_status,batch_id);		
 	}
 	
 	public boolean publishExam(int exam_id,int inst_id,int sub_id,int div_id,Timestamp start_time,Timestamp end_time) {

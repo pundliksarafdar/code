@@ -138,6 +138,48 @@ public class SubjectTransaction {
 		
 	}
 	
+	public boolean deleteTopics(int inst_id,int sub_id,int div_id,int topicid) {
+		SubjectDb subjectDb=new SubjectDb();
+		return subjectDb.deleteTopics(inst_id, sub_id, div_id,topicid);
+			
+		}
+	
+	public boolean addTopic(int inst_id,int sub_id,int div_id,String topicname) {
+		SubjectDb subjectDb=new SubjectDb();
+		int topicid=subjectDb.getNextTopicID(inst_id, div_id, sub_id);
+		Topics topic=new Topics();
+		topic.setDiv_id(div_id);
+		topic.setInst_id(inst_id);
+		topic.setSub_id(sub_id);
+		topic.setTopic_id(topicid);
+		topic.setTopic_name(topicname);
+		return subjectDb.saveorupdateTopic(topic);
+			
+		}
+	
+	public boolean updateTopic(int inst_id,int sub_id,int div_id,String topicname,int topicid) {
+		SubjectDb subjectDb=new SubjectDb();
+	//	int topicid=subjectDb.getNextTopicID(inst_id, div_id, sub_id);
+		Topics topic=new Topics();
+		topic.setDiv_id(div_id);
+		topic.setInst_id(inst_id);
+		topic.setSub_id(sub_id);
+		topic.setTopic_id(topicid);
+		topic.setTopic_name(topicname);
+		return subjectDb.saveorupdateTopic(topic);
+			
+		}
+	
+	public boolean isTopicExists(int inst_id,int sub_id,int div_id,String topic_name) {
+		SubjectDb subjectDb=new SubjectDb();
+		return subjectDb.isTopicExists(inst_id, div_id, sub_id, topic_name);
+	}
+	
+	public boolean isEditTopicExists(int inst_id,int sub_id,int div_id,String topic_name,int topicid) {
+		SubjectDb subjectDb=new SubjectDb();
+		return subjectDb.isEditTopicExists(inst_id, div_id, sub_id, topic_name,topicid);
+	}
+	
 	public static void main(String[] args) {
 		SubjectTransaction subjectTransaction = new SubjectTransaction();
 		//subjectTransaction.getSubjectsOfDivision(13,12);
