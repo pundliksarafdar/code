@@ -117,15 +117,15 @@ $(".end").on("click",function(){
 			<a type="button" class="btn btn-primary" href="choosesubject?forwardAction=attemptexamlist" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
 	</div>
 
-	 <c:if test="${(examlist != null)}">
+	 <c:if test="${(examlist != null) && (totalPages gt 0)}">
 	<div class="container">
   <h2><font face="cursive">Search Result</font> </h2>            
   <table class="table table-striped">
     <thead>
       <tr>
         <th>Sr No.</th>
-        <th>Question</th>
-        <th>Edit</th>
+        <th>Exam</th>
+        <th>Attempt</th>
       </tr>
     </thead>
     <tbody>
@@ -142,9 +142,9 @@ $(".end").on("click",function(){
         <c:when test="${(role eq 0) || (role eq 1) || (role eq 2)}">
         <td><a href="#" class="attemptExam" id="<c:out value="${item.exam_id}" ></c:out>"><button class="btn btn-warning">Attempt</button></a></td>
         </c:when>
-        <c:when test="${role eq 3 }">
+       <%--  <c:when test="${role eq 3 }">
         <td><a class="attemptExam" href="#" id="<c:out value="${item.exam_id}"></c:out>"><button class="btn btn-success">Enable</button></a></td>
-        </c:when>
+        </c:when> --%>
         </c:choose>
       </tr>
       </c:forEach>
@@ -184,5 +184,8 @@ $(".end").on("click",function(){
 </form>
 </div>
 	</c:if>	
+	<c:if test="${totalPages eq 0}">
+	<div class="alert alert-info">Exams not available..</div>
+	</c:if>
 </body>
 </html>

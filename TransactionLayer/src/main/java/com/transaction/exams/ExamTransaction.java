@@ -72,9 +72,16 @@ public class ExamTransaction {
 		
 	}
 	
+	public Exam getExamToEdit(int inst_id,int sub_id,int div_id,int examID) {
+		ExamDB db=new ExamDB();
+	  return db.getExam(examID, inst_id, sub_id, div_id);
+		
+	}
+	
 	public int getExamCount(int inst_id,int sub_id,int div_id,String exam_status,String batch_id) {
 		ExamDB db=new ExamDB();
-		return db.getExamListCount(inst_id, sub_id, div_id, exam_status,batch_id);		
+		return db.getcount(inst_id, div_id, sub_id, batch_id,exam_status);
+		/*return db.getExamListCount(inst_id, sub_id, div_id, exam_status,batch_id);*/		
 	}
 	
 	public boolean publishExam(int exam_id,int inst_id,int sub_id,int div_id,Timestamp start_time,Timestamp end_time) {
@@ -110,7 +117,15 @@ public class ExamTransaction {
 		return result;
 	}
 	
+	public List<Exam> getExamByIDs(int inst_id,int sub_id,int div_id,List<Integer> examids){
+		ExamDB examDB=new ExamDB();
+		return examDB.getExamByIDs(inst_id, sub_id, div_id, examids);
+	}
 	
+	public List<Exam> getExamforStudents(int inst_id,int sub_id,int div_id,List<Integer> examids){
+		ExamDB examDB=new ExamDB();
+		return examDB.getExamforStudents(inst_id, sub_id, div_id, examids);
+	}
 	/**
 	 * @param questionId - coma seaparatted
 	 * @param batchId - coma seaparatted
@@ -135,6 +150,11 @@ public class ExamTransaction {
 	public List<String> getAnswers(int sub_id,int inst_id,int div_id,List<Integer> que_ids){
 		QuestionbankDB questionbankDB = new QuestionbankDB();
 		return questionbankDB.getQuestionAnsIds(sub_id, inst_id, div_id, que_ids);
+	}
+	
+	public List<Exam> isQuestionAvailableInExam(int inst_id,int sub_id,int div_id,String ques_id) {
+		ExamDB db=new ExamDB();
+		return db.isQuestionAvailableInExam(inst_id, sub_id, div_id, ques_id);
 	}
 	public static void main(String[] args) {
 		/*

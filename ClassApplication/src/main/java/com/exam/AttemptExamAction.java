@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.exam.Exam;
+import com.classapp.db.student.StudentMarks;
 import com.classapp.db.subject.Subject;
 import com.classapp.login.UserStatic;
 import com.config.BaseAction;
@@ -25,6 +26,7 @@ import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.questionbank.QuestionBankTransaction;
+import com.transaction.studentmarks.StudentMarksTransaction;
 import com.user.UserBean;
 
 public class AttemptExamAction extends BaseAction {
@@ -44,16 +46,39 @@ public class AttemptExamAction extends BaseAction {
 	int Total_Marks;
 	int TotalExam_Marks;
 	String flag;
+	int institute;
+	Exam initiateExam;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
+		int inst_id=userBean.getRegId();
+		if(institute!=0){
+			UserStatic userStatic = userBean.getUserStatic();
+			String storagePath = Constants.STORAGE_PATH+File.separator+institute;
+			userStatic.setStorageSpace(storagePath);
+			inst_id=institute;
+		}
+		if("initiateexam".equals(actionname)){
+			ExamTransaction examTransaction=new ExamTransaction();
+			initiateExam=examTransaction.getExamToAttempt(inst_id, Integer.parseInt(subject), Integer.parseInt(division), examID);
+			}else{
+				if("examattempted".equals(actionname) && userBean.getRegId()==3){
+					StudentMarks studentMarks=new StudentMarks();
+					studentMarks.setDiv_id(Integer.parseInt(division));
+					studentMarks.setExam_id(examID);
+					studentMarks.setInst_id(inst_id);
+					studentMarks.setStudent_id(userBean.getRegId());
+					studentMarks.setSub_id(Integer.parseInt(subject));
+					StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
+					marksTransaction.saveStudentMarks(studentMarks);
+				}
 		Map<Integer,String>SelectedAnswerIds= (Map<Integer, String>) session.get("SelectedAnswerIds");
 		if(SelectedAnswerIds==null){
 			SelectedAnswerIds=new HashMap();
 		}
 		ExamTransaction examTransaction=new ExamTransaction();
-		Exam exam =examTransaction.getExamToAttempt(userBean.getRegId(), Integer.parseInt(subject), Integer.parseInt(division), examID);
+		Exam exam =examTransaction.getExamToAttempt(inst_id, Integer.parseInt(subject), Integer.parseInt(division), examID);
 		if("examSubmit".equals(actionname)){
 			String queid_arr[]=	exam.getQue_ids().split(",");
 		QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
@@ -61,7 +86,7 @@ public class AttemptExamAction extends BaseAction {
 		for (int i = 0; i < queid_arr.length; i++) {
 			ques_ids.add(Integer.parseInt(queid_arr[i]));
 		}
-		List<Integer> ques_marks=bankTransaction.getQuestionMarks(userBean.getRegId(), Integer.parseInt(subject), Integer.parseInt(division), ques_ids);
+		List<Integer> ques_marks=bankTransaction.getQuestionMarks(inst_id, Integer.parseInt(subject), Integer.parseInt(division), ques_ids);
 		String finalAnsString="";
 		for (int i = 1; i <= SelectedAnswerIds.size(); i++) {
 			if(i==1){
@@ -83,6 +108,20 @@ public class AttemptExamAction extends BaseAction {
 		}else{
 			flag="N";
 		}
+		if(userBean.getRole()==3){
+		StudentMarks studentMarks=new StudentMarks();
+		studentMarks.setAns_ids(finalAnsString);
+		studentMarks.setDiv_id(Integer.parseInt(division));
+		studentMarks.setExam_id(examID);
+		studentMarks.setInst_id(institute);
+		studentMarks.setMarks(Total_Marks);
+		studentMarks.setStudent_id(userBean.getRegId());
+		studentMarks.setSub_id(Integer.parseInt(subject));
+		StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
+		marksTransaction.saveStudentMarks(studentMarks);
+		}
+		SelectedAnswerIds=null;
+		session.put("SelectedAnswerIds", SelectedAnswerIds);
 		return "examresult";
 		}else{
 		if(exam!=null){
@@ -113,6 +152,9 @@ public class AttemptExamAction extends BaseAction {
 			questionStartIndex=(currentPage-1)*2;
 		}
 		int questionEndIndex=questionStartIndex+2;
+		if (questionEndIndex>totalCount) {
+			questionEndIndex=totalCount;
+		}
 		questionDataList=new ArrayList<QuestionData>();
 		while(questionStartIndex<questionEndIndex){
 		String questionNumber=queid_arr[questionStartIndex];
@@ -126,6 +168,13 @@ public class AttemptExamAction extends BaseAction {
 		questionDataList.add(questionData);
 		questionStartIndex++;
 		}
+		}
+		if(currentPage==0){
+			for (int i = 1; i <= totalPages; i++) {
+				SelectedAnswerIds.put(i, "-1/-1");
+				
+			}
+			session.put("SelectedAnswerIds", SelectedAnswerIds);
 		}
 		if(currentPage!=0){
 			if(lastPage==0){
@@ -153,6 +202,7 @@ public class AttemptExamAction extends BaseAction {
 		}
 		if (currentPage==0) {
 			currentPage=1;
+		}
 		}
 		}
 		return SUCCESS;
@@ -286,6 +336,22 @@ public class AttemptExamAction extends BaseAction {
 
 	public void setFlag(String flag) {
 		this.flag = flag;
+	}
+
+	public int getInstitute() {
+		return institute;
+	}
+
+	public void setInstitute(int institute) {
+		this.institute = institute;
+	}
+
+	public Exam getInitiateExam() {
+		return initiateExam;
+	}
+
+	public void setInitiateExam(Exam initiateExam) {
+		this.initiateExam = initiateExam;
 	}
 	
 	

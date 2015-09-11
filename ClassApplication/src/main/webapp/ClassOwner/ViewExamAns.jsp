@@ -144,7 +144,7 @@ $(document).ready(function(){
 	});
 	
 	$("#cancelEdit").on("click",function(){
-		$("form#paginateform #actionname").val("viewcomplete");
+		$("form#paginateform #actionname").val("viewanscomplete");
 		$("#paginateform").submit();
 	});
 	
@@ -217,18 +217,22 @@ var selectMarks = function(){
       </c:forEach>
       </td>
       </tr>
+      <tr>
+       <td  class="col-md-1"></td>
+      <td  class="col-md-10">Answer - <c:out value="${item.answers}"></c:out></td>
+      </tr>
       </c:forEach>
     </tbody>
   </table>
   
-  <form action="viewexam" id="autosubmitform" method="post">
+  <form action="viewexamans" id="autosubmitform" method="post">
   <input type="hidden" name="forwardhref" id="forwardhref">
   <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
   <input type="hidden" name="searchcurrentPage" value="<c:out value="${searchcurrentPage}"></c:out>"/>
   <input type="hidden" name="searchtotalPages" value="<c:out value="${searchtotalPages}"></c:out>"/>
   <input type="hidden" name="actionname" id="actionname" value="autosubmit">
   </form>
-  <form action="viewexam" id="paginateform">
+  <form action="viewexamans" id="paginateform">
   <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
   <input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
   <input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">

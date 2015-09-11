@@ -11,6 +11,13 @@ $(document).ready(function(){
 	if($("#actionname").val()=="deleteExam"){
 		$("#paginateform").prop("action","listExam");
 	}
+	if($("#actionname").val()=="canceledit" || $("#actionname").val()=="editcomplete" || $("#actionname").val()=="viewcomplete"){
+		$("#paginateform").prop("action","listExam");
+	}
+	
+	if($("#actionname").val()=="viewanscomplete"){
+		$("#paginateform").prop("action","examMarks");
+	}
 $("#paginateform").submit();
 });
 </script>

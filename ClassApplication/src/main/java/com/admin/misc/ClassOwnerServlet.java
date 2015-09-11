@@ -53,6 +53,7 @@ import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.BatchDB;
 import com.classapp.db.batch.BatchDetails;
 import com.classapp.db.batch.division.Division;
+import com.classapp.db.exam.Exam;
 import com.classapp.db.notificationpkg.Notification;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
@@ -83,6 +84,7 @@ import com.transaction.register.RegisterTransaction;
 import com.transaction.schedule.ScheduleTransaction;
 import com.transaction.teacher.TeaherTransaction;
 import com.transaction.student.StudentTransaction;
+import com.transaction.studentmarks.StudentMarksTransaction;
 import com.transaction.teacher.TeacherTransaction;
 import com.user.UserBean;
 
@@ -2169,7 +2171,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		}
 		
 		ExamTransaction examTransaction=new ExamTransaction();
-		examTransaction.publishExam(Integer.parseInt(examID), 1, 11, 111, startTimestamp, endTimestamp);
+		examTransaction.publishExam(Integer.parseInt(examID), regId, Integer.parseInt(subjectid), Integer.parseInt(divisionId), startTimestamp, endTimestamp);
 		respObject.addProperty(STATUS, "success");
 	}else if("disableExam".equalsIgnoreCase(methodToCall)){
 		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
@@ -2178,7 +2180,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		String subjectid = req.getParameter("subject");
 		String examID = req.getParameter("examID");
 		ExamTransaction examTransaction=new ExamTransaction();
-		examTransaction.disableExam(Integer.parseInt(examID), 1, 11, 111);
+		examTransaction.disableExam(Integer.parseInt(examID), regId, Integer.parseInt(subjectid), Integer.parseInt(divisionId));
 		respObject.addProperty(STATUS, "success");
 	}else if("getDivisionsTopics".equalsIgnoreCase(methodToCall)){
 		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
@@ -2264,6 +2266,49 @@ public class ClassOwnerServlet extends HttpServlet{
 		}else{
 			subjectTransaction.updateTopic(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId),topicname,Integer.parseInt(topicid));
 			respObject.addProperty("topicexists", "");
+		}
+		respObject.addProperty(STATUS, "success");
+	}else if("isStudentAttemptedExam".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId=userBean.getRegId();;
+		String divisionId = req.getParameter("division");
+		String subjectid = req.getParameter("subject");
+		String examID=req.getParameter("examID");
+		String institute=req.getParameter("institute");
+		StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
+		if(marksTransaction.isExamSolvedByStudent(Integer.parseInt(examID), Integer.parseInt(institute), Integer.parseInt(subjectid), Integer.parseInt(divisionId), userBean.getRegId()))
+		{
+			respObject.addProperty("examsolved", "yes");
+		}else{
+			respObject.addProperty("examsolved", "no");
+		}
+		respObject.addProperty(STATUS, "success");
+	}else if("isQuestionAvailableInExam".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId=userBean.getRegId();;
+		String divisionId = req.getParameter("division");
+		String subjectid = req.getParameter("subject");
+		String questionNumber=req.getParameter("questionNumber");
+		String institute=req.getParameter("institute");
+		int inst_id=userBean.getRegId();
+		if(!"".equals(institute)){
+			inst_id=Integer.parseInt(institute);
+		}
+		ExamTransaction examTransaction=new ExamTransaction();
+		List<Exam> list=examTransaction.isQuestionAvailableInExam(inst_id, Integer.parseInt(subjectid), Integer.parseInt(divisionId), questionNumber);
+		if(list!=null){
+			String examname="";
+			for (int i = 0; i < list.size(); i++) {
+				if(i==0){
+					examname=list.get(i).getExam_name();
+				}else{
+					examname=examname+","+list.get(i).getExam_name();
+				}
+			}
+			respObject.addProperty("examnames", examname);
+			respObject.addProperty("quesstatus", "Y");
+		}else{
+			respObject.addProperty("quesstatus", "");
 		}
 		respObject.addProperty(STATUS, "success");
 	}

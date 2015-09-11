@@ -49,7 +49,7 @@ public class UploadExamsAction extends BaseAction{
 	String searchedExam;
 	String searchedRep;
 	String institute;
-	
+	String quesstatus;
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		int inst_id=userBean.getRegId();
@@ -214,6 +214,7 @@ public class UploadExamsAction extends BaseAction{
 			String result = "questioneditsuccess";
 			return result;
 		}else if("deletequestion".equals(actionname)){
+			if("".equals(quesstatus)){
 			UserStatic userStatic = userBean.getUserStatic();
 			SubjectTransaction subjectTransaction=new SubjectTransaction();
 			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
@@ -238,7 +239,12 @@ public class UploadExamsAction extends BaseAction{
 			}
 			QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
 			bankTransaction.deleteQuestion(questionNumber, inst_id, Integer.parseInt(subject), Integer.parseInt(division));
-			
+			}else{
+				QuestionBankTransaction questionBankTransaction=new QuestionBankTransaction();
+				Questionbank questionbank=questionBankTransaction.getQuestion(questionNumber, inst_id,Integer.parseInt(subject), Integer.parseInt(division));
+				questionbank.setQues_status("N");
+				questionBankTransaction.saveQuestion(questionbank);
+			}
 			return "questiondelete";
 		}else if("cancleuploading".equals(actionname)){
 			if (currentPage==0) {
@@ -564,6 +570,14 @@ public class UploadExamsAction extends BaseAction{
 
 	public void setInstitute(String institute) {
 		this.institute = institute;
+	}
+
+	public String getQuesstatus() {
+		return quesstatus;
+	}
+
+	public void setQuesstatus(String quesstatus) {
+		this.quesstatus = quesstatus;
 	}
 	
 	

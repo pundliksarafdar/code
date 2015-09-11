@@ -18,7 +18,7 @@ public class StudentMarksDB {
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
-		session.save(studentMarks);
+		session.saveOrUpdate(studentMarks);
 		transaction.commit();
 		session.close();
 		return  true;
@@ -64,5 +64,33 @@ public class StudentMarksDB {
 		}
 		
 		return  true;
+	}
+	
+	public List<StudentMarks> getStudentMarksList(int inst_id,int student_id,int sub_id,int div_id) {
+		StudentMarks studentMarks=new StudentMarks();
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Criteria criteria = session.createCriteria(StudentMarks.class);
+		Criterion criterion = Restrictions.eq("student_id", student_id);
+		criteria.add(criterion);
+		if(inst_id!=-1){
+		criterion = Restrictions.eq("inst_id", inst_id);
+		criteria.add(criterion);
+		}
+		if(sub_id!=-1){
+			criterion = Restrictions.eq("sub_id", sub_id);
+			criteria.add(criterion);
+			}
+		if(div_id!=-1){
+			criterion = Restrictions.eq("div_id", div_id);
+			criteria.add(criterion);
+			}
+		
+		List<StudentMarks> marks = criteria.list();
+		transaction.commit();
+		session.close();
+		return  marks;
 	}
 }

@@ -19,12 +19,19 @@ public class SearchExamResultAction extends BaseAction {
 	List<Exam> examlist;
 	int currentPage;
 	int totalPages;
+	String institute;
+	int role;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
 		ExamTransaction examTransaction = new ExamTransaction();
-		int totalCount=examTransaction.getExamCount(1, 11, 111, "-1",batch);
+		int inst_id= userBean.getRegId();
+		role=userBean.getRole();
+		if(userBean.getRole()==2){
+			inst_id=Integer.parseInt(institute);
+		}
+		int totalCount=examTransaction.getExamCount(inst_id, Integer.parseInt(subject), Integer.parseInt(division), "-1",batch);
 		if(totalCount>0){
 			int remainder=totalCount%2;
 			totalPages=totalCount/2;
@@ -40,7 +47,10 @@ public class SearchExamResultAction extends BaseAction {
 		if(currentPage==0){
 			currentPage++;
 		}
-		examlist=examTransaction.getExam(1, 11, 111, "-1",currentPage,batch);
+		examlist=examTransaction.getExam(inst_id, Integer.parseInt(subject), Integer.parseInt(division), "-1",currentPage,batch);
+		if(userBean.getRole()==2){
+			return "teacherexamsearch";
+		}
 		return SUCCESS;
 	}
 	public String getBatch() {
@@ -79,7 +89,19 @@ public class SearchExamResultAction extends BaseAction {
 	public void setTotalPages(int totalPages) {
 		this.totalPages = totalPages;
 	}
-
+	public String getInstitute() {
+		return institute;
+	}
+	public void setInstitute(String institute) {
+		this.institute = institute;
+	}
+	public int getRole() {
+		return role;
+	}
+	public void setRole(int role) {
+		this.role = role;
+	}
+	
 	
 
 }

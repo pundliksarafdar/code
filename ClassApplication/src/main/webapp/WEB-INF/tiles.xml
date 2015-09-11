@@ -342,6 +342,12 @@
 		<put-attribute name="body" value="/ClassOwner/ExamList.jsp" />
 	</definition>
 	
+	<definition name="teacher.teacherexamsearch" extends="baseLayout">
+		<put-attribute name="title" value="Choose Subject" />
+		<put-attribute name="topnav" value="/teacher/menu.jsp" />
+		<put-attribute name="body" value="/ClassOwner/ExamList.jsp" />
+	</definition>
+	
 	<definition name="classowner.attemptexamlist" extends="baseLayout">
 		<put-attribute name="title" value="Choose Subject" />
 		<put-attribute name="body" value="/ClassOwner/AttemptExamList.jsp" />
@@ -417,5 +423,34 @@
       <put-attribute name="title"  value="Manual Exam"/>
       <put-attribute name="topnav" value="/teacher/menu.jsp" />
       <put-attribute name="body"   value="/ClassOwner/AddManualExam.jsp"/>      
+   </definition>
+   <definition name="classowner.editexam" extends="baseLayout">
+      <put-attribute name="title"  value="Manual Exam"/>
+      <put-attribute name="body"   value="/ClassOwner/EditExam.jsp"/>      
+   </definition>
+   <definition name="teacher.teachereditexam" extends="baseLayout">
+      <put-attribute name="title"  value="Manual Exam"/>
+      <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/ClassOwner/EditExam.jsp"/>      
+   </definition>
+   <definition name="classowner.viewexam" extends="baseLayout">
+      <put-attribute name="title"  value="Manual Exam"/>
+      <put-attribute name="body"   value="/ClassOwner/viewexam.jsp"/>      
+   </definition>
+   <definition name="teacher.teacherviewexam" extends="baseLayout">
+      <put-attribute name="title"  value="Manual Exam"/>
+      <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/ClassOwner/viewexam.jsp"/>      
+   </definition>
+   
+   <definition name="student.examMarks" extends="baseLayout">
+      <put-attribute name="title"  value="Manual Exam"/>
+      <put-attribute name="topnav" value="/student/menu.jsp" />
+      <put-attribute name="body"   value="/student/StudentExamMarks.jsp"/>      
+   </definition>
+    <definition name="student.viewexamans" extends="baseLayout">
+      <put-attribute name="title"  value="Manual Exam"/>
+      <put-attribute name="topnav" value="/student/menu.jsp" />
+      <put-attribute name="body"   value="/ClassOwner/ViewExamAns.jsp"/>      
    </definition>
 </tiles-definitions>

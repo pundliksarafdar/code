@@ -11,10 +11,10 @@
 		<key-property name="div_id" column="div_id"></key-property>
 		<key-property name="exam_id" column="exam_id"></key-property>
     </composite-id>
-        <property name="marks" type="date">
+        <property name="marks">
             <column name="marks" />
         </property>
-        <property name="ans_ids" type="date">
+        <property name="ans_ids">
             <column name="ans_ids" />
         </property>
     </class>

@@ -61,7 +61,7 @@
 	<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Exam <b class="caret"></b></a>
     	<ul class="dropdown-menu">
 	            <li><a href="teachercommoncomponent?forwardAction=manualexam">Add Manual Exam</a></li>
-	            <li><a href="teachercommoncomponent?forwardAction=searchQuestion">Search Exam</a></li>  
+	            <li><a href="teachercommoncomponent?forwardAction=listExam">Search Exam</a></li>  
 	     </ul>
    </li>     
     </ul>

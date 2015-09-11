@@ -137,12 +137,19 @@ $(".end").on("click",function(){
 	$("#paginateform").submit();
 });
 
+$(".viewExam").on("click",function(){
+	$("form#ViewEditform #actionname").val("viewexam");
+	$("form#ViewEditform #examID").val($(this).prop("id"));
+	$("#ViewEditform").prop("action","viewexamans")
+	$("#ViewEditform").submit();
+});
+
 });
 </script>
 </head>
 <body>
 <div class="container" style="margin-bottom: 5px">
-			<a type="button" class="btn btn-primary" href="studentcommoncomponent?forwardAction=attemptexamlist" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
+			<a type="button" class="btn btn-primary" href="studentcommoncomponent?forwardAction=examMarks" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
 	</div>
 
 	 <c:if test="${(examlist != null) && (totalPages gt 0)}">
@@ -153,8 +160,8 @@ $(".end").on("click",function(){
       <tr>
         <th>Sr No.</th>
         <th>Exam</th>
-        <th>Attempt</th>
         <th>Marks</th>
+        <th>View Answers</th>
       </tr>
     </thead>
     <tbody>
@@ -167,16 +174,8 @@ $(".end").on("click",function(){
         <td><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
         </c:if>
         <td><c:out value="${item.exam_name}"></c:out></td>
-      <%--   <c:choose>
-        <c:when test="${item.examAttempted eq 'N'}">
-       --%>  <td><a href="#" class="attemptExam" id="<c:out value="${item.exam_id}" ></c:out>"><button class="btn btn-warning">Attempt</button></a></td>
-        <%-- <td>-</td>
-        </c:when> --%>
-       <%--  <c:when test="${item.examAttempted eq 'Y'}">
-        <td><a class="attemptExam" href="#" id="<c:out value="${item.exam_id}"></c:out>"><button class="btn btn-success">Attempted</button></a></td>
         <td><c:out value="${item.marks}"></c:out></td>
-        </c:when>
-        </c:choose> --%>
+     	 <td><a href="#" class="viewExam" id="<c:out value="${item.exam_id}" ></c:out>"><button class="btn btn-primary">View</button></a></td>
       </tr>
       </c:forEach>
     </tbody>
@@ -192,6 +191,18 @@ $(".end").on("click",function(){
   <input type="hidden" name="actionname" id="actionname" value="initiateexam">
   <input type="hidden" name="institute" id="institute" value='<c:out value="${institute}"></c:out>'>
   </form>
+  
+   <form action="" id="ViewEditform" method="post">
+  <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
+  <input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
+  <input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
+  <input type="hidden" name="searchcurrentPage" id="searchcurrentPage" value='<c:out value="${currentPage}"></c:out>'>
+  <input type="hidden" name="searchtotalPages" id="searchcurrentPage" value='<c:out value="${totalPages}"></c:out>'>
+  <input type="hidden" name="examID" id="examID" value='<c:out value="${examID}"></c:out>'>
+  <input type="hidden" name="actionname" id="actionname">
+  <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
+  </form>
+  
   <form action="attemptexamlist" id="paginateform">
   <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
   <input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
@@ -218,7 +229,7 @@ $(".end").on("click",function(){
 </div>
 	</c:if>
 	<c:if test="${totalPages eq 0}">
-	<div class="alert alert-info">Exam not available.</div>
+	<div class="alert alert-info">Exam marks not available.</div>
 	</c:if>
 	<div class="modal fade" id="examattemptmodal" tabindex="-1" role="dialog" 
    aria-labelledby="myModalLabel" aria-hidden="true">

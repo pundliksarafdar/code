@@ -186,6 +186,45 @@ $(".examSubmit").on("click",function(){
 </script>
 </head>
 <body>
+<c:if test="${actionname eq 'initiateexam' }">
+<div class="container">
+<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+	<div class="row">
+		<div class="alert alert-danger" style="padding-bottom: 10px;display:none">
+			 
+		</div>
+	</div>
+<h3><font face="cursive">Welcome To Exam Corner </font></h3>
+<div class="row">
+<div class="col-md-12" align="center">Exam Details</div>
+</div>
+<div class="row">
+		<div class="col-md-6">Exam Name </div> 
+		<div class="col-md-3"><c:out value="${initiateExam.exam_name }"></c:out></div>
+</div>
+<div class="row">
+		<div class="col-md-6">Total Marks</div> <div class="col-md-3"><c:out value="${initiateExam.total_marks }"></c:out></div>
+</div>
+<div class="row">
+		<div class="col-md-6">Time</div> <div class="col-md-3"> 1 Hr</div>
+</div>
+<div class="row">
+		<div class="col-md-12" align="center">
+  <form action="attemptExam" id="paginateform">
+  <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
+  <input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
+  <input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
+  <input type="hidden" name="examID" id="examID" value='<c:out value="${examID}"></c:out>'>
+  <input type="hidden" name="institute" id="institute" value='<c:out value="${institute}"></c:out>'>
+  <input type="hidden" name="actionname" value="examattempted">
+  <input type="submit" value="Attrempt Exam">
+  </form>
+  </div>
+  </div>
+  </div>
+  
+</div>
+</c:if>
  <c:if test="${(questionDataList != null)}">
 	<div class="container">
   <h2><font face="cursive">Exam</font> </h2>            
@@ -200,15 +239,16 @@ $(".examSubmit").on("click",function(){
     <c:forEach items="${questionDataList}" var="item" varStatus="counter">
     <tr>
     	<c:if test="${currentPage eq 1}">
-        <td><c:out value="${counter.count}"></c:out></td>
+        <td class="col-md-1"><c:out value="${counter.count}"></c:out></td>
         </c:if>
         <c:if test="${currentPage gt 1 }">
-        <td><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
+        <td class="col-md-1"><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
         </c:if>
-        <td><c:out value="${item.question}"></c:out></td>
+        <td> class="col-md-10"<c:out value="${item.question}"></c:out></td>
       </tr>
       <tr>
-      <td>
+      <td class="col-md-1"></td>
+      <td class="col-md-10">
      <c:if test="${item.options != null}"> 
     	<table>
     		<c:forEach items="${item.options}" var="option" varStatus="innercounter">
@@ -250,6 +290,7 @@ $(".examSubmit").on("click",function(){
   <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
   <input type="hidden" name="examID" id="examID" value='<c:out value="${examID}"></c:out>'>
   <input type="hidden" name="actionname" id="actionname">
+  <input type="hidden" name="institute" id="institute" value='<c:out value="${institute}"></c:out>'>
   </form>
   <form action="attemptExam" id="paginateform">
   <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
@@ -264,6 +305,7 @@ $(".examSubmit").on("click",function(){
   <input type="hidden" name="answers" id="answers">
   <input type="hidden" name="lastPage" id="lastPage" value='<c:out value="${currentPage}"></c:out>'>
   <input type="hidden" name="actionname" id="actionname">
+  <input type="hidden" name="institute" id="institute" value='<c:out value="${institute}"></c:out>'>
   <ul class="pagination">
   <li><a class="start" >&laquo;</a></li>
   <c:forEach var="item" begin="1" end="${totalPages}">

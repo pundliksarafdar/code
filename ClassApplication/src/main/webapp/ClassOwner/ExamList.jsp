@@ -21,10 +21,10 @@ $(document).ready(function(){
 		pickDate:false
 	});
 	
-	$(".disableExam").on("click",function(){
+	$("#examBaseDiv").on("click",".disableExam",function(){
 		examID=$(this).prop("id");
-		subject=$("#subject").val();
-		division=$("#division").val();
+		subject=$("form#paginateform #subject").val();
+		division=$("form#paginateform #division").val();
 		that=$(this);	
 		$.ajax({
 			 
@@ -37,6 +37,7 @@ $(document).ready(function(){
 			   		},
 			   		success:function(data){
 			   			 $(that).find("button").text("Enable");
+			   			$(that).off();
 			   			$(that).find("button").prop("class","btn btn-success");
 			   			 $(that).prop("class","enableExam"); 
 			   		},
@@ -64,8 +65,12 @@ $(document).ready(function(){
 			   		},
 			   		success:function(data){
 			   			$(that).find("button").text("Disable");
+			   			$(that).off();
 			   			$(that).find("button").prop("class","btn btn-warning");
 			   			$(that).prop("class","disableExam");
+			   			$("#"+$(that).prop("id")+"edit").text("View");
+			   			$("#"+$(that).prop("id")+"edit").parent().off();
+			   			$("#"+$(that).prop("id")+"edit").parent().prop("class","viewExam");
 			   		},
 			   		error:function(error){
 			   		
@@ -73,20 +78,48 @@ $(document).ready(function(){
 		});
 	});
 	
-$(".enableExam").on("click",function(){
+$("#examBaseDiv").on("click",".enableExam",function(){
+	var exam_status=$("#"+$(this).prop("id")+"status").val();
+	examID=$(this).prop("id");
+	that=$(this); 
+	var statusflag=false;
+	if(exam_status=="E"){
+		$("#enableexamcontinuemodal").modal("toggle");
+	}else{
 	$("#enableexammodal").modal({
 	    backdrop: 'static',
 	    keyboard: false
 	});
-	//$("#enableexammodal").modal('toggle');
-	examID=$(this).prop("id");
-	subject=$("#subject").val();
-	division=$("#division").val();
-	that=$(this);
-	//$(this).find("button").text("Enabling...");
+	subject=$("form#paginateform #subject").val();
+	division=$("form#paginateform #division").val();
+	}
+	
 });
 
-$(".delete").on("click",function(){
+$("#enablecontinue").on("click",function(){
+	$("#enableexammodal").modal({
+	    backdrop: 'static',
+	    keyboard: false
+	});
+	subject=$("form#paginateform #subject").val();
+	division=$("form#paginateform #division").val();
+});
+
+$("#examBaseDiv").on("click",".editExam",function(){
+	$("form#ViewEditform #actionname").val("editexam");
+	$("form#ViewEditform #examID").val($(this).prop("id"));
+	$("#ViewEditform").prop("action","editexam")
+	$("#ViewEditform").submit();
+});
+
+$("#examBaseDiv").on("click",".viewExam",function(){
+	$("form#ViewEditform #actionname").val("viewexam");
+	$("form#ViewEditform #examID").val($(this).prop("id"));
+	$("#ViewEditform").prop("action","viewexam")
+	$("#ViewEditform").submit();
+});
+
+$(".deleteExam").on("click",function(){
 	$("#examID").val($(this).prop("id"));
 	$("#actionform").submit();
 });
@@ -111,19 +144,29 @@ $(".end").on("click",function(){
 </head>
 <body>
 <div class="container" style="margin-bottom: 5px">
-			<a type="button" class="btn btn-primary" href="choosesubject?forwardAction=listExam" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
+	 <c:if test="${(role eq 1 || role eq 0)}">
+	<a type="button" class="btn btn-primary" href="choosesubject?forwardAction=listExam" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
+	</c:if>
+	 <c:if test="${(role eq 2)}">
+	 <a type="button" class="btn btn-primary" href="teachercommoncomponent?forwardAction=listExam" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
+	 </c:if>
 	</div>
 
 	 <c:if test="${(examlist != null)}">
-	<div class="container">
+	<div class="container" id="examBaseDiv">
   <h2><font face="cursive">Search Result</font> </h2>            
   <table class="table table-striped">
     <thead>
       <tr>
         <th>Sr No.</th>
-        <th>Question</th>
-        <th>Edit</th>
+        <th>Exam Name</th>
+         <c:if test="${(role eq 1 || role eq 0)}">
+        <th>Enable/Disable</th>
+        </c:if>
+        <th>Edit/View</th>
+         <c:if test="${(role eq 1 || role eq 0)}">
         <th>Delete</th>
+        </c:if>
       </tr>
     </thead>
     <tbody>
@@ -136,14 +179,23 @@ $(".end").on("click",function(){
         <td><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
         </c:if>
         <td><c:out value="${item.exam_name}"></c:out></td>
-        <c:if test="${item.exam_status eq 'Y'}">
+        <c:if test="${(item.exam_status eq 'Y') &&  (role eq 1 || role eq 0) }">
         <td><a href="#" class="disableExam" id="<c:out value="${item.exam_id}" ></c:out>"><button class="btn btn-warning">Disable</button></a></td>
         </c:if>
-        <c:if test="${item.exam_status eq 'N'}">
-        <td><a class="enableExam" href="#" id="<c:out value="${item.exam_id}"></c:out>"><button class="btn btn-success">Enable</button></a></td>
+        <c:if test="${(item.exam_status eq 'N' || item.exam_status eq 'E') &&  (role eq 1 || role eq 0)}">
+        <td><a class="enableExam" href="#" id="<c:out value="${item.exam_id}"></c:out>"><button class="btn btn-success">Enable</button></a>
+        	<input type="hidden" id="<c:out value="${item.exam_id}"></c:out>status" value="<c:out value="${item.exam_status}"></c:out>"> 
+        </td>
         </c:if>
-        
-        <td><a class="delete" href="#" id="<c:out value="${item.exam_id}"></c:out>"><button class="btn btn-danger">Delete</button></a></td>
+         <c:if test="${item.exam_status eq 'E'}">
+        <td><a href="#" class="editExam" id="<c:out value="${item.exam_id}" ></c:out>"><button class="btn btn-primary" id="<c:out value="${item.exam_id}" ></c:out>edit">Edit</button></a></td>
+        </c:if>
+         <c:if test="${item.exam_status ne 'E'}">
+        <td><a href="#" class="viewExam" id="<c:out value="${item.exam_id}" ></c:out>"><button class="btn btn-primary">View</button></a></td>
+        </c:if>
+        <c:if test="${(role eq 1 || role eq 0)}">
+        <td><a class="deleteExam" href="#" id="<c:out value="${item.exam_id}"></c:out>"><button class="btn btn-danger">Delete</button></a></td>
+      	</c:if>
       </tr>
       </c:forEach>
     </tbody>
@@ -156,17 +208,31 @@ $(".end").on("click",function(){
   <input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
   <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
   <input type="hidden" name="examID" id="examID" value='<c:out value="${examID}"></c:out>'>
+  <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
   <input type="hidden" name="actionname" id="actionname">
   </form>
-  <form action="listExam" id="paginateform">
+  
+  <form action="" id="ViewEditform" method="post">
   <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
   <input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
   <input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
+  <input type="hidden" name="searchcurrentPage" id="searchcurrentPage" value='<c:out value="${currentPage}"></c:out>'>
+  <input type="hidden" name="searchtotalPages" id="searchcurrentPage" value='<c:out value="${totalPages}"></c:out>'>
+  <input type="hidden" name="examID" id="examID" value='<c:out value="${examID}"></c:out>'>
+  <input type="hidden" name="actionname" id="actionname">
+  <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
+  </form>
+  
+  <form action="listExam" id="paginateform">
+  <input type="hidden" name="subject" id="subject" value="<c:out value="${subject}" ></c:out>">
+  <input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
+  <input type="hidden" name="division" id="division" value="<c:out value="${division}" ></c:out>">
   <input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
   <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
   <input type="hidden" name="searchedMarks" value='<c:out value="${searchedMarks}"></c:out>'>
   <input type="hidden" name="searchedExam" value='<c:out value="${searchedExam}"></c:out>'>
   <input type="hidden" name="searchedRep" value='<c:out value="${searchedRep}"></c:out>'>
+  <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
   <ul class="pagination">
   <li><a class="start" >&laquo;</a></li>
   <c:forEach var="item" begin="1" end="${totalPages}">
@@ -200,6 +266,28 @@ $(".end").on("click",function(){
          </div>
          <div class="modal-footer">
             <button type="button" class="btn btn-primary" data-dismiss="modal" id="enableOK">OK</button>
+         </div>
+         </div>
+   </div>
+</div>
+
+<div class="modal fade" id="enableexamcontinuemodal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" 
+               aria-hidden="true">×
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               Enable Exam
+            </h4>
+         </div>
+         <div class="modal-body">
+           Once you enable this exam you will not able edit it. Do you want to continue?
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="enablecontinue">Continue</button>
          </div>
          </div>
    </div>

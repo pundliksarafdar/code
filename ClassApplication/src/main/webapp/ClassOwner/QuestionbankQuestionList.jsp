@@ -48,18 +48,63 @@ $(document).ready(function(){
 		$("#paginateform").submit();
 	});
 	
-	$(".edit").on("click",function(){
+	$(".editQuestion").on("click",function(){
 		$("#questionNumber").val($(this).prop("id"));
 		$("#actionform").attr("action","editquestion");
 		$("#actionname").val("editquestion");
 		$("#actionform").submit();
 	});
 	
-	$(".delete").on("click",function(){
+	$(".deleteQuestion").on("click",function(){
 		$("#questionNumber").val($(this).prop("id"));
-		$("#actionform").attr("action","deletequestion");
+		var subject=$("form#actionform #subject").val();
+		var division=$("form#actionform #division").val();
+		var institute=$("form#actionform #institute").val();
+		var questionNumber=$("form#actionform #questionNumber").val();
+		$.ajax({
+			 
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "isQuestionAvailableInExam",
+			    	 questionNumber:questionNumber,
+			    	 subject:subject,
+			    	 division:division,
+			    	 institute:institute
+			   		},
+			   		success:function(data){
+			   			var resultJson = JSON.parse(data);
+						   var quesstatus=resultJson.quesstatus;
+						   if(quesstatus=="Y"){
+							   $("#DeleteConfirmBody").empty();
+							  var examnames=resultJson.examnames.split(",");
+							   $("#DeleteConfirmBody").append("This Question is present in following exams-<br>")
+							   for(var i=0;i<examnames.length;i++){
+								   $("#DeleteConfirmBody").append((i+1)+"."+examnames[i]+"<br>");
+							   }
+							   $("#DeleteConfirmBody").append("Still you delete, this question will remain in exams but will not be available in search. Once you delete that exams this question will get deleted.<br>")
+						   		$("#DeleteConfirmBody").append("Do you want to continue?");
+							   $("#quesstatus").val("Y");
+							   $("#DeleteConfirmModal").modal("toggle");
+						   }else{
+							   $("#DeleteConfirmBody").empty();
+							   $("#DeleteConfirmBody").append("Are you sure?");
+							   $("#quesstatus").val("");
+							   $("#DeleteConfirmModal").modal("toggle");
+						   }
+			   		},
+			   		error:function(error){
+			   		
+			   		}
+		});
+		/* $("#actionform").attr("action","deletequestion");
 		$("#actionname").val("deletequestion");
-		$("#actionform").submit();
+		$("#actionform").submit(); */
+	});
+	
+	$("#QuestionDeleteConfirm").on("click",function(){
+		 $("#actionform").attr("action","deletequestion");
+			$("#actionname").val("deletequestion");
+			$("#actionform").submit();
 	});
 	
 	$("#QuestionBankQuestionListCreateExamhModalChooseMarksAdd").on("click",addQuestionCriteria);
@@ -192,17 +237,17 @@ function resetForm(){
         <td><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
         </c:if>
         <td><c:out value="${item.question}"></c:out></td>
-        <td><a class="edit" href="#" id="<c:out value="${item.questionNumber}"></c:out>"><button class="btn btn-primary">Edit</button></a></td>
-        <td><a class="delete" href="#" id="<c:out value="${item.questionNumber}"></c:out>"><button class="btn btn-danger">Delete</button></a></td>
+        <td><a class="editQuestion" href="#" id="<c:out value="${item.questionNumber}"></c:out>"><button class="btn btn-primary">Edit</button></a></td>
+        <td><a class="deleteQuestion" href="#" id="<c:out value="${item.questionNumber}"></c:out>"><button class="btn btn-danger">Delete</button></a></td>
       </tr>
       </c:forEach>
     </tbody>
   </table>
   
   <form action="" id="actionform" method="post">
-  <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
+  <input type="hidden" name="subject" id="subject" value="<c:out value="${subject}" ></c:out>">
   <input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
-  <input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
+  <input type="hidden" name="division" id="division" value="<c:out value="${division}" ></c:out>">
   <input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
   <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
   <input type="hidden" name="searchedMarks" value='<c:out value="${searchedMarks}"></c:out>'>
@@ -210,7 +255,8 @@ function resetForm(){
   <input type="hidden" name="searchedRep" value='<c:out value="${searchedRep}"></c:out>'>
   <input type="hidden" name="questionNumber" id="questionNumber" value='<c:out value="${questionNumber}"></c:out>'>
   <input type="hidden" name="actionname" id="actionname">
-  <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
+  <input type="hidden" name="institute" id="institute" value="<c:out value="${institute}"></c:out>"/>
+  <input type="hidden" name="quesstatus" id="quesstatus">	
   </form>
   <form action="paginateQuestion" id="paginateform">
   <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
@@ -375,6 +421,28 @@ function resetForm(){
     </div>
 	</div>
 	</div>
-
+	
+	<div class="modal fade" id="DeleteConfirmModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" 
+               aria-hidden="true">×
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               Question Delete
+            </h4>
+         </div>
+         <div class="modal-body" id="DeleteConfirmBody">
+           
+         </div>
+         <div class="modal-footer">
+	        <button type="button" class="btn btn-default"  data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal" id="QuestionDeleteConfirm">Ok</button>
+      	</div>
+         </div>
+   </div>
+</div>
 </body>
 </html>

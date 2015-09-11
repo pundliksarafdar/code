@@ -144,7 +144,7 @@ $(document).ready(function(){
 	});
 	
 	$("#cancelEdit").on("click",function(){
-		$("form#paginateform #actionname").val("viewcomplete");
+		$("form#paginateform #actionname").val("canceledit");
 		$("#paginateform").submit();
 	});
 	
@@ -169,9 +169,9 @@ var selectMarks = function(){
 			<div class="container" style="margin-bottom: 5px">
 			<c:choose>
 			<c:when test="${institute ne null }">
-			<a type="button" class="btn btn-primary" href="#" id="cancelEdit" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Back To Exam List</a>
+			<a type="button" class="btn btn-primary" href="#" id="cancelEdit" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Cancel Edit</a>
 			</c:when>
-			<c:otherwise><a type="button" class="btn btn-primary" href="#" id="cancelEdit"><span class="glyphicon glyphicon-circle-arrow-left"></span> Back To Exam List</a></c:otherwise>
+			<c:otherwise><a type="button" class="btn btn-primary" href="#" id="cancelEdit"><span class="glyphicon glyphicon-circle-arrow-left"></span> Cancel Edit</a></c:otherwise>
 			</c:choose>
 			</div>
 			<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
@@ -184,51 +184,81 @@ var selectMarks = function(){
 			<input type="hidden" name="searchcurrentPage" value="<c:out value="${searchcurrentPage}"></c:out>"/>
 			<input type="hidden" name="searchtotalPages" value="<c:out value="${searchtotalPages}"></c:out>"/>
 			<input type="hidden" name="examname" value="<c:out value="${examname}"></c:out>"/>
-			<div  class="col-md-6" align="left">
-			Exam Name:- <c:out value="${examname}"></c:out>	
-			</div>
-			<div class="col-md-6" align="right">
-			Total Marks:-<span class="badge" id="temptotalmarks" name="temptotalmarks"><c:out value="${totalmarks}"></c:out></span><br>
-			  </div>
+			Exam Name:- <c:out value="${examname}"></c:out>
+			  <c:if test="${(actionname ne 'editexam')}">
+			  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#QuestionBankQuestionListQuestionSearchModal">Advance Search</button>
+			   </c:if>
+			   <c:if test="${(actionname ne 'editexam')}">
+			  <button type="button" class="btn btn-default" id="createexam">Create Exam</button>
+			  </c:if>
+			  <c:if test="${(actionname ne 'showaddedquestions') && (actionname ne 'editexam')}">
+			  <button type="button" class="btn btn-default" id="showaddedquestion">Show All Added Questions</button>
+			 </c:if>
+			 <c:if test="${(actionname eq 'showaddedquestions') || (actionname eq 'editexam')}">
+			  <button type="button" class="btn btn-default" id="backtoquestions">Add Other Questions</button>
+			 </c:if>	
+			  Total Marks:-<span class="badge" id="temptotalmarks" name="temptotalmarks"><c:out value="${totalmarks}"></c:out></span><br>
+			  <c:if test='${actionname eq "advancesearch"}'>
+			   <button type="button" class="btn btn-default" id="clearadvancesearch">Clear Advance Search Criteria <span class="badge">x</span></button>
+			  </c:if>
 			</form>
 			</div>
 			</div>
 			<c:if test="${(questionDataList != null)}">
 	<div class="container">
-  <h4><font face="cursive">Exam Questions</font> </h4>            
+  <h2><font face="cursive">Search Result</font> </h2>            
   <table class="table table-striped" id="basetable">
+    <thead>
+      <tr>
+        <th>Sr No.</th>
+        <th>Question</th>
+        <th>Marks</th>
+        <th>Action</th>
+      </tr>
+    </thead>
     <tbody>
     <c:forEach items="${questionDataList}" var="item" varStatus="counter">
     <tr>
+    	<c:if test="${(actionname eq 'showaddedquestions') || (actionname eq 'editexam')}">
+        <td><c:out value="${counter.count}"></c:out></td>
+        </c:if>
     	<c:if test="${currentPage eq 1}">
-        <td  class="col-md-1"><c:out value="${counter.count}"></c:out></td>
+        <td><c:out value="${counter.count}"></c:out></td>
         </c:if>
         <c:if test="${currentPage gt 1 }">
-        <td  class="col-md-1"><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
+        <td><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
         </c:if>
-        <td  class="col-md-10"><c:out value="${item.question}"></c:out></td>
-        <td  class="col-md-1"><span class="badge" id='mark<c:out value="${item.questionNumber}"></c:out>'><c:out value="${item.marks}"></span></c:out></td>
-      </tr>
-      <tr>
-      <td  class="col-md-1"></td>
-      <td  class="col-md-10">
-      <c:forEach items="${item.options}" var="option" varStatus="innercounter">
-      <c:out value="${innercounter.count}"></c:out>.&nbsp; &nbsp;<c:out value="${option}"></c:out><br>
-      </c:forEach>
-      </td>
+        <td><c:out value="${item.question}"></c:out></td>
+        <td><span class="badge" id='mark<c:out value="${item.questionNumber}"></c:out>'><c:out value="${item.marks}"></span></c:out></td>
+        <c:choose>
+        <c:when test="${(questionIds != null)}">
+        <c:if test="${questionIds[(counter.count-1)] eq 1 }">
+        <td><a class="removequestion" href="#" id="<c:out value="${item.questionNumber}"></c:out>"><button class="btn btn-danger">Remove</button></a></td>
+        </c:if>
+		<c:if test="${questionIds[(counter.count-1)] eq 0 }">
+        <td><a class="addquestion" href="#" id="<c:out value="${item.questionNumber}"></c:out>"><button class="btn btn-success">Add</button></a></td>
+        </c:if>
+          	</c:when>
+          	<c:when test="${(actionname eq 'showaddedquestions') || (actionname eq 'editexam')}">
+          	<td><a class="removequestion" href="#" id="<c:out value="${item.questionNumber}"></c:out>"><button class="btn btn-danger">Remove</button></a></td>
+          	</c:when>
+      	<c:otherwise>
+      	<td><a class="addquestion" href="#" id="<c:out value="${item.questionNumber}"></c:out>"><button class="btn btn-success">Add</button></a></td>
+      	</c:otherwise>
+      	</c:choose>
       </tr>
       </c:forEach>
     </tbody>
   </table>
   
-  <form action="viewexam" id="autosubmitform" method="post">
+  <form action="editexam" id="autosubmitform" method="post">
   <input type="hidden" name="forwardhref" id="forwardhref">
   <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
   <input type="hidden" name="searchcurrentPage" value="<c:out value="${searchcurrentPage}"></c:out>"/>
   <input type="hidden" name="searchtotalPages" value="<c:out value="${searchtotalPages}"></c:out>"/>
   <input type="hidden" name="actionname" id="actionname" value="autosubmit">
   </form>
-  <form action="viewexam" id="paginateform">
+  <form action="editexam" id="paginateform">
   <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
   <input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
   <input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
@@ -240,7 +270,7 @@ var selectMarks = function(){
   <input type="hidden" name="addedIds" id="addedIds" value="">
   <input type="hidden" name="removedIds" id="removedIds" value="">
   <input type="hidden" id="totalmarks" name="totalmarks">
-   <input type="hidden" name="actionname" id="actionname">
+   <input type="hidden" name="actionname" id="actionname" value='<c:out value="${actionname}"></c:out>'>
    <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
    <input type="hidden" name="searchcurrentPage" value="<c:out value="${searchcurrentPage}"></c:out>"/>
    <input type="hidden" name="searchtotalPages" value="<c:out value="${searchtotalPages}"></c:out>"/>
@@ -263,7 +293,120 @@ var selectMarks = function(){
 </div>
 	</c:if>	
 
+	
+	
+<div class="modal fade" id="QuestionBankQuestionListQuestionSearchModal">
+ 	<div class="modal-dialog">
+    <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+          <h4 class="modal-title" id="myModalLabel">Search</h4>
+        </div>
+        <div class="modal-body" >
+		<form action="editexam" id="searchform">
+		<input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
+			<input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
+			<input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
+			<input type="hidden" name="actionname" value="advancesearch">
+			 <input type="hidden" name="addedIds" id="addedIds" value="">
+ 			 <input type="hidden" name="removedIds" id="removedIds" value="">
+ 			 <input type="hidden" id="totalmarks" name="totalmarks">
+ 			 <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
+ 			 <input type="hidden" name="searchcurrentPage" value="<c:out value="${searchcurrentPage}"></c:out>"/>
+ 			 <input type="hidden" name="searchtotalPages" value="<c:out value="${searchtotalPages}"></c:out>"/>
+ 			 <input type="hidden" name="examname" value="<c:out value="${examname}"></c:out>"/>
+		<div class="form-group">
+		<label for="exampleInputEmail1">Search word</label>
+          <input type="text" placeholder="Search word" class="form-control"/>
+		</div>
 
+		<div class="form-group">
+		<label for="">Choose Question occured in</label>	
+		<select class="btn btn-default" name="selectedExamID"> 
+			<option value="-1">Select</option>
+			<c:forEach items="${compExams}" var="item">
+    			<option value="'<c:out value="${item.compexam_id}"></c:out>'"><c:out value="${item.compexam_name}"></c:out></option>
+			</c:forEach>
+		</select>
+		</div>
 
+		<div class="form-group">
+		<label for="-1">Choose Marks</label>	
+		  <select  class="btn btn-default" name="selectedMarks">
+			<option value="-1">Select</option>
+			<c:forEach items="${marks}" var="item">
+    			<option value="<c:out value="${item}"></c:out>"><c:out value="${item}"></c:out></option>
+			</c:forEach>
+		  </select>
+		</div>
+
+		<div class="form-group">
+		<label for="">Choose repetetion</label>	
+		  <select class="btn btn-default" name="selectedRep">
+			<option value="-1">Select</option>
+			<c:forEach items="${repeatation}" var="item">
+    			<option value="<c:out value="${item}"></c:out>"><c:out value="${item}"></c:out></option>
+			</c:forEach>
+		  </select>
+		</div>  
+		</form>
+        </div>
+
+      	<div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal" id="search">Ok</button>
+      	</div>
+
+    </div>
+</div>
+</div>
+
+	
+    <c:if test="${actionname eq 'createexam' }">
+    <form role="form" action="editexam">
+    <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
+			<input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
+			<input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
+			<input type="hidden" name="actionname" value="submitexam">
+			<input type="hidden" name="searchcurrentPage" value="<c:out value="${searchcurrentPage}"></c:out>"/>
+			<input type="hidden" name="searchtotalPages" value="<c:out value="${searchtotalPages}"></c:out>"/>
+			<input type="hidden" name="examname" value="<c:out value="${examname}"></c:out>"/>
+  <div class="form-group">
+    <label for="examname">Enter Exam Name:</label>
+    <input type="text" class="form-control" id="examname" name="examname">
+  </div>
+  <div class="form-group">
+    <label for="totalquestions">Total Questions:</label>
+    <input type="text" class="form-control" id="noofquestions" name="noofquestions" value=<c:out value="${noofquestions}"></c:out> disabled="disabled">
+  </div>
+  <div class="form-group">
+    <label for="totalmarks">Total Marks:</label>
+    <input type="text" class="form-control" id="totalmarks" name="totalmarks" value=<c:out value="${totalmarks}"></c:out> disabled="disabled">
+  </div>
+   <div class="form-group">
+    <label for="totalmarks">Enter Passing Marks:</label>
+    <input type="text" class="form-control" id="passmarks" name="passmarks">
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+<form action="editexam" id="paginateform">
+  <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
+  <input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
+  <input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
+  <input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
+  <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
+  <input type="hidden" name="searchedMarks" value='<c:out value="${searchedMarks}"></c:out>'>
+  <input type="hidden" name="searchedExam" value='<c:out value="${searchedExam}"></c:out>'>
+  <input type="hidden" name="searchedRep" value='<c:out value="${searchedRep}"></c:out>'>
+  <input type="hidden" name="addedIds" id="addedIds" value="">
+  <input type="hidden" name="removedIds" id="removedIds" value="">
+  <input type="hidden" id="totalmarks" name="totalmarks">
+   <input type="hidden" name="actionname" id="actionname" value='<c:out value="${actionname}"></c:out>'>
+   <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
+   <input type="hidden" name="searchcurrentPage" value="<c:out value="${searchcurrentPage}"></c:out>"/>
+   <input type="hidden" name="searchtotalPages" value="<c:out value="${searchtotalPages}"></c:out>"/>
+   <input type="hidden" name="examname" value="<c:out value="${examname}"></c:out>"/>
+</form>
+</c:if>
 </body>
 </html>

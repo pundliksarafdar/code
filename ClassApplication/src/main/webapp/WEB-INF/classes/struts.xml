@@ -277,10 +277,10 @@
 			<result name="uploadexams" type="chain">uploadexams</result>
 			<result name="editexam" type="chain">editexam</result>
 		</action>
-		<action name="editexam" class="com.classowner.EditExamAction"
+		<!-- <action name="editexam" class="com.classowner.EditExamAction"
 			method="execute">
 			<result name="success" type="tiles">editexamlist</result>
-		</action>
+		</action> -->
 		
 		<action name="studentchoosesubject" class="com.exam.StudentChooseSubjectAction">
 			<result name="success" type="tiles">student.studentchoosesubject</result>
@@ -350,6 +350,7 @@
 		<action name="listExam" class="com.exam.SearchExamResultAction"
 			method="execute">
 			<result name="success" type="tiles">classowner.editexamlist</result>
+			<result name="teacherexamsearch" type="tiles">teacher.teacherexamsearch</result>
 		</action>
 		
 		<action name="deleteExam" class="com.corex.exam.DeleteExamAction"
@@ -380,6 +381,33 @@
 			<result name="addmanualexam" type="tiles">classowner.addmanualexam</result>
 			<result name="autosubmit" type="tiles">classowner.autosubmit</result>
 			<result name="teachermanualexam" type="tiles">teacher.teachermanualexam</result>
+		</action>
+		
+		<action name="editexam" class="com.exam.EditExamAction"
+			method="execute">
+			<result name="editexam" type="tiles">classowner.editexam</result>
+			<result name="autosubmit" type="tiles">classowner.autosubmit</result>
+			<result name="teachereditexam" type="tiles">teacher.teachereditexam</result>
+			<result name="editcomplete" type="tiles">classowner.questioneditsuccess</result>
+		</action>
+		
+		<action name="viewexam" class="com.exam.ViewExamAction"
+			method="execute">
+			<result name="viewexam" type="tiles">classowner.viewexam</result>
+			<result name="autosubmit" type="tiles">classowner.autosubmit</result>
+			<result name="teacherviewexam" type="tiles">teacher.teacherviewexam</result>
+			<result name="viewcomplete" type="tiles">classowner.questioneditsuccess</result>
+		</action>
+		
+		<action name="examMarks" class="com.exam.StudentExamMarksAction"
+			method="execute">
+			<result name="success" type="tiles">student.examMarks</result>
+			<result name="studentexamlist" type="tiles">student.examMarks</result>
+		</action>
+		<action name="viewexamans" class="com.exam.ViewExamAnsAction"
+			method="execute">
+			<result name="viewexamans" type="tiles">student.viewexamans</result>
+			<result name="viewanscomplete" type="tiles">classowner.questioneditsuccess</result>
 		</action>
 	</package>
 </struts>
