@@ -6,7 +6,7 @@
 	<constant name="struts.devMode" value="true" />
 	<constant name="struts.action.excludePattern" value="LoadConfig" />
 	<constant name="struts.action.excludePattern"
-		value="/admajxsrvlt,/classOwnerServlet,/notificationServlet,/reloadConfig" />
+		value="/admajxsrvlt,/classOwnerServlet,/notificationServlet,/reloadConfig,/notifications" />
 	<constant name="struts.multipart.maxSize" value="1000000" />
 	<constant name="struts.multipart.saveDir" value="C:\\ExamPapers" />
 	<package name="classapp" extends="struts-default">
@@ -279,7 +279,7 @@
 		</action>
 		<!-- <action name="editexam" class="com.classowner.EditExamAction"
 			method="execute">
-			<result name="success" type="tiles">editexamlist</result>
+			<result name="success" type="tiles">classowner.editexamlist</result>
 		</action> -->
 		
 		<action name="studentchoosesubject" class="com.exam.StudentChooseSubjectAction">

@@ -131,7 +131,7 @@ public class ExamTransaction {
 	 * @param batchId - coma seaparatted
 	 * @param ansId - coma seaparatted
 	 */
-	public void saveExam(String examName,int instituteId,int subId,int divId,int totalMarks,int passMarks,int creatorId,List<Integer> questionId,List<Integer> batchId,List<Integer> ansId){
+	public void saveExam(String examName,int instituteId,int subId,int divId,int totalMarks,int passMarks,int creatorId,String batchId,String questionId,String ansId){
 		Exam exam = new Exam();
 		ExamDB examDB = new ExamDB();
 		int examId = examDB.getNextExamID(instituteId, divId, subId);

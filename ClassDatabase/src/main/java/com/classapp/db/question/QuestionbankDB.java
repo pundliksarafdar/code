@@ -272,6 +272,7 @@ public List<QuestionSearchRequest> getCriteriaQuestionCount(int sub_id,int inst_
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
 	transaction=session.beginTransaction();
+	for (int i = 0; i < list.size(); i++) {
 	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.rowCount());;
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
 	criteria.add(criterion);
@@ -279,14 +280,14 @@ public List<QuestionSearchRequest> getCriteriaQuestionCount(int sub_id,int inst_
 	criteria.add(criterion);
 	criterion = Restrictions.eq("div_id", div_id);
 	criteria.add(criterion);
-	for (int i = 0; i < list.size(); i++) {
+	
 		if(list.get(i).getMarks()!=-1){
 			criteria.add(Restrictions.eq("marks", list.get(i).getMarks()));
 		}
 		if(list.get(i).getMaximumRepeatation()!=-1){
 			criteria.add(Restrictions.le("maximumRepeatation", list.get(i).getMaximumRepeatation()));
 		}
-		list.get(i).setAvailiblityCount((Integer) criteria.uniqueResult());
+		list.get(i).setAvailiblityCount((Long) criteria.uniqueResult());
 	}
 
 	//List<Integer> questionList = criteria.list();
@@ -300,6 +301,7 @@ public List<QuestionSearchRequest> getCriteriaQuestion(int sub_id,int inst_id,in
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
 	transaction=session.beginTransaction();
+	for (int i = 0; i < list.size(); i++) {
 	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.property("que_id")).addOrder(Order.asc("created_dt"));
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
 	criteria.add(criterion);
@@ -308,7 +310,6 @@ public List<QuestionSearchRequest> getCriteriaQuestion(int sub_id,int inst_id,in
 	criterion = Restrictions.eq("div_id", div_id);
 	criteria.add(criterion);
 	
-	for (int i = 0; i < list.size(); i++) {
 		if(list.get(i).getMarks()!=-1){
 			criteria.add(Restrictions.eq("marks", list.get(i).getMarks()));
 		}
@@ -337,8 +338,8 @@ public List<String> getQuestionAnsIds(int sub_id,int inst_id,int div_id,List<Int
 	criterion = Restrictions.eq("div_id", div_id);
 	criteria.add(criterion);
 	criterion=Restrictions.in("que_id", que_ids);
-	criteria.setMaxResults(2);
-	List<String> questionAnsList = criteria.list();
+	criteria.add(criterion);
+	List questionAnsList = criteria.list();
 	transaction.commit();
 	session.close();
 	return  questionAnsList;	

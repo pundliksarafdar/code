@@ -220,3 +220,4 @@ pip-log.txt
 *.war
 *target/
 run.bat
+run.bat

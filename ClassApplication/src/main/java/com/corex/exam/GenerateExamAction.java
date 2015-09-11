@@ -49,18 +49,24 @@ public class GenerateExamAction extends BaseAction{
 			 String questionId = "";
 			 String questionAnswerId = "";
 			 //Extract questionids
-			 List<List<Integer>> questionIdListsList = new ArrayList<List<Integer>>();
-			 List<List<String>> questionAnswerIdListsList = new ArrayList<List<String>>();
+			 List<String> questionIdListsList = new ArrayList<String>();
+			 List<String> questionAnswerIdListsList = new ArrayList<String>();
+			 String questionIdString = "";
+			 String answerIdString = "";
+			 
 			 for (QuestionSearchRequest questionSearchRequest:exam) {
 				List<Integer> questionList = questionSearchRequest.getQuestionId();
 				List<String> answersId = examTransaction.getAnswers(subject, userBean.getRegId(), division, questionList);
-				questionIdListsList.add(questionList);
-				questionAnswerIdListsList.add(answersId);
+				questionIdListsList.add(StringUtils.join(questionList,","));
+				questionAnswerIdListsList.add(StringUtils.join(answersId,"/"));
 			}
-			 
+			 questionIdString = StringUtils.join(questionIdListsList,",");
+			 answerIdString = StringUtils.join(questionAnswerIdListsList,"/");
+			 System.out.println(questionIdString+"<>"+answerIdString);
 		}
-		System.out.println(exam);
-		//examTransaction.saveExam(examname, in, subId, divId, totalMarks, passMarks, creatorId, questionId, batchId, ansId)
+		
+		
+		//examTransaction.saveExam(examname, userBean.getRegId(), 0, division, 10, passingmarks, 0, StringUtils.join(qu, separator), batch, ansId);
 		return SUCCESS;
 	}
 	

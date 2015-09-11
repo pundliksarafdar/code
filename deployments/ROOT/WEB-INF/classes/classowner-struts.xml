@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+   "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+   "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.action.excludePattern" value="LoadConfig" />
+	<constant name="struts.action.excludePattern"
+		value="/admajxsrvlt,/classOwnerServlet,/notificationServlet,/reloadConfig" />
+	<constant name="struts.multipart.maxSize" value="1000000" />
+	<constant name="struts.multipart.saveDir" value="C:\\ExamPapers" />
+	<package name="classapp" extends="struts-default">
+		<result-types>
+			<result-type name="tiles"
+				class="org.apache.struts2.views.tiles.TilesResult" />
+		</result-types>
+		<global-results>
+			<result name="syserror" type="tiles">syserror</result>
+			<result name="logoutglobal" type="tiles">login</result>
+			<result name="UNAUTHRISED" type="tiles">unauthorised</result>
+		</global-results>
+
+		<action name="login" class="com.corex.exam.ExamAction" method="execute">
+			<result name="success" type="tiles">login</result>
+			<param name="ignoresession">true</param>
+		</action>
+	</package>
+</struts>
