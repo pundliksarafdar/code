@@ -406,7 +406,12 @@
       <put-attribute name="title"  value="Criteria"/>
       <put-attribute name="body"   value="/ClassOwner/ExamCriteria.jsp"/>      
    </definition>
-	
+
+	<definition name="classowner.generateexamsuccess" extends="baseLayout">
+      <put-attribute name="title"  value="Criteria"/>
+      <put-attribute name="body"   value="/ClassOwner/generateexamsuccess.jsp"/>      
+   </definition>
+		
 	<definition name="classowner.addtopicinitiate" extends="baseLayout">
       <put-attribute name="title"  value="Criteria"/>
       <put-attribute name="body"   value="/ClassOwner/AddTopics.jsp"/>      

@@ -4,11 +4,9 @@
    "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
 	<constant name="struts.devMode" value="true" />
-	<constant name="struts.action.excludePattern" value="LoadConfig" />
 	<constant name="struts.action.excludePattern"
 		value="/admajxsrvlt,/classOwnerServlet,/notificationServlet,/reloadConfig,/notifications" />
 	<constant name="struts.multipart.maxSize" value="1000000" />
-	<constant name="struts.multipart.saveDir" value="C:\\ExamPapers" />
 	<package name="classapp" extends="struts-default">
 		<result-types>
 			<result-type name="tiles"
@@ -326,7 +324,7 @@
 		</action>
 		
 		<action name="generateexamaction" class="com.corex.exam.GenerateExamAction" method="execute">
-			<result name="success" type="tiles">classowner.generateexam</result>
+			<result name="success" type="tiles">classowner.generateexamsuccess</result>
 			<param name="ignoresession">true</param>
 		</action>
 

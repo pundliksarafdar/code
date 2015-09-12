@@ -143,8 +143,11 @@ public class ExamTransaction {
 		exam.setTotal_marks(totalMarks);
 		exam.setPass_marks(passMarks);
 		exam.setCreated_by(creatorId);
-		
+		exam.setQue_ids(questionId);
+		exam.setAns_ids(ansId);
+		exam.setBatch_id(batchId);
 		examDB.saveExam(exam);
+		
 	}
 	
 	public List<String> getAnswers(int sub_id,int inst_id,int div_id,List<Integer> que_ids){

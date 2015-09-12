@@ -174,7 +174,7 @@ function displayTable(tableId,rowObj){
 			totalMarks += parseInt(key)*parseInt(rowObj[key]);
 			totalQuestion += parseInt(rowObj[key]);
 		}	
-		tableObj.append('<tr class="success"><td></td><td>Total</td><td>'+totalQuestion+'</td><td>'+totalMarks+'</td></tr>');
+		tableObj.append('<tr class="success"><td></td><td>Total</td><td>'+totalQuestion+'</td><td>'+totalMarks+'<input type="hidden" name="totalMarks" value='+totalMarks+'></td></tr>');
 		return tableObj;
 }
 

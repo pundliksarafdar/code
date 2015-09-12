@@ -26,6 +26,7 @@ public class GenerateExamAction extends BaseAction{
 	private Integer division,subject;
 	private Integer[] bacth;
 	private Integer passingmarks;
+	private Integer totalMarks;
 	private String examname;
 	@Override
 	public String performBaseAction(UserBean userBean,
@@ -63,10 +64,13 @@ public class GenerateExamAction extends BaseAction{
 			 questionIdString = StringUtils.join(questionIdListsList,",");
 			 answerIdString = StringUtils.join(questionAnswerIdListsList,"/");
 			 System.out.println(questionIdString+"<>"+answerIdString);
+			 int instituteId = userBean.getRegId();
+			 int creatorId = userBean.getRegId();
+			 examTransaction.saveExam(examname, instituteId, subject, division,totalMarks , passingmarks, creatorId,StringUtils.join(bacth, ",") , questionId, answerIdString);
 		}
 		
 		
-		//examTransaction.saveExam(examname, userBean.getRegId(), 0, division, 10, passingmarks, 0, StringUtils.join(qu, separator), batch, ansId);
+		
 		return SUCCESS;
 	}
 	
@@ -162,98 +166,13 @@ public class GenerateExamAction extends BaseAction{
 		this.examname = examname;
 	}
 
-	public static void main(String[] args) {
-		GenerateExamAction action = new GenerateExamAction();
-		/*
-		List<Integer> allExamId = new ArrayList<Integer>();
-		allExamId.add(1);
-		allExamId.add(2);
-		allExamId.add(3);
-		allExamId.add(4);
-		allExamId.add(5);
-		allExamId.add(6);
-		
-		List<Integer> examIds = action.generateRandomExamId(allExamId, 3);
-		System.out.println(examIds);
-		*/
-		
-		List<QuestionSearchRequest> questionSearchRequests = new ArrayList<QuestionSearchRequest>();
-		
-		//5 Marks questions
-		QuestionSearchRequest questionSearchRequest = new QuestionSearchRequest();
-		questionSearchRequest.setMarks(5);
-		
-		List<Integer> allQuestionId = new ArrayList<Integer>();
-		allQuestionId.add(1);
-		allQuestionId.add(2);
-		allQuestionId.add(3);
-		allQuestionId.add(4);
-		allQuestionId.add(5);
-		allQuestionId.add(6);
-		questionSearchRequest.setQuestionId(allQuestionId);
-		
-		questionSearchRequest.setAvailiblityCount(10);
-		
-		questionSearchRequest.setCount(5);
-		
-		questionSearchRequest.setMaximumRepeatation(2);
-		
-		questionSearchRequests.add(questionSearchRequest);
-		
-		//4 Marks
-		questionSearchRequest = new QuestionSearchRequest();
-		questionSearchRequest.setMarks(4);
-		
-		allQuestionId = new ArrayList<Integer>();
-		allQuestionId.add(1*2);
-		allQuestionId.add(2*2);
-		allQuestionId.add(3*2);
-		allQuestionId.add(4*2);
-		allQuestionId.add(5*2);
-		allQuestionId.add(6*2);
-		questionSearchRequest.setQuestionId(allQuestionId);
-		
-		questionSearchRequest.setAvailiblityCount(10);
-		
-		questionSearchRequest.setCount(5);
-		
-		questionSearchRequest.setMaximumRepeatation(2);
-		
-		questionSearchRequests.add(questionSearchRequest);
-		
-
-		//3 Marks
-		questionSearchRequest = new QuestionSearchRequest();
-		questionSearchRequest.setMarks(3);
-		
-		allQuestionId = new ArrayList<Integer>();
-		allQuestionId.add(1*3);
-		allQuestionId.add(2*3);
-		allQuestionId.add(3*3);
-		allQuestionId.add(4*3);
-		allQuestionId.add(5*3);
-		allQuestionId.add(6*3);
-		questionSearchRequest.setQuestionId(allQuestionId);
-		
-		questionSearchRequest.setAvailiblityCount(10);
-		
-		questionSearchRequest.setCount(3);
-		
-		questionSearchRequest.setMaximumRepeatation(2);
-		
-		questionSearchRequests.add(questionSearchRequest);
-
-		/*
-		try {
-			List<QuestionSearchRequest> list = action.generateExam(questionSearchRequests);
-			for(QuestionSearchRequest questionSearchRequest2 : list){
-				System.out.println(questionSearchRequest2.toString());
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
+	public Integer getTotalMarks() {
+		return totalMarks;
 	}
-	
+
+	public void setTotalMarks(Integer totalMarks) {
+		this.totalMarks = totalMarks;
+	}
+
+		
 }
