@@ -74,6 +74,7 @@ $.ajax({
 		   $("#classownerUploadexamSubjectNameSelect").removeAttr('disabled');
 		   displaySubjectDropDown(data);
 	   },
+	   global:false,
 		error:function(){
 	   		modal.launchAlert("Error","Error");
 	   	}

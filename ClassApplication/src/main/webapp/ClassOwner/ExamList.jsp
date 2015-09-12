@@ -154,7 +154,8 @@ $(".end").on("click",function(){
 
 	 <c:if test="${(examlist != null)}">
 	<div class="container" id="examBaseDiv">
-  <h2><font face="cursive">Search Result</font> </h2>            
+  <h2><font face="cursive">Search Result</font> </h2>
+              
   <table class="table table-striped">
     <thead>
       <tr>

@@ -24,7 +24,7 @@ public class GenerateExamAction extends BaseAction{
 	private Integer[] questioncount;
 	private Integer[] marks;
 	private Integer division,subject;
-	private Integer[] bacth;
+	private String bacth;
 	private Integer passingmarks;
 	private Integer totalMarks;
 	private String examname;
@@ -66,7 +66,7 @@ public class GenerateExamAction extends BaseAction{
 			 System.out.println(questionIdString+"<>"+answerIdString);
 			 int instituteId = userBean.getRegId();
 			 int creatorId = userBean.getRegId();
-			 examTransaction.saveExam(examname, instituteId, subject, division,totalMarks , passingmarks, creatorId,StringUtils.join(bacth, ",") , questionId, answerIdString);
+			 examTransaction.saveExam(examname, instituteId, subject, division,totalMarks , passingmarks, creatorId,bacth , questionIdString, answerIdString);
 		}
 		
 		
@@ -142,11 +142,11 @@ public class GenerateExamAction extends BaseAction{
 		this.subject = subject;
 	}
 
-	public Integer[] getBacth() {
+	public String getBacth() {
 		return bacth;
 	}
 
-	public void setBacth(Integer[] bacth) {
+	public void setBacth(String bacth) {
 		this.bacth = bacth;
 	}
 	

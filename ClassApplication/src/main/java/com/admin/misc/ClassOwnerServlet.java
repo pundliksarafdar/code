@@ -1,15 +1,10 @@
 package com.admin.misc;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.nio.file.Files;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -17,26 +12,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-
 
 import com.classapp.db.Feedbacks.Feedback;
 import com.classapp.db.Notes.Notes;
@@ -50,7 +30,6 @@ import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Teacher.Teacher;
 import com.classapp.db.Teacher.TeacherDetails;
 import com.classapp.db.batch.Batch;
-import com.classapp.db.batch.BatchDB;
 import com.classapp.db.batch.BatchDetails;
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.exam.Exam;
@@ -62,16 +41,13 @@ import com.classapp.db.student.StudentDetails;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
 import com.classapp.db.subject.Topics;
-import com.classapp.notification.AllUserId;
 import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;
-import com.config.ClassException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.helper.BatchHelperBean;
 import com.mails.AllMail;
-import com.opensymphony.xwork2.ActionContext;
-import com.signon.User;
+import com.threadrunner.ReEvaluateThreadRunner;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
@@ -2311,6 +2287,8 @@ public class ClassOwnerServlet extends HttpServlet{
 			respObject.addProperty("quesstatus", "");
 		}
 		respObject.addProperty(STATUS, "success");
+	}else if("reevaluate".equalsIgnoreCase(methodToCall)){
+		ReEvaluateThreadRunner evaluateThreadRunner = new ReEvaluateThreadRunner();
 	}
 		
 		printWriter.write(respObject.toString());
@@ -2444,32 +2422,4 @@ public class ClassOwnerServlet extends HttpServlet{
 		}
 		return true;
 	}
-	
-	
-/*	public void test() {
-		try {
-			InputStream input = new BufferedInputStream(
-			        new FileInputStream("D:/test.xlsx"));
-		//	POIFSFileSystem fileSystem=new POIFSFileSystem(input);
-			XSSFWorkbook workbook=new XSSFWorkbook(input);
-			XSSFSheet sheet=workbook.getSheetAt(0);
-			Iterator rows = sheet.rowIterator(); 
-			while(rows.hasNext())
-			{
-				XSSFRow row=(XSSFRow) rows.next();
-				Iterator cells = row.cellIterator();
-				while(cells.hasNext())
-				{
-					XSSFCell cell=(XSSFCell) cells.next();
-					System.out.println(cell.getStringCellValue()+"");
-				}
-			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
 }
