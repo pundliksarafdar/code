@@ -6,6 +6,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+<style>
+.popover-content {
+  height:300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+ }
+</style>
 <script>
 $(document).ready(function(){
 	var examID;
@@ -138,7 +145,9 @@ $(".end").on("click",function(){
 	$("form#paginateform #currentPage").val($("#totalPages").val());
 	$("#paginateform").submit();
 });
-
+var popoverTitle = "<div>Re-evaluate <button class='btn btn-success btn-xs pull-right'>All<i class='glyphicon glyphicon-refresh'></i></button></div>";
+var option = {content:$("#examListReevaluateExams").html(),html:true,title:popoverTitle};
+$('#example').popover(option);
 });
 </script>
 </head>
@@ -151,7 +160,63 @@ $(".end").on("click",function(){
 	 <a type="button" class="btn btn-primary" href="teachercommoncomponent?forwardAction=listExam" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
 	 </c:if>
 	</div>
-
+	<a id="example" href="#" class="btn btn-danger pull-right" data-toggle="popover" data-placement="bottom" 
+		title=""  role="button" >Re-evaluate</a>
+	<div id="examListReevaluateExams" style="display:none">
+		<div>
+		<table class="table">
+		<tr>
+			<td>Exammmmmmmmm need reevaluation</td>
+			<td><button id="examList0" class="btn btn-xs btn-danger" type="button">&nbsp;<i class="glyphicon glyphicon-unchecked"></i></button></td>
+		</tr>
+		<tr>
+			<td>Exammmmmmmmm2 reevaluating</td>
+			<td><button id="examList0" class="btn btn-xs btn-warning" type="button">&nbsp;<i class="glyphicon glyphicon-edit"></i></button></td>
+		</tr>
+		<tr>
+			<td>Exammmmmmmmm2 reevaluation done</td>
+			<td><button id="examList0" class="btn btn-xs btn-success" type="button">&nbsp;<i class="glyphicon glyphicon-check"></i></button></td>
+		</tr>
+		<tr>
+			<td>Exammmmmmmmm need reevaluation</td>
+			<td><button id="examList0" class="btn btn-xs btn-danger" type="button">&nbsp;<i class="glyphicon glyphicon-unchecked"></i></button></td>
+		</tr>
+		<tr>
+			<td>Exammmmmmmmm2 reevaluating</td>
+			<td><button id="examList0" class="btn btn-xs btn-warning" type="button">&nbsp;<i class="glyphicon glyphicon-edit"></i></button></td>
+		</tr>
+		<tr>
+			<td>Exammmmmmmmm2 reevaluation done</td>
+			<td><button id="examList0" class="btn btn-xs btn-success" type="button">&nbsp;<i class="glyphicon glyphicon-check"></i></button></td>
+		</tr>
+		<tr>
+			<td>Exammmmmmmmm need reevaluation</td>
+			<td><button id="examList0" class="btn btn-xs btn-danger" type="button">&nbsp;<i class="glyphicon glyphicon-unchecked"></i></button></td>
+		</tr>
+		<tr>
+			<td>Exammmmmmmmm2 reevaluating</td>
+			<td><button id="examList0" class="btn btn-xs btn-warning" type="button">&nbsp;<i class="glyphicon glyphicon-edit"></i></button></td>
+		</tr>
+		<tr>
+			<td>Exammmmmmmmm2 reevaluation done</td>
+			<td><button id="examList0" class="btn btn-xs btn-success" type="button">&nbsp;<i class="glyphicon glyphicon-check"></i></button></td>
+		</tr>
+		<tr>
+			<td>Exammmmmmmmm need reevaluation</td>
+			<td><button id="examList0" class="btn btn-xs btn-danger" type="button">&nbsp;<i class="glyphicon glyphicon-unchecked"></i></button></td>
+		</tr>
+		<tr>
+			<td>Exammmmmmmmm2 reevaluating</td>
+			<td><button id="examList0" class="btn btn-xs btn-warning" type="button">&nbsp;<i class="glyphicon glyphicon-edit"></i></button></td>
+		</tr>
+		<tr>
+			<td>Exammmmmmmmm2 reevaluation done</td>
+			<td><button id="examList0" class="btn btn-xs btn-success" type="button">&nbsp;<i class="glyphicon glyphicon-check"></i></button></td>
+		</tr>
+		<tr><td></td><td></td></tr>
+		</table>
+		</div>
+	</div>
 	 <c:if test="${(examlist != null)}">
 	<div class="container" id="examBaseDiv">
   <h2><font face="cursive">Search Result</font> </h2>
