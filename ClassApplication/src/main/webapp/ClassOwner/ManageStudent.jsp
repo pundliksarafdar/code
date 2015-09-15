@@ -26,9 +26,10 @@ function canceledit(batchID,pagenumber){
 function getstudentsrelatedtobatch(pagenumber){
 	
 	var batchname=$("#batchselected").val();
+	var batchdivision=$("#division"+batchname).val();
 	if(batchname!="-1"){
 		$("#students").hide();
-		$("#pagination").hide();
+		$("#pagination").empty();
 		$("#studentDetailTable").remove();
 		$("#noStudentError").hide();
 		pno=pagenumber;
@@ -37,7 +38,8 @@ function getstudentsrelatedtobatch(pagenumber){
 		data:{
 			batchname:batchname,
 			methodToCall:"getstudentsrelatedtobatch",
-			pagenumber:pagenumber
+			pagenumber:pagenumber,
+			batchdivision:batchdivision
 		},
 		type:"post",
 		success:function(data){
@@ -88,11 +90,11 @@ function getstudentsrelatedtobatch(pagenumber){
 			}
 			
 			noofpages=pages;
-			/* $("#pagination").append("<li><a href='#'>&raquo;</a></li>"): */
+			 $("#pagination").append("<li><a href='#' onClick=getstudentsrelatedtobatch("+noofpages+")>&raquo;</a></li>");
 			}else{
 				$("#noStudentError").show();
 			}
-			if(noofpages>1){
+			if(noofpages>0){
 				$("#pagination").show();
 			}
 			
@@ -199,6 +201,7 @@ function searchStudent() {
 
 function searchStudentthroughtable(studentLoginName) {
 		var batchname=$("#batchselected").val();
+		var batchdivision=$("#division"+batchname).val();
 		$("#studentDetailTable").remove();
 	$.ajax({
 		   url: "classOwnerServlet",
@@ -206,7 +209,8 @@ function searchStudentthroughtable(studentLoginName) {
 		    	 methodToCall: "searchStudent",
 		    	 studentLgName:studentLoginName,
 		    	 pagenumber:pno,
-		    	 batchID:batchname
+		    	 batchID:batchname,
+		    	 batchdivision:batchdivision
 		   		}, 
 		   type:"POST",
 		   success:function(data){
@@ -798,6 +802,10 @@ function getSelectedStudentsToDelete(){
 					<option value="<%=batches.get(counter).getBatch_id() %>"><%=batches.get(counter).getBatch_name() %></option>
 					<%} %>
 					</select>
+					<%for(int counter=0;counter<batches.size();counter++){ %>
+					<input type="hidden" id="division<%=batches.get(counter).getBatch_id() %>" value="<%=batches.get(counter).getDiv_id() %>">
+					<%} %>
+					</select>
 				<%}else{ %>
 					<div style="color:red">
 						No batches are added for this class <br>
@@ -809,7 +817,7 @@ function getSelectedStudentsToDelete(){
 		</div>
 		</div>
 		
-	<div class="btn-group btn-group-sm">
+	<div>
 			<div id="noStudentError" class="alert alert-danger" style="display:none;">
 				No student for this batch
 			</div>
@@ -834,17 +842,17 @@ function getSelectedStudentsToDelete(){
 				//System.out.println("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
 			%>
 			
-			<table class="hidden-xs hidden-sm table table-bordered table-hover" id="studentDetailTable" style="background-color: white;" border="1">
+			<table class=" hidden-xs hidden-sm table table-bordered table-hover" id="studentDetailTable" style="background-color: white;" border="1">
 				<thead>
 					<tr style="background-color: rgb(0, 148, 255);">
 						
-						<th>Student Login Name</th>
-						<th>Student Name</th>
-						<th>Division</th>
-						<th>Batches</th>
-						<th></th>
-						<th></th>
-						<th></th>
+						<th class="col-md-1">Student Login Name</th>
+						<th class="col-md-3">Student Name</th>
+						<th class="col-md-2">Division</th>
+						<th class="col-md-2">Batches</th>
+						<th class="col-md-2"></th>
+						<th class="col-md-1"></th>
+						<th class="col-md-1"></th>
 					 </tr>
 				</thead>
 				<tbody>	
@@ -861,7 +869,7 @@ function getSelectedStudentsToDelete(){
 				</tbody>
 			</table>
 
-			<table class="visible-xs visible-sm table table-bordered table-hover" id="studentDetailTable" style="background-color: white;" border="1">
+			 <table class="visible-xs visible-sm table table-bordered table-hover" id="studentDetailTable" style="background-color: white;" border="1">
 					<tr>
 						<td>Student Login Name</td>
 						<td><%=studentSearch.getStudentUserBean().getLoginName() %></td>
@@ -883,9 +891,10 @@ function getSelectedStudentsToDelete(){
 						<td>
 							<button type="button" class="btn btn-info" data-target="#modifyStudentModal" data-toggle="modal">Modify Student Batch</button>
 							<button type="button" class="btn btn-info" data-target="#deleteStudentModal" data-toggle="modal">Delete Student</button>
+							<a onclick="canceledit(<%=batchID%>,<%=pagenumber%>)"><button type="button" class="btn btn-info">Cancel</button></a>
 						</td>
 					</tr>
-			</table>			
+			</table>		
 			<%
 			request.getSession().setAttribute("studentSearchResult",null);	
 			}

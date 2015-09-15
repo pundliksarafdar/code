@@ -24,7 +24,7 @@ public class ExamDB {
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
-		session.save(exam);
+		session.saveOrUpdate(exam);
 		transaction.commit();
 		session.close();
 		return  true;

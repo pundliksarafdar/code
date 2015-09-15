@@ -224,6 +224,7 @@ $('#batchname').change(function(){
 	 }
 	 var regId;
 	 var batchID = $('div#timetable').find('#batchname').val();
+	 var batchdivision=$("#division"+batchID).val();
 	 $.ajax({
 		 
 		   url: "classOwnerServlet",
@@ -235,7 +236,8 @@ $('#batchname').change(function(){
 				 teachers:teachers,
 				 starttimes:starttimes,
 				 endtimes:endtimes,
-				 dates:dates
+				 dates:dates,
+				 batchdivision:batchdivision
 		   		},
 		   type:"POST",
 		   success:function(data){
@@ -486,12 +488,14 @@ $(function(){
   function filldropdown()
   {
 	  var batchName = $('div#timetable').find('#batchname').val();
+	  var batchdivision=$("#division"+batchName).val();
 	  var reg;
 	  $.ajax({
 		   url: "classOwnerServlet",
 		    data: {
 		    	 methodToCall: "fetchBatchSubject",
-		    		 batchName:batchName
+		    		 batchName:batchName,
+		    		 batchdivision:batchdivision
 		   		}, 
 		   type:"POST",
 		   success:function(data){
@@ -560,6 +564,9 @@ $(function(){
 					<option value="<%=batch.get(i).getBatch_id()%>"><%=batch.get(i).getBatch_name() %></option>
 					<%i++;} %>
 					</select>
+					<%for(int counter=0;counter<batch.size();counter++){ %>
+					<input type="hidden" id="division<%=batch.get(counter).getBatch_id() %>" value="<%=batch.get(counter).getDiv_id() %>">
+					<%} %>
 				</div>
 				<div class="col-md-4">
 				<button id="add" type="button" class="btn btn-info" disabled="true">Add lecture</button>

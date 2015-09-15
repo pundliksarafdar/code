@@ -56,6 +56,8 @@ public class ManualExamAction extends BaseAction{
 	int noofquestions;
 	String forwardhref;
 	String institute;
+	String examname;
+	int passmarks;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -190,21 +192,34 @@ public class ManualExamAction extends BaseAction{
 				for (Integer key:questionIdsMap.keySet()) {
 					questionIds.add(key);
 				}
-				
-				List<Integer> ansIdsList=bankTransaction.getQuestionMarks(inst_id, Integer.parseInt(subject), Integer.parseInt(division), questionIds);
+				Collections.sort(questionIds);
+				List<String> ansIdsList=examTransaction.getAnswers( Integer.parseInt(subject),inst_id, Integer.parseInt(division), questionIds);
 				String ansIds="";
 				if (ansIdsList!=null) {
 					for (int i = 0; i < ansIdsList.size(); i++) {
 						if(i==0){
 							ansIds=ansIdsList.get(i)+"";
 						}else{
-							ansIds=ansIds+","+ansIdsList.get(i);
+							ansIds=ansIds+"/"+ansIdsList.get(i);
+						}
+					}
+				}
+				String queIds="";
+				if (questionIds!=null) {
+					for (int i = 0; i < questionIds.size(); i++) {
+						if(i==0){
+							queIds=questionIds.get(i)+"";
+						}else{
+							queIds=queIds+","+questionIds.get(i);
 						}
 					}
 				}
 				Exam exam=new Exam();
-				//examTransaction
+				examTransaction.saveExam(examname, inst_id, Integer.parseInt(subject), Integer.parseInt(division), totalmarks, passmarks, userBean.getRegId(), batch, queIds, ansIds);
 			}
+			session.put("questionsIds",null);
+			actionname="examadded";
+			return "examadded";
 		}else if("autosubmit".equals(actionname)){
 			session.put("questionsIds",null);
 			return "autosubmit";
@@ -271,8 +286,11 @@ public class ManualExamAction extends BaseAction{
 					questionDataList.add(questionData);
 				}
 			}
-			
-			actionname="";
+			if("examadded".equals(actionname)){
+			actionname="examaddedsuccessfully";
+			}else{
+				actionname="";
+			}
 		}
 		if(userBean.getRole()==2){
 			return "teachermanualexam";
@@ -486,6 +504,22 @@ public class ManualExamAction extends BaseAction{
 
 	public void setInstitute(String institute) {
 		this.institute = institute;
+	}
+
+	public String getExamname() {
+		return examname;
+	}
+
+	public void setExamname(String examname) {
+		this.examname = examname;
+	}
+
+	public int getPassmarks() {
+		return passmarks;
+	}
+
+	public void setPassmarks(int passmarks) {
+		this.passmarks = passmarks;
 	}
 	
 	

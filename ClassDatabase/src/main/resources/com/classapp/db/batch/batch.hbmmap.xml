@@ -4,7 +4,12 @@
 <!-- Generated 18 Jul, 2014 11:15:40 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.classapp.db.batch.Batch" table="batch" catalog="classdb">
-        <id name="batch_id" type="int">
+    <composite-id>
+    	<key-property name="batch_id" column="BATCH_ID"></key-property>
+    	<key-property name="class_id" column="CLASS_ID"></key-property>
+		<key-property name="div_id" column="div_id"></key-property>
+		</composite-id>
+       <!--  <id name="batch_id" type="int">
             <column name="BATCH_ID" />
             <generator class="increment" />
         </id>
@@ -13,7 +18,7 @@
         </property>
         <property name="div_id" type="int">
             <column name="DIV_ID" />
-        </property>
+        </property> -->
         <property name="batch_name" type="java.lang.String">
             <column name="BATCH_NAME" />
         </property>

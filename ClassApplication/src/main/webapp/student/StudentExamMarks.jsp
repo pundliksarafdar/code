@@ -203,7 +203,7 @@ $(".viewExam").on("click",function(){
   <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
   </form>
   
-  <form action="attemptexamlist" id="paginateform">
+  <form action="examMarks" id="paginateform">
   <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
   <input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
   <input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">

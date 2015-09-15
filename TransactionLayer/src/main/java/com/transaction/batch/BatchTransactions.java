@@ -70,6 +70,10 @@ public class BatchTransactions {
 		return false;
 	}
 	
+public int getNextBatchID(int inst_id,int div_id){
+		return batchDB.getNextBatchID(inst_id, div_id);
+	}
+	
 	public boolean addUpdateDatchTime(Batch batch){
 		AddBatch addBatch = new AddBatch();
 		if (isBatchExist(batch)) {
@@ -102,8 +106,8 @@ public class BatchTransactions {
 		return status;
 	}
 	
-	public Batch getBatch(int batchId){
-		return batchDB.getBatchFromID(batchId);
+	public Batch getBatch(int batchId,int inst_id,int div_id){
+		return batchDB.getBatchFromID(batchId,inst_id,div_id);
 		
 	}
 	
@@ -114,7 +118,7 @@ public class BatchTransactions {
 	
 	
 	public String getBatcheSubjects(String batchID) {
-		List Subjects=batchDB.getBatchSubjects(batchID);
+		List Subjects=batchDB.getBatchSubjects(batchID,1,0);
 		String subject=(String) Subjects.get(0);
 		String[] subjectids=subject.split(",");
 		List subidsList = new ArrayList();
@@ -145,9 +149,9 @@ public class BatchTransactions {
 		
 	}
 	
-	public List getBatcheSubject(String batchID) {
+	public List getBatcheSubject(String batchID,int inst_id,int div_id) {
 		BatchDB batchDB=new BatchDB();
-		List Subjects=batchDB.getBatchSubjects(batchID);
+		List Subjects=batchDB.getBatchSubjects(batchID, inst_id, div_id);
 		String subject=(String) Subjects.get(0);
 		if(!subject.equals("")){
 		String[] subjectids=subject.split(",");
@@ -168,7 +172,7 @@ public class BatchTransactions {
 		batchDB=new BatchDB();
 		int counter=0;
 		while(counter<schedules.size()){
-		Batch batch=batchDB.getBatchFromID(schedules.get(counter).getBatch_id());
+		Batch batch=batchDB.getBatchFromID(schedules.get(counter).getBatch_id(),schedules.get(counter).getClass_id(),schedules.get(counter).getDiv_id());
 		batchs.add(batch);
 		counter++;
 		}

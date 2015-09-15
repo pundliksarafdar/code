@@ -146,6 +146,26 @@ public class ExamTransaction {
 		exam.setQue_ids(questionId);
 		exam.setAns_ids(ansId);
 		exam.setBatch_id(batchId);
+		exam.setExam_status("E");
+		examDB.saveExam(exam);
+		
+	}
+	
+	public void updateExam(int examID,String examName,int instituteId,int subId,int divId,int totalMarks,int passMarks,int creatorId,String batchId,String questionId,String ansId){
+		Exam exam = new Exam();
+		ExamDB examDB = new ExamDB();
+		exam.setExam_id(examID);
+		exam.setExam_name(examName);
+		exam.setInstitute_id(instituteId);
+		exam.setDiv_id(divId);
+		exam.setSub_id(subId);
+		exam.setTotal_marks(totalMarks);
+		exam.setPass_marks(passMarks);
+		exam.setCreated_by(creatorId);
+		exam.setQue_ids(questionId);
+		exam.setAns_ids(ansId);
+		exam.setBatch_id(batchId);
+		exam.setExam_status("E");
 		examDB.saveExam(exam);
 		
 	}

@@ -60,6 +60,7 @@ public class EditExamAction extends BaseAction{
 	String examname;
 	int searchcurrentPage;
 	int searchtotalPages;
+	int passmarks;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -195,7 +196,8 @@ public class EditExamAction extends BaseAction{
 		}
 		
 		}else if("createexam".equals(actionname)){
-			
+			Exam exam=examTransaction.getExamToEdit(inst_id, Integer.parseInt(subject), Integer.parseInt(division), examID);
+			passmarks=exam.getPass_marks();
 		}else if("canceledit".equals(actionname)){
 			currentPage=searchcurrentPage;
 			totalPages=searchtotalPages;
@@ -206,21 +208,35 @@ public class EditExamAction extends BaseAction{
 				for (Integer key:questionIdsMap.keySet()) {
 					questionIds.add(key);
 				}
-				
-				List<Integer> ansIdsList=bankTransaction.getQuestionMarks(inst_id, Integer.parseInt(subject), Integer.parseInt(division), questionIds);
+				Collections.sort(questionIds);
+				List<String> ansIdsList=examTransaction.getAnswers( Integer.parseInt(subject),inst_id, Integer.parseInt(division), questionIds);
 				String ansIds="";
 				if (ansIdsList!=null) {
 					for (int i = 0; i < ansIdsList.size(); i++) {
 						if(i==0){
 							ansIds=ansIdsList.get(i)+"";
 						}else{
-							ansIds=ansIds+","+ansIdsList.get(i);
+							ansIds=ansIds+"/"+ansIdsList.get(i);
+						}
+					}
+				}
+				String queIds="";
+				if (questionIds!=null) {
+					for (int i = 0; i < questionIds.size(); i++) {
+						if(i==0){
+							queIds=questionIds.get(i)+"";
+						}else{
+							queIds=queIds+","+questionIds.get(i);
 						}
 					}
 				}
 				Exam exam=new Exam();
-				//examTransaction
+				examTransaction.updateExam(examID,examname, inst_id, Integer.parseInt(subject), Integer.parseInt(division), totalmarks, passmarks, userBean.getRegId(), batch, queIds, ansIds);
+				actionname="editcomplete";
 			}
+			currentPage=searchcurrentPage;
+			totalPages=searchtotalPages;
+			return "editcomplete";
 		}else if("autosubmit".equals(actionname)){
 			session.put("questionsIds",null);
 			return "autosubmit";
@@ -534,6 +550,14 @@ public class EditExamAction extends BaseAction{
 
 	public void setSearchtotalPages(int searchtotalPages) {
 		this.searchtotalPages = searchtotalPages;
+	}
+
+	public int getPassmarks() {
+		return passmarks;
+	}
+
+	public void setPassmarks(int passmarks) {
+		this.passmarks = passmarks;
 	}
 	
 	

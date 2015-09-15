@@ -25,7 +25,7 @@ public class FetchNotesAction extends BaseAction{
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
 		// TODO Auto-generated method stub
-		String subject=(String) request.getParameter("subject");
+		/*String subject=(String) request.getParameter("subject");
 		String division=(String) request.getParameter("division");
 		NotesTransaction notesTransaction=new NotesTransaction();
 		List<Notes> noteslist =notesTransaction.getNotesPath(Integer.parseInt(division), Integer.parseInt(subject), userBean.getRegId());
@@ -36,7 +36,7 @@ public class FetchNotesAction extends BaseAction{
 		DivisionTransactions divisionTransactions=new DivisionTransactions();
 		List<Division> divisions=divisionTransactions.getAllDivisions(userBean.getRegId());
 		request.setAttribute("divisions", divisions);
-		
+		*/
 		return SUCCESS;
 	}
 }

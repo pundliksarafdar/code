@@ -100,7 +100,7 @@ public class StudentDB {
 				String[] batchids=entry.getBatch_id().split(",");
 				List<Batch> batches= new ArrayList<Batch>();
 				for (String batchId : batchids) {
-					Batch batch=batchDB.getBatchFromID(Integer.parseInt(batchId));
+					Batch batch=batchDB.getBatchFromID(Integer.parseInt(batchId),class_id,entry.getDiv_id());
 					if(batch!=null){
 						batches.add(batch);
 					}
@@ -450,12 +450,12 @@ public class StudentDB {
 		}
 	}
 	
-	public Integer getStudentcountrelatedtobatch(String batchname) {
+	public Integer getStudentcountrelatedtobatch(String batchname,int inst_id,int div_id) {
 		Session session = null;
 		boolean status=false;
 		Transaction transaction = null;
 		List<Long> list=null;
-		String queryString="select count(student_id) from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4)";
+		String queryString="select count(student_id) from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4) and class_id=:class_id and div_id=:div_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
@@ -464,6 +464,8 @@ public class StudentDB {
 			query.setParameter("batch_id2","%,"+batchname+",%");	
 			query.setParameter("batch_id3", "%,"+batchname);
 			query.setParameter("batch_id4", batchname);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
 			list=(List<Long>)query.list();
 			if(list!=null)
 			{
@@ -478,12 +480,12 @@ public class StudentDB {
 		return 0;
 	}
 	
-	public List getStudentIDSrelatedtoBatch(String batchname) {
+	public List getStudentIDSrelatedtoBatch(String batchname,int inst_id,int div_id) {
 		Session session = null;
 		boolean status=false;
 		Transaction transaction = null;
 		List list=null;
-		String queryString="select student_id from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4)";
+		String queryString="select student_id from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4) and class_id=:class_id and div_id=:div_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
@@ -492,6 +494,8 @@ public class StudentDB {
 			query.setParameter("batch_id2","%,"+batchname+",%");	
 			query.setParameter("batch_id3", "%,"+batchname);
 			query.setParameter("batch_id4", batchname);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
 				list=query.list();
 			if(list!=null)
 			{

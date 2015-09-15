@@ -12,15 +12,19 @@ import org.apache.commons.beanutils.BeanUtils;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.batch.Batch;
+import com.classapp.db.register.RegisterBean;
+import com.classapp.db.register.RegisterDB;
+import com.classapp.db.student.Student;
+import com.classapp.schedule.Scheduledata;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
 
 public class ScheduleTransaction {
 
 	public String addLecture(String class_id,String batch_id,List sub_id,List teacher_id,
-			List start_time,List end_time,List date) {
+			List start_time,List end_time,List date,int div_id) {
 		BatchTransactions batchTransactions=new BatchTransactions();
-		Batch batch=batchTransactions.getBatch(Integer.parseInt(batch_id));
+		Batch batch=batchTransactions.getBatch(Integer.parseInt(batch_id),Integer.parseInt(class_id),div_id);
 		int i=0;
 		for(i=0;i<sub_id.size();i++)
 		{
@@ -81,7 +85,7 @@ public class ScheduleTransaction {
 	}
 	
 	public String isTeacherUnavailable(String class_id,String batch_id,List sub_id,List teacher_id,
-			List start_time,List end_time,List date,List scheduleids) {
+			List start_time,List end_time,List date,List scheduleids,int div_id) {
 		
 		int i=0;
 		String status="";
@@ -92,7 +96,7 @@ public class ScheduleTransaction {
 		schedule.setClass_id(Integer.parseInt(class_id));
 		schedule.setDate((Date)date.get(i));
 		schedule.setDay_id(2);
-		schedule.setDiv_id(1);
+		schedule.setDiv_id(div_id);
 		schedule.setEnd_time((Time)end_time.get(i));
 		schedule.setStart_time((Time)start_time.get(i));
 		schedule.setSub_id(Integer.parseInt((String)sub_id.get(i)));
@@ -122,10 +126,10 @@ public class ScheduleTransaction {
 		return status;
 	}
 	
-	public List<Schedule> getSchedule(int batchid,Date date) {
+	public List<Schedule> getSchedule(int batchid,Date date,int inst_id,int div_id) {
 		List<Schedule> schedulelist=null;
 		ScheduleDB db=new ScheduleDB();
-		schedulelist=db.getSchedule(batchid,date);
+		schedulelist=db.getSchedule(batchid,date,inst_id,div_id);
 		return schedulelist;
 		
 	}
@@ -138,16 +142,16 @@ public class ScheduleTransaction {
 		
 	}
 	
-	public boolean deleteSchedule(int scheduleid)
+	public boolean deleteSchedule(int scheduleid,int inst_id)
 	{
 		
 		ScheduleDB db=new ScheduleDB();
-		db.deleteSchedule(scheduleid);
+		db.deleteSchedule(scheduleid,inst_id);
 		return true;
 	}
 	
 	public String updateLecture(String class_id,String batch_id,List sub_id,List teacher_id,
-			List start_time,List end_time,List date,List scheduleid) {
+			List start_time,List end_time,List date,List scheduleid,int div_id) {
 		
 		int i=0;
 		for(i=0;i<sub_id.size();i++)
@@ -157,7 +161,7 @@ public class ScheduleTransaction {
 		schedule.setClass_id(Integer.parseInt(class_id));
 		schedule.setDate((Date)date.get(i));
 		schedule.setDay_id(2);
-		schedule.setDiv_id(1);
+		schedule.setDiv_id(div_id);
 		schedule.setEnd_time((Time)end_time.get(i));
 		schedule.setStart_time((Time)start_time.get(i));
 		schedule.setSub_id(Integer.parseInt((String)sub_id.get(i)));
@@ -209,7 +213,7 @@ public class ScheduleTransaction {
 				}	
 			}
 			if(flag==false){
-				db.deleteschedulerelatedtobatchsubject(batch.getBatch_id(), Integer.parseInt(batchsubids[i]));
+				db.deleteschedulerelatedtobatchsubject(batch.getBatch_id(), Integer.parseInt(batchsubids[i]),batch.getDiv_id(),batch.getClass_id());
 			}
 			
 		}
@@ -236,5 +240,66 @@ public class ScheduleTransaction {
 		ScheduleDB scheduleDB=new ScheduleDB();
 		scheduleDB.deleteschedulerelatedtoBatch(batch);
 		return true;
+	}
+	
+	public List<Scheduledata> gettodaysSchedule(List<Student> students){
+		List<Scheduledata> scheduledatas=new ArrayList<Scheduledata>();
+		if(students!=null){
+			ScheduleDB scheduleDB=new ScheduleDB();
+			List<List<Schedule>> list=new ArrayList<List<Schedule>>();
+			for (int i = 0; i < students.size(); i++) {
+				String batchid[]=students.get(i).getBatch_id().split(",");
+				for (int k = 0; k < batchid.length; k++) {
+				List<Schedule> schedule=scheduleDB.getSchedule(Integer.parseInt(batchid[k]), new Date(new java.util.Date().getTime()), students.get(i).getClass_id(), students.get(i).getDiv_id());
+				list.add(schedule);
+				}
+			}
+			if(list!=null && list.size()>0){
+				BatchTransactions batchTransactions=new BatchTransactions();
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < list.get(i).size(); j++) {
+						Batch batch=batchTransactions.getBatch(list.get(i).get(j).getBatch_id(), list.get(i).get(j).getClass_id(), list.get(i).get(j).getDiv_id());
+						Scheduledata scheduledata=new Scheduledata();
+						scheduledata.setBatch_name(batch.getBatch_name());
+						scheduledata.setStart_time(list.get(i).get(j).getStart_time());
+						scheduledata.setEnd_time(list.get(i).get(j).getEnd_time());
+						scheduledata.setInst_id(list.get(i).get(j).getClass_id());
+						scheduledatas.add(scheduledata);
+					}
+				}
+				}
+		}
+		return scheduledatas;
+	}
+	
+	public List<Scheduledata> getteacherstodaysSchedule(List<Integer> inst_ids,int teachersid){
+		List<Scheduledata> scheduledatas=new ArrayList<Scheduledata>();
+		if(inst_ids!=null){
+			ScheduleDB scheduleDB=new ScheduleDB();
+			List<List<Schedule>> list=new ArrayList<List<Schedule>>();
+			for (int i = 0; i < inst_ids.size(); i++) {
+				List<Schedule> schedules=scheduleDB.getTeachersSchedule(inst_ids.get(i), teachersid, new Date(new java.util.Date().getTime()));
+				list.add(schedules);
+			}
+			if(list.size()>0){
+				BatchTransactions batchTransactions=new BatchTransactions();
+				RegisterDB db=new RegisterDB();
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < list.get(i).size(); j++) {
+						Batch batch=batchTransactions.getBatch(list.get(i).get(j).getBatch_id(), list.get(i).get(j).getClass_id(), list.get(i).get(j).getDiv_id());
+						Scheduledata scheduledata=new Scheduledata();
+						scheduledata.setBatch_name(batch.getBatch_name());
+						scheduledata.setStart_time(list.get(i).get(j).getStart_time());
+						scheduledata.setEnd_time(list.get(i).get(j).getEnd_time());
+						scheduledata.setInst_id(list.get(i).get(j).getClass_id());
+						RegisterBean bean=db.getRegisterclass(list.get(i).get(j).getClass_id());
+						scheduledata.setInst_name(bean.getClassName());
+						scheduledatas.add(scheduledata);
+					}
+				}
+			}
+			
+		}
+		return scheduledatas;
 	}
 }

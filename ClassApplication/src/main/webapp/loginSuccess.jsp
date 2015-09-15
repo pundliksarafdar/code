@@ -1,3 +1,6 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="com.classapp.schedule.Scheduledata"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="org.apache.commons.lang3.time.DateUtils"%>
 <%@page import="java.util.Date"%>
@@ -14,72 +17,87 @@
 </head>
 <body>
 
-<div align="left" class="col-sm-12">
+<div align="left" class="row container">
 
 <%List<RegisterBean> registerBean =(List<RegisterBean>)session.getAttribute("classes");
 List<Notification> notifications =(List<Notification>)session.getAttribute("notifications");
+Map<String, List<Scheduledata>> map =(Map<String, List<Scheduledata>>)session.getAttribute("todayslect");
 String[] monthName = { "January", "February", "March", "April", "May", "June", "July",
         "August", "September", "October", "November", "December" };
-if(registerBean.size()>0){
 %>
-<div class="alert alert-info">You are linked with Following Classes</div>
-
-<div class="btn-group-vertical" role="group" aria-label="...">
-<%int counter=0;
-while(counter<registerBean.size()){
+<div class="col-sm-6">
+<div class="panel-group">
+<div class="panel panel-primary">
+      <div class="panel-heading"><b>Your classes</b></div>
+      <%if(registerBean.size()>0){ %>
+      <div class="panel-body">
+      <ul>
+      <%for(int i=0;i<registerBean.size();i++){ %>
+     <li title="1"><%=registerBean.get(i).getClassName() %></li>
+      <%} %>
+      </ul>
+      </div>
+      <%}else{ %>
+      <div class="panel-body">Yor are not connected to any class</div>
+      <%} %>
+    </div>
+    </div>
+	
+	<div class="">
+<%
+Iterator it = map.entrySet().iterator();
+while (it.hasNext()) {
+    Map.Entry pair = (Map.Entry)it.next();
+    System.out.println(pair.getKey() + " = " + pair.getValue());
+    %>
+    <div class="panel-group">
+    <div class="panel panel-primary" >
+      <div class="panel-heading">Todays Lectures</div>
+      <div class="panel-body">
+      <ul>
+      <li><%=pair.getKey() %></li>
+      <table class="table">
+      <% List<Scheduledata> list=(List<Scheduledata>)pair.getValue();
+      for(int i=0;i<list.size();i++){
+      %>
+      <tr>
+      	<td><%=list.get(i).getBatch_name() %></td>
+      	<td><%=list.get(i).getStart_time() %></td>
+      	<td><%=list.get(i).getEnd_time()%></td>
+      </tr>
+      <%} %>
+      </table>
+      </ul>
+      </div>
+      </div>
+      </div>
+    <%}
 %>
-<button type="button" class="btn btn-default"><%=registerBean.get(counter).getClassName() %></button>
-<%
-counter++;
-} %>
-</div><Br>
-<%}else{ %>
-<div class="alert alert-info">You are not linked with any Class</div>
-<%}%>
-<hr>
-<%
-if(notifications!=null){
-	if(notifications.size()>0){
-		boolean flag=false;
-		%>
-		<div class="alert alert-info">Notifications</div>
-		<div>
-		<%
-		for(int i=0;i<registerBean.size();i++){
-			flag=false;
-			String institutename=registerBean.get(i).getClassName();
-			%>
-			<p><b><%=institutename %> </b></p>
+</div>
+	</div>
+	
+<div class="col-sm-6">	
+<div class="panel-group">
+    <div class="panel panel-default" >
+      <div class="panel-heading" style="background-color:black;color: white;align:center" >Notice Board</div>
+      <%if(notifications.size()>0){ %>
+      <div class="panel-body" style="background-color:black;height: 200px;">
+		<%for(int i=0;i<notifications.size();i++){ %>
 			<ul>
-			<%
-			for(int j=0;j<notifications.size();j++){
-			if(registerBean.get(i).getRegId()==notifications.get(j).getInstitute_id())
-			{
-			flag=true;
-			%>
-			<li><%=monthName[notifications.get(j).getMsg_date().getMonth()]+" "+ notifications.get(j).getMsg_date().getDate()+" -> "+notifications.get(j).getBatch_name()+" -> "+notifications.get(j).getMessage() %></li><Br>
-		<%}}
-		if(flag==false)	{
-			%>
-			<li>No notifications available</li><Br>
-			<%
-		}%>
-		</ul>
-		<% 
-		}
-		%>
+			<li type="disc"><%=notifications.get(i).getMessage() %></li>
+			</ul>
+		<%} %>
+	  </div>
+	  <%} else{%>
+	  <div class="panel-body" style="background-color:black;height: 200px;"></div>
+	  <%} %>
+	  <div align="center">
+	  <img src=".\images\2.png" align="center">
 		</div>
-		<%
-		}else{
-		%>
-		<div class="alert alert-info">Notifications not available</div><Br>
-		<%
-	}
-}
-%>
+	</div>
+  </div>
 </div>
-<div  class="col-sm"> 
-<img alt="temp" src="images/background.png" >
 </div>
+
 </body>
 </html>

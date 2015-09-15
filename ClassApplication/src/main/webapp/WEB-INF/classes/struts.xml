@@ -127,9 +127,10 @@
 			<result name="success" type="tiles">notes.success</result>
 			<result name="teachernotes" type="tiles">notes.teachernotes</result>
 		</action>
-		<action name="seenotes" class="com.notes.SeeNotesAction"
+		<action name="seenotes" class="com.notes.DisplayNotesListAction"
 			method="execute">
 			<result name="success" type="tiles">seenotes.success</result>
+			<result name="teachernotes" type="tiles">seenotes.teachernotes</result>
 		</action>
 		<action name="fetchnotes" class="com.notes.FetchNotesAction"
 			method="execute">
@@ -250,11 +251,11 @@
 			<result type="tiles">uploadadd</result>
 		</action>
 
-		<!-- 
+		
 		<action name="sendmessage" class="com.classowner.SendMessageAction">
 			<result type="tiles">classowner.sendmessage</result>
 		</action>
-		 -->
+		
 		 
 		<action name="sessionreload" class="com.config.SessionReloadAction">
 			<result type="tiles">uploadadd</result>
@@ -379,6 +380,7 @@
 			<result name="addmanualexam" type="tiles">classowner.addmanualexam</result>
 			<result name="autosubmit" type="tiles">classowner.autosubmit</result>
 			<result name="teachermanualexam" type="tiles">teacher.teachermanualexam</result>
+			<result name="examadded" type="tiles">classowner.questioneditsuccess</result>
 		</action>
 		
 		<action name="editexam" class="com.exam.EditExamAction"

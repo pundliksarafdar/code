@@ -18,6 +18,9 @@ $(document).ready(function(){
 	if($("#actionname").val()=="viewanscomplete"){
 		$("#paginateform").prop("action","examMarks");
 	}
+	if($("#actionname").val()=="examadded"){
+		$("#paginateform").prop("action","manualexam");
+	}
 $("#paginateform").submit();
 });
 </script>

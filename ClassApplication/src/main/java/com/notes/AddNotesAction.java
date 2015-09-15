@@ -15,7 +15,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 
 import com.classapp.db.Notes.Notes;
+import com.classapp.login.UserStatic;
 import com.config.BaseAction;
+import com.config.Constants;
 import com.transaction.notes.NotesTransaction;
 import com.transaction.notification.NotificationGlobalTransation;
 import com.user.UserBean;
@@ -70,11 +72,14 @@ public class AddNotesAction extends BaseAction{
 		/* Copy file to a safe location */
 	    //  destPath = "D:/"+userBean.getRegId()+"/"+division+"/"+subject+"/"; 
 	      Notes notes=new Notes();
-	      destPath=  ServletActionContext.getServletContext().getRealPath("/"+userBean.getRegId())+"/Notes/"+division+"/"+subject+"/";
-	      String DBPAth=userBean.getRegId()+"/Notes/"+division+"/"+subject+"/";
+	      UserStatic userStatic = userBean.getUserStatic();
+	      destPath=  userStatic.getNotesPath()+File.separator+subject+File.separator+division;
+	      String DBPAth="";
 	      if(userBean.getRole()==2){
-	    	  destPath=  ServletActionContext.getServletContext().getRealPath("/"+institute)+"/Notes/"+division+"/"+subject+"/";
-		       DBPAth=institute+"/Notes/"+division+"/"+subject+"/";
+				String storagePath = Constants.STORAGE_PATH+File.separator+institute;
+				userStatic.setStorageSpace(storagePath);
+	    	  destPath=  userStatic.getNotesPath()+File.separator+subject+File.separator+division;
+		      
 	      }
 	      
 	      

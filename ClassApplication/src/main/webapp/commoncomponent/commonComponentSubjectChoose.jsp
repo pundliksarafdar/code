@@ -130,9 +130,8 @@ var displayBatchFromSubjectNDivision = function (data){
 	data = JSON.parse(data);
 	data = data.batchlist;
 	data = JSON.parse(data);
-	console.log(data);
-	
-	//$(classownerUploadexamBatchNameMenu).children().not(".staticMenu").remove();
+	$(classownerUploadexamBatchNameMenu).children().not(".staticMenu").remove();
+	$(classownerUploadexamBatchNameMenu).find(".selectAllCheckbox").prop("checked",false);
 	if(data.length !== 0){
 	var index=0;
 	$.each(data,function(index,subjectData){
@@ -188,7 +187,6 @@ this.displayBatchFromSubjectNDivision = displayBatchFromSubjectNDivision;
 			  <ul class="dropdown-menu" aria-labelledby="classownerUploadexamSubjectNameMenu" id="classownerUploadexamBatchNameMenu">
 				<li class="staticMenu"><a href="#" id="selectAll"> <input type="checkbox" class="selectAllCheckbox" id="classownerUploadexamSubjectNameMenuselectAllRadio"><label for="classownerUploadexamSubjectNameMenuselectAllRadio">Select All<label></a></li>
 				<li class="staticMenu divider" role="separator" class=""></li>
-				
 			  </ul>
 			</div>
 			

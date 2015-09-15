@@ -39,7 +39,7 @@ public class AttemptExamList extends BaseAction {
 		int totalCount=0;
 		if(userBean.getRole()==3){
 			BatchTransactions batchTransactions=new BatchTransactions();
-			Batch studentbatch=batchTransactions.getBatch(Integer.parseInt(batch));
+			Batch studentbatch=batchTransactions.getBatch(Integer.parseInt(batch),institute,Integer.parseInt(division));
 			division=studentbatch.getDiv_id()+"";
 			StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
 		List<StudentMarks>	marks=marksTransaction.getStudentMarksList(institute, userBean.getRegId(), Integer.parseInt(subject), Integer.parseInt(division));
@@ -75,9 +75,19 @@ public class AttemptExamList extends BaseAction {
 			/*examlist=examTransaction.getExam(institute, Integer.parseInt(subject), -1, "Y",currentPage,"-1");
 			StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
 			List<StudentMarks> studentMarks=marksTransaction.getStudentMarksList(institute, userBean.getRegId(), Integer.parseInt(subject), Integer.parseInt(division));
-		*/	if(examlist!=null){
+		*/
+			int startindex=0;
+			if(currentPage>1){
+				startindex=(currentPage-1)*2;
+			}
+			int endindex=startindex+2;
+			
+			if(examlist!=null){
+				if(endindex>examlist.size()){
+					endindex=examlist.size();
+				}
 				studentExamData=new ArrayList<StudentExamData>();
-				for (int i = 0; i < examlist.size(); i++) {
+				for (int i = startindex; i < endindex; i++) {
 					StudentExamData examData=new StudentExamData();
 					examData.setExam_id(examlist.get(i).getExam_id());
 					examData.setExam_name(examlist.get(i).getExam_name());

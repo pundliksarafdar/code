@@ -157,6 +157,10 @@ $(document).ready(function(){
 			$("#autosubmitform").submit();
 		}
 	});
+	
+	$("#submitExam").click("click",function(){
+		$("form#saveExamForm #examname").val($("form#saveExamForm #newexamname").val());
+	});
 });
 
 var selectMarks = function(){
@@ -184,6 +188,7 @@ var selectMarks = function(){
 			<input type="hidden" name="searchcurrentPage" value="<c:out value="${searchcurrentPage}"></c:out>"/>
 			<input type="hidden" name="searchtotalPages" value="<c:out value="${searchtotalPages}"></c:out>"/>
 			<input type="hidden" name="examname" value="<c:out value="${examname}"></c:out>"/>
+			<input type="hidden" name="examID" value="<c:out value="${examID}"></c:out>"/>
 			Exam Name:- <c:out value="${examname}"></c:out>
 			  <c:if test="${(actionname ne 'editexam')}">
 			  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#QuestionBankQuestionListQuestionSearchModal">Advance Search</button>
@@ -275,6 +280,7 @@ var selectMarks = function(){
    <input type="hidden" name="searchcurrentPage" value="<c:out value="${searchcurrentPage}"></c:out>"/>
    <input type="hidden" name="searchtotalPages" value="<c:out value="${searchtotalPages}"></c:out>"/>
    <input type="hidden" name="examname" value="<c:out value="${examname}"></c:out>"/>
+   <input type="hidden" name="examID" value="<c:out value="${examID}"></c:out>"/>
    <c:if test="${(actionname ne 'showaddedquestions') && (actionname ne 'editexam')}">
   <ul class="pagination">
   <li><a class="start" >&laquo;</a></li>
@@ -315,6 +321,7 @@ var selectMarks = function(){
  			 <input type="hidden" name="searchcurrentPage" value="<c:out value="${searchcurrentPage}"></c:out>"/>
  			 <input type="hidden" name="searchtotalPages" value="<c:out value="${searchtotalPages}"></c:out>"/>
  			 <input type="hidden" name="examname" value="<c:out value="${examname}"></c:out>"/>
+ 			 <input type="hidden" name="examID" value="<c:out value="${examID}"></c:out>"/>
 		<div class="form-group">
 		<label for="exampleInputEmail1">Search word</label>
           <input type="text" placeholder="Search word" class="form-control"/>
@@ -363,17 +370,19 @@ var selectMarks = function(){
 
 	
     <c:if test="${actionname eq 'createexam' }">
-    <form role="form" action="editexam">
+    <form role="form" action="editexam" id="saveExamForm">
     <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
 			<input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
 			<input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
 			<input type="hidden" name="actionname" value="submitexam">
 			<input type="hidden" name="searchcurrentPage" value="<c:out value="${searchcurrentPage}"></c:out>"/>
 			<input type="hidden" name="searchtotalPages" value="<c:out value="${searchtotalPages}"></c:out>"/>
-			<input type="hidden" name="examname" value="<c:out value="${examname}"></c:out>"/>
+			<input type="hidden" name="examname" id="examname" value="<c:out value="${examname}"></c:out>"/>
+			<input type="hidden" name="examID" value="<c:out value="${examID}"></c:out>"/>
+			<input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
   <div class="form-group">
-    <label for="examname">Enter Exam Name:</label>
-    <input type="text" class="form-control" id="examname" name="examname">
+    <label for="newexamname">Enter Exam Name:</label>
+    <input type="text" class="form-control" id="newexamname" name="newexamname" value=<c:out value="${examname}"></c:out>>
   </div>
   <div class="form-group">
     <label for="totalquestions">Total Questions:</label>
@@ -381,13 +390,13 @@ var selectMarks = function(){
   </div>
   <div class="form-group">
     <label for="totalmarks">Total Marks:</label>
-    <input type="text" class="form-control" id="totalmarks" name="totalmarks" value=<c:out value="${totalmarks}"></c:out> disabled="disabled">
+    <input type="text" class="form-control" id="totalmarks" name="totalmarks" value=<c:out value="${totalmarks}"></c:out> readonly="readonly">
   </div>
    <div class="form-group">
     <label for="totalmarks">Enter Passing Marks:</label>
-    <input type="text" class="form-control" id="passmarks" name="passmarks">
+    <input type="text" class="form-control" id="passmarks" name="passmarks" value=<c:out value="${passmarks}"></c:out>>
   </div>
-  <button type="submit" class="btn btn-default">Submit</button>
+  <button type="submit" class="btn btn-default" id="submitExam">Submit</button>
 </form>
 <form action="editexam" id="paginateform">
   <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
@@ -406,6 +415,7 @@ var selectMarks = function(){
    <input type="hidden" name="searchcurrentPage" value="<c:out value="${searchcurrentPage}"></c:out>"/>
    <input type="hidden" name="searchtotalPages" value="<c:out value="${searchtotalPages}"></c:out>"/>
    <input type="hidden" name="examname" value="<c:out value="${examname}"></c:out>"/>
+   <input type="hidden" name="examID" value="<c:out value="${examID}"></c:out>"/>
 </form>
 </c:if>
 </body>

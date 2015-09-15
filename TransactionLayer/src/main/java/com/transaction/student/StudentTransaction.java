@@ -109,15 +109,15 @@ public class StudentTransaction {
 	return true;
 	}
 	
-	public List getStudentsrelatedtobatch(String batchname) {
+	public List getStudentsrelatedtobatch(String batchname,int inst_id,int div_id) {
 	StudentDB studentDB=new StudentDB();
-	List students =studentDB.getStudentIDSrelatedtoBatch(batchname);
+	List students =studentDB.getStudentIDSrelatedtoBatch(batchname,inst_id,div_id);
 	return students;
 	}
 	
-	public Integer getStudentscountrelatedtobatch(String batchname) {
+	public Integer getStudentscountrelatedtobatch(String batchname,int inst_id,int div_id) {
 		StudentDB db=new StudentDB();
-		return db.getStudentcountrelatedtobatch(batchname);
+		return db.getStudentcountrelatedtobatch(batchname, inst_id, div_id);
 		
 	}
 	

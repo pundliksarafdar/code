@@ -11,10 +11,12 @@
 		<key-property name="end_time" column="end_time"></key-property>
 		<key-property name="day_id" column="day_id"></key-property>
 		<key-property name="date" column="date"></key-property>
+		<key-property name="class_id" column="class_id"></key-property>
+		<key-property name="schedule_id" column="schedule_id"></key-property>
 		</composite-id>
-		<property name="class_id" type="java.lang.Integer">
+		<!-- <property name="class_id" type="java.lang.Integer">
             <column name="class_id" not-null="false" unique="false" />
-        </property>
+        </property> -->
         <property name="div_id" type="java.lang.Integer">
             <column name="div_id" not-null="false" unique="false" />
         </property>  
@@ -24,9 +26,9 @@
         <property name="sub_id" type="java.lang.Integer">
             <column name="sub_id" not-null="false" unique="false" />
         </property>
-        <property name="schedule_id" type="java.lang.Integer">
+       <!--  <property name="schedule_id" type="java.lang.Integer">
             <column name="schedule_id" not-null="false" unique="false" />
-        </property>    
+        </property> -->    
         
      </class>
 </hibernate-mapping>

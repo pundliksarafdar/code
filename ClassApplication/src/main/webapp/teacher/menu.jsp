@@ -49,7 +49,7 @@
    <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
     	<ul class="dropdown-menu">
 	            <li><a href="teachercommoncomponent?forwardAction=addteachernotesoption">Add Notes</a></li>
-	            <li><a href="seeteachernotes">See/Update Notes</a></li>  
+	            <li><a href="teachercommoncomponent?forwardAction=seenotes">See/Update Notes</a></li>  
 	     </ul>
   </li>
     <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Question <b class="caret"></b></a>

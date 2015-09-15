@@ -132,9 +132,9 @@ public class ClassOwnerServlet extends HttpServlet{
 				respObject.addProperty(STATUS, "error");
 				respObject.addProperty(MESSAGE, "No subjects selected!");
 			}
-			
+			int batchId=batchTransactions.getNextBatchID(regId, Integer.parseInt(divisionName));
 			batch.setSub_id(subjects);
-			
+			batch.setBatch_id(batchId);
 			if(batchTransactions.isBatchExist(batch)){
 				respObject.addProperty(STATUS, "error");
 				respObject.addProperty(MESSAGE, "Batch already exists.");
@@ -206,6 +206,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			String studentLoginName=req.getParameter("studentLgName");
 			String batchID=req.getParameter("batchID");
 			String pagenumber=req.getParameter("pagenumber");
+			String batchdivision=req.getParameter("batchdivision");
 			req.getSession().setAttribute("pagenumber",pagenumber);
 			req.getSession().setAttribute("batchID",batchID);
 			if(studentLoginName.equals("")){
@@ -229,7 +230,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				if(!student.getBatch_id().equals("")){
 				String batchids[]=student.getBatch_id().split(",");
 				for (int i = 0; i < batchids.length; i++) {
-					Batch batch=batchTransactions.getBatch(Integer.parseInt(batchids[i]));
+					Batch batch=batchTransactions.getBatch(Integer.parseInt(batchids[i]),userBean.getRegId(),Integer.parseInt(batchdivision));
 					batchs.add(batch);
 					batchName.append(batch.getBatch_name()+",");
 				}
@@ -544,8 +545,16 @@ public class ClassOwnerServlet extends HttpServlet{
 				regId = userBean.getRegId();
 			}
 			String batchID=req.getParameter("batchName");
+			String batchdivision=req.getParameter("batchdivision");
+			String institute=req.getParameter("institute");
 			BatchTransactions batchTransactions=new BatchTransactions();
-			List<Subjects> Batchsubjects=(List<Subjects>)batchTransactions.getBatcheSubject(batchID);
+			List<Subjects> Batchsubjects=null;
+			if(userBean.getRole()==3){
+				Batchsubjects=(List<Subjects>)batchTransactions.getBatcheSubject(batchID,Integer.parseInt(institute),Integer.parseInt(batchdivision));
+			}else{
+				Batchsubjects=(List<Subjects>)batchTransactions.getBatcheSubject(batchID,userBean.getRegId(),Integer.parseInt(batchdivision));
+			}
+			
 			if(Batchsubjects!=null){
 			String subjectnames="";
 			String subjectids="";
@@ -696,6 +705,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			String endtimes=req.getParameter("endtimes");
 			String dates=req.getParameter("dates");
 			String batchID=req.getParameter("batchID");
+			String batchdivision=req.getParameter("batchdivision");
 			if(batchID==null)
 			{
 				batchID=req.getParameter("batchname");
@@ -793,8 +803,8 @@ public class ClassOwnerServlet extends HttpServlet{
 			
 			if(exists.equals(""))
 			{
-			scheduleTransaction.addLecture(regId+"", batchID, subList, teacherList, stList, edList, dateList);
-			Batch batch=batchTransactions.getBatch(Integer.parseInt(batchID));
+			scheduleTransaction.addLecture(regId+"", batchID, subList, teacherList, stList, edList, dateList,Integer.parseInt(batchdivision));
+			Batch batch=batchTransactions.getBatch(Integer.parseInt(batchID),userBean.getRegId(),Integer.parseInt(batchdivision));
 			NotificationGlobalTransation notificationGlobalTransation=new NotificationGlobalTransation();
 			notificationGlobalTransation.sendAddLectureNotification(batch.getBatch_name(),batchID);
 			}else{
@@ -911,11 +921,17 @@ public class ClassOwnerServlet extends HttpServlet{
 				studentclass=Integer.parseInt(req.getParameter("classid"));
 			}
 			String batchname=	req.getParameter("batchname");
+			String batchdivision=req.getParameter("batchdivision");
 			String date=req.getParameter("date");
 			String dateString[]=date.split("/");
 			Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
 			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
-			List<Schedule> list=scheduleTransaction.getSchedule(Integer.parseInt(batchname),date2);
+			List<Schedule> list=null;
+			if(userBean.getRole()==3){
+			list=scheduleTransaction.getSchedule(Integer.parseInt(batchname),date2,studentclass,Integer.parseInt(batchdivision));
+			}else{
+			list=scheduleTransaction.getSchedule(Integer.parseInt(batchname),date2,userBean.getRegId(),Integer.parseInt(batchdivision));
+			}
 			SubjectTransaction subjectTransaction=new SubjectTransaction();
 			List<String> subjectList= subjectTransaction.getScheduleSubject(list);
 			RegisterTransaction registerTransaction=new RegisterTransaction();
@@ -1003,8 +1019,9 @@ public class ClassOwnerServlet extends HttpServlet{
 				regId = userBean.getRegId();
 			}
 			String batchID=req.getParameter("batchname");
+			String batchdivision=req.getParameter("batchdivision");
 			BatchTransactions batchTransactions=new BatchTransactions();
-			List<Subjects> Batchsubjects=(List<Subjects>)batchTransactions.getBatcheSubject(batchID);
+			List<Subjects> Batchsubjects=(List<Subjects>)batchTransactions.getBatcheSubject(batchID,userBean.getRegId(),Integer.parseInt(batchdivision));
 			String subjectnames="";
 			String subjectids="";
 			for(int i=0;i<Batchsubjects.size();i++)
@@ -1022,13 +1039,13 @@ public class ClassOwnerServlet extends HttpServlet{
 				
 			}
 		
-	
+			
 			String batchname=	req.getParameter("batchname");
 			String date=req.getParameter("date");
 			String dateString[]=date.split("/");
 			Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
 			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
-			List<Schedule> list=scheduleTransaction.getSchedule(Integer.parseInt(batchname),date2);
+			List<Schedule> list=scheduleTransaction.getSchedule(Integer.parseInt(batchname),date2,userBean.getRegId(),Integer.parseInt(batchdivision));
 			SubjectTransaction subjectTransaction=new SubjectTransaction();
 			List<String> subjectList= subjectTransaction.getScheduleSubject(list);
 			RegisterTransaction registerTransaction=new RegisterTransaction();
@@ -1153,7 +1170,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			String dates=req.getParameter("dates");
 			String batchID=req.getParameter("batchID");
 			String schrduleid=req.getParameter("schrduleid");
-			
+			String batchdivision=req.getParameter("batchdivision");
 			if(batchID==null)
 			{
 				batchID=req.getParameter("batchname");
@@ -1240,13 +1257,13 @@ public class ClassOwnerServlet extends HttpServlet{
 			String lectureexists="";
 			if(validatetime(stList, edList, dateList)){
 			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
-			String exists=scheduleTransaction.isTeacherUnavailable(regId+"", batchID, subList, teacherList, stList, edList, dateList,scheduleidsList);
+			String exists=scheduleTransaction.isTeacherUnavailable(regId+"", batchID, subList, teacherList, stList, edList, dateList,scheduleidsList,Integer.parseInt(batchdivision));
 			
 			if(exists.equals(""))
 			{
-			scheduleTransaction.updateLecture(regId+"", batchID, subList, teacherList, stList, edList, dateList,scheduleidsList);
+			scheduleTransaction.updateLecture(regId+"", batchID, subList, teacherList, stList, edList, dateList,scheduleidsList,Integer.parseInt(batchdivision));
 			BatchTransactions batchTransactions=new BatchTransactions();
-			Batch batch=batchTransactions.getBatch(Integer.parseInt(batchID));
+			Batch batch=batchTransactions.getBatch(Integer.parseInt(batchID),userBean.getRegId(),Integer.parseInt(batchdivision));
 			NotificationGlobalTransation notificationGlobalTransation=new NotificationGlobalTransation();
 			notificationGlobalTransation.sendUpdateLectureNotification(batch.getBatch_name(),batchID);
 			}else{
@@ -1330,10 +1347,10 @@ public class ClassOwnerServlet extends HttpServlet{
 					regId = userBean.getRegId();
 				}
 			}
-			
+			UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 			int batchId=Integer.parseInt(req.getParameter("batchId"));
-			
-			Batch batch=batchTransactions.getBatch(batchId);
+			int batchdivisionid=Integer.parseInt(req.getParameter("batchdivisionid"));
+			Batch batch=batchTransactions.getBatch(batchId,userBean.getRegId(),batchdivisionid);
 			String sub_Ids=req.getParameter("subIds");			
 			
 			if(batch!=null){
@@ -1363,9 +1380,10 @@ public class ClassOwnerServlet extends HttpServlet{
 					regId = userBean.getRegId();
 				}
 			}
-			
-			int deleteBatchId=Integer.parseInt(req.getParameter("batchId"));										
-			Batch batch=batchTransactions.getBatch(deleteBatchId);
+			UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+			int deleteBatchId=Integer.parseInt(req.getParameter("batchId"));
+			int batchdivisionid=Integer.parseInt(req.getParameter("batchdivisionid"));
+			Batch batch=batchTransactions.getBatch(deleteBatchId,userBean.getRegId(),batchdivisionid);
 			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 			scheduleTransaction.deleteSchedulerelatedoBatch(batch);
 			StudentTransaction studentTransaction=new StudentTransaction();
@@ -1403,7 +1421,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				String batchid="";
 				while(batchids.length>counter)
 				{
-					Batch batch=batchTransactions.getBatch(Integer.parseInt(batchids[counter]));
+					Batch batch=batchTransactions.getBatch(Integer.parseInt(batchids[counter]),Integer.parseInt(classid),student.getDiv_id());
 					if(counter==0)
 					{
 						batchnames=batch.getBatch_name();
@@ -1512,13 +1530,15 @@ public class ClassOwnerServlet extends HttpServlet{
 		
 		String scheduleid=req.getParameter("scheduleid");
 		ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
-		scheduleTransaction.deleteSchedule(Integer.parseInt(scheduleid));
+		scheduleTransaction.deleteSchedule(Integer.parseInt(scheduleid),userBean.getRegId());
 			respObject.addProperty(STATUS, "success");
 }else if("getstudentsrelatedtobatch".equals(methodToCall)){
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 	String batchname=req.getParameter("batchname");
 	String pagenumber=req.getParameter("pagenumber");
+	String batchdivision=req.getParameter("batchdivision");
 	StudentTransaction studentTransaction=new StudentTransaction();
-	int count=studentTransaction.getStudentscountrelatedtobatch(batchname);
+	int count=studentTransaction.getStudentscountrelatedtobatch(batchname,userBean.getRegId(),Integer.parseInt(batchdivision));
 	
 	//Taking data from database
 	int resultPerPage = Integer.parseInt(ServiceMap.getSystemParam(Constants.SERVICE_PAGINATION, "resultsperpage"));
@@ -1531,7 +1551,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		if(Integer.parseInt(pagenumber)>pages){
 			pagenumber=pages+"";
 		}
-		List students=studentTransaction.getStudentsrelatedtobatch(batchname);
+		List students=studentTransaction.getStudentsrelatedtobatch(batchname,userBean.getRegId(),Integer.parseInt(batchdivision));
 		RegisterTransaction registerTransaction=new RegisterTransaction();
 		List<RegisterBean> registerBeans= registerTransaction.getStudentsInfo(students,Integer.parseInt(pagenumber),resultPerPage);
 		if(registerBeans.size()>0)
@@ -1836,7 +1856,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	respObject.addProperty(STATUS, "success");
 	
 }else if("fetchnotes".equals(methodToCall)){
-	String subject=(String) req.getParameter("subject");
+	/*String subject=(String) req.getParameter("subject");
 	String division=(String) req.getParameter("division");
 	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 	NotesTransaction notesTransaction=new NotesTransaction();
@@ -1864,7 +1884,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	respObject.addProperty("notesnames", notesname.toString());
 	respObject.addProperty("notesids", notesids.toString());
 	respObject.addProperty("notespaths", notespaths.toString());
-	respObject.addProperty(STATUS, "success");
+	respObject.addProperty(STATUS, "success");*/
 	
 }else if("getstudentnotes".equals(methodToCall)){
 	String subject=(String) req.getParameter("subject");
@@ -1872,7 +1892,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	String batch=(String) req.getParameter("batch");
 	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 	NotesTransaction notesTransaction=new NotesTransaction();
-	List<Notes> noteslist =notesTransaction.getStudentNotesPath(batch, Integer.parseInt(subject), Integer.parseInt(classid));
+	List<Notes> noteslist =notesTransaction.getStudentNotesPath(batch, Integer.parseInt(subject), Integer.parseInt(classid),1);
 	StringBuilder notesname=new StringBuilder();
 	StringBuilder notesids=new StringBuilder();
 	StringBuilder notespaths=new StringBuilder();
@@ -1899,7 +1919,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	respObject.addProperty(STATUS, "success");
 	
 }else if("fetchteachernotes".equals(methodToCall)){
-	String subject=(String) req.getParameter("subject");
+	/*String subject=(String) req.getParameter("subject");
 	String division=(String) req.getParameter("division");
 	String classid=(String) req.getParameter("classes");
 	
@@ -1938,18 +1958,25 @@ public class ClassOwnerServlet extends HttpServlet{
 	respObject.addProperty("notesids", notesids.toString());
 	respObject.addProperty("notespaths", notespaths.toString());
 	respObject.addProperty("addedbyteacher", addedbyteacher.toString());
-	respObject.addProperty(STATUS, "success");
+	respObject.addProperty(STATUS, "success");*/
 	
 }else if("editnotesinformation".equals(methodToCall)){
 	String notesid=(String) req.getParameter("notesid");
-	String classes=(String) req.getParameter("classes");
+	String institute=(String) req.getParameter("institute");
+	String division=(String) req.getParameter("division");
+	String subject=(String) req.getParameter("subject");
 	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 	NotesTransaction notesTransaction=new NotesTransaction();
-	Notes notes=notesTransaction.getNotesById(Integer.parseInt(notesid));
+	Notes notes=null;
+	if(userBean.getRole()==2){
+		notes=notesTransaction.getNotesById(Integer.parseInt(notesid),Integer.parseInt(institute),Integer.parseInt(subject),Integer.parseInt(division));
+	}else{
+		notes=notesTransaction.getNotesById(Integer.parseInt(notesid),userBean.getRegId(),Integer.parseInt(subject),Integer.parseInt(division));
+	}
 	BatchTransactions batchTransactions=new BatchTransactions();
 	List<Batch> list=new ArrayList<Batch>();
-	if(classes!=null){		
-		list=batchTransactions.getAllBatchesOfDivision(notes.getDivid()+"", Integer.parseInt(classes));
+	if(institute!=null && !"".equals(institute)){		
+		list=batchTransactions.getAllBatchesOfDivision(notes.getDivid()+"", Integer.parseInt(institute));
 	}else{
 	list=batchTransactions.getAllBatchesOfDivision(notes.getDivid()+"", userBean.getRegId());
 	}
@@ -1986,7 +2013,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	NotesTransaction notesTransaction=new NotesTransaction();
 	
 	if(!notesTransaction.validatenotesnamebyID(notesname, userBean.getRegId(), Integer.parseInt(notesid))){
-	notesTransaction.updatenotes(notesname, Integer.parseInt(notesid), batchids);
+	notesTransaction.updatenotes(notesname, Integer.parseInt(notesid), batchids,1,1,1);
 	}else{
 		respObject.addProperty("duplicate", "true");
 	}
@@ -1995,11 +2022,11 @@ public class ClassOwnerServlet extends HttpServlet{
 }else if("deletenotes".equals(methodToCall)){
 	String notesid=(String) req.getParameter("notesid");
 	NotesTransaction notesTransaction=new NotesTransaction();
-	String path=notesTransaction.getNotepathById(Integer.parseInt(notesid));
+	String path=notesTransaction.getNotepathById(Integer.parseInt(notesid),1,1,1);
 	String realpath=	req.getSession().getServletContext().getRealPath("/"+path);
 	File file = new File(realpath);
 	  file.delete();
-	  notesTransaction.deleteNotes(Integer.parseInt(notesid));
+	  notesTransaction.deleteNotes(Integer.parseInt(notesid),1,1,1);
 	respObject.addProperty(STATUS, "success");
 	
 }else if("sendmessage".equals(methodToCall)){

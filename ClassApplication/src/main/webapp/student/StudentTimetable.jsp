@@ -16,6 +16,7 @@ $(document).ready(function(){
 	  $("#submit").click(function(){
 			var batchname=$("#batch").val();
 			var classid=$("#classnameSelect").val();
+			var batchdivision=$("#studentdivision").val();
 			var date=$("#date").val();
 			if(batchname!="-1" && classid!="-1" && date!="")
 				{
@@ -26,7 +27,8 @@ $(document).ready(function(){
 				    	 methodToCall: "getschedule",
 				    	 batchname:batchname,
 				    	 date:date,
-				    	 classid:classid
+				    	 classid:classid,
+				    	 batchdivision:batchdivision
 				   		},
 				   type:"POST",
 				   success:function(data){
@@ -129,7 +131,9 @@ $(document).ready(function(){
 Select Class
 <select id="classnameSelect" class='form-control'>
 <option value="-1">Select Class</option>
-<%List<RegisterBean> list=(List<RegisterBean>)request.getAttribute("Classes"); %>
+<%List<RegisterBean> list=(List<RegisterBean>)request.getAttribute("Classes");
+int studentdivision=(Integer)request.getAttribute("studentdivision");
+%>
 <%
 int counter=0;
 while(list.size()>counter){ %>
@@ -158,6 +162,7 @@ Select Date
    </button>
 
 </div>
+<input type="hidden" id="studentdivision" value="<%=studentdivision%>">
 </div>
 </div>
 </div>

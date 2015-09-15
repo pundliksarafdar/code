@@ -330,7 +330,7 @@ public List<String> getQuestionAnsIds(int sub_id,int inst_id,int div_id,List<Int
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
 	transaction=session.beginTransaction();
-	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.property("ans_id"));
+	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.property("ans_id")).addOrder(Order.asc("que_id"));
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
 	criteria.add(criterion);
 	criterion = Restrictions.eq("sub_id", sub_id);

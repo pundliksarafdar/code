@@ -3,6 +3,7 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -71,12 +72,18 @@ function fetchnotes(){
 
 function editnotes(notesid){
 	globalnotesid=notesid;
+	var institute=$("#institute").val();
+	var division=$("#division").val();
+	var subject=$("#subject").val();
 	$.ajax({
 		 
 		   url: "classOwnerServlet",
 		   data: {
 		    	 methodToCall: "editnotesinformation",
-		    	 notesid: notesid
+		    	 notesid: notesid,
+		    	 institute:institute,
+		    	 division:division,
+		    	 subject:subject
 		    	 
 		   		},
 		   type:"POST",
@@ -86,14 +93,14 @@ function editnotes(notesid){
 			   var notesbatch=resultJson.notesbatches.split(",");
 			   var allbatchnames=resultJson.allbatchnames.split(",");
 			   var allbatchids=resultJson.allbatchids.split(",");
-			   $("#notesname").val(notesname);
+			   $("#newnotesname").val(notesname);
 			   $("#batchesdiv").empty();
 			   var i=0;
 			   while(i<allbatchids.length){
 				   var flag=false;
 				   var j=0;
 				   while(j<notesbatch.length){
-					   if(allbatchids[i]==notesbatch[j]){
+					   if(allbatchids[i]==notesbatch[j].trim()){
 						   flag=true; 
 					   }
 					   j++;
@@ -115,8 +122,11 @@ function editnotes(notesid){
 }
 
 function deletenotes(notesid){
-	globalnotesid=notesid;
-	$.ajax({
+	$("form#actionform #notesid").val(notesid);
+	$("form#actionform #actionname").val("deletenotes");
+	$("#actionform").prop("action","seenotes");
+	$("#actionform").submit();
+	/* $.ajax({
 		 
 		   url: "classOwnerServlet",
 		   data: {
@@ -133,11 +143,19 @@ function deletenotes(notesid){
 			error:function(){
 		   		modal.launchAlert("Error","Error");
 		   	}
-		   });
+		   }); */
 }
 
 
 $(document).ready(function(){
+	$(".shownotes").on("click",function(){
+		$("form#actionform #notesid").val($(this).prop("id"));
+		$("#actionform").prop("action","shownotes");
+		var formData = $("#actionform").serialize();
+		console.log(formData);
+		window.open("shownotes?"+formData,"","width=500, height=500"); 
+	});
+	
 	$("#submit").click(function(){
 		$("#subjecterror").html("");
 		$("#divisionerror").html("");
@@ -197,8 +215,32 @@ $(document).ready(function(){
 		}
 	});
 	
+	$(".page").on("click",function(){
+		$("form#paginateform #currentPage").val($(this).text());
+	//	$("#totalmarks").val($("#temptotalmarks").html());
+	//	$("#addedIds").val(addedIds);
+	//	$("#removedIds").val(removedIds);
+		$("#paginateform").submit();
+	});
+	
+	$(".start").on("click",function(){
+		$("form#paginateform #currentPage").val("1");
+	//	$("#totalmarks").val($("#temptotalmarks").html());
+	//	$("#addedIds").val(addedIds);
+	//	$("#removedIds").val(removedIds);
+		$("#paginateform").submit();
+	});
+	
+	$(".end").on("click",function(){
+		$("form#paginateform #currentPage").val($("#totalPage").val());
+	//	$("#totalmarks").val($("#temptotalmarks").html());
+	//	$("#addedIds").val(addedIds);
+	//	$("#removedIds").val(removedIds);
+		$("#paginateform").submit();
+	});
+	
 	$("#savenotes").click(function(){
-		var notesname=$("#notesname").val();
+		var notesname=$("#newnotesname").val();
 		var notesnameerror=$("#notesnameerror");
 		var batchidmap;
 		var batchids="";
@@ -228,7 +270,13 @@ $(document).ready(function(){
 			i++;
 			}
 		if(flag==true){
-		$.ajax({
+			$("form#actionform #newbatch").val(batchids);
+			$("form#actionform #actionname").val("editnames");
+			 $("form#actionform #notesname").val( $("#newnotesname").val());
+			$("form#actionform #notesid").val(globalnotesid);
+			$("#actionform").prop("action","seenotes");
+			$("#actionform").submit();
+		/* $.ajax({
 			 
 			   url: "classOwnerServlet",
 			   data: {
@@ -252,7 +300,7 @@ $(document).ready(function(){
 			   error:function(){
 			   		modal.launchAlert("Error","Error");
 			   	}
-			   });
+			   }); */
 			   
 		}
 	});
@@ -261,53 +309,20 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
-<h3><font face="cursive">Search/Update Notes</font></h3>
-<hr>
-<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
-		<div class="row">
-				<div class='col-sm-6 header' style="padding-bottom: 10px;" align="left">*
-					Search/Edit Notes 
-				</div>
+<div class="container" style="margin-bottom: 5px">
+			<c:choose>
+			<c:when test="${(institute ne null) && (institute ne '') }">
+			<a type="button" class="btn btn-primary" href="teachercommoncomponent?forwardAction=seenotes" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
+			</c:when>
+			<c:otherwise><a type="button" class="btn btn-primary" href="choosesubject?forwardAction=seenotes" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a></c:otherwise>
+			</c:choose>
 			</div>
-	<div class="row">
-		<div class="alert alert-danger" style="padding-bottom: 10px;display:none">
-			 
-		</div>
-	</div>
+<h3><font face="cursive">Search Result</font></h3>
+<hr>
 	
-	<div class="row">
-		<div class="col-md-3">
-		<select name="subject" class="form-control" id="subject">
-      <option value="-1">Select Subject</option>
-      <%List<Subjects> list=(List<Subjects>)request.getAttribute("subjects"); 
-      for(int i=0;i<list.size();i++)
-      {
-      %>
-      <option value="<%=list.get(i).getSubjectId() %>"><%=list.get(i).getSubjectName()%></option>
-      <%} %>
-      </select>
-		<span class="error" id="subjecterror" name="subjecterror"></span>
-		</div>
-		<div class="col-md-3">
-		<select name="division" class="form-control" id="division">
-      <option value="-1">Select Division</option>
-      <%List<Division> divisions=(List<Division>)request.getAttribute("divisions"); 
-      for(int i=0;i<divisions.size();i++)
-      {
-      %>
-      <option value="<%=divisions.get(i).getDivId() %>"><%=divisions.get(i).getDivisionName()%>  <%=divisions.get(i).getStream() %></option>
-      <%} %>
-      </select>
-		<span class="error" id="divisionerror" name="divisionerror"></span>
-		</div>
-		<div class="col-md-3">
-      <button type="submit" class="btn btn-info" id="submit">Submit</button>
-      </div>
-		</div>
-</div>		
  	<hr>
    <div id="notesdiv" class="container">
-   <table id="notestable" class="table table-bordered table-hover" style="background-color: white; display:none;">
+   <table id="notestable" class="table table-bordered table-hover" style="background-color: white;">
    <thead style="background-color: rgb(0, 148, 255);">
    	<tr>
    	<th>Sr No.</th>
@@ -317,8 +332,55 @@ $(document).ready(function(){
   <th></th> 	
    	</tr>
    </thead>
+   <tbody>
+   <c:forEach items="${noteslist}" var="item" varStatus="counter">
+   <tr>
+   <td><c:out value="${counter.count}"></c:out></td>
+   <td><c:out value="${item.name}"></c:out></td>
+    <td><button class="btn btn-primary shownotes" id='<c:out value="${item.notesid}"></c:out>'>Open</button></td>
+   <td><button class="btn btn-primary" id="edit" onclick='editnotes("<c:out value="${item.notesid}"></c:out>")'>Edit</button></td>
+   <td><button class="btn btn-danger" onclick='deletenotes("<c:out value="${item.notesid}"></c:out>")'>Delete</button></td>
+   </tr>
+   </c:forEach>
+   </tbody>
    </table>
+   <form action="seenotes" id="paginateform">
+  <input type="hidden" name="division" id="division" value='<c:out value="${division}"></c:out>'>
+   <input type="hidden" name="batch" id="batch" value='<c:out value="${batch}"></c:out>'>
+   <input type="hidden" name="subject" id="subject" value='<c:out value="${subject}"></c:out>'>
+   <input type="hidden" name="institute" id="institute" value='<c:out value="${institute}"></c:out>'>
+   <input type="hidden" name="newbatch" id="newbatch">
+   <input type="hidden" name="actionname" id="actionname" >
+   <input type="hidden" name="notesname" id="notesname" >
+   <input type="hidden" name="notesid" id="notesid" >
+   <input type="hidden" name="totalPage" id="totalPage" value='<c:out value="${totalPage}"></c:out>'>
+   <input type="hidden" name="currentPage" id="currentPage"  value='<c:out value="${currentPage}"></c:out>'>
+  <ul class="pagination">
+  <li><a class="start" >&laquo;</a></li>
+  <c:forEach var="item" begin="1" end="${totalPage}">
+  <c:if test="${item eq currentPage}">
+  <li class="active"><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
+  </c:if>
+  <c:if test="${item ne currentPage}">
+  <li><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
+  </c:if>
+  </c:forEach>
+  <li><a href="#" class="end">&raquo;</a></li>
+</ul>
+</form>
    </div>
+   <form action="" id="actionform">
+   <input type="hidden" name="division" id="division" value='<c:out value="${division}"></c:out>'>
+   <input type="hidden" name="batch" id="batch" value='<c:out value="${batch}"></c:out>'>
+   <input type="hidden" name="subject" id="subject" value='<c:out value="${subject}"></c:out>'>
+   <input type="hidden" name="institute" id="institute" value='<c:out value="${institute}"></c:out>'>
+   <input type="hidden" name="newbatch" id="newbatch">
+   <input type="hidden" name="actionname" id="actionname" >
+   <input type="hidden" name="notesname" id="notesname" >
+   <input type="hidden" name="notesid" id="notesid" >
+   <input type="hidden" name="totalPage" id="totalPage" value='<c:out value="${totalPage}"></c:out>'>
+   <input type="hidden" name="currentPage" id="currentPage"  value='<c:out value="${currentPage}"></c:out>'>
+   </form>
    
    <div class="modal fade" id="notesnotavailable" tabindex="-1" role="dialog" 
    aria-labelledby="myModalLabel" aria-hidden="true">
@@ -390,7 +452,7 @@ $(document).ready(function(){
             </h4>
          </div>
          <div class="modal-body" align="left">
-		Notes Name :- <input type="text" id="notesname" class="form-control" maxlength="50"> <br>
+		Notes Name :- <input type="text" id="newnotesname" class="form-control" maxlength="50"> <br>
 		<span id="notesnameerror" class="error"></span><br>
 		This Notes is applicatble for following batches:- <br>
 		<div id="batchesdiv"> 

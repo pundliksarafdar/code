@@ -1,6 +1,8 @@
 package com.classapp.db.batch;
 
-public class Batch {
+import java.io.Serializable;
+
+public class Batch implements Serializable {
 	private int batch_id;
 	private int class_id;
 	private int div_id;

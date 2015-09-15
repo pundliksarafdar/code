@@ -92,7 +92,7 @@ public class SubjectTransaction {
 	
 	public List<com.datalayer.subject.Subject> getSubjectsOfBatch(int batchId){
 		BatchDB batchDB = new BatchDB();
-		Batch batch = batchDB.getBatchFromID(batchId);
+		Batch batch = batchDB.getBatchFromID(batchId,1,1);
 		List<com.datalayer.batch.Batch> batchesDataLayer = new ArrayList<com.datalayer.batch.Batch>();
 		StringBuilder subjectIds = new StringBuilder();
 		

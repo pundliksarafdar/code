@@ -15,31 +15,37 @@ public Boolean addNotes(Notes notes) {
 	
 }
 
-public Boolean deleteNotes(int notesid) {
+public Boolean deleteNotes(int notesid,int inst_id,int div_id,int sub_id) {
 	
 	NotesDB db=new NotesDB();
-	db.deletenotes(notesid);
+	db.deletenotes(notesid,inst_id,div_id,sub_id);
 	return true;
 	
 }
 
-public List<Notes> getNotesPath(int divid,int subid,int classid) {
+public List<Notes> getNotesPath(int divid,int subid,int classid,int currentPage,String batchids) {
 	NotesDB notesDB=new NotesDB();
-	List<Notes> list=notesDB.getNotesPath(divid, subid, classid);
+	List<Notes> list=notesDB.getNotesPath(divid, subid, classid,currentPage,batchids);
 	return list;
 	
 }
 
-public List<Notes> getStudentNotesPath(String batch,int subid,int classid) {
+public int getNotescount(int divid,int subid,int classid,String batchids) {
 	NotesDB notesDB=new NotesDB();
-	List<Notes> list=notesDB.getStudentNotesPath(batch, subid, classid);
+	return notesDB.getNotescount(divid, subid, classid,batchids);
+	
+}
+
+public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int div_id) {
+	NotesDB notesDB=new NotesDB();
+	List<Notes> list=notesDB.getStudentNotesPath(batch, subid, classid,div_id);
 	return list;
 	
 }
 
-public String getNotepathById(int id) {
+public String getNotepathById(int id,int inst_id,int sub_id,int div_id) {
 	NotesDB db=new NotesDB();
-	List<Notes> notes=db.getNotesPathById(id);
+	List<Notes> notes=db.getNotesPathById(id,inst_id, sub_id,div_id);
 	if(notes!=null)
 	{
 		return notes.get(0).getNotespath();
@@ -47,9 +53,9 @@ public String getNotepathById(int id) {
 	return null;
 }
 
-public Notes getNotesById(int id) {
+public Notes getNotesById(int id,int inst_id,int sub_id,int div_id) {
 	NotesDB db=new NotesDB();
-	List<Notes> notes=db.getNotesPathById(id);
+	List<Notes> notes=db.getNotesPathById(id,inst_id,sub_id,div_id);
 	if(notes!=null)
 	{
 		return notes.get(0);
@@ -62,9 +68,9 @@ public boolean validatenotesname(String notesname,int regID) {
 	return db.validatenotesname(notesname, regID);
 }
 
-public void updatenotes(String notesname,int notesid,String batchids) {
+public void updatenotes(String notesname,int notesid,String batchids,int inst_id,int div_id,int sub_id) {
 	NotesDB db=new NotesDB();
-	db.updatenotes(notesname, notesid, batchids);
+	db.updatenotes(notesname, notesid, batchids,inst_id,div_id,sub_id);
 }
 
 public boolean validatenotesnamebyID(String notesname,int regID,int notesID) {

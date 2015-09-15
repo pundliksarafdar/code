@@ -28,6 +28,9 @@ public class StudentTimetableAction extends BaseAction {
 		RegisterTransaction registerTransaction=new RegisterTransaction();
 		List<RegisterBean> beans= registerTransaction.getclassNames(list);
 		request.setAttribute("Classes", beans);
+		if(list!=null){
+			request.setAttribute("studentdivision",list.get(0).getDiv_id());
+		}
 		// TODO Auto-generated method stub
 		return SUCCESS;
 	}

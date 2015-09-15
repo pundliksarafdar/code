@@ -80,6 +80,7 @@ function getsubjectteachers(id){
 
 function edit(){
 	var batchname=$("#batchname").val();
+	var batchdivision=$("#division"+batchname).val();
 	var date=$("#date").val();
 	$.ajax({
 		 
@@ -87,8 +88,8 @@ function edit(){
 		   data: {
 		    	 methodToCall: "geteditschedule",
 		    	 batchname:batchname,
-		    	 date:date
-		    	
+		    	 date:date,
+		    	 batchdivision:batchdivision
 		   		},
 		   type:"POST",
 		   success:function(data){
@@ -284,7 +285,7 @@ $(document).ready(function(){
 	
 	$("#submit").click(function(){
 		var batchname=$("#batchname").val();
-		
+		var batchdivision=$("#division"+batchname).val();
 		var date=$("#date").val();
 		var status=true;
 		if(batchname=="-1"){
@@ -302,7 +303,8 @@ $(document).ready(function(){
 			   data: {
 			    	 methodToCall: "getschedule",
 			    	 batchname:batchname,
-			    	 date:date
+			    	 date:date,
+			    	 batchdivision:batchdivision
 			    	
 			   		},
 			   type:"POST",
@@ -533,6 +535,7 @@ $(document).ready(function(){
 		 }
 		 var regId;
 		 var batchID = $('#batchname').val();
+		 var batchdivision=$("#division"+batchID).val();
 		 $.ajax({
 			 
 			   url: "classOwnerServlet",
@@ -546,7 +549,8 @@ $(document).ready(function(){
 					 endtimes:endtimes,
 					 dates:dates,
 					 batchID:batchID,
-					 schrduleid:schrduleid
+					 schrduleid:schrduleid,
+					 batchdivision:batchdivision
 			   		},
 			   type:"POST",
 			   success:function(data){
@@ -646,6 +650,9 @@ while(i<batch.size()){
 <option value="<%=batch.get(i).getBatch_id()%>"><%=batch.get(i).getBatch_name() %></option>
 <%i++;} %>
 </select>
+<%for(int counter=0;counter<batch.size();counter++){ %>
+<input type="hidden" id="division<%=batch.get(counter).getBatch_id() %>" value="<%=batch.get(counter).getDiv_id() %>">
+<%} %>
 </div>
 <!-- <div class="col-xs-2" align="right">
 <label>Select Date</label>

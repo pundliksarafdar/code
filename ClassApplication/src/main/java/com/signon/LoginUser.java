@@ -2,6 +2,8 @@ package com.signon;
 
 import java.util.ArrayList;
 import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,13 +14,16 @@ import com.classapp.db.notificationpkg.Notification;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
 import com.classapp.login.UserStatic;
+import com.classapp.schedule.Scheduledata;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.google.gson.Gson;
+import com.sun.org.apache.bcel.internal.generic.LUSHR;
 import com.tranaction.login.login;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.notification.NotificationTransaction;
 import com.transaction.register.RegisterTransaction;
+import com.transaction.schedule.ScheduleTransaction;
 import com.transaction.student.StudentTransaction;
 import com.transaction.teacher.TeacherTransaction;
 import com.user.UserBean;
@@ -131,10 +136,31 @@ public class LoginUser extends BaseAction{
 					} else if ((null != userBean.getRole())
 							&& 2 == userBean.getRole()) {
 						TeacherTransaction teacherTransaction=new TeacherTransaction();
-						List classids=teacherTransaction.getTeachersClass(userBean.getRegId());
+						List<Integer> classids=teacherTransaction.getTeachersClass(userBean.getRegId());
 						RegisterTransaction registerTransaction=new RegisterTransaction();
 						List<RegisterBean> classbeanes=registerTransaction.getTeachersclassNames(classids);
+						List<Notification> notifications=new ArrayList<Notification>();
+						ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
+						List<Scheduledata> scheduledatas=scheduleTransaction.getteacherstodaysSchedule(classids, userBean.getRegId());
+						Map<String, List<Scheduledata>> map=new HashMap<String, List<Scheduledata>>();
+						if(scheduledatas!=null){
+							if(scheduledatas.size()>0){
+							for (int i = 0; i < classids.size(); i++) {
+								List<Scheduledata> data=new ArrayList<Scheduledata>();
+								for (int j = 0; j < scheduledatas.size(); j++) {
+									if(classids.get(i)==scheduledatas.get(j).getInst_id()){
+										data.add(scheduledatas.get(j));
+									}
+								}
+								if(data.size()>0){
+								map.put(data.get(0).getInst_name(),data);
+								}
+							}
+							}
+						}
+						session.put("notifications", notifications);
 						session.put("classes", classbeanes);
+						session.put("todayslect", map);
 						return Constants.CLASSTEACHER;
 					} else if ((null != userBean.getRole())
 							&& 3 == userBean.getRole()) {
@@ -152,8 +178,28 @@ public class LoginUser extends BaseAction{
 								}
 							}
 						}
+						ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
+						List<Scheduledata> scheduledatas=scheduleTransaction.gettodaysSchedule(list);
+						Map<String, List<Scheduledata>> map=new HashMap<String, List<Scheduledata>>();
+						if(scheduledatas!=null){
+							if(scheduledatas.size()>0){
+							for (int i = 0; i < beans.size(); i++) {
+								List<Scheduledata> data=new ArrayList<Scheduledata>();
+								for (int j = 0; j < scheduledatas.size(); j++) {
+									if(beans.get(i).getRegId()==scheduledatas.get(j).getInst_id()){
+										scheduledatas.get(j).setInst_name(beans.get(i).getClassName());
+										data.add(scheduledatas.get(j));
+									}
+								}
+								if(data.size()>0){
+								map.put(beans.get(i).getClassName(),data);
+								}
+							}
+							}
+						}
 						session.put("notifications", notifications);
 						session.put("classes", beans);
+						session.put("todayslect", map);
 						return Constants.CLASSSTUDENT;
 					} else {
 						return ERROR;

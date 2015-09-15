@@ -16,7 +16,7 @@ import com.transaction.register.RegisterTransaction;
 import com.transaction.teacher.TeacherTransaction;
 import com.user.UserBean;
 
-public class StudentNotesAction extends BaseAction{
+public class DisplayNotesListAction extends BaseAction{
 	private String division;
 	private String subject;
 	private String batch;
@@ -28,7 +28,6 @@ public class StudentNotesAction extends BaseAction{
 	private int notesid;
 	int currentPage;
 	int totalPage;
-	String notesavailable;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -63,8 +62,8 @@ public class StudentNotesAction extends BaseAction{
 		if(totalPage<currentPage){
 			currentPage--;
 		}
-		if(noteslist == null || noteslist.size()==0){
-			notesavailable="no";
+		if(!"".equals(institute) && institute!=null){
+			return "teachernotes";
 		}
 		return SUCCESS;
 	}
@@ -133,12 +132,6 @@ public class StudentNotesAction extends BaseAction{
 	}
 	public void setTotalPage(int totalPage) {
 		this.totalPage = totalPage;
-	}
-	public String getNotesavailable() {
-		return notesavailable;
-	}
-	public void setNotesavailable(String notesavailable) {
-		this.notesavailable = notesavailable;
 	}
 	
 	

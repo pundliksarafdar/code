@@ -144,6 +144,8 @@ $(document).ready(function(){
 	});
 	
 	$(".menuoptions").on("click",function(e){
+		var noofquestions=$("#noofquestions").val();
+		if(noofquestions!="0" || addedIds.length!=0){
 		var confirmresult=confirm("If you press OK your exam data will get lost.Do you want to continue?");
 		if(confirmresult==false){
 			e.preventDefault()
@@ -151,7 +153,12 @@ $(document).ready(function(){
 			$("#autosubmitform #forwardhref").val($(this).prop("href"));
 			$("#autosubmitform").submit();
 		}
+		}
 	});
+	
+	$( window ).load(function() {
+		  $("#examadded").modal("toggle");
+		});
 });
 
 var selectMarks = function(){
@@ -176,6 +183,7 @@ var selectMarks = function(){
 			<input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
 			<input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
 			<input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
+			<input type="hidden" id="noofquestions" value=<c:out value="${noofquestions}"></c:out>>
 			  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#QuestionBankQuestionListQuestionSearchModal">Advance Search</button>
 			  <button type="button" class="btn btn-default" id="createexam">Create Exam</button>
 			  <c:if test="${actionname ne 'showaddedquestions'}">
@@ -357,10 +365,10 @@ var selectMarks = function(){
   </div>
   <div class="form-group">
     <label for="totalmarks">Total Marks:</label>
-    <input type="text" class="form-control" id="totalmarks" name="totalmarks" value=<c:out value="${totalmarks}"></c:out> disabled="disabled">
+    <input type="text" class="form-control" id="totalmarks" name="totalmarks" value=<c:out value="${totalmarks}"></c:out> readonly="readonly">
   </div>
    <div class="form-group">
-    <label for="totalmarks">Enter Passing Marks:</label>
+    <label for="passmarks">Enter Passing Marks:</label>
     <input type="text" class="form-control" id="passmarks" name="passmarks">
   </div>
   <button type="submit" class="btn btn-default">Submit</button>
@@ -381,5 +389,28 @@ var selectMarks = function(){
    <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
 </form>
 </c:if>
+<c:if test="${actionname eq 'examaddedsuccessfully' }">
+<div class="modal fade" id="examadded">
+ 	<div class="modal-dialog">
+    <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+          <h4 class="modal-title" id="myModalLabel">Exam</h4>
+        </div>
+        <div class="modal-body" >
+		Exam Added Successfully...
+        </div>
+
+      	<div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+      	</div>
+
+    </div>
+</div>
+</div>
+
+
+</c:if>
+
 </body>
 </html>

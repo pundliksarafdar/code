@@ -12,6 +12,8 @@ public class BatchHelperBean {
 	private List<Batch> batches=null;
 	private List<BatchDetails> batchDetailsList= null;
 	BatchData batchData= null;
+	int sub_id;
+	int div_id;
 	public BatchHelperBean() {	
 		batchData= new BatchData();		
 	}

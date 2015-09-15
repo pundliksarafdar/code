@@ -117,6 +117,8 @@
 		
 		$("#batch").change(function(){
 			var batchName = $("#batch").val();
+			var batchdivision=$("#studentdivision").val();
+			var institute=$("#classnameselect").val();
 			$("#subject").empty();
 			$("#subject").append("<option value='-1'>Select Subject</option>")
 			  var reg;
@@ -124,7 +126,9 @@
 				   url: "classOwnerServlet",
 				    data: {
 				    	 methodToCall: "fetchBatchSubject",
-				    		 batchName:batchName
+				    		 batchName:batchName,
+				    		 batchdivision:batchdivision,
+				    		 institute:institute
 				   		}, 
 				   type:"POST",
 				   success:function(data){
@@ -170,7 +174,9 @@
 		<div class="col-md-3">
 				<%
 					List<RegisterBean> list=(List<RegisterBean>)request.getAttribute("Classes");
+					int studentdivision=(Integer)request.getAttribute("studentdivision");
 				%>
+				<input type="hidden" id="studentdivision" name="division"  value="<%=studentdivision%>">
 				<select id="classnameselect" class="form-control" name="institute">
 					<option value="-1">Select Institute</option>
 					<%

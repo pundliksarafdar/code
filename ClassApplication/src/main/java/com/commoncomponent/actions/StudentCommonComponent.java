@@ -31,6 +31,9 @@ public class StudentCommonComponent extends BaseAction{
 		RegisterTransaction registerTransaction=new RegisterTransaction();
 		List<RegisterBean> beans= registerTransaction.getclassNames(list);
 		request.setAttribute("Classes", beans);
+		if(list!=null){
+			request.setAttribute("studentdivision",list.get(0).getDiv_id());
+		}
 		return SUCCESS;
 	}
 	public String getForwardAction() {

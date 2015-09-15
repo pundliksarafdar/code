@@ -80,6 +80,10 @@ public class AttemptExamAction extends BaseAction {
 		ExamTransaction examTransaction=new ExamTransaction();
 		Exam exam =examTransaction.getExamToAttempt(inst_id, Integer.parseInt(subject), Integer.parseInt(division), examID);
 		if("examSubmit".equals(actionname)){
+			if(lastPage==0){
+				lastPage++;
+			}
+			SelectedAnswerIds.put(lastPage, answers);
 			String queid_arr[]=	exam.getQue_ids().split(",");
 		QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
 		List<Integer> ques_ids=new ArrayList<Integer>();
@@ -98,7 +102,7 @@ public class AttemptExamAction extends BaseAction {
 		String solvedans_arr[]=finalAnsString.split("/");
 		String examans_arr[]=exam.getAns_ids().split("/");
 		for (int i = 0; i < examans_arr.length; i++) {
-			if(examans_arr[i].equals(solvedans_arr[i])){
+			if(examans_arr[i].equals(solvedans_arr[i].trim())){
 				Total_Marks=Total_Marks+ques_marks.get(i);
 			}
 		}

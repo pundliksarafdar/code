@@ -211,10 +211,10 @@
 		<put-attribute name="title" value="Add Notes Success" />
 		<put-attribute name="body" value="/Notes/AddTeacherNotes.jsp" />
 	</definition>
-	<definition name="notes.seeteachernotes" extends="baseLayout">
+	<definition name="seenotes.teachernotes" extends="baseLayout">
 		<put-attribute name="title" value="See Notes " />
 		<put-attribute name="topnav" value="/teacher/menu.jsp" />
-		<put-attribute name="body" value="/Notes/SeeTeacherNotes.jsp" />
+		<put-attribute name="body" value="/Notes/SeeNotes.jsp" />
 	</definition>
 	<definition name="seenotes.success" extends="baseLayout">
 		<put-attribute name="title" value="Notes" />

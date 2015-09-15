@@ -211,7 +211,7 @@ $(document).ready(function(){
 	$('div#modifyBatchModal').on('click','button#btn-updateBatch',function(){
 		
 		var batchId=document.getElementsByName("radioBatch")[0].value;
-		
+		var batchdivisionid=$("#batchdivisionid").val();
 		subjectIds="";
 		$('div#modifyBatchModal .error').html('');
 		$('div#modifyBatchModal .error').hide();
@@ -228,7 +228,8 @@ $(document).ready(function(){
 				    	 methodToCall: "updateBatch",
 						 regId:'',
 						 subIds:subjectIds,
-						 batchId:batchId
+						 batchId:batchId,
+						 batchdivisionid:batchdivisionid
 				   		},
 				   type:"POST",
 				   success:function(data){					  
@@ -268,6 +269,7 @@ $(document).ready(function(){
 	$('div#deleteBatchModal').on('click','button#btn-deleteBatch',function(){
 	
 		var batchId=document.getElementsByName("radioBatch")[0].value;
+		var batchdivisionid=$("#batchdivisionid").val();
 		$('div#deleteBatchModal .error').html('');
 		$('div#deleteBatchModal .error').hide();
 		
@@ -278,7 +280,8 @@ $(document).ready(function(){
 				   data: {
 				    	 methodToCall: "deleteBatch",
 						 regId:'',
-						 batchId:batchId
+						 batchId:batchId,
+						 batchdivisionid:batchdivisionid
 				   		},
 				   type:"POST",
 				   success:function(data){
@@ -363,7 +366,9 @@ $(document).ready(function(){
 			</thead>
 			<tbody>	
 				<tr>
-					<td> <INPUT TYPE="radio" NAME="radioBatch" VALUE="<%=batchSearch.getBatch().getBatch_id() %>" CHECKED></td>
+					<td> <INPUT TYPE="radio" NAME="radioBatch" VALUE="<%=batchSearch.getBatch().getBatch_id() %>" CHECKED>
+						 <input type="hidden" id="batchdivisionid" VALUE="<%=batchSearch.getBatch().getDiv_id() %>"> 
+					</td>
 					<td><%=batchSearch.getBatch().getBatch_name() %></td>
 					<td> <%= batchSearch.getDivision().getDivisionName()%> </td>
 					<td> <%= batchSearch.getDivision().getStream()%> </td>
