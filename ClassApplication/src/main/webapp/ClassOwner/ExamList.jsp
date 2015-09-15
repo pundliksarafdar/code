@@ -145,7 +145,7 @@ $(".end").on("click",function(){
 	$("form#paginateform #currentPage").val($("#totalPages").val());
 	$("#paginateform").submit();
 });
-var popoverTitle = "<div>Re-evaluate <button class='btn btn-success btn-xs pull-right'>All<i class='glyphicon glyphicon-refresh'></i></button></div>";
+var popoverTitle = "<div><b>Re-evaluate</b> <button class='btn btn-success btn-xs pull-right'>All<i class='glyphicon glyphicon-refresh'></i></button></div>";
 var option = {content:$("#examListReevaluateExams").html(),html:true,title:popoverTitle};
 $('#example').popover(option);
 });

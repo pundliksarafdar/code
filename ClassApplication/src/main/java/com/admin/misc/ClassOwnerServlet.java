@@ -41,6 +41,8 @@ import com.classapp.db.student.StudentDetails;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
 import com.classapp.db.subject.Topics;
+import com.classapp.notification.GeneralNotification;
+import com.classapp.notification.GeneralNotification.NOTIFICATION_KEYS;
 import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;
 import com.google.gson.Gson;
@@ -2289,6 +2291,20 @@ public class ClassOwnerServlet extends HttpServlet{
 		respObject.addProperty(STATUS, "success");
 	}else if("reevaluate".equalsIgnoreCase(methodToCall)){
 		ReEvaluateThreadRunner evaluateThreadRunner = new ReEvaluateThreadRunner();
+	}else if("getgeneralnotification".equalsIgnoreCase(methodToCall)){
+		List<GeneralNotification>notifications = new ArrayList<GeneralNotification>();
+		
+		for(int indexNotification = 0;indexNotification<5;indexNotification++){
+			GeneralNotification generalNotification = new GeneralNotification();
+			generalNotification.setNotificationDate(new java.util.Date());
+			generalNotification.setNotificationTitle("Notification title");
+			generalNotification.setNotificationMessage("have notification");
+			generalNotification.setKeys(NOTIFICATION_KEYS.REEVALUATION);
+			notifications.add(generalNotification);
+		}
+		Gson gson = new Gson();
+		respObject.addProperty("notifications",gson.toJson(notifications));
+		respObject.addProperty(STATUS, "success");
 	}
 		
 		printWriter.write(respObject.toString());

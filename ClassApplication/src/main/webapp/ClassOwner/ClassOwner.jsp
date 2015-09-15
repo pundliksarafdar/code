@@ -4,13 +4,6 @@
 <html>
 <head>
 <!-- <link href="../assets/css/style.css" rel="stylesheet" /> -->
-<style>
-.input-group-addon{
-	background-color: gray;
-  color: white;
-}
-
-</style>
 </head>
 <div class="container">
 	<%

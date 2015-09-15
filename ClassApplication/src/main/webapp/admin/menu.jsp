@@ -11,6 +11,19 @@
 <script>
 var siteMapData = <%=session.getAttribute("sitemapdata")%>
 
+/******************Static data********************/
+var MENU_NOTIFICATION_DATA = "#menuNotificationDetailsData";
+var MENU_NOTIFICATION_DATA_RE_EVALUATION = MENU_NOTIFICATION_DATA+"Reevaluation";
+var MENU_NOTIFICATION_DATA_RE_EVALUATION_COUNT = MENU_NOTIFICATION_DATA_RE_EVALUATION+" .badge";
+var MENU_NOTIFICATION_BACK_BTN = "#menuNotificationBack";
+/**************************************/
+/***********Enums********************/
+var NOTIFICATION_KEY = {REEVALUATION:"REEVALUATION"};
+/**************************************/
+
+/****Require vaiable********************/
+var ease = 200;
+/************************************/
 function chunk(arr, size) {
   var newArr = [];
   for (var i=0; i<arr.length; i+=size) {
@@ -29,7 +42,108 @@ siteMapApp.controller("SiteMapController",function($scope){
 $(document).ready(function(){
 	var timer = new RenderTimer(0,30);
 	timer.startTimer();
+	
+	var popoverTitle = "<div style='color:black;'><button class='btn btn-warning btn-xs' id='menuNotificationBack'>&nbsp;<i class='glyphicon glyphicon-arrow-left'> </i></button>&nbsp;&nbsp;<b>Notifications</b></div>";
+	var option = {content:$("#menuNotificationDetails").html(),html:true,title:popoverTitle};
+	$('#notificationBtn').popover(option);
+	$('#notificationBtn').on("shown.bs.popover",renderNotification);
 });
+
+function renderNotification(){
+		$(this).parent().find(".popover-content #menuNotificationDetailsProgress").show();
+		$(this).parent().find(".popover-content #menuNotificationDetailsData").hide();
+		getAllNotifications($(this),displayNotifications);
+		$(this).parent().off("click").on("click",MENU_NOTIFICATION_DATA_RE_EVALUATION,renderReevaluationNotification);
+}
+
+function renderReevaluationNotification(){
+		$(this).parents(".popover").find(".popover-content #menuNotificationDetailsProgress").show();
+		$(this).parents(".popover").find(".popover-content #menuNotificationDetailsData").hide();
+		
+		getAllNotifications($(this).parents(".popover").siblings('[data-toggle="popover"]'),displayReevaluationNotification);
+		
+		$(MENU_NOTIFICATION_BACK_BTN).show(10,function(){
+			$(this).on("click",function(){
+				$('#notificationBtn').parent().find(".popover-content #menuNotificationDetailsData").hide(ease,function(){
+						$('#notificationBtn').parent().find(".popover-content #menuNotificationDetailsProgress").show(ease,function(){
+							getAllNotifications($('#notificationBtn'),displayNotifications);
+						});
+				});
+				
+			});
+		});
+}
+
+function getAllNotifications(targetElm,successCallback){
+	
+	$.ajax({
+			url: "classOwnerServlet",
+			global:false,
+			data: {
+				 methodToCall: "getgeneralnotification"
+				},
+				success:function(data){successCallback(data,targetElm)},
+				error:function(error){
+					
+				}
+		});
+}
+
+function displayNotifications(data,targetElm){
+	$(MENU_NOTIFICATION_BACK_BTN).hide(10,function(){
+			$(this).off("click");
+	});
+	targetElm.parent().find(".popover-content #menuNotificationDetailsData").empty();
+	targetElm.parent().find(".popover-content #menuNotificationDetailsData").html($("#menuNotificationDetails").html());
+	var displayData = JSON.parse(JSON.parse(data).notifications);
+	$.each(displayData,function(index,val){
+		if(val.keys == NOTIFICATION_KEY.REEVALUATION){
+			$(MENU_NOTIFICATION_DATA_RE_EVALUATION_COUNT).html(val.notificationCount);
+		}
+	});
+	
+	$(targetElm).parent().find(".popover-content #menuNotificationDetailsProgress").hide(ease,function(){
+			$(targetElm).parent().find(".popover-content #menuNotificationDetailsData").show(ease);
+	});
+	
+	
+}
+
+function displayReevaluationNotification(data,targetElm){
+	var dataJson = JSON.parse(data);
+	var notificationDatas = JSON.parse(dataJson.notifications);
+	targetElm.parent().find(".popover-content #menuNotificationDetailsData").empty();
+	
+	var ulItem = $("<ul>",{
+			class:"nav nav-pills nav-stacked"
+		});
+		
+	for(var index in notificationDatas){
+		var title = notificationDatas[index].notificationTitle;
+		var keys = notificationDatas[index].keys;
+		var liItem = $("<li/>");
+		
+		var aItem = $("<a/>",{
+			class:"btn btn-success btn-xs",
+			text:title
+		});
+		
+		var statusBtn = $("<a/>",{
+			type:"button",
+			class:"btn btn-danger btn-xs pull-right",
+			html:"&nbsp;<i class='glyphicon glyphicon-unchecked'>"
+		});
+		
+		aItem.append(statusBtn);
+		liItem.append(aItem);
+		ulItem.append(liItem);
+	}
+	targetElm.parent().find(".popover-content #menuNotificationDetailsData").html(ulItem);
+	
+	targetElm.parent().find(".popover-content #menuNotificationDetailsProgress").hide(ease,function(){
+		targetElm.parent().find(".popover-content #menuNotificationDetailsData").show(ease);
+	});
+}
 
 function RenderTimer(completedTime,totalTime){
 	var ctx = document.getElementById("myChart").getContext("2d");
@@ -57,7 +171,6 @@ function RenderTimer(completedTime,totalTime){
 			completed.value = completedTime;
 			incompleted.value = totalTime-completedTime;
 			var completedPer = completedTime/totalTime*100;
-			console.log(completedPer);
 			if(completedPer <50){
 				incompleted.color = "white";
 			$("#timerRemainingTime").css({"color":"white"});
@@ -80,8 +193,76 @@ function RenderTimer(completedTime,totalTime){
 	.className:hover{
 		color:white;
 	}
+	
+	.notificationBlinker {
+	    background-color: red;
+	    -webkit-animation-name: blinker; /* Chrome, Safari, Opera */
+	    -webkit-animation-duration: 1s; /* Chrome, Safari, Opera */
+	    -webkit-animation-iteration-count: infinite; /* Chrome, Safari, Opera */
+	    animation-name: blinker;
+	    animation-duration: 1s;
+	    animation-iteration-count: infinite;
+	}
+	
+	/* Chrome, Safari, Opera */
+	@-webkit-keyframes blinker {
+		50%  {background-color:red;}
+	}
+	
+	/* Standard syntax */
+	@keyframes blinker {
+	    50%  {background-color:red;}
+	}
+		
+	.popover-content {
+	  color:black;
+	  max-height:300px;
+	  width:200px;
+	  overflow-y: auto;
+	  overflow-x: hidden;
+	 }
+		
 </style>
-
+	<div id="menuNotificationDetails" style="display:none">
+		<div id="menuNotificationDetailsData">
+			<ul class="nav nav-pills nav-stacked">
+			  <li id="menuNotificationDetailsDataReevaluation">
+				<a href="#" class="btn btn-success btn-xs">
+				  <span class="badge pull-right">5</span>
+				  Re-evaluation
+				</a>
+			  </li>
+			  <li>
+				<a href="#" class="btn btn-success btn-xs">
+				  <span class="badge pull-right">5</span>
+				  General notification
+				</a>
+			  </li>
+			</ul>
+		</div>
+		<div id="menuNotificationDetailsProgress">
+			<div class="corex-loader">Please wait</div>
+		</div>
+	</div>	
+	<div id="id0" style="display:none">
+		<div>
+		<table class="table">
+		<tr id="id0">
+			<td>Messages 1</td>
+			<td><button id="examList0" class="btn btn-xs btn-danger pull-right" type="button">&nbsp;<i class="glyphicon glyphicon-unchecked"></i></button></td>
+		</tr>
+		<tr id="id1">
+			<td>Messages 2</td>
+			<td><button id="examList0" class="btn btn-xs btn-warning pull-right" type="button">&nbsp;<i class="glyphicon glyphicon-edit"></i></button></td>
+		</tr>
+		<tr><td></td><td></td></tr>
+		</table>
+		</div>
+	</div>
+	
+	<div id="id1" style="display:none">
+	
+	</div>
 <nav class="navbar navbar-apple-custom" role="navigation" ng-controller="SiteMapController">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
@@ -184,7 +365,7 @@ function RenderTimer(completedTime,totalTime){
 	  <li>
 	  <form class="navbar-form navbar-left">
 			<div class="form-group">
-	  			<a href="#" class="btn btn-default className" style="background: transparent;"><%=userBean.getClassName()%></a>
+	  			<a href="#" id="notificationBtn" data-toggle="popover" data-placement="bottom" class="btn btn-default className notificationBlinker" style="background: transparent;"><%=userBean.getClassName()%></a>
 	  		</div>
 	  	</form>
 	  	</li>	

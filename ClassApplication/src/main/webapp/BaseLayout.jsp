@@ -96,11 +96,8 @@ $( document ).ajaxStop(function() {
 	<div class="modal fade" id="loaderModal">
 		<div class="modal-dialog">
 			
-				<div class="progress progress-striped active">
-					<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="45"
-						aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-						Please wait....
-					</div>
+				<div class="corex-loader">
+					
 			</div>	
 			
 		</div>
