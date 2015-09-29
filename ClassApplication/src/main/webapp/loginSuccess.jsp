@@ -1,3 +1,5 @@
+<%@page import="java.text.DateFormat"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="com.classapp.schedule.Scheduledata"%>
@@ -42,53 +44,86 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
       <%} %>
     </div>
     </div>
-	
+	<div>&nbsp;</div>
 	<div class="">
+	 <div class="panel-group">
+    <div class="panel panel-primary" >
+      <div class="panel-heading">Todays Lectures</div>
+      <div class="panel-body">
 <%
+DateFormat sdf = new SimpleDateFormat("kk:mm");
+DateFormat f2 = new SimpleDateFormat("h:mma");
 Iterator it = map.entrySet().iterator();
+if(map.size()>0){
 while (it.hasNext()) {
     Map.Entry pair = (Map.Entry)it.next();
     System.out.println(pair.getKey() + " = " + pair.getValue());
     %>
-    <div class="panel-group">
-    <div class="panel panel-primary" >
-      <div class="panel-heading">Todays Lectures</div>
-      <div class="panel-body">
+   
       <ul>
-      <li><%=pair.getKey() %></li>
+      <li><b><%=pair.getKey() %></b></li>
       <table class="table">
       <% List<Scheduledata> list=(List<Scheduledata>)pair.getValue();
       for(int i=0;i<list.size();i++){
       %>
       <tr>
       	<td><%=list.get(i).getBatch_name() %></td>
-      	<td><%=list.get(i).getStart_time() %></td>
-      	<td><%=list.get(i).getEnd_time()%></td>
+      	<td><%=list.get(i).getSubject_name() %></td>
+      	<%
+      	Date start=sdf.parse(list.get(i).getStart_time().toString());
+      	Date end=sdf.parse(list.get(i).getEnd_time().toString());
+      	%>
+      	<td><%= f2.format(start).toUpperCase() %></td>
+      	<td><%=f2.format(end).toUpperCase()%></td>
       </tr>
       <%} %>
       </table>
       </ul>
-      </div>
-      </div>
-      </div>
+      
     <%}
+}else{
 %>
+<div class="alert alert-info" align="center">No lectures today.</div>
+<%} %>
+</div>
+      </div>
+      </div>
 </div>
 	</div>
 	
 <div class="col-sm-6">	
 <div class="panel-group">
     <div class="panel panel-default" >
-      <div class="panel-heading" style="background-color:black;color: white;align:center" >Notice Board</div>
+      <div class="panel-heading" style="background-color:black;color: white;align:center" ><u>Notice Board</u></div>
       <%if(notifications.size()>0){ %>
-      <div class="panel-body" style="background-color:black;height: 200px;">
-		<%for(int i=0;i<notifications.size();i++){ %>
-			<ul>
+      <div class="panel-body" style="background-color:black;height: 200px;color: white;">
+		<ul>
+		<%
+		for(int j=0;j<registerBean.size();j++){
+			boolean flag= false;
+		for(int i=0;i<notifications.size();i++){ 
+		if(registerBean.get(j).getRegId()==notifications.get(i).getInstitute_id()){
+		%>
+		
+		<%
+			if(flag==false){
+		%>
+			<u><%=registerBean.get(j).getClassName() %></u>
+			<%
+		flag=true;	
+		} %>
+			
 			<li type="disc"><%=notifications.get(i).getMessage() %></li>
-			</ul>
-		<%} %>
+			
+		<%
+		}
+		}
+		}%>
+		</ul>
 	  </div>
-	  <%} else{%>
+	  <%
+		
+		} else{%>
 	  <div class="panel-body" style="background-color:black;height: 200px;"></div>
 	  <%} %>
 	  <div align="center">

@@ -65,6 +65,7 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
 		 -->
 		
 		<div class="col-md-3 well" style="height:248px">
+		<div align="center" style="font-size: larger;"><u>Institute Statastics</u></div>
 		<div class="input-group">
 			<input
 				type="text" disabled="disabled" class="form-control" placeholder="Username"
@@ -86,13 +87,16 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
 				<span class="input-group-addon" id="basic-addon1"><%= studentcount%></span>
 		</div>
 		</div>
-		<div class="col-md-3 well" style="height:248px">
+		<div class="col-md-6 well">
+		<div align="center" style="font-size: larger;"><u>Storage Statastics</u></div>
+		<div class="row">
+		<div class="col-md-6  " >
 	<div id="classownerStorageGraph">
 		<canvas id="classownerStorageGraphCtx" width="150" height="150"></canvas>
 	</div>
 </div>
 
-<div class="col-md-2 well"  style="height:248px">
+<div class="col-md-6 "  >
 	<div class="panel panel-default">
 		<table id="classownerStorageTable" class="table">
 			<tr style="background-color:;">
@@ -117,11 +121,14 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
 		</table>
 	</div>
 </div>
+</div>
+</div>
 
 <div class="col-md-3"></div>
 
 </div>
-	
+	</div>
+	<div class="container">
 	<div class="row">
 	<div align="left" class="col-md-12">
 
@@ -133,7 +140,7 @@ if(notifications!=null){
 		%>
 		<div class="alert alert-info">Notifications</div>
 		<div>
-	<marquee behavior="scroll" direction="up" height="100" width="350">
+	<marquee behavior="scroll" direction="up" height="100" width="350" onmouseover="this.stop();" onmouseout="this.start();">
 			<ul>
 				<%
 			for(int j=0;j<notifications.size();j++){

@@ -43,7 +43,13 @@
     <%}if(userBean.getRole() == 2 || userBean.getRole() == 10){ %>  
       <li><a href="#">Class Teacher</a></li>  
     <%}if(userBean.getRole() == 2 || userBean.getRole() == 10){ %>  
-       <li><a href="teachertimetable">Time Table</a></li>
+       <li>
+       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Time Table <b class="caret"></b></a>
+      		<ul class="dropdown-menu">
+	            <li><a href="teachertimetable">Daily Time Table</a></li>
+	             <li><a href="teacherweeklytimetable">Weekly Time Table</a></li>
+	            </ul>
+       </li>
     <%}%>      
    
    <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>

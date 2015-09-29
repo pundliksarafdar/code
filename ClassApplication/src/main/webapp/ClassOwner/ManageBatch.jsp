@@ -7,13 +7,19 @@
 <%@page import="java.util.List"%>
 <%@page import="com.config.Constants"%>
 <%@taglib prefix="s" uri="http://java.sun.com/jstl/core"%>
+ <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <html>
 <script type="text/javascript" src="js/ManageStudent.js"></script>
  <%List list = (List)request.getSession().getAttribute(Constants.BATCHES_LIST); %>
 <script>
 var subjectIds;
+var batchID="";
+var batchdivisionIDs="";
 function canceledit(){
-	$("#batchtomodify").remove();
+	 $("#modifyBatchModalbody").empty();
+	$("#batchtomodify").hide();
+	$("#basebatchtable").show();
+	$("#paginateform").show();
 }
 function getSelectedSubjectsForBatch(){
 	var subjects;
@@ -64,20 +70,63 @@ function searchbatchthroughtable(batchName) {
 		   type:"POST",
 		   success:function(data){
 			   var resultJson = JSON.parse(data);   
-			   // var firstname= resultJson.studentFname;
-			  // var lastname= resultJson.studentLname;
-			  // var studentId= resultJson.studentId;
-			   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
+			    var batchId= resultJson.batchId;
+			   var batchName= resultJson.batchName;
+			   var batchdivisionname= resultJson.batchdivisionname;
+			   var batchdivisionID= resultJson.batchdivisionID;
+			   var batchdivisionstream= resultJson.batchdivisionstream;
+			   var batchsubjectIds= resultJson.batchsubjectIds.split(",");
+			   var allsubjectname= resultJson.allsubjectname.split(",");
+			   var allsubjectIds= resultJson.allsubjectIds.split(",");
+			   var batchsubjectnames= resultJson.batchsubjectnames;
+			   $("#batchtomodifybody").empty();
+			   $("#batchtomodify").hide();
+			  $("#batchtomodifybody").append("<tr><td>"+batchName+"</td><td>"+batchdivisionname+"</td><td>"+batchdivisionstream+"</td><td>"+batchsubjectnames+"</td>"
+			    +"<td><button type='button' class='btn btn-info' data-target='#modifyBatchModal' data-toggle='modal'>Modify Batch Subjects</button></td>"
+			    +"<td> <button type='button' class='btn btn-info' data-target='#deleteBatchModal' data-toggle='modal'>Delete Batch</button></td>"
+				+"<td><button type='button' class='btn btn-info' onclick='canceledit()' >Cancel</button></td></tr>");
+			  if(allsubjectIds[0]!=""){
+				   for(var i=0;i<allsubjectIds.length;i++){
+					   var flag=false;
+					   for(var j=0;j<batchsubjectIds.length;j++){
+						   if(batchsubjectIds[j]==allsubjectIds[i]){
+							   flag=true;
+						   }
+					   }
+					   if(flag==true){
+						   $("#modifyBatchModalbody").append("<div class='input-group'>"
+						  +"<span class='input-group-addon'>"
+							+"<input type='checkbox' class='chkSubjectBatch' name='subjectBatchId' id='subjectBatchId'  value='"+allsubjectIds[i]+"' checked/>"
+							+"</span>"
+							+"<input type='text' value='"+allsubjectname[i]+"' class='form-control' disabled='disabled'>"
+						+"</div>");
+					   }else{
+						   $("#modifyBatchModalbody").append("<div class='input-group'>"
+									  +"<span class='input-group-addon'>"
+										+"<input type='checkbox' class='chkSubjectBatch' name='subjectBatchId' id='subjectBatchId'  value='"+allsubjectIds[i]+"'/>"
+										+"</span>"
+										+"<input type='text' value='"+allsubjectname[i]+"' class='form-control' disabled='disabled'>"
+									+"</div>");
+					   }
+				   }
+			   }
+			   batchID=batchId;
+			   batchdivisionIDs=batchdivisionID;
+			   $("#batchtomodify").show();
+			   $("#basebatchtable").hide();
+			   $("#paginateform").hide();
+			//   alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
 			    if(resultJson.status != 'error'){
 				//modal.launchAlert("Success","Found Batch! Page will refresh in soon");
-						   setTimeout(function(){
+				
+						/*    setTimeout(function(){
 							   location.reload();
-						   },2*1000);
+						   },2*1000); */
 			    }else{
 			    	 modal.launchAlert("Error","Batch with batch name : "+batchName+" not found!");
-					   	setTimeout(function(){
+					   	/* setTimeout(function(){
 					   		location.reload();
-					   	},1000*3);
+					   	},1000*3); */
 					}		   
 		   	},
 		   error:function(data){
@@ -113,15 +162,59 @@ function searchBatch() {
 			  // var studentId= resultJson.studentId;
 			   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
 			    if(resultJson.status != 'error'){
-				modal.launchAlert("Success","Found Batch! Page will refresh in soon");
-						   setTimeout(function(){
+			    	 var batchId= resultJson.batchId;
+					   var batchName= resultJson.batchName;
+					   var batchdivisionname= resultJson.batchdivisionname;
+					   var batchdivisionID= resultJson.batchdivisionID;
+					   var batchdivisionstream= resultJson.batchdivisionstream;
+					   var batchsubjectIds= resultJson.batchsubjectIds.split(",");
+					   var allsubjectname= resultJson.allsubjectname.split(",");
+					   var allsubjectIds= resultJson.allsubjectIds.split(",");
+					   var batchsubjectnames= resultJson.batchsubjectnames;
+					   $("#batchtomodifybody").empty();
+					   $("#batchtomodify").hide();
+					  $("#batchtomodifybody").append("<tr><td>"+batchName+"</td><td>"+batchdivisionname+"</td><td>"+batchdivisionstream+"</td><td>"+batchsubjectnames+"</td>"
+					    +"<td><button type='button' class='btn btn-info' data-target='#modifyBatchModal' data-toggle='modal'>Modify Batch Subjects</button></td>"
+					    +"<td> <button type='button' class='btn btn-info' data-target='#deleteBatchModal' data-toggle='modal'>Delete Batch</button></td>"
+						+"<td><button type='button' class='btn btn-info' onclick='canceledit()' >Cancel</button></td></tr>");
+					  if(allsubjectIds[0]!=""){
+						   for(var i=0;i<allsubjectIds.length;i++){
+							   var flag=false;
+							   for(var j=0;j<batchsubjectIds.length;j++){
+								   if(batchsubjectIds[j]==allsubjectIds[i]){
+									   flag=true;
+								   }
+							   }
+							   if(flag==true){
+								   $("#modifyBatchModalbody").append("<div class='input-group'>"
+								  +"<span class='input-group-addon'>"
+									+"<input type='checkbox' class='chkSubjectBatch' name='subjectBatchId' id='subjectBatchId'  value='"+allsubjectIds[i]+"' checked/>"
+									+"</span>"
+									+"<input type='text' value='"+allsubjectname[i]+"' class='form-control' disabled='disabled'>"
+								+"</div>");
+							   }else{
+								   $("#modifyBatchModalbody").append("<div class='input-group'>"
+											  +"<span class='input-group-addon'>"
+												+"<input type='checkbox' class='chkSubjectBatch' name='subjectBatchId' id='subjectBatchId'  value='"+allsubjectIds[i]+"'/>"
+												+"</span>"
+												+"<input type='text' value='"+allsubjectname[i]+"' class='form-control' disabled='disabled'>"
+											+"</div>");
+							   }
+						   }
+					   }
+					 batchID=batchId;
+					   batchdivisionIDs=batchdivisionID;
+					   $("#batchtomodify").show();
+					   $("#basebatchtable").hide();
+					   $("#paginateform").hide();
+					   /* setTimeout(function(){
 							   location.reload();
-						   },2*1000);
+						   },2*1000); */
 			    }else{
 			    	 modal.launchAlert("Error","Batch with batch name : "+batchName+" not found!");
-					   	setTimeout(function(){
+					   	/* setTimeout(function(){
 					   		location.reload();
-					   	},1000*3);
+					   	},1000*3); */
 					}		   
 		   	},
 		   error:function(data){
@@ -136,6 +229,27 @@ function searchBatch() {
 }
 
 $(document).ready(function(){
+	$('div#modifyBatchModal .error').html('');
+	$('div#modifyBatchModal .error').hide();
+	
+	$(".page").on("click",function(e){
+		$("form#paginateform #currentPage").val($(this).text());
+		$("#paginateform").submit();
+		e.preventDefault();
+	});
+	
+	$(".start").on("click",function(e){
+		$("form#paginateform #currentPage").val("1");
+		$("#paginateform").submit();
+		e.preventDefault();
+	});
+	
+	$(".end").on("click",function(e){
+		$("form#paginateform #currentPage").val($("#totalPages").val());
+		$("#paginateform").submit();
+		e.preventDefault();
+	});
+	
 	$('div#addBatchModal .error').hide();
 	$("#batchName").on("keyup",function(){
 		var string = $(this).val();	
@@ -209,16 +323,16 @@ $(document).ready(function(){
 	
 
 	$('div#modifyBatchModal').on('click','button#btn-updateBatch',function(){
-		
-		var batchId=document.getElementsByName("radioBatch")[0].value;
-		var batchdivisionid=$("#batchdivisionid").val();
+		 
+		var batchId=batchID;
+		var batchdivisionid=batchdivisionIDs;
 		subjectIds="";
 		$('div#modifyBatchModal .error').html('');
 		$('div#modifyBatchModal .error').hide();
 		getSelectedSubjectsForBatch();
 		
 		if(!subjectIds || subjectIds.trim()==""){
-			$('div#modifyBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Subject name cannot be blank');
+			$('div#modifyBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Please Select Atleast One Subject');
 			$('div#modifyBatchModal .error').show();
 		}else{
 			
@@ -238,9 +352,7 @@ $(document).ready(function(){
 					      if(resultJson.status != 'error'){
 					       $('div#modifyBatchModal').modal('hide');
 					   	   modal.launchAlert("Success","Batch Updated! Page will refresh in soon");
-					   	   setTimeout(function(){
-					   		   location.reload();
-					   	   },2*1000);		   
+					   	 $("#paginateform").submit();	   
 					     }
 				   	},
 				   error:function(data){
@@ -267,9 +379,9 @@ $(document).ready(function(){
 });
 
 	$('div#deleteBatchModal').on('click','button#btn-deleteBatch',function(){
-	
-		var batchId=document.getElementsByName("radioBatch")[0].value;
-		var batchdivisionid=$("#batchdivisionid").val();
+		
+		var batchId=batchID;
+		var batchdivisionid=batchdivisionIDs;
 		$('div#deleteBatchModal .error').html('');
 		$('div#deleteBatchModal .error').hide();
 		
@@ -297,9 +409,7 @@ $(document).ready(function(){
 					      if(resultJson.status != 'error'){
 					   	   $('div#deleteBatchModal').modal('hide');
 					   	   modal.launchAlert("Success","Batch Deleted! Page will refresh in soon");
-					   	   setTimeout(function(){
-					   		   location.reload();
-					   	   },2*1000);		   
+					   	 $("#paginateform").submit();		   
 					      }else{
 					   		   $('div#deleteBatchModal .add').removeClass('hide');
 					   		   $('div#deleteBatchModal .error').show();
@@ -328,10 +438,9 @@ $(document).ready(function(){
 
 </script>
 <body>
-	<h3><font face="cursive">Manage Batch</font></h3>
-<hr>
-	<div class="btn-group btn-group-sm">
-		<div class="container bs-callout bs-callout-danger" style="margin-bottom: 10px;">
+	<div class="">
+		<div class="container bs-callout bs-callout-danger white-back"  style="margin-bottom: 10px;">
+			<div align="center" style="font-size: larger;margin-bottom: 15px"><u>Manage Batch</u></div>
 			<div class="row">
 			<div class="col-md-4">
 				<button type="button" class="btn btn-info" data-target="#addBatchModal" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Batch</button>
@@ -348,13 +457,13 @@ $(document).ready(function(){
 			</div>		
 		</div>
 	<%BatchDetails batchSearch=(BatchDetails)request.getSession().getAttribute("batchSearchResult");
-	if(batchSearch!=null){
-		//System.out.println("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
+	/* if(batchSearch!=null){
+	 */	//System.out.println("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
 	%>
-		<table class="table table-bordered table-hover" style="background-color: white;" border="1" id="batchtomodify">
+		<table class="table table-bordered table-hover" style="background-color: white;display:none" border="1" id="batchtomodify">
 			<thead>
 				<tr style="background-color: rgb(0, 148, 255);">
-					<th></th>
+					<!-- <th></th> -->
 					<th>Batch Name</th>
 					<th>Division</th>
 					<th>Stream</th>
@@ -364,8 +473,8 @@ $(document).ready(function(){
 					<th></th>
 				</tr>
 			</thead>
-			<tbody>	
-				<tr>
+			<tbody id="batchtomodifybody">	
+				<%-- <tr>
 					<td> <INPUT TYPE="radio" NAME="radioBatch" VALUE="<%=batchSearch.getBatch().getBatch_id() %>" CHECKED>
 						 <input type="hidden" id="batchdivisionid" VALUE="<%=batchSearch.getBatch().getDiv_id() %>"> 
 					</td>
@@ -376,14 +485,14 @@ $(document).ready(function(){
 					<td><button type="button" class="btn btn-info" data-target="#modifyBatchModal" data-toggle="modal">Modify Batch Subjects</button></td>
 					<td> <button type="button" class="btn btn-info" data-target="#deleteBatchModal" data-toggle="modal">Delete Batch</button></td>
 					<td><button type="button" class="btn btn-info" onclick="canceledit()" >Cancel</button></td>
-				</tr>
+				</tr> --%>
 			</tbody>
 		</table>
 	
-	<%
+	<%-- <%
 	request.getSession().setAttribute("batchSearchResult",null);
 	}
-	%>
+	%> --%>
 	</div>	
 	<!--  <br/><br/><br/>
 	<div>
@@ -395,7 +504,7 @@ $(document).ready(function(){
 	<s:choose>
 	<s:when test="${batchSize gt 0}">
 	<div class="panel-group" id="accordion">
-		<table class="table table-bordered table-hover" style="background-color: white;" border="1">
+		<table class="table table-bordered table-hover" style="background-color: white;" border="1" id="basebatchtable">
 			<thead>
 				<tr style="background-color: rgb(0, 148, 255);">
 					<!--<td> <input type="checkbox" class="chk" name="selectAll" id="selectAll" data-label="selectAll">Select All</<input></td>  -->
@@ -408,11 +517,14 @@ $(document).ready(function(){
 			</thead>
 		
 				 <%
-				 int i = 0;
+				 int endIndex=(Integer)request.getAttribute("endIndex");
+				 int currentPage=(Integer)request.getAttribute("currentPage");
+				 int startIndex=(Integer)request.getAttribute("startIndex");
+				 int i = startIndex;
 				 if(null != list){
-				  Iterator iteratorList = list.iterator();
-				  while(iteratorList.hasNext()){
-				  BatchDetails batchDetails = (BatchDetails)iteratorList.next();
+				//  Iterator iteratorList = list.iterator();
+				  while(i<endIndex){
+				  BatchDetails batchDetails = (BatchDetails)list.get(i);
 				  //String timmingsTitle = "Start time :"+ batchDataClass.getTimmings().getStartTimming()+"<br>End Time :"+batchDataClass.getTimmings().getEndTimming(); 
 				 		String timmingsTitle = "Start time :";
 				 %>
@@ -432,6 +544,24 @@ $(document).ready(function(){
 		 	</tbody>
 		 </table>
 	</div>
+	<div>
+ <form action="managebatch" id="paginateform">
+  <input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
+  <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
+  <ul class="pagination">
+  <li><a class="start" >&laquo;</a></li>
+  <c:forEach var="item" begin="1" end="${totalPages}">
+  <c:if test="${item eq currentPage}">
+  <li class="active"><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
+  </c:if>
+  <c:if test="${item ne currentPage}">
+  <li><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
+  </c:if>
+  </c:forEach>
+  <li><a href="#" class="end">&raquo;</a></li>
+</ul>
+</form>
+</div>
 	</s:when>
 	<s:otherwise>
 		<span class="alert alert-info">No Batches added yet</span>

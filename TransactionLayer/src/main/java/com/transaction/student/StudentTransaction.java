@@ -72,9 +72,9 @@ public class StudentTransaction {
 		
 	}
 	
-	public void removeBatchFromstudentslist(String Batchname) {
+	public void removeBatchFromstudentslist(String Batchname,int inst_id,int div_id) {
 		StudentDB db=new StudentDB();
-		List<Student> students=db.getStudentrelatedtoBatch(Batchname);
+		List<Student> students=db.getStudentrelatedtoBatch(Batchname,inst_id,div_id);
 		if(students!=null)
 		{
 			for (int i = 0; i < students.size(); i++) 
@@ -118,6 +118,12 @@ public class StudentTransaction {
 	public Integer getStudentscountrelatedtobatch(String batchname,int inst_id,int div_id) {
 		StudentDB db=new StudentDB();
 		return db.getStudentcountrelatedtobatch(batchname, inst_id, div_id);
+		
+	}
+	
+	public List<Integer> getStudentsFromBatches(int class_id,int div_id,String batchids) {
+		StudentDB db=new StudentDB();
+		return db.getStudentsFromBatches(class_id, div_id, batchids);
 		
 	}
 	

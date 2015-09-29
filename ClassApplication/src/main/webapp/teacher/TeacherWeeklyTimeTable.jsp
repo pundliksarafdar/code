@@ -10,20 +10,20 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	  $( "#datetimepicker" ).datetimepicker({
-		  pickTime: false,
-		  format: 'DD/MM/YYYY'
+		  pickTime: false
 	  }).data("DateTimePicker");
 	  
 	  $("#submit").click(function(){
 			var classid=$("#teacherTimeTableClassnameDropDown").val();
 			var date=$("#date").val();
+			$("#scheduletable").empty();
 			if(classid!="-1" && date!="")
 				{
 			$.ajax({
 				 
 				   url: "classOwnerServlet",
 				   data: {
-				    	 methodToCall: "getteacherschedule",
+				    	 methodToCall: "getteacherweeklyschedule",
 				    	 classid:classid,
 				    	 date:date
 				    	
@@ -36,24 +36,39 @@ $(document).ready(function(){
 					   var starttime=resultJson.starttime.split(",");
 					   var endtime=resultJson.endtime.split(",");
 					   var subject=resultJson.subject.split(",");
+					   var dates=resultJson.dates.split(',');
+					   var alldates=resultJson.alldates.split(',');
 					   var table=$(document.getElementById("scheduletable"));
 					   var counter=0
-					   var table1=document.getElementById("scheduletable");
-						  var rowCount=table1.rows.length;
-						  for (var x=rowCount-1; x>0; x--) {
-							  table1.deleteRow(x);
-						   }
+					   
 						 if(batch[0]!="") {
-					   $(table).border="1";
-					   while(counter<batch.length)
-						   {
-					   $(table).append("<tr><td>"+batch[counter]+"</td><td>"+subject[counter]+"</td><td>"+starttime[counter]+
-					"</td><td>"+endtime[counter]+"</td></tr>");
-					   $(table).show();
-					   counter++;
-						   }
+							 $(table).border="1";
+							   var tableString="<tr>";
+							   var outercounter=0;
+							   while(outercounter<dates.length){
+								   tableString= tableString+"<td class='col-md-1'><table class='table  table-bordered'><tr><td colspan='2' style='background-color:rgb(181,181,181)'><b><u>"+dates[outercounter]+"</u><b></td></tr>";
+								   counter=0;
+								   var scheduleflag=false;
+								   while(counter<subject.length)
+							   {
+							   
+							   if(alldates[counter]==dates[outercounter]){
+							   tableString=tableString+"<tr><td>"+starttime[counter]+
+									"-"+endtime[counter]+"</td><td><table class='table table-condensed'><tr><td>"+subject[counter]+"</td></tr><tr><td>"+batch[counter]+"</td></tr></table></td></tr>"; 
+							   scheduleflag=true;
+							   }
+						   counter++;
+							   }
+								   if(scheduleflag==false){
+									   tableString=tableString+"<tr><td>Lecturs are not scheduled</td></tr>";
+								   }
+								   tableString=tableString+"</table></td>"
+						   outercounter++;
+							   }
+							   tableString=tableString+"</tr>";
+							   $(table).append(tableString);
+							   $("#scheduletable").show();
 				   }else{
-					   $("#scheduletable").hide();
 					   $('#lectureupdatemodal').modal('toggle');
 				   }
 					    
@@ -73,7 +88,7 @@ $(document).ready(function(){
 </head>
 <body>
 <div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
-			<div align="center" style="font-size: larger;"><u>Time Table</u></div>
+			<div align="center" style="font-size: larger;"><u>Weekly Time Table</u></div>
 <form role="form" class="form-inline">
 <div class="container">
 <div align="left" class="container">
@@ -110,15 +125,9 @@ while(list.size()>counter){ %>
 </div>
 
 <div class="container">
-<table id="scheduletable" border="1" style="display:none;background-color: white;" class="table table-bordered">
-<thead>
-<tr style="background-color: rgb(0, 148, 255);">
-<th>Batch</th>
-<th>Subject</th>
-<th>Start Time</th>
-<th>End Time </th>
- </tr>
-</thead>
+<table id="scheduletable" border="1" style="display:none" class="table table-bordered">
+
+
 </table>
 </div>
 <div class="modal fade" id="lectureupdatemodal" tabindex="-1" role="dialog" 
@@ -134,7 +143,7 @@ while(list.size()>counter){ %>
             </h4>
          </div>
          <div class="modal-body">
-           Lectures Not Available..
+           Lectures are not scheduled in selected week..
          </div>
          </div>
    </div>

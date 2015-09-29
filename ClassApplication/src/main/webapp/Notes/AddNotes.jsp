@@ -128,13 +128,12 @@ $(document).ready(function(){
 				}
 			j++;
 			}
-		alert(batch);
 		if(file==""){
 			fileerror.html("Please select file");
 			flag=false;
 		}else{
 			var filesize=document.getElementById("myfile").files[0].size/1024/1024;
-			if(filesize > 2){
+			if(filesize > 5){
 				fileerror.html("File size should be less than 5 MB");
 				flag=false;
 			}
@@ -240,12 +239,11 @@ function showalert(){
 </script>
 </head>
 <body onload="showalert()">
-<h3><font face="cursive">Add Notes</font></h3>
-<hr>
 <div>
 <%
 String notes=(String)request.getAttribute("notes");
 if(notes!=null){
+	request.setAttribute("notes", null);
 %>
 <div class="modal fade" id="notesaddedalert" tabindex="-1" role="dialog" 
    aria-labelledby="myModalLabel" aria-hidden="true">
@@ -276,11 +274,7 @@ if(notes!=null){
 <input type="hidden" id="division" name="division" value="<c:out value="${division}" ></c:out>">
 <input type="hidden" id="subject" name="subject" value="<c:out value="${subject}" ></c:out>">
 <div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
-		<div class="row">
-				<div class='col-sm-6 header' style="padding-bottom: 10px;" align="left">*
-					Upload Your Notes 
-				</div>
-			</div>
+		<div align="center" style="font-size: larger;"><u>Add Notes</u></div>
 	<div class="row">
 		<div class="alert alert-danger" style="padding-bottom: 10px;display:none">
 			 

@@ -21,7 +21,7 @@ public class NotificationDB {
 	
 	}
 	
-	public List<Notification> getMessageforStudent(int instituteid,List<String> batchids) {
+	public List<Notification> getMessageforStudent(int instituteid,List<String> batchids,int div_id) {
 		Transaction transaction=null;
 		Session session=null;
 		List<Notification> notifications = null;
@@ -29,9 +29,32 @@ public class NotificationDB {
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("from Notification where  institute_id = :institute_id and (batch in :batch or batch='ALL')");
+			Query query = session.createQuery("from Notification where  institute_id = :institute_id and ((batch in :batch and div_id=:div_id) or batch='ALL')");
 			query.setParameter("institute_id", instituteid);
 			query.setParameterList("batch", batchids);
+			query.setParameter("div_id", div_id);
+			notifications = query.list();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}
+	return notifications;
+	}
+	
+	public List<Notification> getMessageforTeachers(int instituteid) {
+		Transaction transaction=null;
+		Session session=null;
+		List<Notification> notifications = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from Notification where  institute_id = :institute_id and role=2");
+			query.setParameter("institute_id", instituteid);
 			notifications = query.list();
 			
 		}catch(Exception e){

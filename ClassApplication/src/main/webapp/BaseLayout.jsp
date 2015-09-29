@@ -53,7 +53,8 @@ body{
 }
 
 .white-back{
-background-color: white;
+background-color: rgb(142,142,142);
+color: white;
 }
 
 /* #footer-sec{
@@ -175,7 +176,7 @@ $( document ).ajaxStop(function() {
 				</div>
 					<br/>							
 			</div>
-			<div id="body" style="margin: 10px;" class="well">
+			<div id="body" style="margin: 10px;background-color: rgb(221, 225, 216)" >
 				<div>
 					<tiles:insertAttribute name="body" />
 					<br />

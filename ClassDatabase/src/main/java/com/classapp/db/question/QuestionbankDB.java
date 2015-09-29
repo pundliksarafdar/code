@@ -184,9 +184,9 @@ public List<Questionbank> getSearchedQuestion(int rep,String compexam_id,int mar
 		criteria.add(criterion);
 	}
 	if(currentPage!=0 &&  currentPage!=1){
-		criteria.setFirstResult((currentPage-1)*2);
+		criteria.setFirstResult((currentPage-1)*20);
 	}
-	criteria.setMaxResults(2);
+	criteria.setMaxResults(50);
 	List<Questionbank> questionList = criteria.list();
 	transaction.commit();
 	session.close();
@@ -235,7 +235,7 @@ public List<Integer> getdistinctQuestionMarks(int sub_id,int inst_id,int div_id)
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
 	transaction=session.beginTransaction();
-	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.distinct(Projections.property("marks")));;
+	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.distinct(Projections.property("marks"))).addOrder(Order.asc("marks"));;
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
 	criteria.add(criterion);
 	criterion = Restrictions.eq("sub_id", sub_id);

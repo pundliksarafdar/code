@@ -177,6 +177,11 @@
 		<put-attribute name="title" value="Update Time Table" />
 		<put-attribute name="body" value="/Timetable/UpdateTimeTable.jsp" />
 	</definition>
+	
+	<definition name="timetable.weeklytimetable" extends="baseLayout">
+		<put-attribute name="title" value="Update Time Table" />
+		<put-attribute name="body" value="/Timetable/WeeklyTimetable.jsp" />
+	</definition>
 
 	<definition name="notes.NotesOption" extends="baseLayout">
 		<put-attribute name="title" value="Notes" />
@@ -209,6 +214,7 @@
 	</definition>
 	<definition name="notes.teachernotes" extends="baseLayout">
 		<put-attribute name="title" value="Add Notes Success" />
+		<put-attribute name="topnav" value="/teacher/menu.jsp" />
 		<put-attribute name="body" value="/Notes/AddTeacherNotes.jsp" />
 	</definition>
 	<definition name="seenotes.teachernotes" extends="baseLayout">
@@ -395,6 +401,11 @@
       <put-attribute name="title"  value="Choose Subject"/>
       <put-attribute name="body"   value="/ClassOwner/QuestionbankQuestionList.jsp"/>      
    </definition>
+   
+   <definition name="classowner.generateexampre" extends="baseLayout">
+      <put-attribute name="title"  value="Choose Subject"/>
+      <put-attribute name="body"   value="/ClassOwner/GenerateExam.jsp"/>      
+   </definition>
 
    <definition name="teacher.teacherquestionsearch" extends="baseLayout">
       <put-attribute name="title"  value="Choose Subject"/>
@@ -457,5 +468,19 @@
       <put-attribute name="title"  value="Manual Exam"/>
       <put-attribute name="topnav" value="/student/menu.jsp" />
       <put-attribute name="body"   value="/ClassOwner/ViewExamAns.jsp"/>      
+   </definition>
+    <definition name="classowner.viewexammarks" extends="baseLayout">
+      <put-attribute name="title"  value="Manual Exam"/>
+      <put-attribute name="body"   value="/ClassOwner/ExamMarks.jsp"/>      
+   </definition>
+   <definition name="student.studentweeklytimetable" extends="baseLayout">
+		<put-attribute name="title" value="Student Time Table" />
+		<put-attribute name="topnav" value="/student/menu.jsp" />
+		<put-attribute name="body" value="/student/StudentWeeklyTimeTable.jsp" />
+	</definition>
+	 <definition name="teacher.teacherweeklytimetable" extends="baseLayout">
+      <put-attribute name="title"  value="Time Table"/>
+      <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/teacher/TeacherWeeklyTimeTable.jsp"/>      
    </definition>
 </tiles-definitions>

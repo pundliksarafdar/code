@@ -8,11 +8,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.db.Notes.Notes;
 import com.classapp.db.batch.division.Division;
+import com.classapp.db.student.Student;
 import com.config.BaseAction;
 import com.tranaction.subject.SubjectTransaction;
+import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.notes.NotesTransaction;
 import com.transaction.register.RegisterTransaction;
+import com.transaction.student.StudentTransaction;
 import com.transaction.teacher.TeacherTransaction;
 import com.user.UserBean;
 
@@ -49,10 +52,12 @@ public class StudentNotesAction extends BaseAction{
 		if(currentPage==0){
 			currentPage++;
 		}
-		
+		StudentTransaction studentTransaction=new StudentTransaction();
+		Student student=studentTransaction.getclassStudent(userBean.getRegId(),Integer.parseInt(institute));
+		division=student.getDiv_id()+"";
 		NotesTransaction notesTransaction=new NotesTransaction();
-		int totalCount=notesTransaction.getNotescount(Integer.parseInt(division), Integer.parseInt(subject), inst_id,batch);
-		noteslist =notesTransaction.getNotesPath(Integer.parseInt(division), Integer.parseInt(subject), inst_id,currentPage,batch);
+		int totalCount=notesTransaction.getNotescount(student.getDiv_id(), Integer.parseInt(subject), inst_id,batch);
+		noteslist =notesTransaction.getNotesPath(student.getDiv_id(), Integer.parseInt(subject), inst_id,currentPage,batch);
 		if(totalCount>0){
 			int remainder=totalCount%2;
 			totalPage=totalCount/2;

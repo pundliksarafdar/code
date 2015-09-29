@@ -22,6 +22,12 @@
         </property> 
         <property name="batch_name">
             <column name="batch_name"/>
-        </property>     
+        </property>    
+         <property name="div_id" type="int">
+            <column name="div_id"/>
+        </property>
+         <property name="role" type="int">
+            <column name="role"/>
+        </property>  
         </class>
 </hibernate-mapping>

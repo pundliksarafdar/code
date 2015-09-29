@@ -6,7 +6,7 @@
 	<constant name="struts.devMode" value="true" />
 	<constant name="struts.action.excludePattern"
 		value="/admajxsrvlt,/classOwnerServlet,/notificationServlet,/reloadConfig,/notifications" />
-	<constant name="struts.multipart.maxSize" value="1000000" />
+	<constant name="struts.multipart.maxSize" value="5000000" />
 	<package name="classapp" extends="struts-default">
 		<result-types>
 			<result-type name="tiles"
@@ -328,6 +328,11 @@
 			<result name="success" type="tiles">classowner.generateexamsuccess</result>
 			<param name="ignoresession">true</param>
 		</action>
+		
+		<action name="generateexampreaction" class="com.corex.exam.GenerateExamPreAction" method="execute">
+			<result name="success" type="tiles">classowner.generateexampre</result>
+			<param name="ignoresession">true</param>
+		</action>
 
 		<action name="editquestion" class="com.classowner.UploadExamsAction"
 			method="execute">
@@ -408,6 +413,25 @@
 			method="execute">
 			<result name="viewexamans" type="tiles">student.viewexamans</result>
 			<result name="viewanscomplete" type="tiles">classowner.questioneditsuccess</result>
+		</action>
+		<action name="studentexammarks" class="com.exam.ExamMarksAction"
+			method="execute">
+			<result name="viewexammarks" type="tiles">classowner.viewexammarks</result>
+			<result name="viewanscomplete" type="tiles">classowner.questioneditsuccess</result>
+		</action>
+		<action name="weeklytimetable" class="com.timetable.UpdateTimeTableAction"
+			method="execute">
+			<result name="success" type="tiles">timetable.weeklytimetable</result>
+		</action>
+		<action name="studentweeklytimetable" class="com.timetable.StudentTimetableAction"
+			method="execute">
+			<result name="success" type="tiles">student.studentweeklytimetable</result>
+			<result name="error" type="tiles">register</result>
+		</action>
+		<action name="teacherweeklytimetable" class="com.timetable.TeacherTimeTableAction"
+			method="execute">
+			<result name="success" type="tiles">teacher.teacherweeklytimetable</result>
+			<result name="error" type="tiles">register</result>
 		</action>
 	</package>
 </struts>

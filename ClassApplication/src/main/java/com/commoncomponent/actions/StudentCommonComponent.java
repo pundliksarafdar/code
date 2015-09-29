@@ -19,6 +19,7 @@ import com.user.UserBean;
 
 public class StudentCommonComponent extends BaseAction{
 	String forwardAction;
+	String lable;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -34,15 +35,35 @@ public class StudentCommonComponent extends BaseAction{
 		if(list!=null){
 			request.setAttribute("studentdivision",list.get(0).getDiv_id());
 		}
+		lable=getheader();
 		return SUCCESS;
 	}
+	
+	public String getLable() {
+		return lable;
+	}
+
+	public void setLable(String lable) {
+		this.lable = lable;
+	}
+
 	public String getForwardAction() {
 		return forwardAction;
 	}
 	public void setForwardAction(String forwardAction) {
 		this.forwardAction = forwardAction;
 	}
-	
+	public String getheader() {
+		if("attemptexamlist".equals(forwardAction)){
+			return "Attempt Exam";
+		}else if("examMarks".equals(forwardAction)){
+			return "Exam Marks";
+		}else if("studentnotes".equals(forwardAction)){
+			return "Notes";
+		}
+		
+		return "";
+	}
 	
 
 }

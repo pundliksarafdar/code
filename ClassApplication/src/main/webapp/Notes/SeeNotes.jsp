@@ -215,28 +215,31 @@ $(document).ready(function(){
 		}
 	});
 	
-	$(".page").on("click",function(){
+	$(".page").on("click",function(e){
 		$("form#paginateform #currentPage").val($(this).text());
 	//	$("#totalmarks").val($("#temptotalmarks").html());
 	//	$("#addedIds").val(addedIds);
 	//	$("#removedIds").val(removedIds);
 		$("#paginateform").submit();
+		e.preventDefault();
 	});
 	
-	$(".start").on("click",function(){
+	$(".start").on("click",function(e){
 		$("form#paginateform #currentPage").val("1");
 	//	$("#totalmarks").val($("#temptotalmarks").html());
 	//	$("#addedIds").val(addedIds);
 	//	$("#removedIds").val(removedIds);
 		$("#paginateform").submit();
+		e.preventDefault();
 	});
 	
-	$(".end").on("click",function(){
+	$(".end").on("click",function(e){
 		$("form#paginateform #currentPage").val($("#totalPage").val());
 	//	$("#totalmarks").val($("#temptotalmarks").html());
 	//	$("#addedIds").val(addedIds);
 	//	$("#removedIds").val(removedIds);
 		$("#paginateform").submit();
+		e.preventDefault();
 	});
 	
 	$("#savenotes").click(function(){
@@ -317,10 +320,10 @@ $(document).ready(function(){
 			<c:otherwise><a type="button" class="btn btn-primary" href="choosesubject?forwardAction=seenotes" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a></c:otherwise>
 			</c:choose>
 			</div>
-<h3><font face="cursive">Search Result</font></h3>
-<hr>
-	
- 	<hr>
+			<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+			<div align="center" style="font-size: larger;"><u>Search Notes</u></div>
+			</div>
+<c:if test="${(totalPage!=0)}">
    <div id="notesdiv" class="container">
    <table id="notestable" class="table table-bordered table-hover" style="background-color: white;">
    <thead style="background-color: rgb(0, 148, 255);">
@@ -338,8 +341,25 @@ $(document).ready(function(){
    <td><c:out value="${counter.count}"></c:out></td>
    <td><c:out value="${item.name}"></c:out></td>
     <td><button class="btn btn-primary shownotes" id='<c:out value="${item.notesid}"></c:out>'>Open</button></td>
+    <c:choose>
+    <c:when test="${role eq 2 }">
+    	<c:choose>
+    	<c:when test="${item.addedby eq user.regId }">
+    		<td><button class="btn btn-primary" id="edit" onclick='editnotes("<c:out value="${item.notesid}"></c:out>")'>Edit</button></td>
+   			<td><button class="btn btn-danger" onclick='deletenotes("<c:out value="${item.notesid}"></c:out>")'>Delete</button></td>
+    	</c:when>
+    	<c:otherwise>
+    	 <td><button class="btn btn-primary" disabled="disabled">Edit</button></td>
+   		 <td><button class="btn btn-danger" disabled="disabled">Delete</button></td> 
+    	</c:otherwise>
+    	</c:choose>
+    </c:when>
+    <c:otherwise>
    <td><button class="btn btn-primary" id="edit" onclick='editnotes("<c:out value="${item.notesid}"></c:out>")'>Edit</button></td>
-   <td><button class="btn btn-danger" onclick='deletenotes("<c:out value="${item.notesid}"></c:out>")'>Delete</button></td>
+   <td><button class="btn btn-danger" onclick='deletenotes("<c:out value="${item.notesid}"></c:out>")'>Delete</button></td> 
+    </c:otherwise>
+    </c:choose>
+   
    </tr>
    </c:forEach>
    </tbody>
@@ -467,5 +487,9 @@ $(document).ready(function(){
    </div>
     
 </div>
+</c:if>
+<c:if test="${(totalPage==0)}">
+<div class="alert alert-info" align="center">Notes not available for selected criteria.</div>
+</c:if>
 </body>
 </html>

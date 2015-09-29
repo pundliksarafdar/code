@@ -16,6 +16,7 @@ import com.transaction.batch.division.DivisionTransactions;
 import com.user.UserBean;
 
 public class SendMessageAction extends BaseAction{
+	String to;
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		BatchTransactions batchTransactions=new BatchTransactions();
@@ -24,5 +25,13 @@ public class SendMessageAction extends BaseAction{
 		List batch=batchTransactions.getAllBatches(regID);
 		request.setAttribute("batch", batch);
 		return SUCCESS;
+	}
+	public String getTo() {
+		return to;
+	}
+	public void setTo(String to) {
+		this.to = to;
 	}	
+	
+	
 }

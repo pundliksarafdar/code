@@ -16,6 +16,7 @@ import com.user.UserBean;
 
 public class TeacherCommonComponentAction extends BaseAction{
 	String forwardAction;
+	String lable;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -28,7 +29,7 @@ public class TeacherCommonComponentAction extends BaseAction{
 		RegisterTransaction registerTransaction=new RegisterTransaction();
 		List classes=registerTransaction.getTeachersclassNames(classids);
 		request.setAttribute("classes", classes);
-		
+		lable=getheader();
 		request.setAttribute("notes", notes);
 		
 		return SUCCESS;
@@ -38,8 +39,35 @@ public class TeacherCommonComponentAction extends BaseAction{
 	}
 	public void setForwardAction(String forwardAction) {
 		this.forwardAction = forwardAction;
+	}	
+	public String getLable() {
+		return lable;
 	}
-	
-	
+	public void setLable(String lable) {
+		this.lable = lable;
+	}
+	public String getheader() {
+		if("uploadexams".equals(forwardAction)){
+			return "Add Question";
+		}else if("searchQuestion".equals(forwardAction)){
+			return "Search Question";
+		}else if("generateexampreaction".equals(forwardAction)){
+			return "Generate Exam";
+		}else if("manualexam".equals(forwardAction)){
+			return "Manual Exam";
+		}else if("listExam".equals(forwardAction)){
+			return "Search Exam";
+		}else if("attemptexamlist".equals(forwardAction)){
+			return "Attempt Exam";
+		}else if("studentexammarks".equals(forwardAction)){
+			return "Student Marks";
+		}else if("addteachernotesoption".equals(forwardAction)){
+			return "Add Notes";
+		}else if("seenotes".equals(forwardAction)){
+			return "See Notes";
+		}
+		
+		return "";
+	}
 
 }

@@ -74,7 +74,6 @@ $.ajax({
 		   $("#classownerUploadexamSubjectNameSelect").removeAttr('disabled');
 		   displaySubjectDropDown(data);
 	   },
-	   global:false,
 		error:function(){
 	   		modal.launchAlert("Error","Error");
 	   	}
@@ -118,7 +117,8 @@ var displaySubjectDropDown = function (data){
 			}).appendTo(selectOptionDropdown);
 		}
 	}else{
-		$(SUBJECT_DROPDOWN).hide();
+		$("#classownerUploadexamSubjectNameSelect").prop("disabled",true);
+		$("#classownerUploadexamBatchName").prop("disabled",true);
 		$(".alert-danger").text("Batch for selected division are not added.").show();
 	}
 	
@@ -158,6 +158,8 @@ this.displayBatchFromSubjectNDivision = displayBatchFromSubjectNDivision;
 
 <form method="post" action="<c:out value="${forwardAction}" ></c:out>">
 <div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+	
+	<div align="center" style="font-size: larger;margin-bottom: 15px"><u><c:out value="${lable}"></c:out></u></div>
 	<div class="row">
 		<div class="alert alert-danger" style="padding-bottom: 10px;display:none">
 			 
@@ -193,7 +195,7 @@ this.displayBatchFromSubjectNDivision = displayBatchFromSubjectNDivision;
 		</div>
 		
 		<div class="col-md-3">
-			<button id="classownerUploadexamAddExam" type="submit" class="btn btn-info" disabled>Add</button>
+			<button id="classownerUploadexamAddExam" type="submit" class="btn btn-info" disabled>Continue</button>
 		</div>
 		<div class="col-md-3">
 		

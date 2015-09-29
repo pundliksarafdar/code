@@ -173,9 +173,10 @@ var resultJson = JSON.parse(e);
    if(resultJson.status != 'error'){
 	   $('div#addSubjectModal').modal('hide');
 	   modal.launchAlert("Success","Subject Added! Page will refresh in soon");
-	   setTimeout(function(){
+	   $("#addsub").submit();
+	   /*  setTimeout(function(){
 		   location.reload();
-	   },2*1000);		   
+	   },2*1000);	*/	   
    }else{
 	   $('div#addSubjectModal .add').removeClass('hide');
 	   $('div#addSubjectModal .error').show();

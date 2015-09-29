@@ -74,10 +74,10 @@ $(document).ready(function(){
 <div class="container" style="margin-bottom: 5px">
 			<a type="button" class="btn btn-primary" href="studentcommoncomponent?forwardAction=studentnotes" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
 </div>
-<h3><font face="cursive">Search Result</font></h3>
-<hr>
-	
- 	<hr>
+<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+			<div align="center" style="font-size: larger;"><u>Notes</u></div>
+			</div>
+			<c:if test="${totalPage ne 0 }">
    <div id="notesdiv" class="container">
    <table id="notestable" class="table table-bordered table-hover" style="background-color: white;">
    <thead style="background-color: rgb(0, 148, 255);">
@@ -220,5 +220,9 @@ $(document).ready(function(){
    </div>
     
 </div>
+</c:if>
+	<c:if test="${totalPage eq 0 }">
+	<div class="alert alert-info" align="center">Notes not available for selected criteria.</div>
+	</c:if>
 </body>
 </html>

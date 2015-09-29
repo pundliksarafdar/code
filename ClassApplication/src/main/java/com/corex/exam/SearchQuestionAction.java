@@ -45,11 +45,16 @@ public class SearchQuestionAction extends BaseAction{
 	String questionedit;
 	String actionname;
 	String institute;
+	int paginationstartindex;
+	int paginationendindex;
+	int role;
+	List<Integer> createdIds;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
 		int inst_id=userBean.getRegId();
+		role=userBean.getRole();
 		if(institute!=null && !"".equals(institute)){
 			UserStatic userStatic = userBean.getUserStatic();
 			String storagePath = Constants.STORAGE_PATH+File.separator+institute;
@@ -81,8 +86,8 @@ public class SearchQuestionAction extends BaseAction{
 		if(currentPage==0){
 			int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(selectedRep), selectedExamID, Integer.parseInt(selectedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division));
 			if(totalCount>0){
-				int remainder=totalCount%2;
-				totalPages=totalCount/2;
+				int remainder=totalCount%50;
+				totalPages=totalCount/50;
 				if(remainder>0){
 					totalPages++;
 				}
@@ -92,8 +97,8 @@ public class SearchQuestionAction extends BaseAction{
 			if("true".equals(questionedit)){
 				int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(searchedRep), searchedExam, Integer.parseInt(searchedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division));
 				if(totalCount>0){
-					int remainder=totalCount%2;
-					totalPages=totalCount/2;
+					int remainder=totalCount%50;
+					totalPages=totalCount/50;
 					if(remainder>0){
 						totalPages++;
 					}
@@ -104,16 +109,34 @@ public class SearchQuestionAction extends BaseAction{
 			if(totalPages<currentPage){
 				currentPage--;
 			}
-		
+			paginationstartindex=1;
+		if(currentPage>3){
+			paginationstartindex=currentPage-2;
+			
+		}
+		paginationendindex=paginationstartindex+4;
+		if(paginationendindex>totalPages){
+			paginationendindex=totalPages;
+			if(currentPage==totalPages){
+				paginationstartindex=currentPage-4;
+			}else{
+				paginationstartindex=currentPage-3;
+			}
+			if(paginationstartindex<0){
+				paginationstartindex=1;
+			}
+		}
 		List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(Integer.parseInt(searchedRep), searchedExam, Integer.parseInt(searchedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage);
 		UserStatic userStatic = userBean.getUserStatic();
 		String questionPath = "";
 		if(questionbanks!=null)
 		{
+			createdIds=new ArrayList<Integer>();
 			questionDataList=new ArrayList<QuestionData>();
 			for (int i = 0; i < questionbanks.size(); i++) {
 				questionPath=userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionbanks.get(i).getQue_id();
 				QuestionData questionData=(QuestionData) readObject(new File(questionPath));
+				createdIds.add(questionbanks.get(i).getAdded_by());
 				questionDataList.add(questionData);
 			}
 		}
@@ -283,6 +306,38 @@ public class SearchQuestionAction extends BaseAction{
 
 	public void setInstitute(String institute) {
 		this.institute = institute;
+	}
+
+	public int getPaginationstartindex() {
+		return paginationstartindex;
+	}
+
+	public void setPaginationstartindex(int paginationstartindex) {
+		this.paginationstartindex = paginationstartindex;
+	}
+
+	public int getPaginationendindex() {
+		return paginationendindex;
+	}
+
+	public void setPaginationendindex(int paginationendindex) {
+		this.paginationendindex = paginationendindex;
+	}
+
+	public int getRole() {
+		return role;
+	}
+
+	public void setRole(int role) {
+		this.role = role;
+	}
+
+	public List<Integer> getCreatedIds() {
+		return createdIds;
+	}
+
+	public void setCreatedIds(List<Integer> createdIds) {
+		this.createdIds = createdIds;
 	}
 	
 	

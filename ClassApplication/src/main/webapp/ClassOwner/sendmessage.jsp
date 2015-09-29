@@ -1,5 +1,6 @@
 <%@page import="com.classapp.db.batch.Batch"%>
 <%@page import="java.util.List"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -16,6 +17,7 @@ $(document).ready(function(){
 	
 	$("#submit").click(function(){
 		var message=$("#message").val();
+		if($("#to").val()=='student'){
 		var batch=$("#batch").val();
 		var date=$("#date").val();
 		var batchname=$( "#batch option:selected" ).text();
@@ -40,6 +42,27 @@ $(document).ready(function(){
 				   	}
 				   });
 		}
+		}else{
+			if(message!=""){
+				$.ajax({
+					 
+					   url: "classOwnerServlet",
+					   data: {
+					    	 methodToCall: "sendteachermessage",
+					    	 message: message
+					   		},
+					   type:"POST",
+					   success:function(data){
+						   var resultJson = JSON.parse(data);
+						   modal.launchAlert("Success","Message has been sent");
+					   },
+						error:function(){
+					   		modal.launchAlert("Error","Error");
+					   	}
+					   });
+			}
+			
+		}
 	});
 	});
 	
@@ -49,6 +72,9 @@ $(document).ready(function(){
 <body>
 <%List<Batch> batch=(List<Batch>)request.getAttribute("batch"); 
 		int i=0;%>
+		<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+			<div align="center" style="font-size: larger;"><u>Send Notice/Message</u></div>
+			</div>
 <div class="form-group">
 	<label for="message"  class="col-sm-4 control-label" align="right">Message :</label>
 	<div class="col-sm-5" align="left">
@@ -58,7 +84,8 @@ $(document).ready(function(){
 	<span class="error" id="messageerror" name="messageerror"></span>
 	</div>
 	</div>
-	
+	<input type="hidden" name="to" id="to" value="<c:out value='${to}'></c:out>">
+	<c:if test="${to eq 'student' }">
 	<div class="form-group">
 	<label for="batch"  class="col-sm-4 control-label" align="right">Select Batch :</label>
 	<div class="col-sm-5" align="left">
@@ -82,7 +109,7 @@ $(document).ready(function(){
 				<%
 					while(i<batch.size()){
 					%>
-					<option value="<%=batch.get(i).getBatch_id()%>"><%=batch.get(i).getBatch_name() %></option>
+					<option value="<%=batch.get(i).getBatch_id()%>_<%=batch.get(i).getDiv_id()%>"><%=batch.get(i).getBatch_name() %></option>
 					<%i++;} }}%>
 	</select>
 	</div>
@@ -90,7 +117,7 @@ $(document).ready(function(){
 	<span class="error" id="batcherror" name="batcherror"></span>
 	</div>
 	</div>
-	
+
 	<div class="form-group">
 	<label for="date"  class="col-sm-4 control-label" align="right">Select Date :</label>
 	<div class="col-sm-5" align="left">
@@ -102,10 +129,10 @@ $(document).ready(function(){
 				</div>
 	</div>
 	<div class="col-sm-2" align="left">
-	<span class="error" id="batcherror" name="batcherror"></span>
+	<span class="error" id="dateerror" name="dateerror"></span>
 	</div>
 	</div>
-	
+		</c:if>
 	<div class="form-group">
 	<div class="col-sm-4" align="left"></div>
 	<div class="col-sm-5" align="left">

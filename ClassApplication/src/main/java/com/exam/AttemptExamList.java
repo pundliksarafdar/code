@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.db.batch.Batch;
 import com.classapp.db.exam.Exam;
+import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentMarks;
 import com.config.BaseAction;
 import com.config.Constants;
@@ -17,6 +18,7 @@ import com.datalayer.exam.MCQData;
 import com.datalayer.exam.StudentExamData;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.exams.ExamTransaction;
+import com.transaction.student.StudentTransaction;
 import com.transaction.studentmarks.StudentMarksTransaction;
 import com.user.UserBean;
 
@@ -38,8 +40,10 @@ public class AttemptExamList extends BaseAction {
 		
 		int totalCount=0;
 		if(userBean.getRole()==3){
+			StudentTransaction studentTransaction=new StudentTransaction();
+			Student student=(Student) studentTransaction.getclassStudent(userBean.getRegId(), institute);
 			BatchTransactions batchTransactions=new BatchTransactions();
-			Batch studentbatch=batchTransactions.getBatch(Integer.parseInt(batch),institute,Integer.parseInt(division));
+			Batch studentbatch=batchTransactions.getBatch(Integer.parseInt(batch),institute,student.getDiv_id());
 			division=studentbatch.getDiv_id()+"";
 			StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
 		List<StudentMarks>	marks=marksTransaction.getStudentMarksList(institute, userBean.getRegId(), Integer.parseInt(subject), Integer.parseInt(division));
@@ -57,8 +61,8 @@ public class AttemptExamList extends BaseAction {
 			totalCount=examTransaction.getExamCount(userBean.getRegId(),  Integer.parseInt(subject), Integer.parseInt(division), "-1",batch);
 		}
 		if(totalCount>0){
-			int remainder=totalCount%2;
-			totalPages=totalCount/2;
+			int remainder=totalCount%10;
+			totalPages=totalCount/10;
 			if(remainder>0){
 				totalPages++;
 			}
@@ -78,9 +82,9 @@ public class AttemptExamList extends BaseAction {
 		*/
 			int startindex=0;
 			if(currentPage>1){
-				startindex=(currentPage-1)*2;
+				startindex=(currentPage-1)*10;
 			}
-			int endindex=startindex+2;
+			int endindex=startindex+10;
 			
 			if(examlist!=null){
 				if(endindex>examlist.size()){

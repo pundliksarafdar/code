@@ -37,28 +37,31 @@ $(document).ready(function(){
 		$("#searchform").submit();
 	});
 	
-	$(".page").on("click",function(){
+	$(".page").on("click",function(e){
 		$("form#paginateform #currentPage").val($(this).text());
 		$("#totalmarks").val($("#temptotalmarks").html());
 		$("#addedIds").val(addedIds);
 		$("#removedIds").val(removedIds);
 		$("#paginateform").submit();
+		e.preventDefault();
 	});
 	
-	$(".start").on("click",function(){
+	$(".start").on("click",function(e){
 		$("form#paginateform #currentPage").val("1");
 		$("#totalmarks").val($("#temptotalmarks").html());
 		$("#addedIds").val(addedIds);
 		$("#removedIds").val(removedIds);
 		$("#paginateform").submit();
+		e.preventDefault();
 	});
 	
-	$(".end").on("click",function(){
+	$(".end").on("click",function(e){
 		$("form#paginateform #currentPage").val($("#totalPages").val());
 		$("#totalmarks").val($("#temptotalmarks").html());
 		$("#addedIds").val(addedIds);
 		$("#removedIds").val(removedIds);
 		$("#paginateform").submit();
+		e.preventDefault();
 	});
 	
 	$(".edit").on("click",function(){
@@ -75,7 +78,7 @@ $(document).ready(function(){
 		$("#actionform").submit();
 	});
 	
-	$("#basetable").on("click",".addquestion",function(){
+	$("#basetable").on("click",".addquestion",function(e){
 	//	$("#addedIds").val($("#addedIds").val()+","+$(this).prop("id"));
 		addedIds.push($(this).prop("id"));
 		removedIds.splice(removedIds.indexOf($(this).prop("id")), 1);
@@ -83,8 +86,9 @@ $(document).ready(function(){
 		$(this).find("button").prop("class","btn btn-danger");
 		$("#temptotalmarks").html(parseInt($("#temptotalmarks").html()) + parseInt($("#mark"+$(this).prop("id")).html()));
 		$(this).prop("class","removequestion");
+		e.preventDefault();
 	});
-	$("#basetable").on("click",".removequestion",function(){
+	$("#basetable").on("click",".removequestion",function(e){
 	//	$("#removedIds").val($("#removedIds").val()+","+$(this).prop("id"));
 		removedIds.push($(this).prop("id"));
 		addedIds.splice(addedIds.indexOf($(this).prop("id")), 1);
@@ -92,6 +96,7 @@ $(document).ready(function(){
 		$(this).find("button").prop("class","btn btn-success");
 		$("#temptotalmarks").html(parseInt($("#temptotalmarks").html()) - parseInt($("#mark"+$(this).prop("id")).html()));
 		$(this).prop("class","addquestion");
+		e.preventDefault();
 	});
 	$("#clearadvancesearch").on("click",function(){
 		$("form#paginateform #currentPage").val("0");
@@ -131,30 +136,109 @@ $(document).ready(function(){
 	});
 	
 	$("#createexam").on("click",function(){
-		$("form#paginateform #currentPage").val("0");
-		$("form#paginateform #totalmarks").val($("#temptotalmarks").html());
-		$("form#paginateform #addedIds").val(addedIds);
-		$("form#paginateform #removedIds").val(removedIds);
-		$("form#paginateform #searchedMarks").val("-1");
-		$("form#paginateform #searchedExam").val("-1");
-		$("form#paginateform #searchedRep").val("-1");
-		$("form#paginateform #actionname").val("createexam");
-		$("#paginateform").submit();    
 		
+		var noofquestions=$("#noofquestions").val();
+		if(noofquestions=="0" && addedIds.length==0){
+			alert("please add questions");
+		}else{
+			$("form#paginateform #currentPage").val("0");
+			$("form#paginateform #totalmarks").val($("#temptotalmarks").html());
+			$("form#paginateform #addedIds").val(addedIds);
+			$("form#paginateform #removedIds").val(removedIds);
+			$("form#paginateform #searchedMarks").val("-1");
+			$("form#paginateform #searchedExam").val("-1");
+			$("form#paginateform #searchedRep").val("-1");
+			$("form#paginateform #actionname").val("createexam");
+		$("#paginateform").submit();    
+		}
 	});
 	
 	$(".menuoptions").on("click",function(e){
 		var noofquestions=$("#noofquestions").val();
-		if(noofquestions!="0" || addedIds.length!=0){
+		if((noofquestions!="0" && !"undefined".match(noofquestions)) || addedIds.length!=0){
 		var confirmresult=confirm("If you press OK your exam data will get lost.Do you want to continue?");
 		if(confirmresult==false){
 			e.preventDefault()
 		}else{
+			$.ajax({
+				 
+				url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "removeaddedquestioninexam"
+			   		},
+			   type:"POST",
+			   success:function(data){
+				  
+			   },
+			   error:function(){
+				   }
+			   });
 			$("#autosubmitform #forwardhref").val($(this).prop("href"));
 			$("#autosubmitform").submit();
 		}
 		}
 	});
+	
+	$("#examsubmit").on("click",function(e){
+		var numberExpr = /^[0-9]+$/;
+		var nameExpr = /^[a-zA-Z0-9 ]+$/;
+		var flag=false;
+		$("#passmarkserror").hide();
+		$("#examnameerror").hide();
+		if($("form#examsubmitform #examname").val().trim()==""){
+			$("#examnameerror").html("Please enter exam name");
+			$("#examnameerror").show();
+			flag=true;
+		}
+		else if(!$("form#examsubmitform #examname").val().match(nameExpr)){
+			$("#examnameerror").html("invalid exam name");
+			$("#examnameerror").show();
+			flag=true;
+		}
+		if($("form#examsubmitform #passmarks").val().trim()==""){
+			$("#passmarkserror").html("Please enter passing marks!!");
+			$("#passmarkserror").show();
+			flag=true;
+		}
+		else if(!$("form#examsubmitform #passmarks").val().match(numberExpr)){
+			$("#passmarkserror").html("On numbers allowded!!");
+			$("#passmarkserror").show();
+			flag=true;
+		}else if(parseInt($("form#examsubmitform #passmarks").val()) > parseInt($("form#examsubmitform #totalmarks").val())){
+				$("#passmarkserror").html("Pass marks cannot be greater than total marks!!");
+			$("#passmarkserror").show();
+			flag=true;
+
+		}
+		var examname=$("form#examsubmitform #examname").val().trim();
+		var institute=$("form#examsubmitform #institute").val();
+		$.ajax({
+			
+			url: "classOwnerServlet",
+		   data: {
+		    	 methodToCall: "validateexamname",
+		    	 examname:examname,
+		    	 institute:institute
+		   		},
+		   	 async: false, 
+		   type:"POST",
+		   success:function(data){
+			   var resultJson=JSON.parse(data);
+			   var examstatus=resultJson.examavailable;
+			   if(examstatus=="true"){
+				   $("#examnameerror").html("Exam name already available.Please enter different name");
+					$("#examnameerror").show();
+					flag=true;
+			   }
+		   },
+		   error:function(){
+			   }
+		   });
+		if(flag==true){
+			e.preventDefault();
+		}
+	});
+	
 	
 	$( window ).load(function() {
 		  $("#examadded").modal("toggle");
@@ -170,13 +254,15 @@ var selectMarks = function(){
 			
 			<div class="container" style="margin-bottom: 5px">
 			<c:choose>
-			<c:when test="${institute ne null }">
-			<a type="button" class="btn btn-primary" href="teachercommoncomponent?forwardAction=manualexam" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
+			<c:when test="${institute ne null && institute ne ''}">
+			<a type="button" class="btn btn-primary menuoptions" href="teachercommoncomponent?forwardAction=manualexam" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
 			</c:when>
-			<c:otherwise><a type="button" class="btn btn-primary" href="choosesubject?forwardAction=manualexam" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a></c:otherwise>
+			<c:otherwise><a type="button" class="btn btn-primary menuoptions" href="choosesubject?forwardAction=manualexam" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a></c:otherwise>
 			</c:choose>
 			</div>
 			<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+			<div align="center" style="font-size: larger;margin-bottom: 15px"><u>Manual Exam</u></div>
+			<c:if test="${(totalPages!=0)}">
 			<div class="btn-group" role="group" aria-label="..." style="width:90%">
 			<form action="" id="uploadform" method="post">
 			<input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
@@ -198,6 +284,7 @@ var selectMarks = function(){
 			  </c:if>
 			</form>
 			</div>
+			</c:if>
 			</div>
 			<c:if test="${(questionDataList != null) && (totalPages!=0)}">
 	<div class="container">
@@ -221,7 +308,7 @@ var selectMarks = function(){
         <td><c:out value="${counter.count}"></c:out></td>
         </c:if>
         <c:if test="${currentPage gt 1 }">
-        <td><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
+        <td><c:out value="${counter.count + ((currentPage-1)*50)}"></c:out></td>
         </c:if>
         <td><c:out value="${item.question}"></c:out></td>
         <td><span class="badge" id='mark<c:out value="${item.questionNumber}"></c:out>'><c:out value="${item.marks}"></span></c:out></td>
@@ -282,7 +369,10 @@ var selectMarks = function(){
 </form>
 </div>
 	</c:if>	
-
+<c:if test="${(totalPages==0)}">
+<div class="alert alert-info" align="center">Questions not available for selected criteria.</div>
+</c:if>
+	
 	
 	
 <div class="modal fade" id="QuestionBankQuestionListQuestionSearchModal">
@@ -350,28 +440,41 @@ var selectMarks = function(){
 
 	
     <c:if test="${actionname eq 'createexam' }">
-    <form role="form" action="manualexam">
+    <form role="form" action="manualexam" class="form-horizontal" id="examsubmitform">
     <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
 			<input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
 			<input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
+			<input type="hidden" name="institute" id="institute" value="<c:out value="${institute}"></c:out>"/>
 			<input type="hidden" name="actionname" value="submitexam">
   <div class="form-group">
-    <label for="examname">Enter Exam Name:</label>
-    <input type="text" class="form-control" id="examname" name="examname">
+    <label for="examname" class="control-label col-sm-2">Enter Exam Name:</label>
+     <div class="col-sm-5">
+    <input type="text" class="form-control col-md-4" id="examname" name="examname" maxlength="25">
+    </div>
+    <span class="col-sm-5" id="examnameerror" style="display:none;color: red"></span>
   </div>
   <div class="form-group">
-    <label for="totalquestions">Total Questions:</label>
-    <input type="text" class="form-control" id="noofquestions" name="noofquestions" value=<c:out value="${noofquestions}"></c:out> disabled="disabled">
+    <label for="totalquestions" class="control-label col-sm-2">Total Questions:</label>
+ 	 <div class="col-sm-5">
+    <input type="text" class="form-control col-md-4" id="noofquestions" name="noofquestions" value=<c:out value="${noofquestions}"></c:out> disabled="disabled">
+  	</div>
   </div>
   <div class="form-group">
-    <label for="totalmarks">Total Marks:</label>
-    <input type="text" class="form-control" id="totalmarks" name="totalmarks" value=<c:out value="${totalmarks}"></c:out> readonly="readonly">
+    <label for="totalmarks" class="control-label col-sm-2">Total Marks:</label>
+     <div class="col-sm-5">
+    <input type="text" class="form-control col-md-4" id="totalmarks" name="totalmarks" value=<c:out value="${totalmarks}"></c:out> readonly="readonly">
+	</div>
   </div>
    <div class="form-group">
-    <label for="passmarks">Enter Passing Marks:</label>
-    <input type="text" class="form-control" id="passmarks" name="passmarks">
+    <label for="passmarks" class="control-label col-sm-2">Enter Passing Marks:</label>
+     <div class="col-sm-5">
+    <input type="text" class="form-control col-md-4" id="passmarks" name="passmarks">
+  	</div>
+  	<span class="col-sm-5" id="passmarkserror" style="display:none;color: red"></span>
   </div>
-  <button type="submit" class="btn btn-default">Submit</button>
+  <div class="col-sm-offset-2 col-sm-5">
+  <button type="submit" class="btn btn-default" id="examsubmit">Submit</button>
+  </div>
 </form>
 <form action="manualexam" id="paginateform">
   <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">

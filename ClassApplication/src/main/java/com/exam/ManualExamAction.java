@@ -118,8 +118,8 @@ public class ManualExamAction extends BaseAction{
 		if(currentPage==0){
 			int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(selectedRep), selectedExamID, Integer.parseInt(selectedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division));
 			if(totalCount>0){
-				int remainder=totalCount%2;
-				totalPages=totalCount/2;
+				int remainder=totalCount%50;
+				totalPages=totalCount/50;
 				if(remainder>0){
 					totalPages++;
 				}
@@ -129,8 +129,8 @@ public class ManualExamAction extends BaseAction{
 			if("true".equals(questionedit)){
 				int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(searchedRep), searchedExam, Integer.parseInt(searchedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division));
 				if(totalCount>0){
-					int remainder=totalCount%2;
-					totalPages=totalCount/2;
+					int remainder=totalCount%50;
+					totalPages=totalCount/50;
 					if(remainder>0){
 						totalPages++;
 					}
@@ -244,8 +244,8 @@ public class ManualExamAction extends BaseAction{
 			if(currentPage==0){
 				int totalCount=bankTransaction.getTotalSearchedQuestionCount(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division));
 				if(totalCount>0){
-					int remainder=totalCount%2;
-					totalPages=totalCount/2;
+					int remainder=totalCount%50;
+					totalPages=totalCount/50;
 					if(remainder>0){
 						totalPages++;
 					}

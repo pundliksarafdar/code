@@ -2,6 +2,7 @@ package com.classapp.db.Schedule;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -100,22 +101,24 @@ public String isExistsLecture(Schedule schedule) {
 			}
 		}
 		
-		query = session.createQuery("from Schedule where batch_id =:batchid and ((start_time <= :starttime and end_time> :starttime) OR (start_time < :endtime and end_time>= :endtime) OR (start_time > :starttime and end_time< :endtime)) and date=:date and class_id=:class_id");
+		query = session.createQuery("from Schedule where batch_id =:batchid and ((start_time <= :starttime and end_time> :starttime) OR (start_time < :endtime and end_time>= :endtime) OR (start_time > :starttime and end_time< :endtime)) and date=:date and class_id=:class_id  and div_id=:div_id");
 		query.setParameter("batchid", schedule.getBatch_id());
 		query.setParameter("starttime", schedule.getStart_time());
 		query.setParameter("endtime", schedule.getEnd_time());
 		query.setParameter("date", schedule.getDate());
 		query.setParameter("class_id", schedule.getClass_id());
+		query.setParameter("div_id", schedule.getDiv_id());
 		scheduleList = query.list();
 		if(scheduleList.size()>0){
 			return "lecture";
 		}else{
-			query = session.createQuery("from Schedule where batch_id =:batchid and start_time=:starttime and end_time=:endtime and date=:date and class_id=:class_id");
+			query = session.createQuery("from Schedule where batch_id =:batchid and start_time=:starttime and end_time=:endtime and date=:date and class_id=:class_id  and div_id=:div_id");
 			query.setParameter("batchid", schedule.getBatch_id());
 			query.setParameter("starttime", schedule.getStart_time());
 			query.setParameter("endtime", schedule.getEnd_time());
 			query.setParameter("date", schedule.getDate());
 			query.setParameter("class_id", schedule.getClass_id());
+			query.setParameter("div_id", schedule.getDiv_id());
 			scheduleList = query.list();
 			if(scheduleList.size()>0){
 				return "lecture";
@@ -215,9 +218,36 @@ public List<Schedule> getSchedule(int batchid,Date date,int inst_id,int div_id) 
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
 		transaction = session.beginTransaction();
-		Query query = session.createQuery("from Schedule where batch_id=:batch_id and date=:date and class_id=:class_id and div_id=:div_id");
+		Query query = session.createQuery("from Schedule where batch_id=:batch_id and date=:date and class_id=:class_id and div_id=:div_id order by start_time");
 		query.setParameter("batch_id", batchid);
 		query.setParameter("date", date);
+		query.setParameter("class_id", inst_id);
+		query.setParameter("div_id", div_id);
+		scheduleList = query.list();
+		
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	return scheduleList;
+}
+
+public List<Schedule> getWeeklySchedule(int batchid,Date date,int inst_id,int div_id) {
+	
+	Session session = null;
+	Transaction transaction = null;
+	List<Schedule> scheduleList = null;
+	Calendar cal=Calendar.getInstance();
+	cal.set(date.getYear()+1900, date.getMonth(), date.getDate());
+	cal.add(Calendar.DATE, 7);
+	Date enddate=new Date(cal.getTimeInMillis());
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("from Schedule where batch_id=:batch_id and date>=:startdate and date<:enddate and class_id=:class_id and div_id=:div_id order by date,start_time");
+		query.setParameter("batch_id", batchid);
+		query.setParameter("startdate", date);
+		query.setParameter("enddate", enddate);
 		query.setParameter("class_id", inst_id);
 		query.setParameter("div_id", div_id);
 		scheduleList = query.list();
@@ -238,7 +268,7 @@ public List<Schedule> getTeachersSchedule(int classid,int teacherid,Date schedul
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
 		transaction = session.beginTransaction();
-		Query query = session.createQuery("from Schedule where class_id=:class_id and teacher_id=:teacher_id and date=:date");
+		Query query = session.createQuery("from Schedule where class_id=:class_id and teacher_id=:teacher_id and date=:date order by start_time");
 		query.setParameter("class_id", classid);
 		query.setParameter("teacher_id", teacherid);
 		query.setParameter("date", scheduledate);
@@ -469,6 +499,32 @@ public boolean deleteschedulerelatedtoBatch(Batch batch) {
 		}
 	return true;
 	
+}
+
+public List<Schedule> getTeachersWeeklySchedule(int classid,int teacherid,Date scheduledate) {
+	
+	Session session = null;
+	Transaction transaction = null;
+	List<Schedule> scheduleList = null;
+	Calendar cal=Calendar.getInstance();
+	cal.set(scheduledate.getYear()+1900, scheduledate.getMonth(), scheduledate.getDate());
+	cal.add(Calendar.DATE, 7);
+	Date enddate=new Date(cal.getTimeInMillis());
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("from Schedule where class_id=:class_id and teacher_id=:teacher_id and date>=:startdate and date <:enddate order by date,start_time");
+		query.setParameter("class_id", classid);
+		query.setParameter("teacher_id", teacherid);
+		query.setParameter("startdate", scheduledate);
+		query.setParameter("enddate", enddate);
+		scheduleList = query.list();
+		
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	return scheduleList;
 }
 
 public static void main(String[] args) {

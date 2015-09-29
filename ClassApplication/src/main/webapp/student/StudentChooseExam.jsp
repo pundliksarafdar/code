@@ -144,7 +144,9 @@ $(".end").on("click",function(){
 <div class="container" style="margin-bottom: 5px">
 			<a type="button" class="btn btn-primary" href="studentcommoncomponent?forwardAction=attemptexamlist" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
 	</div>
-
+<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+			<div align="center" style="font-size: larger;"><u>Attempt Exam List</u></div>
+			</div>
 	 <c:if test="${(examlist != null) && (totalPages gt 0)}">
 	<div class="container">
   <h2><font face="cursive">Search Result</font> </h2>            
@@ -154,7 +156,6 @@ $(".end").on("click",function(){
         <th>Sr No.</th>
         <th>Exam</th>
         <th>Attempt</th>
-        <th>Marks</th>
       </tr>
     </thead>
     <tbody>

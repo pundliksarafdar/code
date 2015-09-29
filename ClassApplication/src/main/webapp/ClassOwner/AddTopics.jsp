@@ -147,6 +147,9 @@ function deletetopic(topicid){
 }
 function fetchTopic(){
 	$("#topictable tbody").empty();
+	$("#topictable").hide();
+	$("#notopicdiv").hide();
+	$("#topicbasediv").hide();
 	var divisionID=$("#topics_division").val();
 	var subID=$("#subjectID").val();
 	 if(divisionID!="-1"){
@@ -171,9 +174,14 @@ function fetchTopic(){
 			   var topic_ids=resultJson.topic_ids.split(",");
 			   if(topic_ids[0]!=""){
 				   for(var i=0;i<topic_ids.length;i++){
-					   $("#topictable tbody").append("<tr><td>"+(i+1)+"</td><td id='topic"+topic_ids[i]+"'>"+topic_names[i]+"</td><td><button id="+topic_ids[i]+" class='btn btn-danger deletetopic' onclick='deletetopic("+topic_ids[i]+")'>Delete</button>/<button class='btn btn-primary' onclick='edittopic("+topic_ids[i]+")'>Edit</button></td></tr>");
+					   $("#topictable tbody").append("<tr><td>"+(i+1)+"</td><td id='topic"+topic_ids[i]+"'>"+topic_names[i]+"</td><td><button class='btn btn-primary' onclick='edittopic("+topic_ids[i]+")'>Edit</button></td><td><button id="+topic_ids[i]+" class='btn btn-danger deletetopic' onclick='deletetopic("+topic_ids[i]+")'>Delete</button></td></tr>");
 				   }
+				   $("#topictable").show();
+			   }else{
+				  // $("#topictable").hide();
+					$("#notopicdiv").show();
 			   }
+			   $("#topicbasediv").show();
 		   },
 		   error:function(){
 			   }
@@ -186,9 +194,10 @@ function fetchTopic(){
 <body>
 <input type="hidden" value="<c:out value="${subid}"> </c:out>" id="subjectID">
 <div class="container" style="margin-bottom: 5px">
-			<a type="button" class="btn btn-primary" href="addsubject" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Back To Manage Subjects</a>
+			<a type="button" class="btn btn-primary" href="addsubject?currentPage=<c:out value="${currentPage}"> </c:out>" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Back To Manage Subjects</a>
 </div>
 <div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+	<div align="center" style="font-size: larger;">Add Topics</div>
 			<div class="row">
 				<div class='col-sm-6 header' style="padding-bottom: 10px;">*
 					Add Topics for subject here 
@@ -215,19 +224,21 @@ function fetchTopic(){
 			</div>
 			</div>
 </div>
-		<div class="container">
+		<div class="container" id="topicbasediv" style="display: none;">
   <h2><font face="cursive">Topics</font> </h2>            
-  <table class="table table-striped" id="topictable">
+  <table class="table table-striped" id="topictable" style="display: none">
     <thead>
       <tr>
         <th>Sr No.</th>
         <th>Topic Name</th>
-        <th>Action</th>
+        <th>Edit</th>
+        <th>Delete</th>
       </tr>
     </thead>
     <tbody>
     </tbody>
     </table>
+    <div class="alert alert-info" align="center" id="notopicdiv" style="display: none">Topics are not available for selected criteria.</div>
     </div>	
     
     <div class="modal fade" id="topicedit" tabindex="-1" role="dialog" 

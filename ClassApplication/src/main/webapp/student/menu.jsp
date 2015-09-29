@@ -44,7 +44,14 @@
       <li><a href="#">Class Teacher</a></li>  
     <%}if(userBean.getRole() == 3 || userBean.getRole() == 10){ %>  
       <li><a href="#">Students</a></li>
-       <li><a href="studenttimetable">Time Table</a></li>
+       <li>
+       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Time Table <b class="caret"></b></a>
+      		<ul class="dropdown-menu">
+	            <li><a href="studenttimetable">Daily Time Table</a></li>
+	            <li><a href="studentweeklytimetable">Weekly Time Table</a></li>
+	           </ul>
+	            
+	     </li>
     <%}%>      
      <%-- <cx:versionswitch switchId="3"> --%>
     <li><a href="studentcommoncomponent?forwardAction=studentnotes">Notes</a></li>

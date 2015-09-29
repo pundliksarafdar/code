@@ -9,7 +9,8 @@ public class Notification {
 	String batch;
 	Date msg_date;
 	String batch_name;
-	
+	int div_id;
+	int role;
 	public String getBatch_name() {
 		return batch_name;
 	}
@@ -46,4 +47,17 @@ public class Notification {
 	public void setMsg_date(Date msg_date) {
 		this.msg_date = msg_date;
 	}
+	public int getDiv_id() {
+		return div_id;
+	}
+	public void setDiv_id(int div_id) {
+		this.div_id = div_id;
+	}
+	public int getRole() {
+		return role;
+	}
+	public void setRole(int role) {
+		this.role = role;
+	}
+	
 }

@@ -1,8 +1,9 @@
 package com.classapp.db.Notes;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Notes {
+public class Notes implements Serializable{
 int notesid;
 String notespath;
 int classid;

@@ -2,6 +2,7 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -30,10 +31,10 @@ function deleteclass(classid){
         },
         success: function(data){
         	modal.launchAlert("Success","Class Deleted!");
-  		   setTimeout(function(){
+  		  /*  setTimeout(function(){
   			   location.reload();
-  		   },2*1000);
-        	
+  		   },2*1000); */
+        	$("#paginateform").submit();
         },error:function(data){
         	
         }
@@ -46,6 +47,24 @@ $(document).ready(function(){
 		var string = $(this).val();	
 		$(this).val(string.charAt(0).toUpperCase() + string.slice(1));
 	});
+	$(".page").on("click",function(e){
+		$("form#paginateform #currentPage").val($(this).text());
+		$("#paginateform").submit();
+		e.preventDefault();
+	});
+	
+	$(".start").on("click",function(e){
+		$("form#paginateform #currentPage").val("1");
+		$("#paginateform").submit();
+		e.preventDefault();
+	});
+	
+	$(".end").on("click",function(e){
+		$("form#paginateform #currentPage").val($("#totalPages").val());
+		$("#paginateform").submit();
+		e.preventDefault();
+	});
+	
 	$('#saveclass').click(function(){
 		var classname=$("#editclassname").val();
 		var stream=$("#editstream").val();
@@ -73,9 +92,10 @@ $(document).ready(function(){
                 	}else{
                 	$('#ModifyClassModal').modal('hide');
                 	modal.launchAlert("Success","Class Modified!");
-         		   setTimeout(function(){
+         		  /*  setTimeout(function(){
          			   location.reload();
-         		   },2*1000);
+         		   },2*1000); */
+                	$("#paginateform").submit();
                 	}
                 }, error: function(data){
                     alert('ajax failed');
@@ -91,13 +111,15 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
-<h3><font face="cursive">Manage Class</font></h3>
-<hr>
-<div class="container bs-callout bs-callout-danger" style="margin-bottom: 10px;">
-<button data-target="#addclassModal" type="button" class="btn btn-info" data-toggle="modal">Add Class</button>
+<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 10px;">
+<div align="center" style="font-size: larger;"><u>Manage Class</u></div>
+<button data-target="#addclassModal" type="button" class="btn btn-info" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Class</button>
 </div>
 <br>
 <%List<Division> list=(List<Division>)request.getAttribute("classes"); 
+int endIndex=(Integer)request.getAttribute("endIndex");
+int currentPage=(Integer)request.getAttribute("currentPage");
+int startIndex=(Integer)request.getAttribute("startIndex");
 if(list!=null)
 {
 if(list.size()>0)
@@ -114,22 +136,40 @@ if(list.size()>0)
 <th>Delete</th>
 </tr>
 <%
-int counter=0;
-while(list.size()>counter)
+int counter=startIndex;
+while(endIndex>counter)
 {
 %>
 <tr>
 <td><%=counter+1 %></td>
 <td><%=list.get(counter).getDivisionName() %><input type="hidden" id="name<%=list.get(counter).getDivId()%>" value="<%=list.get(counter).getDivisionName()%>"></td>
 <td><%=list.get(counter).getStream() %><input type="hidden" id="stream<%=list.get(counter).getDivId()%>" value="<%=list.get(counter).getStream()%>"></td>
-<td><a href="#" onclick="editclass(<%=list.get(counter).getDivId()%>)">Edit</a></td>
-<td><a href="#" onclick="deleteclass(<%=list.get(counter).getDivId()%>)">Delete</a></td>
+<td><a href="#" class="btn btn-primary" onclick="editclass(<%=list.get(counter).getDivId()%>)">Edit</a></td>
+<td><a href="#" class="btn btn-danger" onclick="deleteclass(<%=list.get(counter).getDivId()%>)">Delete</a></td>
 </tr>
 <%
 counter++;
 }
 %>
 </table>
+</div>
+<div>
+ <form action="manageclass" id="paginateform">
+  <input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
+  <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
+  <ul class="pagination">
+  <li><a class="start" >&laquo;</a></li>
+  <c:forEach var="item" begin="1" end="${totalPages}">
+  <c:if test="${item eq currentPage}">
+  <li class="active"><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
+  </c:if>
+  <c:if test="${item ne currentPage}">
+  <li><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
+  </c:if>
+  </c:forEach>
+  <li><a href="#" class="end">&raquo;</a></li>
+</ul>
+</form>
 </div>
 <%}else{
 %>

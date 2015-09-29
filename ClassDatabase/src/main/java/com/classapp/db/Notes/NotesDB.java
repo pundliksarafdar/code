@@ -2,12 +2,16 @@ package com.classapp.db.Notes;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Teacher.Teacher;
+import com.classapp.db.exam.Exam;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.persistence.HibernateUtil;
 
@@ -15,15 +19,42 @@ public class NotesDB {
 	public Boolean add(Notes notes) {
 		Transaction transaction=null;
 		Session session=null;
-		List<RegisterBean> list=null;
-		List<Teacher> list2=null;
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
+		int notesID=getNotesNextID(notes.getSubid(), notes.getClassid(), notes.getDivid());
+		notes.setNotesid(notesID);
 			session.save(notes);
 			transaction.commit();
 		return  true;
 	
 	}
+	
+public int getNotesNextID(int subid,int classid,int div_id) {
+		
+		Session session = null;
+		Transaction transaction = null;
+		List<Integer> notesList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("select max(notesid)+1 from Notes where classid=:classid and subid=:subid and divid=:divid");
+			query.setParameter("classid", classid);
+			query.setParameter("subid", subid);
+			query.setParameter("divid", div_id);
+			notesList = query.list();
+			if(notesList!=null){
+				if(notesList.get(0)!=null){
+				return notesList.get(0);
+				}
+			}
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		return 1;
+	}
+	
 	
 	public List<Notes> getNotesPath(int divid,int subid,int classid,int currentPage,String batchids) {
 		
@@ -257,5 +288,77 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 				e.printStackTrace();
 			}
 		
+	}
+	
+	public Boolean deleteNotesRelatedToSubject(int sub_id) {
+		Transaction transaction=null;
+		Session session=null;
+		Notes notes=new Notes();
+		notes.setSubid(sub_id);
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+			session.delete(notes);
+			transaction.commit();
+		return  true;
+	
+	}
+	
+	public Boolean deleteNotesRelatedToDivision(int div_d) {
+		Transaction transaction=null;
+		Session session=null;
+		Notes notes=new Notes();
+		notes.setDivid(div_d);
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+			session.delete(notes);
+			transaction.commit();
+		return  true;
+	
+	}
+	
+	public boolean removebatchfromnotes(int inst_id,int div_id,String batchid) {
+		//Exam exam=new Exam();
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Criteria criteria = session.createCriteria(Notes.class);
+		Criterion criterion = Restrictions.eq("classid", inst_id);
+		criteria.add(criterion);
+		
+		if(div_id!=-1){
+		criterion = Restrictions.eq("divid", div_id);
+		criteria.add(criterion);
+		}
+		if(!"-1".equals(batchid)){
+			
+			criterion=Restrictions.or(Restrictions.like("batch", batchid+",%"),Restrictions.like("batch","%,"+batchid),Restrictions.like("batch", "%,"+batchid+",%"),Restrictions.eq("batch", batchid));
+			criteria.add(criterion);
+		}
+	
+		List<Notes> notesList = criteria.list();
+		if(notesList!=null){
+			for (int i = 0; i < notesList.size(); i++) {
+				Notes notes=notesList.get(i);
+				String batchidarr[]=notes.batch.split(",");
+				String newbatches="";
+				int index=1;
+				for (int j = 0; j < batchidarr.length; j++) {
+					if(!batchid.equals(batchidarr[j].trim())){
+						if(index==1){
+							newbatches=batchidarr[j];
+						}else{
+							newbatches=newbatches+","+batchidarr[j];
+						}
+						index++;
+					}
+				}
+				notes.setBatch(newbatches);
+				session.save(notes);
+			}
+		}
+		transaction.commit();
+		session.close();
+		return  true;
 	}
 }

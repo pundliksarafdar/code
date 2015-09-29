@@ -308,7 +308,27 @@ public String getschedulesubject(int subjectid) {
 		Session session = null;
 		Transaction transaction = null;
 		List<Subject> queryResult=null;
-		String queryString="from Subject where institute_id in :institute_id";
+		String queryString="from Subject where institute_id in :institute_id order by subjectName asc";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("institute_id", institute_id);  
+			queryResult = query.list();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return queryResult;
+	}
+	
+public List<Subject> recentlyaddedsubfirst(int institute_id){
+		
+		Session session = null;
+		Transaction transaction = null;
+		List<Subject> queryResult=null;
+		String queryString="from Subject where institute_id in :institute_id order by subjectId desc";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();

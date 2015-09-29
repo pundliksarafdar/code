@@ -10,8 +10,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	  $( "#datetimepicker" ).datetimepicker({
-		  pickTime: false,
-		  format: 'DD/MM/YYYY'
+		  pickTime: false
 	  }).data("DateTimePicker");
 	  
 	  $("#submit").click(function(){
@@ -19,13 +18,14 @@ $(document).ready(function(){
 			var classid=$("#classnameSelect").val();
 			var batchdivision=$("#studentdivision").val();
 			var date=$("#date").val();
+			$("#scheduletable").empty();
 			if(batchname!="-1" && classid!="-1" && date!="")
 				{
 			$.ajax({
 				 
 				   url: "classOwnerServlet",
 				   data: {
-				    	 methodToCall: "getschedule",
+				    	 methodToCall: "getweeklyschedule",
 				    	 batchname:batchname,
 				    	 date:date,
 				    	 classid:classid,
@@ -41,7 +41,12 @@ $(document).ready(function(){
 					   var starttime=resultJson.starttime.split(',');
 					   var endtime=resultJson.endtime.split(',');
 					   var dates=resultJson.dates.split(',');
-					   var prefix=resultJson.prefix.split(',');
+					  var alldates=resultJson.alldates.split(',');
+					   var prefix = new Object();
+					   
+					   if(resultJson.prefix != null){
+						   prefix=resultJson.prefix.split(',');
+					   }
 					   var table=$(document.getElementById("scheduletable"));
 					   var counter=0
 					   var table1=document.getElementById("scheduletable");
@@ -49,25 +54,52 @@ $(document).ready(function(){
 						  for (var x=rowCount-1; x>0; x--) {
 							  table1.deleteRow(x);
 						   }
-					   $(table).border="1";
+					  
+					   var actiontr=$(document.getElementById("scheduletr"));
+					   $(actiontr).hide();
 					   if(subjects[0]!=""){
-					   while(counter<subjects.length)
+						   $(table).border="1";
+						   var tableString="<tr>";
+						   var outercounter=0;
+						   while(outercounter<dates.length){
+							   tableString= tableString+"<td class='col-md-1'><table class='table  table-bordered'><tr><td colspan='2' style='background-color:rgb(181,181,181)'><b><u>"+dates[outercounter]+"</u><b></td></tr>";
+							   counter=0;
+							   var scheduleflag=false;
+							   while(counter<subjects.length)
 						   {
-						   if(prefix[counter]=="null"){
+						   var pre="";
+						   if(prefix[counter]=="null" || prefix[counter] == undefined){
 							   prefix[counter]="";
 						   }
-					   $(table).append("<tr><td>"+subjects[counter]+"</td><td>"+firstname[counter]+" "+lastname[counter]+" "+prefix[counter]+"</td><td>"+starttime[counter]+
-					"</td><td>"+endtime[counter]+"</td><td>"+dates[counter]+"</td></tr>");
-					   $(table).show();
+						   if(alldates[counter]==dates[outercounter]){
+						   tableString=tableString+"<tr><td>"+starttime[counter]+
+								"-"+endtime[counter]+"</td><td><table class='table table-condensed'><tr><td>"+subjects[counter]+"</td></tr><tr><td>"+firstname[counter]+"<br>"+lastname[counter]+"</td></tr></table></td></tr>"; 
+						   scheduleflag=true;
+						   }
 					   counter++;
 						   }
+							   if(scheduleflag==false){
+								   tableString=tableString+"<tr><td>Lecturs are not scheduled</td></tr>";
+							   }
+							   tableString=tableString+"</table></td>"
+					   outercounter++;
+						   }
+						   tableString=tableString+"</tr>";
+						   $(table).append(tableString);
+					  /*  $("#edit").show();
+					   $("#update").hide(); */
+						   $(table).show();
 					   }else{
-						   $("#scheduletable").hide();
+						   rowCount=table1.rows.length;
+							  for (var x=rowCount-1; x>0; x--) {
+								  table1.deleteRow(x);
+							   }
+						   $("#edit").hide();
 						   $("#lecturenotavailablemodal").modal('toggle');
+						   
+						   $(table).style="display:none"
 					   }
-					   $("#edit").show();
-					   
-					   		   	   },
+					   		   	    },
 				   	error:function(){
 				   		modal.launchAlert("Error","Error");
 				   	}	
@@ -106,7 +138,6 @@ $(document).ready(function(){
 					   	counter++;
 					   }
 				   }else{
-					   $("#scheduletable").hide();
 					   $("#notallocated").modal('toggle');
 					   
 				   }
@@ -125,7 +156,7 @@ $(document).ready(function(){
 </head>
 <body>
 <div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
-			<div align="center" style="font-size: larger;margin-bottom: 15px"><u>Time Table</u></div>
+			<div align="center" style="font-size: larger;margin-bottom: 15px"><u>Weekly Time Table</u></div>
 <form role="form" class="form-inline">
 <div class="container">
 <div align="left" class="container">
@@ -169,17 +200,10 @@ while(list.size()>counter){ %>
 </div>
 
 
-<div class="container">
-<table id="scheduletable" border="1" style="display:none;background-color: white;" class="table table-bordered">
+<div class="" style="margin: 5px">
+<table id="scheduletable" class="table table-bordered table-hover" style="background-color: white; display:none;">
 <thead>
-<tr style="background-color: rgb(0, 148, 255);">
-<th>Subject</th>
-<th>Teacher</th>
-<th>Start Time</th>
-<th>End Time </th>
-<th>Date</th>
- </tr>
-</thead>
+
 </table>
 </div>
 <div class="modal fade" id="lecturenotavailablemodal" tabindex="-1" role="dialog" 
@@ -195,7 +219,7 @@ while(list.size()>counter){ %>
             </h4>
          </div>
          <div class="modal-body">
-           Schedule Not Available...
+           Lectures are not scheduled in selected week.
          </div>
          </div>
    </div>

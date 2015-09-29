@@ -252,6 +252,31 @@ public List getStudentInfo(List StudentIDs,int pagenumber, int resultPerPage) {
 		return subidList;
 	}
 
+public List getStudents(List StudentIDs) {
+	
+	Session session = null;
+	Transaction transaction = null;
+	List students = null;
+	
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		//Query query = session.createQuery("SELECT  reg.fname,reg.lname,reg.loginName FROM SELECT  :rownum := :rownum + 1 RowNumber, t.fname,t.lname,t.loginName FROM RegisterBean t, (SELECT :rownum := 0) s where regId=:studentids  ORDER BY t.regId reg where reg.RowNumber>:lowerlimit and reg.RowNumber<:upperlimit");
+		
+		Query query = session.createQuery("from RegisterBean where  regId in :studentids order by regId");
+		query.setParameterList("studentids", StudentIDs);
+		students = query.list();
+		
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}
+	return students;
+}
+
 	public boolean isEmailAndMobileValid(String email,String phone) {
 		Session session = null;
 		Transaction transaction = null;

@@ -159,7 +159,7 @@ var displaySubjectDropDown = function (data){
 			}).appendTo(selectOptionDropdown);
 		}
 	}else{
-		$(SUBJECT_DROPDOWN).hide();
+		//$(SUBJECT_DROPDOWN).hide();
 		$(".alert-danger").text("Batch for selected division are not added.").show();
 	}
 	
@@ -200,6 +200,8 @@ this.displayBatchFromSubjectNDivision = displayBatchFromSubjectNDivision;
 
 <form method="post" action="<c:out value="${forwardAction}" ></c:out>">
 <div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+	
+	<div align="center" style="font-size: larger;margin-bottom: 15px"><u><c:out value="${lable}"></c:out></u></div>
 	<div class="row">
 		<div class="alert alert-danger" style="padding-bottom: 10px;display:none">
 			 
@@ -227,13 +229,13 @@ this.displayBatchFromSubjectNDivision = displayBatchFromSubjectNDivision;
 				</c:forEach>							
 			</select>
 		</div>
-		<div class="col-md-3 subjectDropDown">
+		<div class="col-md-2 subjectDropDown">
 			<select name="subject" id="classownerUploadexamSubjectNameSelect" class="form-control" width="100px" disabled="disabled">
 				<option value="-1">Select Subject</option>
 			</select>
 		</div>
 		
-		<div class="col-md-3 batchDropDown">
+		<div class="col-md-2 batchDropDown">
 			<div class="dropdown" id="classownerUploadexamSelectBatchName" >
 			  <button class="btn btn-default dropdown-toggle" type="button" id="classownerUploadexamBatchName" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" disabled="disabled">
 				Select Batch
@@ -248,8 +250,8 @@ this.displayBatchFromSubjectNDivision = displayBatchFromSubjectNDivision;
 			
 		</div>
 		
-		<div class="col-md-3">
-			<button id="classownerUploadexamAddExam" type="submit" class="btn btn-info" disabled>Add</button>
+		<div class="col-md-2">
+			<button id="classownerUploadexamAddExam" type="submit" class="btn btn-info" disabled>Continue</button>
 		</div>
 		<div class="col-md-3">
 		

@@ -37,28 +37,31 @@ $(document).ready(function(){
 		$("#searchform").submit();
 	});
 	
-	$(".page").on("click",function(){
+	$(".page").on("click",function(e){
 		$("form#paginateform #currentPage").val($(this).text());
 		$("#totalmarks").val($("#temptotalmarks").html());
 		$("#addedIds").val(addedIds);
 		$("#removedIds").val(removedIds);
 		$("#paginateform").submit();
+		e.preventDefault();
 	});
 	
-	$(".start").on("click",function(){
+	$(".start").on("click",function(e){
 		$("form#paginateform #currentPage").val("1");
 		$("#totalmarks").val($("#temptotalmarks").html());
 		$("#addedIds").val(addedIds);
 		$("#removedIds").val(removedIds);
 		$("#paginateform").submit();
+		e.preventDefault();
 	});
 	
-	$(".end").on("click",function(){
+	$(".end").on("click",function(e){
 		$("form#paginateform #currentPage").val($("#totalPages").val());
 		$("#totalmarks").val($("#temptotalmarks").html());
 		$("#addedIds").val(addedIds);
 		$("#removedIds").val(removedIds);
 		$("#paginateform").submit();
+		e.preventDefault();
 	});
 	
 	$(".edit").on("click",function(){
@@ -175,6 +178,7 @@ var selectMarks = function(){
 			</c:choose>
 			</div>
 			<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+			<div align="center" style="font-size: larger;"><u>View Exam</u></div>
 			<div class="btn-group" role="group" aria-label="..." style="width:90%">
 			<form action="" id="uploadform" method="post">
 			<input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">

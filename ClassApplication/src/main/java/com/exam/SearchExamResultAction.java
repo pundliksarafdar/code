@@ -33,8 +33,8 @@ public class SearchExamResultAction extends BaseAction {
 		}
 		int totalCount=examTransaction.getExamCount(inst_id, Integer.parseInt(subject), Integer.parseInt(division), "-1",batch);
 		if(totalCount>0){
-			int remainder=totalCount%2;
-			totalPages=totalCount/2;
+			int remainder=totalCount%10;
+			totalPages=totalCount/10;
 			if(remainder>0){
 				totalPages++;
 			}

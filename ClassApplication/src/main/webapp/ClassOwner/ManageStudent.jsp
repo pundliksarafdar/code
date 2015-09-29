@@ -15,22 +15,26 @@ var batchIds;
 var selectedStudentIds;
 var noofpages=0; 
 var pno="";
-function canceledit(batchID,pagenumber){
+function canceledit(){
 	//alert(batchID+" "+pagenumber);
-	$('#studentDetailTable').remove(); 
-	   if(batchID!=null){
-	   $('#batchselected').val(batchID);
-	   getstudentsrelatedtobatch(pagenumber);
-	   }
+	$('#studentDetailTable').hide();
+	$('#studentDetailTablebody').empty();
+	  /*  if(batchID!=null){
+	   $('#batchselected').val(batchID+"_"+batchdivision); */
+	   getstudentsrelatedtobatch(pno);
+	   $("#students").show();
+		$("#pagination").show();
+	   
 }
 function getstudentsrelatedtobatch(pagenumber){
 	
-	var batchname=$("#batchselected").val();
-	var batchdivision=$("#division"+batchname).val();
+	var batchnamevalue=$("#batchselected").val().split("_");
+	var batchname=batchnamevalue[0];
+	var batchdivision=$("#division"+batchname+"_"+batchnamevalue[1]).val();
 	if(batchname!="-1"){
 		$("#students").hide();
 		$("#pagination").empty();
-		$("#studentDetailTable").remove();
+		$("#studentDetailTable").hide();
 		$("#noStudentError").hide();
 		pno=pagenumber;
 	$.ajax({
@@ -145,6 +149,7 @@ function getSelectedStudentsToDelete(){
 
 
 function searchStudent() {
+	$("#modifyStudentModalbody").empty();
 	var studentLoginName=document.getElementById("studentLoginNameSearch").value;
 	var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
 	if(!studentLoginName || studentLoginName.trim()==""||studentLoginName.lenght==0 ){
@@ -156,7 +161,8 @@ function searchStudent() {
 	{
 		modal.launchAlert("Error","Error!</strong>Invalid Student login name");
 	}else{
-		$("#studentDetailTable").remove();
+		$("#studentDetailTable").hide();
+		$('#studentDetailTablebody').empty();
 	$.ajax({
 		   url: "classOwnerServlet",
 		    data: {
@@ -168,14 +174,58 @@ function searchStudent() {
 			   var resultJson = JSON.parse(data);   
 
 			   if(resultJson.status != 'error'){
-			    var firstname= resultJson.studentFname;
-			   var lastname= resultJson.studentLname;
-			   var studentId= resultJson.studentId;
+				   var firstname= resultJson.studentFname;
+				   var lastname= resultJson.studentLname;
+				   var studentId= resultJson.studentId;
+				   var studentbatchIds= resultJson.studentbatchIds.split(",");
+				   var studentbatchnames= resultJson.studentbatchnames;
+				   var allbatchnames= resultJson.allbatchnames.split(",");
+				   var allbatchIDs= resultJson.allbatchIDs.split(",");
+				   var studentdivision= resultJson.studentdivision;
+				   $("#studentDetailTablebody").append("<tr><td>"+studentLoginName+"</td><td>"+firstname+" "+lastname+"</td><td>"+studentdivision+"</td><td>"+studentbatchnames+"</td>"
+				   +"<td><button type='button' class='btn btn-info' data-target='#modifyStudentModal' data-toggle='modal'>Modify Student Batch</button></td>"
+				   +"<td><button type='button' class='btn btn-info' data-target='#deleteStudentModal' data-toggle='modal'>Delete Student</button></td>"
+					+"<td><a onclick='canceledit()'><button type='button' class='btn btn-info'>Cancel</button></a></td></tr>");
+				   $('#studentDetailTable').show();
+				   var studentbatchnamesarr=studentbatchnames.split(",");
+				   if(allbatchIDs[0]!=""){
+					   
+					   for(var i=0;i<allbatchIDs.length;i++){
+						   var flag=false;
+						   for(var j=0;j<studentbatchIds.length;j++){
+							   if(allbatchIDs[i]==studentbatchIds[j]){
+								   flag=true;
+							   }
+						   }
+						   if(flag==true){
+							   $("#modifyStudentModalbody").append('<div class="col-lg-12">'
+								+'<div class="input-group">'
+								+'<span class="input-group-addon">'
+								+'<input type="checkbox" class="chkBatch" name="batchId" id="batchId"  value="'+allbatchIDs[i]+'" checked/>'
+								+'</span>'
+								+'<input type="text" value="'+allbatchnames[i]+'" class="form-control" disabled="disabled"/>'
+								+'</div>'			
+								+'</div>');  
+						   }else{
+							   $("#modifyStudentModalbody").append('<div class="col-lg-12">'
+										+'<div class="input-group">'
+										+'<span class="input-group-addon">'
+										+'<input type="checkbox" class="chkBatch" name="batchId" id="batchId"  value="'+allbatchIDs[i]+'"/>'
+										+'</span>'
+										+'<input type="text" value="'+allbatchnames[i]+'" class="form-control" disabled="disabled"/>'
+										+'</div>'			
+										+'</div>');  
+						   }
+					   }
+				   }
+				   selectedStudentIds=studentId;
+				   $("#students").hide();
+					$("#pagination").hide();
 			   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
-				modal.launchAlert("Success","Found "+firstname+" "+lastname+"! Page will refresh in soon");
+				/* modal.launchAlert("Success","Found "+firstname+" "+lastname+"! Page will refresh in soon");
 						   setTimeout(function(){
 							   location.reload();
-						   },2*1000);
+						   },2*1000); */
 			   }else{
 				 	 if(!resultJson.message){
 				 		modal.launchAlert("Error","Error while searching student!");
@@ -200,9 +250,12 @@ function searchStudent() {
 }
 
 function searchStudentthroughtable(studentLoginName) {
-		var batchname=$("#batchselected").val();
-		var batchdivision=$("#division"+batchname).val();
-		$("#studentDetailTable").remove();
+	$("#modifyStudentModalbody").empty();
+	var batchnamevalue=$("#batchselected").val().split("_");
+	var batchname=batchnamevalue[0];
+	var batchdivision=$("#division"+batchname+"_"+batchnamevalue[1]).val();
+		$("#studentDetailTable").hide();
+		$('#studentDetailTablebody').empty();
 	$.ajax({
 		   url: "classOwnerServlet",
 		    data: {
@@ -220,9 +273,54 @@ function searchStudentthroughtable(studentLoginName) {
 			    var firstname= resultJson.studentFname;
 			   var lastname= resultJson.studentLname;
 			   var studentId= resultJson.studentId;
-						   setTimeout(function(){
+			   var studentbatchIds= resultJson.studentbatchIds.split(",");
+			   var studentbatchnames= resultJson.studentbatchnames;
+			   var allbatchnames= resultJson.allbatchnames.split(",");
+			   var allbatchIDs= resultJson.allbatchIDs.split(",");
+			   var studentdivision= resultJson.studentdivision;
+			   $("#studentDetailTablebody").append("<tr><td>"+studentLoginName+"</td><td>"+firstname+" "+lastname+"</td><td>"+studentdivision+"</td><td>"+studentbatchnames+"</td>"
+			   +"<td><button type='button' class='btn btn-info' data-target='#modifyStudentModal' data-toggle='modal'>Modify Student Batch</button></td>"
+			   +"<td><button type='button' class='btn btn-info' data-target='#deleteStudentModal' data-toggle='modal'>Delete Student</button></td>"
+				+"<td><a onclick='canceledit()'><button type='button' class='btn btn-info'>Cancel</button></a></td></tr>");
+			   var studentbatchnamesarr=studentbatchnames.split(",");
+			   if(allbatchIDs[0]!=""){
+				   
+				   for(var i=0;i<allbatchIDs.length;i++){
+					   var flag=false;
+					   for(var j=0;j<studentbatchIds.length;j++){
+						   if(allbatchIDs[i]==studentbatchIds[j]){
+							   flag=true;
+						   }
+					   }
+					   if(flag==true){
+						   $("#modifyStudentModalbody").append('<div class="col-lg-12">'
+							+'<div class="input-group">'
+							+'<span class="input-group-addon">'
+							+'<input type="checkbox" class="chkBatch" name="batchId" id="batchId"  value="'+allbatchIDs[i]+'" checked/>'
+							+'</span>'
+							+'<input type="text" value="'+allbatchnames[i]+'" class="form-control" disabled="disabled"/>'
+							+'</div>'			
+							+'</div>');  
+					   }else{
+						   $("#modifyStudentModalbody").append('<div class="col-lg-12">'
+									+'<div class="input-group">'
+									+'<span class="input-group-addon">'
+									+'<input type="checkbox" class="chkBatch" name="batchId" id="batchId"  value="'+allbatchIDs[i]+'"/>'
+									+'</span>'
+									+'<input type="text" value="'+allbatchnames[i]+'" class="form-control" disabled="disabled"/>'
+									+'</div>'			
+									+'</div>');  
+					   }
+				   }
+			   }
+			  
+			   $('#studentDetailTable').show();
+			   selectedStudentIds=studentId;
+			   $("#students").hide();
+				$("#pagination").hide();
+						  /*  setTimeout(function(){
 							   location.reload();
-						   },2*1000);
+						   },2*1000); */
 			   }else{
 				 	 if(!resultJson.message){
 				 		modal.launchAlert("Error","Error while searching student!");
@@ -265,7 +363,11 @@ function getSelectedStudentsToDelete(){
 
 	$(document).ready(function(){
 		
-		
+		   $('#studentDetailTable').hide();
+		var selectedbatchIDfromsession=$("#selectedbatchIDfromsession").val();
+		if(selectedbatchIDfromsession!=null && selectedbatchIDfromsession!=""){
+			$("#batchselected").attr('selected', selectedbatchIDfromsession);
+		}
 	/* 	$('.batchName').tooltip({'placement':'right','html':'true'}).on('click',function(){
 			$(this).tooltip('hide');
 		});
@@ -273,6 +375,11 @@ function getSelectedStudentsToDelete(){
 		$('.addsubject2batch').tooltip();
 
 		$('.addsubject2batch').popover({'placement':'bottom','content':$('#allSubject').html(),'html':true}); */
+		
+		$('div#addStudentModal').on('change','#divisionName',function(){
+			$('div#addStudentModal #checkboxes').empty();
+		});
+		
 		
 		$('div#addStudentModal').on('click','button#btn-addStudent',function(){
 			batchIds = "";
@@ -349,7 +456,7 @@ function getSelectedStudentsToDelete(){
 		});
 		
 		$('div#modifyStudentModal').on('click','button#btn-update',function(){
-			var studentId=document.getElementsByName("radioStudent")[0].value;
+			var studentId=selectedStudentIds;
 			batchIds="";
 			$('div#modifyStudentModal .error').html('');
 			$('div#modifyStudentModal .error').hide();
@@ -376,10 +483,10 @@ function getSelectedStudentsToDelete(){
 							var batchID=resultJson.batchID;
 							   if(resultJson.status != 'error'){
 								   $('div#modifyStudentModal').modal('hide');
-								   $('#studentDetailTable').remove(); 
+								   $('#studentDetailTable').hide(); 
 								   if(batchID!=null){
-								   $('#batchselected').val(batchID);
-								   getstudentsrelatedtobatch(pagenumber);
+								 //  $('#batchselected').val(batchID);
+								   getstudentsrelatedtobatch(pno);
 								   }
 								   modal.launchAlert("Success","Student Updated successfully!");
 								   /* modal.launchAlert("Success","Student Updated! Page will refresh in soon");
@@ -433,7 +540,7 @@ function getSelectedStudentsToDelete(){
 		});
 
 		$('div#deleteStudentModal').on('click','button#btn-delete',function(){
-			var studentId=document.getElementsByName("radioStudent")[0].value;
+			var studentId=selectedStudentIds;
 			$('div#deleteStudentModal .error').html('');
 			$('div#deleteStudentModal .error').hide();
 			$('div#deleteStudentModal .progress').removeClass('hide');
@@ -458,10 +565,11 @@ function getSelectedStudentsToDelete(){
 							var resultJson = JSON.parse(e);
 							   if(resultJson.status != 'error'){
 								   $('div#deleteStudentModal').modal('hide');
-								   modal.launchAlert("Success","Student Deleted! Page will refresh in soon");
+								   getstudentsrelatedtobatch(pno);
+								   /* modal.launchAlert("Success","Student Deleted! Page will refresh in soon");
 								   setTimeout(function(){
 									   location.reload();
-								   },2*1000);		   
+								   },2*1000); */		   
 							   }else{
 									   $('div#deleteStudentModal .add').removeClass('hide');
 									   $('div#deleteStudentModal .error').show();
@@ -689,8 +797,7 @@ function getSelectedStudentsToDelete(){
 		   $('<input />', { type: 'text', value: batchname,disabled:'disabled',class:'form-control' }).appendTo(inputGroupLable);
 		}
 </script>
-<h3><font face="cursive">Manage Student</font></h3>
-<hr>
+
 <div class="modal fade" id="addStudentModal" data-backdrop="static">
   <div class="modal-dialog">
       <div class="modal-content">
@@ -723,7 +830,7 @@ function getSelectedStudentsToDelete(){
 				</s:otherwise>
 				</s:choose>
 				<br>
-				<div id="checkboxes">
+				<div id="checkboxes" style="overflow-y:auto; overflow-x:hidden;">
 				
 				</div>
 														
@@ -776,10 +883,14 @@ function getSelectedStudentsToDelete(){
 </div>	
 </div>
 	
-		<div class="container bs-callout bs-callout-danger" style="margin-bottom: 10px;">
+		<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 10px;">
+		<div align="center" style="font-size: larger;margin-bottom: 15px"><u>Manage Student</u></div>
 		<div class="row">
 			<div class="col-md-4">
+			&nbsp;
+			<div class="input-group">
 				<button type="button" class="btn btn-info" data-target="#addStudentModal" data-toggle="modal"><i class="glyphicon glyphicon-user"></i>&nbsp;Add Student</button>
+			</div>
 			</div>
 			
 			<div class="col-md-4">
@@ -793,18 +904,23 @@ function getSelectedStudentsToDelete(){
 			</div>
 			
 			<div class="col-md-4">
-				<%List<Batch> batches=(List<Batch>)request.getAttribute("batches"); %>
+				<%List<Batch> batches=(List<Batch>)request.getAttribute("batches"); 
+				String batchdivision=(String)request.getSession().getAttribute("batchdivision"); 
+				String batchID=(String)request.getSession().getAttribute("batchID");
+				%>
 				<%if(null != batches && batches.size()!=0) {%>
 					Search Student By Batch
 					<select class="form-control btn btn-default" id="batchselected" >
 					<option value="-1">Select Batch</option>
 					<%for(int counter=0;counter<batches.size();counter++){ %>
-					<option value="<%=batches.get(counter).getBatch_id() %>"><%=batches.get(counter).getBatch_name() %></option>
+					<option value="<%=batches.get(counter).getBatch_id() %>_<%=batches.get(counter).getDiv_id() %>"><%=batches.get(counter).getBatch_name() %></option>
 					<%} %>
 					</select>
 					<%for(int counter=0;counter<batches.size();counter++){ %>
-					<input type="hidden" id="division<%=batches.get(counter).getBatch_id() %>" value="<%=batches.get(counter).getDiv_id() %>">
-					<%} %>
+					<input type="hidden" id="division<%=batches.get(counter).getBatch_id() %>_<%=batches.get(counter).getDiv_id() %>" value="<%=batches.get(counter).getDiv_id() %>">
+					<%} 
+					%>
+					<input type="hidden" id="selectedbatchIDfromsession" value="<%=batchID%>_<%=batchdivision%>">
 					</select>
 				<%}else{ %>
 					<div style="color:red">
@@ -836,13 +952,14 @@ function getSelectedStudentsToDelete(){
 			</div>
 		
 			<%StudentDetails studentSearch=(StudentDetails)request.getSession().getAttribute("studentSearchResult");
-			String batchID=(String)request.getSession().getAttribute("batchID");
+			
 			String pagenumber=(String)request.getSession().getAttribute("pagenumber");
-			if(studentSearch!=null){
+			//String batchdivision=(String)request.getSession().getAttribute("batchdivision");
+			/* if(studentSearch!=null){ */
 				//System.out.println("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
 			%>
 			
-			<table class=" hidden-xs hidden-sm table table-bordered table-hover" id="studentDetailTable" style="background-color: white;" border="1">
+			<table  id="studentDetailTable" style="background-color: white;" border="1">
 				<thead>
 					<tr style="background-color: rgb(0, 148, 255);">
 						
@@ -855,21 +972,21 @@ function getSelectedStudentsToDelete(){
 						<th class="col-md-1"></th>
 					 </tr>
 				</thead>
-				<tbody>	
-					<tr>
-						<INPUT TYPE="hidden" NAME="radioStudent" VALUE="<%=studentSearch.getStudentId() %>" CHECKED>
-						<td><%=studentSearch.getStudentUserBean().getLoginName() %></td>
+				<tbody id="studentDetailTablebody">	
+			<!-- 	//	<tr> -->
+						<%-- <INPUT TYPE="hidden" NAME="radioStudent" VALUE="<%=studentSearch.getStudentId() %>" CHECKED> --%>
+						<%-- <td><%=studentSearch.getStudentUserBean().getLoginName() %></td>
 						<td><%= studentSearch.getStudentUserBean().getFname()%> <%= studentSearch.getStudentUserBean().getLname()%></td>
 						<td><%= studentSearch.getDivision().getDivisionName()%>  </td>
 						<td><%= request.getSession().getAttribute("studentBatch")%></td>
 						<td><button type="button" class="btn btn-info" data-target="#modifyStudentModal" data-toggle="modal">Modify Student Batch</button></td>
 						<td><button type="button" class="btn btn-info" data-target="#deleteStudentModal" data-toggle="modal">Delete Student</button></td>
-						<td><a onclick="canceledit(<%=batchID%>,<%=pagenumber%>)"><button type="button" class="btn btn-info">Cancel</button></a></td>
-					</tr>
+						<td><a onclick="canceledit(<%=batchID%>,<%=pagenumber%>,<%=batchdivision%>)"><button type="button" class="btn btn-info">Cancel</button></a></td>
+		 --%>			<!-- </tr> -->
 				</tbody>
 			</table>
 
-			 <table class="visible-xs visible-sm table table-bordered table-hover" id="studentDetailTable" style="background-color: white;" border="1">
+		<%-- 	 <table class="visible-xs visible-sm table table-bordered table-hover" id="studentDetailTable" style="background-color: white;" border="1">
 					<tr>
 						<td>Student Login Name</td>
 						<td><%=studentSearch.getStudentUserBean().getLoginName() %></td>
@@ -891,13 +1008,13 @@ function getSelectedStudentsToDelete(){
 						<td>
 							<button type="button" class="btn btn-info" data-target="#modifyStudentModal" data-toggle="modal">Modify Student Batch</button>
 							<button type="button" class="btn btn-info" data-target="#deleteStudentModal" data-toggle="modal">Delete Student</button>
-							<a onclick="canceledit(<%=batchID%>,<%=pagenumber%>)"><button type="button" class="btn btn-info">Cancel</button></a>
+							<a onclick="canceledit(<%=batchID%>,<%=pagenumber%>,<%=batchdivision%>)"><button type="button" class="btn btn-info">Cancel</button></a>
 						</td>
 					</tr>
-			</table>		
+			</table>	 --%>	
 			<%
-			request.getSession().setAttribute("studentSearchResult",null);	
-			}
+			/* request.getSession().setAttribute("studentSearchResult",null);	
+			} */
 			%>
 			<!--<br><br><br>
 				<button type="button" class="btn btn-info" data-target="#addStudentModal" data-toggle="modal">Add Student</button>

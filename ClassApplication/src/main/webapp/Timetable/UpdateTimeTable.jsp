@@ -1,3 +1,4 @@
+<%@page import="com.classapp.db.batch.division.Division"%>
 <%@page import="com.classapp.db.batch.Batch"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -11,13 +12,16 @@
   <script src="../js/bootstrap-datetimepicker.min.js"></script>
   
 <script type="text/javascript">
+var prev="";
+var prevdiv="";
 function gettime(time,id){
 	 var input; 
 	 if(time=="date"){
 		 input = $('#date'+id);
 		 input.datetimepicker({
 			    pickTime: false,
-			    minDate:((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()
+			    minDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()),
+				  format: 'DD/MM/YYYY'
 			});
 	 }else{
 	 if(time=="start")
@@ -27,7 +31,8 @@ input = $('#start'+id);
 			 input = $('#end'+id);
 		 }
 input.datetimepicker({
-    pickDate: false
+    pickDate: false,
+	  format: 'DD/MM/YYYY'
 });
 	 }
 input.data("DateTimePicker").show();
@@ -80,8 +85,10 @@ function getsubjectteachers(id){
 
 function edit(){
 	var batchname=$("#batchname").val();
-	var batchdivision=$("#division"+batchname).val();
+	var batchdivision=$("#divisionID").val();
 	var date=$("#date").val();
+	prev=batchname;
+	prediv=batchdivision;
 	$.ajax({
 		 
 		   url: "classOwnerServlet",
@@ -193,6 +200,7 @@ function edit(){
 			   counter++;
 				   }
 			   $("#update").show();
+			   $("#edit").hide();
 			   }else{
 				   $("#update").hide();
 				   $("#edit").hide();
@@ -230,7 +238,7 @@ function deleteschedule(scheduleid)
 
 function validatedate(inputText)
 {
-	var dateformat = /^(0?[1-9]|1[012])[\/](0?[1-9]|[12][0-9]|3[01])[\/]\d{4}$/;
+	var dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
 	if(inputText.match(dateformat)){
 		
 		var pdate = inputText.split('/');
@@ -278,14 +286,72 @@ $(document).ready(function(){
 	
 		  $( "#datetimepicker" ).datetimepicker({
 			  pickTime: false,
-			  minDate:((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()
+			  minDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()),
+			  format: 'DD/MM/YYYY'
 		  }).data("DateTimePicker");
 		  
+		  $("#divisionID").change(function(){
+				 var divisionID=$("#divisionID").val();
+			
+				 var conf=true;
+					if(prev!="" && prev!='-1')
+						{
+					 conf=confirm('Your previous data will get lost. sure to change batch?');
+						}
+					if(conf==true){
+						prediv=divisionID;
+					var table1=document.getElementById("scheduletable");
+				  var rowCount=table1.rows.length;
+				  prev="";
+				  for (var x=rowCount-1; x>0; x--) {
+					  table1.deleteRow(x);
+				   }
+				  $("#scheduletable").hide();
+				  $("#edit").hide();
+				  $("#update").hide();
+				 if(divisionID!="-1"){
+					 
+					 $.ajax({
+						 
+						   url: "classOwnerServlet",
+						   data: {
+						    	 methodToCall: "getDivisionBatches",
+						    	 divisionID:divisionID
+						   		},
+						   type:"POST",
+						   success:function(data){
+							   var resultJson = JSON.parse(data);
+							   var batchnames=resultJson.batchnames.split(",");
+						   		var batchids=resultJson.batchids.split(",");
+						   		$("#batchname").empty();
+						   		if(batchids[0]!=""){
+						   			$("#batchname").append("<option value='-1'>Select Batch</option>");
+						   			for(var i=0;i<batchids.length;i++){
+						   				$("#batchname").append("<option value='"+batchids[i]+"'>"+batchnames[i]+"</option>");
+						   			}
+						   			$("#batchname").prop("disabled",false);
+						   		}else{
+						   			modal.launchAlert("Batch","Batches are not available for selected class");
+						   			$("#batchname").prop("disabled",true);
+						   		}
+							   		},
+						   	error:function(){
+						   		modal.launchAlert("Error","Error");
+						   	}	
+						}); 
+				 }else{
+					 $("#batchname").prop("disabled",true);
+				 }
+					}else{
+						$("#divisionID").val(prediv);
+					}
+				  
+			  });
 
 	
 	$("#submit").click(function(){
 		var batchname=$("#batchname").val();
-		var batchdivision=$("#division"+batchname).val();
+		var batchdivision=$("#divisionID").val();
 		var date=$("#date").val();
 		var status=true;
 		if(batchname=="-1"){
@@ -297,6 +363,9 @@ $(document).ready(function(){
 				status=validatedate(date);
 			
 		if(status==true){
+			var conf=true;
+			
+			if(conf==true){
 		$.ajax({
 			 
 			   url: "classOwnerServlet",
@@ -352,6 +421,8 @@ $(document).ready(function(){
 						  for (var x=rowCount-1; x>0; x--) {
 							  table1.deleteRow(x);
 						   }
+						  $("#scheduletable").hide();
+						  $("#update").hide();
 					   $("#edit").hide();
 					   $("#lecturenotavailablemodal").modal('toggle');
 					   
@@ -361,7 +432,11 @@ $(document).ready(function(){
 			   	error:function(){
 			   		modal.launchAlert("Error","Error");
 			   	}	
-			});}}else{
+			});
+			}else{
+				$("#batchname").val(prev);
+			}		
+			}}else{
 				alert("Please Enter Date");
 			}
 		}
@@ -462,10 +537,35 @@ $(document).ready(function(){
 			});
 	} */
 	
+	$("#batchname").change(function(){
+		var conf=true;
+		if(prev!="" && prev!='-1')
+		{
+	 conf=confirm('Your previous data will get lost. sure to change batch?');
+		}
+	if(conf==true){
+		prediv=divisionID;
+	var table1=document.getElementById("scheduletable");
+  var rowCount=table1.rows.length;
+  prev="";
+  for (var x=rowCount-1; x>0; x--) {
+	  table1.deleteRow(x);
+   }
+  $("#edit").hide();
+  $("#update").hide();
+  $("#scheduletable").hide();
+	
+		prev="";
+	}else{
+		$('#batchname').val(prev);
+		
+	}
+	});
+	
 	 $("#update").click(function(){
 		 var table=document.getElementById("scheduletable");
 		 var globcounter=table.rows.length-1;
-		
+		 var sametime=0; 
 		 var subjects="";
 		 var teachers="";
 		 var starttimes="";
@@ -488,6 +588,17 @@ $(document).ready(function(){
 						state=1;
 			 		}
 			 	
+			 	var startDate = new Date("January 01, 2015 "+starttimes);
+				var endDate = new Date("January 01, 2015 "+endtimes);
+				
+				if(startDate>=endDate){
+					state=1;
+					sametime=1;
+					modal.launchAlert("Error","Start Time Should be less than End Time");
+					$("#starttime"+i).parents("td").addClass("has-error");
+					$("#endtime"+i).parents("td").addClass("has-error");
+				}
+			 	
 			 	var startsplit=starttimes.split(" ");
 			 	var endsplit=endtimes.split(" ");
 			 	var startspitagain=startsplit[0].split(":");
@@ -503,7 +614,14 @@ $(document).ready(function(){
 					 {
 					 state=1;
 					 } */
-			 	validatedate(dates);
+			 //	validatedate(dates);
+			 	if(!'undefined'.match(dates)){
+				 	var valid=validatedate(dates);
+				 	if(valid==false)
+				 		{
+				 		state=1;
+				 		}
+				 	}
 			 }
 		 if(state!=1)
 			 {
@@ -535,7 +653,7 @@ $(document).ready(function(){
 		 }
 		 var regId;
 		 var batchID = $('#batchname').val();
-		 var batchdivision=$("#division"+batchID).val();
+		 var batchdivision=$("#divisionID").val();
 		 $.ajax({
 			 
 			   url: "classOwnerServlet",
@@ -610,6 +728,8 @@ $(document).ready(function(){
 				   						$("#edit").hide();
 				   						$("#update").hide();
 				   						$(td).hide();
+				   						prev="";
+				   						previd="";
 				   					}
 				   			
 				   			
@@ -620,7 +740,9 @@ $(document).ready(function(){
 			   	}	
 			});
 			 }else{
+				 if(sametime!=1){
 				 $("#fielderror").modal('toggle');
+				 }
 			 }
 	 });
 });
@@ -628,31 +750,45 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
-<h3><font face="cursive">Update Timetable</font></h3>
-<hr>
+
 <%List<Batch> batch=(List<Batch>)request.getAttribute("batch"); 
+List<Division> divisions=(List<Division>)request.getAttribute("divisions");
 int i=0;%>
 <form role="form" class="form-inline">
 <div class="container">
 <div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+	<div align="center" style="font-size: larger;"><u>Search/Update Time Table</u></div>
 	<div class="row">
 		<div class='col-sm-6 header' style="padding-bottom: 10px;">*
 			Update time table for batch here</div>
 	</div>
 	<div align="left" class="row">
+	<div class="col-md-4">
+					<select name="divisionID" id="divisionID" class="form-control" width="100px">
+					<option value="-1">Select Division</option>
+					<%
+					if(divisions!=null){
+					while(i<divisions.size()){
+					%>
+					<option value="<%=divisions.get(i).getDivId()%>"><%=divisions.get(i).getDivisionName() %> <%=divisions.get(i).getStream() %></option>
+					<%
+					i++;
+					}} %>
+			</select>
+			</div>
 <div class="col-md-4">
 
-<select name="batchname" id="batchname" class='form-control'>
+<select name="batchname" id="batchname" class='form-control' disabled="disabled">
 <option value="-1">Select Batch</option>
-<%
+<%-- <%
 while(i<batch.size()){
 %>
 <option value="<%=batch.get(i).getBatch_id()%>"><%=batch.get(i).getBatch_name() %></option>
-<%i++;} %>
+<%i++;} %> --%>
 </select>
-<%for(int counter=0;counter<batch.size();counter++){ %>
+<%-- <%for(int counter=0;counter<batch.size();counter++){ %>
 <input type="hidden" id="division<%=batch.get(counter).getBatch_id() %>" value="<%=batch.get(counter).getDiv_id() %>">
-<%} %>
+<%} %> --%>
 </div>
 <!-- <div class="col-xs-2" align="right">
 <label>Select Date</label>
@@ -665,12 +801,12 @@ while(i<batch.size()){
 					</span>
 				</div>
 				</div>
-<div class="col-md-3">
+<div class="col-md-2">
 <input value="Submit" type="button" id="submit" class="btn btn-danger">
 </div>
 <div class="col-md-3">
 <%if(i==0) {%>
-<div class="header">No batch is added please add batch first </div>
+<div class="header">No classes is added please add class first </div>
 <%} %>
 </div>
 </div>
@@ -726,7 +862,7 @@ while(i<batch.size()){
             </h4>
          </div>
          <div class="modal-body">
-           Schedule Not Available...
+           batch is not schuduled for any lectures...
          </div>
          </div>
    </div>

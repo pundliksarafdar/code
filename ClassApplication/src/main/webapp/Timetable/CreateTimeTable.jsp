@@ -1,5 +1,6 @@
 <!DOCTYPE html>
- <%@page import="java.io.IOException"%>
+ <%@page import="com.classapp.db.batch.division.Division"%>
+<%@page import="java.io.IOException"%>
 <%@page import="java.io.FileNotFoundException"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.io.FileInputStream"%>
@@ -20,15 +21,16 @@
 
   <script>
   var prev= "";
+  var prediv="";
   var globcounter=0;
   function validatedate(inputText)
   {
-  	var dateformat = /^(0?[1-9]|1[012])[\/](0?[1-9]|[12][0-9]|3[01])[\/]\d{4}$/;
+  	var dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
   	if(inputText.match(dateformat)){
   		
   		var pdate = inputText.split('/');
-  		var mm  = parseInt(pdate[0]);  
-  		  var dd = parseInt(pdate[1]);  
+  		var mm  = parseInt(pdate[1]);  
+  		  var dd = parseInt(pdate[0]);  
   		  var yy = parseInt(pdate[2]); 
   		  var ListofDays = [31,28,31,30,31,30,31,31,30,31,30,31]; 
   		  if (mm==1 || mm>2)  
@@ -70,7 +72,8 @@
 	  
 	 
           $('.hasDatepicker').datetimepicker({
-              pickDate: false
+              pickDate: false,
+              format: 'dd/mm/yyyy'
           });
 
 	  $(function () {
@@ -78,6 +81,63 @@
               pickDate: false
           });
       });
+	  
+	  $("#divisionID").change(function(){
+		 var divisionID=$("#divisionID").val();
+	
+		 var conf=true;
+			if(prev!="" && prev!='-1')
+				{
+			 conf=confirm('Your previous data will get lost. sure to change batch?');
+				}
+			if(conf==true){
+				prediv=divisionID;
+			var table1=document.getElementById("timetablediv");
+		  var rowCount=table1.rows.length;
+		  prev="";
+		  for (var x=rowCount-1; x>0; x--) {
+			  table1.deleteRow(x);
+		   }
+		  $("#testdiv").addClass("hide");
+		 if(divisionID!="-1"){
+			 
+			 $.ajax({
+				 
+				   url: "classOwnerServlet",
+				   data: {
+				    	 methodToCall: "getDivisionBatches",
+				    	 divisionID:divisionID
+				   		},
+				   type:"POST",
+				   success:function(data){
+					   var resultJson = JSON.parse(data);
+					   var batchnames=resultJson.batchnames.split(",");
+				   		var batchids=resultJson.batchids.split(",");
+				   		$("#batchname").empty();
+				   		$("#batchname").append("<option value='-1'>Select Batch</option>");
+				   		if(batchids[0]!=""){
+				   			
+				   			for(var i=0;i<batchids.length;i++){
+				   				$("#batchname").append("<option value='"+batchids[i]+"'>"+batchnames[i]+"</option>");
+				   			}
+				   			$("#batchname").prop("disabled",false);
+				   		}else{
+				   			modal.launchAlert("Batch","Batches are not available for selected class");
+				   			$("#batchname").prop("disabled",true);
+				   		}
+					   		},
+				   	error:function(){
+				   		modal.launchAlert("Error","Error");
+				   	}	
+				}); 
+		 }else{
+			 $("#batchname").prop("disabled",true);
+		 }
+			}else{
+				$("#divisionID").val(prediv);
+			}
+		  
+	  });
 	  
 $('#batchname').change(function(){
 	
@@ -224,7 +284,7 @@ $('#batchname').change(function(){
 	 }
 	 var regId;
 	 var batchID = $('div#timetable').find('#batchname').val();
-	 var batchdivision=$("#division"+batchID).val();
+	 var batchdivision=$("#divisionID").val();
 	 $.ajax({
 		 
 		   url: "classOwnerServlet",
@@ -275,7 +335,7 @@ $('#batchname').change(function(){
 			   						if(lecture[k].split("/")[1]==i+"" && lecture[k].split("/")[0]=="lecture")
 										{
 			   							flag=1;
-			   								$(td).append('<span>Lecture Already Exists</span>');
+			   								$(td).append('<span>batch is busy with another lecture.</span>');
 			   								$(td).show();
 										}			   					
 			   					}
@@ -297,7 +357,8 @@ $('#batchname').change(function(){
   						$("#testdiv").addClass("hide");
   						$('#lectureaddedmodal').modal('toggle');
   						$(td).hide();
-  					
+  						prev="";
+  						prediv="";
 			   			}
 			   		/* if(status[0]!="")
 			   			{
@@ -344,7 +405,8 @@ $(function(){
 		
 		$(this).find("input[id^='date']").datetimepicker({
 			  pickTime: false,
-			  minDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
+			  minDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()),
+			  format: 'DD/MM/YYYY'
 		  });
 	});
 })
@@ -488,7 +550,7 @@ $(function(){
   function filldropdown()
   {
 	  var batchName = $('div#timetable').find('#batchname').val();
-	  var batchdivision=$("#division"+batchName).val();
+	  var batchdivision=$("#divisionID").val();
 	  var reg;
 	  $.ajax({
 		   url: "classOwnerServlet",
@@ -543,30 +605,46 @@ $(function(){
  </script> 
  </head>
  <body>
- <h3><font face="cursive">Create Timetable</font></h3>
-<hr>
 	<div id="timetable" align="center" class="container">	
-		<%List<Batch> batch=(List<Batch>)request.getAttribute("batch"); 
+		<%List<Batch> batch=(List<Batch>)request.getAttribute("batch");
+		List<Division> divisions=(List<Division>)request.getAttribute("divisions");
+		
 		int i=0;%>
 		<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+			<div align="center" style="font-size: larger;"><u>Create Time Table</u></div>
 			<div class="row">
 				<div class='col-sm-6 header' style="padding-bottom: 10px;">*
 					Create time table for batch here 
 				</div>
 			</div>
+			
 			<div class="row">
 				<div class="col-md-4">
-					<select name="batchname" id="batchname" class="form-control" width="100px">
-					<option value="-1">Select Batch</option>
+					<select name="divisionID" id="divisionID" class="form-control" width="100px">
+					<option value="-1">Select Division</option>
 					<%
+					if(divisions!=null){
+					while(i<divisions.size()){
+					%>
+					<option value="<%=divisions.get(i).getDivId()%>"><%=divisions.get(i).getDivisionName() %> <%=divisions.get(i).getStream() %></option>
+					<%
+					i++;
+					}} %>
+			</select>
+			</div>
+				
+				<div class="col-md-4">
+					<select name="batchname" id="batchname" class="form-control" width="100px" disabled="disabled">
+					 <option value="-1">Select Batch</option>
+					<%--<%
 					while(i<batch.size()){
 					%>
 					<option value="<%=batch.get(i).getBatch_id()%>"><%=batch.get(i).getBatch_name() %></option>
-					<%i++;} %>
+					<%i++;} %>--%>
 					</select>
-					<%for(int counter=0;counter<batch.size();counter++){ %>
+					<%--<%for(int counter=0;counter<batch.size();counter++){ %>
 					<input type="hidden" id="division<%=batch.get(counter).getBatch_id() %>" value="<%=batch.get(counter).getDiv_id() %>">
-					<%} %>
+					<%} %> --%>
 				</div>
 				<div class="col-md-4">
 				<button id="add" type="button" class="btn btn-info" disabled="true">Add lecture</button>
@@ -575,7 +653,7 @@ $(function(){
 				<%
 				if(i==0){
 				%>
-				<div class="header">No batch is added please add batch first </div>
+				<div class="header">No classes is added please add class first </div>
 				<%} %>
 				</div>
 			</div>

@@ -42,4 +42,18 @@ public class BatchDetails {
 			
 			return subjectNames;		
 	}
+	
+	public String getSubjectIds(){
+		String subjectIds="";
+		
+			for (Subject subject : this.subjects) {
+				if(subjectIds.equals("")){
+					subjectIds=subject.getSubjectId()+"";
+				}else{
+					subjectIds=subjectIds+","+subject.getSubjectId();
+				}
+			}
+			
+			return subjectIds;		
+	}
 }

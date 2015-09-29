@@ -2,6 +2,7 @@ package com.classapp.db.exam;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -68,12 +69,40 @@ public class ExamDB {
 
 	}
 	
-	public boolean deleteQuestion(int exam_id,int inst_id,int sub_id,int div_id) {
+	public boolean deleteExam(int exam_id,int inst_id,int sub_id,int div_id) {
 		Exam exam=new Exam();
 		exam.setExam_id(exam_id);
 		exam.setInstitute_id(inst_id);
 		exam.setDiv_id(div_id);
 		exam.setSub_id(sub_id);
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		session.delete(exam);
+		transaction.commit();
+		session.close();
+		return  true;
+
+	}
+	
+	public boolean deleteExamrelatedtosubject(int sub_id) {
+		Exam exam=new Exam();
+		exam.setSub_id(sub_id);
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		session.delete(exam);
+		transaction.commit();
+		session.close();
+		return  true;
+
+	}
+	
+	public boolean deleteExamrelatedtodivision(int div_id) {
+		Exam exam=new Exam();
+		exam.setDiv_id(div_id);
 		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
@@ -179,8 +208,8 @@ public class ExamDB {
 		return  true;
 	}
 	
-	/*public List<Exam> getExamList(int inst_id,int sub_id,int div_id,String exam_status,int currentPage,String batchid) {
-		Exam exam=new Exam();
+	public boolean removebatchfromexam(int inst_id,int div_id,String batchid) {
+		//Exam exam=new Exam();
 		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
@@ -188,32 +217,42 @@ public class ExamDB {
 		Criteria criteria = session.createCriteria(Exam.class);
 		Criterion criterion = Restrictions.eq("institute_id", inst_id);
 		criteria.add(criterion);
-		if(sub_id!=-1){
-		criterion = Restrictions.eq("sub_id", sub_id);
-		criteria.add(criterion);
-		}
+		
 		if(div_id!=-1){
 		criterion = Restrictions.eq("div_id", div_id);
 		criteria.add(criterion);
-		}
-		if(exam_status!="-1"){
-			criterion = Restrictions.eq("exam_status", exam_status);
-			criteria.add(criterion);
-		}
-		if (currentPage!=1 && currentPage!=0) {
-			criteria.setFirstResult((currentPage-1)*2);
 		}
 		if(!"-1".equals(batchid)){
 			
 			criterion=Restrictions.or(Restrictions.like("batch_id", batchid+",%"),Restrictions.like("batch_id","%,"+batchid),Restrictions.like("batch_id", "%,"+batchid+",%"),Restrictions.eq("batch_id", batchid));
 			criteria.add(criterion);
 		}
-		criteria.setMaxResults(2);
+	
 		List<Exam> examList = criteria.list();
+		if(examList!=null){
+			for (int i = 0; i < examList.size(); i++) {
+				Exam exam=examList.get(i);
+				String batchidarr[]=exam.getBatch_id().split(",");
+				String newbatches="";
+				int index=1;
+				for (int j = 0; j < batchidarr.length; j++) {
+					if(!batchid.equals(batchidarr[j].trim())){
+						if(index==1){
+							newbatches=batchidarr[j];
+						}else{
+							newbatches=newbatches+","+batchidarr[j];
+						}
+						index++;
+					}
+				}
+				exam.setBatch_id(newbatches);
+				session.save(exam);
+			}
+		}
 		transaction.commit();
 		session.close();
-		return  examList;
-	}*/
+		return  true;
+	}
 	public List<Exam> getExamList(int inst_id,int sub_id,int div_id,String exam_status,int currentPage,String batchids) {
 	Transaction transaction=null;
 	Session session=null;
@@ -235,7 +274,7 @@ public class ExamDB {
 		}
 		int startindex=0;
 		if (currentPage!=1 && currentPage!=0) {
-			startindex=(currentPage-1)*2;
+			startindex=(currentPage-1)*10;
 		}
 		Query query = session.createQuery(queryString);
 		query.setParameter("inst_id", inst_id);
@@ -255,7 +294,7 @@ public class ExamDB {
 			queryString=queryString+"and exam_status= :exam_status";
 		}
 		query.setFirstResult(startindex);
-		query.setMaxResults(2);
+		query.setMaxResults(10);
 		list = query.list();
 		
 	}catch(Exception e){
@@ -379,7 +418,7 @@ return list;
 		criteria.add(criterion);
 		}
 		
-		Restrictions.in("exam_id", examids);
+		criterion=Restrictions.in("exam_id", examids);
 		criteria.add(criterion);
 		
 		List<Exam> list=  criteria.list();
@@ -468,5 +507,33 @@ return list;
 			
 		}
 	return 0;
+	}
+	
+	public boolean isExamExists(int inst_id,String examname,String examID) {
+		Exam exam=new Exam();
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Criteria criteria = session.createCriteria(Exam.class).setProjection(Projections.property("exam_name"));
+		Criterion criterion = Restrictions.eq("institute_id", inst_id);
+		criteria.add(criterion);
+				
+		criterion=Restrictions.eq("exam_name", examname);
+		criteria.add(criterion);
+		if(!"".equals(examID) && examID!=null){
+			criterion=Restrictions.ne("exam_id", Integer.parseInt(examID));
+			criteria.add(criterion);
+		}
+		List<Exam> list=  criteria.list();
+		if(list!=null){
+			if(list.size()>0){
+				return true;
+			}
+		}
+		//int count=examListCount;
+		transaction.commit();
+		session.close();
+		return false;
 	}
 }

@@ -31,4 +31,14 @@ public class SubjectHelperBean {
 		}*/
 		return subjects;
 	}
+	
+	public List<Subject> getrecentlyaddedSubjectsfirst() {
+		SubjectDb db=new SubjectDb();
+		subjects = db.recentlyaddedsubfirst(class_id);
+		/*for (Subject subject : this.subjects) {
+			System.out.println("Subject name :"+subject.getSubjectName());	
+			
+		}*/
+		return subjects;
+	}
 }

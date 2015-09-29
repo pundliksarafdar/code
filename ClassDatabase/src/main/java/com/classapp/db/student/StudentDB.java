@@ -395,12 +395,12 @@ public class StudentDB {
 		return null;
 	}
 	
-	public List getStudentrelatedtoBatch(String batchname) {
+	public List getStudentrelatedtoBatch(String batchname,int inst_id,int div_id) {
 		Session session = null;
 		boolean status=false;
 		Transaction transaction = null;
 		List list=null;
-		String queryString="from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4)";
+		String queryString="from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4) and class_id=:class_id and div_id=:div_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
@@ -409,6 +409,8 @@ public class StudentDB {
 			query.setParameter("batch_id2","%,"+batchname+",%");	
 			query.setParameter("batch_id3", "%,"+batchname);
 			query.setParameter("batch_id4", batchname);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
 				list=query.list();
 			if(list!=null)
 			{
@@ -584,6 +586,49 @@ public class StudentDB {
 		}
 		
 		return null;
+	}
+	
+	public List<Integer>  getStudentsFromBatches(int class_id,int div_id,String batchids) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List<Integer> list=new ArrayList<Integer>();
+		String queryString=" select student_id from Student where class_id=:class_id and div_id=:div_id";
+		if(!"-1".equals(batchids) && !"".equals(batchids)){
+			String batchidsarr[]=batchids.split(",");
+			for (int i = 0; i < batchidsarr.length; i++) {
+				if(i==0){
+					queryString=queryString+" and ((batch_id like :batch_id"+i+"a or batch_id like :batch_id"+i+"b or batch_id like :batch_id"+i+"c or batch_id = :batch_id"+i+"d)";
+				}else{
+					queryString=queryString+"or (batch_id like :batch_id"+i+"a or batch_id like :batch_id"+i+"b or batch_id like :batch_id"+i+"c or batch_id = :batch_id"+i+"d)";
+				}
+			}
+			queryString=queryString+") order by student_id";
+		}
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("div_id", div_id);
+			query.setParameter("class_id", class_id);
+			if(!"-1".equals(batchids) && !"".equals(batchids)){
+				String batchidsarr[]=batchids.split(",");
+				for (int i = 0; i < batchidsarr.length; i++) {
+					query.setParameter("batch_id"+i+"a", batchidsarr[i].trim()+",%");
+					query.setParameter("batch_id"+i+"b","%,"+batchidsarr[i].trim()+",%");	
+					query.setParameter("batch_id"+i+"c", "%,"+batchidsarr[i].trim());
+					query.setParameter("batch_id"+i+"d", batchidsarr[i].trim());
+			}
+			}
+				list= query.list();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return list;
 	}
 	
 }

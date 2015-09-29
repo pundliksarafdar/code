@@ -23,7 +23,7 @@ public class NotificationTransaction {
 		for (int i = 0; i < ids.length; i++) {
 			batchids.add(ids[i]);
 		}
-		return db.getMessageforStudent(student.getClass_id(), batchids);
+		return db.getMessageforStudent(student.getClass_id(), batchids,student.getDiv_id());
 		  
 	
 	}
@@ -31,6 +31,13 @@ public class NotificationTransaction {
 	public List<Notification> getMessageforOwner(int institute_id) {
 		NotificationDB db=new NotificationDB();
 		return db.getMessageforOwner(institute_id);
+		  
+	
+	}
+	
+	public List<Notification> getMessageforTeacher(int institute_id) {
+		NotificationDB db=new NotificationDB();
+		return db.getMessageforTeachers(institute_id);
 		  
 	
 	}

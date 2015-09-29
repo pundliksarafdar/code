@@ -22,10 +22,22 @@ public class AddTopicAction extends BaseAction{
 	String subname;
 	int subid;
 	List<Division> divisionList;
+	int currentPage;
+	int totalPages;
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		DivisionTransactions divisionTransactions=new DivisionTransactions();
 		divisionList=divisionTransactions.getAllDivisions(userBean.getRegId());
+		if(divisionList!=null){
+		 int totalCount=divisionList.size();
+		if(totalCount>0){
+			int remainder=totalCount%2;
+			totalPages=totalCount/2;
+			if(remainder>0){
+				totalPages++;
+			}
+		}
+		}
 		return "addtopicinitiate";
 	}
 	public String getActionname() {
@@ -51,6 +63,18 @@ public class AddTopicAction extends BaseAction{
 	}
 	public void setDivisionList(List<Division> divisionList) {
 		this.divisionList = divisionList;
+	}
+	public int getCurrentPage() {
+		return currentPage;
+	}
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
+	}
+	public int getTotalPages() {
+		return totalPages;
+	}
+	public void setTotalPages(int totalPages) {
+		this.totalPages = totalPages;
 	}
 	
 	

@@ -20,6 +20,7 @@ import com.classapp.db.exam.CompExam;
 import com.classapp.db.exam.Exam;
 
 import com.classapp.db.question.Questionbank;
+import com.classapp.db.student.StudentMarks;
 import com.classapp.db.subject.Subject;
 import com.classapp.login.UserStatic;
 import com.config.BaseAction;
@@ -29,6 +30,7 @@ import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.questionbank.QuestionBankTransaction;
+import com.transaction.studentmarks.StudentMarksTransaction;
 import com.user.UserBean;
 
 public class ViewExamAnsAction extends BaseAction{
@@ -60,6 +62,7 @@ public class ViewExamAnsAction extends BaseAction{
 	String examname;
 	int searchcurrentPage;
 	int searchtotalPages;
+	List<ArrayList<String>> yourans;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -91,8 +94,8 @@ public class ViewExamAnsAction extends BaseAction{
 			
 		}
 		noofquestions=questionIdsList.size();
-		totalPages=noofquestions/2;
-		int remainder=noofquestions%2;
+		totalPages=noofquestions/10;
+		int remainder=noofquestions%10;
 		if(remainder>0){
 			totalPages++;
 		}
@@ -120,10 +123,31 @@ public class ViewExamAnsAction extends BaseAction{
 				questionDataList=new ArrayList<QuestionData>();
 				UserStatic userStatic = userBean.getUserStatic();
 				String questionPath = "";
-				int startIndex=(currentPage-1)*2;
-				int endIndex=startIndex+2;
+				int startIndex=(currentPage-1)*10;
+				int endIndex=startIndex+10;
 				if(endIndex>noofquestions){
 					endIndex=noofquestions;
+				}
+				StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
+				StudentMarks studentMarks=marksTransaction.getStudentExamMark(inst_id,userBean.getRegId(), Integer.parseInt(division), Integer.parseInt(subject), examID);
+				String answersarr[]={};
+				if(studentMarks!=null){
+					answersarr=studentMarks.getAns_ids().split("/");
+				}
+				yourans=new ArrayList<ArrayList<String>>();
+				for (int i = startIndex; i < endIndex; i++) {
+					if(answersarr.length>0){
+						ArrayList<String> templist=new ArrayList<String>();
+						String temparr[]=answersarr[i].split(",");
+						for (int j = 0; j < temparr.length; j++) {
+							if(!"".equals(temparr[j]) && !"-1".equals(temparr[j])){
+							templist.add((Integer.parseInt(temparr[j])+1)+"");
+							}else{
+								templist.add("");
+							}
+							}
+						yourans.add(templist);
+					}
 				}
 				//Set<Integer> keys=questionIdsMap.keySet();
 				for (int i = startIndex; i < endIndex; i++) {
@@ -382,6 +406,15 @@ public class ViewExamAnsAction extends BaseAction{
 	public void setSearchtotalPages(int searchtotalPages) {
 		this.searchtotalPages = searchtotalPages;
 	}
+
+	public List<ArrayList<String>> getYourans() {
+		return yourans;
+	}
+
+	public void setYourans(List<ArrayList<String>> yourans) {
+		this.yourans = yourans;
+	}
+	
 	
 	
 }

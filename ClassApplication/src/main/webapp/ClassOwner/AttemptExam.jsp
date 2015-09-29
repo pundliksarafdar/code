@@ -97,7 +97,7 @@ $(".page").on("click",function(){
 	$("form#paginateform #currentPage").val($(this).text());
 	var answers="";
 	var count=1;
-	while(count<3){
+	while(count<11){
 		var checkedanswers = [];
 		var name="answers"+count;
 			$.each($("input[name='"+name+"']:checked"), function(){            
@@ -119,7 +119,7 @@ $(".start").on("click",function(){
 	$("form#paginateform #currentPage").val("1");
 	var answers="";
 	var count=1;
-	while(count<3){
+	while(count<11){
 		var checkedanswers = [];
 		var name="answers"+count;
 			$.each($("input[name='"+name+"']:checked"), function(){            
@@ -141,7 +141,7 @@ $(".end").on("click",function(){
 	$("form#paginateform #currentPage").val($("#totalPages").val());
 	var answers="";
 	var count=1;
-	while(count<3){
+	while(count<11){
 		var checkedanswers = [];
 		var name="answers"+count;
 			$.each($("input[name='"+name+"']:checked"), function(){            
@@ -163,7 +163,7 @@ $(".examSubmit").on("click",function(){
 	$("form#paginateform #currentPage").val($("#totalPages").val());
 	var answers="";
 	var count=1;
-	while(count<3){
+	while(count<11){
 		var checkedanswers = [];
 		var name="answers"+count;
 			$.each($("input[name='"+name+"']:checked"), function(){            
@@ -217,7 +217,7 @@ $(".examSubmit").on("click",function(){
   <input type="hidden" name="examID" id="examID" value='<c:out value="${examID}"></c:out>'>
   <input type="hidden" name="institute" id="institute" value='<c:out value="${institute}"></c:out>'>
   <input type="hidden" name="actionname" value="examattempted">
-  <input type="submit" value="Attrempt Exam">
+  <input type="submit" value="Attempt Exam">
   </form>
   </div>
   </div>
@@ -244,13 +244,16 @@ $(".examSubmit").on("click",function(){
         <c:if test="${currentPage gt 1 }">
         <td class="col-md-1"><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
         </c:if>
-        <td> class="col-md-10"<c:out value="${item.question}"></c:out></td>
+        <td class="col-md-10"><c:out value="${item.question}"></c:out></td>
       </tr>
       <tr>
       <td class="col-md-1"></td>
       <td class="col-md-10">
      <c:if test="${item.options != null}"> 
     	<table>
+    	<c:forEach items="${item.answers}" var="ans" varStatus="anscounter">
+    	<c:set var="optionlistsize" value='${anscounter.count}' scope="page"></c:set>
+		</c:forEach>
     		<c:forEach items="${item.options}" var="option" varStatus="innercounter">
     		<tr>
     		<c:set var="optionstatus" value="N" scope="page"></c:set>
@@ -262,12 +265,27 @@ $(".examSubmit").on("click",function(){
     			</c:forEach>
     		</c:if>
     		<c:choose>
+    		<c:when test="${optionlistsize eq '1' }">
+    		
+    		<c:choose>
+    		<c:when test="${optionstatus eq 'Y' }">
+    		<td><input type="radio" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>'' checked="checked"><c:out value="${option}"></c:out></td>
+    		</c:when>
+    			<c:otherwise>
+    			<td><input type="radio" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>''><c:out value="${option}"></c:out></td>
+    			</c:otherwise>
+    		</c:choose>
+    		</c:when>
+    		<c:otherwise>
+    		<c:choose>
     		<c:when test="${optionstatus eq 'Y' }">
     		<td><input type="checkbox" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>'' checked="checked"><c:out value="${option}"></c:out></td>
     		</c:when>
     			<c:otherwise>
     			<td><input type="checkbox" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>''><c:out value="${option}"></c:out></td>
     			</c:otherwise>
+    		</c:choose>
+    		</c:otherwise>
     		</c:choose>
     		</tr>
     	</c:forEach>

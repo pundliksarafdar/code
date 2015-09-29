@@ -102,7 +102,7 @@ public class AttemptExamAction extends BaseAction {
 		String solvedans_arr[]=finalAnsString.split("/");
 		String examans_arr[]=exam.getAns_ids().split("/");
 		for (int i = 0; i < examans_arr.length; i++) {
-			if(examans_arr[i].equals(solvedans_arr[i].trim())){
+			if(examans_arr[i].replace(" ", "").equals(solvedans_arr[i].trim())){
 				Total_Marks=Total_Marks+ques_marks.get(i);
 			}
 		}
@@ -132,8 +132,8 @@ public class AttemptExamAction extends BaseAction {
 		String queid_arr[]=	exam.getQue_ids().split(",");
 		int totalCount=queid_arr.length;
 		if(totalCount>0){
-			int remainder=totalCount%2;
-			totalPages=totalCount/2;
+			int remainder=totalCount%10;
+			totalPages=totalCount/10;
 			if(remainder>0){
 				totalPages++;
 			}
@@ -153,9 +153,9 @@ public class AttemptExamAction extends BaseAction {
 		}
 		int questionStartIndex=0;
 		if(currentPage!=0){
-			questionStartIndex=(currentPage-1)*2;
+			questionStartIndex=(currentPage-1)*10;
 		}
-		int questionEndIndex=questionStartIndex+2;
+		int questionEndIndex=questionStartIndex+10;
 		if (questionEndIndex>totalCount) {
 			questionEndIndex=totalCount;
 		}
@@ -175,7 +175,7 @@ public class AttemptExamAction extends BaseAction {
 		}
 		if(currentPage==0){
 			for (int i = 1; i <= totalPages; i++) {
-				SelectedAnswerIds.put(i, "-1/-1");
+				SelectedAnswerIds.put(i, "-1/-1/-1/-1/-1/-1/-1/-1/-1/-1");
 				
 			}
 			session.put("SelectedAnswerIds", SelectedAnswerIds);

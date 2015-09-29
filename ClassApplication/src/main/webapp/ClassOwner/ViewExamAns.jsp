@@ -37,28 +37,31 @@ $(document).ready(function(){
 		$("#searchform").submit();
 	});
 	
-	$(".page").on("click",function(){
+	$(".page").on("click",function(e){
 		$("form#paginateform #currentPage").val($(this).text());
 		$("#totalmarks").val($("#temptotalmarks").html());
 		$("#addedIds").val(addedIds);
 		$("#removedIds").val(removedIds);
 		$("#paginateform").submit();
+		e.preventDefault();
 	});
 	
-	$(".start").on("click",function(){
+	$(".start").on("click",function(e){
 		$("form#paginateform #currentPage").val("1");
 		$("#totalmarks").val($("#temptotalmarks").html());
 		$("#addedIds").val(addedIds);
 		$("#removedIds").val(removedIds);
 		$("#paginateform").submit();
+		e.preventDefault();
 	});
 	
-	$(".end").on("click",function(){
+	$(".end").on("click",function(e){
 		$("form#paginateform #currentPage").val($("#totalPages").val());
 		$("#totalmarks").val($("#temptotalmarks").html());
 		$("#addedIds").val(addedIds);
 		$("#removedIds").val(removedIds);
 		$("#paginateform").submit();
+		e.preventDefault();
 	});
 	
 	$(".edit").on("click",function(){
@@ -175,6 +178,7 @@ var selectMarks = function(){
 			</c:choose>
 			</div>
 			<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+			<div align="center" style="font-size: larger;"><u>View Exam Answers</u></div>
 			<div class="btn-group" role="group" aria-label="..." style="width:90%">
 			<form action="" id="uploadform" method="post">
 			<input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
@@ -210,7 +214,10 @@ var selectMarks = function(){
         <td  class="col-md-1"><span class="badge" id='mark<c:out value="${item.questionNumber}"></c:out>'><c:out value="${item.marks}"></span></c:out></td>
       </tr>
       <tr>
-      <td  class="col-md-1"></td>
+       <td  class="col-md-1"></td>
+      <td>
+      <table>
+      <tr>  
       <td  class="col-md-10">
       <c:forEach items="${item.options}" var="option" varStatus="innercounter">
       <c:out value="${innercounter.count}"></c:out>.&nbsp; &nbsp;<c:out value="${option}"></c:out><br>
@@ -218,9 +225,21 @@ var selectMarks = function(){
       </td>
       </tr>
       <tr>
-       <td  class="col-md-1"></td>
-      <td  class="col-md-10">Answer - <c:out value="${item.answers}"></c:out></td>
+      <td  class="col-md-10">
+      Your Answer- <c:out value="${yourans[counter.count-1]}"></c:out>
+      <c:if test="${yourans[counter.count-1] eq item.answers}">
+      <span class="glyphicon glyphicon-ok" style="color:green"></span>
+      </c:if>
+      <c:if test="${yourans[counter.count-1] ne item.answers}">
+      <span class="glyphicon glyphicon-remove" style="color:red"></span>
+      </c:if>
+      <br>
+      Answer - <c:out value="${item.answers}"></c:out></td>
       </tr>
+      </table>
+      </td>
+      </tr>
+      
       </c:forEach>
     </tbody>
   </table>
@@ -249,6 +268,7 @@ var selectMarks = function(){
    <input type="hidden" name="searchcurrentPage" value="<c:out value="${searchcurrentPage}"></c:out>"/>
    <input type="hidden" name="searchtotalPages" value="<c:out value="${searchtotalPages}"></c:out>"/>
    <input type="hidden" name="examname" value="<c:out value="${examname}"></c:out>"/>
+   <input type="hidden" name="examID" value="<c:out value="${examID}"></c:out>"/>
    <c:if test="${(actionname ne 'showaddedquestions') && (actionname ne 'editexam')}">
   <ul class="pagination">
   <li><a class="start" >&laquo;</a></li>

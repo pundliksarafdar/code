@@ -158,6 +158,15 @@ public class LoginUser extends BaseAction{
 							}
 							}
 						}
+						NotificationTransaction notificationTransaction=new NotificationTransaction();
+						for (int i = 0; i < classids.size(); i++) {
+							List<Notification> notificationsList=  notificationTransaction.getMessageforTeacher(classids.get(i));
+							if(notificationsList!=null){
+								for (int j = 0; j < notificationsList.size(); j++) {
+									notifications.add(notificationsList.get(j));
+								}
+							}
+						}
 						session.put("notifications", notifications);
 						session.put("classes", classbeanes);
 						session.put("todayslect", map);

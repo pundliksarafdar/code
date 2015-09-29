@@ -122,36 +122,43 @@ $(".attemptExam").on("click",function(){
 	
 });
 
-$(".page").on("click",function(){
+$(".page").on("click",function(e){
 	$("form#paginateform #currentPage").val($(this).text());
 	$("#paginateform").submit();
+	e.preventDefault();
 });
 
-$(".start").on("click",function(){
+$(".start").on("click",function(e){
 	$("form#paginateform #currentPage").val("1");
 	$("#paginateform").submit();
+	e.preventDefault();
 });
 
-$(".end").on("click",function(){
+$(".end").on("click",function(e){
 	$("form#paginateform #currentPage").val($("#totalPages").val());
 	$("#paginateform").submit();
+	e.preventDefault();
 });
 
-$(".viewExam").on("click",function(){
+$(".viewExam").on("click",function(e){
 	$("form#ViewEditform #actionname").val("viewexam");
 	$("form#ViewEditform #examID").val($(this).prop("id"));
 	$("#ViewEditform").prop("action","viewexamans")
 	$("#ViewEditform").submit();
+	e.preventDefault();
 });
 
 });
 </script>
 </head>
 <body>
+
 <div class="container" style="margin-bottom: 5px">
 			<a type="button" class="btn btn-primary" href="studentcommoncomponent?forwardAction=examMarks" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
 	</div>
-
+<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+	<div align="center" style="font-size: larger;"><u>Exam Marks</u></div>
+	</div>
 	 <c:if test="${(examlist != null) && (totalPages gt 0)}">
 	<div class="container">
   <h2><font face="cursive">Search Result</font> </h2>            
@@ -229,7 +236,7 @@ $(".viewExam").on("click",function(){
 </div>
 	</c:if>
 	<c:if test="${totalPages eq 0}">
-	<div class="alert alert-info">Exam marks not available.</div>
+	<div class="alert alert-info" align="center">Exam marks not available for selected criteria.</div>
 	</c:if>
 	<div class="modal fade" id="examattemptmodal" tabindex="-1" role="dialog" 
    aria-labelledby="myModalLabel" aria-hidden="true">

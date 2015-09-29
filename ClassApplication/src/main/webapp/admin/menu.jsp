@@ -40,7 +40,7 @@ siteMapApp.controller("SiteMapController",function($scope){
 	$scope.chunkedData = chunk(siteMapData, 3);
 });
 
-$(document).ready(function(){
+/* $(document).ready(function(){
 	var timer = new RenderTimer(0,30);
 	timer.startTimer();
 	
@@ -188,7 +188,7 @@ function RenderTimer(completedTime,totalTime){
 			var myDoughnutChart = new Chart(ctx).Doughnut(data,option);
 		},1000);
 	}
-}	
+}	 */
 </script>
 <style>
 	.className:hover{
@@ -311,9 +311,8 @@ function RenderTimer(completedTime,totalTime){
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Questions <b class="caret"></b></a>
       		<ul class="dropdown-menu">
-	            <li><a class="menuoptions" href="choosesubject?forwardAction=listquestionbankquestionaction">Add Questions</a></li>
-	            <li><a class="menuoptions" href="subjectchooseaction?successaction=editexam">Search/Edit Questions</a></li>
-	            <li><a class="menuoptions" href="searchexamnonstudent">Attempt Exam</a></li>
+	            <li><a class="menuoptions" href="choosesubject?forwardAction=uploadexams">Add Questions</a></li>
+	            <li><a class="menuoptions" href="choosesubject?forwardAction=searchQuestion">Search/Edit Questions</a></li>
 	         </ul>
       </li>
       </cx:versionswitch>
@@ -321,10 +320,11 @@ function RenderTimer(completedTime,totalTime){
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Exam <b class="caret"></b></a>
       		<ul class="dropdown-menu">
-	            <li><a class="menuoptions" href="choosesubject?forwardAction=listquestionbankquestionaction">Add Exam</a></li>
+	            <li><a class="menuoptions" href="choosesubject?forwardAction=generateexampreaction">Auto Generate Exam</a></li>
 	            <li><a class="menuoptions" href="choosesubject?forwardAction=manualexam">Add Manual Exam</a></li>
 	            <li><a class="menuoptions" href="choosesubject?forwardAction=listExam">Search Exam</a></li>
 	            <li><a class="menuoptions" href="choosesubject?forwardAction=attemptexamlist">Attempt Exam</a></li>
+	            <li><a class="menuoptions" href="choosesubject?forwardAction=studentexammarks">Exam marks</a></li>
 	         </ul>
       </li>
       </cx:versionswitch>
@@ -334,6 +334,7 @@ function RenderTimer(completedTime,totalTime){
       		<ul class="dropdown-menu">
 	            <li><a class="menuoptions" href="createtimetable">Create Time Table</a></li>
 	            <li><a class="menuoptions" href="updatetimetable">View & Update Time Table</a></li>
+	             <li><a class="menuoptions" href="weeklytimetable">Weekly Time Table</a></li>
 	            <!-- <li><a href="showtimetable">See Time Table</a></li>  -->
 	         </ul>
       </li>
@@ -347,7 +348,12 @@ function RenderTimer(completedTime,totalTime){
     	
     	</li>
     <%-- </cx:versionswitch> --%>
-    <li><a href="sendmessage" class="menuoptions">Send Message</b></a></li>
+    <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Send Notice/Message<b class="caret"></b></a>
+    		<ul class="dropdown-menu">
+	            <li><a class="menuoptions" href="sendmessage?to=student">Student</a></li>
+	            <li><a class="menuoptions" href="sendmessage?to=teacher">Teacher</a></li>  
+	         </ul>
+    </li>
     </ul>
 	<ul class="nav navbar-nav navbar-right">
       <li>

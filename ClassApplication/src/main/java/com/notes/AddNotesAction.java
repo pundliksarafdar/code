@@ -111,7 +111,7 @@ public class AddNotesAction extends BaseAction{
 	    	 NotificationGlobalTransation notificationGlobalTransation=new NotificationGlobalTransation();
 	    	 while(i<batchids.length)
 	    	 {
-	    		 notificationGlobalTransation.sendAddNotesNotification(subject, batchids[i]);
+	    		 notificationGlobalTransation.sendAddNotesNotification(subject, batchids[i],Integer.parseInt(division),notes.getClassid());
 	    		 i++;
 	    	 }
 	    	 request.setAttribute("division", division);

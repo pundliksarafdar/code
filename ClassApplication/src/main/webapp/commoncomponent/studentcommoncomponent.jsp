@@ -162,10 +162,11 @@
 </script>
 </head>
 <body>
-
 	<form method="post" action="<c:out value="${forwardAction}" ></c:out>" id="commonform">
 <div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
-	<div class="row">
+	
+		<div align="center" style="font-size: larger;margin-bottom: 15px"><u><c:out value="${lable}"></c:out></u></div>
+		<div class="row">
 		<div class="alert alert-danger" style="padding-bottom: 10px;display:none">
 			 
 		</div>
@@ -212,7 +213,7 @@
 		<div class="col-md-3">
 			
 				<button type="button" class="btn btn-primary"
-					data-loading-text="Loading..." id="submitbtn">Submit</button>
+					data-loading-text="Loading..." id="submitbtn">Continue</button>
 			
 		</div>
 	</div>

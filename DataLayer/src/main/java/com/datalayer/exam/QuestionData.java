@@ -9,6 +9,7 @@ public class QuestionData implements Serializable{
 	private List<String> answers;
 	private List<String> options;
 	private int marks;
+	//private transient int createdby;
 	public int getQuestionNumber() {
 		return questionNumber;
 	}
@@ -39,6 +40,12 @@ public class QuestionData implements Serializable{
 	public void setMarks(int marks) {
 		this.marks = marks;
 	}
-
+	/*public int getCreatedby() {
+		return createdby;
+	}
+	public void setCreatedby(int createdby) {
+		this.createdby = createdby;
+	}*/
+	
 	
 }

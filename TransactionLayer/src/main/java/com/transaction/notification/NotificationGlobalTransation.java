@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import com.classapp.db.notificationpkg.Notification;
 import com.classapp.db.register.AllUserIdDb;
 import com.classapp.notification.AllUserId;
 import com.google.gson.Gson;
@@ -52,17 +53,17 @@ public class NotificationGlobalTransation {
 		return userIds;
 	}
 	
-	public Boolean sendUpdateLectureNotification(String batchname,String Batchid) {
+	public Boolean sendUpdateLectureNotification(String batchname,String Batchid,int div_id,int inst_id) {
 		AllUserIdDb allUserIdDb=new AllUserIdDb();
-		List<String> list=allUserIdDb.getAllUserIdrelatedtoBatch(Batchid);
+		List<String> list=allUserIdDb.getAllUserIdrelatedtoBatch(Batchid,div_id,inst_id);
 		GCMSender gcmSender = new GCMSender();
 		String responce = gcmSender.sendMessage("Lectures of batch "+batchname+" has been updated", (ArrayList<String>) list);
 		return true;
 	}
 	
-	public Boolean sendAddLectureNotification(String batchname,String Batchid) {
+	public Boolean sendAddLectureNotification(String batchname,String Batchid,int div_id,int inst_id) {
 		AllUserIdDb allUserIdDb=new AllUserIdDb();
-		List<String> list=allUserIdDb.getAllUserIdrelatedtoBatch(Batchid);
+		List<String> list=allUserIdDb.getAllUserIdrelatedtoBatch(Batchid,div_id,inst_id);
 		GCMSender gcmSender = new GCMSender();
 		if(list.size()>0){
 		String responce = gcmSender.sendMessage("Lectures of batch "+batchname+" has been added", (ArrayList<String>) list);
@@ -70,9 +71,14 @@ public class NotificationGlobalTransation {
 		return true;
 	}
 	
-	public Boolean sendMessage(String message,String Batchid) {
+	public Boolean sendMessage(String message,Notification notification) {
 		AllUserIdDb allUserIdDb=new AllUserIdDb();
-		List<String> list=allUserIdDb.getAllUserIdrelatedtoBatch(Batchid);
+		List<String> list=new ArrayList<String>();
+		if("ALL".equals(notification.getBatch())){
+			list=allUserIdDb.getAllUserIdrelatedtoinstitute(notification.getInstitute_id());
+		}else{
+		list=allUserIdDb.getAllUserIdrelatedtoBatch(notification.getBatch(),notification.getDiv_id(),notification.getInstitute_id());
+		}
 		GCMSender gcmSender = new GCMSender();
 		if(list.size()>0){
 		String responce = gcmSender.sendMessage(message, (ArrayList<String>) list);
@@ -80,9 +86,9 @@ public class NotificationGlobalTransation {
 		return true;
 	}
 	
-	public Boolean sendAddNotesNotification(String subject,String Batchid) {
+	public Boolean sendAddNotesNotification(String subject,String Batchid,int div_id,int inst_id) {
 		AllUserIdDb allUserIdDb=new AllUserIdDb();
-		List<String> list=allUserIdDb.getAllUserIdrelatedtoBatch(Batchid);
+		List<String> list=allUserIdDb.getAllUserIdrelatedtoBatch(Batchid,div_id,inst_id);
 		GCMSender gcmSender = new GCMSender();
 		if(list.size()>0){
 		String responce = gcmSender.sendMessage("New Notes for "+subject+" has been added", (ArrayList<String>) list);

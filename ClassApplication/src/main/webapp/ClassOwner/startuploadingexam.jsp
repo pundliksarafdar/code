@@ -9,22 +9,25 @@ $(document).ready(function(){
 	var currentOptionUploadImageBtn;
 	indexOption=$("#indexOption").val();
 	$(".addOptionUploadExam").on('click',function(){
-		var submitquestionsuploadoptionsText = "<div class='form-group'><div class='input-group'><span class='input-group-addon'><input type='checkbox' name='answersOptionCheckBox' value='"+indexOption+"' id='answersOptionCheckBox"+indexOption+"'></span><textarea class='form-control' name='answersOptionText'></textarea><span class='input-group-addon'><i class='glyphicon glyphicon-picture uploadAnswerImage'></i></span><span class='input-group-addon'><i class='glyphicon glyphicon-trash removeOption' id='remove/"+indexOption+"'></i></span></div><div id='optionImagesDiv"+indexOption+"'></div></div>";
+		var submitquestionsuploadoptionsText = "<div class='form-group'><div class='input-group'><span class='input-group-addon'><input type='checkbox' name='answersOptionCheckBox' value='"+indexOption+"' id='answersOptionCheckBox"+indexOption+"'></span><textarea class='form-control' name='answersOptionText'></textarea><span class='input-group-addon'><i class='glyphicon glyphicon-picture uploadAnswerImage'></i></span><span class='input-group-addon'><i class='glyphicon glyphicon-trash removeOption' id='removeOption_"+indexOption+"'></i></span></div><div id='optionImagesDiv"+indexOption+"'></div></div>";
 		$("#submitquestionsuploadoptions").append(submitquestionsuploadoptionsText);
 		indexOption++;
 	});
 	
 	$('form[action="uploadexams"]').on("click",".removeOption",function(){
-		var removeid=$(this).prop("id").split("/")[1];
+		var removeid=$(this).prop("id").split("_")[1];
 		if(removeid < indexOption){
 		while(removeid <= indexOption){
-			var answersOptionCheckBoxid="#answersOptionCheckBox"+(removeid+1);
+			var answersOptionCheckBoxid="#answersOptionCheckBox"+(parseInt(removeid)+1);
 		$(answersOptionCheckBoxid).val(removeid);	
-		$(answersOptionCheckBoxid).prop("id","answersOptionCheckBox"+(removeid-1));
+		$(answersOptionCheckBoxid).prop("id","answersOptionCheckBox"+(parseInt(removeid)));
+		var newremoveID="#removeOption_"+(parseInt(removeid)+1);
+		$(newremoveID).prop("id","removeOption_"+(parseInt(removeid)));
 		removeid++;
 		}	
 		}
 		$(this).parents(".form-group").remove();
+		indexOption--;
 	});
 	
 	$('form[action="uploadexams"]').on("click",".uploadAnswerImage",function(){
@@ -102,16 +105,19 @@ $(document).ready(function(){
   </div>
 </div>
 <div>
+<c:if test="${actionname eq 'submitquestions'}">
 <c:choose>
-<c:when test="${(institute != null) && (currentPage eq 0)}">
+<c:when test="${(institute != null) && (institute != '') && (currentPage eq 0)}">
 <a type="button" class="btn btn-primary" href="teachercommoncomponent?forwardAction=uploadexams" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Back</a>
 </c:when>
-<c:when test="${(institute == null) && (currentPage eq 0)}"></c:when>
-<c:when test="${(institute != null) && (currentPage ne 0)}"></c:when>
 <c:otherwise>
-<a type="button" class="btn btn-primary" href="choosesubject?forwardAction=listquestionbankquestionaction" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Back</a>
+<a type="button" class="btn btn-primary" href="choosesubject?forwardAction=uploadexams" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Back</a>
  </c:otherwise>
  </c:choose>
+ </c:if>
+ <div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+			<div align="center" style="font-size: larger;">Add Question</div>
+</div>
  <form action="uploadexams" method="post" enctype="multipart/form-data" id="uploadexams" >
  <input type="hidden" id="batch" name="batch" value="<c:out value="${batch}" ></c:out>">
 <input type="hidden" id="division" name="division" value="<c:out value="${division}" ></c:out>">
@@ -134,10 +140,10 @@ $(document).ready(function(){
 			</div>
 			<div class="form-group">
 				<label for="questionmarks">Marks</label>
-				<input type="number" class="form-control" id="questionmarks" name="questionmarks" maxlength="5" size="5" style="width: 10%;" value="<c:out value="${requestScope.questionData.marks}"></c:out>"></input>
+				<input type="number" class="form-control" id="questionmarks" name="questionmarks" maxlength="5" min="0" size="5" style="width: 10%;" value="<c:out value="${requestScope.questionData.marks}"></c:out>"></input>
 			</div>
 			<div class="form-group">
-				<input type="file" class="btn btn-default" onchange="readURL(this,'fileList');" id="submitquestionsuploadfile" multiple name="questionImages">
+				<input type="file" class="btn btn-default" onchange="readURL(this,'fileList');" id="submitquestionsuploadfile" multiple name="questionImages" value="<c:out value="${requestScope.questionData.marks}"></c:out>">
 			</div>
 			<div id="fileList">
 			</div>
@@ -160,10 +166,10 @@ $(document).ready(function(){
 							</c:forEach>
 							<c:choose>
 								<c:when test="${ansstatus eq 'Y'}">
-								<input type="checkbox" name='answersOptionCheckBox' id='answersOptionCheckBox'+'<c:out value="${counter.index}"></c:out>' checked="checked" value='<c:out value="${counter.index}"></c:out>'>
+								<input type="checkbox" name='answersOptionCheckBox' id='answersOptionCheckBox<c:out value="${counter.index}"></c:out>' checked="checked" value='<c:out value="${counter.index}"></c:out>'>
 								</c:when>
 								<c:otherwise>
-								<input type="checkbox" name='answersOptionCheckBox'+'<c:out value="${counter.index}"></c:out>' value='<c:out value="${counter.index}"></c:out>'>
+								<input type="checkbox" name='answersOptionCheckBox' id='answersOptionCheckBox<c:out value="${counter.index}"></c:out>' value='<c:out value="${counter.index}"></c:out>'>
 								</c:otherwise>
 							</c:choose>
 							
@@ -177,7 +183,7 @@ $(document).ready(function(){
 						<span class='input-group-addon'> <i
 							class='glyphicon glyphicon-picture uploadAnswerImage'></i>
 						</span> <span class='input-group-addon'> <i
-							class='glyphicon glyphicon-trash removeOption'></i>
+							class='glyphicon glyphicon-trash removeOption' id='removeOption_<c:out value="${counter.index}"></c:out>'></i>
 						</span>
 					</div>
 					<div id='optionImagesDiv"+indexOption+"'></div>
@@ -188,7 +194,9 @@ $(document).ready(function(){
 		</div>
 		<div class="form-group">
 			<input type="button" class="btn btn-default startuplodingexamSave" value="Save"/>
-			<input type="button" class="btn btn-default CancleUploading" value="Cancle" id="CancleUploading"/>
+			<c:if test="${actionname ne 'submitquestions'}">
+			<input type="button" class="btn btn-default CancleUploading" value="Cancel" id="CancleUploading"/>
+			</c:if>
 		</div>
 </form>
 </div>

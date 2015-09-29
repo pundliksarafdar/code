@@ -19,7 +19,10 @@ import com.user.UserBean;
 public class ManageBatchAction extends BaseAction{
 	int divisionSize;
 	int batchSize;
-	
+	int currentPage;
+	int totalPages;
+	int endIndex;
+	int startIndex;
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		BatchHelperBean batchHelperBean= new BatchHelperBean(userBean.getRegId());
@@ -39,6 +42,30 @@ public class ManageBatchAction extends BaseAction{
 			divisionNames.add(division.getDivisionName());
 			Streams.add(division.getStream());
 			ids.add(division.getDivId()+"");
+		}
+		if(batchList!=null){
+			int totalcount=batchList.size();
+			int remainder=0;
+			if(totalcount>0){
+				totalPages=totalcount/10;
+				remainder=totalcount%10;
+				if (remainder>0) {
+					totalPages++;
+				}
+		
+			}
+			if (currentPage==0) {
+				currentPage++;
+			}
+			
+			if(currentPage>totalPages){
+				currentPage--;
+			}
+			startIndex=(currentPage-1)*10;
+			endIndex=startIndex+10;
+			if(currentPage==totalPages && remainder>0){
+				endIndex=startIndex+remainder;
+			}
 		}
 		request.setAttribute(Constants.DIVISION_NAMES, divisionNames);
 		request.setAttribute("streams", Streams);
@@ -60,6 +87,38 @@ public class ManageBatchAction extends BaseAction{
 
 	public void setBatchSize(int batchSize) {
 		this.batchSize = batchSize;
+	}
+
+	public int getCurrentPage() {
+		return currentPage;
+	}
+
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
+	}
+
+	public int getTotalPages() {
+		return totalPages;
+	}
+
+	public void setTotalPages(int totalPages) {
+		this.totalPages = totalPages;
+	}
+
+	public int getEndIndex() {
+		return endIndex;
+	}
+
+	public void setEndIndex(int endIndex) {
+		this.endIndex = endIndex;
+	}
+
+	public int getStartIndex() {
+		return startIndex;
+	}
+
+	public void setStartIndex(int startIndex) {
+		this.startIndex = startIndex;
 	}
 	
 	

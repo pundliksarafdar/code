@@ -33,34 +33,39 @@ $(document).ready(function(){
 		$("#searchform").submit();
 	});
 	
-	$(".page").on("click",function(){
+	$(".page").on("click",function(e){
 		$("form#paginateform #currentPage").val($(this).text());
 		$("#paginateform").submit();
+		e.preventDefault();
 	});
 	
-	$(".start").on("click",function(){
-		$("form#paginateform #currentPage").val("1");
+	$(".start").on("click",function(e){
+		$("form#paginateform #currentPage").val(parseInt($("form#paginateform #currentPage").val())-1);
 		$("#paginateform").submit();
+		e.preventDefault();
 	});
 	
-	$(".end").on("click",function(){
-		$("form#paginateform #currentPage").val($("#totalPages").val());
+	$(".end").on("click",function(e){
+		$("form#paginateform #currentPage").val(parseInt($("form#paginateform #currentPage").val())+1);
 		$("#paginateform").submit();
+		e.preventDefault();
 	});
 	
-	$(".editQuestion").on("click",function(){
+	$(".editQuestion").on("click",function(e){
 		$("#questionNumber").val($(this).prop("id"));
 		$("#actionform").attr("action","editquestion");
 		$("#actionname").val("editquestion");
 		$("#actionform").submit();
+		e.preventDefault();
 	});
 	
-	$(".deleteQuestion").on("click",function(){
+	$(".deleteQuestion").on("click",function(e){
 		$("#questionNumber").val($(this).prop("id"));
 		var subject=$("form#actionform #subject").val();
 		var division=$("form#actionform #division").val();
 		var institute=$("form#actionform #institute").val();
 		var questionNumber=$("form#actionform #questionNumber").val();
+		e.preventDefault();
 		$.ajax({
 			 
 			   url: "classOwnerServlet",
@@ -192,28 +197,31 @@ function resetForm(){
 </script>
 </head>
 <body>
-			<div class="container" style="margin-bottom: 5px">
+			<h3><font face="cursive"><u>Search Questions</u></font></h3>
+			<div class="" style="margin-bottom: 5px">
 			<c:choose>
-			<c:when test="${institute ne null }">
+			<c:when test="${(institute ne null) && (institute ne '') }">
 			<a type="button" class="btn btn-primary" href="teachercommoncomponent?forwardAction=searchQuestion" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
 			</c:when>
 			<c:otherwise>
-			<a type="button" class="btn btn-primary" href="choosesubject?forwardAction=listquestionbankquestionaction" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
+			<a type="button" class="btn btn-primary" href="choosesubject?forwardAction=searchQuestion" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
 			</c:otherwise>
 			</c:choose>
 			</div>
-			<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+			<div class="bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+			<div align="center" style="font-size: larger;"><u>Search Questions</u></div>
 			<div class="btn-group" role="group" aria-label="..." style="width:90%">
 			<form action="" id="uploadform" method="post">
 			<input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
 			<input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
 			<input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
 			
-			  <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" >Summary</button>
-			  <a type="button" class="btn btn-default" id="uploadexams">Add new Question</a>
-			  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#QuestionBankQuestionListQuestionSearchModal">Search</button>
-			  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#QuestionBankQuestionListCreateExamhModal">Create Exam</button>
+			  <!-- <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" >Summary</button>
+			  <a type="button" class="btn btn-default" id="uploadexams">Add new Question</a> -->
+			  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#QuestionBankQuestionListQuestionSearchModal">Advance Search</button>
+			  <!-- <button type="button" class="btn btn-default" data-toggle="modal" data-target="#QuestionBankQuestionListCreateExamhModal">Create Exam</button> -->
 			</form>
+			</div>
 			</div>
 			<c:if test="${(questionDataList != null) && (totalPages!=0)}">
 	<div class="container">
@@ -234,12 +242,22 @@ function resetForm(){
         <td><c:out value="${counter.count}"></c:out></td>
         </c:if>
         <c:if test="${currentPage gt 1 }">
-        <td><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
+        <td><c:out value="${counter.count + ((currentPage-1)*50)}"></c:out></td>
         </c:if>
         <td><c:out value="${item.question}"></c:out></td>
+        <c:choose>
+        <c:when test="${role eq 2 && createdIds[counter.count-1] ne user.regId }">
+		<td><a class="editQuestion"><button class="btn btn-primary" disabled="disabled">Edit</button></a></td>
+        <td><a class="deleteQuestion"><button class="btn btn-danger" disabled="disabled">Delete</button></a></td>
+        </c:when>
+        <c:otherwise>
         <td><a class="editQuestion" href="#" id="<c:out value="${item.questionNumber}"></c:out>"><button class="btn btn-primary">Edit</button></a></td>
         <td><a class="deleteQuestion" href="#" id="<c:out value="${item.questionNumber}"></c:out>"><button class="btn btn-danger">Delete</button></a></td>
-      </tr>
+        </c:otherwise>
+        </c:choose>
+        <%-- <td><a class="editQuestion" href="#" id="<c:out value="${item.questionNumber}"></c:out>"><button class="btn btn-primary">Edit</button></a></td>
+        <td><a class="deleteQuestion" href="#" id="<c:out value="${item.questionNumber}"></c:out>"><button class="btn btn-danger">Delete</button></a></td>
+    --%>   </tr>
       </c:forEach>
     </tbody>
   </table>
@@ -268,9 +286,16 @@ function resetForm(){
   <input type="hidden" name="searchedExam" value='<c:out value="${searchedExam}"></c:out>'>
   <input type="hidden" name="searchedRep" value='<c:out value="${searchedRep}"></c:out>'>
   <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
+  <input type="hidden" name="paginationstartindex"  value="<c:out value="${paginationstartindex}"></c:out>"/>
+  <input type="hidden" name="paginationendindex" value="<c:out value="${paginationendindex}"></c:out>"/>
   <ul class="pagination">
+  <c:if test="${currentPage eq 1 }">
+  <li><a>&laquo;</a></li>
+  </c:if>
+  <c:if test="${currentPage ne 1 }">
   <li><a class="start" >&laquo;</a></li>
-  <c:forEach var="item" begin="1" end="${totalPages}">
+  </c:if>
+  <c:forEach var="item" begin="${paginationstartindex}" end="${paginationendindex}">
   <c:if test="${item eq currentPage}">
   <li class="active"><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
   </c:if>
@@ -278,12 +303,19 @@ function resetForm(){
   <li><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
   </c:if>
   </c:forEach>
+  <c:if test="${currentPage eq totalPages }">
+  <li><a>&raquo;</a></li>
+  </c:if>
+	<c:if test="${currentPage ne totalPages }">
   <li><a href="#" class="end">&raquo;</a></li>
+  </c:if>
 </ul>
 </form>
 </div>
 	</c:if>	
-
+<c:if test="${(totalPages==0)}">
+<div class="alert alert-info" align="center">Questions not available for selected criteria.</div>
+</c:if>
 	
 	
 <div class="modal fade" id="QuestionBankQuestionListQuestionSearchModal">
@@ -317,7 +349,7 @@ function resetForm(){
 		<div class="form-group">
 		<label for="-1">Choose Marks</label>	
 		  <select  class="btn btn-default" name="selectedMarks">
-			<option>Select</option>
+			<option value="-1">Select</option>
 			<c:forEach items="${marks}" var="item">
     			<option value="<c:out value="${item}"></c:out>"><c:out value="${item}"></c:out></option>
 			</c:forEach>

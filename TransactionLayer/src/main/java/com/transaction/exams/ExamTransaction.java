@@ -179,6 +179,32 @@ public class ExamTransaction {
 		ExamDB db=new ExamDB();
 		return db.isQuestionAvailableInExam(inst_id, sub_id, div_id, ques_id);
 	}
+	
+	public boolean deleteExamrelatedtosubject(int sub_id) {
+		ExamDB db=new ExamDB();
+		return db.deleteExamrelatedtosubject(sub_id);
+	}
+	
+	public boolean deleteExamrelatedtodivision(int div_id) {
+		ExamDB db=new ExamDB();
+		return db.deleteExamrelatedtodivision(div_id);
+	}
+	
+	public boolean deleteExam(int exam_id,int inst_id,int sub_id,int div_id) {
+		ExamDB db=new ExamDB();
+		return db.deleteExam(exam_id, inst_id, sub_id, div_id);
+	}
+	
+	public boolean removebatchfromexam(int inst_id,int div_id,String batchid) {
+		ExamDB db=new ExamDB();
+		return db.removebatchfromexam(inst_id, div_id, batchid);
+	}
+	
+	public boolean isExamExists(int inst_id,String examname,String examID) {
+		ExamDB db=new ExamDB();
+		return db.isExamExists(inst_id, examname,examID);
+	}
+	
 	public static void main(String[] args) {
 		/*
 		ExamData examData = new ExamData();

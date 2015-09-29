@@ -191,7 +191,7 @@ $(document).ready(function(){
 				}
 			j++;
 			}
-		alert(batch);
+		
 	
 		if(file==""){
 			fileerror.html("Please select file");
@@ -304,8 +304,6 @@ function showalert(){
 </script>
 </head>
 <body onload="showalert()">
-<h3><font face="cursive">Add Notes</font></h3>
-<hr>
 <div align="center">
 <%
 String notes=(String)request.getAttribute("notes");
@@ -332,38 +330,29 @@ if(notes!=null){
 
 </div>
 <%} %>
-
+<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+			<div align="center" style="font-size: larger;">Add notes</div>
+		
 <form action="upload" method="post" enctype="multipart/form-data" role="form" id="form">
 	<input type="hidden" id="batch" name="batch" value='<c:out value="${batch}" ></c:out>'>
 	<input type="hidden" id="division" name="division" value='<c:out value="${division}" ></c:out>'>
 	<input type="hidden" id="subject" name="subject" value='<c:out value="${subject}" ></c:out>'>
 	<input type="hidden" id="institute" name="institute" value='<c:out value="${institute}" ></c:out>'>
-	<div class="form-group">
-	<label for="notesname"  class="col-sm-4 control-label" align="right">Notes Name :</label>
-	<div class="col-sm-5" align="left">
-	<input type="text" name="notesname" class="form-control" id="notesname" maxlength="50">
-	</div>
-	<div class="col-sm-2" align="left">
-	<span class="error" id="notesnameerror" name="notesnameerror"></span>
-	</div>
-	</div>
-	
-	<div class="form-group">
-	<label for="myFile"  class="col-sm-4 control-label" align="right">Upload your file :</label>
-	<div class="col-sm-5" align="left">
-      <input type="file" name="myFile" accept=".pdf" class="form-control"  size="100px" id="myfile">
+	<div class="row">
+		<div class="col-md-3">
+		<label for="notesname"  class="control-label" align="right">Notes Name :</label>
+		<input type="text" name="notesname" class="form-control" id="notesname" maxlength="50">
+		<span class="error" id="notesnameerror" name="notesnameerror"></span>
+		</div>
+		<div class="col-md-3">
+		<label for="myFile"  class="control-label" align="right">Upload your file :</label>
+		<input type="file" name="myFile" accept=".pdf" class="form-control"  size="100px" id="myfile">
+		<span id="fileerror" class="error"></span>
+		</div>
+		<div class="col-md-3">
+      <button type="submit" class="btn btn-info" id="submit" style="margin-top: 22px">Submit</button>
       </div>
-      <div class="col-sm-2" align="left">
-      <span id="fileerror" class="error"></span>
-      </div>
-      </div>
-      
-     <div class="form-group">
-  	 <label for="role"  class="col-sm-4 control-label"></label>
-  	<div class="col-sm-5" align="left">
-      <button type="submit" class="btn btn-info" id="submit">Submit</button>
-      </div>
-     </div>
+		</div>
      </form>
    </div>
 </body>

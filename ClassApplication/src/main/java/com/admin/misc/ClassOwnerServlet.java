@@ -8,9 +8,11 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -209,6 +211,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			String batchdivision=req.getParameter("batchdivision");
 			req.getSession().setAttribute("pagenumber",pagenumber);
 			req.getSession().setAttribute("batchID",batchID);
+			req.getSession().setAttribute("batchdivision",batchdivision);
 			if(studentLoginName.equals("")){
 				respObject.addProperty(STATUS, "error");
 				respObject.addProperty(MESSAGE, "Login name can not be blank! Please enter login name of Student. ");											
@@ -226,9 +229,19 @@ public class ClassOwnerServlet extends HttpServlet{
 				studentDetails.setStudentId(student.getStudent_id());
 				DivisionTransactions divisionTransactions=new DivisionTransactions();
 				Division  division=divisionTransactions.getDidvisionByID(student.getDiv_id());
+				List<Batch> list=batchTransactions.getAllBatchesOfDivision(student.getDiv_id()+"", userBean.getRegId());
+				StringBuilder allbatchIDs=new StringBuilder();
+				StringBuilder allbatchnames=new StringBuilder();
+				for (int i = 0; i < list.size(); i++) {
+					allbatchIDs.append(list.get(i).getBatch_id()+",");
+					allbatchnames.append(list.get(i).getBatch_name()+",");
+				}
+				allbatchIDs.deleteCharAt(allbatchIDs.length()-1);
+				allbatchnames.deleteCharAt(allbatchnames.length()-1);
 				List<Batch> batchs=new ArrayList<Batch>();
 				if(!student.getBatch_id().equals("")){
 				String batchids[]=student.getBatch_id().split(",");
+				batchdivision=student.getDiv_id()+"";
 				for (int i = 0; i < batchids.length; i++) {
 					Batch batch=batchTransactions.getBatch(Integer.parseInt(batchids[i]),userBean.getRegId(),Integer.parseInt(batchdivision));
 					batchs.add(batch);
@@ -248,6 +261,11 @@ public class ClassOwnerServlet extends HttpServlet{
 				respObject.addProperty("studentId", student.getStudent_id());
 				respObject.addProperty("studentFname", registerBean.getFname());
 				respObject.addProperty("studentLname", registerBean.getLname());
+				respObject.addProperty("studentbatchIds", student.getBatch_id());
+				respObject.addProperty("studentbatchnames", batchName.toString());
+				respObject.addProperty("allbatchnames", allbatchnames.toString());
+				respObject.addProperty("allbatchIDs", allbatchIDs.toString());
+				respObject.addProperty("studentdivision", division.getDivisionName());
 				found=true;
 			}
 			
@@ -400,6 +418,8 @@ public class ClassOwnerServlet extends HttpServlet{
 			int deletStudentId=Integer.parseInt(req.getParameter("deleteStudentId"));										
 			
 				if(studentTransaction.deleteStudent(deletStudentId, regId)){
+					StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
+					marksTransaction.deleteStudentMarksrelatedtostudentID(regId, deletStudentId);
 					respObject.addProperty(STATUS, "success");
 					respObject.addProperty(MESSAGE, "Student Successfully deleted .");
 				}else{
@@ -467,15 +487,29 @@ public class ClassOwnerServlet extends HttpServlet{
 					
 					//printWriter.write(respObject.toString());
 				}else if(Constants.SEARCH_TEACHER.equals(methodToCall)){
-					
+					UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 					String teacherLoginName=req.getParameter("teacherLgName");
 					if(teacherLoginName.equals("")){
 						respObject.addProperty(STATUS, "error");
 						respObject.addProperty(MESSAGE, "Login name can not be blank! Please enter login name of teacher");											
 					}else{
 					List<TeacherDetails> teachers=(List<TeacherDetails>) req.getSession().getAttribute(Constants.TEACHER_LIST);
-					
+					SubjectTransaction subjectTransaction=new SubjectTransaction();
+					List<Subjects> list=subjectTransaction.getAllClassSubjects(userBean.getRegId());
 					req.getSession().setAttribute("teacherSearchResultSubjects", null);
+					String allsubjectname="";
+					String allsubjectIds="";
+					if(list!=null){
+						for (int i = 0; i < list.size(); i++) {
+							if(i==0){
+								allsubjectname=list.get(i).getSubjectName();
+								allsubjectIds=list.get(i).getSubjectId()+"";
+							}else{
+								allsubjectname=allsubjectname+","+list.get(i).getSubjectName();
+								allsubjectIds=allsubjectIds+","+list.get(i).getSubjectId()+"";
+							}
+						}
+					}
 					boolean found=false;
 					for (TeacherDetails teacher :teachers) {
 						if(teacher.getTeacherBean().getLoginName().equals(teacherLoginName)){
@@ -484,6 +518,12 @@ public class ClassOwnerServlet extends HttpServlet{
 							respObject.addProperty("teacherId", teacher.getTeacherId());
 							respObject.addProperty("teacherFname", teacher.getTeacherBean().getFname());
 							respObject.addProperty("teacherLname", teacher.getTeacherBean().getLname());
+							respObject.addProperty("teacherssubjectname", teacher.getSubjectNames());
+							respObject.addProperty("teacherssubjectIds", teacher.getSubjectIds());
+							respObject.addProperty("teachersloginname", teacher.getTeacherBean().getLoginName());
+							respObject.addProperty("allsubjectname", allsubjectname);
+							respObject.addProperty("allsubjectIds", allsubjectIds);
+							respObject.addProperty("teacherssuffix", teacher.getSuffix());
 							found=true;
 							break;
 						}
@@ -550,7 +590,8 @@ public class ClassOwnerServlet extends HttpServlet{
 			BatchTransactions batchTransactions=new BatchTransactions();
 			List<Subjects> Batchsubjects=null;
 			if(userBean.getRole()==3){
-				Batchsubjects=(List<Subjects>)batchTransactions.getBatcheSubject(batchID,Integer.parseInt(institute),Integer.parseInt(batchdivision));
+				Student student=(Student) studentTransaction.getclassStudent(userBean.getRegId(), Integer.parseInt(institute));
+				Batchsubjects=(List<Subjects>)batchTransactions.getBatcheSubject(batchID,Integer.parseInt(institute),student.getDiv_id());
 			}else{
 				Batchsubjects=(List<Subjects>)batchTransactions.getBatcheSubject(batchID,userBean.getRegId(),Integer.parseInt(batchdivision));
 			}
@@ -791,7 +832,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				if(!dateString[i].equals("undefined"))
 				{
 			String[] dat=dateString[i].split("/");
-			Date date=new Date(Integer.parseInt(dat[2])-1900, Integer.parseInt(dat[0])-1,Integer.parseInt(dat[1]));
+			Date date=new Date(Integer.parseInt(dat[2])-1900, Integer.parseInt(dat[1])-1,Integer.parseInt(dat[0]));
 			dateList.add(date);
 				}
 			}
@@ -799,14 +840,14 @@ public class ClassOwnerServlet extends HttpServlet{
 			String lectureexists="";
 			if(validatetime(stList, edList,dateList)){
 			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
-			String exists=scheduleTransaction.isExistsLecture(regId+"", batchID, subList, teacherList, stList, edList, dateList);
+			String exists=scheduleTransaction.isExistsLecture(regId+"", batchID, subList, teacherList, stList, edList, dateList,Integer.parseInt(batchdivision));
 			
 			if(exists.equals(""))
 			{
 			scheduleTransaction.addLecture(regId+"", batchID, subList, teacherList, stList, edList, dateList,Integer.parseInt(batchdivision));
 			Batch batch=batchTransactions.getBatch(Integer.parseInt(batchID),userBean.getRegId(),Integer.parseInt(batchdivision));
 			NotificationGlobalTransation notificationGlobalTransation=new NotificationGlobalTransation();
-			notificationGlobalTransation.sendAddLectureNotification(batch.getBatch_name(),batchID);
+			notificationGlobalTransation.sendAddLectureNotification(batch.getBatch_name(),batchID,Integer.parseInt(batchdivision),regId);
 			}else{
 				String error[]= exists.split(",");
 				for(i=0;i<error.length;i++)
@@ -924,11 +965,13 @@ public class ClassOwnerServlet extends HttpServlet{
 			String batchdivision=req.getParameter("batchdivision");
 			String date=req.getParameter("date");
 			String dateString[]=date.split("/");
-			Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
+			Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[1])-1,Integer.parseInt( dateString[0]));
 			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 			List<Schedule> list=null;
 			if(userBean.getRole()==3){
-			list=scheduleTransaction.getSchedule(Integer.parseInt(batchname),date2,studentclass,Integer.parseInt(batchdivision));
+			StudentTransaction studentTransaction=new StudentTransaction();
+			Student student=studentTransaction.getclassStudent(userBean.getRegId(), studentclass);
+			list=scheduleTransaction.getSchedule(Integer.parseInt(batchname),date2,studentclass,student.getDiv_id());
 			}else{
 			list=scheduleTransaction.getSchedule(Integer.parseInt(batchname),date2,userBean.getRegId(),Integer.parseInt(batchdivision));
 			}
@@ -981,14 +1024,14 @@ public class ClassOwnerServlet extends HttpServlet{
 					tlastname=teacherlist.get(counter).getLname();
 					starttime=formattedstarttime;
 					endtime=formattedendtime;
-					dates=list.get(counter).getDate()+"";
+					dates=new SimpleDateFormat("dd-MM-yyyy").format(list.get(counter).getDate());
 				}else{
 					subjects=subjects+","+subjectList.get(counter);
 					tfirstname=tfirstname+","+teacherlist.get(counter).getFname();
 					tlastname=tlastname+","+teacherlist.get(counter).getLname();
 					starttime=starttime+","+formattedstarttime;
 					endtime=endtime+","+formattedendtime;
-					dates=dates+","+list.get(counter).getDate();
+					dates=dates+","+new SimpleDateFormat("dd-MM-yyyy").format(list.get(counter).getDate());
 					
 				}
 				counter++;
@@ -1043,7 +1086,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			String batchname=	req.getParameter("batchname");
 			String date=req.getParameter("date");
 			String dateString[]=date.split("/");
-			Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
+			Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[1])-1,Integer.parseInt( dateString[0]));
 			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 			List<Schedule> list=scheduleTransaction.getSchedule(Integer.parseInt(batchname),date2,userBean.getRegId(),Integer.parseInt(batchdivision));
 			SubjectTransaction subjectTransaction=new SubjectTransaction();
@@ -1090,7 +1133,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				}
 				innercounter++;
 			}
-			SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/yyyy");
+			SimpleDateFormat sdf=new SimpleDateFormat("dd/MM/yyyy");
 			int starthour=list.get(counter).getStart_time().getHours();
 			int startminute=list.get(counter).getStart_time().getMinutes();
 			int endthour=list.get(counter).getEnd_time().getHours();
@@ -1250,7 +1293,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			for(i=0;i<dateString.length;i++)
 			{
 			String[] dat=dateString[i].split("/");
-			Date date=new Date(Integer.parseInt(dat[2])-1900, Integer.parseInt(dat[0])-1,Integer.parseInt(dat[1]));
+			Date date=new Date(Integer.parseInt(dat[2])-1900, Integer.parseInt(dat[1])-1,Integer.parseInt(dat[0]));
 			dateList.add(date);
 			}
 			String teacherbusy="";
@@ -1265,7 +1308,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			BatchTransactions batchTransactions=new BatchTransactions();
 			Batch batch=batchTransactions.getBatch(Integer.parseInt(batchID),userBean.getRegId(),Integer.parseInt(batchdivision));
 			NotificationGlobalTransation notificationGlobalTransation=new NotificationGlobalTransation();
-			notificationGlobalTransation.sendUpdateLectureNotification(batch.getBatch_name(),batchID);
+			notificationGlobalTransation.sendUpdateLectureNotification(batch.getBatch_name(),batchID,Integer.parseInt(batchdivision),regId);
 			}else{
 				String error[]= exists.split(",");
 				for(i=0;i<error.length;i++)
@@ -1303,22 +1346,45 @@ public class ClassOwnerServlet extends HttpServlet{
 			
 		}
 		else if(Constants.SEARCH_BATCH.equals(methodToCall)){
-			
+			UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 			String batchName=req.getParameter("batchName");
 			if(batchName.equals("")){
 				respObject.addProperty(STATUS, "error");
 				respObject.addProperty(MESSAGE, "batch name can not be blank! Please enter batch name of Student. ");											
 			}else{
 			List<BatchDetails> batches=(List<BatchDetails>) req.getSession().getAttribute(com.config.Constants.BATCHES_LIST);
+			SubjectTransaction subjectTransaction=new SubjectTransaction();
+			List<Subjects> list=subjectTransaction.getAllClassSubjects(userBean.getRegId());
 			
+			String allsubjectname="";
+			String allsubjectIds="";
+			if(list!=null){
+				for (int i = 0; i < list.size(); i++) {
+					if(i==0){
+						allsubjectname=list.get(i).getSubjectName();
+						allsubjectIds=list.get(i).getSubjectId()+"";
+					}else{
+						allsubjectname=allsubjectname+","+list.get(i).getSubjectName();
+						allsubjectIds=allsubjectIds+","+list.get(i).getSubjectId()+"";
+					}
+				}
+			}
 			req.getSession().setAttribute("batchSearchResult", null);
 			boolean found=false;
 			for (BatchDetails batch :batches) {
 				if(batch.getBatch().getBatch_name().equals(batchName)){
+					
 					req.getSession().setAttribute("batchSearchResult", batch);
 					req.getSession().setAttribute("batchSearchResultBatch", batch);
 					respObject.addProperty("batchId", batch.getBatch().getBatch_id());
 					respObject.addProperty("batchName", batch.getBatch().getBatch_name());
+					respObject.addProperty("batchdivisionname", batch.getDivision().getDivisionName());
+					respObject.addProperty("batchdivisionID", batch.getDivision().getDivId());
+					respObject.addProperty("batchdivisionstream", batch.getDivision().getStream());
+					respObject.addProperty("batchsubjectIds", batch.getSubjectIds());
+					respObject.addProperty("batchsubjectnames", batch.getSubjectNames());
+					respObject.addProperty("allsubjectname", allsubjectname);
+					respObject.addProperty("allsubjectIds", allsubjectIds);
 					found=true;
 					break;
 				}
@@ -1387,7 +1453,11 @@ public class ClassOwnerServlet extends HttpServlet{
 			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 			scheduleTransaction.deleteSchedulerelatedoBatch(batch);
 			StudentTransaction studentTransaction=new StudentTransaction();
-			studentTransaction.removeBatchFromstudentslist(deleteBatchId+"");
+			studentTransaction.removeBatchFromstudentslist(deleteBatchId+"",userBean.getRegId(),batchdivisionid);
+			NotesTransaction notesTransaction=new NotesTransaction();
+			notesTransaction.removebatchfromnotes(userBean.getRegId(), batchdivisionid, deleteBatchId+"");
+			ExamTransaction examTransaction=new ExamTransaction();
+			examTransaction.removebatchfromexam(userBean.getRegId(), batchdivisionid, deleteBatchId+"");
 				if(batchTransactions.deleteBatch(batch)){
 					respObject.addProperty(STATUS, "success");
 					respObject.addProperty(MESSAGE, "Batch Successfully deleted .");
@@ -1455,7 +1525,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			String classid=req.getParameter("classid");
 			String date=req.getParameter("date");
 			String dateString[]=date.split("/");
-			Date scheduledate=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
+			Date scheduledate=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[1])-1,Integer.parseInt( dateString[0]));
 			ScheduleTransaction  scheduleTransaction=new ScheduleTransaction();
 			List<Schedule> schedules= scheduleTransaction.getTeachersSchedule(Integer.parseInt(classid), regId,scheduledate);
 			BatchTransactions batchTransactions=new BatchTransactions();
@@ -1468,20 +1538,30 @@ public class ClassOwnerServlet extends HttpServlet{
 			String endtime="";
 			String subject="";
 			String batch="";
-			
+			DateFormat sdf = new SimpleDateFormat("kk:mm");
+			DateFormat f2 = new SimpleDateFormat("h:mma");
 			while(counter<schedules.size()){
+				try {
+					java.util.Date start=sdf.parse(schedules.get(counter).getStart_time().toString());
+					java.util.Date end=sdf.parse(schedules.get(counter).getEnd_time().toString());
+			
 				if(counter==0)
 				{
-					starttime=schedules.get(counter).getStart_time().toString();
-					endtime=schedules.get(counter).getEnd_time().toString();
+					starttime=f2.format(start).toUpperCase();
+					endtime=f2.format(end).toUpperCase();
 					subject=subjects.get(counter);
 					batch=batchs.get(counter).getBatch_name();
 				}else{
-					starttime=starttime+","+ schedules.get(counter).getStart_time().toString();
-					endtime=endtime+","+ schedules.get(counter).getEnd_time().toString();
+					starttime=starttime+","+ f2.format(start).toUpperCase();
+					endtime=endtime+","+ f2.format(end).toUpperCase();
 					subject=subject+","+subjects.get(counter);
 					batch=batch+","+ batchs.get(counter).getBatch_name();
 				}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		      	
 				counter++;
 			}
 			
@@ -1613,6 +1693,12 @@ public class ClassOwnerServlet extends HttpServlet{
 	teacherTransaction.deletesubjectfromteacherlist(subjectid);
 	ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 	scheduleTransaction.deleteschedulerelatedsubject(Integer.parseInt(subjectid));
+	NotesTransaction notesTransaction=new NotesTransaction();
+	notesTransaction.deleteNotesRelatedToSubject(Integer.parseInt(subjectid));
+	StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
+	marksTransaction.deleteStudentMarksrelatedtosubject(Integer.parseInt(subjectid));
+	ExamTransaction examTransaction=new ExamTransaction();
+	examTransaction.deleteExamrelatedtosubject(Integer.parseInt(subjectid));
 	SubjectTransaction subjectTransaction=new SubjectTransaction();
 	subjectTransaction.deleteSubject(Integer.parseInt(subjectid));
 	respObject.addProperty(STATUS, "success");
@@ -1640,6 +1726,12 @@ public class ClassOwnerServlet extends HttpServlet{
 	scheduleTransaction.deleteschedulerelatedtoclass(Integer.parseInt(classid));
 	StudentTransaction studentTransaction=new StudentTransaction();
 	studentTransaction.removebatchfromstudentlist(Integer.parseInt(classid));
+	NotesTransaction notesTransaction=new NotesTransaction();
+	notesTransaction.deleteNotesRelatedToDivision(Integer.parseInt(classid));
+	StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
+	marksTransaction.deleteStudentMarksrelatedtodivision(Integer.parseInt(classid));
+	ExamTransaction examTransaction=new ExamTransaction();
+	examTransaction.deleteExamrelatedtodivision(Integer.parseInt(classid));
 	BatchTransactions batchTransactions=new BatchTransactions();
 	batchTransactions.deletebatchrelatdtoclass(Integer.parseInt(classid));
 	DivisionTransactions divisionTransactions=new DivisionTransactions();
@@ -2043,7 +2135,8 @@ public class ClassOwnerServlet extends HttpServlet{
 	if(batcharr.length>1){
 		notification.setBatch("ALL");
 	}else{
-	notification.setBatch(batch);
+	notification.setBatch(batch.split("_")[0]);
+	notification.setDiv_id(Integer.parseInt(batch.split("_")[1]));
 	}
 	notification.setInstitute_id(userBean.getRegId());
 	notification.setMessage(message);
@@ -2052,10 +2145,10 @@ public class ClassOwnerServlet extends HttpServlet{
 	NotificationTransaction transaction=new NotificationTransaction();
 	transaction.add(notification);		
 	int i=0;
-	while(i<batcharr.length){
-		notificationGlobalTransation.sendMessage(message, batcharr[i]);
-		i++;
-	}
+	/*while(i<batcharr.length){*/
+		notificationGlobalTransation.sendMessage(message, notification);
+	/*	i++;
+	}*/
 	respObject.addProperty(STATUS, "success");
 	
 	}else if("getsubjectofbatch".equalsIgnoreCase(methodToCall)){
@@ -2093,16 +2186,40 @@ public class ClassOwnerServlet extends HttpServlet{
 	}
 	
 		List<Subject> subjects = subjectTransaction.getSubjectRelatedToDiv(Integer.parseInt(divisionId), regId);
-		
+		TeacherTransaction teacherTransaction=new TeacherTransaction();
+		List<Subject> list=new ArrayList<Subject>();
+		if(userBean.getRole()==2){
+			list= teacherTransaction.getTeacherSubject(userBean.getRegId(), regId);
+		}
 		StringBuilder subjectids=new StringBuilder();
 		StringBuilder subjectnames=new StringBuilder();
 		int i=0;
 		if(null!=subjects && subjects.size()>0){
+			if(userBean.getRole()==2){
+				while(subjects.size()>i){
+					Subject subject = subjects.get(i);
+					if (list!=null) {
+						int j=0;
+						while (j<list.size()) {
+						
+							if(list.get(j).getSubjectId()==subject.getSubjectId())
+							{
+								subjectids.append(subject.getSubjectId()+",");
+								subjectnames.append(subject.getSubjectName()+",");
+							}
+						j++;
+						}
+					}
+					
+					i++;
+				}
+			}else{
 		while(subjects.size()>i){
 			Subject subject = subjects.get(i);
 			subjectids.append(subject.getSubjectId()+",");
 			subjectnames.append(subject.getSubjectName()+",");
 			i++;
+		}
 		}
 		subjectnames.deleteCharAt(subjectnames.length()-1);
 		subjectids.deleteCharAt(subjectids.length()-1);
@@ -2332,6 +2449,313 @@ public class ClassOwnerServlet extends HttpServlet{
 		Gson gson = new Gson();
 		respObject.addProperty("notifications",gson.toJson(notifications));
 		respObject.addProperty(STATUS, "success");
+	}else if("removeaddedquestioninexam".equalsIgnoreCase(methodToCall)){
+		req.getSession().setAttribute("questionsIds",null);
+		respObject.addProperty(STATUS, "success");
+	}else if("validateexamname".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		String examname = req.getParameter("examname");
+		String institute = req.getParameter("institute");
+		String examID = req.getParameter("examID");
+		ExamTransaction examTransaction=new ExamTransaction();
+		boolean flag=false;
+		if(!"".equals(institute) && institute !=null){
+			flag=examTransaction.isExamExists(Integer.parseInt(institute),examname,examID );
+		}else {
+			flag=examTransaction.isExamExists(userBean.getRegId(), examname,examID);
+		}
+		if(flag==true){
+			respObject.addProperty("examavailable", "true");
+		}else{
+			respObject.addProperty("examavailable", "false");
+		}
+		respObject.addProperty(STATUS, "success");
+	}else if("getweeklyschedule".equals(methodToCall)){
+		Integer regId = null;
+		try{
+			regId = Integer.parseInt(req.getParameter("regId"));
+		}catch(Exception e){
+			e.printStackTrace();
+			
+		}
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	
+		if(0 == userBean.getRole() || !"".equals(regId)){
+			if(null == regId){
+				regId = userBean.getRegId();
+			}
+		}else{
+			regId = userBean.getRegId();
+		}
+		int studentclass=0;
+		if(userBean.getRole()==3){
+			studentclass=Integer.parseInt(req.getParameter("classid"));
+		}
+		String batchname=	req.getParameter("batchname");
+		String batchdivision=req.getParameter("batchdivision");
+		String date=req.getParameter("date");
+		String dateString[]=date.split("/");
+		Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
+		ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
+		List<Schedule> list=null;
+		if(userBean.getRole()==3){
+		StudentTransaction studentTransaction=new StudentTransaction();
+		Student student=studentTransaction.getclassStudent(userBean.getRegId(), studentclass);
+		list=scheduleTransaction.getWeeklySchedule(Integer.parseInt(batchname),date2,studentclass,student.getDiv_id());
+		}else{
+		list=scheduleTransaction.getWeeklySchedule(Integer.parseInt(batchname),date2,userBean.getRegId(),Integer.parseInt(batchdivision));
+		}
+		SubjectTransaction subjectTransaction=new SubjectTransaction();
+		List<String> subjectList= subjectTransaction.getScheduleSubject(list);
+		RegisterTransaction registerTransaction=new RegisterTransaction();
+		List<RegisterBean> teacherlist=registerTransaction.getScheduleTeacher(list);
+		TeacherTransaction teacherTransaction=new TeacherTransaction();
+		List<String> prefixs=new ArrayList<String>();
+		if(userBean.getRole()==3){
+			prefixs=teacherTransaction.getTeachersPrefix(list, studentclass);
+		}else{
+			prefixs=teacherTransaction.getTeachersPrefix(list, regId);
+		}
+		
+		String subjects="";
+		String tfirstname="";
+		String tlastname="";
+		String starttime="";
+		String endtime="";
+		String dates="";
+		String prefix="";
+		String alldates="";
+		
+		int counter=0;
+		
+		while (prefixs.size()>counter) {
+			if (counter==0) {
+				if(prefixs.get(counter)!=null)
+				{
+				prefix=prefixs.get(counter);
+				}
+			}else{
+				prefix=prefix+","+prefixs.get(counter);
+			}
+			counter++;
+		}
+		counter=0;
+
+		Calendar cal=Calendar.getInstance();
+		
+		for (int i = 0; i < 7; i++) {
+			cal.set(date2.getYear()+1900, date2.getMonth(), date2.getDate());
+			cal.add(Calendar.DATE, i);
+			Date enddate=new Date(cal.getTimeInMillis());	
+			if(i==0){
+			dates=new SimpleDateFormat("dd-MM-yyyy").format(enddate);
+			}else{
+				dates=dates+","+new SimpleDateFormat("dd-MM-yyyy").format(enddate);
+			}
+			}
+		DateFormat sdf = new SimpleDateFormat("kk:mm");
+		DateFormat f2 = new SimpleDateFormat("h:mma");
+		while(counter<list.size())
+		{
+			int starthour=list.get(counter).getStart_time().getHours();
+			int startminute=list.get(counter).getStart_time().getMinutes();
+			int endthour=list.get(counter).getEnd_time().getHours();
+			int endtminute=list.get(counter).getEnd_time().getMinutes();
+			String formattedstarttime=getFormattedTime(starthour, startminute);
+			String formattedendtime=getFormattedTime(endthour, endtminute);
+			if(counter==0)
+			{
+				subjects=subjectList.get(counter);
+				tfirstname=teacherlist.get(counter).getFname();
+				tlastname=teacherlist.get(counter).getLname();
+				starttime=formattedstarttime;
+				endtime=formattedendtime;
+				
+				alldates=new SimpleDateFormat("dd-MM-yyyy").format(list.get(counter).getDate());
+			}else{
+				subjects=subjects+","+subjectList.get(counter);
+				tfirstname=tfirstname+","+teacherlist.get(counter).getFname();
+				tlastname=tlastname+","+teacherlist.get(counter).getLname();
+				starttime=starttime+","+formattedstarttime;
+				endtime=endtime+","+formattedendtime;
+				alldates=alldates+","+new SimpleDateFormat("dd-MM-yyyy").format(list.get(counter).getDate());
+				
+			}
+			counter++;
+			
+		}
+		
+		
+		respObject.addProperty("alldates", alldates);
+		respObject.addProperty("subjects", subjects);
+		respObject.addProperty("firstname", tfirstname);
+		respObject.addProperty("lastname", tlastname);
+		respObject.addProperty("starttime", starttime);
+		respObject.addProperty("endtime", endtime);
+		respObject.addProperty("dates", dates);
+		respObject.addProperty("prefix", prefix);
+		respObject.addProperty(STATUS, "success");
+	}else if("getteacherweeklyschedule".equals(methodToCall)){
+		Integer regId = null;
+		
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		if(0 == userBean.getRole() || !"".equals(regId)){
+			if(null == regId){
+				regId = userBean.getRegId();
+			}
+		}else{
+			regId = userBean.getRegId();
+		}
+		
+		String classid=req.getParameter("classid");
+		String date=req.getParameter("date");
+		String dateString[]=date.split("/");
+		Date scheduledate=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
+		ScheduleTransaction  scheduleTransaction=new ScheduleTransaction();
+		List<Schedule> schedules= scheduleTransaction.getTeachersWeeklySchedule(Integer.parseInt(classid), regId,scheduledate);
+		BatchTransactions batchTransactions=new BatchTransactions();
+		List<Batch> batchs =batchTransactions.getTeachersBatch(schedules);
+		SubjectTransaction subjectTransaction=new SubjectTransaction();
+		List<String> subjects=subjectTransaction.getScheduleSubject(schedules);
+		int counter=0;
+		
+		String starttime="";
+		String endtime="";
+		String subject="";
+		String batch="";
+		String dates="";
+		String alldates="";
+		
+		Calendar cal=Calendar.getInstance();
+		
+		for (int i = 0; i < 7; i++) {
+			cal.set(scheduledate.getYear()+1900, scheduledate.getMonth(), scheduledate.getDate());
+			cal.add(Calendar.DATE, i);
+			Date enddate=new Date(cal.getTimeInMillis());	
+			if(i==0){
+			dates=new SimpleDateFormat("dd-MM-yyyy").format(enddate);
+			}else{
+				dates=dates+","+new SimpleDateFormat("dd-MM-yyyy").format(enddate);
+			}
+			}
+		while(counter<schedules.size()){
+			int starthour=schedules.get(counter).getStart_time().getHours();
+			int startminute=schedules.get(counter).getStart_time().getMinutes();
+			int endthour=schedules.get(counter).getEnd_time().getHours();
+			int endtminute=schedules.get(counter).getEnd_time().getMinutes();
+			String formattedstarttime=getFormattedTime(starthour, startminute);
+			String formattedendtime=getFormattedTime(endthour, endtminute);
+			if(counter==0)
+			{
+				starttime=formattedstarttime;
+				endtime=formattedendtime;
+				subject=subjects.get(counter);
+				batch=batchs.get(counter).getBatch_name();
+				//dates=new SimpleDateFormat("dd-MM-yyyy").format(schedules.get(counter).getDate());
+				alldates=new SimpleDateFormat("dd-MM-yyyy").format(schedules.get(counter).getDate());
+			}else{
+				starttime=starttime+","+formattedstarttime;
+				endtime=endtime+","+ formattedendtime;
+				subject=subject+","+subjects.get(counter);
+				batch=batch+","+ batchs.get(counter).getBatch_name();
+				/*if(!dates.contains(new SimpleDateFormat("dd-MM-yyyy").format(schedules.get(counter).getDate()))){
+					dates=dates+","+new SimpleDateFormat("dd-MM-yyyy").format(schedules.get(counter).getDate());
+					}*/
+					alldates=alldates+","+new SimpleDateFormat("dd-MM-yyyy").format(schedules.get(counter).getDate());
+			}
+			counter++;
+		}
+		
+		respObject.addProperty("batch", batch);
+		respObject.addProperty("starttime", starttime);
+		respObject.addProperty("endtime", endtime);
+		respObject.addProperty("subject", subject);
+		respObject.addProperty("alldates", alldates);
+		respObject.addProperty("dates", dates);
+		/*String dateString[]=date.split("/");
+		Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
+		Student student= studentTransaction.getclassStudent(regId,Integer.parseInt(classid));		
+		BatchTransactions batchTransactions=new BatchTransactions();
+		ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
+		int counter =0;
+		String batchids[]=student.getBatch_id().split(",");
+		String batchnames="";
+		String batchid="";
+		while(batchids.length>counter)
+		{
+			Batch batch=batchTransactions.getBatch(Integer.parseInt(batchids[counter]));
+			if(counter==0)
+			{
+				batchnames=batch.getBatch_name();
+				batchid=batchids[counter];
+				
+			}else{
+				batchnames=batchnames+","+batch.getBatch_name();
+				batchid=batchid+","+batchids[counter];
+			}
+			counter++;	
+		}
+		respObject.addProperty("batchids", batchid);
+	respObject.addProperty("batchnames", batchnames);*/	
+	respObject.addProperty(STATUS, "success");
+}else if("getDivisionBatches".equalsIgnoreCase(methodToCall)){
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	Integer regId=userBean.getRegId();;
+	String divisionId = req.getParameter("divisionID");
+	BatchTransactions batchTransactions=new BatchTransactions();
+	List<Batch> list =batchTransactions.getBatchRelatedtoDivision(Integer.parseInt(divisionId));
+	String batchnames="";
+	String batchids="";
+	if(list!=null){
+		if(list.size()>0){
+			for (int i = 0; i < list.size(); i++) {
+				if(i==0){
+					batchnames=list.get(i).getBatch_name();
+					batchids=list.get(i).getBatch_id()+"";
+				}else{
+					batchnames=batchnames+","+list.get(i).getBatch_name();
+					batchids=batchids+","+list.get(i).getBatch_id();
+				}
+			}
+		}
+	}
+	respObject.addProperty("batchnames", batchnames);
+	respObject.addProperty("batchids", batchids);
+	respObject.addProperty(STATUS, "success");
+}else if("sendteachermessage".equals(methodToCall)){
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	String message=(String) req.getParameter("message");
+	/*String batch=(String) req.getParameter("batch");
+	String date=(String) req.getParameter("date");
+	String batchname=(String) req.getParameter("batchname");
+	String dateString[]=date.split("/");
+	Date msgdate=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));*/
+	NotificationGlobalTransation notificationGlobalTransation=new NotificationGlobalTransation();
+	/*String batcharr[]=batch.split(",");
+	
+	if(batcharr.length>1){
+		notification.setBatch("ALL");
+	}else{
+	notification.setBatch(batch.split("_")[0]);
+	notification.setDiv_id(Integer.parseInt(batch.split("_")[1]));
+	}*/
+	Calendar cal=Calendar.getInstance();
+	cal.setTime(new java.util.Date());
+	Notification notification=new Notification();
+	notification.setInstitute_id(userBean.getRegId());
+	notification.setMessage(message);
+	notification.setMsg_date(cal.getTime());
+	notification.setBatch_name("Teachers");
+	notification.setRole(2);
+	NotificationTransaction transaction=new NotificationTransaction();
+	transaction.add(notification);		
+	int i=0;
+	/*while(i<batcharr.length){
+		notificationGlobalTransation.sendMessage(message, batcharr[i]);
+		i++;
+	}*/
+	respObject.addProperty(STATUS, "success");
+	
 	}
 		
 		printWriter.write(respObject.toString());
@@ -2350,7 +2774,9 @@ public class ClassOwnerServlet extends HttpServlet{
 		}else{
 			ampm="AM";
 		}
-		
+		if(minute<10){
+			return temphour+":0"+tempminute+" "+ampm;
+		}
 		return temphour+":"+tempminute+" "+ampm;
 	}
 	

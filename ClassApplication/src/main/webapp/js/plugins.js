@@ -32,7 +32,7 @@
 					e.stopPropagation();
 				});	
 				
-				this.find('.dropdown-menu').on("click","input",function(e){
+				this.find('.dropdown-menu').on("click","input",function(event){
 				if($(event.target).attr('class') !== "selectAllCheckbox"){
 					$that.find('.dropdown-menu').find(".selectAllCheckbox").prop("checked",false);
 				}

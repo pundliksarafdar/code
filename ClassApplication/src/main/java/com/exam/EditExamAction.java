@@ -152,8 +152,8 @@ public class EditExamAction extends BaseAction{
 		if(currentPage==0){
 			int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(selectedRep), selectedExamID, Integer.parseInt(selectedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division));
 			if(totalCount>0){
-				int remainder=totalCount%2;
-				totalPages=totalCount/2;
+				int remainder=totalCount%50;
+				totalPages=totalCount/50;
 				if(remainder>0){
 					totalPages++;
 				}
@@ -199,6 +199,7 @@ public class EditExamAction extends BaseAction{
 			Exam exam=examTransaction.getExamToEdit(inst_id, Integer.parseInt(subject), Integer.parseInt(division), examID);
 			passmarks=exam.getPass_marks();
 		}else if("canceledit".equals(actionname)){
+			session.put("questionsIds",null);
 			currentPage=searchcurrentPage;
 			totalPages=searchtotalPages;
 			return "editcomplete";
@@ -234,6 +235,7 @@ public class EditExamAction extends BaseAction{
 				examTransaction.updateExam(examID,examname, inst_id, Integer.parseInt(subject), Integer.parseInt(division), totalmarks, passmarks, userBean.getRegId(), batch, queIds, ansIds);
 				actionname="editcomplete";
 			}
+			session.put("questionsIds",null);
 			currentPage=searchcurrentPage;
 			totalPages=searchtotalPages;
 			return "editcomplete";
@@ -261,8 +263,8 @@ public class EditExamAction extends BaseAction{
 			if(currentPage==0){
 				int totalCount=bankTransaction.getTotalSearchedQuestionCount(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division));
 				if(totalCount>0){
-					int remainder=totalCount%2;
-					totalPages=totalCount/2;
+					int remainder=totalCount%50;
+					totalPages=totalCount/50;
 					if(remainder>0){
 						totalPages++;
 					}

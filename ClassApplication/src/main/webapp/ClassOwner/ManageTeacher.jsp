@@ -7,16 +7,20 @@
 <%@page import="java.util.List"%>
 <%@page import="com.config.Constants"%>
 <%@taglib prefix="s" uri="http://java.sun.com/jstl/core"%>
+ <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <html>
 <script type="text/javascript" src="js/ManageTeacher.js"></script>
 <script type="text/javascript" src="js/AddSubject.js"></script>
  <%List list = (List)request.getSession().getAttribute(Constants.TEACHER_LIST); %>
 <script>
 var subjectIds;
-
+var searchedteacherID;
 function canceledit(){
 	//alert(batchID+" "+pagenumber);
-	$('#teachertomodify').remove(); 
+	 $("#teachertomodify").hide();
+	 $("#modifyTeacherModalbody").empty();
+	 $("#paginateform").show();
+	 $("#baseteachertable").show();
 	
 }
 function getSelectedSubjectsForAddTeacher(){
@@ -67,21 +71,63 @@ function searchTeacherthroughtable(teacherLoginName) {
 				   var firstname= resultJson.teacherFname;
 				   var lastname= resultJson.teacherLname;
 				   var teacherId= resultJson.teacherId;
+				   var teacherssubjectname= resultJson.teacherssubjectname;
+				   var teacherssubjectIds= resultJson.teacherssubjectIds.split(",");
+				   var teachersloginname= resultJson.teachersloginname;
+				   var teacherssuffix= resultJson.teacherssuffix;
+				   var allsubjectname= resultJson.allsubjectname.split(",");
+				   var allsubjectIds= resultJson.allsubjectIds.split(",");
+				   $("#teachertomodifybody").empty();
+				   $("#modifyTeacherModalbody").empty();
+				   $("#teachertomodifybody").append("<td>"+teachersloginname+"</td><td>"+firstname+" "+lastname+"</td><td>"+teacherssubjectname+"</td>"
+						   +"<td><button type='button' class='btn btn-info' data-target='#modifyTeacherModal' data-toggle='modal'>Modify Teacher</button></td>"
+						   +"<td> <button type='button' class='btn btn-info' data-target='#deleteTeacherModal' data-toggle='modal'>Delete Teacher</button></td>"
+						   +"<td> <a onclick='canceledit()'><button type='button' class='btn btn-info'>Cancel</button></a></td>");
+				   $("#modifysuffix").val(teacherssuffix);
+				   if(allsubjectIds[0]!=""){
+					   for(var i=0;i<allsubjectIds.length;i++){
+						   var flag=false;
+						   for(var j=0;j<teacherssubjectIds.length;j++){
+							   if(teacherssubjectIds[j]==allsubjectIds[i]){
+								   flag=true;
+							   }
+						   }
+						   if(flag==true){
+							   $("#modifyTeacherModalbody").append("<div class='input-group'>"
+							  +"<span class='input-group-addon'>"
+								+"<input type='checkbox' class='chkSubjectTeacher' name='subjectnameTeacher' id='subjectnameTeacher'  value='"+allsubjectIds[i]+"' checked/>"
+								+"</span>"
+								+"<input type='text' value='"+allsubjectname[i]+"' class='form-control' disabled='disabled'>"
+							+"</div>");
+						   }else{
+							   $("#modifyTeacherModalbody").append("<div class='input-group'>"
+										  +"<span class='input-group-addon'>"
+											+"<input type='checkbox' class='chkSubjectTeacher' name='subjectnameTeacher' id='subjectnameTeacher'  value='"+allsubjectIds[i]+"'/>"
+											+"</span>"
+											+"<input type='text' value='"+allsubjectname[i]+"' class='form-control' disabled='disabled'>"
+										+"</div>");
+						   }
+					   }
+				   }
+				   $("#teachertomodify").show();
+				   $("#paginateform").hide();
+				   $("#baseteachertable").hide();
+				   searchedteacherID=teacherId;
 				   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
 				
 					//modal.launchAlert("Success","Found "+firstname+" "+lastname+" with teacher id ="+teacherId+"! Page will refresh in soon");
-					 setTimeout(function(){
+					 /* setTimeout(function(){
 						   location.reload();
-					   },2*1000);	   
+					   },2*1000); */	   
 			      }else{
 				 	 if(!resultJson.message){
 				 		modal.launchAlert("Error","Error while searching teacher!");
 			   	   	}else{
-			   	   		modal.launchAlert("Error","Error while searching teacher!"+resultJson.message);
+			   	   		modal.launchAlert("Error",""+resultJson.message);
 			   	   	}
-				 	setTimeout(function(){
+				 	/* setTimeout(function(){
 				   		location.reload();
-				   	},1000*3);
+				   	},1000*3); */
 			      }				   
 		   	},
 		   error:function(data){
@@ -119,21 +165,57 @@ function searchTeacher() {
 				   var firstname= resultJson.teacherFname;
 				   var lastname= resultJson.teacherLname;
 				   var teacherId= resultJson.teacherId;
-				   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
-				
-					modal.launchAlert("Success","Found "+firstname+" "+lastname+"! Page will refresh in soon");
-					 setTimeout(function(){
-						   location.reload();
-					   },2*1000);	   
+				   var teacherssubjectname= resultJson.teacherssubjectname;
+				   var teacherssubjectIds= resultJson.teacherssubjectIds.split(",");
+				   var teachersloginname= resultJson.teachersloginname;
+				   var teacherssuffix= resultJson.teacherssuffix;
+				   var allsubjectname= resultJson.allsubjectname.split(",");
+				   var allsubjectIds= resultJson.allsubjectIds.split(",");
+				   $("#teachertomodifybody").empty();
+				   $("#modifyTeacherModalbody").empty();
+				   $("#teachertomodifybody").append("<td>"+teachersloginname+"</td><td>"+firstname+" "+lastname+"</td><td>"+teacherssubjectname+"</td>"
+						   +"<td><button type='button' class='btn btn-info' data-target='#modifyTeacherModal' data-toggle='modal'>Modify Teacher</button></td>"
+						   +"<td> <button type='button' class='btn btn-info' data-target='#deleteTeacherModal' data-toggle='modal'>Delete Teacher</button></td>"
+						   +"<td> <a onclick='canceledit()'><button type='button' class='btn btn-info'>Cancel</button></a></td>");
+				   $("#modifysuffix").val(teacherssuffix);
+				   if(allsubjectIds[0]!=""){
+					   for(var i=0;i<allsubjectIds.length;i++){
+						   var flag=false;
+						   for(var j=0;j<teacherssubjectIds.length;j++){
+							   if(teacherssubjectIds[j]==allsubjectIds[i]){
+								   flag=true;
+							   }
+						   }
+						   if(flag==true){
+							   $("#modifyTeacherModalbody").append("<div class='input-group'>"
+							  +"<span class='input-group-addon'>"
+								+"<input type='checkbox' class='chkSubjectTeacher' name='subjectnameTeacher' id='subjectnameTeacher'  value='"+allsubjectIds[i]+"' checked/>"
+								+"</span>"
+								+"<input type='text' value='"+allsubjectname[i]+"' class='form-control' disabled='disabled'>"
+							+"</div>");
+						   }else{
+							   $("#modifyTeacherModalbody").append("<div class='input-group'>"
+										  +"<span class='input-group-addon'>"
+											+"<input type='checkbox' class='chkSubjectTeacher' name='subjectnameTeacher' id='subjectnameTeacher'  value='"+allsubjectIds[i]+"'/>"
+											+"</span>"
+											+"<input type='text' value='"+allsubjectname[i]+"' class='form-control' disabled='disabled'>"
+										+"</div>");
+						   }
+					   }
+				   }
+				   $("#teachertomodify").show();
+				   $("#paginateform").hide();
+				   $("#baseteachertable").hide();
+				   searchedteacherID=teacherId;   
 			      }else{
 				 	 if(!resultJson.message){
 				 		modal.launchAlert("Error","Error while searching teacher!");
 			   	   	}else{
-			   	   		modal.launchAlert("Error","Error while searching teacher!"+resultJson.message);
+			   	   		modal.launchAlert("Error",""+resultJson.message);
 			   	   	}
-				 	setTimeout(function(){
+				 	/* setTimeout(function(){
 				   		location.reload();
-				   	},1000*3);
+				   	},1000*3); */
 			      }				   
 		   	},
 		   error:function(data){
@@ -148,6 +230,27 @@ function searchTeacher() {
 }
 
 	$(document).ready(function(){
+		$('div#modifyTeacherModal .error').html('');
+		$('div#modifyTeacherModal .error').hide();
+		
+		$(".page").on("click",function(e){
+			$("form#paginateform #currentPage").val($(this).text());
+			$("#paginateform").submit();
+			e.preventDefault();
+		});
+		
+		$(".start").on("click",function(e){
+			$("form#paginateform #currentPage").val("1");
+			$("#paginateform").submit();
+			e.preventDefault();
+		});
+		
+		$(".end").on("click",function(e){
+			$("form#paginateform #currentPage").val($("#totalPages").val());
+			$("#paginateform").submit();
+			e.preventDefault();
+		});
+		
 		$('.batchName').tooltip({'placement':'right','html':'true'}).on('click',function(){
 			$(this).tooltip('hide');
 		});
@@ -208,7 +311,7 @@ function searchTeacher() {
 
 		$('div#modifyTeacherModal').on('click','button#btn-update',function(){
 			
-			var teacherId=document.getElementsByName("radioTeacher")[0].value;
+			var teacherId=searchedteacherID;
 			
 			subjectIds="";
 			$('div#modifyTeacherModal .error').html('');
@@ -261,10 +364,9 @@ function searchTeacher() {
 						   var resultJson = JSON.parse(data);
 						      if(resultJson.status != 'error'){
 						   	   $('div#modifyTeacherModal').modal('hide');
+						   	 $("#teachertomodify").hide();
 						   	   modal.launchAlert("Success","Teacher Updated! Page will refresh in soon");
-						   	   setTimeout(function(){
-						   		   location.reload();
-						   	   },2*1000);		   
+						   	 $("#paginateform").submit();	   
 						      }else{
 						   		   $('div#modifyTeacherModal .add').removeClass('hide');
 						   		   $('div#modifyTeacherModal .error').show();
@@ -298,7 +400,7 @@ function searchTeacher() {
 		});
 
 		$('div#deleteTeacherModal').on('click','button#btn-deleteTeacher',function(){
-			var teacherId=document.getElementsByName("radioTeacher")[0].value;
+			var teacherId=searchedteacherID;
 			$('div#deleteTeacherModal .error').html('');
 			$('div#deleteTeacherModal .error').hide();
 			
@@ -324,10 +426,9 @@ function searchTeacher() {
 						   var resultJson = JSON.parse(data);
 						      if(resultJson.status != 'error'){
 						   	   $('div#deleteTeacherModal').modal('hide');
+						   	 $("#teachertomodify").hide();
 						   	   modal.launchAlert("Success","Teacher Deleted! Page will refresh in soon");
-						   	   setTimeout(function(){
-						   		   location.reload();
-						   	   },2*1000);		   
+						   	 $("#paginateform").submit();		   
 						      }else{
 						   		   $('div#deleteTeacherModal .add').removeClass('hide');
 						   		   $('div#deleteTeacherModal .error').show();
@@ -361,10 +462,10 @@ function searchTeacher() {
 	
 </script>
 <body>
-	<h3><font face="cursive">Manage Teacher</font></h3>
-<hr>
-	<div class="btn-group btn-group-sm">	
-		<div class="container bs-callout bs-callout-danger" style="margin-bottom: 10px;">
+
+	<div class="">	
+		<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 10px;">
+			<div align="center" style="font-size: larger;margin-bottom: 15px"><u>Manage teacher</u></div>
 			<div class="row">
 			<div class="col-md-4">
 			<button type="button" class="btn btn-info" data-target="#addTeacherModal" data-toggle="modal"><i class="glyphicon glyphicon-user"></i>&nbsp;Add Teacher</button>
@@ -382,23 +483,22 @@ function searchTeacher() {
 		</div>
 		
 		<%TeacherDetails teacherSearch=(TeacherDetails)request.getSession().getAttribute("teacherSearchResult");
-		if(teacherSearch!=null){
+		/* if(teacherSearch!=null){ */
 		//System.out.println("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
 		%> 
-		<table id="teachertomodify" class="table table-bordered table-hover" style="background-color: white;" border="1">
+		<table id="teachertomodify" class="table table-bordered table-hover" style="background-color: white;display:none" border="1">
 			<thead>
 				<tr style="background-color: rgb(0, 148, 255);">
-					<th></th>
 					<th>Teacher Login Name</th>
-					<th>Student Name</th>
+					<th>Teacher Name</th>
 					<th>Subjects</th>
 					<th></th>
 					<th></th>
 					<th></th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
+			<tbody id="teachertomodifybody">
+				<%-- <tr>
 					<td> <INPUT TYPE="radio" NAME="radioTeacher" VALUE="<%=teacherSearch.getTeacherId() %>" CHECKED></td>
 					<td><%=teacherSearch.getTeacherBean().getLoginName() %></td>
 					<td><%=teacherSearch.getTeacherBean().getFname() %> </td>
@@ -406,13 +506,13 @@ function searchTeacher() {
 					<td><button type="button" class="btn btn-info" data-target="#modifyTeacherModal" data-toggle="modal">Modify Teacher</button></td>
 					<td> <button type="button" class="btn btn-info" data-target="#deleteTeacherModal" data-toggle="modal">Delete Teacher</button></td>
 					<td> <a onclick="canceledit()"><button type="button" class="btn btn-info">Cancel</button></a></td>
-				</tr>
+				</tr> --%>
 			</tbody>
 		</table>
 		
 		<%
-		request.getSession().setAttribute("teacherSearchResult",null);		
-		}
+		/* request.getSession().setAttribute("teacherSearchResult",null);		
+		} */
 		%> 
 		<!-- <br><br><br>
 		  <button type="button" class="btn btn-info" data-target="#addTeacherModal" data-toggle="modal">Add Teacher</button>
@@ -423,7 +523,7 @@ function searchTeacher() {
 	<s:choose>
 	<s:when test="${teacherListSize gt 0}">
 	<div class="panel-group" id="accordion">
-		<table class="table table-bordered table-hover" style="background-color: white;" border="1">
+		<table class="table table-bordered table-hover" style="background-color: white;" border="1" id="baseteachertable">
 			<thead>
 				<tr style="background-color: rgb(0, 148, 255);">
 					<!--<td> <input type="checkbox" class="chk" name="selectAll" id="selectAll" data-label="selectAll">Select All</<input></td>  -->
@@ -435,10 +535,14 @@ function searchTeacher() {
 			</thead>
 			
 			 <%			
+			 int endIndex=(Integer)request.getAttribute("endIndex");
+			 int currentPage=(Integer)request.getAttribute("currentPage");
+			 int startIndex=(Integer)request.getAttribute("startIndex");
+			 int i = startIndex;
 				if(null != list){
-				 Iterator iteratorList = list.iterator();
-				 while(iteratorList.hasNext()){
-				 TeacherDetails teacher = (TeacherDetails)iteratorList.next();
+				// Iterator iteratorList = list.iterator();
+				 while(i<endIndex){
+				 TeacherDetails teacher = (TeacherDetails)list.get(i);
 				 //String timmingsTitle = "Start time :"+ batchDataClass.getTimmings().getStartTimming()+"<br>End Time :"+batchDataClass.getTimmings().getEndTimming(); 
 					String timmingsTitle = "Start time :";					 		 
 			%> 
@@ -450,7 +554,7 @@ function searchTeacher() {
 					<td><%=teacher.getSubjectNames() %> </td>
 					<td><button type="button" class="btn btn-info" onclick="searchTeacherthroughtable('<%=teacher.getTeacherBean().getLoginName() %>')" >Edit</button></td>
 				</tr>
-			<%	}
+			<%	i++;}
 			}else{
 			%>
 				<tr>
@@ -461,6 +565,24 @@ function searchTeacher() {
 			 </tbody>
 		</table>
 	</div>
+	<div>
+ <form action="manageteacher" id="paginateform">
+  <input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
+  <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
+  <ul class="pagination">
+  <li><a class="start" >&laquo;</a></li>
+  <c:forEach var="item" begin="1" end="${totalPages}">
+  <c:if test="${item eq currentPage}">
+  <li class="active"><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
+  </c:if>
+  <c:if test="${item ne currentPage}">
+  <li><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
+  </c:if>
+  </c:forEach>
+  <li><a href="#" class="end">&raquo;</a></li>
+</ul>
+</form>
+</div>
 	</s:when>
 	<s:otherwise>
 		<span class="alert alert-info">No teacher added yet</span>

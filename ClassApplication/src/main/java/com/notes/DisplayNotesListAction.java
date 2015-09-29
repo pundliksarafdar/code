@@ -1,5 +1,6 @@
 package com.notes;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.db.Notes.Notes;
 import com.classapp.db.batch.division.Division;
+import com.classapp.login.UserStatic;
 import com.config.BaseAction;
+import com.config.Constants;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.notes.NotesTransaction;
@@ -28,6 +31,7 @@ public class DisplayNotesListAction extends BaseAction{
 	private int notesid;
 	int currentPage;
 	int totalPage;
+	int role;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -36,22 +40,37 @@ public class DisplayNotesListAction extends BaseAction{
 		if(!"".equals(institute) && institute!=null){
 			inst_id=Integer.parseInt(institute);
 		}
+		role=userBean.getRole();
 		// TODO Auto-generated method stub
 		if("editnames".equals(actionname)){
 			NotesTransaction notesTransaction=new NotesTransaction();
 			notesTransaction.updatenotes(notesname, notesid, newbatch,inst_id,Integer.parseInt(division),Integer.parseInt(subject));
 		}else if("deletenotes".equals(actionname)){
 			NotesTransaction notesTransaction=new NotesTransaction();
+			String name=notesTransaction.getNotepathById(notesid,inst_id,Integer.parseInt(subject),Integer.parseInt(division));
+			 UserStatic userStatic = userBean.getUserStatic();
+		      String filePath=  userStatic.getNotesPath()+File.separator+subject+File.separator+division+File.separator+name;
+		      String DBPAth="";
+		      if(userBean.getRole()==2){
+					String storagePath = Constants.STORAGE_PATH+File.separator+institute;
+					userStatic.setStorageSpace(storagePath);
+		    	  filePath=  userStatic.getNotesPath()+File.separator+subject+File.separator+division+File.separator+name;
+			      
+		      }
+		      
+			File file = new File(filePath);
+			  file.delete();
+			
 			notesTransaction.deleteNotes(notesid,inst_id,Integer.parseInt(division),Integer.parseInt(subject));
 		}
 		
 		if(currentPage==0){
 			currentPage++;
 		}
-		
+		totalPage=0;
 		NotesTransaction notesTransaction=new NotesTransaction();
 		int totalCount=notesTransaction.getNotescount(Integer.parseInt(division), Integer.parseInt(subject), inst_id,batch);
-		noteslist =notesTransaction.getNotesPath(Integer.parseInt(division), Integer.parseInt(subject), inst_id,currentPage,batch);
+		
 		if(totalCount>0){
 			int remainder=totalCount%2;
 			totalPage=totalCount/2;
@@ -59,9 +78,11 @@ public class DisplayNotesListAction extends BaseAction{
 				totalPage++;
 			}
 		}
+		
 		if(totalPage<currentPage){
 			currentPage--;
 		}
+		noteslist =notesTransaction.getNotesPath(Integer.parseInt(division), Integer.parseInt(subject), inst_id,currentPage,batch);
 		if(!"".equals(institute) && institute!=null){
 			return "teachernotes";
 		}
@@ -132,6 +153,12 @@ public class DisplayNotesListAction extends BaseAction{
 	}
 	public void setTotalPage(int totalPage) {
 		this.totalPage = totalPage;
+	}
+	public int getRole() {
+		return role;
+	}
+	public void setRole(int role) {
+		this.role = role;
 	}
 	
 	

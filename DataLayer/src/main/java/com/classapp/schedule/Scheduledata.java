@@ -8,6 +8,7 @@ String inst_name;
 String batch_name;
 Time start_time;
 Time end_time;
+String subject_name;
 public String getInst_name() {
 	return inst_name;
 }
@@ -37,6 +38,12 @@ public int getInst_id() {
 }
 public void setInst_id(int inst_id) {
 	this.inst_id = inst_id;
+}
+public String getSubject_name() {
+	return subject_name;
+}
+public void setSubject_name(String subject_name) {
+	this.subject_name = subject_name;
 }
 
 

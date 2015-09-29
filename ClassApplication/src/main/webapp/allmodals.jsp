@@ -155,7 +155,7 @@
         </div>
         <div class="modal-body" id="">
         	<div class="error alert alert-danger"></div>
-			<div class="form-group">
+			<div class="form-group" style="overflow-y:auto; overflow-x:hidden;">
 				<%
 					UserBean user=(UserBean) request.getSession().getAttribute("user");
 				%>
@@ -188,7 +188,7 @@
 				</select>
 				<br/>
 				<br/>
-				<div class="row">
+				<div class="">
 				<%
 				
 				if(listOfSubject!=null){
@@ -253,46 +253,9 @@
  		<div class="modal-header">
        		<strong>Modify Student</strong>
         </div>
-        <div class="modal-body" id="">
-       	<div class="error alert alert-danger"></div>
-       	<jsp:useBean id="batchHelperBean" class="com.helper.BatchHelperBean">
-		<jsp:setProperty name="batchHelperBean" property="class_id" value="<%=user.getRegId() %>"/>
-        	<%
-        	StudentDetails studentDetails=(StudentDetails)request.getSession().getAttribute("studentSearchResultBatch");
-        	if(studentDetails!=null){
-        	
-        	List<Batch> currentBatches=studentDetails.getBatches();
-        //	Batch selectedBatch=currentBatches.get(0);
-        	List<Batch> listOfBatches=batchHelperBean.getAllRelatedBatches(studentDetails.getDivID());
-        	if(listOfBatches.size()==0){
-        		%>
-        		<h4>Batches for <%=studentDetails.getDivision().getDivisionName() %> are not available</h4>
-        		<%
-        	}
-			if(listOfBatches!=null){    	
-        	if(currentBatches!=null){
-        	listOfBatches.removeAll(currentBatches);
-        	}
-        	for(int i=0;i<listOfBatches.size();i++){
-						Batch batch=listOfBatches.get(i);
-											
-						%>
-					<input type="checkbox" class="chkBatch" name="batchId" data-label="<%=batch.getBatch_name() %>" value="<%=batch.getBatch_id() %>"/><%=batch.getBatch_name()%>		
-					<%}}else{%>
-					<h4>Batches for <%=studentDetails.getDivision().getDivisionName() %> are not available</h4>
-			
-			<%}		
-			if(currentBatches!=null){
-			for(Batch batch: currentBatches){
-						%>
-						<input type="checkbox" class="chkBatch" name="batchId" data-label="<%=batch.getBatch_name() %>" value="<%=batch.getBatch_id() %>" checked="checked"/><%=batch.getBatch_name()%>		
-				
-						<%
-					}
-        	}
-        	}
-				%>
-			</jsp:useBean>
+        <div class="modal-body">
+       	<div class="error alert alert-danger" id="modifyStudentModalbodyerror" style="display: none;"></div>
+       	<div id="modifyStudentModalbody" style="overflow-y:auto; overflow-x:hidden;"></div>
 			<div class="form-group">
 																			
 				<div id="classTimming" class="hide">
@@ -411,16 +374,17 @@
        		<div class="error alert alert-danger"></div>	
         	
 			<jsp:setProperty name="subjectHelperBean" property="class_id" value="<%=user.getRegId() %>"/>
-				<% 
+				<%-- <% 
 				TeacherDetails teacherSearch=(TeacherDetails)request.getSession().getAttribute("teacherSearchResultSubjects");
 				
 				if(teacherSearch!=null){
 				List<Subject> currentAssignedSubjects=teacherSearch.getSubjects();
 				List<Subject> listOfSubject=subjectHelperBean.getSubjects();
-				%>
-				<input type="text" name="modifysuffix" id="modifysuffix" class="form-control" value="<%=teacherSearch.getSuffix()%>" placeholder="Suffix" maxlength="5">
+				%> --%>
+				<input type="text" name="modifysuffix" id="modifysuffix" class="form-control" value="" placeholder="Suffix" maxlength="5">
 				<br>
-				<%
+				<div class="form-group" style="overflow-y:auto; overflow-x:hidden;" id="modifyTeacherModalbody">
+				<%-- <%
 				if(listOfSubject!=null){
 				listOfSubject.removeAll(currentAssignedSubjects);
 					for(int i=0;i<listOfSubject.size();i++){
@@ -446,8 +410,8 @@
 					<%}
 					}
 					
-					}%>
-        	
+					}%> --%>
+        	</div>
 			<div class="form-group">
 																	
 				<div id="classTimming" class="hide">
@@ -595,9 +559,11 @@
  		<div class="modal-header">
        		<strong>Modify Batch</strong>
         </div>
-        <div class="modal-body" id="">
-             	
-        	<%BatchDetails batchDetails=(BatchDetails)request.getSession().getAttribute("batchSearchResultBatch");
+        <div class="modal-body" id="" style="overflow-y:auto; overflow-x:hidden;">
+             	<div class="error alert alert-danger"></div>
+             <div id="modifyBatchModalbody">
+             </div>	
+        	<%-- <%BatchDetails batchDetails=(BatchDetails)request.getSession().getAttribute("batchSearchResultBatch");
         	if(batchDetails!=null){
         	List<Subject> listOfSubjects=subjectHelperBean.getSubjects();
         	List<Subject> currentSubjects=batchDetails.getSubjects();
@@ -607,21 +573,34 @@
 						Subject subject=listOfSubjects.get(i);
 											
 						%>
-					<input type="checkbox" class="chkSubjectBatch" name="subjectBatchId" data-label="<%=subject.getSubjectName() %>" value="<%=subject.getSubjectId() %>"/><%= subject.getSubjectName()%>		
-				<%	}
+						 <div class="col-lg-12">
+						<div class="input-group">
+      					<span class="input-group-addon">
+					<input type="checkbox" class="chkSubjectBatch" name="subjectBatchId" data-label="<%=subject.getSubjectName() %>" value="<%=subject.getSubjectId() %>"/>		
+					</span>
+					<input type="text" value="<%=subject.getSubjectName()%>" class="form-control" disabled="disabled"/>
+						</div>			
+						</div>
+					<%	}
 					}%>
 					
 			
 			<%	if(currentSubjects!=null){	
 			for(Subject subject: currentSubjects){
 						%>
-						<input type="checkbox" class="chkSubjectBatch" name="subjectBatchId" data-label="<%=subject.getSubjectName() %>" value="<%=subject.getSubjectId() %>" checked="checked"/><%=subject.getSubjectName()%>		
-				
+						 <div class="col-lg-12">
+						<div class="input-group">
+      					<span class="input-group-addon">
+						<input type="checkbox" class="chkSubjectBatch" name="subjectBatchId" data-label="<%=subject.getSubjectName() %>" value="<%=subject.getSubjectId() %>" checked="checked"/>		
+						</span>
+					<input type="text" value="<%=subject.getSubjectName()%>" class="form-control" disabled="disabled"/>
+						</div>			
+						</div>
 						<%
 					}
 			}
         	}
-				%>
+				%> --%>
 			
 			<div class="form-group">
 																			
@@ -771,7 +750,7 @@
 				if(ls.size()>0){
 				%>
         	<div class="error alert alert-danger"></div>
-			<div class="form-group" id="">
+			<div class="form-group" id="" style="overflow-y:auto; overflow-x:hidden;">
 			 <input type="tel" class="form-control" id="teacherID" placeholder="Enter Teacher ID" name="teacherID"><br>
 			 <input type="text" class="form-control" id="suffix" placeholder="Suffix" name="suffix" maxlength="5" rel="tooltip" title="This is optional field.You can use this field when you have more than one teachers with same name. eg Ajay Bhatt JR. ">
 				<br>
