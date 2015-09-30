@@ -345,4 +345,77 @@ public List<String> getQuestionAnsIds(int sub_id,int inst_id,int div_id,List<Int
 	return  questionAnsList;	
 }
 
+public List<Integer> getQuestionrelatedtoTopics(int sub_id,int inst_id,int div_id,int topic_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.distinct(Projections.property("que_id"))).addOrder(Order.asc("que_id"));;
+	Criterion criterion = Restrictions.eq("inst_id", inst_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("sub_id", sub_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("div_id", div_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("topic_id", topic_id);
+	criteria.add(criterion);
+	List<Integer> questionList = criteria.list();
+	transaction.commit();
+	session.close();
+	return  questionList;	
+}
+
+public boolean deleteQuestionList(List<Integer> que_id,int inst_id,int sub_id,int div_id) {
+	Transaction transaction=null;
+	Session session=null;
+	List<Exam> list = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		String queryString="delete from Questionbank where inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id in :que_id";
+		
+		Query query = session.createQuery(queryString);
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("sub_id", sub_id);
+		query.setParameterList("que_id", que_id);
+		 query.executeUpdate();
+		
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}
+return true;
+
+}
+
+public boolean ExamQuestionStatus(List<Integer> que_id,int inst_id,int sub_id,int div_id) {
+	Transaction transaction=null;
+	Session session=null;
+	List<Exam> list = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		String queryString="update Questionbank set ques_status ='N' where inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id in :que_id";
+		
+		Query query = session.createQuery(queryString);
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("sub_id", sub_id);
+		query.setParameterList("que_id", que_id);
+		 query.executeUpdate();
+		
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}
+return true;
+
+}
 }

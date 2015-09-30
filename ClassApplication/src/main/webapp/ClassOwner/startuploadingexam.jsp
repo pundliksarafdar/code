@@ -143,6 +143,16 @@ $(document).ready(function(){
 				<input type="number" class="form-control" id="questionmarks" name="questionmarks" maxlength="5" min="0" size="5" style="width: 10%;" value="<c:out value="${requestScope.questionData.marks}"></c:out>"></input>
 			</div>
 			<div class="form-group">
+				<label for="questionmarks">Topic</label>
+				<select class="form-control" id="topicID" name="topicID">
+				<option value="-1">Select Topic</option>
+				<c:forEach items="${topics}" var="topic">
+				<option value="<c:out value="${topic.topic_id}"></c:out>"><c:out value="${topic.topic_name}"></c:out></option>	
+				</c:forEach>
+				</select>
+			</div>
+			
+			<div class="form-group">
 				<input type="file" class="btn btn-default" onchange="readURL(this,'fileList');" id="submitquestionsuploadfile" multiple name="questionImages" value="<c:out value="${requestScope.questionData.marks}"></c:out>">
 			</div>
 			<div id="fileList">

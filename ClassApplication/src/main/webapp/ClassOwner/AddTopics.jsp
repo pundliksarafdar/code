@@ -13,11 +13,59 @@
 }
 </style>
 <script type="text/javascript">
+var topicid="";
 $(document).ready(function(){
 	$("#topics_division").on("change",fetchTopic);
 	$(".deletetopic").on("click",deletetopic);
 	$("#addTopic").on("click",addTopic);
 	$("#saveTopic").on("click",saveedittopic);
+	
+	$("#topictable").on("click",".deletetopic",function(e){
+		topicid =$(this).prop("id");
+		var divisionID=$("#topics_division").val();
+		var subID=$("#subjectID").val();
+		var institute=$("form#actionform #institute").val();
+	//	var questionNumber=$("form#actionform #questionNumber").val();
+		e.preventDefault();
+		$.ajax({
+			 
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "isTopicRelatedQuestionAvailableInExam",
+			    	 topicid:topicid,
+			    	 subject:subID,
+			    	 division:divisionID
+			    	// institute:institute
+			   		},
+			   		success:function(data){
+			   			var resultJson = JSON.parse(data);
+						   var quesstatus=resultJson.quesstatus;
+						   if(quesstatus=="Y"){
+							   $("#DeleteConfirmBody").empty();
+							  var examnames=resultJson.examnames.split(",");
+							   $("#DeleteConfirmBody").append("This Question is present in following exams-<br>")
+							   for(var i=0;i<examnames.length;i++){
+								   $("#DeleteConfirmBody").append((i+1)+"."+examnames[i]+"<br>");
+							   }
+							   $("#DeleteConfirmBody").append("Still you delete, this question will remain in exams but will not be available in search. Once you delete that exams this question will get deleted.<br>")
+						   		$("#DeleteConfirmBody").append("Do you want to continue?");
+							   $("#quesstatus").val("Y");
+							   $("#DeleteConfirmModal").modal("toggle");
+						   }else{
+							   $("#DeleteConfirmBody").empty();
+							   $("#DeleteConfirmBody").append("Are you sure?");
+							   $("#quesstatus").val("");
+							   $("#DeleteConfirmModal").modal("toggle");
+						   }
+			   		},
+			   		error:function(error){
+			   		
+			   		}
+		});
+		/* $("#actionform").attr("action","deletequestion");
+		$("#actionname").val("deletequestion");
+		$("#actionform").submit(); */
+	});
 });
 
 function addTopic(){
@@ -123,7 +171,7 @@ function saveedittopic(){
 	 
 }
 
-function deletetopic(topicid){
+function deletetopic(){
 	var divisionID=$("#topics_division").val();
 	var subID=$("#subjectID").val();
 	 $.ajax({
@@ -174,7 +222,7 @@ function fetchTopic(){
 			   var topic_ids=resultJson.topic_ids.split(",");
 			   if(topic_ids[0]!=""){
 				   for(var i=0;i<topic_ids.length;i++){
-					   $("#topictable tbody").append("<tr><td>"+(i+1)+"</td><td id='topic"+topic_ids[i]+"'>"+topic_names[i]+"</td><td><button class='btn btn-primary' onclick='edittopic("+topic_ids[i]+")'>Edit</button></td><td><button id="+topic_ids[i]+" class='btn btn-danger deletetopic' onclick='deletetopic("+topic_ids[i]+")'>Delete</button></td></tr>");
+					   $("#topictable tbody").append("<tr><td>"+(i+1)+"</td><td id='topic"+topic_ids[i]+"'>"+topic_names[i]+"</td><td><button class='btn btn-primary' onclick='edittopic("+topic_ids[i]+")'>Edit</button></td><td><button id="+topic_ids[i]+" class='btn btn-danger deletetopic'>Delete</button></td></tr>");
 				   }
 				   $("#topictable").show();
 			   }else{
@@ -263,6 +311,27 @@ function fetchTopic(){
          </div>
    </div>
 </div>
-    
+   	<div class="modal fade" id="DeleteConfirmModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" 
+               aria-hidden="true">×
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               Topic Delete
+            </h4>
+         </div>
+         <div class="modal-body" id="DeleteConfirmBody">
+           
+         </div>
+         <div class="modal-footer">
+	        <button type="button" class="btn btn-default"  data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal" id="QuestionDeleteConfirm" onclick="deletetopic()">Ok</button>
+      	</div>
+         </div>
+   </div>
+</div> 
 </body>
 </html>

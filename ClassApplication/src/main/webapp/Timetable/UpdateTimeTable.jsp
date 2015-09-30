@@ -31,8 +31,7 @@ input = $('#start'+id);
 			 input = $('#end'+id);
 		 }
 input.datetimepicker({
-    pickDate: false,
-	  format: 'DD/MM/YYYY'
+    pickDate: false
 });
 	 }
 input.data("DateTimePicker").show();

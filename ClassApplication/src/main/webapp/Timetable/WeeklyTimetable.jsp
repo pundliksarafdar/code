@@ -18,7 +18,8 @@ function gettime(time,id){
 		 input = $('#date'+id);
 		 input.datetimepicker({
 			    pickTime: false,
-			    minDate:((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()
+			    minDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()),
+				  format: 'DD/MM/YYYY'
 			});
 	 }else{
 	 if(time=="start")
@@ -37,7 +38,7 @@ input.data("DateTimePicker").show();
 
 function validatedate(inputText)
 {
-	var dateformat = /^(0?[1-9]|1[012])[\/](0?[1-9]|[12][0-9]|3[01])[\/]\d{4}$/;
+	var dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
 	if(inputText.match(dateformat)){
 		
 		var pdate = inputText.split('/');
@@ -85,7 +86,8 @@ $(document).ready(function(){
 	
 		  $( "#datetimepicker" ).datetimepicker({
 			  pickTime: false,
-			  minDate:((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()
+			  minDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()),
+			  format: 'DD/MM/YYYY'
 		  }).data("DateTimePicker");
 		  
 		  $("#divisionID").change(function(){

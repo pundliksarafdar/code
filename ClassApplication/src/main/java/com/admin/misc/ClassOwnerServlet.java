@@ -36,6 +36,7 @@ import com.classapp.db.batch.BatchDetails;
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.exam.Exam;
 import com.classapp.db.notificationpkg.Notification;
+import com.classapp.db.question.Questionbank;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentData;
@@ -60,6 +61,7 @@ import com.transaction.feedback.feedbackTransaction;
 import com.transaction.notes.NotesTransaction;
 import com.transaction.notification.NotificationGlobalTransation;
 import com.transaction.notification.NotificationTransaction;
+import com.transaction.questionbank.QuestionBankTransaction;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.schedule.ScheduleTransaction;
 import com.transaction.teacher.TeaherTransaction;
@@ -2334,7 +2336,42 @@ public class ClassOwnerServlet extends HttpServlet{
 		String subjectid = req.getParameter("subID");
 		String topicid=req.getParameter("topicid");
 		SubjectTransaction subjectTransaction=new SubjectTransaction();
-		subjectTransaction.deleteTopics(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId),Integer.parseInt(topicid));
+		QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
+		List<Integer> quesids=bankTransaction.getQuestionrelatedtoTopics(Integer.parseInt(subjectid), userBean.getRegId(), Integer.parseInt(divisionId), Integer.parseInt(topicid));
+		ExamTransaction examTransaction=new ExamTransaction();
+		String examname="";
+		if(quesids!=null){
+			
+	List<Integer> examQuesIds=new ArrayList<Integer>();
+	List<Integer> nonExamQuesIds=new ArrayList<Integer>();
+		//for (int j = 0; j < quesids.size(); j++) {	
+		List<Exam> list=examTransaction.isQuestionRelatedToTopicAvailableInExam(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId), quesids);
+		if(list!=null){
+			
+			for (int i = 0; i < list.size(); i++) {
+				for (int j = 0; j < quesids.size(); j++) {
+					boolean flag= false;
+					String quesarr[]=list.get(i).getQue_ids().split(",");
+					for (int k = 0; k < quesarr.length; k++) {
+					if(quesarr[k].trim().equals((quesids.get(j)+""))){
+						flag=true;
+						break;
+					}
+					}
+					if(flag==true){
+						examQuesIds.add(quesids.get(j));
+					}else{
+						nonExamQuesIds.add(quesids.get(j));
+					}
+				}
+				}
+			bankTransaction.deleteQuestionList(nonExamQuesIds, userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId));
+			bankTransaction.ExamQuestionStatus(examQuesIds,  userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId));
+			}
+			//respObject.addProperty("examnames", examname);
+			//respObject.addProperty("quesstatus", "Y");
+		}
+		//subjectTransaction.deleteTopics(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId),Integer.parseInt(topicid));
 		respObject.addProperty(STATUS, "success");
 	}else if("addTopic".equalsIgnoreCase(methodToCall)){
 		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
@@ -2495,7 +2532,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		String batchdivision=req.getParameter("batchdivision");
 		String date=req.getParameter("date");
 		String dateString[]=date.split("/");
-		Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
+		Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[1])-1,Integer.parseInt( dateString[0]));
 		ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 		List<Schedule> list=null;
 		if(userBean.getRole()==3){
@@ -2610,7 +2647,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		String classid=req.getParameter("classid");
 		String date=req.getParameter("date");
 		String dateString[]=date.split("/");
-		Date scheduledate=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
+		Date scheduledate=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[1])-1,Integer.parseInt( dateString[0]));
 		ScheduleTransaction  scheduleTransaction=new ScheduleTransaction();
 		List<Schedule> schedules= scheduleTransaction.getTeachersWeeklySchedule(Integer.parseInt(classid), regId,scheduledate);
 		BatchTransactions batchTransactions=new BatchTransactions();
@@ -2756,6 +2793,42 @@ public class ClassOwnerServlet extends HttpServlet{
 	}*/
 	respObject.addProperty(STATUS, "success");
 	
+	}else if("isTopicRelatedQuestionAvailableInExam".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId=userBean.getRegId();;
+		String divisionId = req.getParameter("division");
+		String subjectid = req.getParameter("subject");
+	//	String questionNumber=req.getParameter("questionNumber");
+		String topic_id=req.getParameter("topicid");
+		//String institute=req.getParameter("institute");
+		int inst_id=userBean.getRegId();
+		/*if(!"".equals(institute)){
+			inst_id=Integer.parseInt(institute);
+		}*/
+		QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
+		List<Integer> quesids=bankTransaction.getQuestionrelatedtoTopics(Integer.parseInt(subjectid), inst_id, Integer.parseInt(divisionId), Integer.parseInt(topic_id));
+		ExamTransaction examTransaction=new ExamTransaction();
+		String examname="";
+		if(quesids!=null){
+		//for (int j = 0; j < quesids.size(); j++) {	
+		List<Exam> list=examTransaction.isQuestionRelatedToTopicAvailableInExam(inst_id, Integer.parseInt(subjectid), Integer.parseInt(divisionId), quesids);
+		if(list!=null){
+			
+			for (int i = 0; i < list.size(); i++) {
+				if("".equals(examname)){
+					examname=list.get(i).getExam_name();
+				}else{
+					examname=examname+","+list.get(i).getExam_name();
+				}
+			}
+			respObject.addProperty("examnames", examname);
+			respObject.addProperty("quesstatus", "Y");
+		}
+		//	}
+		}if("".equals(examname)){
+			respObject.addProperty("quesstatus", "");
+		}
+		respObject.addProperty(STATUS, "success");
 	}
 		
 		printWriter.write(respObject.toString());

@@ -88,7 +88,11 @@ public class ScheduleTransaction {
 	
 	public String isTeacherUnavailable(String class_id,String batch_id,List sub_id,List teacher_id,
 			List start_time,List end_time,List date,List scheduleids,int div_id) {
-		
+		ArrayList<Integer> scheduleid = new ArrayList<Integer>();
+
+		for(int i = 0; i < scheduleids.size(); i++) {
+			scheduleid.add(Integer.parseInt((String) scheduleids.get(i)));   
+		}
 		int i=0;
 		String status="";
 		for(i=0;i<sub_id.size();i++)
@@ -105,7 +109,7 @@ public class ScheduleTransaction {
 		schedule.setTeacher_id(Integer.parseInt((String)teacher_id.get(i)));
 		schedule.setSchedule_id(Integer.parseInt((String)scheduleids.get(i)));
 		ScheduleDB scheduleDB=new ScheduleDB();
-		String exists=scheduleDB.isTeacherUnavailable(schedule);
+		String exists=scheduleDB.isTeacherUnavailable(schedule,scheduleid);
 	//	String exists=scheduleDB.isExistsLecture(schedule);
 		if(exists.equals("teacher"))
 		{

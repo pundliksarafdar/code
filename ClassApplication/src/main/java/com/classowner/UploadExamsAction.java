@@ -22,6 +22,7 @@ import com.classapp.db.batch.division.Division;
 import com.classapp.db.exam.CompExam;
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.subject.Subject;
+import com.classapp.db.subject.Topics;
 import com.classapp.login.UserStatic;
 import com.config.BaseAction;
 import com.config.Constants;
@@ -50,6 +51,8 @@ public class UploadExamsAction extends BaseAction{
 	String searchedRep;
 	String institute;
 	String quesstatus;
+	List<Topics> topics;
+	int topicID;
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		int inst_id=userBean.getRegId();
@@ -60,6 +63,9 @@ public class UploadExamsAction extends BaseAction{
 			inst_id=Integer.parseInt(institute);
 		}
 		if(null == actionname){
+			SubjectTransaction subjectTransaction=new SubjectTransaction();
+			topics=subjectTransaction.getTopics(inst_id, Integer.parseInt(subject), Integer.parseInt(division));
+		
 			actionname="submitquestions";
 			if(userBean.getRole()==2){
 				return "teacheraddquestion";
@@ -118,7 +124,7 @@ public class UploadExamsAction extends BaseAction{
 			Questionbank questionbank=new Questionbank();
 			questionbank.setAdded_by(userBean.getRegId());
 			questionbank.setAns_id(answersOptionCheckBox.toString());
-			questionbank.setCreated_dt(new Date(2015, 7, 13));
+			questionbank.setCreated_dt(new Date(new java.util.Date().getTime()));
 			questionbank.setDiv_id(Integer.parseInt(division));
 			questionbank.setExam_rep("1");
 			questionbank.setInst_id(inst_id);
@@ -126,6 +132,7 @@ public class UploadExamsAction extends BaseAction{
 			questionbank.setQue_id(questionNumber);
 			questionbank.setRep(0);
 			questionbank.setSub_id(Integer.parseInt(subject));
+			questionbank.setTopic_id(topicID);
 			bankTransaction.saveQuestion(questionbank);
 			if(currentPage!=0){
 				result="questioneditsuccess";
@@ -578,6 +585,22 @@ public class UploadExamsAction extends BaseAction{
 
 	public void setQuesstatus(String quesstatus) {
 		this.quesstatus = quesstatus;
+	}
+
+	public List<Topics> getTopics() {
+		return topics;
+	}
+
+	public void setTopics(List<Topics> topics) {
+		this.topics = topics;
+	}
+
+	public int getTopicID() {
+		return topicID;
+	}
+
+	public void setTopicID(int topicID) {
+		this.topicID = topicID;
 	}
 	
 	

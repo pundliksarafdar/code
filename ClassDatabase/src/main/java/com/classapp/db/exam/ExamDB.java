@@ -370,6 +370,53 @@ return list;
 		return (int)examListCount;
 	}
 	
+	public List<Exam> isQuestionRelatedToTopicAvailableInExam(int inst_id,int sub_id,int div_id,List<Integer> ques_id) {
+		Transaction transaction=null;
+		Session session=null;
+		List<Exam> list = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			String queryString="from Exam where  institute_id = :inst_id and div_id=:div_id and sub_id=:sub_id";
+			if(ques_id!=null){
+				if(ques_id.size()>0){
+				for (int i = 0; i < ques_id.size(); i++) {
+					if(i==0){
+						queryString=queryString+" and ((que_ids like :que_ids"+i+"a or que_ids like :que_ids"+i+"b or que_ids like :que_ids"+i+"c or que_ids = :que_ids"+i+"d)";
+					}else{
+						queryString=queryString+"or (que_ids like :que_ids"+i+"a or que_ids like :que_ids"+i+"b or que_ids like :que_ids"+i+"c or que_ids = :que_ids"+i+"d)";
+					}
+				}
+				queryString=queryString+")";
+			
+			
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("sub_id", sub_id);
+		
+				//String batchidsarr[]=batchids.split(",");
+				for (int i = 0; i < ques_id.size(); i++) {
+					query.setParameter("que_ids"+i+"a", ques_id.get(i)+",%");
+					query.setParameter("que_ids"+i+"b","%,"+ques_id.get(i)+",%");	
+					query.setParameter("que_ids"+i+"c", "%,"+ques_id.get(i));
+					query.setParameter("que_ids"+i+"d", ques_id.get(i));
+			}
+			
+			
+			list = query.list();
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}
+	return list;
+	}
+	
 	public List<Exam> isQuestionAvailableInExam(int inst_id,int sub_id,int div_id,String ques_id) {
 		Exam exam=new Exam();
 		Transaction transaction=null;

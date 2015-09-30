@@ -37,5 +37,8 @@
         <property name="ques_status" type="java.lang.String">
             <column name="ques_status" />
         </property>
+         <property name="topic_id" type="int">
+            <column name="topic_id" />
+        </property>
     </class>
 </hibernate-mapping>

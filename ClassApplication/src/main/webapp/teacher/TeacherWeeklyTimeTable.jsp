@@ -10,7 +10,8 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	  $( "#datetimepicker" ).datetimepicker({
-		  pickTime: false
+		  pickTime: false,
+		  format:"DD/MM/YYYY"
 	  }).data("DateTimePicker");
 	  
 	  $("#submit").click(function(){

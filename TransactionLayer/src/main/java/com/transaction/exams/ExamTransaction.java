@@ -180,6 +180,11 @@ public class ExamTransaction {
 		return db.isQuestionAvailableInExam(inst_id, sub_id, div_id, ques_id);
 	}
 	
+	public List<Exam> isQuestionRelatedToTopicAvailableInExam(int inst_id,int sub_id,int div_id,List<Integer> ques_id) {
+		ExamDB db=new ExamDB();
+		return db.isQuestionRelatedToTopicAvailableInExam(inst_id, sub_id, div_id, ques_id);
+	}
+	
 	public boolean deleteExamrelatedtosubject(int sub_id) {
 		ExamDB db=new ExamDB();
 		return db.deleteExamrelatedtosubject(sub_id);

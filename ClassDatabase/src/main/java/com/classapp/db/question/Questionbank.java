@@ -18,6 +18,7 @@ public class Questionbank implements Serializable {
 	private String ans_id;
 	private String exam_rep;
 	String ques_status;
+	int topic_id;
 	public int getInst_id() {
 		return inst_id;
 	}
@@ -95,6 +96,12 @@ public class Questionbank implements Serializable {
 	}
 	public void setQues_status(String ques_status) {
 		this.ques_status = ques_status;
+	}
+	public int getTopic_id() {
+		return topic_id;
+	}
+	public void setTopic_id(int topic_id) {
+		this.topic_id = topic_id;
 	}
 	
 	
