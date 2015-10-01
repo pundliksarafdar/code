@@ -146,8 +146,13 @@ $(document).ready(function(){
 				<label for="questionmarks">Topic</label>
 				<select class="form-control" id="topicID" name="topicID">
 				<option value="-1">Select Topic</option>
+				<c:if test="${selectedtopicID ne 0 && selectedtopicID ne -1}">
+				<option value="<c:out value="${selectedtopicID}"></c:out>" selected="selected"><c:out value="${selectedtopicName}"></c:out></option>
+				</c:if>
 				<c:forEach items="${topics}" var="topic">
+				<c:if test="${topic.topic_id ne selectedtopicID}">
 				<option value="<c:out value="${topic.topic_id}"></c:out>"><c:out value="${topic.topic_name}"></c:out></option>	
+				</c:if>
 				</c:forEach>
 				</select>
 			</div>

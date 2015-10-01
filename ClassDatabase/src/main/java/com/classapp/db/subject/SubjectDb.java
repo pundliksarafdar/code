@@ -473,9 +473,59 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
+		topic=(Topics) session.get(Topics.class, topic);
 		session.delete(topic);
 		transaction.commit();
 		session.close();
+		return  true;
+	}
+	
+	public boolean deleteTopicsrelatedToSubject(int inst_id,int sub_id) {
+	
+		Session session = null;
+		Transaction transaction = null;
+		List<Subject> queryResult=null;
+		String queryString="delete Topics where inst_id = :inst_id and sub_id=:sub_id";	
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+		Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("sub_id", sub_id);
+			 query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		
+		return  true;
+	}
+	
+	public boolean deleteTopicsrelatedToDivision(int inst_id,int div_id) {
+		Session session = null;
+		Transaction transaction = null;
+		List<Subject> queryResult=null;
+		String queryString="delete Topics where inst_id = :inst_id and div_id=:div_id";	
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+		Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			 query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		
 		return  true;
 	}
 	

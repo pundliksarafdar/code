@@ -32,7 +32,9 @@
  </style>
 <script type="text/javascript">
 var allbatches="";
-
+var globalnotesrowcounter=0;
+var noofrows=0;
+var deletedrows=[];
 function validate()
 {
 var file=document.getElementByID("myFile");
@@ -93,75 +95,86 @@ $(document).ready(function(){
 	
 	$("#submit").click(function(event){
 	//	event.preventDefault();
-		var file=document.getElementById("myfile").value;
-		var notesname=$("#notesname").val();
+		var flag=true;
+	var allnotesnames="";
+	var allnotesrowid="";
+	var i=0;
+	for(i=0;i<=globalnotesrowcounter;i++){
+		var internalflag=false;
+		for(var j=0;j<deletedrows.length;j++){
+			if(deletedrows[j]==i){
+				internalflag=true;	
+			}
+		}
+		if(internalflag==false){
+		var file=document.getElementById("myfile"+i).value;
+		var notesname=$("#notesname"+i).val();
+		if(""==allnotesnames){
+		allnotesnames=notesname;
+		allnotesrowid=i;
+		}else{
+			allnotesnames=allnotesnames+','+notesname;
+			allnotesrowid=allnotesrowid+','+i;
+		}
 		var division=$("#division").val();
 		var subject=$("#subject").val();
 		var validforbatch=$("#validforbatch:checked").val();
 		//var batch=$("#batch").val();
-		var notesnameerror=$("#notesnameerror");
-		var divisionerror=$("#divisionerror");
-		var subjecterror=$("#subjecterror");
-		var batcherror=$("#batcherror");
-		var fileerror=$("#fileerror");
+		var noteserror=$("#noteserror"+i);
 		var regex = /^[a-zA-Z0-9 ]*$/;
-		batcherror.html("");
-		subjecterror.html("");
-		divisionerror.html("");
-		notesnameerror.html("");
-		fileerror.html("");
+		noteserror.html("");
 		var batchidmap;
 		var batch="";
-		var flag=true;
-		batchidmap=$("input[name='batch']:checked").map(function() {
-			return this.value;
-		});
 		
-		var j=0;
-		while(j<batchidmap.size())
-			{
-			if(j==0)
-				{
-				batch=batch+batchidmap[0]+"";
-				}else{
-					batch=batch+","+batchidmap[j];
-				}
-			j++;
-			}
 		if(file==""){
-			fileerror.html("Please select file");
+			noteserror.html("Please select file");
 			flag=false;
 		}else{
-			var filesize=document.getElementById("myfile").files[0].size/1024/1024;
+			var filesize=document.getElementById("myfile"+i).files[0].size/1024/1024;
 			if(filesize > 5){
-				fileerror.html("File size should be less than 5 MB");
+				noteserror.html("File size should be less than 5 MB");
 				flag=false;
 			}
 		}
 		if(notesname==""){
-			notesnameerror.html("Please enter notes name");
+			noteserror.html("Please enter notes name");
 			flag=false;
 		}else if(!notesname.match(regex)){
-			notesnameerror.html("Please enter valid notes name (No special characher allowed) ");
+			noteserror.html("Please enter valid notes name (No special characher allowed) ");
 			flag=false;
-		}else{
+		}
+		}
+	}
+		if(flag==true){
 			var  notesflag=false;
 			$.ajax({
 				 
 				   url: "classOwnerServlet",
 				   data: {
 				    	 methodToCall: "validatenotesname",
-				    	 notes: notesname
+				    	 notes: allnotesnames,
+				    	 notesrowid:allnotesrowid
 				   		},
 				   		async: false,
 				   type:"POST",
 				   success:function(data){
 					   var resultJson = JSON.parse(data);
 					   var notesstatuts=resultJson.notesname;
-					   if(notesstatuts=="available"){
-						   notesflag=true; 
+					   var overlappedIds=resultJson.overlappedIds.split("/");
+					   var notesnamestatus=resultJson.notesnamestatus.split(",");
+					   if(overlappedIds[0]==""){
+						   if(notesnamestatus[0]!=""){
+					  for(var s=0;s<notesnamestatus.length;s++){
+						  $("#noteserror"+notesnamestatus[s]).html("Notes name already exists,Please enter different names");
+					  }
+					  flag=false;
+						   }
 					   }else{
-						   notesflag=false;
+						   for(var k=0;k<overlappedIds.length;k++){
+							   $("#noteserror"+overlappedIds[k].split(",")[0]).html("Please enter unique names");
+							   $("#noteserror"+overlappedIds[k].split(",")[1]).html("Please enter unique names");
+						   }
+						   flag=false;
 					   }
 					  
 				   },
@@ -169,66 +182,46 @@ $(document).ready(function(){
 				   		modal.launchAlert("Error","Error");
 				   	}
 				   });
-			if(notesflag==true){
-				notesnameerror.html("Please enter different notes name");
+	/* 		if(notesflag==true){
+				noteserror.html("Please enter different notes name");
 				flag=false;
-			}
-		}
-		if(division=="-1"){
-			divisionerror.html("Please select division");
-			flag=false;
-		}
-		if(subject=="-1"){
-			subjecterror.html("Please select subject");
-			flag=false;
-		}
-		var allbatch=$("#allbatches").val();
-		if(allbatch==""){
-			 $("#batcherror").html("No Batch Present");
-			 flag=false;
-		}
-		
-		if(validforbatch=="specific"){
-			if(batch==null || batch==""){
-				batcherror.html("Please select atleast one batch");
-				flag=false;
-			}
+			} */
 		}
 		
 		if(flag==false){
 			event.preventDefault();
 		}
 			
-		
+	
 	});
 	
 	
-/* $(":file").filestyle({buttonBefore: true});
- */
-/* $('.selectpicker').selectpicker();
-$('#form').bootstrapValidator({
-    feedbackIcons: {
-        valid: 'glyphicon glyphicon-ok',
-        invalid: 'glyphicon glyphicon-remove',
-        validating: 'glyphicon glyphicon-refresh'
-    },
-    fields: {
-    	notesname: {
-            validators: {
-                notEmpty: {
-                    message: 'The username is required'
-                }
-            }
-        },
-        myFile: {
-            validators: {
-                notEmpty: {
-                    message: 'The password is required'
-                }
-            }
-        }
-    }
-}); */
+$("#addrow").click(function(event){
+	event.preventDefault();
+	if(noofrows==0){
+		$(".removenotesrow").prop('disabled',false);
+	}
+	globalnotesrowcounter++;
+	noofrows++;
+	$("#basenotestablebody").append('<tr id="notesTR'+globalnotesrowcounter+'">'
+	+'<td><input type="text" name="notesname" class="form-control" id="notesname'+globalnotesrowcounter+'" maxlength="50"></td>'
+	+'<td><input type="file" name="myFile" accept=".pdf" class="form-control"  size="100px" id="myfile'+globalnotesrowcounter+'"></td>'
+	+'<td><button class="btn btn-info removenotesrow" id="notesdelete_'+globalnotesrowcounter+'"><i class="glyphicon glyphicon-trash"></i></button></td>'
+	+'<td><span class="error" id="noteserror'+globalnotesrowcounter+'" name="noteserror"></span></td>'
+	+'</tr>');
+	
+});
+
+$("#basenotestablebody").on("click",".removenotesrow",function(event){
+	event.preventDefault();
+	var id=$(this).prop("id").split("_");
+	$("#notesTR"+id[1]).remove();
+	deletedrows.push(id[1]);
+	noofrows--;
+	if(noofrows==0){
+		$(".removenotesrow").prop('disabled',true);
+	}
+});
 
 });
 
@@ -280,28 +273,38 @@ if(notes!=null){
 			 
 		</div>
 	</div>
-	
-	<div class="row">
-		<div class="col-md-3">
-		<label for="notesname"  class="control-label" align="right">Notes Name :</label>
-		<input type="text" name="notesname" class="form-control" id="notesname" maxlength="50">
-		<span class="error" id="notesnameerror" name="notesnameerror"></span>
-		</div>
-		<div class="col-md-3">
-		<label for="myFile"  class="control-label" align="right">Upload your file :</label>
-		<input type="file" name="myFile" accept=".pdf" class="form-control"  size="100px" id="myfile">
-		<span id="fileerror" class="error"></span>
-		</div>
-		<div class="col-md-3">
-      <button type="submit" class="btn btn-info" id="submit" style="margin-top: 22px">Submit</button>
-      </div>
-		</div>
-		<%-- <div class="row">
-		<div class="col-md-3" align="left">
-		<b><u><a href="choosesubject?forwardAction=addnotesoption"><span class="glyphicon glyphicon-arrow-left"></span> Go Back</a></u></b>
-		</div>
-		</div> --%>
 </div>		
+<div class="container" id="basenotesdiv">
+	<table id="basenotestable">
+	<thead>
+	<tr>
+	<th>Name</th>
+	<th>File</th>
+	<th>Delete</th>
+	<th></th>
+	</tr>
+	</thead>
+	<tbody id="basenotestablebody">
+	<tr id="notesTR0">
+		<td><input type="text" name="notesname" class="form-control" id="notesname0" maxlength="50"></td>
+		<td><input type="file" name="myFile" accept=".pdf" class="form-control"  size="100px" id="myfile0"></td>
+		<td><button class="btn btn-info removenotesrow" id="notesdelete_0" disabled="disabled"><i class="glyphicon glyphicon-trash"></i></button></td>
+		<td><span class="error" id="noteserror0" name="noteserror"></span></td>
+	</tr>
+	</tbody>
+	</table>
+	
+</div>
+<div class="container">
+<div class="row">
+	<div class="col-md-3">
+	 <button class="btn btn-info" id="addrow" style="margin-top: 22px"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Row</button>
+      </div>
+      <div class="col-md-3">
+      <button type="submit" class="btn btn-info" id="submit" style="margin-top: 22px">Submit</button>
+  		</div>
+  </div>
+  </div>
 </form>		
 </body>
 </html>

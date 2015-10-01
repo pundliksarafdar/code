@@ -53,6 +53,8 @@ public class UploadExamsAction extends BaseAction{
 	String quesstatus;
 	List<Topics> topics;
 	int topicID;
+	int selectedtopicID;
+	String selectedtopicName;
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		int inst_id=userBean.getRegId();
@@ -62,10 +64,11 @@ public class UploadExamsAction extends BaseAction{
 			userStatic.setStorageSpace(storagePath);
 			inst_id=Integer.parseInt(institute);
 		}
+		SubjectTransaction subjectTransaction=new SubjectTransaction();
+		topics=subjectTransaction.getTopics(inst_id, Integer.parseInt(subject), Integer.parseInt(division));
+	
 		if(null == actionname){
-			SubjectTransaction subjectTransaction=new SubjectTransaction();
-			topics=subjectTransaction.getTopics(inst_id, Integer.parseInt(subject), Integer.parseInt(division));
-		
+			
 			actionname="submitquestions";
 			if(userBean.getRole()==2){
 				return "teacheraddquestion";
@@ -82,7 +85,7 @@ public class UploadExamsAction extends BaseAction{
 			if("submitquestions".equals(actionname)){
 			questionNumber=bankTransaction.getNextQuestionID(inst_id,Integer.parseInt(subject), Integer.parseInt(division));
 			}
-			SubjectTransaction subjectTransaction=new SubjectTransaction();
+			subjectTransaction=new SubjectTransaction();
 			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
 			if(subbean!=null){
 				subjectname=subbean.getSubjectName();
@@ -140,7 +143,7 @@ public class UploadExamsAction extends BaseAction{
 			return result;
 		}else if("navigatequestions".equals(actionname)||"editquestion".equals(actionname)){
 			UserStatic userStatic = userBean.getUserStatic();
-			SubjectTransaction subjectTransaction=new SubjectTransaction();
+			 subjectTransaction=new SubjectTransaction();
 			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
 			if(subbean!=null){
 				subjectname=subbean.getSubjectName();
@@ -167,6 +170,17 @@ public class UploadExamsAction extends BaseAction{
 				}
 				indexOption=questionData.getOptions().size();
 			}
+			QuestionBankTransaction questionBankTransaction=new QuestionBankTransaction();
+			Questionbank questionbank=questionBankTransaction.getQuestion(questionNumber, inst_id,Integer.parseInt(subject), Integer.parseInt(division));
+			selectedtopicID=questionbank.getTopic_id();
+			if(topics!=null){
+				for(int i = 0; i < topics.size(); i++) {
+					if(topics.get(i).getTopic_id()==selectedtopicID){
+						selectedtopicName=topics.get(i).getTopic_name();
+						break;
+					}
+				}
+			}
 			request.setAttribute("questionData", questionData);
 			actionname="SavenSubmit";
 			String result = "startuploadingexam";
@@ -175,7 +189,7 @@ public class UploadExamsAction extends BaseAction{
 			}
 			return result;
 		}else if("SavenSubmit".equals(actionname)){
-			SubjectTransaction subjectTransaction=new SubjectTransaction();
+			 subjectTransaction=new SubjectTransaction();
 			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
 			if(subbean!=null){
 				subjectname=subbean.getSubjectName();
@@ -215,6 +229,7 @@ public class UploadExamsAction extends BaseAction{
 			Questionbank questionbank=questionBankTransaction.getQuestion(questionNumber, inst_id,Integer.parseInt(subject), Integer.parseInt(division));
 			questionbank.setAns_id(answersOptionCheckBox.toString());
 			questionbank.setMarks(questionmarks);
+			questionbank.setTopic_id(topicID);
 			questionBankTransaction.saveQuestion(questionbank);
 			
 			actionname="SavenSubmit";
@@ -223,7 +238,7 @@ public class UploadExamsAction extends BaseAction{
 		}else if("deletequestion".equals(actionname)){
 			if("".equals(quesstatus)){
 			UserStatic userStatic = userBean.getUserStatic();
-			SubjectTransaction subjectTransaction=new SubjectTransaction();
+			 subjectTransaction=new SubjectTransaction();
 			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
 			if(subbean!=null){
 				subjectname=subbean.getSubjectName();
@@ -601,6 +616,22 @@ public class UploadExamsAction extends BaseAction{
 
 	public void setTopicID(int topicID) {
 		this.topicID = topicID;
+	}
+
+	public int getSelectedtopicID() {
+		return selectedtopicID;
+	}
+
+	public void setSelectedtopicID(int selectedtopicID) {
+		this.selectedtopicID = selectedtopicID;
+	}
+
+	public String getSelectedtopicName() {
+		return selectedtopicName;
+	}
+
+	public void setSelectedtopicName(String selectedtopicName) {
+		this.selectedtopicName = selectedtopicName;
 	}
 	
 	

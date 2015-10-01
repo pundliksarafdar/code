@@ -1686,6 +1686,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	}
 	respObject.addProperty(STATUS, "success");
 }else if("deletesubject".equals(methodToCall)){
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 	String subjectid=req.getParameter("subjectid");
 	Subject subject=new Subject();
 	subject.setSubjectId(Integer.parseInt(subjectid));
@@ -1702,6 +1703,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	ExamTransaction examTransaction=new ExamTransaction();
 	examTransaction.deleteExamrelatedtosubject(Integer.parseInt(subjectid));
 	SubjectTransaction subjectTransaction=new SubjectTransaction();
+	subjectTransaction.deleteTopicsrelatedToSubject(userBean.getRegId(), Integer.parseInt(subjectid));
 	subjectTransaction.deleteSubject(Integer.parseInt(subjectid));
 	respObject.addProperty(STATUS, "success");
 }else if("modifyclass".equals(methodToCall)){
@@ -1723,6 +1725,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	respObject.addProperty(STATUS, "success");
 
 }else if("deleteclass".equals(methodToCall)){
+	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 	String classid=req.getParameter("classid");
 	ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 	scheduleTransaction.deleteschedulerelatedtoclass(Integer.parseInt(classid));
@@ -1736,6 +1739,8 @@ public class ClassOwnerServlet extends HttpServlet{
 	examTransaction.deleteExamrelatedtodivision(Integer.parseInt(classid));
 	BatchTransactions batchTransactions=new BatchTransactions();
 	batchTransactions.deletebatchrelatdtoclass(Integer.parseInt(classid));
+	SubjectTransaction subjectTransaction=new SubjectTransaction();
+	subjectTransaction.deleteTopicsrelatedToDivision(userBean.getRegId(), Integer.parseInt(classid));
 	DivisionTransactions divisionTransactions=new DivisionTransactions();
 	divisionTransactions.deletedivision(Integer.parseInt(classid));
 	respObject.addProperty(STATUS, "success");
@@ -1889,7 +1894,23 @@ public class ClassOwnerServlet extends HttpServlet{
 	respObject.addProperty(STATUS, "success");
 	
 }else if("validatenotesname".equals(methodToCall)){
-	String notes=req.getParameter("notes");
+	String[] notes=req.getParameter("notes").split(",");
+	String[] notesrowid=req.getParameter("notesrowid").split(",");
+	String overlappedIds="";
+	for (int i = 0; i < notesrowid.length; i++) {
+		for (int j = i+1; j < notesrowid.length; j++) {
+			if(notes[i].trim().equalsIgnoreCase(notes[j])){
+				if("".equals(overlappedIds)){
+					overlappedIds=notesrowid[i]+","+notesrowid[j];
+				}else{
+					overlappedIds=overlappedIds+"/"+notesrowid[i]+","+notesrowid[j];
+				}
+			}
+		}
+		
+	}
+	String notesnamestatus="";
+	if("".equals(overlappedIds)){
 	String classes=req.getParameter("classes");
 	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 	NotesTransaction notesTransaction=new NotesTransaction();
@@ -1897,12 +1918,25 @@ public class ClassOwnerServlet extends HttpServlet{
 	if(classes!="" && classes !=null){
 		classid=Integer.parseInt(classes);
 	}
-	boolean flag=notesTransaction.validatenotesname(notes, classid);
+	
+	for (int i = 0; i < notes.length; i++) {
+		
+	
+	boolean flag=notesTransaction.validatenotesname(notes[i].trim(), classid);
 	if(flag){
-		respObject.addProperty("notesname", "available");
-	}else{
-		respObject.addProperty("notesname", "notavailable");
+		if("".equals(notesnamestatus)){
+		notesnamestatus=notesrowid[i];
+		}else{
+			notesnamestatus=notesnamestatus+","+notesrowid[i];
+			
+		}
 	}
+	}
+	
+	}
+	respObject.addProperty("notesnamestatus", notesnamestatus);
+		respObject.addProperty("overlappedIds", overlappedIds);
+	
 	respObject.addProperty(STATUS, "success");
 	
 }else if("getsubjectsanddivisions".equals(methodToCall)){
@@ -2371,7 +2405,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			//respObject.addProperty("examnames", examname);
 			//respObject.addProperty("quesstatus", "Y");
 		}
-		//subjectTransaction.deleteTopics(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId),Integer.parseInt(topicid));
+		subjectTransaction.deleteTopics(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId),Integer.parseInt(topicid));
 		respObject.addProperty(STATUS, "success");
 	}else if("addTopic".equalsIgnoreCase(methodToCall)){
 		UserBean userBean = (UserBean) req.getSession().getAttribute("user");

@@ -85,6 +85,7 @@ public class SubjectTransaction {
 		
 	}
 	public boolean deleteSubject(int subid) {
+		
 		SubjectDb subjectDb=new SubjectDb();
 		subjectDb.deleteSubject(subid);
 		return true;
@@ -141,6 +142,18 @@ public class SubjectTransaction {
 	public boolean deleteTopics(int inst_id,int sub_id,int div_id,int topicid) {
 		SubjectDb subjectDb=new SubjectDb();
 		return subjectDb.deleteTopics(inst_id, sub_id, div_id,topicid);
+			
+		}
+	
+	public boolean deleteTopicsrelatedToSubject(int inst_id,int sub_id) {
+		SubjectDb subjectDb=new SubjectDb();
+		return subjectDb.deleteTopicsrelatedToSubject(inst_id, sub_id);
+			
+		}
+	
+	public boolean deleteTopicsrelatedToDivision(int inst_id,int div_id) {
+		SubjectDb subjectDb=new SubjectDb();
+		return subjectDb.deleteTopicsrelatedToDivision(inst_id, div_id);
 			
 		}
 	

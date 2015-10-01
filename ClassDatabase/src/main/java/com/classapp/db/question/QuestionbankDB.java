@@ -184,7 +184,7 @@ public List<Questionbank> getSearchedQuestion(int rep,String compexam_id,int mar
 		criteria.add(criterion);
 	}
 	if(currentPage!=0 &&  currentPage!=1){
-		criteria.setFirstResult((currentPage-1)*20);
+		criteria.setFirstResult((currentPage-1)*50);
 	}
 	criteria.setMaxResults(50);
 	List<Questionbank> questionList = criteria.list();

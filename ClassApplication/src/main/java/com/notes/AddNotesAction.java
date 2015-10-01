@@ -23,13 +23,13 @@ import com.transaction.notification.NotificationGlobalTransation;
 import com.user.UserBean;
 
 public class AddNotesAction extends BaseAction{
-	 private File myFile;
+	 private File[] myFile;
 	   private String myFileContentType;
 	   private String myFileFileName;
 	   private String destPath;
 	   private String subject;
 	   private String division;
-	   private String notesname;
+	   private String[] notesname;
 	   private String batch;
 	   private String validforbatch;
 	   private String allbatches;
@@ -59,10 +59,10 @@ public class AddNotesAction extends BaseAction{
 	public void setValidforbatch(String validforbatch) {
 		this.validforbatch = validforbatch;
 	}
-	public String getNotesname() {
+	public String[] getNotesname() {
 		return notesname;
 	}
-	public void setNotesname(String notesname) {
+	public void setNotesname(String[] notesname) {
 		this.notesname = notesname;
 	}
 	@Override
@@ -71,6 +71,9 @@ public class AddNotesAction extends BaseAction{
 			Map<String, Object> session) {
 		/* Copy file to a safe location */
 	    //  destPath = "D:/"+userBean.getRegId()+"/"+division+"/"+subject+"/"; 
+		for (int j = 0; j < myFile.length; j++) {
+			
+		
 	      Notes notes=new Notes();
 	      UserStatic userStatic = userBean.getUserStatic();
 	      destPath=  userStatic.getNotesPath()+File.separator+subject+File.separator+division;
@@ -84,20 +87,20 @@ public class AddNotesAction extends BaseAction{
 	      
 	      
 	      try{
-	     	 System.out.println("Src File name: " + myFile);
-	     	 System.out.println("Dst File name: " + myFileFileName);
+	     	 System.out.println("Src File name: " + myFile[j]);
+	     	 System.out.println("Dst File name: " + myFileFileName.split(",")[j]);
 	     	    	 
-	     	 File destFile  = new File(destPath, myFileFileName);
-	    	 FileUtils.copyFile(myFile, destFile);
+	     	 File destFile  = new File(destPath, myFileFileName.split(",")[j]);
+	    	 FileUtils.copyFile(myFile[j], destFile);
 	    	 if(userBean.getRole()==2){
 	    		 notes.setClassid(Integer.parseInt(institute));
 	    	 }else{
 	    	 notes.setClassid(userBean.getRegId());
 	    	 }
 	    	 notes.setDivid(Integer.parseInt(division));
-	    	 notes.setNotespath(DBPAth+myFileFileName);
+	    	 notes.setNotespath(DBPAth+myFileFileName.split(",")[j]);
 	    	 notes.setSubid(Integer.parseInt(subject));
-	    	 notes.setName(notesname);
+	    	 notes.setName(notesname[j]);
 	    	 notes.setAddedby(userBean.getRegId());
 	    	 /*if(validforbatch.equals("all")){
 	    		 batch=allbatches;
@@ -122,15 +125,17 @@ public class AddNotesAction extends BaseAction{
 	         e.printStackTrace();
 	         return ERROR;
 	      }
+		}
 	      if(userBean.getRole()==2){
 	    	  return "teachernotes";
 	      }
+	      
 	      return SUCCESS;
 	}
-	public File getMyFile() {
+	public File[] getMyFile() {
 		return myFile;
 	}
-	public void setMyFile(File myFile) {
+	public void setMyFile(File[] myFile) {
 		this.myFile = myFile;
 	}
 	public String getMyFileContentType() {
