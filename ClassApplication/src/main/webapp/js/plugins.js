@@ -40,9 +40,9 @@
 				var lengthSelected = $that.find('.dropdown-menu').find('[type="checkbox"]:checked').not("#classownerUploadexamSubjectNameMenuselectAllRadio").length;
 				if(lengthSelected!=0){
 					$that.trigger("selected",lengthSelected);
-					$that.find(".dropdown-toggle").text(lengthSelected+" item selected");
+					$that.find(".dropdown-toggle label").text(lengthSelected+" item selected");
 				}else{
-					$that.find(".dropdown-toggle").text("Select batch");
+					$that.find(".dropdown-toggle label").text("Select batch");
 					$that.trigger("allDeslected");
 				}
 				});
@@ -50,7 +50,7 @@
 				this.find('.dropdown-menu').find(".selectAllCheckbox").on("click",function(){
 					if($(this).is(":checked")){
 						$(this).parents("ul").find("input").prop("checked",true);
-						$that.find(".dropdown-toggle").text("All item selected");
+						$that.find(".dropdown-toggle label").text("All item selected");
 					}
 				});
 				return this;	

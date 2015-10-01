@@ -15,6 +15,7 @@ import com.user.UserBean;
 public class ChooseSubjectAction extends BaseAction{
 	List<Division> divisions;
 	String forwardAction;
+	String hideBatch;
 	String lable;
 	@Override
 	public String performBaseAction(UserBean userBean,
@@ -43,6 +44,18 @@ public class ChooseSubjectAction extends BaseAction{
 	}
 	public void setLable(String lable) {
 		this.lable = lable;
+	}
+	
+	public String getHideBatch() {
+		//Return false is hiebatch is not specified
+		if(null == hideBatch || hideBatch.trim().length()==0){
+			return "false";
+		}else{
+			return hideBatch;
+		}
+	}
+	public void setHideBatch(String hideBatch) {
+		this.hideBatch = hideBatch;
 	}
 	public String getheader() {
 		if("uploadexams".equals(forwardAction)){
