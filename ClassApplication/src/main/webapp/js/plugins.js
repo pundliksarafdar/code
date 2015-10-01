@@ -32,7 +32,7 @@
 					e.stopPropagation();
 				});	
 				
-				this.find('.dropdown-menu').on("click","input",function(event){
+				this.find('.dropdown-menu').on("click","input",function(e){
 				if($(event.target).attr('class') !== "selectAllCheckbox"){
 					$that.find('.dropdown-menu').find(".selectAllCheckbox").prop("checked",false);
 				}
@@ -40,7 +40,9 @@
 				var lengthSelected = $that.find('.dropdown-menu').find('[type="checkbox"]:checked').not("#classownerUploadexamSubjectNameMenuselectAllRadio").length;
 				if(lengthSelected!=0){
 					$that.trigger("selected",lengthSelected);
+					$that.find(".dropdown-toggle").text(lengthSelected+" item selected");
 				}else{
+					$that.find(".dropdown-toggle").text("Select batch");
 					$that.trigger("allDeslected");
 				}
 				});
@@ -48,6 +50,7 @@
 				this.find('.dropdown-menu').find(".selectAllCheckbox").on("click",function(){
 					if($(this).is(":checked")){
 						$(this).parents("ul").find("input").prop("checked",true);
+						$that.find(".dropdown-toggle").text("All item selected");
 					}
 				});
 				return this;	
