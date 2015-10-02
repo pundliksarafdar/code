@@ -2104,9 +2104,9 @@ public class ClassOwnerServlet extends HttpServlet{
 	BatchTransactions batchTransactions=new BatchTransactions();
 	List<Batch> list=new ArrayList<Batch>();
 	if(institute!=null && !"".equals(institute)){		
-		list=batchTransactions.getAllBatchesOfDivision(notes.getDivid()+"", Integer.parseInt(institute));
+		list=batchTransactions.getbachesrelatedtodivandsubject(subject, Integer.parseInt(division), Integer.parseInt(institute));
 	}else{
-	list=batchTransactions.getAllBatchesOfDivision(notes.getDivid()+"", userBean.getRegId());
+	list=batchTransactions.getbachesrelatedtodivandsubject(subject, Integer.parseInt(division), userBean.getRegId());
 	}
 	StringBuilder allbatchnames=new StringBuilder();
 	StringBuilder allbatchids=new StringBuilder();
