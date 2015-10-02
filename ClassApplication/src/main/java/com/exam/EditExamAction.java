@@ -21,6 +21,7 @@ import com.classapp.db.exam.Exam;
 
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.subject.Subject;
+import com.classapp.db.subject.Topics;
 import com.classapp.login.UserStatic;
 import com.config.BaseAction;
 import com.config.Constants;
@@ -39,6 +40,7 @@ public class EditExamAction extends BaseAction{
 	String selectedMarks="-1";
 	String selectedExamID="-1";
 	String selectedRep="-1";
+	String selectedTopic="-1";
 	String subjectname;
 	String divisionName;
 	List<QuestionData> questionDataList;
@@ -47,6 +49,7 @@ public class EditExamAction extends BaseAction{
 	String searchedMarks;
 	String searchedExam;
 	String searchedRep;
+	String searchedTopic;
 	String questionedit;
 	String actionname;
 	List<Integer> questionIds;
@@ -61,6 +64,7 @@ public class EditExamAction extends BaseAction{
 	int searchcurrentPage;
 	int searchtotalPages;
 	int passmarks;
+	List<Topics> topics;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -106,11 +110,13 @@ public class EditExamAction extends BaseAction{
 		noofquestions=questionIdsMap.size();
 		ExamTransaction examTransaction=new ExamTransaction();
 		QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
+		SubjectTransaction subjectTransaction=new SubjectTransaction();
 		compExams=examTransaction.getAllCompExamList();
 		marks=bankTransaction.getDistinctQuestionMarks(Integer.parseInt(subject), Integer.parseInt(division), inst_id);
 		repeatation=bankTransaction.getDistinctQuestionRep(Integer.parseInt(subject), Integer.parseInt(division), inst_id);
+		topics=subjectTransaction.getTopics(inst_id, Integer.parseInt(subject), Integer.parseInt(division));
 		if("showaddedquestions".equals(actionname) || "editexam".equals(actionname)){
-			SubjectTransaction subjectTransaction=new SubjectTransaction();
+			//SubjectTransaction subjectTransaction=new SubjectTransaction();
 			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
 			if(subbean!=null){
 				subjectname=subbean.getSubjectName();
@@ -133,7 +139,7 @@ public class EditExamAction extends BaseAction{
 			}
 			currentPage=0;
 		}else if("advancesearch".equals(actionname)){
-		SubjectTransaction subjectTransaction=new SubjectTransaction();
+		//SubjectTransaction subjectTransaction=new SubjectTransaction();
 		Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
 		if(subbean!=null){
 			subjectname=subbean.getSubjectName();
@@ -147,10 +153,11 @@ public class EditExamAction extends BaseAction{
 			searchedExam=selectedExamID;
 			searchedMarks=selectedMarks;
 			searchedRep=selectedRep;
+			searchedTopic=selectedTopic;
 		}
 		
 		if(currentPage==0){
-			int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(selectedRep), selectedExamID, Integer.parseInt(selectedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division));
+			int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(selectedRep), selectedExamID, Integer.parseInt(selectedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),Integer.parseInt(selectedTopic));
 			if(totalCount>0){
 				int remainder=totalCount%50;
 				totalPages=totalCount/50;
@@ -161,7 +168,7 @@ public class EditExamAction extends BaseAction{
 			currentPage=1;
 			}
 			if("true".equals(questionedit)){
-				int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(searchedRep), searchedExam, Integer.parseInt(searchedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division));
+				int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(searchedRep), searchedExam, Integer.parseInt(searchedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),Integer.parseInt(searchedTopic));
 				if(totalCount>0){
 					int remainder=totalCount%2;
 					totalPages=totalCount/2;
@@ -176,7 +183,7 @@ public class EditExamAction extends BaseAction{
 				currentPage--;
 			}
 		
-		List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(Integer.parseInt(searchedRep), searchedExam, Integer.parseInt(searchedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage);
+		List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(Integer.parseInt(searchedRep), searchedExam, Integer.parseInt(searchedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage,Integer.parseInt(searchedTopic));
 		UserStatic userStatic = userBean.getUserStatic();
 		String questionPath = "";
 		if(questionbanks!=null)
@@ -244,7 +251,7 @@ public class EditExamAction extends BaseAction{
 			return "autosubmit";
 		}else{
 
-			SubjectTransaction subjectTransaction=new SubjectTransaction();
+			//SubjectTransaction subjectTransaction=new SubjectTransaction();
 			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
 			if(subbean!=null){
 				subjectname=subbean.getSubjectName();
@@ -258,10 +265,11 @@ public class EditExamAction extends BaseAction{
 				searchedExam=selectedExamID;
 				searchedMarks=selectedMarks;
 				searchedRep=selectedRep;
+				searchedTopic=selectedTopic;
 			}
 			
 			if(currentPage==0){
-				int totalCount=bankTransaction.getTotalSearchedQuestionCount(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division));
+				int totalCount=bankTransaction.getTotalSearchedQuestionCount(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),-1);
 				if(totalCount>0){
 					int remainder=totalCount%50;
 					totalPages=totalCount/50;
@@ -272,7 +280,7 @@ public class EditExamAction extends BaseAction{
 				currentPage=1;
 				}
 				if("true".equals(questionedit)){
-					int totalCount=bankTransaction.getTotalSearchedQuestionCount(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division));
+					int totalCount=bankTransaction.getTotalSearchedQuestionCount(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),-1);
 					if(totalCount>0){
 						int remainder=totalCount%2;
 						totalPages=totalCount/2;
@@ -287,7 +295,7 @@ public class EditExamAction extends BaseAction{
 					currentPage--;
 				}
 			
-			List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage);
+			List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage,-1);
 			UserStatic userStatic = userBean.getUserStatic();
 			String questionPath = "";
 			if(questionbanks!=null)
@@ -560,6 +568,30 @@ public class EditExamAction extends BaseAction{
 
 	public void setPassmarks(int passmarks) {
 		this.passmarks = passmarks;
+	}
+
+	public String getSelectedTopic() {
+		return selectedTopic;
+	}
+
+	public void setSelectedTopic(String selectedTopic) {
+		this.selectedTopic = selectedTopic;
+	}
+
+	public String getSearchedTopic() {
+		return searchedTopic;
+	}
+
+	public void setSearchedTopic(String searchedTopic) {
+		this.searchedTopic = searchedTopic;
+	}
+
+	public List<Topics> getTopics() {
+		return topics;
+	}
+
+	public void setTopics(List<Topics> topics) {
+		this.topics = topics;
 	}
 	
 	

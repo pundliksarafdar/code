@@ -157,7 +157,7 @@ public int getNextQuestionID(int inst_id,int div_id,int sub_id) {
 return 1;
 }
 
-public List<Questionbank> getSearchedQuestion(int rep,String compexam_id,int marks,int sub_id,int inst_id,int div_id,int currentPage) {
+public List<Questionbank> getSearchedQuestion(int rep,String compexam_id,int marks,int sub_id,int inst_id,int div_id,int currentPage,int topic_id) {
 	Exam exam=new Exam();
 	Transaction transaction=null;
 	Session session=null;
@@ -183,9 +183,15 @@ public List<Questionbank> getSearchedQuestion(int rep,String compexam_id,int mar
 		criterion = Restrictions.eq("marks", marks);
 		criteria.add(criterion);
 	}
+	
+	if(topic_id!=-1){
+		criterion = Restrictions.eq("topic_id", topic_id);
+		criteria.add(criterion);
+	}
 	if(currentPage!=0 &&  currentPage!=1){
 		criteria.setFirstResult((currentPage-1)*50);
 	}
+	
 	criteria.setMaxResults(50);
 	List<Questionbank> questionList = criteria.list();
 	transaction.commit();
@@ -193,7 +199,7 @@ public List<Questionbank> getSearchedQuestion(int rep,String compexam_id,int mar
 	return  questionList;	
 }
 
-public int getSearchedQuestionCount(int rep,String compexam_id,int marks,int sub_id,int inst_id,int div_id) {
+public int getSearchedQuestionCount(int rep,String compexam_id,int marks,int sub_id,int inst_id,int div_id,int topic_id) {
 	Exam exam=new Exam();
 	Transaction transaction=null;
 	Session session=null;
@@ -217,6 +223,10 @@ public int getSearchedQuestionCount(int rep,String compexam_id,int marks,int sub
 	}
 	if(marks!=-1){
 		criterion = Restrictions.eq("marks", marks);
+		criteria.add(criterion);
+	}
+	if(topic_id!=-1){
+		criterion = Restrictions.eq("topic_id", topic_id);
 		criteria.add(criterion);
 	}
 	

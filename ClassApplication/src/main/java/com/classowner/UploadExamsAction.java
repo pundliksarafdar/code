@@ -49,6 +49,7 @@ public class UploadExamsAction extends BaseAction{
 	String searchedMarks;
 	String searchedExam;
 	String searchedRep;
+	String searchedTopic;
 	String institute;
 	String quesstatus;
 	List<Topics> topics;
@@ -632,6 +633,14 @@ public class UploadExamsAction extends BaseAction{
 
 	public void setSelectedtopicName(String selectedtopicName) {
 		this.selectedtopicName = selectedtopicName;
+	}
+
+	public String getSearchedTopic() {
+		return searchedTopic;
+	}
+
+	public void setSearchedTopic(String searchedTopic) {
+		this.searchedTopic = searchedTopic;
 	}
 	
 	

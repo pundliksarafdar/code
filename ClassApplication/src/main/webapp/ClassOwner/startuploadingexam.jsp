@@ -129,6 +129,7 @@ $(document).ready(function(){
   <input type="hidden" name="searchedMarks" value='<c:out value="${searchedMarks}"></c:out>'>
   <input type="hidden" name="searchedExam" value='<c:out value="${searchedExam}"></c:out>'>
   <input type="hidden" name="searchedRep" value='<c:out value="${searchedRep}"></c:out>'>
+  <input type="hidden" name="searchedTopic" value='<c:out value="${searchedTopic}"></c:out>'>
 	<input type="hidden" name="actionname" value='<c:out value="${actionname }"></c:out>' id="actionname"/>
 	<input type="hidden" name="examname" value="<c:out value="${requestScope.examname}"></c:out>"/>
 	<input type="hidden" name="uploadedMarks" value="<c:out value="${sessionScope.uploadedMarks}"></c:out>"/>

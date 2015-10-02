@@ -275,6 +275,7 @@ function resetForm(){
   <input type="hidden" name="actionname" id="actionname">
   <input type="hidden" name="institute" id="institute" value="<c:out value="${institute}"></c:out>"/>
   <input type="hidden" name="quesstatus" id="quesstatus">	
+   <input type="hidden" name="searchedTopic" id="searchedTopic" value="<c:out value="${searchedTopic}"></c:out>"/>
   </form>
   <form action="paginateQuestion" id="paginateform">
   <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
@@ -288,6 +289,7 @@ function resetForm(){
   <input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
   <input type="hidden" name="paginationstartindex"  value="<c:out value="${paginationstartindex}"></c:out>"/>
   <input type="hidden" name="paginationendindex" value="<c:out value="${paginationendindex}"></c:out>"/>
+  <input type="hidden" name="searchedTopic" id="searchedTopic" value="<c:out value="${searchedTopic}"></c:out>"/>
   <ul class="pagination">
   <c:if test="${currentPage eq 1 }">
   <li><a>&laquo;</a></li>
@@ -331,12 +333,12 @@ function resetForm(){
 			<input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
 			<input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
 			<input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
-		<div class="form-group">
+		<!-- <div class="form-group">
 		<label for="exampleInputEmail1">Search word</label>
           <input type="text" placeholder="Search word" class="form-control"/>
-		</div>
+		</div> -->
 
-		<div class="form-group">
+		<%-- <div class="form-group">
 		<label for="">Choose Question occured in</label>	
 		<select class="btn btn-default" name="selectedExamID"> 
 			<option value="-1">Select</option>
@@ -344,7 +346,8 @@ function resetForm(){
     			<option value="'<c:out value="${item.compexam_id}"></c:out>'"><c:out value="${item.compexam_name}"></c:out></option>
 			</c:forEach>
 		</select>
-		</div>
+		</div> --%>
+		<input type="hidden" name="selectedExamID" value="-1">
 
 		<div class="form-group">
 		<label for="-1">Choose Marks</label>	
@@ -355,8 +358,18 @@ function resetForm(){
 			</c:forEach>
 		  </select>
 		</div>
-
+		
 		<div class="form-group">
+		<label for="-1">Choose Topic</label>	
+		  <select  class="btn btn-default" name="selectedTopic">
+			<option value="-1">Select</option>
+			<c:forEach items="${topics}" var="item">
+    			<option value="<c:out value="${item.topic_id}"></c:out>"><c:out value="${item.topic_name}"></c:out></option>
+			</c:forEach>
+		  </select>
+		</div>
+
+		<%-- <div class="form-group">
 		<label for="">Choose repetetion</label>	
 		  <select class="btn btn-default" name="selectedRep">
 			<option value="-1">Select</option>
@@ -364,7 +377,8 @@ function resetForm(){
     			<option value="<c:out value="${item}"></c:out>"><c:out value="${item}"></c:out></option>
 			</c:forEach>
 		  </select>
-		</div>  
+		</div> --%>
+		<input type="hidden" name="selectedRep" value="-1" >  
 		</form>
         </div>
 

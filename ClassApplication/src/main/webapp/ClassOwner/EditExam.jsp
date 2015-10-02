@@ -106,6 +106,7 @@ $(document).ready(function(){
 		$("form#paginateform #searchedMarks").val("-1");
 		$("form#paginateform #searchedExam").val("-1");
 		$("form#paginateform #searchedRep").val("-1");
+		$("form#paginateform #searchedTopic").val("-1");
 		$("form#paginateform #actionname").val("");
 		$("#paginateform").submit();    
 		
@@ -118,6 +119,7 @@ $(document).ready(function(){
 		$("form#paginateform #searchedMarks").val("-1");
 		$("form#paginateform #searchedExam").val("-1");
 		$("form#paginateform #searchedRep").val("-1");
+		$("form#paginateform #searchedTopic").val("-1");
 		$("form#paginateform #actionname").val("showaddedquestions");
 		$("#paginateform").submit();    
 		
@@ -130,6 +132,7 @@ $(document).ready(function(){
 		$("form#paginateform #searchedMarks").val("-1");
 		$("form#paginateform #searchedExam").val("-1");
 		$("form#paginateform #searchedRep").val("-1");
+		$("form#paginateform #searchedTopic").val("-1");
 		$("form#paginateform #actionname").val("");
 		$("#paginateform").submit();    
 		
@@ -148,6 +151,7 @@ $("#createexam").on("click",function(){
 			$("form#paginateform #searchedMarks").val("-1");
 			$("form#paginateform #searchedExam").val("-1");
 			$("form#paginateform #searchedRep").val("-1");
+			$("form#paginateform #searchedTopic").val("-1");
 			$("form#paginateform #actionname").val("createexam");
 		$("#paginateform").submit();    
 		}
@@ -319,7 +323,7 @@ var selectMarks = function(){
         <td><c:out value="${counter.count}"></c:out></td>
         </c:if>
         <c:if test="${currentPage gt 1 }">
-        <td><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
+        <td><c:out value="${counter.count + ((currentPage-1)*50)}"></c:out></td>
         </c:if>
         <td><c:out value="${item.question}"></c:out></td>
         <td><span class="badge" id='mark<c:out value="${item.questionNumber}"></c:out>'><c:out value="${item.marks}"></span></c:out></td>
@@ -360,6 +364,7 @@ var selectMarks = function(){
   <input type="hidden" name="searchedMarks" value='<c:out value="${searchedMarks}"></c:out>'>
   <input type="hidden" name="searchedExam" value='<c:out value="${searchedExam}"></c:out>'>
   <input type="hidden" name="searchedRep" value='<c:out value="${searchedRep}"></c:out>'>
+  <input type="hidden" name="searchedTopic" id="searchedTopic" value="<c:out value="${searchedTopic}"></c:out>"/>
   <input type="hidden" name="addedIds" id="addedIds" value="">
   <input type="hidden" name="removedIds" id="removedIds" value="">
   <input type="hidden" id="totalmarks" name="totalmarks">
@@ -410,7 +415,7 @@ var selectMarks = function(){
  			 <input type="hidden" name="searchtotalPages" value="<c:out value="${searchtotalPages}"></c:out>"/>
  			 <input type="hidden" name="examname" value="<c:out value="${examname}"></c:out>"/>
  			 <input type="hidden" name="examID" value="<c:out value="${examID}"></c:out>"/>
-		<div class="form-group">
+		<%-- <div class="form-group">
 		<label for="exampleInputEmail1">Search word</label>
           <input type="text" placeholder="Search word" class="form-control"/>
 		</div>
@@ -423,8 +428,8 @@ var selectMarks = function(){
     			<option value="'<c:out value="${item.compexam_id}"></c:out>'"><c:out value="${item.compexam_name}"></c:out></option>
 			</c:forEach>
 		</select>
-		</div>
-
+		</div> --%>
+		<input type="hidden" name="selectedExamID" value="-1">
 		<div class="form-group">
 		<label for="-1">Choose Marks</label>	
 		  <select  class="btn btn-default" name="selectedMarks">
@@ -434,8 +439,18 @@ var selectMarks = function(){
 			</c:forEach>
 		  </select>
 		</div>
-
+		
 		<div class="form-group">
+		<label for="-1">Choose Topic</label>	
+		  <select  class="btn btn-default" name="selectedTopic">
+			<option value="-1">Select</option>
+			<c:forEach items="${topics}" var="item">
+    			<option value="<c:out value="${item.topic_id}"></c:out>"><c:out value="${item.topic_name}"></c:out></option>
+			</c:forEach>
+		  </select>
+		</div>
+		<input type="hidden" name="selectedRep" value="-1" >
+		<%-- <div class="form-group">
 		<label for="">Choose repetetion</label>	
 		  <select class="btn btn-default" name="selectedRep">
 			<option value="-1">Select</option>
@@ -443,7 +458,7 @@ var selectMarks = function(){
     			<option value="<c:out value="${item}"></c:out>"><c:out value="${item}"></c:out></option>
 			</c:forEach>
 		  </select>
-		</div>  
+		</div> --%>  
 		</form>
         </div>
 
@@ -507,6 +522,7 @@ var selectMarks = function(){
   <input type="hidden" name="searchedMarks" value='<c:out value="${searchedMarks}"></c:out>'>
   <input type="hidden" name="searchedExam" value='<c:out value="${searchedExam}"></c:out>'>
   <input type="hidden" name="searchedRep" value='<c:out value="${searchedRep}"></c:out>'>
+   <input type="hidden" name="searchedTopic" id="searchedTopic" value="<c:out value="${searchedTopic}"></c:out>"/>
   <input type="hidden" name="addedIds" id="addedIds" value="">
   <input type="hidden" name="removedIds" id="removedIds" value="">
   <input type="hidden" id="totalmarks" name="totalmarks">

@@ -28,14 +28,14 @@ public class QuestionBankTransaction {
 		return questionbankDB.getdistinctQuestionRep(sub_id, inst_id, div_id);
 	}
 	
-	public List<Questionbank> getSearchedQuestions(int rep,String compexam_id,int marks,int sub_id,int inst_id,int div_id,int currentPage) {
+	public List<Questionbank> getSearchedQuestions(int rep,String compexam_id,int marks,int sub_id,int inst_id,int div_id,int currentPage,int topic_id) {
 		QuestionbankDB db=new QuestionbankDB();
-		return db.getSearchedQuestion(rep, compexam_id, marks, sub_id, inst_id, div_id,currentPage);
+		return db.getSearchedQuestion(rep, compexam_id, marks, sub_id, inst_id, div_id,currentPage,topic_id);
 	}
 	
-	public int getTotalSearchedQuestionCount(int rep,String compexam_id,int marks,int sub_id,int inst_id,int div_id) {
+	public int getTotalSearchedQuestionCount(int rep,String compexam_id,int marks,int sub_id,int inst_id,int div_id,int topic_id) {
 		QuestionbankDB questionbankDB=new QuestionbankDB();
-		return questionbankDB.getSearchedQuestionCount(rep, compexam_id, marks, sub_id, inst_id, div_id);
+		return questionbankDB.getSearchedQuestionCount(rep, compexam_id, marks, sub_id, inst_id, div_id,topic_id);
 	}
 	
 	public boolean deleteQuestion(int que_id,int inst_id,int sub_id,int div_id) {

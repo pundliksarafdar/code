@@ -275,7 +275,7 @@ if(notes!=null){
 	</div>
 </div>		
 <div class="container" id="basenotesdiv">
-	<table id="basenotestable">
+	<table id="basenotestable" class="table table-striped">
 	<thead>
 	<tr>
 	<th>Name</th>

@@ -35,6 +35,7 @@ $("#paginateform").submit();
   <input type="hidden" name="searchedMarks" value='<c:out value="${searchedMarks}"></c:out>'>
   <input type="hidden" name="searchedExam" value='<c:out value="${searchedExam}"></c:out>'>
   <input type="hidden" name="searchedRep" value='<c:out value="${searchedRep}"></c:out>'>
+   <input type="hidden" name="searchedTopic" value='<c:out value="${searchedTopic}"></c:out>'>
    <input type="hidden" name="questionedit" value="true">
    <input type="hidden" name="actionname" id="actionname" value='<c:out value="${actionname}"></c:out>'>
 	<input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
