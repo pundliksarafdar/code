@@ -29,8 +29,8 @@ public class BatchData {
 	}*/
 
 
-	public boolean isBatchExist(int regID,String batchName){
-		return batchDB.isBatchExist(regID, batchName);		
+	public boolean isBatchExist(int regID,String batchName,int div_id){
+		return batchDB.isBatchExist(regID, batchName,div_id);		
 		
 	}
 	

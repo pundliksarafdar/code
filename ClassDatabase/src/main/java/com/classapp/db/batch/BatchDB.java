@@ -216,7 +216,7 @@ public class BatchDB {
 		return batches;
 	}
 
-	public boolean isBatchExist(int class_id,String batch_name){
+	public boolean isBatchExist(int class_id,String batch_name,int div_id){
 		Session session = null;
 		Transaction transaction = null;
 		List<Batch> batchList = null;
@@ -224,9 +224,10 @@ public class BatchDB {
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("from Batch where class_id =:class_id and batch_name =:batch_name");
+			Query query = session.createQuery("from Batch where class_id =:class_id and batch_name =:batch_name and div_id=:div_id");
 			query.setInteger("class_id", class_id);
 			query.setString("batch_name", batch_name);
+			query.setParameter("div_id", div_id);
 			batchList = query.list();
 			transaction.commit();
 		}catch(Exception e){

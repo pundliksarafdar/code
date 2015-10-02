@@ -66,6 +66,10 @@ public class ExamMarksAction extends BaseAction {
 		}else{
 			StudentTransaction studentTransaction=new StudentTransaction();
 			List<Integer> studentIds=studentTransaction.getStudentsFromBatches(userBean.getRegId(), Integer.parseInt(division), batch);
+			if (studentIds!=null) {
+				if (studentIds.size()>0) {
+					
+			
 			StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
 			totalCount=marksTransaction.getStudentMarksCount(userBean.getRegId() ,studentIds, Integer.parseInt(subject), Integer.parseInt(division), examID);
 			if(totalCount>0){
@@ -103,6 +107,8 @@ public class ExamMarksAction extends BaseAction {
 							examData.add(studentExamData);
 						}
 					}
+				}
+			}
 				}
 			}
 		}
