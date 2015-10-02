@@ -91,7 +91,11 @@ $(document).ready(function(){
         <form>
 		<p id="optionText"></p>
 		<hr/>
-		<input type="file" id="uploadOptionImageModalFileBtn" multiple onchange="readURL(this,'uploadOptionImageModalAnswerImages');">
+		<span class="btn btn-success fileinput-button">
+			<i class="glyphicon glyphicon-folder-open"></i>
+					<span>Add images </span>
+			<input type="file" id="uploadOptionImageModalFileBtn" multiple onchange="readURL(this,'uploadOptionImageModalAnswerImages');">
+		</span>
 		<div id="uploadOptionImageModalAnswerImages">
 		
 		</div>
@@ -119,22 +123,22 @@ $(document).ready(function(){
 			<div align="center" style="font-size: larger;">Add Question</div>
 </div>
  <form action="uploadexams" method="post" enctype="multipart/form-data" id="uploadexams" >
- <input type="hidden" id="batch" name="batch" value="<c:out value="${batch}" ></c:out>">
-<input type="hidden" id="division" name="division" value="<c:out value="${division}" ></c:out>">
-<input type="hidden" id="subject" name="subject" value="<c:out value="${subject}" ></c:out>">
-<input type="hidden" id="questionNumber" name="questionNumber" value="<c:out value="${questionNumber}" ></c:out>">
-<input type="hidden" id="indexOption" name="indexOption" value="<c:out value="${indexOption}" ></c:out>">
-<input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
-  <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
-  <input type="hidden" name="searchedMarks" value='<c:out value="${searchedMarks}"></c:out>'>
-  <input type="hidden" name="searchedExam" value='<c:out value="${searchedExam}"></c:out>'>
-  <input type="hidden" name="searchedRep" value='<c:out value="${searchedRep}"></c:out>'>
+	<input type="hidden" id="batch" name="batch" value="<c:out value="${batch}" ></c:out>">
+	<input type="hidden" id="division" name="division" value="<c:out value="${division}" ></c:out>">
+	<input type="hidden" id="subject" name="subject" value="<c:out value="${subject}" ></c:out>">
+	<input type="hidden" id="questionNumber" name="questionNumber" value="<c:out value="${questionNumber}" ></c:out>">
+	<input type="hidden" id="indexOption" name="indexOption" value="<c:out value="${indexOption}" ></c:out>">
+	<input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
+	<input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
+	<input type="hidden" name="searchedMarks" value='<c:out value="${searchedMarks}"></c:out>'>
+	<input type="hidden" name="searchedExam" value='<c:out value="${searchedExam}"></c:out>'>
+	<input type="hidden" name="searchedRep" value='<c:out value="${searchedRep}"></c:out>'>
   <input type="hidden" name="searchedTopic" value='<c:out value="${searchedTopic}"></c:out>'>
 	<input type="hidden" name="actionname" value='<c:out value="${actionname }"></c:out>' id="actionname"/>
 	<input type="hidden" name="examname" value="<c:out value="${requestScope.examname}"></c:out>"/>
 	<input type="hidden" name="uploadedMarks" value="<c:out value="${sessionScope.uploadedMarks}"></c:out>"/>
 	<input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
-		<div>
+		
 			<div class="form-group">
 				<label for="examname">Question </label>
 				<textarea class="form-control" id="question" name="question"><c:out value="${requestScope.questionData.question}"></c:out></textarea>
@@ -159,7 +163,11 @@ $(document).ready(function(){
 			</div>
 			
 			<div class="form-group">
-				<input type="file" class="btn btn-default" onchange="readURL(this,'fileList');" id="submitquestionsuploadfile" multiple name="questionImages" value="<c:out value="${requestScope.questionData.marks}"></c:out>">
+				<span class="btn btn-success fileinput-button">
+					<i class="glyphicon glyphicon-folder-open"></i>
+					<span>Add images </span>
+					<input type="file" onchange="readURL(this,'fileList');" id="submitquestionsuploadfile" multiple name="questionImages" value="<c:out value="${requestScope.questionData.marks}"></c:out>">
+				</span>	
 			</div>
 			<div id="fileList">
 			</div>
@@ -207,7 +215,7 @@ $(document).ready(function(){
 			</c:forEach>
 			
 		</div>
-		</div>
+		
 		<div class="form-group">
 			<input type="button" class="btn btn-default startuplodingexamSave" value="Save"/>
 			<c:if test="${actionname ne 'submitquestions'}">
