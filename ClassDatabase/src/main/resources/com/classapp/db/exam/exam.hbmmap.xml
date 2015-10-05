@@ -51,5 +51,8 @@
         <property name="ans_ids" type="java.lang.String">
             <column name="ans_ids" />
         </property>
+        <property name="exam_time" type="java.lang.String">
+            <column name="exam_time" />
+        </property>
     </class>
 </hibernate-mapping>

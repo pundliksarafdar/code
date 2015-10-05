@@ -21,7 +21,9 @@ public class SendMessageAction extends BaseAction{
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		BatchTransactions batchTransactions=new BatchTransactions();
 		int regID=userBean.getRegId();
-		
+		DivisionTransactions divisionTransactions = new DivisionTransactions();
+		List<Division> divisions= divisionTransactions.getAllDivisions(userBean.getRegId());
+		request.setAttribute(Constants.DIVISION, divisions);
 		List batch=batchTransactions.getAllBatches(regID);
 		request.setAttribute("batch", batch);
 		return SUCCESS;

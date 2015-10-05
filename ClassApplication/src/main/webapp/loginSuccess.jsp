@@ -67,6 +67,9 @@ while (it.hasNext()) {
       for(int i=0;i<list.size();i++){
       %>
       <tr>
+      	<%if(list.get(i).getDivision_name()!=null) {%>
+      	<td><%=list.get(i).getDivision_name() %></td>
+      	<%} %>
       	<td><%=list.get(i).getBatch_name() %></td>
       	<td><%=list.get(i).getSubject_name() %></td>
       	<%

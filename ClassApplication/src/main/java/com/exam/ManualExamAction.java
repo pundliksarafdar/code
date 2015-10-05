@@ -62,6 +62,8 @@ public class ManualExamAction extends BaseAction{
 	String examname;
 	int passmarks;
 	List<Topics> topics;
+	int examHour;
+	int examMinute;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -222,7 +224,7 @@ public class ManualExamAction extends BaseAction{
 					}
 				}
 				Exam exam=new Exam();
-				examTransaction.saveExam(examname, inst_id, Integer.parseInt(subject), Integer.parseInt(division), totalmarks, passmarks, userBean.getRegId(), batch, queIds, ansIds);
+				examTransaction.saveExam(examname, inst_id, Integer.parseInt(subject), Integer.parseInt(division), totalmarks, passmarks, userBean.getRegId(), batch, queIds, ansIds,examHour,examMinute);
 			}
 			session.put("questionsIds",null);
 			actionname="examadded";
@@ -552,6 +554,22 @@ public class ManualExamAction extends BaseAction{
 
 	public void setTopics(List<Topics> topics) {
 		this.topics = topics;
+	}
+
+	public int getExamHour() {
+		return examHour;
+	}
+
+	public void setExamHour(int examHour) {
+		this.examHour = examHour;
+	}
+
+	public int getExamMinute() {
+		return examMinute;
+	}
+
+	public void setExamMinute(int examMinute) {
+		this.examMinute = examMinute;
 	}
 	
 	

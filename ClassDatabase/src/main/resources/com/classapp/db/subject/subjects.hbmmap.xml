@@ -6,7 +6,7 @@
     <class name="com.classapp.db.subject.Subject" table="subject" catalog="classdb">
         <id name="subjectId" type="java.lang.Integer">
             <column name="SUB_ID" />
-            <generator class="increment" />
+            <generator class="identity" />
         </id>
         <property name="subjectName" type="java.lang.String">
             <column name="SUB_NAME" />

@@ -278,10 +278,10 @@ if(notes!=null){
 	<table id="basenotestable" class="table table-striped">
 	<thead>
 	<tr>
-	<th>Name</th>
-	<th>File</th>
-	<th>Delete</th>
-	<th></th>
+	<th class='col-md-3'>Name</th>
+	<th class='col-md-3'>File</th>
+	<th class='col-md-3'>Delete</th>
+	<th class='col-md-3'></th>
 	</tr>
 	</thead>
 	<tbody id="basenotestablebody">

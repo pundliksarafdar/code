@@ -189,6 +189,7 @@ $("#createexam").on("click",function(){
 		var numberExpr = /^[0-9]+$/;
 		var nameExpr = /^[a-zA-Z0-9 ]+$/;
 		var flag=false;
+		$("#examTimeError").hide();
 		$("#passmarkserror").hide();
 		$("#examnameerror").hide();
 		if($("form#saveExamForm #newexamname").val().trim()==""){
@@ -215,6 +216,27 @@ $("#createexam").on("click",function(){
 			$("#passmarkserror").show();
 			flag=true;
 
+		}
+		if($("form#examsubmitform #examMinute").val().trim()=="" || $("form#examsubmitform #examHour").val().trim()==""){
+			$("#examTimeError").html("Please Enter Valid Time!!");
+			$("#examTimeError").show();
+			flag=true;
+		}else if(!$("form#examsubmitform #examHour").val().match(numberExpr)){
+			$("#examTimeError").html("Only numbers allowded!!");
+			$("#examTimeError").show();
+			flag=true;
+		}else if(!$("form#examsubmitform #examMinute").val().match(numberExpr)){
+			$("#examTimeError").html("Only numbers allowded!!");
+			$("#examTimeError").show();
+			flag=true;
+		}else if(parseInt($("form#examsubmitform #examHour").val())>24 || parseInt($("form#examsubmitform #examHour").val())<0){
+			$("#examTimeError").html("Exam hour should be in between 1 and 24!!");
+			$("#examTimeError").show();
+			flag=true;
+		}else if(parseInt($("form#examsubmitform #examMinute").val())>60 || parseInt($("form#examsubmitform #examMinute").val())<0){
+			$("#examTimeError").html("Exam Minute should be in between 1 and 60!!");
+			$("#examTimeError").show();
+			flag=true;
 		}
 		var examname=$("form#saveExamForm #newexamname").val().trim();
 		var institute=$("form#saveExamForm #institute").val();
@@ -508,6 +530,16 @@ var selectMarks = function(){
     <input type="text" class="form-control" id="passmarks" name="passmarks" value=<c:out value="${passmarks}"></c:out>>
   	</div>
   	<span class="col-sm-5" id="passmarkserror" style="display:none;color: red"></span>
+  </div>
+  <div class="form-group">
+    <label for="examHour" class="control-label col-sm-2">Exam Time Duration:</label>
+     <div class="col-sm-1">
+    <input type="number" class="form-control" min="0" max="24" maxlength="2" id="examHour" name="examHour" placeholder="HH" value="<c:out value='${examHour}'></c:out>" >
+     </div>
+     <div class="col-sm-1">
+    <input type="number" class="form-control" min="0" max="59" maxlength="2" id="examMinute" name="examMinute" placeholder="MM" value='<c:out value="${examMinute}"></c:out>'>
+  	</div>
+  	<span class="col-sm-5" id="examTimeError" style="display:none;color: red"></span>
   </div>
    <div class="col-sm-offset-2 col-sm-5">
   <button type="submit" class="btn btn-default" id="submitExam">Submit</button>

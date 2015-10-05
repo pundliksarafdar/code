@@ -22,6 +22,7 @@ public class Exam implements Serializable{
 	private String exam_status;
 	private String batch_id;
 	private String ans_ids;
+	private String exam_time;
 	public int getExam_id() {
 		return exam_id;
 	}
@@ -123,6 +124,12 @@ public class Exam implements Serializable{
 	}
 	public void setAns_ids(String ans_ids) {
 		this.ans_ids = ans_ids;
+	}
+	public String getExam_time() {
+		return exam_time;
+	}
+	public void setExam_time(String exam_time) {
+		this.exam_time = exam_time;
 	}
 	
 	

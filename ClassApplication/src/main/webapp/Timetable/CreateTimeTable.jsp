@@ -202,6 +202,11 @@ $('#batchname').change(function(){
 	 var dates="";
 	 var state=0;
 	 for(var i=0;i<globcounter;i++)
+	 {
+		 $("#starttime"+i).parents("td").removeClass("has-error");
+		 $("#endtime"+i).parents("td").removeClass("has-error");
+	 }
+	 for(var i=0;i<globcounter;i++)
 		 {
 		 subjects=$("#sub"+i).val();
 			teachers=$("#teacher"+i).val();
@@ -308,6 +313,7 @@ $('#batchname').change(function(){
 			   		var teacher=resultJson.teacher.split(",");
 			   		var lecture=resultJson.lecture.split(",");
 			   		var time=resultJson.time;
+			   		var overlappedtimeids=resultJson.overlappedtimeids.split("/");
 			   		var flag=0;
 			   		for(var z=0;z<globcounter;z++)
 			   			{
@@ -343,7 +349,18 @@ $('#batchname').change(function(){
 			   			}
 			   		}else{
 			   			flag=1;
-			   			modal.launchAlert("Error","Some lectures timmings are overlapped OR Start time is after end time");
+			   			for(var s=0;s<overlappedtimeids.length;s++){
+			   			
+			   				for(var p=0;p<globcounter;p++)
+			   				if($("#starttime"+p).val()!=""){
+			   					if($("#starttime"+p).val()==overlappedtimeids[s].split(",")[0]){
+			   					$("#starttime"+p).parents("td").addClass("has-error");
+								$("#endtime"+p).parents("td").addClass("has-error");
+			   					}
+			   					
+			   				}
+			   			}
+			   			modal.launchAlert("Error","Some lectures timmings are overlapped");
 			   		}
 			   		
 			   		if(flag==0)
@@ -612,11 +629,11 @@ $(function(){
 		int i=0;%>
 		<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
 			<div align="center" style="font-size: larger;"><u>Create Time Table</u></div>
-			<div class="row">
+			<!-- <div class="row">
 				<div class='col-sm-6 header' style="padding-bottom: 10px;">*
 					Create time table for batch here 
 				</div>
-			</div>
+			</div> -->
 			
 			<div class="row">
 				<div class="col-md-4">

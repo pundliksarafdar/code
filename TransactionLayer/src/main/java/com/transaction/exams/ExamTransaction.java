@@ -131,7 +131,7 @@ public class ExamTransaction {
 	 * @param batchId - coma seaparatted
 	 * @param ansId - coma seaparatted
 	 */
-	public void saveExam(String examName,int instituteId,int subId,int divId,int totalMarks,int passMarks,int creatorId,String batchId,String questionId,String ansId){
+	public void saveExam(String examName,int instituteId,int subId,int divId,int totalMarks,int passMarks,int creatorId,String batchId,String questionId,String ansId,int examHour,int examMinute){
 		Exam exam = new Exam();
 		ExamDB examDB = new ExamDB();
 		int examId = examDB.getNextExamID(instituteId, divId, subId);
@@ -147,11 +147,12 @@ public class ExamTransaction {
 		exam.setAns_ids(ansId);
 		exam.setBatch_id(batchId);
 		exam.setExam_status("E");
+		exam.setExam_time(examHour+":"+examMinute);
 		examDB.saveExam(exam);
 		
 	}
 	
-	public void updateExam(int examID,String examName,int instituteId,int subId,int divId,int totalMarks,int passMarks,int creatorId,String batchId,String questionId,String ansId){
+	public void updateExam(int examID,String examName,int instituteId,int subId,int divId,int totalMarks,int passMarks,int creatorId,String batchId,String questionId,String ansId,int examHour,int examMinute){
 		Exam exam = new Exam();
 		ExamDB examDB = new ExamDB();
 		exam.setExam_id(examID);
@@ -166,6 +167,7 @@ public class ExamTransaction {
 		exam.setAns_ids(ansId);
 		exam.setBatch_id(batchId);
 		exam.setExam_status("E");
+		exam.setExam_time(examHour+":"+examMinute);
 		examDB.saveExam(exam);
 		
 	}

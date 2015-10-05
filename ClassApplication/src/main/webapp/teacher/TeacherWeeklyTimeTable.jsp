@@ -39,6 +39,7 @@ $(document).ready(function(){
 					   var subject=resultJson.subject.split(",");
 					   var dates=resultJson.dates.split(',');
 					   var alldates=resultJson.alldates.split(',');
+					   var division=resultJson.division.split(',');
 					   var table=$(document.getElementById("scheduletable"));
 					   var counter=0
 					   
@@ -55,7 +56,7 @@ $(document).ready(function(){
 							   
 							   if(alldates[counter]==dates[outercounter]){
 							   tableString=tableString+"<tr><td>"+starttime[counter]+
-									"-"+endtime[counter]+"</td><td><table class='table table-condensed'><tr><td>"+subject[counter]+"</td></tr><tr><td>"+batch[counter]+"</td></tr></table></td></tr>"; 
+									"-"+endtime[counter]+"</td><td><table class='table table-condensed'><tr><td>"+subject[counter]+"</td></tr><tr><td>"+batch[counter]+"</td></tr><tr><td>"+division[counter]+"</td></tr></table></td></tr>"; 
 							   scheduleflag=true;
 							   }
 						   counter++;

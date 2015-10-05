@@ -12,6 +12,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.batch.Batch;
+import com.classapp.db.batch.division.Division;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.register.RegisterDB;
 import com.classapp.db.student.Student;
@@ -314,12 +315,16 @@ public class ScheduleTransaction {
 					for (int j = 0; j < list.get(i).size(); j++) {
 						Batch batch=batchTransactions.getBatch(list.get(i).get(j).getBatch_id(), list.get(i).get(j).getClass_id(), list.get(i).get(j).getDiv_id());
 						Subject subject=subjectTransaction.getSubject(list.get(i).get(j).getSub_id());
+						DivisionTransactions divisionTransactions=new DivisionTransactions();
+						Division division=new Division();
+						division=divisionTransactions.getDidvisionByID(list.get(i).get(j).getDiv_id());
 						Scheduledata scheduledata=new Scheduledata();
 						scheduledata.setBatch_name(batch.getBatch_name());
 						scheduledata.setStart_time(list.get(i).get(j).getStart_time());
 						scheduledata.setEnd_time(list.get(i).get(j).getEnd_time());
 						scheduledata.setInst_id(list.get(i).get(j).getClass_id());
 						scheduledata.setSubject_name(subject.getSubjectName());
+						scheduledata.setDivision_name(division.getDivisionName());
 						RegisterBean bean=db.getRegisterclass(list.get(i).get(j).getClass_id());
 						scheduledata.setInst_name(bean.getClassName());
 						scheduledatas.add(scheduledata);

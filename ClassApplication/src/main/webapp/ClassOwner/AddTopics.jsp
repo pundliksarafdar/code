@@ -247,8 +247,8 @@ function fetchTopic(){
 <div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
 	<div align="center" style="font-size: larger;">Add Topics</div>
 			<div class="row">
-				<div class='col-sm-6 header' style="padding-bottom: 10px;">*
-					Add Topics for subject here 
+				<div class='col-sm-6 header' style="padding-bottom: 10px;color: white;">*
+					<c:out value="${subjectname}"></c:out>
 				</div>
 			</div>
 			

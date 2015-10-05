@@ -1,3 +1,4 @@
+<%@page import="com.classapp.db.batch.division.Division"%>
 <meta http-equiv="cache-control" content="max-age=0" />
 <%@page import="com.classapp.db.student.StudentDetails"%>
 <%@page import="com.classapp.db.subject.Subject"%>
@@ -907,14 +908,19 @@ function getSelectedStudentsToDelete(){
 				<%List<Batch> batches=(List<Batch>)request.getAttribute("batches"); 
 				String batchdivision=(String)request.getSession().getAttribute("batchdivision"); 
 				String batchID=(String)request.getSession().getAttribute("batchID");
+				List<Division> alldivisions=(List<Division>)request.getAttribute("divisions");
 				%>
 				<%if(null != batches && batches.size()!=0) {%>
 					Search Student By Batch
 					<select class="form-control btn btn-default" id="batchselected" >
 					<option value="-1">Select Batch</option>
-					<%for(int counter=0;counter<batches.size();counter++){ %>
-					<option value="<%=batches.get(counter).getBatch_id() %>_<%=batches.get(counter).getDiv_id() %>"><%=batches.get(counter).getBatch_name() %></option>
-					<%} %>
+					<%for(int counter=0;counter<batches.size();counter++){
+						for(int innercounter=0;innercounter<alldivisions.size();innercounter++){
+						if(alldivisions.get(innercounter).getDivId()==batches.get(counter).getDiv_id()){
+						%>	
+					<option value="<%=batches.get(counter).getBatch_id() %>_<%=batches.get(counter).getDiv_id() %>"><%=alldivisions.get(innercounter).getDivisionName()%> <%=batches.get(counter).getBatch_name() %></option>
+					<%
+						}}} %>
 					</select>
 					<%for(int counter=0;counter<batches.size();counter++){ %>
 					<input type="hidden" id="division<%=batches.get(counter).getBatch_id() %>_<%=batches.get(counter).getDiv_id() %>" value="<%=batches.get(counter).getDiv_id() %>">

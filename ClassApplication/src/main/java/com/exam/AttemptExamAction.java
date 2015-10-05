@@ -48,6 +48,7 @@ public class AttemptExamAction extends BaseAction {
 	String flag;
 	int institute;
 	Exam initiateExam;
+	int examTimeDuration;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -356,6 +357,14 @@ public class AttemptExamAction extends BaseAction {
 
 	public void setInitiateExam(Exam initiateExam) {
 		this.initiateExam = initiateExam;
+	}
+
+	public String getSubjectname() {
+		return subjectname;
+	}
+
+	public void setSubjectname(String subjectname) {
+		this.subjectname = subjectname;
 	}
 	
 	

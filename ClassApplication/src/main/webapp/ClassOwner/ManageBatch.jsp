@@ -123,14 +123,14 @@ function searchbatchthroughtable(batchName) {
 							   location.reload();
 						   },2*1000); */
 			    }else{
-			    	 modal.launchAlert("Error","Batch with batch name : "+batchName+" not found!");
+			    	 modal.launchAlert("Error","Batch not found!");
 					   	/* setTimeout(function(){
 					   		location.reload();
 					   	},1000*3); */
 					}		   
 		   	},
 		   error:function(data){
-			   modal.launchAlert("Error","Batch with batch name : "+batchName+" not found!");
+			   modal.launchAlert("Error","Batch not found!");
 			   	setTimeout(function(){
 			   		location.reload();
 			   	},1000*3);
@@ -211,14 +211,14 @@ function searchBatch() {
 							   location.reload();
 						   },2*1000); */
 			    }else{
-			    	 modal.launchAlert("Error","Batch with batch name : "+batchName+" not found!");
+			    	 modal.launchAlert("Error","Batch not found!");
 					   	/* setTimeout(function(){
 					   		location.reload();
 					   	},1000*3); */
 					}		   
 		   	},
 		   error:function(data){
-			   modal.launchAlert("Error","Batch with batch name : "+batchName+" not found!");
+			   modal.launchAlert("Error","Batch not found!");
 			   	setTimeout(function(){
 			   		location.reload();
 			   	},1000*3);

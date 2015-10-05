@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.db.batch.division.Division;
+import com.classapp.db.subject.Subject;
 import com.config.BaseAction;
 import com.config.Constants;
-import com.datalayer.subject.Subject;
 import com.helper.SubjectHelperBean;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.BatchTransactions;
@@ -24,6 +24,7 @@ public class AddTopicAction extends BaseAction{
 	List<Division> divisionList;
 	int currentPage;
 	int totalPages;
+	String subjectname;
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		DivisionTransactions divisionTransactions=new DivisionTransactions();
@@ -38,6 +39,9 @@ public class AddTopicAction extends BaseAction{
 			}
 		}
 		}
+		SubjectTransaction subjectTransaction=new SubjectTransaction();
+		Subject subject=subjectTransaction.getSubject(subid);
+		subjectname=subject.getSubjectName();
 		return "addtopicinitiate";
 	}
 	public String getActionname() {
@@ -75,6 +79,12 @@ public class AddTopicAction extends BaseAction{
 	}
 	public void setTotalPages(int totalPages) {
 		this.totalPages = totalPages;
+	}
+	public String getSubjectname() {
+		return subjectname;
+	}
+	public void setSubjectname(String subjectname) {
+		this.subjectname = subjectname;
 	}
 	
 	
