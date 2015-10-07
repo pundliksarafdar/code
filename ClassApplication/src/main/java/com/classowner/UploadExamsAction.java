@@ -119,12 +119,14 @@ public class UploadExamsAction extends BaseAction{
 			List<String> questionImagesList = new ArrayList<String>();
 			List<String> answerImagesList = new ArrayList<String>();
 			
-			for(File questionImage : questionImages){
-				try {
-					String base64questionImage = Base64.encode(FileUtils.readFileToByteArray(questionImage));
-					questionImagesList.add(Constants.BASE64_IMAGE_PREFIX+base64questionImage);
-				} catch (IOException e) {
-					e.printStackTrace();
+			if(null!=questionImages){
+				for(File questionImage : questionImages){
+					try {
+						String base64questionImage = Base64.encode(FileUtils.readFileToByteArray(questionImage));
+						questionImagesList.add(Constants.BASE64_IMAGE_PREFIX+base64questionImage);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 			questionData.setQuestionImage(questionImagesList);
