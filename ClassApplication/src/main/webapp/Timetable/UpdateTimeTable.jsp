@@ -572,6 +572,11 @@ $(document).ready(function(){
 		 var dates="";
 		 var state=0;
 		 for(var i=0;i<globcounter;i++)
+		 {
+			 $("#start"+i).parents("td").removeClass("has-error");
+			 $("#end"+i).parents("td").removeClass("has-error");
+		 }
+		 for(var i=0;i<globcounter;i++)
 			 {
 			 subjects=$("#subject"+i).val();
 				teachers=$("#teacher"+i).val();
@@ -594,8 +599,8 @@ $(document).ready(function(){
 					state=1;
 					sametime=1;
 					modal.launchAlert("Error","Start Time Should be less than End Time");
-					$("#starttime"+i).parents("td").addClass("has-error");
-					$("#endtime"+i).parents("td").addClass("has-error");
+					$("#start"+i).parents("td").addClass("has-error");
+					$("#end"+i).parents("td").addClass("has-error");
 				}
 			 	
 			 	var startsplit=starttimes.split(" ");
@@ -678,6 +683,7 @@ $(document).ready(function(){
 				   		var teacher=resultJson.teacher.split(",");
 				   		var lecture=resultJson.lecture.split(",");
 				   		var time=resultJson.time;
+				   		var overlappedtimeids=resultJson.overlappedtimeids.split("/");
 				   		var flag=0;
 				   		var i=0;
 				   		for(i=0;i<globcounter;i++){
@@ -712,7 +718,18 @@ $(document).ready(function(){
 				   					} 
 				   			}
 				   		if(time!=""){
-				   			modal.launchAlert("Success","Some lectures timmings are overlapped OR Start time is after end time");
+				   			for(var s=0;s<overlappedtimeids.length;s++){
+					   			
+				   				for(var p=0;p<globcounter;p++)
+				   				if($("#start"+p).val()!=""){
+				   					if($("#start"+p).val()==overlappedtimeids[s].split(",")[0]){
+				   					$("#start"+p).parents("td").addClass("has-error");
+									$("#end"+p).parents("td").addClass("has-error");
+				   					}
+				   					
+				   				}
+				   			}
+				   			modal.launchAlert("Success","Some lectures timmings are overlapped");
 				   			flag=1;
 				   		}
 				   		
@@ -757,14 +774,14 @@ int i=0;%>
 <div class="container">
 <div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
 	<div align="center" style="font-size: larger;"><u>Search/Update Time Table</u></div>
-	<div class="row">
+	<!-- <div class="row">
 		<div class='col-sm-6 header' style="padding-bottom: 10px;">*
 			Update time table for batch here</div>
-	</div>
+	</div> -->
 	<div align="left" class="row">
-	<div class="col-md-4">
+	<div class="col-md-3">
 					<select name="divisionID" id="divisionID" class="form-control" width="100px">
-					<option value="-1">Select Division</option>
+					<option value="-1">Select Class</option>
 					<%
 					if(divisions!=null){
 					while(i<divisions.size()){
@@ -775,7 +792,7 @@ int i=0;%>
 					}} %>
 			</select>
 			</div>
-<div class="col-md-4">
+<div class="col-md-3">
 
 <select name="batchname" id="batchname" class='form-control' disabled="disabled">
 <option value="-1">Select Batch</option>
@@ -792,15 +809,15 @@ while(i<batch.size()){
 <!-- <div class="col-xs-2" align="right">
 <label>Select Date</label>
 </div> -->
-<div class="col-md-2">
-<div id="datetimepicker" class="input-group" style="width :150px;">
+<div class="col-md-3">
+<div id="datetimepicker" class="input-group" style="width :190px;">
 					<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
 						type="text" id="date" placeholder="Select Date" readonly/> <span class="input-group-addon add-on"> <i
 						class="glyphicon glyphicon-calendar glyphicon-time"></i>
 					</span>
 				</div>
 				</div>
-<div class="col-md-2">
+<div class="col-md-3">
 <input value="Submit" type="button" id="submit" class="btn btn-danger">
 </div>
 <div class="col-md-3">

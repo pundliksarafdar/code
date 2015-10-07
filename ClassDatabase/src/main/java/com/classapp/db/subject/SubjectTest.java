@@ -20,9 +20,9 @@ public class SubjectTest {
 		GetSubject getSubject = new GetSubject();
 		/*List<Subject> subjects = getSubject.getSubjects(34); 
 		for(int i=0;i<subjects.size();i++){
-			System.out.println(subjects.get(i).getSubjectName());
+			AppLogger.logger(subjects.get(i).getSubjectName());
 		}
 		
-		System.out.println(getSubject.isSubjectExists(34, "subject11"));*/
+		AppLogger.logger(getSubject.isSubjectExists(34, "subject11"));*/
 	}
 }

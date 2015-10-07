@@ -187,7 +187,7 @@
 		<div class="row">
 			<div class="col-md-3">
 				<select name="division" id="classownerUploadexamDivisionName" class="form-control" width="100px">
-					<option value="-1">Select Division</option>
+					<option value="-1">Select Class</option>
 					<c:forEach items="${requestScope.divisions}" var="division">
 						<option value="<c:out value="${division.divId}"></c:out>"><c:out value="${division.divisionName}"></c:out>&nbsp;<c:out value="${division.stream}"></c:out></option>
 					</c:forEach>							

@@ -1,3 +1,4 @@
+<%@page import="com.classapp.db.batch.division.Division"%>
 <meta http-equiv="cache-control" content="max-age=0" />
 <%@page import="com.classapp.db.student.StudentDetails"%>
 <%@page import="com.classapp.db.subject.Subject"%>
@@ -401,7 +402,7 @@ function getSelectedStudentsToDelete(){
 				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Invalid Student login');
 				$('div#addStudentModal .error').show();
 			}else if(!divisionId || divisionId.trim()=="" || divisionId == -1){
-				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Please select division');
+				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Please select Class');
 				$('div#addStudentModal .error').show();
 			}else if(batchIds==""){
 				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>please select atleast one batch');
@@ -818,7 +819,7 @@ function getSelectedStudentsToDelete(){
 				<br>
 				<select class="btn btn-default" name="divisionName" id="divisionName">
 					
-						<option value="-1">Select Division</option>
+						<option value="-1">Select Class</option>
 						<s:forEach items="${divisions}" var="division">
 							<option value='<s:out value="${division.divId}"></s:out>'><s:out value="${division.divisionName}"></s:out> &nbsp; <s:out value="${division.stream}"></s:out></option>
 						</s:forEach>
@@ -907,14 +908,19 @@ function getSelectedStudentsToDelete(){
 				<%List<Batch> batches=(List<Batch>)request.getAttribute("batches"); 
 				String batchdivision=(String)request.getSession().getAttribute("batchdivision"); 
 				String batchID=(String)request.getSession().getAttribute("batchID");
+				List<Division> alldivisions=(List<Division>)request.getAttribute("divisions");
 				%>
 				<%if(null != batches && batches.size()!=0) {%>
 					Search Student By Batch
 					<select class="form-control btn btn-default" id="batchselected" >
 					<option value="-1">Select Batch</option>
-					<%for(int counter=0;counter<batches.size();counter++){ %>
-					<option value="<%=batches.get(counter).getBatch_id() %>_<%=batches.get(counter).getDiv_id() %>"><%=batches.get(counter).getBatch_name() %></option>
-					<%} %>
+					<%for(int counter=0;counter<batches.size();counter++){
+						for(int innercounter=0;innercounter<alldivisions.size();innercounter++){
+						if(alldivisions.get(innercounter).getDivId()==batches.get(counter).getDiv_id()){
+						%>	
+					<option value="<%=batches.get(counter).getBatch_id() %>_<%=batches.get(counter).getDiv_id() %>"><%=alldivisions.get(innercounter).getDivisionName()%> <%=batches.get(counter).getBatch_name() %></option>
+					<%
+						}}} %>
 					</select>
 					<%for(int counter=0;counter<batches.size();counter++){ %>
 					<input type="hidden" id="division<%=batches.get(counter).getBatch_id() %>_<%=batches.get(counter).getDiv_id() %>" value="<%=batches.get(counter).getDiv_id() %>">
@@ -956,7 +962,7 @@ function getSelectedStudentsToDelete(){
 			String pagenumber=(String)request.getSession().getAttribute("pagenumber");
 			//String batchdivision=(String)request.getSession().getAttribute("batchdivision");
 			/* if(studentSearch!=null){ */
-				//System.out.println("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
+				//AppLogger.logger("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
 			%>
 			
 			<table  id="studentDetailTable" style="background-color: white;" border="1">

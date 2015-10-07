@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.classapp.db.register.RegisterBean;
+import com.classapp.logger.AppLogger;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.opensymphony.xwork2.ActionContext;
@@ -34,7 +35,7 @@ public class EditUserConfirm extends BaseAction{
 
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
-		System.out.println(registerBean);
+		AppLogger.logger(registerBean);
 		registerBean.setRole(userBean.getRole());
 		ActionContext.getContext().getSession().put("registerbean", registerBean);
 		getActionErrors().clear();

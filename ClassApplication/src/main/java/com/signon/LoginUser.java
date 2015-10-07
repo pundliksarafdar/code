@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.sun.org.apache.bcel.internal.generic.LUSHR;
 import com.tranaction.login.login;
 import com.transaction.batch.BatchTransactions;
+import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.notification.NotificationTransaction;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.schedule.ScheduleTransaction;
@@ -143,6 +144,8 @@ public class LoginUser extends BaseAction{
 						ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 						List<Scheduledata> scheduledatas=scheduleTransaction.getteacherstodaysSchedule(classids, userBean.getRegId());
 						Map<String, List<Scheduledata>> map=new HashMap<String, List<Scheduledata>>();
+						List<String> divisionNames=new ArrayList<String>();
+						DivisionTransactions divisionTransactions=new DivisionTransactions();
 						if(scheduledatas!=null){
 							if(scheduledatas.size()>0){
 							for (int i = 0; i < classids.size(); i++) {
@@ -158,6 +161,7 @@ public class LoginUser extends BaseAction{
 							}
 							}
 						}
+						
 						NotificationTransaction notificationTransaction=new NotificationTransaction();
 						for (int i = 0; i < classids.size(); i++) {
 							List<Notification> notificationsList=  notificationTransaction.getMessageforTeacher(classids.get(i));

@@ -39,6 +39,7 @@ $(document).ready(function(){
 					   var subject=resultJson.subject.split(",");
 					   var dates=resultJson.dates.split(',');
 					   var alldates=resultJson.alldates.split(',');
+					   var division=resultJson.division.split(',');
 					   var table=$(document.getElementById("scheduletable"));
 					   var counter=0
 					   
@@ -55,7 +56,7 @@ $(document).ready(function(){
 							   
 							   if(alldates[counter]==dates[outercounter]){
 							   tableString=tableString+"<tr><td>"+starttime[counter]+
-									"-"+endtime[counter]+"</td><td><table class='table table-condensed'><tr><td>"+subject[counter]+"</td></tr><tr><td>"+batch[counter]+"</td></tr></table></td></tr>"; 
+									"-"+endtime[counter]+"</td><td><table class='table table-condensed'><tr><td>"+subject[counter]+"</td></tr><tr><td>"+batch[counter]+"</td></tr><tr><td>"+division[counter]+"</td></tr></table></td></tr>"; 
 							   scheduleflag=true;
 							   }
 						   counter++;
@@ -93,10 +94,10 @@ $(document).ready(function(){
 <form role="form" class="form-inline">
 <div class="container">
 <div align="left" class="container">
-<div class="col-xs-2">
+<div class="col-md-3">
 <%List<RegisterBean> list=(List<RegisterBean>)request.getAttribute("Classes"); %>
 <select id="teacherTimeTableClassnameDropDown"  class='form-control'>
-<option value="-1">Select Class</option>
+<option value="-1">Select Institute</option>
 <%
 int counter=0;
 if(list!=null){
@@ -107,15 +108,15 @@ while(list.size()>counter){ %>
 </select>
 </div>
 
-<div class="col-xs-2">
-<div id="datetimepicker" class="input-group" style="width :150px;">
+<div class="col-md-3">
+<div id="datetimepicker" class="input-group" style="width :190px;">
 					<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
 						type="text" id="date" placeholder="Select Date" readonly/> <span class="input-group-addon add-on"> <i
 						class="glyphicon glyphicon-calendar glyphicon-time"></i>
 					</span>
 				</div>
 </div>
-<div class="col-xs-2">
+<div class="col-md-3">
    <button type="button" class="btn btn-danger" 
       data-loading-text="Loading..."  id="submit">Submit
    </button>

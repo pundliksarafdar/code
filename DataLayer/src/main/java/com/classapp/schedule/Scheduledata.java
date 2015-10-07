@@ -9,6 +9,7 @@ String batch_name;
 Time start_time;
 Time end_time;
 String subject_name;
+String division_name;
 public String getInst_name() {
 	return inst_name;
 }
@@ -44,6 +45,12 @@ public String getSubject_name() {
 }
 public void setSubject_name(String subject_name) {
 	this.subject_name = subject_name;
+}
+public String getDivision_name() {
+	return division_name;
+}
+public void setDivision_name(String division_name) {
+	this.division_name = division_name;
 }
 
 

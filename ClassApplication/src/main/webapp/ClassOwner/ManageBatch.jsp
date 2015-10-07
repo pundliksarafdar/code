@@ -123,14 +123,14 @@ function searchbatchthroughtable(batchName) {
 							   location.reload();
 						   },2*1000); */
 			    }else{
-			    	 modal.launchAlert("Error","Batch with batch name : "+batchName+" not found!");
+			    	 modal.launchAlert("Error","Batch not found!");
 					   	/* setTimeout(function(){
 					   		location.reload();
 					   	},1000*3); */
 					}		   
 		   	},
 		   error:function(data){
-			   modal.launchAlert("Error","Batch with batch name : "+batchName+" not found!");
+			   modal.launchAlert("Error","Batch not found!");
 			   	setTimeout(function(){
 			   		location.reload();
 			   	},1000*3);
@@ -211,14 +211,14 @@ function searchBatch() {
 							   location.reload();
 						   },2*1000); */
 			    }else{
-			    	 modal.launchAlert("Error","Batch with batch name : "+batchName+" not found!");
+			    	 modal.launchAlert("Error","Batch not found!");
 					   	/* setTimeout(function(){
 					   		location.reload();
 					   	},1000*3); */
 					}		   
 		   	},
 		   error:function(data){
-			   modal.launchAlert("Error","Batch with batch name : "+batchName+" not found!");
+			   modal.launchAlert("Error","Batch not found!");
 			   	setTimeout(function(){
 			   		location.reload();
 			   	},1000*3);
@@ -271,7 +271,7 @@ $(document).ready(function(){
 			$('div#addBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Invalid Batch name');
 			$('div#addBatchModal .error').show();
 	}else if($("#divisionName").val()=='-1'){
-		$('div#addBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please Select Division');
+		$('div#addBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please Select Class');
 		$('div#addBatchModal .error').show();
 	}else if(subjectsname==""){
 		$('div#addBatchModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please Select Atleast One Subject');
@@ -458,7 +458,7 @@ $(document).ready(function(){
 		</div>
 	<%BatchDetails batchSearch=(BatchDetails)request.getSession().getAttribute("batchSearchResult");
 	/* if(batchSearch!=null){
-	 */	//System.out.println("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
+	 */	//AppLogger.logger("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
 	%>
 		<table class="table table-bordered table-hover" style="background-color: white;display:none" border="1" id="batchtomodify">
 			<thead>

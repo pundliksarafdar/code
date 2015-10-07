@@ -4,6 +4,7 @@ import org.hibernate.Session;
 
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.register.RegisterUser;
+import com.classapp.logger.AppLogger;
 import com.classapp.persistence.HibernateUtil;
 import com.google.gson.Gson;
 
@@ -42,7 +43,7 @@ public class App
     	RegisterUser registerUser = new RegisterUser();
     	Gson gson = new Gson();
     	String status = registerUser.registerUser(gson.toJson(registerBean));
-    	System.out.println(status);
+    	AppLogger.logger(status);
 	    }catch(Exception e){
 			e.printStackTrace();
 		}

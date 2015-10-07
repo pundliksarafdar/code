@@ -484,7 +484,7 @@ function searchTeacher() {
 		
 		<%TeacherDetails teacherSearch=(TeacherDetails)request.getSession().getAttribute("teacherSearchResult");
 		/* if(teacherSearch!=null){ */
-		//System.out.println("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
+		//AppLogger.logger("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
 		%> 
 		<table id="teachertomodify" class="table table-bordered table-hover" style="background-color: white;display:none" border="1">
 			<thead>

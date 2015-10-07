@@ -72,8 +72,8 @@ public class DisplayNotesListAction extends BaseAction{
 		int totalCount=notesTransaction.getNotescount(Integer.parseInt(division), Integer.parseInt(subject), inst_id,batch);
 		
 		if(totalCount>0){
-			int remainder=totalCount%2;
-			totalPage=totalCount/2;
+			int remainder=totalCount%10;
+			totalPage=totalCount/10;
 			if(remainder>0){
 				totalPage++;
 			}

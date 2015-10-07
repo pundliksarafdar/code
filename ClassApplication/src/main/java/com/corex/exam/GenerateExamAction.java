@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
 import org.omg.CORBA.Request;
 
+import com.classapp.logger.AppLogger;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.datalayer.exam.QuestionSearchRequest;
@@ -28,6 +29,8 @@ public class GenerateExamAction extends BaseAction{
 	private Integer passingmarks;
 	private Integer totalMarks;
 	private String examname;
+	private int examHour;
+	private int examMinute;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -63,10 +66,10 @@ public class GenerateExamAction extends BaseAction{
 			}
 			 questionIdString = StringUtils.join(questionIdListsList,",");
 			 answerIdString = StringUtils.join(questionAnswerIdListsList,"/");
-			 System.out.println(questionIdString+"<>"+answerIdString);
+			 AppLogger.logger(questionIdString+"<>"+answerIdString);
 			 int instituteId = userBean.getRegId();
 			 int creatorId = userBean.getRegId();
-			 examTransaction.saveExam(examname, instituteId, subject, division,totalMarks , passingmarks, creatorId,batch , questionIdString, answerIdString);
+			 examTransaction.saveExam(examname, instituteId, subject, division,totalMarks , passingmarks, creatorId,batch , questionIdString, answerIdString,examHour,examMinute);
 		}
 		
 		
@@ -174,5 +177,21 @@ public class GenerateExamAction extends BaseAction{
 		this.totalMarks = totalMarks;
 	}
 
+	public int getExamHour() {
+		return examHour;
+	}
+
+	public void setExamHour(int examHour) {
+		this.examHour = examHour;
+	}
+
+	public int getExamMinute() {
+		return examMinute;
+	}
+
+	public void setExamMinute(int examMinute) {
+		this.examMinute = examMinute;
+	}
+	
 		
 }

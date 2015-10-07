@@ -44,6 +44,7 @@ import com.classapp.db.student.StudentDetails;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
 import com.classapp.db.subject.Topics;
+import com.classapp.logger.AppLogger;
 import com.classapp.notification.GeneralNotification;
 import com.classapp.notification.GeneralNotification.NOTIFICATION_KEYS;
 import com.classapp.persistence.Constants;
@@ -123,7 +124,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			 */
 			String divisionName=(String)req.getParameter("divisionName");	
 			//divisionName="div2";	
-			System.out.println("divisionName:"+divisionName);
+			AppLogger.logger("divisionName:"+divisionName);
 			Division division=new Division();
 			division.setDivisionName(divisionName);
 				
@@ -878,7 +879,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			}else{
 				respObject.addProperty("time", "timeoverlapped");
 			}
-			
+			respObject.addProperty("overlappedtimeids", overlappedtimeids);
 			respObject.addProperty("teacher", teacherbusy);
 			respObject.addProperty("lecture", lectureexists);
 			
@@ -897,7 +898,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		 BufferedReader br = new BufferedReader(new FileReader(path));
 		 String line = null;
 		 while ((line = br.readLine()) != null) {
-		   System.out.println(line);
+		   AppLogger.logger(line);
 		 }
 			if(0 == userBean.getRole() || !"".equals(regId)){
 				if(null == regId){
@@ -1335,13 +1336,14 @@ public class ClassOwnerServlet extends HttpServlet{
 				}
 				
 			}
+			
 			respObject.addProperty("teacher", teacherbusy);
 			respObject.addProperty("lecture", lectureexists);
 			respObject.addProperty("time", "");
 			}else{
 				respObject.addProperty("time", "time");
 			}
-			
+			respObject.addProperty("overlappedtimeids", overlappedtimeids);
 			respObject.addProperty("teacher", teacherbusy);
 			respObject.addProperty("lecture", lectureexists);
 			respObject.addProperty(STATUS, "success");	
@@ -1374,7 +1376,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			req.getSession().setAttribute("batchSearchResult", null);
 			boolean found=false;
 			for (BatchDetails batch :batches) {
-				if(batch.getBatch().getBatch_name().equals(batchName)){
+				if(batch.getBatch().getBatch_name().equalsIgnoreCase(batchName)){
 					
 					req.getSession().setAttribute("batchSearchResult", batch);
 					req.getSession().setAttribute("batchSearchResultBatch", batch);
@@ -1394,7 +1396,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			
 			if(!found){
 				respObject.addProperty(STATUS, "error");
-				respObject.addProperty(MESSAGE, "Batch with batch name "+batchName+" does not exists in class!");
+				respObject.addProperty(MESSAGE, "Batch does not exists in class!");
 			}else{
 				respObject.addProperty(STATUS, "success");				
 			}
@@ -1534,12 +1536,15 @@ public class ClassOwnerServlet extends HttpServlet{
 			List<Batch> batchs =batchTransactions.getTeachersBatch(schedules);
 			SubjectTransaction subjectTransaction=new SubjectTransaction();
 			List<String> subjects=subjectTransaction.getScheduleSubject(schedules);
+			DivisionTransactions divisionTransactions=new DivisionTransactions();
+			List<Division> divisions=divisionTransactions.getAllDivisions(Integer.parseInt(classid));
 			int counter=0;
 			
 			String starttime="";
 			String endtime="";
 			String subject="";
 			String batch="";
+			String division="";
 			DateFormat sdf = new SimpleDateFormat("kk:mm");
 			DateFormat f2 = new SimpleDateFormat("h:mma");
 			while(counter<schedules.size()){
@@ -1553,11 +1558,23 @@ public class ClassOwnerServlet extends HttpServlet{
 					endtime=f2.format(end).toUpperCase();
 					subject=subjects.get(counter);
 					batch=batchs.get(counter).getBatch_name();
+					for (int i = 0; i < divisions.size(); i++) {
+						if(divisions.get(i).getDivId()==schedules.get(counter).getDiv_id()){
+							division=divisions.get(i).getDivisionName();
+							break;
+						}
+					}
 				}else{
 					starttime=starttime+","+ f2.format(start).toUpperCase();
 					endtime=endtime+","+ f2.format(end).toUpperCase();
 					subject=subject+","+subjects.get(counter);
 					batch=batch+","+ batchs.get(counter).getBatch_name();
+					for (int i = 0; i < divisions.size(); i++) {
+						if(divisions.get(i).getDivId()==schedules.get(counter).getDiv_id()){
+							division=division+","+divisions.get(i).getDivisionName();
+							break;
+						}
+					}
 				}
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
@@ -1571,6 +1588,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			respObject.addProperty("starttime", starttime);
 			respObject.addProperty("endtime", endtime);
 			respObject.addProperty("subject", subject);
+			respObject.addProperty("division", division);
 			
 			/*String dateString[]=date.split("/");
 			Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
@@ -1790,7 +1808,7 @@ public class ClassOwnerServlet extends HttpServlet{
         	internetAddress.validate();
 		} catch (AddressException e) {
 			// TODO: handle exception
-			System.out.println("Invalid Address");
+			AppLogger.logger("Invalid Address");
 		}
     	
        // Create a default MimeMessage object.
@@ -1814,10 +1832,10 @@ public class ClassOwnerServlet extends HttpServlet{
        // Send message
      Transport.send(message);
 
-       System.out.println("Sent message successfully....");
+       AppLogger.logger("Sent message successfully....");
 
     } catch (MessagingException e) {
-    	System.out.println("Invalid Internet Address");
+    	AppLogger.logger("Invalid Internet Address");
           throw new RuntimeException(e);
     }
 	*/
@@ -2688,6 +2706,8 @@ public class ClassOwnerServlet extends HttpServlet{
 		List<Batch> batchs =batchTransactions.getTeachersBatch(schedules);
 		SubjectTransaction subjectTransaction=new SubjectTransaction();
 		List<String> subjects=subjectTransaction.getScheduleSubject(schedules);
+		DivisionTransactions divisionTransactions=new DivisionTransactions();
+		List<Division> divisions=divisionTransactions.getAllDivisions(Integer.parseInt(classid));
 		int counter=0;
 		
 		String starttime="";
@@ -2696,7 +2716,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		String batch="";
 		String dates="";
 		String alldates="";
-		
+		String division="";
 		Calendar cal=Calendar.getInstance();
 		
 		for (int i = 0; i < 7; i++) {
@@ -2724,6 +2744,12 @@ public class ClassOwnerServlet extends HttpServlet{
 				batch=batchs.get(counter).getBatch_name();
 				//dates=new SimpleDateFormat("dd-MM-yyyy").format(schedules.get(counter).getDate());
 				alldates=new SimpleDateFormat("dd-MM-yyyy").format(schedules.get(counter).getDate());
+				for (int i = 0; i < divisions.size(); i++) {
+					if(divisions.get(i).getDivId()==schedules.get(counter).getDiv_id())
+					{
+						division=divisions.get(i).getDivisionName();
+					}
+				}
 			}else{
 				starttime=starttime+","+formattedstarttime;
 				endtime=endtime+","+ formattedendtime;
@@ -2733,6 +2759,12 @@ public class ClassOwnerServlet extends HttpServlet{
 					dates=dates+","+new SimpleDateFormat("dd-MM-yyyy").format(schedules.get(counter).getDate());
 					}*/
 					alldates=alldates+","+new SimpleDateFormat("dd-MM-yyyy").format(schedules.get(counter).getDate());
+					for (int i = 0; i < divisions.size(); i++) {
+						if(divisions.get(i).getDivId()==schedules.get(counter).getDiv_id())
+						{
+							division=division+","+divisions.get(i).getDivisionName();
+						}
+					}
 			}
 			counter++;
 		}
@@ -2743,6 +2775,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		respObject.addProperty("subject", subject);
 		respObject.addProperty("alldates", alldates);
 		respObject.addProperty("dates", dates);
+		respObject.addProperty("division", division);
 		/*String dateString[]=date.split("/");
 		Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
 		Student student= studentTransaction.getclassStudent(regId,Integer.parseInt(classid));		
@@ -2975,27 +3008,46 @@ public class ClassOwnerServlet extends HttpServlet{
 	}
 	
 	public boolean validatetime(List<Time> starttime,List<Time> endtime,List<Date> dates) {
+		boolean flag =true;
 		
 		for (int i = 0; i < starttime.size(); i++) {
 			if(starttime.get(i).getTime()>endtime.get(i).getTime())
 			{
 				return false;
 			}
-			
+			SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
+
 			for (int j = 0; j < starttime.size(); j++) {
 				if(i!=j)
 				{
 				if(starttime.get(i).getTime() >= starttime.get(j).getTime() && starttime.get(i).getTime()<endtime.get(j).getTime() && dates.get(i).getTime()==dates.get(j).getTime()){
-					return false;
+					if("".equals(overlappedtimeids)){
+						overlappedtimeids=sdf.format(starttime.get(i))+","+sdf.format(endtime.get(i));
+					}else{
+						overlappedtimeids=overlappedtimeids+"/"+sdf.format(starttime.get(i))+","+sdf.format(endtime.get(i));
+					}
+					flag= false;
 				}else if(endtime.get(i).getTime() > starttime.get(j).getTime() && endtime.get(i).getTime()<=endtime.get(j).getTime() && dates.get(i).getTime()==dates.get(j).getTime())
 				{
-					return false;
+					if("".equals(overlappedtimeids)){
+						overlappedtimeids=sdf.format(starttime.get(i))+","+sdf.format(endtime.get(i));;
+					}else{
+						overlappedtimeids=overlappedtimeids+"/"+sdf.format(starttime.get(i))+","+sdf.format(endtime.get(i));
+					}
+					flag= false;
 				}else if(starttime.get(i).getTime()<starttime.get(j).getTime() && endtime.get(i).getTime()>endtime.get(j).getTime() && dates.get(i).getTime()==dates.get(j).getTime()){
-					return false;
+					if("".equals(overlappedtimeids)){
+						overlappedtimeids=sdf.format(starttime.get(i))+","+sdf.format(endtime.get(i));;
+					}else{
+						overlappedtimeids=overlappedtimeids+"/"+sdf.format(starttime.get(i))+","+sdf.format(endtime.get(i));
+					}
+					flag= false;
 				}
 			}
 			}
 		}
-		return true;
+		return flag;
 	}
+	
+	String overlappedtimeids="";
 }

@@ -6,7 +6,7 @@
     <class name="com.classapp.db.batch.division.Division" table="division" catalog="classdb">
         <id name="divId" type="java.lang.Integer">
             <column name="DIV_ID" />
-            <generator class="increment" />
+            <generator class="identity" />
         </id>
         <property name="divisionName" type="java.lang.String">
             <column name="DIV_NAME" length="100" not-null="true" unique="true"/>

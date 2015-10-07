@@ -206,7 +206,7 @@ $(".examSubmit").on("click",function(){
 		<div class="col-md-6">Total Marks</div> <div class="col-md-3"><c:out value="${initiateExam.total_marks }"></c:out></div>
 </div>
 <div class="row">
-		<div class="col-md-6">Time</div> <div class="col-md-3"> 1 Hr</div>
+		<div class="col-md-6">Time</div> <div class="col-md-3"><c:out value="${initiateExam.exam_time }"></c:out> Hr</div>
 </div>
 <div class="row">
 		<div class="col-md-12" align="center">

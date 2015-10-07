@@ -1,7 +1,10 @@
 package com.notes;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 
 import com.classapp.db.Notes.Notes;
@@ -52,7 +56,8 @@ public class DisplayNotesAction extends BaseAction{
         response.setHeader("Content-Length", String.valueOf(file.length()));
        
         try {
-			Files.copy(file.toPath(), response.getOutputStream());
+			//Files.copy(file.toPath(), response.getOutputStream());
+			FileUtils.copyFile(file, response.getOutputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

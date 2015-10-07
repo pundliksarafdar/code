@@ -5,6 +5,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 import com.classapp.db.notificationpkg.NotificationDB;
+import com.classapp.logger.AppLogger;
 
 public class SchedulerJob implements Job {
 	public void execute(JobExecutionContext context)
@@ -12,7 +13,7 @@ public class SchedulerJob implements Job {
 		NotificationDB notificationDB=new NotificationDB();
 		notificationDB.deleteNotifications();
 		
-		System.out.println("Struts 2.3.4 + Quartz 2.1.5");
+		AppLogger.logger("Struts 2.3.4 + Quartz 2.1.5");
 
 	}
 }

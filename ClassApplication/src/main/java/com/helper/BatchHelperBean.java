@@ -6,6 +6,7 @@ import java.util.List;
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.BatchData;
 import com.classapp.db.batch.BatchDetails;
+import com.classapp.logger.AppLogger;
 
 public class BatchHelperBean {
 	private int class_id;
@@ -33,9 +34,9 @@ public class BatchHelperBean {
 
 	public List<Batch> getBatches() {		
 		this.batches = batchData.getAllBatchesOfClass(class_id);
-		System.out.println("Size of list of subjects :"+this.batches.size());
+		AppLogger.logger("Size of list of subjects :"+this.batches.size());
 		for (Batch batch : this.batches) {
-			System.out.println("Batch name :"+batch.getBatch_name());	
+			AppLogger.logger("Batch name :"+batch.getBatch_name());	
 			
 		}
 		return batches;
@@ -43,9 +44,9 @@ public class BatchHelperBean {
 	
 	public List<Batch> getBatches(List<String>class_id) {		
 		this.batches = batchData.getAllBatchesOfClass(class_id);
-		System.out.println("Size of list of subjects :"+this.batches.size());
+		AppLogger.logger("Size of list of subjects :"+this.batches.size());
 		for (Batch batch : this.batches) {
-			System.out.println("Batch name :"+batch.getBatch_name());	
+			AppLogger.logger("Batch name :"+batch.getBatch_name());	
 			
 		}
 		return batches;

@@ -91,10 +91,10 @@ public int getNotesNextID(int subid,int classid,int div_id) {
 			}
 			int startindex=0;
 			if (currentPage!=1 && currentPage!=0) {
-				startindex=(currentPage-1)*2;
+				startindex=(currentPage-1)*10;
 			}
 			query.setFirstResult(startindex);
-			query.setMaxResults(2);
+			query.setMaxResults(10);
 			notesList = query.list();
 			
 			}catch(Exception e)

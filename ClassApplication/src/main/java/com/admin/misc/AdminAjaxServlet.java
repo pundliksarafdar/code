@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.edit.DBUpdate;
+import com.classapp.logger.AppLogger;
 import com.google.gson.JsonObject;
 import com.miscfunction.MiscFunction;
 import com.transaction.addtransaction.AdvertiseTransaction;
@@ -31,9 +32,9 @@ public class AdminAjaxServlet extends HttpServlet{
 		if("reg".equalsIgnoreCase(methodeToCall)){
 			String regId = (String)req.getParameter("regId");
 			String duration = (String)req.getParameter("duration");
-			System.out.println("MethodeToCall-"+methodeToCall);
-			System.out.println("Registration Id-"+regId);
-			System.out.println("Duration-"+duration);
+			AppLogger.logger("MethodeToCall-"+methodeToCall);
+			AppLogger.logger("Registration Id-"+regId);
+			AppLogger.logger("Duration-"+duration);
 			try{
 				String result = dbUpdate.updateDuration(regId, duration);
 				JsonObject resultJson = new JsonObject();
@@ -48,8 +49,8 @@ public class AdminAjaxServlet extends HttpServlet{
 		}else if("block".equalsIgnoreCase(methodeToCall)){
 			String regId = (String)req.getParameter("regId");
 			String role = (String)req.getParameter("role");
-			System.out.println("MethodeToCall-"+methodeToCall);
-			System.out.println("Registration Id-"+regId);
+			AppLogger.logger("MethodeToCall-"+methodeToCall);
+			AppLogger.logger("Registration Id-"+regId);
 			if("null".equalsIgnoreCase(role)){
 				role = "0";
 			}
@@ -57,16 +58,16 @@ public class AdminAjaxServlet extends HttpServlet{
 		}else if("unblock".equalsIgnoreCase(methodeToCall)){
 			String regId = (String)req.getParameter("regId");
 			String role = (String)req.getParameter("role");
-			System.out.println("MethodeToCall-"+methodeToCall);
-			System.out.println("Registration Id-"+regId);
+			AppLogger.logger("MethodeToCall-"+methodeToCall);
+			AppLogger.logger("Registration Id-"+regId);
 			if("null".equalsIgnoreCase(role)){
 				role = "0";
 			}
 			dbUpdate.unBlockUser(regId,role);
 		}else if("deleteuser".equalsIgnoreCase(methodeToCall)){
 			String regId = (String)req.getParameter("regId");
-			System.out.println("MethodeToCall-"+methodeToCall);
-			System.out.println("Registration Id-"+regId);
+			AppLogger.logger("MethodeToCall-"+methodeToCall);
+			AppLogger.logger("Registration Id-"+regId);
 			if(dbUpdate.deleteUser(regId)){
 				JsonObject resultJson = new JsonObject();
 				resultJson.addProperty("status", "success");
@@ -81,8 +82,8 @@ public class AdminAjaxServlet extends HttpServlet{
 				
 		}else if("checkuphonenumber".equalsIgnoreCase(methodeToCall)){
 			String mobileNum = (String)req.getParameter("mobileNumber");
-			System.out.println("MethodeToCall-"+methodeToCall);
-			System.out.println("Registration Id-"+mobileNum);
+			AppLogger.logger("MethodeToCall-"+methodeToCall);
+			AppLogger.logger("Registration Id-"+mobileNum);
 			RegisterTransaction registerTransaction = new RegisterTransaction();
 			boolean result = registerTransaction.isMobileExits(mobileNum);
 			JsonObject resultJson = new JsonObject();
@@ -91,8 +92,8 @@ public class AdminAjaxServlet extends HttpServlet{
 			writer.print(resultJsonStr);	
 		}else if("checkusername".equalsIgnoreCase(methodeToCall)){
 			String userName = (String)req.getParameter("userName");
-			System.out.println("MethodeToCall-"+methodeToCall);
-			System.out.println("Registration Id-"+userName);
+			AppLogger.logger("MethodeToCall-"+methodeToCall);
+			AppLogger.logger("Registration Id-"+userName);
 			RegisterTransaction registerTransaction = new RegisterTransaction();
 			boolean result = registerTransaction.isUserExits(userName);
 			JsonObject resultJson = new JsonObject();
@@ -101,8 +102,8 @@ public class AdminAjaxServlet extends HttpServlet{
 			writer.print(resultJsonStr);	
 		}else if("checkemail".equalsIgnoreCase(methodeToCall)){
 			String email = (String)req.getParameter("emailId");
-			System.out.println("MethodeToCall-"+methodeToCall);
-			System.out.println("Email Id-"+email);
+			AppLogger.logger("MethodeToCall-"+methodeToCall);
+			AppLogger.logger("Email Id-"+email);
 			RegisterTransaction registerTransaction = new RegisterTransaction();
 			boolean result = registerTransaction.isEmailExists(email);
 			JsonObject resultJson = new JsonObject();

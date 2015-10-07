@@ -189,6 +189,7 @@ $(document).ready(function(){
 		var flag=false;
 		$("#passmarkserror").hide();
 		$("#examnameerror").hide();
+		$("#examTimeError").hide();
 		if($("form#examsubmitform #examname").val().trim()==""){
 			$("#examnameerror").html("Please enter exam name");
 			$("#examnameerror").show();
@@ -205,7 +206,7 @@ $(document).ready(function(){
 			flag=true;
 		}
 		else if(!$("form#examsubmitform #passmarks").val().match(numberExpr)){
-			$("#passmarkserror").html("On numbers allowded!!");
+			$("#passmarkserror").html("Only numbers allowded!!");
 			$("#passmarkserror").show();
 			flag=true;
 		}else if(parseInt($("form#examsubmitform #passmarks").val()) > parseInt($("form#examsubmitform #totalmarks").val())){
@@ -213,6 +214,27 @@ $(document).ready(function(){
 			$("#passmarkserror").show();
 			flag=true;
 
+		} 
+		if($("form#examsubmitform #examMinute").val().trim()=="" || $("form#examsubmitform #examHour").val().trim()==""){
+			$("#examTimeError").html("Please Enter Valid Time!!");
+			$("#examTimeError").show();
+			flag=true;
+		}else if(!$("form#examsubmitform #examHour").val().match(numberExpr)){
+			$("#examTimeError").html("Only numbers allowded!!");
+			$("#examTimeError").show();
+			flag=true;
+		}else if(!$("form#examsubmitform #examMinute").val().match(numberExpr)){
+			$("#examTimeError").html("Only numbers allowded!!");
+			$("#examTimeError").show();
+			flag=true;
+		}else if(parseInt($("form#examsubmitform #examHour").val())>24 || parseInt($("form#examsubmitform #examHour").val())<0){
+			$("#examTimeError").html("Exam hour should be in between 1 and 24!!");
+			$("#examTimeError").show();
+			flag=true;
+		}else if(parseInt($("form#examsubmitform #examMinute").val())>60 || parseInt($("form#examsubmitform #examMinute").val())<0){
+			$("#examTimeError").html("Exam Minute should be in between 1 and 60!!");
+			$("#examTimeError").show();
+			flag=true;
 		}
 		var examname=$("form#examsubmitform #examname").val().trim();
 		var institute=$("form#examsubmitform #institute").val();
@@ -487,6 +509,16 @@ var selectMarks = function(){
     <input type="text" class="form-control col-md-4" id="passmarks" name="passmarks">
   	</div>
   	<span class="col-sm-5" id="passmarkserror" style="display:none;color: red"></span>
+  </div>
+  <div class="form-group">
+    <label for="examHour" class="control-label col-sm-2">Exam Time Duration:</label>
+     <div class="col-sm-1">
+    <input type="number" class="form-control" min="0" max="24" maxlength="2" id="examHour" name="examHour" placeholder="HH" >
+     </div>
+     <div class="col-sm-1">
+    <input type="number" class="form-control" min="0" max="59" maxlength="2" id="examMinute" name="examMinute" placeholder="MM">
+  	</div>
+  	<span class="col-sm-5" id="examTimeError" style="display:none;color: red"></span>
   </div>
   <div class="col-sm-offset-2 col-sm-5">
   <button type="submit" class="btn btn-default" id="examsubmit">Submit</button>

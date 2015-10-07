@@ -65,6 +65,8 @@ public class EditExamAction extends BaseAction{
 	int searchtotalPages;
 	int passmarks;
 	List<Topics> topics;
+	int examHour;
+	int examMinute;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -87,6 +89,7 @@ public class EditExamAction extends BaseAction{
 			}
 			totalmarks=exam.getTotal_marks();
 			examname=exam.getExam_name();
+			
 		}
 		if(!"".equals(addedIds) && addedIds !=null){
 			String addedIdsarr[]=addedIds.split(",");
@@ -205,6 +208,13 @@ public class EditExamAction extends BaseAction{
 		}else if("createexam".equals(actionname)){
 			Exam exam=examTransaction.getExamToEdit(inst_id, Integer.parseInt(subject), Integer.parseInt(division), examID);
 			passmarks=exam.getPass_marks();
+			String examTime=exam.getExam_time();
+			if(examTime!=null){
+				if(!"".equals(examTime)){
+				examHour=Integer.parseInt(examTime.split(":")[0]);
+				examMinute=Integer.parseInt(examTime.split(":")[1]);
+				}
+			}
 		}else if("canceledit".equals(actionname)){
 			session.put("questionsIds",null);
 			currentPage=searchcurrentPage;
@@ -239,7 +249,7 @@ public class EditExamAction extends BaseAction{
 					}
 				}
 				Exam exam=new Exam();
-				examTransaction.updateExam(examID,examname, inst_id, Integer.parseInt(subject), Integer.parseInt(division), totalmarks, passmarks, userBean.getRegId(), batch, queIds, ansIds);
+				examTransaction.updateExam(examID,examname, inst_id, Integer.parseInt(subject), Integer.parseInt(division), totalmarks, passmarks, userBean.getRegId(), batch, queIds, ansIds,examHour,examMinute);
 				actionname="editcomplete";
 			}
 			session.put("questionsIds",null);
@@ -592,6 +602,22 @@ public class EditExamAction extends BaseAction{
 
 	public void setTopics(List<Topics> topics) {
 		this.topics = topics;
+	}
+
+	public int getExamHour() {
+		return examHour;
+	}
+
+	public void setExamHour(int examHour) {
+		this.examHour = examHour;
+	}
+
+	public int getExamMinute() {
+		return examMinute;
+	}
+
+	public void setExamMinute(int examMinute) {
+		this.examMinute = examMinute;
 	}
 	
 	

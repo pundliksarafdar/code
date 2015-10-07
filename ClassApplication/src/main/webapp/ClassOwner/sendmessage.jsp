@@ -1,3 +1,4 @@
+<%@page import="com.classapp.db.batch.division.Division"%>
 <%@page import="com.classapp.db.batch.Batch"%>
 <%@page import="java.util.List"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
@@ -71,6 +72,7 @@ $(document).ready(function(){
 </head>
 <body>
 <%List<Batch> batch=(List<Batch>)request.getAttribute("batch"); 
+List<Division> division=(List<Division>)request.getAttribute("division"); 
 		int i=0;%>
 		<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
 			<div align="center" style="font-size: larger;"><u>Send Notice/Message</u></div>
@@ -108,9 +110,13 @@ $(document).ready(function(){
 							<option value="<%=ids%>">All Batches</option>
 				<%
 					while(i<batch.size()){
+						for(int j=0;j<division.size();j++){
+							if(division.get(j).getDivId()==batch.get(i).getDiv_id()){
 					%>
-					<option value="<%=batch.get(i).getBatch_id()%>_<%=batch.get(i).getDiv_id()%>"><%=batch.get(i).getBatch_name() %></option>
-					<%i++;} }}%>
+					<option value="<%=batch.get(i).getBatch_id()%>_<%=batch.get(i).getDiv_id()%>"><%=division.get(j).getDivisionName()%> <%=batch.get(i).getBatch_name() %></option>
+					<%}
+						}
+					i++;} }}%>
 	</select>
 	</div>
 	<div class="col-sm-2" align="left">
@@ -121,7 +127,7 @@ $(document).ready(function(){
 	<div class="form-group">
 	<label for="date"  class="col-sm-4 control-label" align="right">Select Date :</label>
 	<div class="col-sm-5" align="left">
-	<div id="datetimepicker" class="input-group" style="width :150px;">
+	<div id="datetimepicker" class="input-group" style="width :190px;">
 					<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
 						type="text" id="date" placeholder="Select Date" readonly/> <span class="input-group-addon add-on"> <i
 						class="glyphicon glyphicon-calendar glyphicon-time"></i>

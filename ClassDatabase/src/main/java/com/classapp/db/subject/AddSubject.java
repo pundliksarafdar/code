@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 
 import com.classapp.db.subject.Subject;
+import com.classapp.logger.AppLogger;
 
 public class AddSubject {
 	public boolean addSubject(Subject subject){
@@ -13,10 +14,10 @@ public class AddSubject {
 		try {
 			BeanUtils.copyProperties(subjects, subject);
 		} catch (IllegalAccessException e) {
-			System.out.println("In AddSubject IllegalAccessException......");
+			AppLogger.logger("In AddSubject IllegalAccessException......");
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			System.out.println("In AddSubject InvocationTargetException......");
+			AppLogger.logger("In AddSubject InvocationTargetException......");
 			e.printStackTrace();
 		} 
 		boolean status = false;
@@ -35,10 +36,10 @@ public class AddSubject {
 		try {
 			BeanUtils.copyProperties(subjects, subject);
 		} catch (IllegalAccessException e) {
-			System.out.println("In AddSubject IllegalAccessException......");
+			AppLogger.logger("In AddSubject IllegalAccessException......");
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			System.out.println("In AddSubject InvocationTargetException......");
+			AppLogger.logger("In AddSubject InvocationTargetException......");
 			e.printStackTrace();
 		} 
 		boolean status = false;

@@ -49,6 +49,7 @@ public class AttemptExamAction extends BaseAction {
 	int institute;
 	Exam initiateExam;
 	int[] optionImageEndCount;
+	int examTimeDuration;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -377,6 +378,14 @@ public class AttemptExamAction extends BaseAction {
 
 	public void setOptionImageEndCount(int[] optionImageEndCount) {
 		this.optionImageEndCount = optionImageEndCount;
+	}
+
+	public String getSubjectname() {
+		return subjectname;
+	}
+
+	public void setSubjectname(String subjectname) {
+		this.subjectname = subjectname;
 	}
 	
 	

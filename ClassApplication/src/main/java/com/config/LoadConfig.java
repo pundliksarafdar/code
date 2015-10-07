@@ -27,6 +27,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.classapp.logger.TracingErrorPrintStream;
+import com.classapp.logger.TracingPrintStream;
 import com.classapp.servicetable.ServiceMap;
 
 public class LoadConfig extends HttpServlet{
@@ -70,7 +72,7 @@ public class LoadConfig extends HttpServlet{
 			file = new File(parent);
 		}while(!parent.endsWith("standalone"));
 		parent = file.getParent();
-		
+		System.setProperty("catalina.home", parent);
 		try{
 		file = new File(parent+"/storage");
 		if(!file.exists()){
@@ -83,7 +85,9 @@ public class LoadConfig extends HttpServlet{
 		}
 		
 		}
-		
+		System.setOut(new TracingPrintStream(System.out));
+		System.setErr(new TracingErrorPrintStream(System.err));
+	
 	}
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -126,7 +130,7 @@ public class LoadConfig extends HttpServlet{
 			        		int actionSize = actionPacage.getLength();
 				        	for (int iAction = 0;iAction<actionSize;iAction++) {
 				        		Node actionNode = actionPacage.item(iAction);
-					        	//System.out.println("Action Name:"+actionNode.getNodeName());
+					        	//AppLogger.logger("Action Name:"+actionNode.getNodeName());
 					        	if (actionNode.getNodeName().equals("action")) {
 					        		actionList.add(actionNode.getAttributes().getNamedItem("name").getNodeValue());
 								}

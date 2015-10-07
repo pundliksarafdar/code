@@ -14,6 +14,7 @@ import com.classapp.db.exam.ExamDB;
 import com.classapp.db.exams.MCQData;
 import com.classapp.db.exams.MCQDataDB;
 import com.classapp.db.question.QuestionbankDB;
+import com.classapp.logger.AppLogger;
 import com.datalayer.exam.QuestionSearchRequest;
 import com.datalayer.exambean.ExamData;
 
@@ -131,7 +132,7 @@ public class ExamTransaction {
 	 * @param batchId - coma seaparatted
 	 * @param ansId - coma seaparatted
 	 */
-	public void saveExam(String examName,int instituteId,int subId,int divId,int totalMarks,int passMarks,int creatorId,String batchId,String questionId,String ansId){
+	public void saveExam(String examName,int instituteId,int subId,int divId,int totalMarks,int passMarks,int creatorId,String batchId,String questionId,String ansId,int examHour,int examMinute){
 		Exam exam = new Exam();
 		ExamDB examDB = new ExamDB();
 		int examId = examDB.getNextExamID(instituteId, divId, subId);
@@ -147,11 +148,12 @@ public class ExamTransaction {
 		exam.setAns_ids(ansId);
 		exam.setBatch_id(batchId);
 		exam.setExam_status("E");
+		exam.setExam_time(examHour+":"+examMinute);
 		examDB.saveExam(exam);
 		
 	}
 	
-	public void updateExam(int examID,String examName,int instituteId,int subId,int divId,int totalMarks,int passMarks,int creatorId,String batchId,String questionId,String ansId){
+	public void updateExam(int examID,String examName,int instituteId,int subId,int divId,int totalMarks,int passMarks,int creatorId,String batchId,String questionId,String ansId,int examHour,int examMinute){
 		Exam exam = new Exam();
 		ExamDB examDB = new ExamDB();
 		exam.setExam_id(examID);
@@ -166,6 +168,7 @@ public class ExamTransaction {
 		exam.setAns_ids(ansId);
 		exam.setBatch_id(batchId);
 		exam.setExam_status("E");
+		exam.setExam_time(examHour+":"+examMinute);
 		examDB.saveExam(exam);
 		
 	}
@@ -225,9 +228,9 @@ public class ExamTransaction {
 		*/
 		String batch  = "2";
 		String[] str = batch.split(",");
-		System.out.println();
+		//AppLogger.logger();
 		ExamTransaction examTransaction = new ExamTransaction();
 		List list = examTransaction.searchExamData(3, null, null, null, null, null, null, null,"%2%");
-		System.out.println(list);
+		AppLogger.logger(list);
 	}
 }
