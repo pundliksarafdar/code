@@ -9,8 +9,14 @@ $(document).ready(function(){
 	var currentOptionUploadImageBtn;
 	indexOption=$("#indexOption").val();
 	$(".addOptionUploadExam").on('click',function(){
-		var submitquestionsuploadoptionsText = "<div class='form-group'><div class='input-group'><span class='input-group-addon'><input type='checkbox' name='answersOptionCheckBox' value='"+indexOption+"' id='answersOptionCheckBox"+indexOption+"'></span><textarea class='form-control' name='answersOptionText'></textarea><span class='input-group-addon'><i class='glyphicon glyphicon-picture uploadAnswerImage'></i></span><span class='input-group-addon'><i class='glyphicon glyphicon-trash removeOption' id='removeOption_"+indexOption+"'></i></span></div><div id='optionImagesDiv"+indexOption+"'></div></div>";
+		var imgBtn = '<span class="btn btn-success fileinput-button">'+
+			'<i class="glyphicon glyphicon-folder-open"></i> '+
+					'<span>Add images </span>'+
+			'<input type="file" id="uploadOptionImageModalFileBtn" multiple onchange="readURL(this,\'optionImagesDiv'+indexOption+'\'),appendCount(this,\'optionImagesDiv'+indexOption+'\');" name="optionImages">'
+		'</span>'
+		var submitquestionsuploadoptionsText = "<div class='form-group'><div class='input-group'><span class='input-group-addon'><input type='checkbox' name='answersOptionCheckBox' value='"+indexOption+"' id='answersOptionCheckBox"+indexOption+"'></span><textarea class='form-control' name='answersOptionText'></textarea><span class='input-group-addon'><i class='glyphicon glyphicon-trash removeOption' id='removeOption_"+indexOption+"'></i></span></div><div id='optionImagesDiv"+indexOption+"'></div>"+imgBtn+"</div>";
 		$("#submitquestionsuploadoptions").append(submitquestionsuploadoptionsText);
+		//$("#submitquestionsuploadoptions .form-group").append(imgBtn);
 		indexOption++;
 	});
 	
@@ -40,19 +46,9 @@ $(document).ready(function(){
 	});
 	
 	
-	$("#uploadOptionImageModal #uploadOptionImageModalSaveImage").on("click",function(){
-		var modalOptionImageFiles = $("#uploadOptionImageModal input#uploadOptionImageModalFileBtn");
-		currentOptionUploadImageBtn.parents(".form-group").find("input[name='optionImages']").remove();
-		currentOptionUploadImageBtn.parents(".form-group").append("<input type='file' name='optionImages' class='hide'/>");
-		var fileInput = currentOptionUploadImageBtn.parents(".form-group").find("input[name='optionImages']")[0];
-		fileInput.files = modalOptionImageFiles[0].files;
-		var imageDivId = currentOptionUploadImageBtn.parents(".form-group").find("[id^='optionImagesDiv']");
-		readURL(fileInput,imageDivId.attr("id"));
-	});
-	
-	
 	$("input.startuplodingexamSave").on('click',function(){
-		$('form[action="uploadexams"]').submit();
+		$('form[action="uploadexams"]').validate();
+		//$('form[action="uploadexams"]').submit();
 	});
 	
 	$("#CancleUploading").on("click",function(){
@@ -78,36 +74,17 @@ $(document).ready(function(){
         }
 		}
     }
+	
+	function appendCount(input,id){
+		var imageCount = $("<input/>",
+		{
+			name:"optionImageCount",
+			value:input.files.length,
+			type:'hidden'
+		});
+		$("#"+id).append(imageCount);
+	}
 </script>
-
-<div class="modal fade" id="uploadOptionImageModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Upload Image for options</h4>
-      </div>
-      <div class="modal-body">
-        <form>
-		<p id="optionText"></p>
-		<hr/>
-		<span class="btn btn-success fileinput-button">
-			<i class="glyphicon glyphicon-folder-open"></i>
-					<span>Add images </span>
-			<input type="file" id="uploadOptionImageModalFileBtn" multiple onchange="readURL(this,'uploadOptionImageModalAnswerImages');">
-		</span>
-		<div id="uploadOptionImageModalAnswerImages">
-		
-		</div>
-		</form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="uploadOptionImageModalSaveImage">Save Files</button>
-      </div>
-    </div>
-  </div>
-</div>
 <div>
 <c:if test="${actionname eq 'submitquestions'}">
 <c:choose>
@@ -141,11 +118,13 @@ $(document).ready(function(){
 		
 			<div class="form-group">
 				<label for="examname">Question </label>
-				<textarea class="form-control" id="question" name="question"><c:out value="${requestScope.questionData.question}"></c:out></textarea>
+				<div class="validation-message hide"></div>
+				<textarea class="form-control" id="question" name="question" required><c:out value="${requestScope.questionData.question}"></c:out></textarea>
 			</div>
 			<div class="form-group">
 				<label for="questionmarks">Marks</label>
-				<input type="number" class="form-control" id="questionmarks" name="questionmarks" maxlength="5" min="0" size="5" style="width: 10%;" value="<c:out value="${requestScope.questionData.marks}"></c:out>"></input>
+				<div class="validation-message hide"></div>
+				<input type="number" required class="form-control" id="questionmarks" name="questionmarks" maxlength="5" size="5" style="width: 10%;" min="1" max="5" value="<c:out value="${requestScope.questionData.marks}"></c:out>"></input>
 			</div>
 			<div class="form-group">
 				<label for="questionmarks">Topic</label>
@@ -170,6 +149,9 @@ $(document).ready(function(){
 				</span>	
 			</div>
 			<div id="fileList">
+			<c:forEach items="${requestScope.questionData.questionImage}" var="image">
+				<img src='<c:out value="${image }"></c:out>' width="200px" height="200px" tyle="padding:5px;"/>
+			</c:forEach>
 			</div>
 			<div class="form-group">
 				<a class="btn btn-default addOptionUploadExam">Add Option</a>
@@ -210,7 +192,22 @@ $(document).ready(function(){
 							class='glyphicon glyphicon-trash removeOption' id='removeOption_<c:out value="${counter.index}"></c:out>'></i>
 						</span>
 					</div>
-					<div id='optionImagesDiv"+indexOption+"'></div>
+					<div id='optionImagesDiv<c:out value="${counter.index}"></c:out>'>
+						<c:set var="lastCountIndex" value="${requestScope.optionImageEndCount[counter.index]}"></c:set>
+						<c:choose>
+							<c:when test="${counter.index eq 0 }">
+								<c:set var="startCountIndex" value="0"></c:set>	
+							</c:when>
+							<c:otherwise>
+								<c:set var="startCountIndex" value="${requestScope.optionImageEndCount[counter.index-1]}"></c:set>
+							</c:otherwise>
+						</c:choose>
+							<c:forEach items="${requestScope.questionData.answerImage}" var="optionImage" begin='${startCountIndex }' end="${lastCountIndex-1}">
+								<img src='<c:out value="${optionImage }"></c:out>' width="200px" height="200px" tyle="padding:5px;"/>
+							</c:forEach>
+						
+					</div>
+					
 				</div>
 			</c:forEach>
 			

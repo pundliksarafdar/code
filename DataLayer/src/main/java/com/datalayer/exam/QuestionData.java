@@ -8,7 +8,11 @@ public class QuestionData implements Serializable{
 	private String question;
 	private List<String> answers;
 	private List<String> options;
+	private List<String> questionImage;
+	private List<String> answerImage;
 	private int marks;
+	private int optionImageCount[];
+	
 	//private transient int createdby;
 	public int getQuestionNumber() {
 		return questionNumber;
@@ -46,6 +50,22 @@ public class QuestionData implements Serializable{
 	public void setCreatedby(int createdby) {
 		this.createdby = createdby;
 	}*/
-	
-	
+	public List<String> getQuestionImage() {
+		return questionImage;
+	}
+	public void setQuestionImage(List<String> questionImage) {
+		this.questionImage = questionImage;
+	}
+	public List<String> getAnswerImage() {
+		return answerImage;
+	}
+	public void setAnswerImage(List<String> answerImage) {
+		this.answerImage = answerImage;
+	}
+	public int[] getOptionImageCount() {
+		return optionImageCount;
+	}
+	public void setOptionImageCount(int[] optionImageCount) {
+		this.optionImageCount = optionImageCount;
+	}
 }

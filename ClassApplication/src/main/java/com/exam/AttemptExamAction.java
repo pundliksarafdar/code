@@ -48,6 +48,7 @@ public class AttemptExamAction extends BaseAction {
 	String flag;
 	int institute;
 	Exam initiateExam;
+	int[] optionImageEndCount;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -168,6 +169,18 @@ public class AttemptExamAction extends BaseAction {
 		QuestionData questionData = null;
 		if(file.exists()){
 			questionData = (QuestionData) readObject(file);
+		}
+		
+		int endCount = 0;
+		int index = 0;
+		int[] optionImageCount = questionData.getOptionImageCount();
+		optionImageEndCount = new int[optionImageCount.length];
+		if(null!=optionImageEndCount){
+		for(int count:optionImageCount){
+			endCount = endCount+count;
+			optionImageEndCount[index]=endCount;
+			index++;
+		}
 		}
 		questionDataList.add(questionData);
 		questionStartIndex++;
@@ -356,6 +369,14 @@ public class AttemptExamAction extends BaseAction {
 
 	public void setInitiateExam(Exam initiateExam) {
 		this.initiateExam = initiateExam;
+	}
+
+	public int[] getOptionImageEndCount() {
+		return optionImageEndCount;
+	}
+
+	public void setOptionImageEndCount(int[] optionImageEndCount) {
+		this.optionImageEndCount = optionImageEndCount;
 	}
 	
 	

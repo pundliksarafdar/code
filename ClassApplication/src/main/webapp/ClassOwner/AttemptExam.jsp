@@ -244,7 +244,13 @@ $(".examSubmit").on("click",function(){
         <c:if test="${currentPage gt 1 }">
         <td class="col-md-1"><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
         </c:if>
-        <td class="col-md-10"><c:out value="${item.question}"></c:out></td>
+        <td class="col-md-10">
+			<c:out value="${item.question}"></c:out>
+			<br/>
+			<c:forEach items="${item.questionImage}" var="image">
+				<img src='<c:out value="${image }"></c:out>' width="200px" height="200px" tyle="padding:5px;"/>
+			</c:forEach>
+		</td>
       </tr>
       <tr>
       <td class="col-md-1"></td>
@@ -269,10 +275,43 @@ $(".examSubmit").on("click",function(){
     		
     		<c:choose>
     		<c:when test="${optionstatus eq 'Y' }">
-    		<td><input type="radio" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>'' checked="checked"><c:out value="${option}"></c:out></td>
+    		<td>
+    			<input type="radio" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>'' checked="checked"><c:out value="${option}"></c:out>
+    			<br/>
+						<c:choose>
+							<c:when test="${innercounter.index eq 0}">
+								<c:set var="startCountIndex" value="0"></c:set>
+							</c:when>
+							<c:otherwise>
+								<c:set var="startCountIndex" value="${requestScope.optionImageEndCount[innercounter.index-1]}"></c:set>
+							</c:otherwise>
+						</c:choose>	
+								<c:set var="endCountIndex" value="${requestScope.optionImageEndCount[innercounter.index-1]}"></c:set>
+						
+						<c:forEach items="${item.answerImage}" var="optionImage" begin="${startCountIndex}" end="${endCountIndex}">
+							<img src='<c:out value="${optionImage}"></c:out>' width="200px" height="200px" tyle="padding:5px;"/>
+						</c:forEach>			
+    		</td>
     		</c:when>
     			<c:otherwise>
-    			<td><input type="radio" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>''><c:out value="${option}"></c:out></td>
+    			<td>
+    				<input type="radio" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>''><c:out value="${option}"></c:out>
+						<br/>
+						<c:choose>
+							<c:when test="${innercounter.index eq 0}">
+								<c:set var="startCountIndex" value="0"></c:set>
+							</c:when>
+							<c:otherwise>
+								<c:set var="startCountIndex" value="${requestScope.optionImageEndCount[innercounter.index-1]}"></c:set>
+							</c:otherwise>
+						</c:choose>	
+								<c:set var="endCountIndex" value="${requestScope.optionImageEndCount[innercounter.index-1]}"></c:set>
+						
+						<c:forEach items="${item.answerImage}" var="optionImage" begin="${startCountIndex}" end="${endCountIndex}">
+							<img src='<c:out value="${optionImage}"></c:out>' width="200px" height="200px" tyle="padding:5px;"/>
+						</c:forEach>	
+						
+    			</td>
     			</c:otherwise>
     		</c:choose>
     		</c:when>

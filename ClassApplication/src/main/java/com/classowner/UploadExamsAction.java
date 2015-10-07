@@ -10,16 +10,15 @@ import java.io.ObjectOutputStream;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.mail.search.SubjectTerm;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
+
 import com.classapp.db.batch.division.Division;
-import com.classapp.db.exam.CompExam;
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Topics;
@@ -28,9 +27,10 @@ import com.config.BaseAction;
 import com.config.Constants;
 import com.datalayer.exam.ExamData;
 import com.datalayer.exam.QuestionData;
+
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.division.DivisionTransactions;
-import com.transaction.exams.ExamTransaction;
 import com.transaction.questionbank.QuestionBankTransaction;
 import com.user.UserBean;
 
@@ -55,6 +55,8 @@ public class UploadExamsAction extends BaseAction{
 	List<Topics> topics;
 	int topicID;
 	int selectedtopicID;
+	int optionImageCount[];
+	int optionImageEndCount[];
 	String selectedtopicName;
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
@@ -110,7 +112,31 @@ public class UploadExamsAction extends BaseAction{
 			}
 			questionData.setOptions(listOption);
 			questionData.setQuestion(question);
+			questionData.setOptionImageCount(optionImageCount);
 			questionData.setQuestionNumber(questionNumber);
+			
+			List<String> questionImagesList = new ArrayList<String>();
+			List<String> answerImagesList = new ArrayList<String>();
+			
+			for(File questionImage : questionImages){
+				try {
+					String base64questionImage = Base64.encode(FileUtils.readFileToByteArray(questionImage));
+					questionImagesList.add(Constants.BASE64_IMAGE_PREFIX+base64questionImage);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			questionData.setQuestionImage(questionImagesList);
+			
+			for(File optionImage : optionImages){
+				try {
+					String base64AnswerImage = Base64.encode(FileUtils.readFileToByteArray(optionImage));
+					answerImagesList.add(Constants.BASE64_IMAGE_PREFIX+base64AnswerImage);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			questionData.setAnswerImage(answerImagesList);
 			String result = "startuploadingexam";
 			if(userBean.getRole()==2){
 				result= "teacheraddquestion";
@@ -127,7 +153,9 @@ public class UploadExamsAction extends BaseAction{
 			writeObject(examPath, questionData);
 			Questionbank questionbank=new Questionbank();
 			questionbank.setAdded_by(userBean.getRegId());
-			questionbank.setAns_id(answersOptionCheckBox.toString());
+			if(null!=answersOptionCheckBox){
+				questionbank.setAns_id(answersOptionCheckBox.toString());
+			}
 			questionbank.setCreated_dt(new Date(new java.util.Date().getTime()));
 			questionbank.setDiv_id(Integer.parseInt(division));
 			questionbank.setExam_rep("1");
@@ -158,10 +186,24 @@ public class UploadExamsAction extends BaseAction{
 			String examPath = userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionNumber;
 			//uploadedMarks = (Integer) request.getSession().getAttribute("uploadedMarks");
 			File file = new File(examPath);
+			
+			
 			QuestionData questionData = null;
 			if(file.exists()){
 				questionData = (QuestionData) readObject(file);
 			}
+			
+			int endCount = 0;
+			int index = 0;
+			optionImageCount = questionData.getOptionImageCount();
+			optionImageEndCount = new int[optionImageCount.length];
+			for(int count:optionImageCount){
+				endCount = endCount+count;
+				optionImageEndCount[index]=endCount;
+				index++;
+			}
+
+			
 			if (questionData!=null) {
 				answerList=new ArrayList<Integer>();
 				if (questionData.getAnswers()!=null) {
@@ -208,13 +250,22 @@ public class UploadExamsAction extends BaseAction{
 			if(null!=answersOptionText){
 				listOption = Arrays.asList(answersOptionText);
 			}
-			
+			if(null!=questionImages){
+			for(File questionImage : questionImages){
+				try {
+					String base64OptionImage = Base64.encode(FileUtils.readFileToByteArray(questionImage));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			}
 			if(null!=answersOptionCheckBox){
 				questionData.setAnswers(Arrays.asList(answersOptionCheckBox.split(",")));
 			}
 			questionData.setOptions(listOption);
 			questionData.setQuestion(question);
 			questionData.setQuestionNumber(questionNumber);
+			questionData.setOptionImageCount(optionImageCount);
 		
 			//Create separate file for each question and join them in the save and submit
 			UserStatic userStatic = userBean.getUserStatic();
@@ -228,7 +279,9 @@ public class UploadExamsAction extends BaseAction{
 			writeObject(examPath, questionData);
 			QuestionBankTransaction questionBankTransaction=new QuestionBankTransaction();
 			Questionbank questionbank=questionBankTransaction.getQuestion(questionNumber, inst_id,Integer.parseInt(subject), Integer.parseInt(division));
-			questionbank.setAns_id(answersOptionCheckBox.toString());
+			if(null!=answersOptionCheckBox){
+				questionbank.setAns_id(answersOptionCheckBox.toString());
+			}
 			questionbank.setMarks(questionmarks);
 			questionbank.setTopic_id(topicID);
 			questionBankTransaction.saveQuestion(questionbank);
@@ -642,6 +695,23 @@ public class UploadExamsAction extends BaseAction{
 	public void setSearchedTopic(String searchedTopic) {
 		this.searchedTopic = searchedTopic;
 	}
+
+	public int[] getOptionImageCount() {
+		return optionImageCount;
+	}
+
+	public void setOptionImageCount(int[] optionImageCount) {
+		this.optionImageCount = optionImageCount;
+	}
+
+	public int[] getOptionImageEndCount() {
+		return optionImageEndCount;
+	}
+
+	public void setOptionImageEndCount(int[] optionImageEndCount) {
+		this.optionImageEndCount = optionImageEndCount;
+	}
+
 	
 	
 }

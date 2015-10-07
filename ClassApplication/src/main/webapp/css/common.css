@@ -142,3 +142,7 @@ div[class^="col-"]{
 	overflow: hidden;
 }
 /*****************************************************/
+/***********************Validation message error *******/
+.validation-message{
+	color:red;
+}
