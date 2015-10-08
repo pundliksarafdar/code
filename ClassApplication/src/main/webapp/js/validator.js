@@ -15,6 +15,7 @@ $.fn.validate = function(globalOption){
 		fieldRequired:"This field is mandatory",
 		minRequired:"Minimum value required is {[minval]}",
 		maxRequired:"Maximum value required is {[maxval]}",
+		minSelectionRequired:"Maximum value required is {[minSel]}"
 	}
 	var MAX_LENGTH = "maxlength";
 	var MIN_LENGTH = "minlength";
@@ -23,15 +24,15 @@ $.fn.validate = function(globalOption){
 	var MAX = "max";
 	
 	var maxLengthValidation = function(elm){
-		
+		return true;
 	}
 	
 	var minLengthValidation = function(elm){
-		
+		return true;
 	}
 	
 	var regualrExpressionValidation = function(elm){
-		
+		return true;
 	}
 	
 	var requiredValidation = function(elm){
@@ -64,32 +65,47 @@ $.fn.validate = function(globalOption){
 		return true;
 	}
 	
+	var mandatorySelectionValidation = function(elm,value){
+		var selectedLength = $(elm).find("input[type='checkbox']:checked").length;
+		mandateSelValue = isNaN(parseInt(value))?0:parseInt(value);
+		if(selectedLength<mandateSelValue){
+			var message = validationMessages.minSelectionRequired.replace("{[minSel]}",value);
+			$(elm).find('.validation-message').removeClass('hide').html(message);			
+			return false;
+		}
+		return true;
+	}
+	
 	var validationAttributes = {
 			maxlength:maxLengthValidation,
 			minlength:minLengthValidation,
 			regexp:regualrExpressionValidation,
 			required:requiredValidation,
 			min:minValidation,
-			max:maxValidation
+			max:maxValidation,
+			mandatorySelection:mandatorySelectionValidation
 		}
 	var option = {
 			messageContainer:undefined,
 			validationMessage:'field does not meet criteria',
-			validationTags:['input[type=\'text\']','input[type=\'number\']','textarea']	
+			validationTags:['input[type=\'text\']','input[type=\'number\']','textarea','div.form-btn-group']	
 	}
 	option = $.extend(option,globalOption);
 	
 	$.each(option.validationTags,function(index,tags){
 		var childNode = $form.find(tags).not('[novalidate]');
-		childNode.on("focus",function(){
+		childNode.on("click",function(){
 			$(this).parents('.form-group').find('.validation-message').addClass('hide').html("");	
+			$(this).find('.validation-message').addClass('hide').html("");	
 		});
 		
-		$.each(validationAttributes,function(key,val){
+		$.each(validationAttributes,function(key,fn){
 			var attrValue = childNode.attr(key);
 			if(attrValue){
-				hasError = true;
-				var result = val(childNode,attrValue);
+				var result = fn(childNode,attrValue);
+				if(!result){
+						hasError = true;
+				}	
 				return result;
 			}
 		});

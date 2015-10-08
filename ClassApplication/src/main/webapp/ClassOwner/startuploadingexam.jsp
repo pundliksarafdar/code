@@ -47,8 +47,13 @@ $(document).ready(function(){
 	
 	
 	$("input.startuplodingexamSave").on('click',function(){
-		$('form[action="uploadexams"]').validate();
-		//$('form[action="uploadexams"]').submit();
+		var inValid = $('form[action="uploadexams"]').validate();
+		if(!inValid){
+			var invalidOption = validateOption();
+			if(!invalidOption){
+				$('form[action="uploadexams"]').submit();
+			}
+		}
 	});
 	
 	$("#CancleUploading").on("click",function(){
@@ -56,6 +61,8 @@ $(document).ready(function(){
 		$("#actionname").val("cancleuploading");
 		$("#uploadexams").submit();
 	});
+	
+	$('form[action="uploadexams"]').on("change","input[type='file']",setQuestionSize);
 	
 });
 
@@ -83,6 +90,37 @@ $(document).ready(function(){
 			type:'hidden'
 		});
 		$("#"+id).append(imageCount);
+	}
+	
+	function validateOption(){
+		var options = $('input[name="optionImages"]');
+		var hasError = false;
+		$.each(options,function(index,fileChooser){
+			if($(fileChooser).parents(".form-group").find("textarea").val().trim().length==0 && fileChooser.files.length == 0){
+					$(fileChooser).parents(".form-group").find('.validation-message').empty();
+					$(fileChooser).parents(".form-group").prepend("<div class='validation-message'>Please add image or option text</div>");
+					hasError = true;
+			}else{
+					hasError = false;
+			}	
+		});
+		return hasError;
+	}
+	
+	function setQuestionSize(){
+		var size = 0;
+		var allImageFiles = $("input[type='file']");
+		$.each(allImageFiles,function(index,file){
+			$.each(file.files,function(indexx,fileInner){
+				size = size + fileInner.size;	
+			});
+			
+		});
+		if(allImageFiles.length != 0){
+			$("#startuplodingexamImageFileSize").removeClass("hide").html("Question size is "+(size/(1024*1024)).toFixed(3) +"MB approximately");
+		}else{
+			$("#startuplodingexamImageFileSize").addClass("hide");
+		}
 	}
 </script>
 <div>
@@ -156,7 +194,8 @@ $(document).ready(function(){
 			<div class="form-group">
 				<a class="btn btn-default addOptionUploadExam">Add Option</a>
 			</div>
-			<div class="" id="submitquestionsuploadoptions">
+			<div class="form-btn-group" id="submitquestionsuploadoptions" mandatorySelection="1">
+						<div class="validation-message hide"></div>
 			<c:forEach items="${requestScope.questionData.options}" var="options" varStatus="counter">
 				
 				<div class='form-group'>
@@ -212,7 +251,9 @@ $(document).ready(function(){
 			</c:forEach>
 			
 		</div>
+		<div id="startuplodingexamImageFileSize" class="alert alert-info">
 		
+		</div>
 		<div class="form-group">
 			<input type="button" class="btn btn-default startuplodingexamSave" value="Save"/>
 			<c:if test="${actionname ne 'submitquestions'}">
