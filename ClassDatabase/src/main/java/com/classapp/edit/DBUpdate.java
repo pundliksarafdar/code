@@ -9,6 +9,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.classapp.logger.AppLogger;
 import com.classapp.persistence.HibernateUtil;
 
 public class DBUpdate {
@@ -17,7 +18,7 @@ public class DBUpdate {
 		Date currDate = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		String currDateStr = dateFormat.format(currDate);
-		System.out.println("CurrDate:"+currDateStr);
+		AppLogger.logger("CurrDate:"+currDateStr);
 		Calendar now = Calendar.getInstance();
 		now.add(Calendar.MONTH, Integer.parseInt(duration));
 		String date = now.get(Calendar.DAY_OF_MONTH)+"";
@@ -43,7 +44,7 @@ public class DBUpdate {
 			updateQuery.setParameter("regId", Integer.parseInt(regId));
 			List resList = updateQuery.list();
 			errorMessage = (String) resList.get(0);
-			System.out.println("Result "+result);
+			AppLogger.logger("Result "+result);
 		}catch(Exception e){
 			transaction.rollback();
 			errorMessage = "error";
@@ -69,7 +70,7 @@ public class DBUpdate {
 			updateQuery.setParameter("regId", Integer.parseInt(regId));
 			int result = updateQuery.executeUpdate();
 			transaction.commit();
-			System.out.println("Result "+result);
+			AppLogger.logger("Result "+result);
 		}catch(Exception e){
 			transaction.rollback();
 		}finally{
@@ -94,7 +95,7 @@ public class DBUpdate {
 			updateQuery.setParameter("regId", Integer.parseInt(regId));
 			int result = updateQuery.executeUpdate();
 			transaction.commit();
-			System.out.println("Result "+result);
+			AppLogger.logger("Result "+result);
 		}catch(Exception e){
 			transaction.rollback();
 		}finally{
@@ -117,7 +118,7 @@ public class DBUpdate {
 			updateQuery.setParameter("regId", Integer.parseInt(regId));
 			int rowaffected = updateQuery.executeUpdate();
 			transaction.commit();
-			System.out.println("Result "+rowaffected);
+			AppLogger.logger("Result "+rowaffected);
 			result = true;
 		}catch(Exception e){
 			e.printStackTrace();

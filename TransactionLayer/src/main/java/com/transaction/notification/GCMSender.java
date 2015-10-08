@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import com.classapp.logger.AppLogger;
 import com.google.gson.Gson;
 
 public class GCMSender {
@@ -32,7 +33,7 @@ public class GCMSender {
 		gcmMessageApi.setRegistration_ids(strings);
 		String output = "";
 		Gson gson = new Gson();
-		System.out.println(gson.toJson(gcmMessageApi));
+		AppLogger.logger(gson.toJson(gcmMessageApi));
 		try {
 			 
 			URL url = new URL("https://android.googleapis.com/gcm/send");
@@ -55,12 +56,12 @@ public class GCMSender {
 					(conn.getInputStream())));
 	 
 			
-			System.out.println("Output from Server .... \n");
+			AppLogger.logger("Output from Server .... \n");
 			String out ;
 			while ((out = br.readLine()) != null) {
 				output = output+out; 
 			}
-			System.out.println(output);
+			AppLogger.logger(output);
 			conn.disconnect();
 			
 		  } catch (MalformedURLException e) {

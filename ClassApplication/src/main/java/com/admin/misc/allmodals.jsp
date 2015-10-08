@@ -171,7 +171,7 @@
 				Division<!-- <input type="text" class="form-control" id="divisionName" name="divisionName"/> -->
 				<select class="btn btn-default" name="divisionName" id="divisionName">
 					
-						<option value="-1">Select Division</option>
+						<option value="-1">Select Class</option>
 						<%
 						List<String> divs=(List<String>) request.getAttribute("divisionNames");
 						List<String> streams=(List<String>) request.getAttribute("streams");

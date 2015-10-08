@@ -36,7 +36,7 @@ $(document).ready(function(){
 				   var divisionselect=$('#classownerUploadexamDivisionName');
 				   $("#divisionerror").html("");
 				   divisionselect.empty();
-				   divisionselect.append("<option value='-1'>Select Division</option>");
+				   divisionselect.append("<option value='-1'>Select Class</option>");
 				   if(divisionids[0]!=""){
 					   var i=0;
 					   while(i<divisionids.length){
@@ -223,7 +223,7 @@ this.displayBatchFromSubjectNDivision = displayBatchFromSubjectNDivision;
 	</div>
 		<div class="col-md-3">
 			<select name="division" id="classownerUploadexamDivisionName" class="form-control" width="100px">
-				<option value="-1">Select Division</option>
+				<option value="-1">Select Class</option>
 				<c:forEach items="${requestScope.divisions}" var="division">
 					<option value="<c:out value="${division.divId}"></c:out>"><c:out value="${division.divisionName}"></c:out>&nbsp;<c:out value="${division.stream}"></c:out></option>
 				</c:forEach>							

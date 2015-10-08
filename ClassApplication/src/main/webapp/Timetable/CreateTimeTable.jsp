@@ -638,7 +638,7 @@ $(function(){
 			<div class="row">
 				<div class="col-md-4">
 					<select name="divisionID" id="divisionID" class="form-control" width="100px">
-					<option value="-1">Select Division</option>
+					<option value="-1">Select Class</option>
 					<%
 					if(divisions!=null){
 					while(i<divisions.size()){

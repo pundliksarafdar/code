@@ -167,7 +167,7 @@ $(document).ready(function(){
 			flag=false;
 		}
 		if(division=="-1"){
-			$("#divisionerror").html("Please select Division");
+			$("#divisionerror").html("Please select class");
 			flag=false;
 		}
 		if(flag==true){
@@ -338,7 +338,13 @@ $(document).ready(function(){
    <tbody>
    <c:forEach items="${noteslist}" var="item" varStatus="counter">
    <tr>
-   <td><c:out value="${counter.count}"></c:out></td>
+   
+  <c:if test="${currentPage eq 1}">
+        <td class="col-md-1"><c:out value="${counter.count}"></c:out></td>
+        </c:if>
+        <c:if test="${currentPage gt 1 }">
+        <td class="col-md-1"><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
+        </c:if>
    <td><c:out value="${item.name}"></c:out></td>
     <td><button class="btn btn-primary shownotes" id='<c:out value="${item.notesid}"></c:out>'>Open</button></td>
     <c:choose>

@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 
 import org.hibernate.Session;
 
+import com.classapp.logger.AppLogger;
 import com.classapp.persistence.Constants;
 import com.classapp.persistence.HibernateUtil;
 
@@ -19,13 +20,13 @@ public class ServiceMap {
 	@SuppressWarnings("unchecked")
 	public static void loadServiceMap(){
 		Session session = HibernateUtil.getSessionfactory().openSession();
-		System.out.println("In Load Service map");
+		AppLogger.logger("In Load Service map");
 		
 		try{			
 			List services = session.createQuery("from ServiceTable").list();
 			for (int i=0; i<services.size(); i++) {
 				Map dataMap = new HashMap();
-				System.out.println("Service Map:"+((ServiceTable)services.get(i)).getServiceId());
+				AppLogger.logger("Service Map:"+((ServiceTable)services.get(i)).getServiceId());
 				dataMap.put(Constants.SERVICE_ID, ((ServiceTable)services.get(i)).getServiceId());
 				dataMap.put(Constants.SERVICE_NAME, ((ServiceTable)services.get(i)).getServiceName());
 				dataMap.put(Constants.SERVICE_PARAM, ((ServiceTable)services.get(i)).getServiceParam());
@@ -35,7 +36,7 @@ public class ServiceMap {
 				
 			}
 		}catch(Exception ex){
-			System.out.println("Exception in servicemap..."+ex.getMessage());
+			AppLogger.logger("Exception in servicemap..."+ex.getMessage());
 			ex.printStackTrace();
 		}
 	}

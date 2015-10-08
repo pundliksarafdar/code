@@ -44,6 +44,7 @@ import com.classapp.db.student.StudentDetails;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
 import com.classapp.db.subject.Topics;
+import com.classapp.logger.AppLogger;
 import com.classapp.notification.GeneralNotification;
 import com.classapp.notification.GeneralNotification.NOTIFICATION_KEYS;
 import com.classapp.persistence.Constants;
@@ -123,7 +124,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			 */
 			String divisionName=(String)req.getParameter("divisionName");	
 			//divisionName="div2";	
-			System.out.println("divisionName:"+divisionName);
+			AppLogger.logger("divisionName:"+divisionName);
 			Division division=new Division();
 			division.setDivisionName(divisionName);
 				
@@ -897,7 +898,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		 BufferedReader br = new BufferedReader(new FileReader(path));
 		 String line = null;
 		 while ((line = br.readLine()) != null) {
-		   System.out.println(line);
+		   AppLogger.logger(line);
 		 }
 			if(0 == userBean.getRole() || !"".equals(regId)){
 				if(null == regId){
@@ -1807,7 +1808,7 @@ public class ClassOwnerServlet extends HttpServlet{
         	internetAddress.validate();
 		} catch (AddressException e) {
 			// TODO: handle exception
-			System.out.println("Invalid Address");
+			AppLogger.logger("Invalid Address");
 		}
     	
        // Create a default MimeMessage object.
@@ -1831,10 +1832,10 @@ public class ClassOwnerServlet extends HttpServlet{
        // Send message
      Transport.send(message);
 
-       System.out.println("Sent message successfully....");
+       AppLogger.logger("Sent message successfully....");
 
     } catch (MessagingException e) {
-    	System.out.println("Invalid Internet Address");
+    	AppLogger.logger("Invalid Internet Address");
           throw new RuntimeException(e);
     }
 	*/

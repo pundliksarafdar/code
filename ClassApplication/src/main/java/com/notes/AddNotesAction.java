@@ -15,6 +15,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 
 import com.classapp.db.Notes.Notes;
+import com.classapp.logger.AppLogger;
 import com.classapp.login.UserStatic;
 import com.config.BaseAction;
 import com.config.Constants;
@@ -87,10 +88,10 @@ public class AddNotesAction extends BaseAction{
 	      
 	      
 	      try{
-	     	 System.out.println("Src File name: " + myFile[j]);
-	     	 System.out.println("Dst File name: " + myFileFileName.split(",")[j]);
+	     	 AppLogger.logger("Src File name: " + myFile[j]);
+	     	 AppLogger.logger("Dst File name: " + myFileFileName.split(",")[j]);
 	     	    	 
-	     	 File destFile  = new File(destPath, myFileFileName.split(",")[j]);
+	     	 File destFile  = new File(destPath, notesname[j]);
 	    	 FileUtils.copyFile(myFile[j], destFile);
 	    	 if(userBean.getRole()==2){
 	    		 notes.setClassid(Integer.parseInt(institute));
@@ -98,7 +99,7 @@ public class AddNotesAction extends BaseAction{
 	    	 notes.setClassid(userBean.getRegId());
 	    	 }
 	    	 notes.setDivid(Integer.parseInt(division));
-	    	 notes.setNotespath(DBPAth+myFileFileName.split(",")[j]);
+	    	 notes.setNotespath(DBPAth+notesname[j]);
 	    	 notes.setSubid(Integer.parseInt(subject));
 	    	 notes.setName(notesname[j]);
 	    	 notes.setAddedby(userBean.getRegId());

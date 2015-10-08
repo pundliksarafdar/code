@@ -176,7 +176,7 @@
 				Division<!-- <input type="text" class="form-control" id="divisionName" name="divisionName"/> -->
 				<select class="btn btn-default" name="divisionName" id="divisionName">
 					
-						<option value="-1">Select Division</option>
+						<option value="-1">Select Class</option>
 						<%
 						
 						int count=0;

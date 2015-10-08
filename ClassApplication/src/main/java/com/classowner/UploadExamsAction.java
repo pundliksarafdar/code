@@ -23,6 +23,7 @@ import com.classapp.db.exam.CompExam;
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Topics;
+import com.classapp.logger.AppLogger;
 import com.classapp.login.UserStatic;
 import com.config.BaseAction;
 import com.config.Constants;
@@ -361,7 +362,7 @@ public class UploadExamsAction extends BaseAction{
 	    		if(file.list().length==0){
 	 
 	    		   file.delete();
-	    		   System.out.println("Directory is deleted : " 
+	    		   AppLogger.logger("Directory is deleted : " 
 	                                                 + file.getAbsolutePath());
 	 
 	    		}else{
@@ -380,7 +381,7 @@ public class UploadExamsAction extends BaseAction{
 	        	   //check the directory again, if empty then delete it
 	        	   if(file.list().length==0){
 	           	     file.delete();
-	        	     System.out.println("Directory is deleted : " 
+	        	     AppLogger.logger("Directory is deleted : " 
 	                                                  + file.getAbsolutePath());
 	        	   }
 	    		}
@@ -388,7 +389,7 @@ public class UploadExamsAction extends BaseAction{
 	    	}else{
 	    		//if file, then delete it
 	    		file.delete();
-	    		System.out.println("File is deleted : " + file.getAbsolutePath());
+	    		AppLogger.logger("File is deleted : " + file.getAbsolutePath());
 	    	}
 	    }
 	

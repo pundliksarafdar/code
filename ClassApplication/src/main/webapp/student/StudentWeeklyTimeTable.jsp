@@ -161,9 +161,9 @@ $(document).ready(function(){
 <form role="form" class="form-inline">
 <div class="container">
 <div align="left" class="container">
-<div class="col-xs-2">
+<div class="col-md-3">
 <select id="classnameSelect" class='form-control'>
-<option value="-1">Select Class</option>
+<option value="-1">Select Institute</option>
 <%List<RegisterBean> list=(List<RegisterBean>)request.getAttribute("Classes");
 int studentdivision=(Integer)request.getAttribute("studentdivision");
 %>
@@ -175,11 +175,11 @@ while(list.size()>counter){ %>
 } %>
 </select>
 </div>
-<div class="col-xs-2">
+<div class="col-md-3">
 		<select id="batch" class='form-control'><option value="-1">Select Batch</option></select>
 </div>
-<div class="col-xs-2">
-<div id="datetimepicker" class="input-group" style="width :150px;">
+<div class="col-md-3">
+<div id="datetimepicker" class="input-group" style="width :190px;">
 					<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
 						type="text" id="date" placeholder="Select Date" readonly/> <span class="input-group-addon add-on"> <i
 						class="glyphicon glyphicon-calendar glyphicon-time"></i>
@@ -188,7 +188,7 @@ while(list.size()>counter){ %>
 	</div>
 				
 
-<div class="col-xs-2">	
+<div class="col-md-3">	
    <button type="button" class="btn btn-danger"
       data-loading-text="Loading..."  id="submit">Submit
    </button>

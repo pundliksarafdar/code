@@ -1,3 +1,4 @@
+<%@page import="com.classapp.logger.AppLogger"%>
 <%@page import="com.classapp.db.exams.MCQDetails"%>
 <%@page import="com.user.UserBean"%>
 <%@page import="com.classapp.db.Teacher.TeacherDetails"%>
@@ -7,7 +8,7 @@
 <%@page import="com.config.Constants"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>  
  <%List list = (List)request.getAttribute(Constants.MCQS_LIST); 
- System.out.println(list);
+ //AppLogger.logger(list);
  %>
  <style type="text/css">
 .errorDiv{

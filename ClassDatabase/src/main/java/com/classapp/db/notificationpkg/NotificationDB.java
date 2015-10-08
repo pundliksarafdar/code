@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.classapp.db.register.RegisterBean;
+import com.classapp.logger.AppLogger;
 import com.classapp.persistence.HibernateUtil;
 
 public class NotificationDB {
@@ -99,7 +100,7 @@ public class NotificationDB {
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("delete from Notification where  msg_date < CURRENT_DATE-7");
 			int noofrowsdeleted=query.executeUpdate();
-			System.out.println("No of notifications deleted="+noofrowsdeleted);
+			AppLogger.logger("No of notifications deleted="+noofrowsdeleted);
 		}catch(Exception e){
 			e.printStackTrace();
 			if(null!=transaction){

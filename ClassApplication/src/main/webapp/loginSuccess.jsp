@@ -1,3 +1,4 @@
+<%@page import="com.classapp.logger.AppLogger"%>
 <%@page import="java.text.DateFormat"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Map"%>
@@ -57,11 +58,11 @@ Iterator it = map.entrySet().iterator();
 if(map.size()>0){
 while (it.hasNext()) {
     Map.Entry pair = (Map.Entry)it.next();
-    System.out.println(pair.getKey() + " = " + pair.getValue());
+  //  AppLogger.logger(pair.getKey() + " = " + pair.getValue());
     %>
    
       <ul>
-      <li><b><%=pair.getKey() %></b></li>
+      <li><b><%=pair.getKey() %></b></li>  
       <table class="table">
       <% List<Scheduledata> list=(List<Scheduledata>)pair.getValue();
       for(int i=0;i<list.size();i++){

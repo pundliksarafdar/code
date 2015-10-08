@@ -14,6 +14,7 @@ import com.classapp.db.exam.ExamDB;
 import com.classapp.db.exams.MCQData;
 import com.classapp.db.exams.MCQDataDB;
 import com.classapp.db.question.QuestionbankDB;
+import com.classapp.logger.AppLogger;
 import com.datalayer.exam.QuestionSearchRequest;
 import com.datalayer.exambean.ExamData;
 
@@ -227,9 +228,9 @@ public class ExamTransaction {
 		*/
 		String batch  = "2";
 		String[] str = batch.split(",");
-		System.out.println();
+		//AppLogger.logger();
 		ExamTransaction examTransaction = new ExamTransaction();
 		List list = examTransaction.searchExamData(3, null, null, null, null, null, null, null,"%2%");
-		System.out.println(list);
+		AppLogger.logger(list);
 	}
 }

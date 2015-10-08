@@ -3,6 +3,8 @@ package com.classapp.db.batch.division;
 
 import java.util.List;
 
+import com.classapp.logger.AppLogger;
+
 
 public class DivisionData {
 	DivisionDB divisionDB;
@@ -20,8 +22,8 @@ public class DivisionData {
 		if (null!=divisionList && !divisionList.isEmpty()) {
 			for(int i = 0;i<divisionList.size();i++){
 				Division division = divisionList.get(i);
-				System.out.println("DivName in the list:"+division.getDivisionName());
-				System.out.println("Division Name:"+divisionName);
+				AppLogger.logger("DivName in the list:"+division.getDivisionName());
+				AppLogger.logger("Division Name:"+divisionName);
 				if(division.getDivisionName().equalsIgnoreCase(divisionName)){
 					status = true;
 					break;

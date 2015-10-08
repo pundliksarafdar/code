@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
 import com.classapp.db.register.RegisterUser;
+import com.classapp.logger.AppLogger;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.google.gson.Gson;
@@ -59,7 +60,7 @@ public class RegisterUserAction extends BaseAction{
 		
 		RegisterTransaction registerTransaction = new RegisterTransaction();
 		String status =  registerTransaction.registerUser(registerReq,registerBean.getLoginName(), registerBean.getPhone1(),registerBean.getEmail());
-		System.out.println("In Register user action - Register User Status..."+status);
+		AppLogger.logger("In Register user action - Register User Status..."+status);
 		if("success".equals(status)){
 			AllMail allMail = new AllMail();
 			HashMap<String, String> hashMap = new  HashMap();
@@ -134,10 +135,10 @@ public class RegisterUserAction extends BaseAction{
 	       // Send message
 	     Transport.send(message);
 
-	       System.out.println("Sent message successfully....");
+	       AppLogger.logger("Sent message successfully....");
 
 	    } catch (MessagingException e) {
-	    	System.out.println("Invalid Internet Address");
+	    	AppLogger.logger("Invalid Internet Address");
 	          throw new RuntimeException(e);
 	    }
 	}
