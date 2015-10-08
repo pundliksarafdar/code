@@ -17,7 +17,8 @@ private Constants(){
 	public static String DEBUGGING_MODE = "6";
 	public static String SHOW_STACK_TRACE = "4";
 	public static String RESULT_PER_PAGE = "resultsperpage";
-
+	public static String SERVICE_LOGGER = "8";
+	
 	public static String BATCH_NAME = "batchName";
 	public static String BATCH_TIME = "batchTime";
 	public static String START_TIME = "startTime";

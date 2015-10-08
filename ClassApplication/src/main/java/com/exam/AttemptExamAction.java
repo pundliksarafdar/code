@@ -164,7 +164,7 @@ public class AttemptExamAction extends BaseAction {
 		questionDataList=new ArrayList<QuestionData>();
 		while(questionStartIndex<questionEndIndex){
 		String questionNumber=queid_arr[questionStartIndex];
-		String examPath = userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionNumber;
+		String examPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
 		//uploadedMarks = (Integer) request.getSession().getAttribute("uploadedMarks");
 		File file = new File(examPath);
 		QuestionData questionData = null;

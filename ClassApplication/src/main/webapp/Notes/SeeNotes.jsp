@@ -125,7 +125,8 @@ function deletenotes(notesid){
 	$("form#actionform #notesid").val(notesid);
 	$("form#actionform #actionname").val("deletenotes");
 	$("#actionform").prop("action","seenotes");
-	$("#actionform").submit();
+	$("#notesdeleteconfirmmodal").modal("toggle");
+	//$("#actionform").submit();
 	/* $.ajax({
 		 
 		   url: "classOwnerServlet",
@@ -148,6 +149,10 @@ function deletenotes(notesid){
 
 
 $(document).ready(function(){
+	$("#notesdeleteconfirm").click(function(){
+		$("#actionform").submit();
+	});
+	
 	$(".shownotes").on("click",function(){
 		$("form#actionform #notesid").val($(this).prop("id"));
 		$("#actionform").prop("action","shownotes");
@@ -497,5 +502,22 @@ $(document).ready(function(){
 <c:if test="${(totalPage==0)}">
 <div class="alert alert-info" align="center">Notes not available for selected criteria.</div>
 </c:if>
+<div class="modal fade" id="notesdeleteconfirmmodal">
+    <div class="modal-dialog">
+    <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="myModalLabel">Delete Notes</h4>
+        </div>
+        <div class="modal-body" id="mymodalmessage">
+          Are you sure?
+        </div>
+      	<div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancle</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal" id="notesdeleteconfirm">Yes</button>
+      	</div>
+    </div>
+</div>
+</div>
 </body>
 </html>

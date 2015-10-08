@@ -10,6 +10,7 @@
 <title>Insert title here</title>
 <script type="text/javascript" src="js/AddSubject.js"></script>
 <script type="text/javascript">
+var globalclassid="";
 function editclass(id){
 	$('div#ModifyClassModal .error').hide();
 	$("#editclassname").val($("#name"+id).val());
@@ -20,7 +21,8 @@ function editclass(id){
 }
 
 function deleteclass(classid){
-	var result=confirm("Are You Sure?");
+	globalclassid=classid;
+	/* var result=confirm("Are You Sure?");
 	if(result){
 	$.ajax({
         url: 'classOwnerServlet',
@@ -33,16 +35,37 @@ function deleteclass(classid){
         	modal.launchAlert("Success","Class Deleted!");
   		  /*  setTimeout(function(){
   			   location.reload();
-  		   },2*1000); */
+  		   },2*1000); 
         	$("#paginateform").submit();
         },error:function(data){
         	
         }
 	});
-	}
+	} */
+	$("#classdeleteconfirmmodal").modal("toggle");
 }
 
 $(document).ready(function(){
+	$("#classdeleteconfirm").click(function(){
+		$.ajax({
+	        url: 'classOwnerServlet',
+	        type: 'post',
+	        data: {
+		    	 methodToCall: "deleteclass",
+		    	 classid:globalclassid
+	        },
+	        success: function(data){
+	        	modal.launchAlert("Success","Class Deleted!");
+	  		  /*  setTimeout(function(){
+	  			   location.reload();
+	  		   },2*1000); */
+	        	$("#paginateform").submit();
+	        },error:function(data){
+	        	
+	        }
+		});
+	});
+	
 	$("#classname,#stream").on("keyup",function(){
 		var string = $(this).val();	
 		$(this).val(string.charAt(0).toUpperCase() + string.slice(1));
@@ -178,5 +201,23 @@ counter++;
 }
 
 } %>
+
+<div class="modal fade" id="classdeleteconfirmmodal">
+    <div class="modal-dialog">
+    <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="myModalLabel">Delete Class</h4>
+        </div>
+        <div class="modal-body" id="mymodalmessage">
+          Are you sure?
+        </div>
+      	<div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancle</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal" id="classdeleteconfirm">Yes</button>
+      	</div>
+    </div>
+</div>
+</div>
 </body>
 </html>

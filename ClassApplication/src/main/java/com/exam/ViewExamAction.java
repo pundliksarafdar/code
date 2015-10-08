@@ -127,7 +127,7 @@ public class ViewExamAction extends BaseAction{
 				}
 				//Set<Integer> keys=questionIdsMap.keySet();
 				for (int i = startIndex; i < endIndex; i++) {
-					questionPath=userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionIdsList.get(i);
+					questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionIdsList.get(i);
 					QuestionData questionData=(QuestionData) readObject(new File(questionPath));
 					questionDataList.add(questionData);
 				}

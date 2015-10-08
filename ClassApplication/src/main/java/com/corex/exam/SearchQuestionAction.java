@@ -141,7 +141,7 @@ public class SearchQuestionAction extends BaseAction{
 			createdIds=new ArrayList<Integer>();
 			questionDataList=new ArrayList<QuestionData>();
 			for (int i = 0; i < questionbanks.size(); i++) {
-				questionPath=userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionbanks.get(i).getQue_id();
+				questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionbanks.get(i).getQue_id();
 				QuestionData questionData=(QuestionData) readObject(new File(questionPath));
 				createdIds.add(questionbanks.get(i).getAdded_by());
 				questionDataList.add(questionData);

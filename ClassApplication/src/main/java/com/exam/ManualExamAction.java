@@ -159,7 +159,7 @@ public class ManualExamAction extends BaseAction{
 			questionIds=new ArrayList<Integer>();
 			questionDataList=new ArrayList<QuestionData>();
 			for (int i = 0; i < questionbanks.size(); i++) {
-				questionPath=userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionbanks.get(i).getQue_id();
+				questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionbanks.get(i).getQue_id();
 				if (questionIdsMap.containsKey(questionbanks.get(i).getQue_id())) {
 					questionIds.add(1);
 				}else {
@@ -187,7 +187,7 @@ public class ManualExamAction extends BaseAction{
 				String questionPath = "";
 				//Set<Integer> keys=questionIdsMap.keySet();
 				for (Integer key:questionIdsMap.keySet()) {
-					questionPath=userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionIdsMap.get(key);
+					questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionIdsMap.get(key);
 					QuestionData questionData=(QuestionData) readObject(new File(questionPath));
 					questionDataList.add(questionData);
 				}
@@ -286,7 +286,7 @@ public class ManualExamAction extends BaseAction{
 				questionIds=new ArrayList<Integer>();
 				questionDataList=new ArrayList<QuestionData>();
 				for (int i = 0; i < questionbanks.size(); i++) {
-					questionPath=userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionbanks.get(i).getQue_id();
+					questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionbanks.get(i).getQue_id();
 					if (questionIdsMap.containsKey(questionbanks.get(i).getQue_id())) {
 						questionIds.add(1);
 					}else {

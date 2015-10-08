@@ -144,7 +144,7 @@ public class UploadExamsAction extends BaseAction{
 			}
 			//Create separate file for each question and join them in the save and submit
 			UserStatic userStatic = userBean.getUserStatic();
-			String examPath = userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionNumber;
+			String examPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
 			File file = new File(examPath);
 			
 			if(!file.getParentFile().exists()){
@@ -184,7 +184,7 @@ public class UploadExamsAction extends BaseAction{
 				divisionName=divbean.getDivisionName();
 			}
 			examname = (String) request.getSession().getAttribute("examname");
-			String examPath = userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionNumber;
+			String examPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
 			//uploadedMarks = (Integer) request.getSession().getAttribute("uploadedMarks");
 			File file = new File(examPath);
 			
@@ -270,7 +270,7 @@ public class UploadExamsAction extends BaseAction{
 		
 			//Create separate file for each question and join them in the save and submit
 			UserStatic userStatic = userBean.getUserStatic();
-			String examPath = userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionNumber;
+			String examPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
 			File file = new File(examPath);
 			
 			if(!file.getParentFile().exists()){
@@ -303,7 +303,7 @@ public class UploadExamsAction extends BaseAction{
 			if(divbean!=null){
 				divisionName=divbean.getDivisionName();
 			}
-			String questionPath = userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionNumber;
+			String questionPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
 			//uploadedMarks = (Integer) request.getSession().getAttribute("uploadedMarks");
 			File file = new File(questionPath);
 			if(file.exists()){

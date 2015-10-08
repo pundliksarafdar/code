@@ -20,7 +20,8 @@ function getSubject(subid){
 }
 
 function deleteSubject(subid){
-	$.ajax({
+	subjectid=subid;
+	/* $.ajax({
         url: 'classOwnerServlet',
         type: 'post',
         data: {
@@ -28,18 +29,40 @@ function deleteSubject(subid){
 	    	 subjectid:subid
         },
         success: function(){
-        	/* modal.launchAlert("Success","Subject Deleted! Page will refresh in soon");
+        modal.launchAlert("Success","Subject Deleted! Page will refresh in soon");
  		   setTimeout(function(){
  			   location.reload();
- 		   },2*1000); */
+ 		   },2*1000); 
         	$("#paginateform").submit();
         	
         }, error: function(){
             alert('ajax failed');
         }
-});
+}); */
+$("#subjectdeleteconfirmmodal").modal("toggle");
 }
 	$(document).ready(function(){
+		
+		$("#subjectdeleteconfirm").click(function(){
+			$.ajax({
+		        url: 'classOwnerServlet',
+		        type: 'post',
+		        data: {
+			    	 methodToCall: "deletesubject",
+			    	 subjectid:subjectid
+		        },
+		        success: function(){
+		        	/* modal.launchAlert("Success","Subject Deleted! Page will refresh in soon");
+		 		   setTimeout(function(){
+		 			   location.reload();
+		 		   },2*1000); */
+		        	$("#paginateform").submit();
+		        	
+		        }, error: function(){
+		            alert('ajax failed');
+		        }
+		});
+		});
 		
 		$(".page").on("click",function(e){
 			$("form#paginateform #currentPage").val($(this).text());
@@ -223,6 +246,24 @@ if(list.size()>0){
       	<div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 	        <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+      	</div>
+    </div>
+</div>
+</div>
+
+<div class="modal fade" id="subjectdeleteconfirmmodal">
+    <div class="modal-dialog">
+    <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="myModalLabel">Delete Subject</h4>
+        </div>
+        <div class="modal-body" id="mymodalmessage">
+          Are you sure?
+        </div>
+      	<div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancle</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal" id="subjectdeleteconfirm">Yes</button>
       	</div>
     </div>
 </div>
