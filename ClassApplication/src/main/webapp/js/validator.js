@@ -3,7 +3,7 @@
 /*Tag property
 	maxlength:Define maximum length
 	minlength:Define minimum length
-	
+	validationMessage:is to provide validation message
 */
 $.fn.validate = function(globalOption){
 	var $form = $(this);
@@ -13,9 +13,9 @@ $.fn.validate = function(globalOption){
 	
 	var validationMessages = {
 		fieldRequired:"This field is mandatory",
-		minRequired:"Minimum value required is {[minval]}",
-		maxRequired:"Maximum value required is {[maxval]}",
-		minSelectionRequired:"Maximum value required is {[minSel]}"
+		minRequired:"Minimum value required is {[val]}",
+		maxRequired:"Maximum value required is {[val]}",
+		minSelectionRequired:"Please select {[val]} selection"
 	}
 	var MAX_LENGTH = "maxlength";
 	var MIN_LENGTH = "minlength";
@@ -23,54 +23,77 @@ $.fn.validate = function(globalOption){
 	var MIN = "min";
 	var MAX = "max";
 	
-	var maxLengthValidation = function(elm){
+	var maxLengthValidation = function(elm,value,validationMessage){
 		return true;
 	}
 	
-	var minLengthValidation = function(elm){
+	var minLengthValidation = function(elm,value,validationMessage){
 		return true;
 	}
 	
-	var regualrExpressionValidation = function(elm){
+	var regualrExpressionValidation = function(elm,value,validationMessage){
 		return true;
 	}
 	
-	var requiredValidation = function(elm){
+	var requiredValidation = function(elm,value,validationMessage){
+		var msgStr;
+		if(!validationMessage){
+			msgStr = validationMessages.fieldRequired;
+		}else{
+			msgStr = validationMessage;
+		}
 		if($(elm).val().trim().length == 0){
-			$(elm).parents('.form-group').find('.validation-message').removeClass('hide').html(validationMessages.fieldRequired);
+			$(elm).parents('.form-group').find('.validation-message').removeClass('hide').html(msgStr);
 			return false;
 		}
 		return true;
 	}
 	
-	var minValidation = function(elm,value){
-		var message = validationMessages.minRequired.replace("{[minval]}",value);
+	var minValidation = function(elm,value,validationMessage){
+		var msgStr;
+		if(!validationMessage){
+			msgStr = validationMessages.minRequired.replace("{[val]}",value);
+		}else{
+			msgStr = validationMessage.replace("{[val]}",value);
+		}
+		
 		var elmVal = isNaN(parseInt($(elm).val()))?0:parseInt($(elm).val());
 		var attrVal = isNaN(parseInt(value))?0:parseInt(value);
 		if(elmVal < attrVal){
-			$(elm).parents('.form-group').find('.validation-message').removeClass('hide').html(message);			
+			$(elm).parents('.form-group').find('.validation-message').removeClass('hide').html(msgStr);			
 			return false;
 		}
 		return true;
 	}
 	
-	var maxValidation = function(elm,value){
-		var message = validationMessages.maxRequired.replace("{[maxval]}",value);
+	var maxValidation = function(elm,value,validationMessage){
+		var msgStr;
+		if(!validationMessage){
+			msgStr = validationMessages.maxRequired.replace("{[val]}",value);
+		}else{
+			msgStr = validationMessage.replace("{[val]}",value);
+		}
 		var elmVal = isNaN(parseInt($(elm).val()))?0:parseInt($(elm).val());
 		var attrVal = isNaN(parseInt(value))?0:parseInt(value);
 		if(elmVal > attrVal){
-			$(elm).parents('.form-group').find('.validation-message').removeClass('hide').html(message);			
+			$(elm).parents('.form-group').find('.validation-message').removeClass('hide').html(msgStr);			
 			return false;
 		}
 		return true;
 	}
 	
-	var mandatorySelectionValidation = function(elm,value){
+	var mandatorySelectionValidation = function(elm,value,validationMessage){
 		var selectedLength = $(elm).find("input[type='checkbox']:checked").length;
 		mandateSelValue = isNaN(parseInt(value))?0:parseInt(value);
 		if(selectedLength<mandateSelValue){
-			var message = validationMessages.minSelectionRequired.replace("{[minSel]}",value);
-			$(elm).find('.validation-message').removeClass('hide').html(message);			
+			var msgStr;
+			if(!validationMessage){
+				msgStr = validationMessages.minSelectionRequired.replace("{[val]}",value);
+			}else{
+				msgStr = validationMessage.replace("{[val]}",value);
+			}
+			
+			$(elm).find('.validation-message').removeClass('hide').html(msgStr);			
 			return false;
 		}
 		return true;
@@ -102,7 +125,8 @@ $.fn.validate = function(globalOption){
 		$.each(validationAttributes,function(key,fn){
 			var attrValue = childNode.attr(key);
 			if(attrValue){
-				var result = fn(childNode,attrValue);
+				var validationMessage = childNode.attr("validationMessage");
+				var result = fn(childNode,attrValue,validationMessage);
 				if(!result){
 						hasError = true;
 				}	

@@ -77,6 +77,7 @@ html,body {
 <script src="js/bootstrap-datetimepicker.min.js"></script>
 <script src="js/jquery.autocomplete.js"></script>
 <script src="js/global.js"></script>
+<script src="js/notifications.js"></script>
 <script src="js/angular.min.js"></script>
 <script type="text/javascript" src="js/Chart.min.js"></script>
 <script src="js/plugins.js"></script>
@@ -181,6 +182,9 @@ $( document ).ajaxStop(function() {
 				<div>
 					<tiles:insertAttribute name="body" />
 					<br />
+					<div class="corex-toast-wrapper">
+						<div class='corex-toast' style="display:none"> </div>
+					</div>
 				</div>	
 			</div>
 			<div id="footer">

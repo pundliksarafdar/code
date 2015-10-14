@@ -59,6 +59,11 @@ public class UploadExamsAction extends BaseAction{
 	int optionImageCount[];
 	int optionImageEndCount[];
 	String selectedtopicName;
+	
+	/*Edit exam question*/
+	String optionImagesPrev[];
+	String questionImagesStr[];
+	
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		int inst_id=userBean.getRegId();
@@ -119,6 +124,7 @@ public class UploadExamsAction extends BaseAction{
 			List<String> questionImagesList = new ArrayList<String>();
 			List<String> answerImagesList = new ArrayList<String>();
 			
+			/*
 			if(null!=questionImages){
 				for(File questionImage : questionImages){
 					try {
@@ -129,8 +135,16 @@ public class UploadExamsAction extends BaseAction{
 					}
 				}
 			}
+			*/
+			
+			if(null!=questionImagesStr){
+				questionImagesList = Arrays.asList(questionImagesStr);
+			}
+			
 			questionData.setQuestionImage(questionImagesList);
 			
+			/*
+			if(null!=optionImages){
 			for(File optionImage : optionImages){
 				try {
 					String base64AnswerImage = Base64.encode(FileUtils.readFileToByteArray(optionImage));
@@ -138,6 +152,11 @@ public class UploadExamsAction extends BaseAction{
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
+			}*/
+			
+			if(optionImagesPrev!=null){
+				answerImagesList = Arrays.asList(optionImagesPrev);
 			}
 			questionData.setAnswerImage(answerImagesList);
 			String result = "startuploadingexam";
@@ -199,13 +218,14 @@ public class UploadExamsAction extends BaseAction{
 			int endCount = 0;
 			int index = 0;
 			optionImageCount = questionData.getOptionImageCount();
-			optionImageEndCount = new int[optionImageCount.length];
-			for(int count:optionImageCount){
-				endCount = endCount+count;
-				optionImageEndCount[index]=endCount;
-				index++;
+			if(null != optionImageCount){
+				optionImageEndCount = new int[optionImageCount.length];
+				for(int count:optionImageCount){
+					endCount = endCount+count;
+					optionImageEndCount[index]=endCount;
+					index++;
+				}
 			}
-
 			
 			if (questionData!=null) {
 				answerList=new ArrayList<Integer>();
@@ -253,23 +273,26 @@ public class UploadExamsAction extends BaseAction{
 			if(null!=answersOptionText){
 				listOption = Arrays.asList(answersOptionText);
 			}
-			if(null!=questionImages){
-			for(File questionImage : questionImages){
-				try {
-					String base64OptionImage = Base64.encode(FileUtils.readFileToByteArray(questionImage));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			List<String> questionImagesList;
+			if(null!=questionImagesStr){
+				questionImagesList = Arrays.asList(questionImagesStr);
+			}else{
+				questionImagesList = new ArrayList<String>();
 			}
-			}
+			
 			if(null!=answersOptionCheckBox){
 				questionData.setAnswers(Arrays.asList(answersOptionCheckBox.split(",")));
 			}
+			questionData.setQuestionImage(questionImagesList);
 			questionData.setOptions(listOption);
 			questionData.setQuestion(question);
 			questionData.setQuestionNumber(questionNumber);
 			questionData.setOptionImageCount(optionImageCount);
-		
+			if(null!=optionImagesPrev){
+				questionData.setAnswerImage(Arrays.asList(optionImagesPrev));
+			}else{
+				questionData.setAnswerImage(new ArrayList<String>());
+			}
 			//Create separate file for each question and join them in the save and submit
 			UserStatic userStatic = userBean.getUserStatic();
 			String examPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
@@ -713,6 +736,22 @@ public class UploadExamsAction extends BaseAction{
 
 	public void setOptionImageEndCount(int[] optionImageEndCount) {
 		this.optionImageEndCount = optionImageEndCount;
+	}
+
+	public String[] getOptionImagesPrev() {
+		return optionImagesPrev;
+	}
+
+	public void setOptionImagesPrev(String[] optionImagesPrev) {
+		this.optionImagesPrev = optionImagesPrev;
+	}
+
+	public String[] getQuestionImagesStr() {
+		return questionImagesStr;
+	}
+
+	public void setQuestionImagesStr(String[] questionImagesStr) {
+		this.questionImagesStr = questionImagesStr;
 	}
 
 	
