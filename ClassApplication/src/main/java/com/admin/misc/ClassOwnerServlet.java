@@ -2,6 +2,7 @@ package com.admin.misc;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,6 +32,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Teacher.Teacher;
 import com.classapp.db.Teacher.TeacherDetails;
+import com.classapp.db.advertisement.*;
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.BatchDetails;
 import com.classapp.db.batch.division.Division;
@@ -55,6 +57,7 @@ import com.helper.BatchHelperBean;
 import com.mails.AllMail;
 import com.threadrunner.ReEvaluateThreadRunner;
 import com.tranaction.subject.SubjectTransaction;
+import com.transaction.advertisetransaction.AdvertiseTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.exams.ExamTransaction;
@@ -2895,6 +2898,11 @@ public class ClassOwnerServlet extends HttpServlet{
 		}if("".equals(examname)){
 			respObject.addProperty("quesstatus", "");
 		}
+		respObject.addProperty(STATUS, "success");
+	}else if("getAdvertiseAvailability".equalsIgnoreCase(methodToCall)){
+		//UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		//Integer regId=userBean.getRegId();;
+		String advdate = req.getParameter("advdate");
 		respObject.addProperty(STATUS, "success");
 	}
 		

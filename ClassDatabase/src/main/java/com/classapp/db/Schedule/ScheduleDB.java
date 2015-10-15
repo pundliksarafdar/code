@@ -132,7 +132,11 @@ public String isExistsLecture(Schedule schedule) {
 			transaction.rollback();
 		}
 		
-	}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}	
 	 
 	return "notexists";
 
@@ -203,7 +207,11 @@ public String isTeacherUnavailable(Schedule schedule,List<Integer> scheduleids) 
 			transaction.rollback();
 		}
 		
-	}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}	
 	 
 	return "notexists";
 
@@ -228,7 +236,11 @@ public List<Schedule> getSchedule(int batchid,Date date,int inst_id,int div_id) 
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	return scheduleList;
 }
 
@@ -255,7 +267,11 @@ public List<Schedule> getWeeklySchedule(int batchid,Date date,int inst_id,int di
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	return scheduleList;
 }
 
@@ -277,7 +293,11 @@ public List<Schedule> getTeachersSchedule(int classid,int teacherid,Date schedul
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	return scheduleList;
 }
 
@@ -298,7 +318,11 @@ public boolean deleteSchedule(int scheduleid,int inst_id) {
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	return true;
 }
 
@@ -323,7 +347,11 @@ public List<Schedule> getScheduleForDate(Integer studentId,String date) {
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	return scheduleList;
 }
 
@@ -362,7 +390,11 @@ public HashMap<String, List> getStudentData(Integer studentId){
 	}catch(Exception e)
 		{
 			e.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	return studentDataMap;
 	
 }
@@ -386,7 +418,11 @@ public List<Schedule> deleteSchedulerelatedtoteacher(int teacherid,int classid) 
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	return scheduleList;
 }
 
@@ -409,7 +445,11 @@ public void deleteschedulerelatedtobatchsubject(int batchid,int subid,int div_id
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 }
 
 public boolean deleteschedulerelatedsubject(int subid) {
@@ -429,7 +469,11 @@ public boolean deleteschedulerelatedsubject(int subid) {
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	return true;
 }
 
@@ -451,7 +495,11 @@ public boolean deleteschedulerelatedtoteachersubject(int teacherid,int sub_id) {
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	return true;
 	
 }
@@ -472,7 +520,11 @@ public boolean deleteschedulerelatedtoclass(int classid) {
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	return true;
 	
 }
@@ -496,7 +548,11 @@ public boolean deleteschedulerelatedtoBatch(Batch batch) {
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	return true;
 	
 }
@@ -523,7 +579,11 @@ public List<Schedule> getTeachersWeeklySchedule(int classid,int teacherid,Date s
 		}catch(Exception e)
 		{
 			e.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	return scheduleList;
 }
 

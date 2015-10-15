@@ -186,7 +186,12 @@ public class DivisionDB {
 			
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		
 		return 0;
 	}
@@ -206,7 +211,12 @@ public class DivisionDB {
 			
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		
 		return divisions;
 		
@@ -234,7 +244,12 @@ public class DivisionDB {
 			
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		
 		return false;
 		

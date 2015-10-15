@@ -25,6 +25,9 @@ public boolean saveQuestion(Questionbank questionbank) {
 	transaction=session.beginTransaction();
 	session.saveOrUpdate(questionbank);
 	transaction.commit();
+	if(session!=null){
+		session.close();
+	}
 	return  true;
 
 }
@@ -36,6 +39,9 @@ public boolean editQuestion(Questionbank questionbank) {
 	transaction=session.beginTransaction();
 	session.saveOrUpdate(questionbank);
 	transaction.commit();
+	if(session!=null){
+		session.close();
+	}
 	return  true;
 
 }
@@ -52,6 +58,9 @@ public boolean deleteQuestion(int que_id,int inst_id,int sub_id,int div_id) {
 	transaction=session.beginTransaction();
 	session.delete(questionbank);
 	transaction.commit();
+	if(session!=null){
+		session.close();
+	}
 	return  true;
 
 }
@@ -68,6 +77,9 @@ public Questionbank getQuestion(int que_id,int inst_id,int sub_id,int div_id) {
 	transaction=session.beginTransaction();
 	Questionbank question=(Questionbank) session.get(Questionbank.class,questionbank);
 	transaction.commit();
+	if(session!=null){
+		session.close();
+	}
 	return  question;
 }
 
@@ -105,7 +117,12 @@ public HashMap<Integer, Integer> getQuestionIds(int inst_id,int sub_id,int div_i
 			transaction.rollback();
 		}
 		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
 	}
+		
 return quesids;
 }
 
@@ -128,7 +145,12 @@ public List<Integer> getQuestionMarks(int inst_id,int sub_id,int div_id,List<Int
 			transaction.rollback();
 		}
 		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
 	}
+		
 return list;
 }
 
@@ -153,7 +175,12 @@ public int getNextQuestionID(int inst_id,int div_id,int sub_id) {
 			transaction.rollback();
 		}
 		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
 	}
+		
 return 1;
 }
 
@@ -397,7 +424,12 @@ public boolean deleteQuestionList(List<Integer> que_id,int inst_id,int sub_id,in
 			transaction.rollback();
 		}
 		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
 	}
+		
 return true;
 
 }
@@ -424,7 +456,12 @@ public boolean ExamQuestionStatus(List<Integer> que_id,int inst_id,int sub_id,in
 			transaction.rollback();
 		}
 		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
 	}
+		
 return true;
 
 }

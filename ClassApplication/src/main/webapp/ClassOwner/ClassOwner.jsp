@@ -5,7 +5,12 @@
 <head>
 <!-- <link href="../assets/css/style.css" rel="stylesheet" /> -->
 </head>
-<div class="container">
+<div class="container" style="
+    margin-right: 0px;
+    margin-left: 100px;
+">
+<div class="col-md-10">
+<div >
 	<%
 int batchcount=(Integer)session.getAttribute("batchcount"); 
 int studentcount=(Integer)session.getAttribute("studentcount");
@@ -15,56 +20,7 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
         "August", "September", "October", "November", "December" };
 %>
 	<div class="row">
-		<%-- <div class="col-md-3 col-sm-3 col-xs-6">
-			<div class="panel panel-primary">
-				<div class="panel-heading">NO OF BATCHES</div>
-				<div class="panel-body">
-					<ul class="plan">
-						<li class="price"><strong><%=batchcount %></strong>&nbsp;&nbsp;&nbsp;</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-
-
-		<div class="col-md-3 col-sm-3 col-xs-6">
-			<div class="panel panel-primary">
-				<div class="panel-heading">NO OF TEACHERS</div>
-				<div class="panel-body">
-
-					<ul class="plan">
-						<li class="price"><strong><%=teachercount %></strong>&nbsp;&nbsp;&nbsp;</li>
-					</ul>
-				</div>
-			</div>
-		</div> --%>
-		
-		<!-- 
-		<div class="col-md-3">
-			<div class="btn-group-vertical">
-				<div class="btn-group">
-					<button class="btn btn-primary" type="button">NO OF BATCHES</button>
-					<button type="button" class="btn btn-danger" aria-expanded="false">
-    					<span><%= batchcount%></span>
-    				</button>
-    			</div>
-    			<div class="btn-group">
-				<button class="btn btn-primary" type="button">  NO OF TEACHERS</button>
-					<button type="button" class="btn btn-danger" aria-expanded="false">
-    					<span><%= teachercount%></span>
-    				</button>
-				</div>
-				<div class="btn-group">
-				<button class="btn btn-primary" type="button">  NO OF STUDENTS</button>
-					<button type="button" class="btn btn-danger" aria-expanded="false">
-    					<span><%= studentcount%></span>
-    				</button>
-				</div>
-			</div>
-		</div>
-		 -->
-		
-		<div class="col-md-3 well" style="height:248px">
+		<div class="col-md-3 well" style="height:240px">
 		<div align="center" style="font-size: larger;"><u>Institute Statastics</u></div>
 		<div class="input-group">
 			<input
@@ -87,11 +43,12 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
 				<span class="input-group-addon" id="basic-addon1"><%= studentcount%></span>
 		</div>
 		</div>
+		<div class="col-md-1"></div>
 		<div class="col-md-6 well">
 		<div align="center" style="font-size: larger;"><u>Storage Statastics</u></div>
 		<div class="row">
 		<div class="col-md-6  " >
-	<div id="classownerStorageGraph">
+	<div id="classownerStorageGraph" align="center">
 		<canvas id="classownerStorageGraphCtx" width="150" height="150"></canvas>
 	</div>
 </div>
@@ -124,11 +81,11 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
 </div>
 </div>
 
-<div class="col-md-3"></div>
+<div class="col-md-2"></div>
 
 </div>
 	</div>
-	<div class="container">
+	<div>
 	<div class="row">
 	<div align="left" class="col-md-12">
 
@@ -163,6 +120,14 @@ if(notifications!=null){
 %>
 
 	</div>
+</div>
+</div>
+</div>
+<div class="col-md-2"><img src="/images/1949023.jpg" style="height: 600px;width: 200px"></div>
+</div>
+<div class="container">
+<div class="row">
+<div class="col-md-12"><img src="/images/1949023.jpg" style="height: 200px;width: 600px"></div>
 </div>
 </div>
 
@@ -202,3 +167,4 @@ if(notifications!=null){
 		
 		
 	</script>
+	</html>

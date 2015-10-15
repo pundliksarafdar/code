@@ -38,7 +38,11 @@ public class ServiceMap {
 		}catch(Exception ex){
 			AppLogger.logger("Exception in servicemap..."+ex.getMessage());
 			ex.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	}
 	
 	public static String getSystemParam(String serviceId,String serviceParam){

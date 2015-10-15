@@ -258,7 +258,7 @@ function fetchTopic(){
 			<option value="-1">Select Class</option>
 			<c:if test="${ (divisionList != null) }">
 			<c:forEach items="${divisionList}" var="item">
-				<option value="<c:out value="${item.divId}"> </c:out>"> <c:out value="${item.divisionName}"> </c:out></option>
+				<option value="<c:out value="${item.divId}"> </c:out>"> <c:out value="${item.divisionName}"> </c:out> <c:out value="${item.stream}"> </c:out></option>
 			</c:forEach>
 			</c:if> 
 			</select>

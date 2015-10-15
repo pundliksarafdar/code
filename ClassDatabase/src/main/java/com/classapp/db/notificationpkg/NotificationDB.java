@@ -18,6 +18,9 @@ public class NotificationDB {
 		transaction=session.beginTransaction();
 		session.save(notification);
 		transaction.commit();
+		if(session!=null){
+			session.close();
+		}
 		return  true;
 	
 	}
@@ -42,7 +45,12 @@ public class NotificationDB {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 	return notifications;
 	}
 	
@@ -64,7 +72,12 @@ public class NotificationDB {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 	return notifications;
 	}
 	
@@ -86,7 +99,12 @@ public class NotificationDB {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 	return notifications;
 	}
 	
@@ -107,7 +125,12 @@ public class NotificationDB {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 	
 	}
 }

@@ -50,7 +50,9 @@ public class SearchClassDb {
 		}
 		
 		List list = query.list();
-		
+		if(null!=session){
+			session.close(); 
+		}
 		AppLogger.logger("In ClassSeachForm-DB.."+classSearchForm);
 		return list;
 	}
@@ -120,6 +122,9 @@ public class SearchClassDb {
 		}
 		int totalResult = query.list().size();
 		count = totalResult/resultPerPage;
+		if(session!=null){
+			session.close();
+		}
 		return count;
 	}
 

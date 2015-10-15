@@ -8,8 +8,8 @@
 }
 
 #outerDiv{
-  min-height: 665px;
-  background: white;
+  min-height: 600px;
+
    }
 
 #header {
@@ -20,9 +20,11 @@
 
 #body {
 /*	width :100%;*/	
-	min-height:450px;	
+	min-height:525px;	
 	height: auto;
-	padding-bottom: 20px; /* Height of the footer */
+	padding-bottom: 20px;
+	border-radius: 25px;
+	 box-shadow: 5px 5px /* Height of the footer */
 	/* background:#E9E581; */
 }
 

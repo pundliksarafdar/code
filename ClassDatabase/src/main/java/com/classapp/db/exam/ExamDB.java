@@ -53,7 +53,12 @@ public class ExamDB {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 	return 1;
 	}
 
@@ -303,7 +308,12 @@ public class ExamDB {
 			transaction.rollback();
 		}
 		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
 	}
+		
 return list;
 }
 
@@ -413,7 +423,12 @@ return list;
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 	return list;
 	}
 	
@@ -552,7 +567,12 @@ return list;
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 	return 0;
 	}
 	

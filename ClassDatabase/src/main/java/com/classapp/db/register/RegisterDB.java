@@ -31,7 +31,12 @@ public class RegisterDB {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return subidList;
 	}
 	
@@ -58,7 +63,12 @@ public List getTeachersClassName(List classIDs) {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return subidList;
 	}
 	
@@ -83,7 +93,12 @@ public List getTeachersClassName(List classIDs) {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return subidList.get(0);
 	}
 	
@@ -108,7 +123,12 @@ public List getTeachersClassName(List classIDs) {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return subidList.get(0);
 	}
 	
@@ -137,7 +157,12 @@ public List getTeachersClassName(List classIDs) {
 			if(null!=transaction){
 				transaction.rollback();
 			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return true;
 	}
 
@@ -166,7 +191,12 @@ public List getTeachersClassName(List classIDs) {
 			if(null!=transaction){
 				transaction.rollback();
 			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return true;
 	}
 
@@ -192,7 +222,12 @@ public List getTeachersClassName(List classIDs) {
 				transaction.rollback();
 			}
 			return false;
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return true;
 	}
 	
@@ -248,7 +283,12 @@ public List getStudentInfo(List StudentIDs,int pagenumber, int resultPerPage) {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return subidList;
 	}
 
@@ -273,7 +313,12 @@ public List getStudents(List StudentIDs) {
 			transaction.rollback();
 		}
 		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
 	}
+		
 	return students;
 }
 
@@ -299,7 +344,11 @@ public List getStudents(List StudentIDs) {
 				transaction.rollback();
 			}
 			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}			
 		return false;
 	}
 	
@@ -325,7 +374,11 @@ public List getStudents(List StudentIDs) {
 				transaction.rollback();
 			}
 			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 		return false;
 	}
 	
@@ -347,7 +400,11 @@ public List getStudents(List StudentIDs) {
 				transaction.rollback();
 			}
 			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	}
 	
 	public String getPassword(String email,String phone) {
@@ -377,7 +434,11 @@ public List getStudents(List StudentIDs) {
 				transaction.rollback();
 			}
 			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 		return "";
 	}
 	
@@ -404,7 +465,11 @@ public List getStudents(List StudentIDs) {
 				transaction.rollback();
 			}
 			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	}
 	
 	public boolean isEmailExists(String email) {
@@ -431,7 +496,11 @@ public List getStudents(List StudentIDs) {
 			if(null!=transaction){
 				transaction.rollback();
 			}
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 		return true;
 	}
 	
@@ -451,7 +520,11 @@ public List getStudents(List StudentIDs) {
 			list = query.list();
 		}catch(Exception e){
 			list = new ArrayList<RegisterBean>();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}		
 		}
 		return list;
 	}
@@ -477,7 +550,11 @@ public List getStudents(List StudentIDs) {
 				transaction.rollback();
 			}
 			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 		return null;
 		
 	}

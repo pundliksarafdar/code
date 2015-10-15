@@ -9,16 +9,22 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
         <!-- Uncomment for openshiftdeployment  -->
         
-        <property name="hibernate.connection.username">admin7wiv5Ys</property>
+        <!-- <property name="hibernate.connection.username">admin7wiv5Ys</property>
         <property name="hibernate.connection.password">ReVSpsgcVdXl</property>
         <property name="hibernate.connection.url">jdbc:mysql://127.6.14.2:3306/classdb</property>
-        
+ -->        
         <!-- comment for openshiftdeployment  -->
-         
-        <!-- <property name="hibernate.connection.username">root</property>
+         <!--  -->
+       <!--  <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">gaurav26</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/classdb</property> -->
         
+         <!-- <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.connection.datasource">java:jboss/datasources/classdb</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+         -->
+        <property name="hibernate.connection.datasource">java:jboss/datasources/classdb</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="show_sql">true</property>
         <property name="format_sql">true</property>
@@ -47,6 +53,7 @@
  		<mapping resource="com/classapp/db/studentmarks/studentmarks.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/exam/compexam.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/subject/subject_topics.hbmmap.xml"></mapping>
+ 		<mapping resource="com/classapp/db/advertisement/Advertisement.hbmmap.xml"></mapping>
        <!--  <mapping resource="com/classapp/db/classwithsubjects/ClassWithSubjects.hbmmap.xml"></mapping> --> 
     </session-factory>
 </hibernate-configuration>

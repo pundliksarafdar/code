@@ -187,7 +187,11 @@ public String getschedulesubject(int subjectid) {
 			transaction.rollback();
 		}
 		
-	}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}	
 	return subidList.get(0);
 }
 	
@@ -205,10 +209,11 @@ public String getschedulesubject(int subjectid) {
 		}
 		}catch(Exception e){
 			e.printStackTrace();
-		}
-		finally{
-			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 		return query.list();
 	}
 	
@@ -318,7 +323,11 @@ public String getschedulesubject(int subjectid) {
 			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 		
 		return queryResult;
 	}
@@ -338,7 +347,11 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 		
 		return queryResult;
 	}
@@ -561,7 +574,11 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 				transaction.rollback();
 			}
 			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	return 1;
 	}
 	
@@ -589,7 +606,11 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 				transaction.rollback();
 			}
 			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	return false;
 	}
 	
@@ -619,7 +640,11 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 				transaction.rollback();
 			}
 			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	return false;
 	}
 }

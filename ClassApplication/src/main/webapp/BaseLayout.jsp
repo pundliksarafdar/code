@@ -50,6 +50,10 @@ body{
     padding-right: 5px;
     padding-left: 5px;
     font-family: cursive;
+    min-height: 525px;
+   /* background-color: rgb(141,141,253);*/
+     background: linear-gradient(to right, red , blue);
+    background-size: 100% 100%;
 }
 
 .white-back{
@@ -178,7 +182,7 @@ $( document ).ajaxStop(function() {
 				</div>
 					<br/>							
 			</div>
-			<div id="body" style="margin: 10px;background-color: rgb(221, 225, 216)" >
+			<div id="body" style="margin: 10px;background-color: white" >
 				<div>
 					<tiles:insertAttribute name="body" />
 					<br />
@@ -187,9 +191,9 @@ $( document ).ajaxStop(function() {
 					</div>
 				</div>	
 			</div>
-			<div id="footer">
+			<div id="footer" style="background-color: black;color: white;" align="center">
 				<tiles:insertAttribute name="footer" />		
-				
+				© 2015 Corex. All rights reserved
 			</div>
 		</div>
 	</div>

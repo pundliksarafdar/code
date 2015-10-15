@@ -15,6 +15,9 @@ public class AllUserIdDb {
 		Session session = HibernateUtil.getSessionfactory().openSession();
 		Query query = session.createQuery("from AllUserId");
 		allUserIds = query.list();
+		if(session!=null){
+			session.close();
+		}
 		return allUserIds;
 	}
 	
@@ -30,6 +33,9 @@ public class AllUserIdDb {
 		query.setParameter("div_id", div_id);
 		query.setParameter("class_id", inst_id);
 		allUserIds = query.list();
+		if(session!=null){
+			session.close();
+		}
 		return allUserIds;
 	}
 	
@@ -40,6 +46,9 @@ public class AllUserIdDb {
 		Query query = session.createQuery("select googleId from AllUserId where regId in (select student_id from Student where class_id=:class_id)");
 		query.setParameter("class_id", inst_id);
 		allUserIds = query.list();
+		if(session!=null){
+			session.close();
+		}
 		return allUserIds;
 	}
 }

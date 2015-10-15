@@ -65,7 +65,12 @@ public class LoginCheck implements Serializable{
 			return gson.toJson(userBean);
 		}catch(Exception ex){
 			return null;
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		
 	}
 	
@@ -79,6 +84,7 @@ public class LoginCheck implements Serializable{
 		//Query query = session.createQuery("from AllUserId where regId = :regId");
 		session.saveOrUpdate(allUserId);
 		transaction.commit();
+		session.close();
 	}
 		
 }
