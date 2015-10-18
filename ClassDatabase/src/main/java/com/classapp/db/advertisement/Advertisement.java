@@ -11,7 +11,7 @@ String booking_id;
 String first_name;
 String last_name;
 String email;
-InputStream image;
+byte[] image;
 Date advdate;
 public String getBooking_id() {
 	return booking_id;
@@ -37,11 +37,12 @@ public String getEmail() {
 public void setEmail(String email) {
 	this.email = email;
 }
-public InputStream getImage() {
+
+public byte[] getImage() {
 	return image;
 }
-public void setImage(FileInputStream fileInputStream) {
-	this.image = fileInputStream;
+public void setImage(byte[] image) {
+	this.image = image;
 }
 public Date getAdvdate() {
 	return advdate;

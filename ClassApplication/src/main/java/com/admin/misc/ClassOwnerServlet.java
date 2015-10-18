@@ -2904,6 +2904,17 @@ public class ClassOwnerServlet extends HttpServlet{
 		//Integer regId=userBean.getRegId();;
 		String advdate = req.getParameter("advdate");
 		respObject.addProperty(STATUS, "success");
+	}else if("validateQuestionAvailibility".equalsIgnoreCase(methodToCall)){
+		ExamTransaction examTransaction = new ExamTransaction();
+		int sub_id = Integer.parseInt(req.getParameter("sub_id"));
+		int div_id = Integer.parseInt(req.getParameter("div_id"));
+		int marks = Integer.parseInt(req.getParameter("marks"));
+		int count = Integer.parseInt(req.getParameter("count"));
+		int maximumRepeatation = Integer.parseInt(req.getParameter("maximumRepeatation"));
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId=userBean.getRegId();;
+		int inst_id = regId;
+		examTransaction.isQuestionsAvailable(sub_id, inst_id, div_id, marks, count, maximumRepeatation);
 	}
 		
 		printWriter.write(respObject.toString());

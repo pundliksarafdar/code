@@ -23,6 +23,9 @@ $(function () {
 });
 
 $(document).ready(function(){
+	$("input,select").on("click",function(){
+		$(this).parents(".col-sm-2").find(".validation-message").empty();	
+	});
 	
 	$("#uploadexams").on("click",function(){
 		$("#uploadform").attr("action","uploadexams");
@@ -109,11 +112,18 @@ $(document).ready(function(){
 	
 	$("#QuestionBankQuestionListCreateExamhModalChooseMarksAdd").on("click",addQuestionCriteria);
 	$(EXAM_MODAL_OK).on("click",function(){
-		var passingmarks = $(EXAM_MODAL_EXAM_PASSING_MARKS).val();
-		var examName = $(EXAM_MODAL_EXAM_NAME).val();
-		$("#QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria").find("[name='passingmarks']").val(passingmarks);
-		$("#QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria").find("[name='examname']").val(examName);
-		$("#QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria").submit();
+		$("#QuestionBankQuestionListCreateExamhModalErrorBox").empty();
+		if($("#autogenerateexamform").validate()){
+			
+		}else if($.isEmptyObject(marksObj)){
+			$("#QuestionBankQuestionListCreateExamhModalErrorBox").html("<div class='alert alert-danger'>Please add atleast one question</div>").focus();
+		}else{	
+			var passingmarks = $(EXAM_MODAL_EXAM_PASSING_MARKS).val();
+			var examName = $(EXAM_MODAL_EXAM_NAME).val();
+			$("#QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria").find("[name='passingmarks']").val(passingmarks);
+			$("#QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria").find("[name='examname']").val(examName);
+			$("#QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria").submit();
+		}
 	});
 	$("[data-target='#QuestionBankQuestionListCreateExamhModal']").on("click",resetForm);
 });
@@ -124,6 +134,15 @@ var addQuestionCriteria = function(){
 	$(".alert").alert('close');
 	var examMarks = $(this).parents("form").find("#QuestionBankQuestionListCreateExamhModalMarks").val();
 	var numberOfQuestions = $(this).parents("form").find("#QuestionBankQuestionListCreateExamhModalNoOfQuestion").val();
+	
+	if(examMarks == "Select"){
+		$("#QuestionBankQuestionListCreateExamhModalMarks").parents(".col-sm-2").find(".validation-message").text("Please select marks").removeClass("hide");
+		return;
+	}
+	if(numberOfQuestions.trim().length==0 || numberOfQuestions.trim() == "0"){
+		$("#QuestionBankQuestionListCreateExamhModalNoOfQuestion").parents(".col-sm-2").find(".validation-message").text("Please number of question").removeClass("hide");
+		return;
+	}
 	
 	if(marksObj[examMarks]){
 		showError("Question for "+examMarks+" marks are already added, Click ok to continue or cancel to cancel",examMarks,numberOfQuestions);
@@ -137,6 +156,11 @@ var addQuestionCriteria = function(){
 				$(this).parents("tr").remove();
 				delete marksObj[dataId];
 				tableObj = displayTable("#QuestionBankQuestionListCreateExamhModalTable",marksObj);
+				if(!$.isEmptyObject(marksObj)){
+					$("#QuestionBankQuestionListCreateExamhModalTable").removeClass("hide");
+				}else{
+					$("#QuestionBankQuestionListCreateExamhModalTable").addClass("hide");
+				}
 	});
 }
 
@@ -159,6 +183,12 @@ function showError(message,examMarks,numberOfQuestions){
 				$(this).parents("tr").remove();
 				delete marksObj[dataId];
 				tableObj = displayTable("#QuestionBankQuestionListCreateExamhModalTable",marksObj);
+				
+				if(!$.isEmptyObject(marksObj)){
+					$("#QuestionBankQuestionListCreateExamhModalTable").removeClass("hide");
+				}else{
+					$("#QuestionBankQuestionListCreateExamhModalTable").addClass("hide");
+				}
 			});
 		});
 }
@@ -175,6 +205,11 @@ function displayTable(tableId,rowObj){
 			totalQuestion += parseInt(rowObj[key]);
 		}	
 		tableObj.append('<tr class="success"><td></td><td>Total</td><td>'+totalQuestion+'</td><td>'+totalMarks+'<input type="hidden" name="totalMarks" value='+totalMarks+'></td></tr>');
+		if(!$.isEmptyObject(marksObj)){
+			$("#QuestionBankQuestionListCreateExamhModalTable").removeClass("hide");
+		}else{
+			$("#QuestionBankQuestionListCreateExamhModalTable").addClass("hide");
+		}
 		return tableObj;
 }
 
@@ -208,42 +243,49 @@ function resetForm(){
 		<div id="QuestionBankQuestionListCreateExamhModalErrorBox">
 			
 		</div>
-		<form>
+		<form class="form-horizontal corex-form-container" id="autogenerateexamform">
+		<label class="control-label">
+				<h4>Add Question</h4>
+			</label>
+		<hr/>	
 		<div class="form-group">
-		<label for="QuestionBankQuestionListCreateExamhModalNoOfQuestion">Exam name</label>	<br/>
-		  <input type="text" id="QuestionBankQuestionListCreateExamhModalExamName" class="form-control">
-		</div>
-		<div class="form-group">
-		<label for="QuestionBankQuestionListCreateExamhModalNoOfQuestion">Passing marks</label>	<br/>
-		  <input type="number" id="QuestionBankQuestionListCreateExamhModalPassingMarks" class="form-control">
+		<label class="col-sm-2 control-label" for="QuestionBankQuestionListCreateExamhModalExamName">Exam name</label>
+			<div class="col-sm-4">
+				<div class="validation-message hide"></div>
+				<input type="text" id="QuestionBankQuestionListCreateExamhModalExamName" class="form-control" required>
+			</div>	
+		
+		<label class="col-sm-2 control-label" for="QuestionBankQuestionListCreateExamhModalPassingMarks">Passing marks</label>
+			<div class="col-sm-4">
+			<div class="validation-message hide"></div>
+				<input type="number" id="QuestionBankQuestionListCreateExamhModalPassingMarks" class="form-control" required min="0">
+			</div>	
 		</div>
 		
-		<div class="row">
-			<div class="col-xs-4">
-			<div class="form-group">
-			<label for="QuestionBankQuestionListCreateExamhModalMarks">Marks</label>	<br/>
-			  <select class="btn btn-default" id="QuestionBankQuestionListCreateExamhModalMarks">
-				<option>Select</option>
-				<c:forEach items="${marks}" var="item">
-					<option value="<c:out value="${item}"></c:out>"><c:out value="${item}"></c:out></option>
-				</c:forEach>
-			  </select>
-			</div>
-			</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="QuestionBankQuestionListCreateExamhModalMarks">Marks</label>
+				<div class="col-sm-2">
+				<div class="validation-message hide"></div>
+				  <select class="btn btn-default" id="QuestionBankQuestionListCreateExamhModalMarks">
+					<option>Select</option>
+					<c:forEach items="${marks}" var="item">
+						<option value="<c:out value="${item}"></c:out>"><c:out value="${item}"></c:out></option>
+					</c:forEach>
+				  </select>
+				</div> 
 			
-			<div class="col-xs-4">
-			<div class="form-group">
-			<label for="QuestionBankQuestionListCreateExamhModalNoOfQuestion">Number of question</label>	<br/>
-			  <input type="number" id="QuestionBankQuestionListCreateExamhModalNoOfQuestion" class="form-control">
-			</div>
-			</div>
 			
-			<div class="col-xs-4">
-			<div class="form-group">
-			<label for="QuestionBankQuestionListCreateExamhModalChooseMarksAdd">&nbsp;</label>	<br/>
-			  <input type="button" class="btn btn-default" value="Add" id="QuestionBankQuestionListCreateExamhModalChooseMarksAdd"/>
-			</div>
-			</div>  
+			<label class="col-sm-2 control-label" for="QuestionBankQuestionListCreateExamhModalNoOfQuestion">Number of question</label>
+				<div class="col-sm-2">
+					<div class="validation-message hide"></div>	
+					<input type="number" id="QuestionBankQuestionListCreateExamhModalNoOfQuestion" class="form-control" novalidate>
+				</div>	
+			
+			<div class="col-sm-4">
+				<div class="validation-message hide"></div>
+					<input type="button" class="btn btn-default" value="Add" id="QuestionBankQuestionListCreateExamhModalChooseMarksAdd"/>
+			</div>	
+			
 		</div>
 		</form>
 		<form id="QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria" action="generateexamaction">
@@ -252,17 +294,17 @@ function resetForm(){
 			<input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
 			<input type="hidden" name="passingmarks"/>
 			<input type="hidden" name="examname">
-		<table id="QuestionBankQuestionListCreateExamhModalTable" class="table table-hover">
+		<table id="QuestionBankQuestionListCreateExamhModalTable" class="table table-hover hide">
 			
 			<thead>
-				<tr><th></th><th>Marks</th><th>Count</th></tr>
+				<tr><th>&nbsp;</th><th>Marks</th><th>Count</th><th>Total</th></tr>
 			</thead>
 			<tbody>
 			
 			</tbody>
 		</table>
 		</form>
-     <button type="button" class="btn btn-primary" id="QuestionBankQuestionListCreateExamhModalOk">Ok</button>
+     <input type="button" class="btn btn-primary" id="QuestionBankQuestionListCreateExamhModalOk" value="Ok">
 	</div>
 	
 </body>

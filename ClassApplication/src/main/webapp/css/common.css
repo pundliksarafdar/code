@@ -64,7 +64,7 @@ div[class^="col-"]{
 /*Corex loading bar */
 .corex-loader,
 .corex-loader:before,
-.corex-loader:after {
+.corex-loader:after {	
   background: #ACEFED;
   -webkit-animation: load1 1s infinite ease-in-out;
   animation: load1 1s infinite ease-in-out;
@@ -149,11 +149,11 @@ div[class^="col-"]{
 
 .corex-form-container{
 	margin:5px;
-	padding-right:5px;
+	padding:5px;
 	background-color: #fff;
     border-width: 1px;
     border-color: #ddd;
-    border-radius: 4px 4px 0 0;
+    border-radius: 4px 4px 4px 4px;
     box-shadow: none;
 }
 

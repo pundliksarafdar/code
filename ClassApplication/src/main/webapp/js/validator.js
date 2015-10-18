@@ -43,7 +43,7 @@ $.fn.validate = function(globalOption){
 			msgStr = validationMessage;
 		}
 		if($(elm).val().trim().length == 0){
-			$(elm).parents('.form-group').find('.validation-message').removeClass('hide').html(msgStr);
+			$(elm).prev('.validation-message').removeClass('hide').html(msgStr);
 			return false;
 		}
 		return true;
@@ -60,7 +60,7 @@ $.fn.validate = function(globalOption){
 		var elmVal = isNaN(parseInt($(elm).val()))?0:parseInt($(elm).val());
 		var attrVal = isNaN(parseInt(value))?0:parseInt(value);
 		if(elmVal < attrVal){
-			$(elm).parents('.form-group').find('.validation-message').removeClass('hide').html(msgStr);			
+			$(elm).prev('.validation-message').removeClass('hide').html(msgStr);			
 			return false;
 		}
 		return true;
@@ -76,7 +76,7 @@ $.fn.validate = function(globalOption){
 		var elmVal = isNaN(parseInt($(elm).val()))?0:parseInt($(elm).val());
 		var attrVal = isNaN(parseInt(value))?0:parseInt(value);
 		if(elmVal > attrVal){
-			$(elm).parents('.form-group').find('.validation-message').removeClass('hide').html(msgStr);			
+			$(elm).prev('.validation-message').removeClass('hide').html(msgStr);			
 			return false;
 		}
 		return true;
@@ -93,7 +93,7 @@ $.fn.validate = function(globalOption){
 				msgStr = validationMessage.replace("{[val]}",value);
 			}
 			
-			$(elm).find('.validation-message').removeClass('hide').html(msgStr);			
+			$(elm).prev('hide').html(msgStr);			
 			return false;
 		}
 		return true;
@@ -118,7 +118,7 @@ $.fn.validate = function(globalOption){
 	$.each(option.validationTags,function(index,tags){
 		var childNode = $form.find(tags).not('[novalidate]');
 		childNode.on("click",function(){
-			$(this).parents('.form-group').find('.validation-message').addClass('hide').html("");	
+			$(this).prev('.validation-message').addClass('hide').html("");	
 			$(this).find('.validation-message').addClass('hide').html("");	
 		});
 		

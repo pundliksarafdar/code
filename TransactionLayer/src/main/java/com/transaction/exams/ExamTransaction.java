@@ -213,6 +213,23 @@ public class ExamTransaction {
 		return db.isExamExists(inst_id, examname,examID);
 	}
 	
+	public boolean isQuestionsAvailable(int sub_id,int inst_id,int div_id,int marks,int count,int maximumRepeatation){
+		QuestionSearchRequest searchRequest = new QuestionSearchRequest();
+		searchRequest.setMarks(marks);
+		searchRequest.setCount(count);
+		searchRequest.setMaximumRepeatation(maximumRepeatation);
+		List<QuestionSearchRequest> list = new ArrayList<QuestionSearchRequest>();
+		list.add(searchRequest);
+		boolean result = true;
+		List<QuestionSearchRequest> listQuestionSearchCount = getCriteriaQuestionCount(sub_id, inst_id, div_id, list);
+		for(QuestionSearchRequest questionSearchRequest:listQuestionSearchCount){
+			if(questionSearchRequest.getAvailiblityCount()<questionSearchRequest.getCount()){
+				result = false;
+			}
+		}
+		return result;
+	}
+	
 	public static void main(String[] args) {
 		/*
 		ExamData examData = new ExamData();
