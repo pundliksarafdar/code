@@ -2914,7 +2914,9 @@ public class ClassOwnerServlet extends HttpServlet{
 		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 		Integer regId=userBean.getRegId();;
 		int inst_id = regId;
-		examTransaction.isQuestionsAvailable(sub_id, inst_id, div_id, marks, count, maximumRepeatation);
+		boolean isQuestionAvailable = examTransaction.isQuestionsAvailable(sub_id, inst_id, div_id, marks, count, maximumRepeatation);
+		respObject.addProperty("available", isQuestionAvailable);
+		respObject.addProperty(STATUS, "success");
 	}
 		
 		printWriter.write(respObject.toString());

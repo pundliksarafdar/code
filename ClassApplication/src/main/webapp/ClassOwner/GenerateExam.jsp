@@ -134,6 +134,8 @@ var addQuestionCriteria = function(){
 	$(".alert").alert('close');
 	var examMarks = $(this).parents("form").find("#QuestionBankQuestionListCreateExamhModalMarks").val();
 	var numberOfQuestions = $(this).parents("form").find("#QuestionBankQuestionListCreateExamhModalNoOfQuestion").val();
+	var sub_id = $("[name='subject']").val();
+	var div_id = $("[name='division']").val();
 	
 	if(examMarks == "Select"){
 		$("#QuestionBankQuestionListCreateExamhModalMarks").parents(".col-sm-2").find(".validation-message").text("Please select marks").removeClass("hide");
@@ -144,24 +146,29 @@ var addQuestionCriteria = function(){
 		return;
 	}
 	
-	if(marksObj[examMarks]){
-		showError("Question for "+examMarks+" marks are already added, Click ok to continue or cancel to cancel",examMarks,numberOfQuestions);
+	var available = checkAvailibility(sub_id,div_id,examMarks,numberOfQuestions,-1);
+	if(available){
+		if(marksObj[examMarks]){
+			showError("Question for "+examMarks+" marks are already added, Click ok to continue or cancel to cancel",examMarks,numberOfQuestions);
+		}else{
+			marksObj[examMarks] = numberOfQuestions;
+			var tableObj = displayTable("#QuestionBankQuestionListCreateExamhModalTable",marksObj);
+			tableObj.find("tr").find(".remove").off("click").on("click",function(){
+						var dataId = $(this).attr("data-id").trim();
+						$(this).parents("tr").remove();
+						delete marksObj[dataId];
+						tableObj = displayTable("#QuestionBankQuestionListCreateExamhModalTable",marksObj);
+						if(!$.isEmptyObject(marksObj)){
+							$("#QuestionBankQuestionListCreateExamhModalTable").removeClass("hide");
+						}else{
+							$("#QuestionBankQuestionListCreateExamhModalTable").addClass("hide");
+						}
+			});
+		}
 	}else{
-		marksObj[examMarks] = numberOfQuestions;
-	}	
-	
-	var tableObj = displayTable("#QuestionBankQuestionListCreateExamhModalTable",marksObj);
-	tableObj.find("tr").find(".remove").off("click").on("click",function(){
-				var dataId = $(this).attr("data-id").trim();
-				$(this).parents("tr").remove();
-				delete marksObj[dataId];
-				tableObj = displayTable("#QuestionBankQuestionListCreateExamhModalTable",marksObj);
-				if(!$.isEmptyObject(marksObj)){
-					$("#QuestionBankQuestionListCreateExamhModalTable").removeClass("hide");
-				}else{
-					$("#QuestionBankQuestionListCreateExamhModalTable").addClass("hide");
-				}
-	});
+		var message = numberOfQuestions+" question of "+examMarks+" marks are not available";
+		modal.launchAlert("Error",message);
+	}
 }
 
 function showError(message,examMarks,numberOfQuestions){
@@ -223,6 +230,34 @@ function resetForm(){
 	$("#QuestionBankQuestionListCreateExamhModal").find("form")[0].reset();
 	var tableObj = $("#QuestionBankQuestionListCreateExamhModalTable").find("tbody");	
 		tableObj.empty();
+}
+
+function checkAvailibility(sub_id,div_id,marks,count,maximumRepeatation){
+	var isAvailable = true;
+	$.ajax({
+        url: 'classOwnerServlet',
+        type: 'post',
+		async:false,
+        data: {
+	    	 methodToCall: "validateQuestionAvailibility",
+	    	 sub_id:sub_id,
+			 div_id:div_id,
+			 marks:marks,
+			 count:count,
+			 maximumRepeatation:maximumRepeatation
+        },
+        success: function(e){
+			var responseJSON = JSON.parse(e);
+			if(responseJSON.available){
+				isAvailable = true;
+			}else{
+				isAvailable = false;
+			}
+        }, error: function(){
+            alert('ajax failed');
+        }
+	});
+	return isAvailable;
 }
 </script>
 </head>

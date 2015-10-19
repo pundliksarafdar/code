@@ -325,16 +325,21 @@
 			<param name="ignoresession">true</param>
 		</action>
 		
-		<action name="generateexamaction" class="com.corex.exam.GenerateExamAction" method="execute">
-			<result name="success" type="tiles">classowner.generateexamsuccess</result>
-			<param name="ignoresession">true</param>
-		</action>
-		
 		<action name="generateexampreaction" class="com.corex.exam.GenerateExamPreAction" method="execute">
 			<result name="success" type="tiles">classowner.generateexampre</result>
 			<param name="ignoresession">true</param>
 		</action>
-
+		
+		<action name="generateexamaction" class="com.corex.exam.GenerateExamAction" method="execute">
+			<result name="success" type="tiles">classowner.generateexamreview</result>
+			<param name="ignoresession">true</param>
+		</action>
+		
+		<action name="generateexamsaveaction" class="com.corex.exam.GenerateExamSaveAction" method="execute">
+			<result name="success" type="tiles">classowner.generateexamsuccess</result>
+			<param name="ignoresession">true</param>
+		</action>
+		
 		<action name="editquestion" class="com.classowner.UploadExamsAction"
 			method="execute">
 			<result name="success" type="tiles">classowner.uploadexams</result>

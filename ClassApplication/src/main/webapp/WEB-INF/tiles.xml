@@ -418,8 +418,13 @@
       <put-attribute name="body"   value="/ClassOwner/ExamCriteria.jsp"/>      
    </definition>
 
-	<definition name="classowner.generateexamsuccess" extends="baseLayout">
+	<definition name="classowner.generateexamreview" extends="baseLayout">
       <put-attribute name="title"  value="Criteria"/>
+      <put-attribute name="body"   value="/ClassOwner/generateexamreview.jsp"/>      
+   </definition>
+   
+	<definition name="classowner.generateexamsuccess" extends="baseLayout">
+      <put-attribute name="title"  value="Success"/>
       <put-attribute name="body"   value="/ClassOwner/generateexamsuccess.jsp"/>      
    </definition>
 		
