@@ -83,7 +83,20 @@
             com.schedule.listner.QuartzSchedulerListener
           </listener-class>
 	</listener>
-	
+	<!-- 
+	 <servlet> 
+     <servlet-name>log4j-init</servlet-name>
+     <servlet-class>com.admin.misc.Log4jInit</servlet-class> 
+     <init-param>
+       <param-name>log4j-init-file</param-name>
+       <param-value>WEB-INF/classes/log4j.properties</param-value>
+     </init-param>
+     <load-on-startup>1</load-on-startup>
+</servlet>
+ -->
+     <!-- <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener> -->
    <!-- 
 	<security-constraint>
     <web-resource-collection>

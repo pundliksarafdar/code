@@ -99,6 +99,7 @@ $(document).ready(function(){
 	var allnotesnames="";
 	var allnotesrowid="";
 	var i=0;
+	var filesize=0;
 	for(i=0;i<=globalnotesrowcounter;i++){
 		var internalflag=false;
 		for(var j=0;j<deletedrows.length;j++){
@@ -130,9 +131,10 @@ $(document).ready(function(){
 			noteserror.html("Please select file");
 			flag=false;
 		}else{
-			var filesize=document.getElementById("myfile"+i).files[0].size/1024/1024;
+			var filesizetemp=document.getElementById("myfile"+i).files[0].size/1024/1024;
+			filesize=filesize+filesizetemp;
 			if(filesize > 5){
-				noteserror.html("File size should be less than 5 MB");
+				/* noteserror.html("File size should be less than 5 MB"); */
 				flag=false;
 			}
 		}
@@ -153,7 +155,8 @@ $(document).ready(function(){
 				   data: {
 				    	 methodToCall: "validatenotesname",
 				    	 notes: allnotesnames,
-				    	 notesrowid:allnotesrowid
+				    	 notesrowid:allnotesrowid,
+				    	 filesize:filesize
 				   		},
 				   		async: false,
 				   type:"POST",
@@ -163,11 +166,17 @@ $(document).ready(function(){
 					   var overlappedIds=resultJson.overlappedIds.split("/");
 					   var notesnamestatus=resultJson.notesnamestatus.split(",");
 					   if(overlappedIds[0]==""){
+						   var allocmemory=resultJson.allocmemory;
+						   if(allocmemory==""){
 						   if(notesnamestatus[0]!=""){
 					  for(var s=0;s<notesnamestatus.length;s++){
 						  $("#noteserror"+notesnamestatus[s]).html("Notes name already exists,Please enter different names");
 					  }
 					  flag=false;
+						   }
+						   }else{
+							   flag=false;
+							   $("#memorylimitalert").modal("toggle");
 						   }
 					   }else{
 						   for(var k=0;k<overlappedIds.length;k++){
@@ -189,6 +198,9 @@ $(document).ready(function(){
 		}
 		
 		if(flag==false){
+			if(filesize>5){
+			$("#noteslimitalert").modal("toggle");
+			}
 			event.preventDefault();
 		}
 			
@@ -305,6 +317,42 @@ if(notes!=null){
   		</div>
   </div>
   </div>
-</form>		
+</form>
+<div class="modal fade" id="noteslimitalert" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" 
+               aria-hidden="true">×
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               Notes
+            </h4>
+         </div>
+         <div class="modal-body">
+           You Cannot add more than 5 MB at a time.
+         </div>
+         </div>
+   </div>
+</div>	
+<div class="modal fade" id="memorylimitalert" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" 
+               aria-hidden="true">×
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               Notes
+            </h4>
+         </div>
+         <div class="modal-body">
+           You dont have enough space to add notes.
+         </div>
+         </div>
+   </div>
+</div>		
 </body>
 </html>

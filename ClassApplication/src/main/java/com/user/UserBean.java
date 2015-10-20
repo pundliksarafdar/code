@@ -26,6 +26,7 @@ public class UserBean{
 	private String status;
 	private String email;
 	private String className;
+	private String inst_status;
 	private UserStatic userStatic;
 	
 	public String getEmail() {
@@ -170,6 +171,12 @@ public class UserBean{
 	}
 	public void setUserStatic(UserStatic userStatic) {
 		this.userStatic = userStatic;
+	}
+	public String getInst_status() {
+		return inst_status;
+	}
+	public void setInst_status(String inst_status) {
+		this.inst_status = inst_status;
 	}
 	
 	

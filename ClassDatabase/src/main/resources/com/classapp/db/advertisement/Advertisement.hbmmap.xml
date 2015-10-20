@@ -7,7 +7,6 @@
 		
 	  <id name="booking_id" type="java.lang.String">
             <column name="booking_id" />
-            <generator class="identity" />
         </id>
         <property name="first_name" type="java.lang.String">
             <column name="first_name" length="100" not-null="true" unique="true"/>

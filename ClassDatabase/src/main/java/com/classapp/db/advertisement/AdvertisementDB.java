@@ -22,7 +22,7 @@ public class AdvertisementDB {
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			session.saveOrUpdate(advertisement);
+			session.save(advertisement);
 			transaction.commit();
 		}catch(Exception e){
 		

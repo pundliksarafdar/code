@@ -285,6 +285,7 @@ function RenderTimer(completedTime,totalTime){
 	            <li><a class="menuoptions" href="login">Admin</a></li>
 	            <li><a class="menuoptions" href="getallpaths">URL Access</a></li>
 	            <li><a class="menuoptions" href="uploadadd">Upload Advertise</a></li>
+	            <li><a class="menuoptions" href="instituteupgrade">Institute Upgrade</a></li>
 	            <li><a class="menuoptions" href="javascript:void(0)" data-toggle="modal" data-target="#ajax-modal">Class List</a></li>
           	</ul>
       </li>

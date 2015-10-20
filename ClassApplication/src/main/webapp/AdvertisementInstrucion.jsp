@@ -55,6 +55,12 @@
 		  minDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()),
 		  format: 'DD/MM/YYYY'
 	  }).data("DateTimePicker");
+	 
+	 $( "#bookdatetimepicker" ).datetimepicker({
+		  pickTime: false,
+		  minDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear()),
+		  format: 'DD/MM/YYYY'
+	  }).data("DateTimePicker");
 	$("#header").load("home_head.html");
 	$("#previewModalBodyFrame").load("Preview.jsp");
 	$('.carousel').carousel({interval: 7000});
@@ -87,6 +93,7 @@
 			   type:"POST",
 			   success:function(data){
 				   var resultJson = JSON.parse(data);
+				   $("#availability").html("no");
 				   				   		},
 			   	error:function(){
 			   		modal.launchAlert("Error","Error");
@@ -144,9 +151,24 @@
 						class="glyphicon glyphicon-calendar glyphicon-time"></i>
 					</span>
 				</div>
+				<span id="availability" style="color: red"></span>
 				<button class="btn btn-success" id="availabilityButton">Check Availability</button>
 	</div>
 </li>
+<li>If bookings are available fill below form.After booking you will get one booking ID.Within next 30 minutes you will have to pay 1000rs and send us email and mention your booking ID. For identification while paying in remark box mention your booking ID.For mor detail Contact 9766120685</li>
+           	
+           	<div style="border: 1;border-radius:5px">
+           		<input type="text" id="firstname" name="firstname" placeholder="First Name">
+           		<input type="text" id="lastname" name="lastname" placeholder="Last Name">
+           		<input type="text" id="email" name="email" placeholder="Email">
+           		<div id="bookdatetimepicker" class="input-group" style="width :190px;">
+					<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
+						type="text" id="bookadvdate" placeholder="Booking Date" readonly/> <span class="input-group-addon add-on"> <i
+						class="glyphicon glyphicon-calendar glyphicon-time"></i>
+					</span>
+				</div>
+				<button class="btn btn-success">Book</button>
+           	</div>
            		</ul>
        		<!-- 	</section> -->
        </div>	

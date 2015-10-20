@@ -439,5 +439,9 @@
 			<result name="success" type="tiles">teacher.teacherweeklytimetable</result>
 			<result name="error" type="tiles">register</result>
 		</action>
+		<action name="instituteupgrade" class="com.admin.actions.InstituteUpgradeAction"
+			method="execute">
+			<result name="success" type="tiles">admin.instituteupgrade</result>
+		</action>
 	</package>
 </struts>

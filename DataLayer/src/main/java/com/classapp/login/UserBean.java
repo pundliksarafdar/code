@@ -24,6 +24,7 @@ public class UserBean{
 	private Integer regId;
 	private HashMap<String, List> studentData;
 	private String className;
+	private String inst_status;
 	
 	public String getDob() {
 		return dob;
@@ -149,6 +150,12 @@ public class UserBean{
 	}
 	public void setClassName(String className) {
 		this.className = className;
+	}
+	public String getInst_status() {
+		return inst_status;
+	}
+	public void setInst_status(String inst_status) {
+		this.inst_status = inst_status;
 	}
 	
 }

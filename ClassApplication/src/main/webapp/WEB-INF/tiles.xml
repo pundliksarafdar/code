@@ -488,4 +488,8 @@
       <put-attribute name="topnav" value="/teacher/menu.jsp" />
       <put-attribute name="body"   value="/teacher/TeacherWeeklyTimeTable.jsp"/>      
    </definition>
+   <definition name="admin.instituteupgrade" extends="baseLayout">
+      <put-attribute name="title"  value="Institute Upgrade"/>
+      <put-attribute name="body"   value="/admin/InstituteUpgrade.jsp"/>      
+   </definition>
 </tiles-definitions>

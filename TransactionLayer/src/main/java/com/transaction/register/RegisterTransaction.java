@@ -148,4 +148,16 @@ public class RegisterTransaction {
 		RegisterDB registerDB=new RegisterDB();
 		return registerDB.getRegistereduser(regID);
 	}
-}
+	
+	public RegisterBean getInstitute(String loginName){
+		RegisterDB registerDB=new RegisterDB();
+		return registerDB.getInstitute(loginName);
+	}
+	
+	public boolean updateInstituteStatus(int regId,String inst_status) {
+		RegisterDB registerDB=new RegisterDB();
+		return registerDB.updateInstituteStatus(regId, inst_status);
+	}
+	}
+	
+

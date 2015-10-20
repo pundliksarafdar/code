@@ -90,6 +90,7 @@ public class LoginUser extends BaseAction{
 			userBean.setStatus(gson.fromJson(userBeanJson, UserBean.class).getStatus());
 			userBean.setEmail(gson.fromJson(userBeanJson, UserBean.class).getEmail());
 			userBean.setClassName(gson.fromJson(userBeanJson, UserBean.class).getClassName());
+			userBean.setInst_status(gson.fromJson(userBeanJson, UserBean.class).getInst_status());
 			userBean.setLoginBean(loginBean);
 
 			

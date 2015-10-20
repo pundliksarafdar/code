@@ -37,6 +37,7 @@ import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.BatchDetails;
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.exam.Exam;
+import com.classapp.db.institutestats.InstituteStats;
 import com.classapp.db.notificationpkg.Notification;
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.register.RegisterBean;
@@ -62,6 +63,7 @@ import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.feedback.feedbackTransaction;
+import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.notes.NotesTransaction;
 import com.transaction.notification.NotificationGlobalTransation;
 import com.transaction.notification.NotificationTransaction;
@@ -307,8 +309,13 @@ public class ClassOwnerServlet extends HttpServlet{
 			int divId= Integer.parseInt(divisionId);
 			Student student = validateStudent(studentLoginName, batchIds,divId,
 					regId, printWriter);
+			InstituteStatTransaction statTransaction=new InstituteStatTransaction();
+			InstituteStats instituteStats=statTransaction.getStats(regId);
+			if(instituteStats.getAvail_ids()>0){
 			if (student != null) {
-				if (studentTransaction.addUpdateDb(student)) {
+				
+				if (studentTransaction.addUpdateDb(student)) {	
+					statTransaction.increaseUsedStudentIds(regId);
 					respObject.addProperty(STATUS, "success");
 					respObject.addProperty(MESSAGE,
 							"Successfully addded student.");
@@ -323,6 +330,10 @@ public class ClassOwnerServlet extends HttpServlet{
 				respObject.addProperty(MESSAGE,
 						"Unable to find student with login name : "
 								+ studentLoginName);
+			}
+			}else{
+				respObject.addProperty(STATUS, "error");
+				respObject.addProperty(MESSAGE, "You dont have IDs to add,Please increase your limit!");
 			}
 		}  else if (Constants.FETCH_BATCHES.equals(methodToCall)) {
 			Integer regId = null;
@@ -408,10 +419,11 @@ public class ClassOwnerServlet extends HttpServlet{
 			
 		}else if("deleteStudent".equals(methodToCall)){
 			Integer regId = null;
+			UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 			if(!req.getParameter("regId").equals("")){
 				regId = Integer.parseInt(req.getParameter("regId"));
 			}else{
-				UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+				
 				if(0 == userBean.getRole() || !"".equals(regId)){
 					if(null == regId){
 						regId = userBean.getRegId();
@@ -426,6 +438,16 @@ public class ClassOwnerServlet extends HttpServlet{
 				if(studentTransaction.deleteStudent(deletStudentId, regId)){
 					StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
 					marksTransaction.deleteStudentMarksrelatedtostudentID(regId, deletStudentId);
+					InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
+					instituteStatTransaction.increaseUsedStudentIds(regId);
+					if("disabled".equals(userBean.getInst_status())){
+						RegisterTransaction registerTransaction=new RegisterTransaction();
+						InstituteStats instituteStats=instituteStatTransaction.getStats(regId);
+						if( (instituteStats.getAlloc_ids()>=instituteStats.getUsed_ids()) && (instituteStats.getAlloc_memory()>=instituteStats.getUsed_memory()))
+						{
+							registerTransaction.updateInstituteStatus(regId, "enabled");
+						}
+					}
 					respObject.addProperty(STATUS, "success");
 					respObject.addProperty(MESSAGE, "Student Successfully deleted .");
 				}else{
@@ -1917,6 +1939,8 @@ public class ClassOwnerServlet extends HttpServlet{
 }else if("validatenotesname".equals(methodToCall)){
 	String[] notes=req.getParameter("notes").split(",");
 	String[] notesrowid=req.getParameter("notesrowid").split(",");
+	String filesize=req.getParameter("filesize");
+	InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
 	String overlappedIds="";
 	for (int i = 0; i < notesrowid.length; i++) {
 		for (int j = i+1; j < notesrowid.length; j++) {
@@ -1939,8 +1963,10 @@ public class ClassOwnerServlet extends HttpServlet{
 	if(classes!="" && classes !=null){
 		classid=Integer.parseInt(classes);
 	}
-	
-	for (int i = 0; i < notes.length; i++) {
+	InstituteStats instituteStats=instituteStatTransaction.getStats(classid);
+	if(instituteStats.getAvail_memory()>0 && (instituteStats.getUsed_memory()+Double.parseDouble(filesize))<=instituteStats.getAlloc_memory())
+	{
+		for (int i = 0; i < notes.length; i++) {
 		
 	
 	boolean flag=notesTransaction.validatenotesname(notes[i].trim(), classid);
@@ -1953,7 +1979,10 @@ public class ClassOwnerServlet extends HttpServlet{
 		}
 	}
 	}
-	
+		respObject.addProperty("allocmemory", "");
+	}else{
+		respObject.addProperty("allocmemory", "exceeded");
+	}
 	}
 	respObject.addProperty("notesnamestatus", notesnamestatus);
 		respObject.addProperty("overlappedIds", overlappedIds);
@@ -2903,6 +2932,80 @@ public class ClassOwnerServlet extends HttpServlet{
 		//UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 		//Integer regId=userBean.getRegId();;
 		String advdate = req.getParameter("advdate");
+		AdvertiseTransaction advertiseTransaction=new AdvertiseTransaction();
+		String bookingID=ClassOwnerServlet.getBookigID();
+		/*Advertisement advertisement=new Advertisement();
+		advertisement.setBooking_id("123");
+		advertisement.setFirst_name("suraj");
+		advertisement.setLast_name("Ankush");
+		advertisement.setEmail("sankush@gmail.com");
+		advertisement.setAdvdate(new Date(new java.util.Date().getTime()));
+		advertisement.setImage(new byte[(int) new File("C:/codebase/git/code/ClassApplication/src/main/webapp/images/2.png").length()]);
+		advertiseTransaction.save(advertisement);*/
+		String datearr[]=advdate.split("/");
+		int count=advertiseTransaction.getCount(new Date(new Date(Integer.parseInt(datearr[2])-1900, Integer.parseInt(datearr[1])-1,Integer.parseInt(datearr[0])).getTime()));
+		if(count>10){
+			respObject.addProperty("availability", "no");
+		}else{
+			respObject.addProperty("availability", "yes");
+		}
+		respObject.addProperty(STATUS, "success");
+	}else if("getInstituteStats".equalsIgnoreCase(methodToCall)){
+		String instituteID = req.getParameter("instituteID");
+		RegisterTransaction registerTransaction=new RegisterTransaction();
+		RegisterBean bean=registerTransaction.getInstitute(instituteID);
+		if(bean!=null){
+		InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
+		InstituteStats instituteStats=instituteStatTransaction.getStats(bean.getRegId());
+		respObject.addProperty("classname",bean.getClassName());
+		respObject.addProperty("classowner",bean.getFname()+" "+bean.getLname());
+		respObject.addProperty("noofstudentIds",instituteStats.getAlloc_ids());
+		respObject.addProperty("noofstudentIdsused",instituteStats.getUsed_ids());
+		respObject.addProperty("memoryspace",instituteStats.getAlloc_memory());
+		respObject.addProperty("memoryspaceused",instituteStats.getUsed_memory());
+		if(bean.getInst_status()!=null){
+		respObject.addProperty("inststatus",bean.getInst_status());
+		}else{
+			respObject.addProperty("inststatus","Enabled");
+		}
+		respObject.addProperty("found","");
+		}else{
+			respObject.addProperty("found","notfound");	
+		}
+		respObject.addProperty(STATUS, "success");
+	}else if("addmemory".equalsIgnoreCase(methodToCall)){
+		String instituteID = req.getParameter("instituteID");
+		String memoryspace = req.getParameter("memoryspace");
+		RegisterTransaction registerTransaction=new RegisterTransaction();
+		RegisterBean bean=registerTransaction.getInstitute(instituteID);
+		if(bean!=null){
+			InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
+			instituteStatTransaction.updateMemoryLimit(bean.getRegId(),Double.parseDouble(memoryspace));
+			if("disabled".equals(bean.getInst_status())){
+				InstituteStats instituteStats=instituteStatTransaction.getStats(bean.getRegId());
+				if( (instituteStats.getAlloc_ids()>=instituteStats.getUsed_ids()) && (instituteStats.getAlloc_memory()>=instituteStats.getUsed_memory()))
+				{
+					registerTransaction.updateInstituteStatus(bean.getRegId(), "enabled");
+				}
+			}
+		}	
+		respObject.addProperty(STATUS, "success");
+	}else if("addids".equalsIgnoreCase(methodToCall)){
+		String instituteID = req.getParameter("instituteID");
+		String noofids = req.getParameter("noofids");
+		RegisterTransaction registerTransaction=new RegisterTransaction();
+		RegisterBean bean=registerTransaction.getInstitute(instituteID);
+		if(bean!=null){
+			InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
+			instituteStatTransaction.updateStudentIdLimit(bean.getRegId(),Integer.parseInt(noofids));
+			if("disabled".equals(bean.getInst_status())){
+				InstituteStats instituteStats=instituteStatTransaction.getStats(bean.getRegId());
+				if( (instituteStats.getAlloc_ids()>=instituteStats.getUsed_ids()) && (instituteStats.getAlloc_memory()>=instituteStats.getUsed_memory()))
+				{
+					registerTransaction.updateInstituteStatus(bean.getRegId(), "enabled");
+				}
+			}
+		}	
 		respObject.addProperty(STATUS, "success");
 	}else if("validateQuestionAvailibility".equalsIgnoreCase(methodToCall)){
 		ExamTransaction examTransaction = new ExamTransaction();
@@ -3069,6 +3172,9 @@ public class ClassOwnerServlet extends HttpServlet{
 		}
 		return flag;
 	}
-	
+
+	public static String getBookigID() {
+		return new java.util.Date().getTime()+"";
+	}
 	String overlappedtimeids="";
 }
