@@ -30,10 +30,10 @@
             <column name="LGPASS" length="20" not-null="true" unique="false" />
         </property>
         <property name="addr1" type="string">
-            <column name="ADDR1"  length="10" not-null="true" unique="false" />
+            <column name="ADDR1"  length="50" not-null="true" unique="false" />
         </property>
         <property name="addr2" type="string">
-            <column name="ADDR2"  length="20" not-null="false" unique="false"  />
+            <column name="ADDR2"  length="50" not-null="false" unique="false"  />
         </property>
         <property name="city" type="string">
             <column name="CITY"  length="20" not-null="true" unique="false"  />
@@ -42,7 +42,7 @@
             <column name="STATE"  length="20" not-null="true" unique="false" />
         </property>
         <property name="country" type="string">
-            <column name="COUNTRY" length="10" not-null="true" unique="false" />
+            <column name="COUNTRY" length="20" not-null="true" unique="false" />
         </property>
         <property name="phone1" type="string">
             <column name="PHONE1" length="10" not-null="true" unique="true" />
