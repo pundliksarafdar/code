@@ -11,7 +11,7 @@
 		<key-property name="exam_id" column="exam_id"></key-property>
     	</composite-id>
     	<property name="exam_name" type="java.lang.String">
-            <column name="exam_name" />
+            <column name="exam_name" length="50"/>
         </property>
         <property name="total_marks" type="int">
             <column name="total_marks" />
@@ -33,7 +33,7 @@
             <column name="modified_dt" />
         </property>
          <property name="que_ids" type="java.lang.String">
-            <column name="que_ids" />
+            <column name="que_ids" length="500"/>
         </property>
         <property name="start_time">
             <column name="start_time" />
@@ -43,16 +43,16 @@
         </property>
         
         <property name="exam_status" type="java.lang.String">
-            <column name="exam_status" />
+            <column name="exam_status" length="2"/>
         </property>
         <property name="batch_id" type="java.lang.String">
             <column name="batch_id" />
         </property>
         <property name="ans_ids" type="java.lang.String">
-            <column name="ans_ids" />
+            <column name="ans_ids" length="500"/>
         </property>
         <property name="exam_time" type="java.lang.String">
-            <column name="exam_time" />
+            <column name="exam_time" length="10"/>
         </property>
     </class>
 </hibernate-mapping>

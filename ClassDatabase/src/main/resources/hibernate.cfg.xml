@@ -53,7 +53,8 @@
  		<mapping resource="com/classapp/db/studentmarks/studentmarks.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/exam/compexam.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/subject/subject_topics.hbmmap.xml"></mapping>
- 		<mapping resource="com/classapp/db/advertisement/Advertisement.hbmmap.xml"></mapping> 
+ 		<mapping resource="com/classapp/db/advertisement/Advertisement.hbmmap.xml"></mapping>
+ 		<mapping resource="com/classapp/db/institutestats/InstituteStats.hbmmap.xml"></mapping> 
        <!--  <mapping resource="com/classapp/db/classwithsubjects/ClassWithSubjects.hbmmap.xml"></mapping> --> 
     </session-factory>
 </hibernate-configuration>
