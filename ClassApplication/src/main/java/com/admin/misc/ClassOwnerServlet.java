@@ -379,7 +379,7 @@ public class ClassOwnerServlet extends HttpServlet{
 					respObject.addProperty("batchNames", batchNames);
 				} else {
 					respObject.addProperty(STATUS, "error");
-					respObject.addProperty(MESSAGE, "No batches found!");
+					respObject.addProperty(MESSAGE, "No batches found");
 				}				
 			}
 			//printWriter.write(respObject.toString());
@@ -2540,6 +2540,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		ExamTransaction examTransaction=new ExamTransaction();
 		List<Exam> list=examTransaction.isQuestionAvailableInExam(inst_id, Integer.parseInt(subjectid), Integer.parseInt(divisionId), questionNumber);
 		if(list!=null){
+			if(list.size()>0){
 			String examname="";
 			for (int i = 0; i < list.size(); i++) {
 				if(i==0){
@@ -2550,6 +2551,9 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 			respObject.addProperty("examnames", examname);
 			respObject.addProperty("quesstatus", "Y");
+			}else{
+				respObject.addProperty("quesstatus", "");
+			}
 		}else{
 			respObject.addProperty("quesstatus", "");
 		}

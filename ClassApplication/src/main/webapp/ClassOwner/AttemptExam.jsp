@@ -8,10 +8,10 @@
 <title>Insert title here</title>
 <script>
 
-window.onbeforeunload = confirmExit;
+ window.onbeforeunload = confirmExit;
 function confirmExit() {
     return "You have attempted to leave this page. Are you sure?";
-}
+} 
 
 
 $(document).ready(function(){
@@ -114,7 +114,7 @@ $(".page").on("click",function(){
 			
 			answers=checkedanswers;
 		}else{
-			answers=answers+"/"+checkedanswers;
+			answers=answers+" /"+checkedanswers;
 		}
 		count++;
 	}
@@ -136,7 +136,7 @@ $(".start").on("click",function(){
 			
 			answers=checkedanswers;
 		}else{
-			answers=answers+"/"+checkedanswers;
+			answers=answers+" /"+checkedanswers;
 		}
 		count++;
 	}
@@ -158,7 +158,7 @@ $(".end").on("click",function(){
 			
 			answers=checkedanswers;
 		}else{
-			answers=answers+"/"+checkedanswers;
+			answers=answers+" /"+checkedanswers;
 		}
 		count++;
 	}
@@ -180,7 +180,7 @@ $(".examSubmit").on("click",function(){
 			
 			answers=checkedanswers;
 		}else{
-			answers=answers+"/"+checkedanswers;
+			answers=answers+" /"+checkedanswers;
 		}
 		count++;
 	}

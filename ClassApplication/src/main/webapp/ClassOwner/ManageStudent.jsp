@@ -771,7 +771,7 @@ function getSelectedStudentsToDelete(){
 			   			i++;
 					   }
 				   } else{
-					   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> '+resultJson.message+' <a href="managebatch">Click here</a> to add bacth');
+					   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> '+resultJson.message+' for selected class! <a href="managebatch">Click here</a> to add bacth');
 						$('div#addStudentModal .error').show();
 				}
 		   	},
@@ -827,7 +827,7 @@ function getSelectedStudentsToDelete(){
 				<button type="button" class="btn btn-primary btn-getBatchesForStudent" id="getBatchesForStudent" onclick="getBatchesOfDivision()">Get available batches</button>
 				</s:when>
 				<s:otherwise>
-					<div style="color: red;">No Divisions <a href="addsubject">Click Here</a> to add division</div>	
+					<div style="color: red;">No Class added,<a href="manageclass">Click Here</a> to add class</div>	
 				</s:otherwise>
 				</s:choose>
 				<br>

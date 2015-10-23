@@ -217,23 +217,23 @@ $("#createexam").on("click",function(){
 			flag=true;
 
 		}
-		if($("form#examsubmitform #examMinute").val().trim()=="" || $("form#examsubmitform #examHour").val().trim()==""){
+		if($("form#saveExamForm #examMinute").val().trim()=="" || $("form#saveExamForm #examHour").val().trim()==""){
 			$("#examTimeError").html("Please Enter Valid Time!!");
 			$("#examTimeError").show();
 			flag=true;
-		}else if(!$("form#examsubmitform #examHour").val().match(numberExpr)){
+		}else if(!$("form#saveExamForm #examHour").val().match(numberExpr)){
 			$("#examTimeError").html("Only numbers allowded!!");
 			$("#examTimeError").show();
 			flag=true;
-		}else if(!$("form#examsubmitform #examMinute").val().match(numberExpr)){
+		}else if(!$("form#saveExamForm #examMinute").val().match(numberExpr)){
 			$("#examTimeError").html("Only numbers allowded!!");
 			$("#examTimeError").show();
 			flag=true;
-		}else if(parseInt($("form#examsubmitform #examHour").val())>24 || parseInt($("form#examsubmitform #examHour").val())<0){
+		}else if(parseInt($("form#saveExamForm #examHour").val())>24 || parseInt($("form#saveExamForm #examHour").val())<0){
 			$("#examTimeError").html("Exam hour should be in between 1 and 24!!");
 			$("#examTimeError").show();
 			flag=true;
-		}else if(parseInt($("form#examsubmitform #examMinute").val())>60 || parseInt($("form#examsubmitform #examMinute").val())<0){
+		}else if(parseInt($("form#saveExamForm #examMinute").val())>60 || parseInt($("form#saveExamForm #examMinute").val())<0){
 			$("#examTimeError").html("Exam Minute should be in between 1 and 60!!");
 			$("#examTimeError").show();
 			flag=true;
@@ -241,6 +241,7 @@ $("#createexam").on("click",function(){
 		var examname=$("form#saveExamForm #newexamname").val().trim();
 		var institute=$("form#saveExamForm #institute").val();
 		var examID=$("form#saveExamForm #examID").val();
+	if(flag==false){	
 		$.ajax({
 			
 			url: "classOwnerServlet",
@@ -260,15 +261,18 @@ $("#createexam").on("click",function(){
 					$("#examnameerror").show();
 					flag=true;
 			   }
+			   
 		   },
 		   error:function(){
 			   }
 		   });
+	}
 		if(flag==true){
 			e.preventDefault();
 		}else{
 			$("form#saveExamForm #examname").val($("form#saveExamForm #newexamname").val());
 		}
+		
 	});
 	
 	/* $("#submitExam").click("click",function(){
@@ -308,7 +312,7 @@ var selectMarks = function(){
 			  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#QuestionBankQuestionListQuestionSearchModal">Advance Search</button>
 			   </c:if>
 			   <c:if test="${(actionname ne 'createexam')}">
-			  <button type="button" class="btn btn-default" id="createexam">Create Exam</button>
+			  <button type="button" class="btn btn-default" id="createexam">Save Exam</button>
 			  </c:if>
 			  <c:if test="${(actionname ne 'showaddedquestions') && (actionname ne 'editexam')}">
 			  <button type="button" class="btn btn-default" id="showaddedquestion">Show All Added Questions</button>
@@ -508,7 +512,7 @@ var selectMarks = function(){
   <div class="form-group">
     <label for="newexamname"  class="control-label col-sm-2">Enter Exam Name:</label>
      <div class="col-sm-5">
-    <input type="text" class="form-control" id="newexamname" name="newexamname" value=<c:out value="${examname}"></c:out>>
+    <input type="text" class="form-control" id="newexamname" name="newexamname" value="<c:out value="${examname}"></c:out>">
   	</div>
   	 <span class="col-sm-5" id="examnameerror" style="display:none;color: red"></span>
   </div>
