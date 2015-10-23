@@ -1,5 +1,7 @@
 package com.user;
 
+import java.util.Date;
+
 import com.classapp.login.UserStatic;
 import com.signon.LoginBean;
 
@@ -27,6 +29,7 @@ public class UserBean{
 	private String email;
 	private String className;
 	private String inst_status;
+	private Date lastlogin;
 	private UserStatic userStatic;
 	
 	public String getEmail() {
@@ -177,6 +180,12 @@ public class UserBean{
 	}
 	public void setInst_status(String inst_status) {
 		this.inst_status = inst_status;
+	}
+	public Date getLastlogin() {
+		return lastlogin;
+	}
+	public void setLastlogin(Date lastlogin) {
+		this.lastlogin = lastlogin;
 	}
 	
 	

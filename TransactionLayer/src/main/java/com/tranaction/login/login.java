@@ -57,6 +57,8 @@ public class login {
 					.getClassName());
 			userBean.setInst_status(gson.fromJson(userBeanJson, UserBean.class)
 					.getInst_status());
+			userBean.setLastlogin(gson.fromJson(userBeanJson, UserBean.class)
+					.getLastlogin());
 			userBean.setLoginBean(loginBean);
 
 			loginCheck.updateIdForUser(userBean.getRegId(),loginBean.getUserid(),loginBean.getDeviceId());

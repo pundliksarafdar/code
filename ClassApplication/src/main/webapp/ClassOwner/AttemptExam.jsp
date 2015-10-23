@@ -12,13 +12,43 @@
 function confirmExit() {
     return "You have attempted to leave this page. Are you sure?";
 } 
-
+/*
+function showTimeLeft(timeLeft){
+	var hoursLeft = timeLeft/3600;
+	var minLeft = timeLeft/60;
+	var secondsLeft = timeLeft%3600;
+	$("#timeLeft").text(hoursLeft+":"+minLeft+":"+secondsLeft);
+}
+*/
+function showTimeLeft(millis){
+	millis = millis*-1;
+	console.log(millis);
+    var hours = (millis/3600).toFixed(0);
+        millis = millis%3600;
+        
+		minits = (millis/60).toFixed(0);
+		millis = millis%60;
+		
+		seconds = (millis).toFixed(0);
+        $('#timeLeft').html(hours+':'+minits+':'+seconds);  
+}
 
 $(document).ready(function(){
 	var examID;
 	var subject;
 	var division;
 	var that;
+	var startTime = <c:out value="${sessionScope.starttime }"></c:out>; 
+	var endTime = <c:out value="${sessionScope.endtime }"></c:out>;
+	setInterval(function(){
+		var timeLeft = (new Date().getTime()-new Date(endTime).getTime())/(1000);
+		showTimeLeft(timeLeft);
+		endTime = endTime-1;
+		if(timeLeft > 0){
+			$(".examSubmit").trigger('click');	
+		}
+	},1000);
+	
 	$('.hasDatepicker').datetimepicker({
 		inline: true,
         sideBySide: true
@@ -234,9 +264,12 @@ $(".examSubmit").on("click",function(){
 </c:if>
  <c:if test="${(questionDataList != null)}">
 	<div class="container">
+	
   <h2><font face="cursive">Exam</font> </h2>            
+  <div class="pull-right"><strong id="timeLeft"></strong></div>
   <table class="table table-striped">
     <thead>
+    
       <tr>
         <th>Sr No.</th>
         <th>Question</th>

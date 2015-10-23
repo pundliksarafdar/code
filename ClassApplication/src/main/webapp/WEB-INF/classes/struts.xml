@@ -20,6 +20,7 @@
 		</global-results>
 
 		<action name="login" class="com.signon.LoginUser" method="execute">
+		    
 			<result name="success" type="tiles">admin.loginsuccess</result>
 			<result name="success_classowner" type="tiles">classowner.loginsuccess
 			</result>
@@ -33,6 +34,7 @@
 			<result name="input" type="tiles">login</result>
 			<result name="activation" type="tiles">activation</result>
 			<result name="resetpassword" type="tiles">resetpassword</result>
+			<result name="invalid.token" type="tiles">accessblocked</result>
 			<param name="ignoresession">true</param>
 		</action>
 

@@ -2,6 +2,7 @@ package com.signon;
 
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,6 +19,9 @@ public class Logout extends BaseAction{
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
+		Cookie cookie = new Cookie("logincreation", "loggedin");
+		cookie.setMaxAge(0);
+		response.addCookie(cookie);
 		ActionContext.getContext().getSession().clear();
 		return SUCCESS;
 	}

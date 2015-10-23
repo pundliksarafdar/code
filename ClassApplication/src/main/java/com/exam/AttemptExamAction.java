@@ -5,11 +5,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
-import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,7 +21,6 @@ import com.classapp.db.subject.Subject;
 import com.classapp.login.UserStatic;
 import com.config.BaseAction;
 import com.config.Constants;
-import com.datalayer.exam.MCQData;
 import com.datalayer.exam.QuestionData;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.division.DivisionTransactions;
@@ -82,6 +82,8 @@ public class AttemptExamAction extends BaseAction {
 		ExamTransaction examTransaction=new ExamTransaction();
 		Exam exam =examTransaction.getExamToAttempt(inst_id, Integer.parseInt(subject), Integer.parseInt(division), examID);
 		if("examSubmit".equals(actionname)){
+			request.getSession().removeAttribute("starttime");
+			request.getSession().removeAttribute("endtime");
 			if(lastPage==0){
 				lastPage++;
 			}
@@ -172,6 +174,9 @@ public class AttemptExamAction extends BaseAction {
 			questionData = (QuestionData) readObject(file);
 		}
 		
+		if(null == request.getSession().getAttribute("starttime")){
+			setStartAndEndTime(request,exam.getExam_time());
+		}
 		int endCount = 0;
 		int index = 0;
 		int[] optionImageCount = questionData.getOptionImageCount();
@@ -224,6 +229,25 @@ public class AttemptExamAction extends BaseAction {
 		}
 		}
 		return SUCCESS;
+	}
+	
+	private void setStartAndEndTime(HttpServletRequest request,String examTime){
+		Date startTime = new Date();
+		StringTokenizer stringTokenizer = new StringTokenizer(examTime,":");
+		
+		while (stringTokenizer.hasMoreTokens()) {
+			String hour = stringTokenizer.nextToken();
+			String min = stringTokenizer.nextToken();
+			int hourInt = Integer.parseInt(hour);
+			int minInt = Integer.parseInt(min);
+			setExamTimeDuration((hourInt*60+minInt));
+	     }
+		
+		long endTimeInMilli = startTime.getTime()+examTimeDuration*60*1000;
+		Date endTime = new Date(endTimeInMilli);
+		request.getSession().setAttribute("starttime", startTime.getTime());
+		request.getSession().setAttribute("endtime", endTime.getTime());
+		
 	}
 	
 	private Object readObject(File file) {
@@ -386,6 +410,22 @@ public class AttemptExamAction extends BaseAction {
 
 	public void setSubjectname(String subjectname) {
 		this.subjectname = subjectname;
+	}
+
+	public String getDivisionName() {
+		return divisionName;
+	}
+
+	public void setDivisionName(String divisionName) {
+		this.divisionName = divisionName;
+	}
+
+	public int getExamTimeDuration() {
+		return examTimeDuration;
+	}
+
+	public void setExamTimeDuration(int examTimeDuration) {
+		this.examTimeDuration = examTimeDuration;
 	}
 	
 	

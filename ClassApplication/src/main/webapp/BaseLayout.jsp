@@ -95,8 +95,16 @@ $( document ).ajaxStop(function() {
 	  $("#loaderModal").modal("hide")
 });
 
-
+$(document).ready(function(){
+	var cookieValue = commonfunctions.getCookies("logincreation");
+	console.log(cookieValue);
+	
+	if(cookieValue == undefined){
+		location.href="login";	
+	}
+});
 </script>
+
 </head>
 <body>
 
@@ -127,7 +135,7 @@ $( document ).ajaxStop(function() {
 			%>
 			<script>
 			var timeout = <%=request.getSession().getMaxInactiveInterval()%>;
-				
+				x = document.cookie;
 				setMessage();
 				function setMessage(){
 					setTimeout(function(){

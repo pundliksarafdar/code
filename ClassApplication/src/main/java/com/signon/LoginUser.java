@@ -1,12 +1,16 @@
 package com.signon;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.io.File;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.classapp.db.login.LoginCheck;
@@ -22,6 +26,7 @@ import com.sun.org.apache.bcel.internal.generic.LUSHR;
 import com.tranaction.login.login;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
+import com.transaction.notification.Data;
 import com.transaction.notification.NotificationTransaction;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.schedule.ScheduleTransaction;
@@ -47,6 +52,16 @@ public class LoginUser extends BaseAction{
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		String forward = null;
 		if(null != loginBean){
+			Cookie cookie = new Cookie("logincreation", "loggedin");
+			response.addCookie(cookie);
+			userBean.setLoginBean(loginBean);
+		    forward = loadBean(userBean, loginBean,response,session);
+		}if(null == userBean.getRegId()){
+			addActionError("Invalid Username/Password");
+			forward = ERROR;
+		}else{
+			loginBean = userBean.getLoginBean();
+			if(null != loginBean){
 			userBean.setLoginBean(loginBean);
 		    forward = loadBean(userBean, loginBean,response,session);
 		}if(null == userBean.getRegId()){
@@ -58,9 +73,30 @@ public class LoginUser extends BaseAction{
 				userBean.setLoginBean(loginBean);
 			    forward = loadBean(userBean, loginBean,response,session);
 			    loadUserStaticData(userBean,session);
+			    Date formDate = new Date(loginBean.getLastLogin());
+			    long lastdateLong = userBean.getLastlogin().getTime();
+			    long formDateLong = formDate.getTime();
+			    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			    String dateFormatted = dateFormat.format(formDate);
+			    try {
+					formDateLong = dateFormat.parse(dateFormatted).getTime();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			    
+			    boolean isValid = formDateLong > lastdateLong;
+	    		if(isValid){
+				    LoginCheck loginCheck = new LoginCheck();
+		    		loginCheck.setLastLogin(userBean.getRegId(), formDate);
+			    }else{
+			    	forward = ERROR;
+			    }
+		    	
 			}else{
 				forward = ERROR;
 			}
+		}
 		}
 		return forward;
 	}
@@ -91,6 +127,7 @@ public class LoginUser extends BaseAction{
 			userBean.setEmail(gson.fromJson(userBeanJson, UserBean.class).getEmail());
 			userBean.setClassName(gson.fromJson(userBeanJson, UserBean.class).getClassName());
 			userBean.setInst_status(gson.fromJson(userBeanJson, UserBean.class).getInst_status());
+			userBean.setLastlogin(gson.fromJson(userBeanJson, UserBean.class).getLastlogin());
 			userBean.setLoginBean(loginBean);
 
 			
@@ -279,6 +316,7 @@ public class LoginUser extends BaseAction{
 		}
 		return isSuccessFull;
 	}
+	
 	
 	public long getFolderSize(File directory) {
 	    long length = 0;

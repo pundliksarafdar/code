@@ -2,6 +2,7 @@ package com.classapp.db.login;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -63,6 +64,7 @@ public class LoginCheck implements Serializable{
 			userBean.setEmail(registerBean.getEmail());
 			userBean.setClassName(registerBean.getClassName());
 			userBean.setInst_status(registerBean.getInst_status());
+			userBean.setLastlogin(registerBean.getLastlogin());
 			return gson.toJson(userBean);
 		}catch(Exception ex){
 			return null;
@@ -84,6 +86,24 @@ public class LoginCheck implements Serializable{
 		allUserId.setRegId(regId);
 		//Query query = session.createQuery("from AllUserId where regId = :regId");
 		session.saveOrUpdate(allUserId);
+		transaction.commit();
+		session.close();
+	}
+	
+	public void setLastLogin(Integer regId,Date lastLogin){
+		Session session = HibernateUtil.getSessionfactory().openSession();
+		Transaction transaction = session.beginTransaction();
+		Query query = session.createQuery("from RegisterBean where regId = :regId");
+		query.setParameter("regId", regId);
+		List list = query.list();
+		
+		Iterator iterator = list.iterator();
+		while (iterator.hasNext()) {
+			registerBean = (RegisterBean)iterator.next();
+			System.out.println(registerBean);
+		}
+		registerBean.setLastlogin(lastLogin);
+		session.saveOrUpdate(registerBean);
 		transaction.commit();
 		session.close();
 	}

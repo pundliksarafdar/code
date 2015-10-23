@@ -38,6 +38,7 @@ public class RegisterBean implements Serializable{
 	private String activationcode;
 	private String status;
 	private String inst_status;
+	private Date lastlogin;
 	
 	public String getStatus() {
 		return status;
@@ -184,6 +185,13 @@ public class RegisterBean implements Serializable{
 	}
 	public void setRenewedDates(String renewedDates) {
 		this.renewedDates = renewedDates;
+	}
+	
+	public Date getLastlogin() {
+		return lastlogin;
+	}
+	public void setLastlogin(Date lastlogin) {
+		this.lastlogin = lastlogin;
 	}
 	public String getDaysLeft() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");

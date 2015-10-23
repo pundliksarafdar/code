@@ -82,7 +82,8 @@ ul{
 								</div>
 							</s:if>
 							</s:if>
-								
+							<input type="hidden" name="loginBean.lastLogin" value="<%=new java.util.Date().getTime()%>"/>
+							<s:token></s:token>					
 							<div class="form-group">
 								<label for="lgname" class="col-sm-4 control-label">*Login
 									Name</label>

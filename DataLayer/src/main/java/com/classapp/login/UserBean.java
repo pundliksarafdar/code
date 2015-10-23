@@ -1,5 +1,6 @@
 package com.classapp.login;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,7 +26,14 @@ public class UserBean{
 	private HashMap<String, List> studentData;
 	private String className;
 	private String inst_status;
+	private Date lastlogin;
 	
+	public Date getLastlogin() {
+		return lastlogin;
+	}
+	public void setLastlogin(Date lastlogin) {
+		this.lastlogin = lastlogin;
+	}
 	public String getDob() {
 		return dob;
 	}
