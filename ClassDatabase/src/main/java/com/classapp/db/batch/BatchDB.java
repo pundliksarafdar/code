@@ -514,7 +514,8 @@ public boolean deletebatchrelatedtoclass(int classid) {
 		Query query = session.createQuery("DELETE from Batch where div_id=:div_id");
 		query.setParameter("div_id", classid);
 		query.executeUpdate();
-	}catch(Exception e){
+		transaction.commit();
+		}catch(Exception e){
 		e.printStackTrace();
 		if(null!=transaction){
 			transaction.rollback();
