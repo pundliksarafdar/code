@@ -138,7 +138,9 @@
 		}else{
 			$("#classownerUploadexamSubjectNameSelect").prop("disabled",true);
 			$("#classownerUploadexamBatchName").prop("disabled",true);
-			$(".alert-danger").text("Batch for selected division are not added.").show();
+			if(!hideBatch){
+				$(".alert-danger").text("Batch for selected division are not added.").show();
+			}
 		}
 		
 	}

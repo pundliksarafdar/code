@@ -104,7 +104,6 @@ $(document).ready(function(){
 			var imgTag = "<img src='"+e.target.result+"' width='200px' height='200px'/>";
 			var hiddenTag = "<input type='hidden' value='"+e.target.result+"' name='optionImagesPrev'/>";
 			var closeButton = '<button type="button" class="answer_image_with_btn_remove close" aria-hidden="true">&times;</button>';
-			<!-- This element contains the object -->
 			var imageColElement = "<div class='col-sm-3 image_with_btn'>"+closeButton+imgTag+hiddenTag+"</div>"
 			var imageRow = $(input).parents("div.addMorebuttonImageWrapper").find("#optionImagesDiv .row");
 			imageRow.append(imageColElement);	
@@ -185,14 +184,14 @@ $(document).ready(function(){
 		var options = $('input.uploadOptionImageModalFileBtn');
 		var hasError = false;
 		$.each(options,function(index,fileChooser){
+			$(fileChooser).parents(".form-group").removeClass("has-error");
+			$(fileChooser).parents(".form-group").find(".validation-message").remove();
 			if($(fileChooser).parents(".form-group").find("textarea").val().trim().length==0 && $(fileChooser).parents(".form-group").find("#optionImageCount").val() == 0){
-					$(fileChooser).parents(".form-group").find('.validation-message').remove();
-					$(fileChooser).parents(".form-group").addClass("has-error").parent()
-						.prepend("<div class='form-group'><label class='col-sm-2'></label><div class='validation-message col-sm-10'>Please add image or option text</div></div>");
+					$(fileChooser).parents(".form-group").addClass("has-error");
+					$(fileChooser).parents(".form-group").find(".col-sm-10").prepend("<div class='validation-message'>Error</div>");
 					hasError = true;
-			}else{
-					hasError = false;
-			}	
+					
+			}
 		});
 		return hasError;
 	}

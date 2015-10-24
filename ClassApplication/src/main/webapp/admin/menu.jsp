@@ -313,7 +313,7 @@ function RenderTimer(completedTime,totalTime){
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Questions <b class="caret"></b></a>
       		<ul class="dropdown-menu">
 	            <li><a class="menuoptions" href="choosesubject?forwardAction=uploadexams&hideBatch=true">Add Questions</a></li>
-	            <li><a class="menuoptions" href="choosesubject?forwardAction=searchQuestion">Search/Edit Questions</a></li>
+	            <li><a class="menuoptions" href="choosesubject?forwardAction=searchQuestion&hideBatch=true">Search/Edit Questions</a></li>
 	         </ul>
       </li>
       </cx:versionswitch>

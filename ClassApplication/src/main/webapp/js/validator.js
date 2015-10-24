@@ -93,7 +93,7 @@ $.fn.validate = function(globalOption){
 				msgStr = validationMessage.replace("{[val]}",value);
 			}
 			
-			$(elm).prev('hide').html(msgStr);			
+			$($(elm).find('.validation-message').get(0)).html(msgStr).removeClass("hide");	
 			return false;
 		}
 		return true;

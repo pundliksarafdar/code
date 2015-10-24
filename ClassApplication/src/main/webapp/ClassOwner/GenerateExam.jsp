@@ -120,7 +120,9 @@ $(document).ready(function(){
 	$("#QuestionBankQuestionListCreateExamhModalChooseMarksAdd").on("click",addQuestionCriteria);
 	$(EXAM_MODAL_OK).on("click",function(){
 		$("#QuestionBankQuestionListCreateExamhModalErrorBox").empty();
-		if($("#autogenerateexamform").validate()){
+		if(!isNameIsAvailable){
+			$("#QuestionBankQuestionListCreateExamhModalExamName").prev(".validation-message").html("Exam name already available.Please enter different name").removeClass("hide");
+		}else if($("#autogenerateexamform").validate()){
 			
 		}else if($.isEmptyObject(marksObj)){
 			$("#QuestionBankQuestionListCreateExamhModalErrorBox").html("<div class='alert alert-danger'>Please add atleast one question</div>").focus();
@@ -137,7 +139,11 @@ $(document).ready(function(){
 		var instituteId = $("#institute").val();
 		var examname = $("#QuestionBankQuestionListCreateExamhModalExamName").val().trim();
 		isNameIsAvailable = checkExamNameValidation(instituteId,examname,function(){});
-	})
+	}).on("click",function(){
+		$("#QuestionBankQuestionListCreateExamhModalExamName").prev(".validation-message").empty().addClass("hide");
+	});
+	
+	
 	$("[data-target='#QuestionBankQuestionListCreateExamhModal']").on("click",resetForm);
 });
 

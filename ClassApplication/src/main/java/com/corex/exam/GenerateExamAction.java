@@ -55,7 +55,7 @@ public class GenerateExamAction extends BaseAction{
 		
 		List<QuestionSearchRequest> exam = null;
 		List<String> answerId = new ArrayList<String>();
-		boolean valid = validateCriteria(subject,division, userBean.getRegId(), questionSearchRequestList);
+		boolean valid = validateCriteria(this.examname,subject,division, userBean.getRegId(), questionSearchRequestList);
 		if(valid){
 			 exam = generateExam(subject,division, userBean.getRegId(), questionSearchRequestList);
 			 String questionId = "";
@@ -130,8 +130,16 @@ public class GenerateExamAction extends BaseAction{
 		return object;
 	}
 	
-	public boolean validateCriteria(Integer sub_id,Integer div_id,int classId,List<QuestionSearchRequest> list){
+	public boolean validateCriteria(String examName,Integer sub_id,Integer div_id,int classId,List<QuestionSearchRequest> list){
+		if(null==examName || examName.trim().length()==0){
+			return false;
+		}
+
 		ExamTransaction examTransaction = new ExamTransaction();
+		boolean isExamExist = examTransaction.isExamExists(classId,examName,"");
+		if(isExamExist){
+			return false;
+		}
 		return examTransaction.validateSearchCriteria(sub_id, classId, div_id, list);
 	}
 	
