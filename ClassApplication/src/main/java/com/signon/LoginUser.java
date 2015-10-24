@@ -74,7 +74,10 @@ public class LoginUser extends BaseAction{
 			    forward = loadBean(userBean, loginBean,response,session);
 			    loadUserStaticData(userBean,session);
 			    Date formDate = new Date(loginBean.getLastLogin());
-			    long lastdateLong = userBean.getLastlogin().getTime();
+			    long lastdateLong = 0;
+			    if(null!=userBean.getLastlogin()){
+			    	lastdateLong = userBean.getLastlogin().getTime();
+			    }
 			    long formDateLong = formDate.getTime();
 			    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			    String dateFormatted = dateFormat.format(formDate);

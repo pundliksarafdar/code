@@ -14,6 +14,10 @@ var EXAM_MODAL_CHOOSE_MARKS_ADD = ROOT+"ChooseMarksAdd";
 var EXAM_MODAL_OK = EXAM_MODAL+"Ok";
 var EXAM_MODAL_EXAM_NAME = EXAM_MODAL+"ExamName";
 var EXAM_MODAL_EXAM_PASSING_MARKS = EXAM_MODAL + "PassingMarks";
+
+var examValidationDeferred = $.Deferred();
+var examNameValidationDeferred = $.Deferred();
+var isNameIsAvailable = false;
 $(function () {
 		$('[data-toggle="tooltip"]').attr("title",$("#tooltipdata").html()); 
 		$('[data-toggle="tooltip"]').tooltip({"html":true});
@@ -105,9 +109,12 @@ $(document).ready(function(){
 	});
 	
 	$("#QuestionDeleteConfirm").on("click",function(){
-		 $("#actionform").attr("action","deletequestion");
+		console.log(isNameIsAvailable);
+		if(isNameIsAvailable){
+			$("#actionform").attr("action","deletequestion");
 			$("#actionname").val("deletequestion");
 			$("#actionform").submit();
+		}
 	});
 	
 	$("#QuestionBankQuestionListCreateExamhModalChooseMarksAdd").on("click",addQuestionCriteria);
@@ -125,6 +132,12 @@ $(document).ready(function(){
 			$("#QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria").submit();
 		}
 	});
+	
+	$("#QuestionBankQuestionListCreateExamhModalExamName").on("blur",function(){
+		var instituteId = $("#institute").val();
+		var examname = $("#QuestionBankQuestionListCreateExamhModalExamName").val().trim();
+		isNameIsAvailable = checkExamNameValidation(instituteId,examname,function(){});
+	})
 	$("[data-target='#QuestionBankQuestionListCreateExamhModal']").on("click",resetForm);
 });
 
@@ -259,6 +272,37 @@ function checkAvailibility(sub_id,div_id,marks,count,maximumRepeatation){
 	});
 	return isAvailable;
 }
+
+function checkExamNameValidation(institute,examname,successfunction){
+	var isAvailable = false;
+	$.ajax({
+		
+		url: "classOwnerServlet",
+	   data: {
+	    	 methodToCall: "validateexamname",
+	    	 examname:examname,
+	    	 institute:institute
+	   		},
+	   async: false, 
+	   type:"POST",
+	   success:function(data){
+		   console.log(data);
+		   var resultJson=JSON.parse(data);
+		   var examstatus=resultJson.examavailable;
+		   if(examstatus=="true"){
+				isAvailable = false;
+				$("#QuestionBankQuestionListCreateExamhModalExamName").prev(".validation-message").html("Exam name already available.Please enter different name").removeClass("hide");
+		   }else{
+			   isAvailable = true;
+		   }
+	   },
+	   error:function(e){
+		   console.log(e);
+		   isNameIsAvailable = false;
+		   }
+	   });
+	   return isAvailable;
+}
 </script>
 </head>
 <body>
@@ -327,6 +371,7 @@ function checkAvailibility(sub_id,div_id,marks,count,maximumRepeatation){
 			<input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
 			<input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
 			<input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
+			<input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
 			<input type="hidden" name="passingmarks"/>
 			<input type="hidden" name="examname">
 		<table id="QuestionBankQuestionListCreateExamhModalTable" class="table table-hover hide">
