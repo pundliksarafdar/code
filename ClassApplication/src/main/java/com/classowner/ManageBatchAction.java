@@ -23,13 +23,36 @@ public class ManageBatchAction extends BaseAction{
 	int totalPages;
 	int endIndex;
 	int startIndex;
+	String searchedBatch;
+	String searchedBatchflag;
+	String deleteBatch;
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		BatchHelperBean batchHelperBean= new BatchHelperBean(userBean.getRegId());
 		batchHelperBean.setBatchDetailsList();
 		DivisionTransactions divisionTransactions = new DivisionTransactions();
-		List<BatchDetails> batchList = batchHelperBean.getBatchDetailsList();
-				
+		List<BatchDetails> batchList = new ArrayList<BatchDetails>();
+		if(!"".equals(searchedBatch) && searchedBatch!=null){
+			List<BatchDetails> tempList= batchHelperBean.getBatchDetailsList();;
+			for (BatchDetails batch :tempList) {
+				if(batch.getBatch().getBatch_name().equalsIgnoreCase(searchedBatch)){
+				batchList.add(batch);
+				}
+				}
+			if(batchList.size()<=0){
+				batchList = batchHelperBean.getBatchDetailsList();
+				searchedBatchflag="false";
+				if(deleteBatch==null){
+					deleteBatch="";
+				}
+			}else{
+				searchedBatchflag="true";
+			}
+		}else{
+			batchList = batchHelperBean.getBatchDetailsList();
+			searchedBatch="";
+			searchedBatchflag="false";
+		}		
 		request.getSession().setAttribute(Constants.BATCHES_LIST, batchList);	
 		List<Division> divisions= divisionTransactions.getAllDivisions(userBean.getRegId());
 		setDivisionSize(divisions.size());
@@ -120,7 +143,30 @@ public class ManageBatchAction extends BaseAction{
 	public void setStartIndex(int startIndex) {
 		this.startIndex = startIndex;
 	}
-	
+
+	public String getSearchedBatch() {
+		return searchedBatch;
+	}
+
+	public void setSearchedBatch(String searchedBatch) {
+		this.searchedBatch = searchedBatch;
+	}
+
+	public String getSearchedBatchflag() {
+		return searchedBatchflag;
+	}
+
+	public void setSearchedBatchflag(String searchedBatchflag) {
+		this.searchedBatchflag = searchedBatchflag;
+	}
+
+	public String getDeleteBatch() {
+		return deleteBatch;
+	}
+
+	public void setDeleteBatch(String deleteBatch) {
+		this.deleteBatch = deleteBatch;
+	}
 	
 }
 

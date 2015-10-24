@@ -1,4 +1,4 @@
-
+	
 <%@page import="com.classapp.db.batch.BatchDetails"%>
 <%@page import="com.classapp.db.student.StudentDetails"%>
 <%@page import="com.classapp.db.subject.Subject"%>
@@ -60,12 +60,13 @@ while(i<subjects.size())
 }
 
 
-function searchbatchthroughtable(batchName) {
+function searchbatchthroughtable(batchName,divID) {
 	$.ajax({
 		   url: "classOwnerServlet",
 		    data: {
 		    	 methodToCall: "searchBatch",
-		    		 batchName:batchName
+		    		 batchName:batchName,
+		    		 divID:divID
 		   		}, 
 		   type:"POST",
 		   success:function(data){
@@ -229,6 +230,7 @@ function searchBatch() {
 }
 
 $(document).ready(function(){
+	$("#batchnotavailable").modal("toggle");
 	$('div#modifyBatchModal .error').html('');
 	$('div#modifyBatchModal .error').hide();
 	
@@ -296,9 +298,7 @@ $(document).ready(function(){
 						   if(resultJson.status != 'error'){
 							   $('div#addBatchModal').modal('hide');
 							   modal.launchAlert("Success","Batch Added! Page will refresh in soon");
-							   setTimeout(function(){
-								   location.reload();
-							   },2*1000);		   
+							   $("#paginateform").submit();		   
 						   }else{
 							   $('div#addBatchModal .add').removeClass('hide');
 							   $('div#addBatchModal .error').show();
@@ -409,6 +409,7 @@ $(document).ready(function(){
 					      if(resultJson.status != 'error'){
 					   	   $('div#deleteBatchModal').modal('hide');
 					   	   modal.launchAlert("Success","Batch Deleted! Page will refresh in soon");
+					   	   $("#deleteBatch").val("deleted");
 					   	 $("#paginateform").submit();		   
 					      }else{
 					   		   $('div#deleteBatchModal .add').removeClass('hide');
@@ -447,14 +448,51 @@ $(document).ready(function(){
 			</div>
 		
 			<div class="col-md-4">
+			<form action="managebatch">
 			<div class="input-group">
-				<input type="text" class="form-control" id="batchNameSearch" size="20"/>
+				<input type="text" class="form-control" id="batchNameSearch" name="searchedBatch" size="20"/>
 				<span class="input-group-btn">
-					<button type="button" class="btn btn-info" id="searchBatch" onclick="searchBatch()" ><i class="glyphicon glyphicon-search"></i>&nbsp;Search Batch</button>
+					<button type="submit" class="btn btn-info" id="searchBatch" ><i class="glyphicon glyphicon-search"></i>&nbsp;Search Batch</button>
 				</span>
 			</div>
+			</form>
 			</div>
-			</div>		
+			</div>
+			<c:if test="${searchedBatch ne ''}">
+			<c:if test="${searchedBatchflag eq 'true'}">	
+			<div class="row">
+				<div class="col-md-offset-5 col-md-2" align="center">
+				<form action="managebatch">
+				<input type="hidden" class="form-control" name="searchedBatch" value=""/>
+				<button type="submit"><c:out value="${searchedBatch}"></c:out><span class="badge">x</span></button>
+				</form>
+				</div>
+			</div>	
+			</c:if>
+			<c:if test="${searchedBatchflag eq 'false' }">
+				<c:if test="${deleteBatch eq '' }">
+				<div class="modal fade" id="batchnotavailable" style="color: black;">
+ 					<div class="modal-dialog">
+    				<div class="modal-content">
+ 					<div class="modal-header">
+        				  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+        				  <h4 class="modal-title" id="myModalLabel">Batch</h4>
+       				 </div>
+        			 <div class="modal-body" >
+						Batch with <c:out value="${searchedBatch}"></c:out> name not available.
+        			</div>
+
+      				<div class="modal-footer">
+	        				<button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+      				</div>
+
+    			</div>
+				</div>
+				</div>
+				
+			</c:if>
+			</c:if>
+			</c:if>
 		</div>
 	<%BatchDetails batchSearch=(BatchDetails)request.getSession().getAttribute("batchSearchResult");
 	/* if(batchSearch!=null){
@@ -535,7 +573,7 @@ $(document).ready(function(){
 					  <td> <%= batchDetails.getDivision().getDivisionName()%> </td>
 					  <td> <%= batchDetails.getDivision().getStream()%> </td>
 					  <td> <%= batchDetails.getSubjectNames()%>  </td>
-					  <td><button type="button" class="btn btn-info" onclick="searchbatchthroughtable('<%=batchDetails.getBatch().getBatch_name()%>')" >Edit</button></td>
+					  <td><button type="button" class="btn btn-info" onclick="searchbatchthroughtable('<%=batchDetails.getBatch().getBatch_name()%>','<%=batchDetails.getBatch().getDiv_id()%>')" >Edit</button></td>
 				  </tr>
 				<%
 		  			i++;		  
@@ -548,6 +586,13 @@ $(document).ready(function(){
  <form action="managebatch" id="paginateform">
   <input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
   <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
+  <c:if test="${searchedBatchflag ne 'false'}">
+  <input type="hidden" name="searchedBatch" value='<c:out value="${searchedBatch}"></c:out>'/>
+  </c:if>
+   <c:if test="${searchedBatchflag eq 'false'}">
+  <input type="hidden" name="searchedBatch" value=''/>
+  </c:if>
+  <input type="hidden" name="deleteBatch" id="deleteBatch"/>
   <ul class="pagination">
   <li><a class="start" >&laquo;</a></li>
   <c:forEach var="item" begin="1" end="${totalPages}">

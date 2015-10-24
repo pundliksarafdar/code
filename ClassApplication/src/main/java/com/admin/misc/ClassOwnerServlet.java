@@ -1377,6 +1377,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		else if(Constants.SEARCH_BATCH.equals(methodToCall)){
 			UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 			String batchName=req.getParameter("batchName");
+			String divID=req.getParameter("divID");
 			if(batchName.equals("")){
 				respObject.addProperty(STATUS, "error");
 				respObject.addProperty(MESSAGE, "batch name can not be blank! Please enter batch name of Student. ");											
@@ -1401,7 +1402,8 @@ public class ClassOwnerServlet extends HttpServlet{
 			req.getSession().setAttribute("batchSearchResult", null);
 			boolean found=false;
 			for (BatchDetails batch :batches) {
-				if(batch.getBatch().getBatch_name().equalsIgnoreCase(batchName)){
+				if(divID!="" && divID!=null){
+				if(batch.getBatch().getBatch_name().equalsIgnoreCase(batchName) && batch.getBatch().getDiv_id()==Integer.parseInt(divID)){
 					
 					req.getSession().setAttribute("batchSearchResult", batch);
 					req.getSession().setAttribute("batchSearchResultBatch", batch);
@@ -1416,6 +1418,24 @@ public class ClassOwnerServlet extends HttpServlet{
 					respObject.addProperty("allsubjectIds", allsubjectIds);
 					found=true;
 					break;
+				}
+				}else{
+					if(batch.getBatch().getBatch_name().equalsIgnoreCase(batchName)){
+						
+						req.getSession().setAttribute("batchSearchResult", batch);
+						req.getSession().setAttribute("batchSearchResultBatch", batch);
+						respObject.addProperty("batchId", batch.getBatch().getBatch_id());
+						respObject.addProperty("batchName", batch.getBatch().getBatch_name());
+						respObject.addProperty("batchdivisionname", batch.getDivision().getDivisionName());
+						respObject.addProperty("batchdivisionID", batch.getDivision().getDivId());
+						respObject.addProperty("batchdivisionstream", batch.getDivision().getStream());
+						respObject.addProperty("batchsubjectIds", batch.getSubjectIds());
+						respObject.addProperty("batchsubjectnames", batch.getSubjectNames());
+						respObject.addProperty("allsubjectname", allsubjectname);
+						respObject.addProperty("allsubjectIds", allsubjectIds);
+						found=true;
+						break;
+					}	
 				}
 			}
 			
