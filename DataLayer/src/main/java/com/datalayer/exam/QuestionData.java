@@ -12,6 +12,7 @@ public class QuestionData implements Serializable{
 	private List<String> answerImage;
 	private int marks;
 	private int optionImageCount[];
+	private String description;
 	
 	//private transient int createdby;
 	public int getQuestionNumber() {
@@ -68,4 +69,12 @@ public class QuestionData implements Serializable{
 	public void setOptionImageCount(int[] optionImageCount) {
 		this.optionImageCount = optionImageCount;
 	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	
 }
