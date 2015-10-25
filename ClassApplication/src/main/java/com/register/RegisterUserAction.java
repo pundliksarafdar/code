@@ -18,6 +18,8 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
+
+import com.classapp.db.institutestats.InstituteStats;
 import com.classapp.db.register.RegisterUser;
 import com.classapp.logger.AppLogger;
 import com.config.BaseAction;
@@ -26,6 +28,7 @@ import com.google.gson.Gson;
 import com.mails.AllMail;
 import com.signon.LoginBean;
 import com.signon.LoginUser;
+import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.register.RegisterTransaction;
 import com.user.UserBean;
 
@@ -77,6 +80,18 @@ public class RegisterUserAction extends BaseAction{
 			if(null != loginBean){
 				userBean.setLoginBean(loginBean);
 			    loginUser.loadBean(userBean, loginBean,response,session);
+			    InstituteStats instituteStats=new InstituteStats();
+			    if (userBean.getRole()==1) {
+			    	instituteStats.setInst_id(userBean.getRegId());
+			    	instituteStats.setAlloc_ids(25);
+			    	instituteStats.setAlloc_memory(100);
+			    	instituteStats.setAvail_ids(25);
+			    	instituteStats.setAvail_memory(100);
+			    	instituteStats.setUsed_ids(0);
+			    	instituteStats.setUsed_memory(0);
+			    	InstituteStatTransaction statTransaction=new InstituteStatTransaction();
+			    	statTransaction.save(instituteStats);
+				}
 			}
 			
 			return forward;
