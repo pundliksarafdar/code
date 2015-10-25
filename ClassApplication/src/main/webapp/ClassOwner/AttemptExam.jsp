@@ -20,16 +20,19 @@ function showTimeLeft(timeLeft){
 	$("#timeLeft").text(hoursLeft+":"+minLeft+":"+secondsLeft);
 }
 */
-function showTimeLeft(millis){
-	millis = millis*-1;
-	console.log(millis);
-    var hours = (millis/3600).toFixed(0);
-        millis = millis%3600;
-        
-		minits = (millis/60).toFixed(0);
-		millis = millis%60;
-		
-		seconds = (millis).toFixed(0);
+function showTimeLeft(sec){
+	sec = sec*-1;
+	console.log(sec);
+    
+	var minits = Math.floor(sec/60);
+	var seconds = Math.floor(sec%60);
+	var hours = Math.floor(minits/60);
+	var minits = Math.floor(minits%60);
+	
+	seconds = seconds.toString().length>1?seconds:"0"+seconds;
+	hours = hours.toString().length>1?hours:"0"+hours;
+	minits = minits.toString().length>1?minits:"0"+minits;
+	
         $('#timeLeft').html(hours+':'+minits+':'+seconds);  
 }
 

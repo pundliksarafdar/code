@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,6 +14,9 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.beanutils.BeanUtils;
+
 import com.classapp.db.login.LoginCheck;
 import com.classapp.db.notificationpkg.Notification;
 import com.classapp.db.register.RegisterBean;
@@ -106,33 +110,16 @@ public class LoginUser extends BaseAction{
 	
 	public String loadBean(UserBean userBean,LoginBean loginBean,HttpServletResponse response,Map<String, Object> session){
 		login loginCheck=new login();
-		String userBeanJson = loginCheck.loginck(loginBean.getLoginname(), loginBean.getLoginpass());
-		if(null!=userBeanJson){
-			Gson gson = new Gson();
-			userBean.setAddr1( gson.fromJson(userBeanJson, UserBean.class).getAddr1());
-			userBean.setAddr2( gson.fromJson(userBeanJson, UserBean.class).getAddr2());
-			userBean.setCity( gson.fromJson(userBeanJson, UserBean.class).getCity());
-			userBean.setCountry( gson.fromJson(userBeanJson, UserBean.class).getCountry());
-			userBean.setDob( gson.fromJson(userBeanJson, UserBean.class).getDob());
-			userBean.setFirstname( gson.fromJson(userBeanJson, UserBean.class).getFirstname());
-			userBean.setLastname( gson.fromJson(userBeanJson, UserBean.class).getLastname());
-			userBean.setMiddlename(gson.fromJson(userBeanJson, UserBean.class).getMiddlename());
-			userBean.setPhone1(gson.fromJson(userBeanJson, UserBean.class).getPhone1());
-			userBean.setPhone2(gson.fromJson(userBeanJson, UserBean.class).getPhone2());
-			userBean.setRole(gson.fromJson(userBeanJson, UserBean.class).getRole());
-			userBean.setState(gson.fromJson(userBeanJson, UserBean.class).getState());
-			userBean.setUsername(gson.fromJson(userBeanJson, UserBean.class).getUsername());
-			userBean.setStartdate(gson.fromJson(userBeanJson, UserBean.class).getStartdate());
-			userBean.setEnddate(gson.fromJson(userBeanJson, UserBean.class).getEnddate());
-			userBean.setRegId(gson.fromJson(userBeanJson, UserBean.class).getRegId());
-			userBean.setActivationcode(gson.fromJson(userBeanJson, UserBean.class).getActivationcode());
-			userBean.setStatus(gson.fromJson(userBeanJson, UserBean.class).getStatus());
-			userBean.setEmail(gson.fromJson(userBeanJson, UserBean.class).getEmail());
-			userBean.setClassName(gson.fromJson(userBeanJson, UserBean.class).getClassName());
-			userBean.setInst_status(gson.fromJson(userBeanJson, UserBean.class).getInst_status());
-			userBean.setLastlogin(gson.fromJson(userBeanJson, UserBean.class).getLastlogin());
-			userBean.setLoginBean(loginBean);
-
+		com.classapp.login.UserBean userBeanLg = loginCheck.loginck(loginBean.getLoginname(), loginBean.getLoginpass());
+		if(null!=userBeanLg){
+			try {
+				BeanUtils.copyProperties(userBean, userBeanLg);
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
 			
 			//Check for acceptance
 			/*

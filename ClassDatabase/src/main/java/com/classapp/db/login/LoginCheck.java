@@ -14,7 +14,8 @@ import com.classapp.db.exam.ExamDB;
 import com.classapp.db.question.QuestionbankDB;
 import com.classapp.db.register.AllUserId;
 import com.classapp.db.register.RegisterBean;
-import com.classapp.db.user.UserBean;
+
+import com.classapp.login.UserBean;
 import com.classapp.persistence.HibernateUtil;
 import com.google.gson.Gson;
 
@@ -23,7 +24,7 @@ public class LoginCheck implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(LoginCheck.class);
 	RegisterBean registerBean;
-	public String loadUserObject(String username,String password){
+	public UserBean loadUserObject(String username,String password){
 		Gson gson = new Gson();
 		Session session = HibernateUtil.getSessionfactory().openSession();
 		session.beginTransaction();
@@ -65,7 +66,8 @@ public class LoginCheck implements Serializable{
 			userBean.setClassName(registerBean.getClassName());
 			userBean.setInst_status(registerBean.getInst_status());
 			userBean.setLastlogin(registerBean.getLastlogin());
-			return gson.toJson(userBean);
+			return userBean;
+			//return gson.toJson(userBean);
 		}catch(Exception ex){
 			return null;
 		}finally{

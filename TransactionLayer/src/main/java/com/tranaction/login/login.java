@@ -7,18 +7,18 @@ import com.google.gson.Gson;
 
 public class login {
 
-	public String loginck(String loginname, String loginpass) {
+	public UserBean loginck(String loginname, String loginpass) {
 		LoginCheck loginCheck = new LoginCheck();
-		String userBeanJson = loginCheck.loadUserObject(loginname, loginpass);
+		UserBean userBeanJson = loginCheck.loadUserObject(loginname, loginpass);
 		
 		return userBeanJson;
 	}
 
 	public void loadBean(UserBean userBean, LoginBeanMobile loginBean) {
 		LoginCheck loginCheck = new LoginCheck();
-		String userBeanJson = loginck(loginBean.getUsername(),
+		UserBean userBeanJson = loginck(loginBean.getUsername(),
 				loginBean.getPassword());
-		
+		/*
 		if (null != userBeanJson) {
 			Gson gson = new Gson();
 			userBean.setAddr1(gson.fromJson(userBeanJson, UserBean.class)
@@ -59,9 +59,9 @@ public class login {
 					.getInst_status());
 			userBean.setLastlogin(gson.fromJson(userBeanJson, UserBean.class)
 					.getLastlogin());
-			userBean.setLoginBean(loginBean);
-
+			//userBean.setLoginBean(loginBean);
+		 
 			loginCheck.updateIdForUser(userBean.getRegId(),loginBean.getUserid(),loginBean.getDeviceId());
-		}
+		}*/
 	}
 }
