@@ -5,7 +5,7 @@
 	minlength:Define minimum length
 	validationMessage:is to provide validation message
 */
-$.fn.validate = function(globalOption){
+$.fn.validateCustome = function(globalOption){
 	var $form = $(this);
 	var hasError = false;
 	var ERROR_NO_REGULAR_EXPRESSION = "Regular expression is not available";

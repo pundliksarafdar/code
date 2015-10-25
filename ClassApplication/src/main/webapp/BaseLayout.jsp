@@ -86,6 +86,7 @@ html,body {
 <script type="text/javascript" src="js/Chart.min.js"></script>
 <script src="js/plugins.js"></script>
 <script src="js/validator.js"></script>
+<script src="js/jquery.validate.min.js"></script>
 <script>
 $( document ).ajaxStart(function() {
 	  $("#loaderModal").modal("show")

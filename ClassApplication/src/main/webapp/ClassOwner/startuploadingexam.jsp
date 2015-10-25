@@ -66,7 +66,7 @@ $(document).ready(function(){
 	
 	
 	$("input.startuplodingexamSave").on('click',function(){
-		var inValid = $('form[action="uploadexams"]').validate();
+		var inValid = $('form[action="uploadexams"]').validateCustome();
 		if(!inValid){
 			var invalidOption = validateOption();
 			if(!invalidOption){
@@ -188,7 +188,7 @@ $(document).ready(function(){
 			$(fileChooser).parents(".form-group").find(".validation-message").remove();
 			if($(fileChooser).parents(".form-group").find("textarea").val().trim().length==0 && $(fileChooser).parents(".form-group").find("#optionImageCount").val() == 0){
 					$(fileChooser).parents(".form-group").addClass("has-error");
-					$(fileChooser).parents(".form-group").find(".col-sm-10").prepend("<div class='validation-message'>Error</div>");
+					$(fileChooser).parents(".form-group").find(".col-sm-10").prepend("<div class='validation-message'>Error Please add either option text or image </div>");
 					hasError = true;
 					
 			}

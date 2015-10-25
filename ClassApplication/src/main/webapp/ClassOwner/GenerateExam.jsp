@@ -120,17 +120,21 @@ $(document).ready(function(){
 	$("#QuestionBankQuestionListCreateExamhModalChooseMarksAdd").on("click",addQuestionCriteria);
 	$(EXAM_MODAL_OK).on("click",function(){
 		$("#QuestionBankQuestionListCreateExamhModalErrorBox").empty();
-		if(!isNameIsAvailable){
-			$("#QuestionBankQuestionListCreateExamhModalExamName").prev(".validation-message").html("Exam name already available.Please enter different name").removeClass("hide");
-		}else if($("#autogenerateexamform").validate()){
+		if(!$("#autogenerateexamform").valid()){
 			
+		}else if(!isNameIsAvailable){
+			$("#QuestionBankQuestionListCreateExamhModalExamName").prev(".validation-message").html("Exam name already available.Please enter different name").removeClass("hide");
 		}else if($.isEmptyObject(marksObj)){
 			$("#QuestionBankQuestionListCreateExamhModalErrorBox").html("<div class='alert alert-danger'>Please add atleast one question</div>").focus();
 		}else{	
 			var passingmarks = $(EXAM_MODAL_EXAM_PASSING_MARKS).val();
 			var examName = $(EXAM_MODAL_EXAM_NAME).val();
+			var examHour = $("#autogenerateexamform [name='examHour']").val();
+			var examMinute = $("#autogenerateexamform [name='examMinute']").val();
 			$("#QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria").find("[name='passingmarks']").val(passingmarks);
 			$("#QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria").find("[name='examname']").val(examName);
+			$("#QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria").find("[name='examHour']").val(examHour);
+			$("#QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria").find("[name='examMinute']").val(examMinute);
 			$("#QuestionBankQuestionListCreateExamhModalRandomQuestionGenerateCriteria").submit();
 		}
 	});
@@ -143,7 +147,20 @@ $(document).ready(function(){
 		$("#QuestionBankQuestionListCreateExamhModalExamName").prev(".validation-message").empty().addClass("hide");
 	});
 	
-	
+	var validationOption = {rules: {
+		passingmarks: {
+			max:function(elm){
+				var totalMarks = 0;
+				for(var key in marksObj){
+					totalMarks = totalMarks + marksObj[key]*key;
+				}
+				console.log(totalMarks );
+				return totalMarks;
+			}
+		}
+	  }
+	};
+	$("#autogenerateexamform").validate(validationOption);
 	$("[data-target='#QuestionBankQuestionListCreateExamhModal']").on("click",resetForm);
 });
 
@@ -172,7 +189,7 @@ var addQuestionCriteria = function(){
 		}else{
 			marksObj[examMarks] = numberOfQuestions;
 			var tableObj = displayTable("#QuestionBankQuestionListCreateExamhModalTable",marksObj);
-			tableObj.find("tr").find(".remove").off("click").on("click",function(){
+			$("#QuestionBankQuestionListCreateExamhModalTable").on("click","tr .remove",function(){
 						var dataId = $(this).attr("data-id").trim();
 						$(this).parents("tr").remove();
 						delete marksObj[dataId];
@@ -340,10 +357,9 @@ function checkExamNameValidation(institute,examname,successfunction){
 				<input type="text" id="QuestionBankQuestionListCreateExamhModalExamName" class="form-control" required>
 			</div>	
 		
-		<label class="col-sm-2 control-label" for="QuestionBankQuestionListCreateExamhModalPassingMarks">Passing marks</label>
+		<label class="col-sm-2 control-label" for="QuestionBankQuestionListCreateExamhModalPassingMarks1">Passing marks</label>
 			<div class="col-sm-4">
-			<div class="validation-message hide"></div>
-				<input type="number" id="QuestionBankQuestionListCreateExamhModalPassingMarks" class="form-control" required min="0">
+				<input type="number" id="QuestionBankQuestionListCreateExamhModalPassingMarks" name="passingmarks" class="form-control" required min="0">
 			</div>	
 		</div>
 		
@@ -363,13 +379,29 @@ function checkExamNameValidation(institute,examname,successfunction){
 			<label class="col-sm-2 control-label" for="QuestionBankQuestionListCreateExamhModalNoOfQuestion">Number of question</label>
 				<div class="col-sm-2">
 					<div class="validation-message hide"></div>	
-					<input type="number" id="QuestionBankQuestionListCreateExamhModalNoOfQuestion" class="form-control" novalidate>
+					<input type="number" id="QuestionBankQuestionListCreateExamhModalNoOfQuestion" class="form-control">
 				</div>	
 			
 			<div class="col-sm-4">
 				<div class="validation-message hide"></div>
 					<input type="button" class="btn btn-default" value="Add" id="QuestionBankQuestionListCreateExamhModalChooseMarksAdd"/>
 			</div>	
+			
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="QuestionBankQuestionListCreateExamhModalMarks">Exam Time Duration</label>
+				<div class="col-sm-2">
+				<div class="validation-message hide"></div>
+				  <input type="number" class="form-control" placeholder="hh" name="examHour" required min="0" max="23"/>
+				</div> 
+			
+			
+				<div class="col-sm-2">
+					<div class="validation-message hide"></div>	
+					 <input type="number" class="form-control" placeholder="mm" name="examMinute" required min="0" max="59"/>
+				</div>	
+			
 			
 		</div>
 		</form>
@@ -380,6 +412,9 @@ function checkExamNameValidation(institute,examname,successfunction){
 			<input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
 			<input type="hidden" name="passingmarks"/>
 			<input type="hidden" name="examname">
+			<input type="hidden" name="examHour">
+			<input type="hidden" name="examMinute">
+			
 		<table id="QuestionBankQuestionListCreateExamhModalTable" class="table table-hover hide">
 			
 			<thead>
