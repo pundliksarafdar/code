@@ -82,6 +82,10 @@ public class LoginUser extends BaseAction{
 			}
 			
 		}
+		
+		if(forward.equalsIgnoreCase(ERROR)){
+			addActionError("Please enter correct login name or password");
+		}
 		return forward;
 	}
 	
