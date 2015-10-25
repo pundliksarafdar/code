@@ -54,73 +54,82 @@ public class LoginUser extends BaseAction{
 	
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
-		String forward = null;
-		if(null != loginBean){
-			Cookie cookie = new Cookie("logincreation", "loggedin");
-			response.addCookie(cookie);
-			userBean.setLoginBean(loginBean);
-		    forward = loadBean(userBean, loginBean,response,session);
-		}if(null == userBean.getRegId()){
-			addActionError("Invalid Username/Password");
+		String forward = "";
+		//when login is hit by homepage link no login bean is available then redirect to login page without error message
+		//in this case userbean is not having regestration id
+		if(null == loginBean && null==userBean.getRegId()){
+			forward = ERROR;
+		}else if(loginBean!=null && (loginBean.getLoginname().isEmpty()|| loginBean.getLoginpass().isEmpty())){
+			//login bean null check is alrady done so it will not go to next else loop
+			//If loginname or password is empty send login page
 			forward = ERROR;
 		}else{
-			loginBean = userBean.getLoginBean();
-			if(null != loginBean){
-			userBean.setLoginBean(loginBean);
-		    forward = loadBean(userBean, loginBean,response,session);
-		}if(null == userBean.getRegId()){
-			addActionError("Invalid Username/Password");
-			forward = ERROR;
-		}else{
-			loginBean = userBean.getLoginBean();
-			if(null != loginBean){
-				userBean.setLoginBean(loginBean);
-			    forward = loadBean(userBean, loginBean,response,session);
-			    loadUserStaticData(userBean,session);
-			    Date formDate = new Date(loginBean.getLastLogin());
-			    long lastdateLong = 0;
-			    if(null!=userBean.getLastlogin()){
-			    	lastdateLong = userBean.getLastlogin().getTime();
-			    }
-			    long formDateLong = formDate.getTime();
-			    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			    String dateFormatted = dateFormat.format(formDate);
-			    try {
-					formDateLong = dateFormat.parse(dateFormatted).getTime();
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			    
-			    boolean isValid = formDateLong > lastdateLong;
-	    		if(isValid){
-				    LoginCheck loginCheck = new LoginCheck();
-		    		loginCheck.setLastLogin(userBean.getRegId(), formDate);
-			    }else{
-			    	forward = ERROR;
-			    }
-		    	
+			//login bean is available need to validate
+			//First check is userBean is available
+			//If register id is available then user bean is available and action is hit by reload login
+			if(null!=userBean.getRegId()){
+				forward = loadBean(userBean, loginBean, response, session);
+				Cookie cookie = new Cookie("logincreation", "loggedin");
+				response.addCookie(cookie);
 			}else{
-				forward = ERROR;
+				//if register id is not avialable then check for login
+				forward = loadBean(userBean, loginBean, response, session);
+				Cookie cookie = new Cookie("logincreation", "loggedin");
+				response.addCookie(cookie);
+				if(!forward.equalsIgnoreCase(ERROR) && !validateTime(userBean)){
+					forward = ERROR;
+				}
 			}
-		}
+			
 		}
 		return forward;
 	}
 	
+	/*Method to check validation*/
+	private boolean validateTime(UserBean userBean){
+		Date formDate = new Date(loginBean.getLastLogin());
+	    long lastdateLong = 0;
+	    
+		if(null!=userBean.getLastlogin()){
+	    	lastdateLong = userBean.getLastlogin().getTime();
+	    }
+	    long formDateLong = formDate.getTime();
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    String dateFormatted = dateFormat.format(formDate);
+	    try {
+			formDateLong = dateFormat.parse(dateFormatted).getTime();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    boolean isValid = formDateLong > lastdateLong;
+		if(isValid){
+		    LoginCheck loginCheck = new LoginCheck();
+    		loginCheck.setLastLogin(userBean.getRegId(), formDate);
+	    }
+		return isValid;
+	}
 	public String loadBean(UserBean userBean,LoginBean loginBean,HttpServletResponse response,Map<String, Object> session){
 		login loginCheck=new login();
-		com.classapp.login.UserBean userBeanLg = loginCheck.loginck(loginBean.getLoginname(), loginBean.getLoginpass());
-		if(null!=userBeanLg){
-			try {
-				BeanUtils.copyProperties(userBean, userBeanLg);
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
+		if(null!=loginBean){
+			com.classapp.login.UserBean userBeanLg = loginCheck.loginck(loginBean.getLoginname(), loginBean.getLoginpass());
+			if(null!=userBeanLg){
+				try {
+					BeanUtils.copyProperties(userBean, userBeanLg);
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+				catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			}else{
+				return ERROR;
 			}
-			catch (InvocationTargetException e) {
-				e.printStackTrace();
-			}
-			
+		}
+		
+		if(userBean!=null){
+			loadUserStaticData(userBean, session);
 			//Check for acceptance
 			/*
 			if(null != userBean.getRole() && 0 != userBean.getRole() && 10 != userBean.getRole()){

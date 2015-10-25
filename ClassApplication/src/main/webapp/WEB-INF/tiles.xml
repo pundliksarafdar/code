@@ -277,21 +277,7 @@
 		<put-attribute name="footer" value="" />
 	</definition>
 	
-   <definition name="logoutcomplete" extends="NoTopnavBaseLayout">
-		<put-attribute name="title" value="Log out" />
-		<put-attribute name="header" value="" />
-		<put-attribute name="body" value="/logoutcomplete.jsp" />
-		<put-attribute name="footer" value="" />
-	</definition>
-	
-   <definition name="logoutsuccess" extends="NoTopnavBaseLayout">
-		<put-attribute name="title" value="Logged Out" />
-		<put-attribute name="header" value="" />
-		<put-attribute name="body" value="/logoutsuccess.jsp" />
-		<put-attribute name="footer" value="" />
-	</definition>
-	
-	<definition name="forgotpassword" extends="NoTopnavBaseLayout">
+   <definition name="forgotpassword" extends="NoTopnavBaseLayout">
 		<put-attribute name="title" value="Forgot Password" />
 		<put-attribute name="body" value="/forgotpassword.jsp" />
 	</definition>
