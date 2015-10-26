@@ -113,7 +113,7 @@ List<Division> division=(List<Division>)request.getAttribute("division");
 						for(int j=0;j<division.size();j++){
 							if(division.get(j).getDivId()==batch.get(i).getDiv_id()){
 					%>
-					<option value="<%=batch.get(i).getBatch_id()%>_<%=batch.get(i).getDiv_id()%>"><%=division.get(j).getDivisionName()%> <%=batch.get(i).getBatch_name() %></option>
+					<option value="<%=batch.get(i).getBatch_id()%>_<%=batch.get(i).getDiv_id()%>"><%=division.get(j).getDivisionName()%> <%=division.get(j).getStream()%> <%=batch.get(i).getBatch_name() %></option>
 					<%}
 						}
 					i++;} }}%>

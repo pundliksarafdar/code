@@ -98,6 +98,21 @@ public class ManualExamAction extends BaseAction{
 		}
 		
 		session.put("questionsIds",questionIdsMap);
+		if(questionIdsMap!=null){
+		questionIds=new ArrayList<Integer>();
+		for (Integer key:questionIdsMap.keySet()) {
+			questionIds.add(key);
+		}
+		QuestionBankTransaction  bankTransaction=new QuestionBankTransaction();
+		List<Integer> questionmarks= bankTransaction.getQuestionMarks(inst_id, Integer.parseInt(subject), Integer.parseInt(division), questionIds);
+		if (questionmarks!=null) {
+			totalmarks=0;
+			for (int i = 0; i < questionmarks.size(); i++) {
+				totalmarks=totalmarks+questionmarks.get(i);
+			}
+		}
+		questionIds=null;
+		}
 		noofquestions=questionIdsMap.size();
 		ExamTransaction examTransaction=new ExamTransaction();
 		QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
@@ -222,7 +237,14 @@ public class ManualExamAction extends BaseAction{
 							queIds=queIds+","+questionIds.get(i);
 						}
 					}
-				}
+				} 
+				/*List<Integer> questionmarks= bankTransaction.getQuestionMarks(inst_id, Integer.parseInt(subject), Integer.parseInt(division), questionIds);
+				if (questionmarks!=null) {
+					totalmarks=0;
+					for (int i = 0; i < questionmarks.size(); i++) {
+						totalmarks=totalmarks+questionmarks.get(i);
+					}
+				}*/
 				Exam exam=new Exam();
 				examTransaction.saveExam(examname, inst_id, Integer.parseInt(subject), Integer.parseInt(division), totalmarks, passmarks, userBean.getRegId(), batch, queIds, ansIds,examHour,examMinute);
 			}

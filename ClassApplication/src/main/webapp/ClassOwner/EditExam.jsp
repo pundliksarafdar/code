@@ -237,6 +237,14 @@ $("#createexam").on("click",function(){
 			$("#examTimeError").html("Exam Minute should be in between 1 and 60!!");
 			$("#examTimeError").show();
 			flag=true;
+		}else if(parseInt($("form#saveExamForm #examHour").val())==0 && parseInt($("form#saveExamForm #examMinute").val())==0){
+			$("#examTimeError").html("Exam Time can't be 0!!");
+			$("#examTimeError").show();
+			flag=true;
+		}else if(parseInt($("form#saveExamForm #noofquestions").val())==0){
+			$("#noofquestionsError").html("Please add questions!!");
+			$("#noofquestionsError").show();
+			flag=true;
 		}
 		var examname=$("form#saveExamForm #newexamname").val().trim();
 		var institute=$("form#saveExamForm #institute").val();
@@ -317,7 +325,7 @@ var selectMarks = function(){
 			  <c:if test="${(actionname ne 'showaddedquestions') && (actionname ne 'editexam')}">
 			  <button type="button" class="btn btn-default" id="showaddedquestion">Show All Added Questions</button>
 			 </c:if>
-			 <c:if test="${(actionname eq 'showaddedquestions') || (actionname eq 'editexam')}">
+			 <c:if test="${(actionname eq 'showaddedquestions') || (actionname eq 'editexam') || (actionname eq 'createexam')}">
 			  <button type="button" class="btn btn-default" id="backtoquestions">Add Other Questions</button>
 			 </c:if>	
 			  Total Marks:-<span class="badge" id="temptotalmarks" name="temptotalmarks"><c:out value="${totalmarks}"></c:out></span><br>
@@ -521,6 +529,7 @@ var selectMarks = function(){
     <div class="col-sm-5">
     <input type="text" class="form-control" id="noofquestions" name="noofquestions" value=<c:out value="${noofquestions}"></c:out> disabled="disabled">
   	</div>
+  	<span class="col-sm-5" id="noofquestionsError" style="display:none;color: red"></span>
   </div>
   <div class="form-group">
     <label for="totalmarks" class="control-label col-sm-2">Total Marks:</label>

@@ -918,7 +918,7 @@ function getSelectedStudentsToDelete(){
 						for(int innercounter=0;innercounter<alldivisions.size();innercounter++){
 						if(alldivisions.get(innercounter).getDivId()==batches.get(counter).getDiv_id()){
 						%>	
-					<option value="<%=batches.get(counter).getBatch_id() %>_<%=batches.get(counter).getDiv_id() %>"><%=alldivisions.get(innercounter).getDivisionName()%> <%=batches.get(counter).getBatch_name() %></option>
+					<option value="<%=batches.get(counter).getBatch_id() %>_<%=batches.get(counter).getDiv_id() %>"><%=alldivisions.get(innercounter).getDivisionName()%> <%=alldivisions.get(innercounter).getStream()%> <%=batches.get(counter).getBatch_name() %></option>
 					<%
 						}}} %>
 					</select>
