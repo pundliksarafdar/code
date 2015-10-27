@@ -144,7 +144,23 @@ $(document).ready(function(){
 	if(cookieValue == undefined){
 		location.href="login";	
 	}
+	$(".navbar-nav .dropdown-toggle").on("click",storeMenuSelected);
+	setMenuSelected();
 });
+
+function setMenuSelected(){
+	if(typeof(Storage) !== "undefined" && sessionStorage.clickedMenu !== "undefined") {
+		var clickedMenu = sessionStorage.clickedMenu;
+		$(".navbar-nav a:contains('"+clickedMenu+"')").css("border-bottom-style","inset");
+	}
+}
+
+function storeMenuSelected(){
+	if(typeof(Storage) !== "undefined") {
+		sessionStorage.clickedMenu = $(this).text();
+	}
+}
+
 </script>
 
 </head>
