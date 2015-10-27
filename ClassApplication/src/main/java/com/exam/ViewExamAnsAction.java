@@ -141,7 +141,7 @@ public class ViewExamAnsAction extends BaseAction{
 						String temparr[]=answersarr[i].split(",");
 						for (int j = 0; j < temparr.length; j++) {
 							if(!"".equals(temparr[j]) && !"-1".equals(temparr[j])){
-							templist.add((Integer.parseInt(temparr[j])+1)+"");
+							templist.add((Integer.parseInt(temparr[j].trim())+1)+"");
 							}else{
 								templist.add("");
 							}
