@@ -1895,6 +1895,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	RegisterTransaction registerTransaction=new RegisterTransaction();
 	if(registerTransaction.ActivationCodeValidation(regID, code)){
 		registerTransaction.removeActivationCode(regID);
+		userBean.setActivationcode("");
 		respObject.addProperty(STATUS, "success");	
 	}else{
 		respObject.addProperty(STATUS, "fail");

@@ -93,7 +93,7 @@ public class AddNotesAction extends BaseAction{
 	     	 AppLogger.logger("Src File name: " + myFile[j]);
 	     	 AppLogger.logger("Dst File name: " + myFileFileName.split(",")[j]);
 	     	    	 
-	     	 File destFile  = new File(destPath, notesname[j]);
+	     	 File destFile  = new File(destPath, notesname[j]+".pdf");
 	    	 FileUtils.copyFile(myFile[j], destFile);
 	    	 double filesize=(myFile[j].length()/1024)/1024;
 	    	 if(userBean.getRole()==2){
@@ -104,7 +104,7 @@ public class AddNotesAction extends BaseAction{
 	    	 notes.setClassid(userBean.getRegId());
 	    	 }
 	    	 notes.setDivid(Integer.parseInt(division));
-	    	 notes.setNotespath(DBPAth+notesname[j]);
+	    	 notes.setNotespath(DBPAth+notesname[j]+".pdf");
 	    	 notes.setSubid(Integer.parseInt(subject));
 	    	 notes.setName(notesname[j]);
 	    	 notes.setAddedby(userBean.getRegId());
