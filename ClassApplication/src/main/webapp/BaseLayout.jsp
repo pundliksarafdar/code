@@ -52,7 +52,7 @@ body{
     font-family: cursive;
     min-height: 525px;
    /* background-color: rgb(141,141,253);*/
-     background: linear-gradient(to right, red , blue);
+     background: radial-gradient(#0094bd,#003442 80%) no-repeat #003442;
     background-size: 100% 100%;
 }
 
@@ -64,6 +64,47 @@ color: white;
 /* #footer-sec{
 padding-bottom: 20px;
 padding-top: 10px;
+} */
+.modal-header{
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#0095be+23,003442+100 */
+background: #0095be; /* Old browsers */
+background: -moz-linear-gradient(top, #0095be 23%, #003442 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(23%,#0095be), color-stop(100%,#003442)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #0095be 23%,#003442 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #0095be 23%,#003442 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, #0095be 23%,#003442 100%); /* IE10+ */
+background: linear-gradient(to bottom, #0095be 23%,#003442 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0095be', endColorstr='#003442',GradientType=0 ); /* IE6-9 */
+
+}
+
+.nav .open .dropdown-menu{
+background: rgba(12, 12, 12, 0.71)
+}
+
+.nav .open .dropdown-menu>li>a{
+color: white;
+}
+/* .btn-primary{
+background:white;
+color: blue;
+}
+
+.btn-success{
+background:white;
+color: green;
+}
+
+.btn-danger{
+background:white;
+color: red;
+} */
+/* .modal-body{
+background:linear-gradient(to bottom, rgba(230,225,211,1) 0%,rgb(251, 226, 154) 100%);
+}
+.modal-footer{
+margin: 0px;
+padding: 0px;
 } */
 </style>
 <style type="text/css">

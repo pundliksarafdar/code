@@ -140,7 +140,7 @@ public class ViewExamAnsAction extends BaseAction{
 						ArrayList<String> templist=new ArrayList<String>();
 						String temparr[]=answersarr[i].split(",");
 						for (int j = 0; j < temparr.length; j++) {
-							if(!"".equals(temparr[j]) && !"-1".equals(temparr[j])){
+							if(!"".equals(temparr[j].trim()) && !"-1".equals(temparr[j].trim())){
 							templist.add((Integer.parseInt(temparr[j].trim())+1)+"");
 							}else{
 								templist.add("");

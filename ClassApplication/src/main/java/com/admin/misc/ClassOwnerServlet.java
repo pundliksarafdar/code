@@ -2036,7 +2036,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		i=0;
 		if(divisions.size()>0){
 			while(divisions.size()>i){
-				divisionnames.append(divisions.get(i).getDivisionName()+",");
+				divisionnames.append(divisions.get(i).getDivisionName()+" "+divisions.get(i).getStream()+",");
 				divisionids.append(divisions.get(i).getDivId()+",");
 				i++;
 			}
