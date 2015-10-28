@@ -43,6 +43,11 @@ public class EditUserConfirm extends BaseAction{
 			addActionError("Old password is wrong");
 			return ERROR;
 		}
+		if(userBean.getRole()==2){
+			return "teacher.edituserreview";
+		}else if(userBean.getRole()==3){
+			return "student.edituserreview";
+		}
 		return Constants.SUCCESS;
 	}
 	

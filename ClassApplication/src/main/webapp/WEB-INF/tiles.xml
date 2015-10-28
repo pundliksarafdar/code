@@ -117,10 +117,34 @@
 		<put-attribute name="header" value="/header.jsp" />
 		<put-attribute name="body" value="/General/edituser.jsp" />
 	</definition>
+	
+	<definition name="teacher.edituser" extends="baseLayout">
+		<put-attribute name="title" value="Edit User" />
+		<put-attribute name="topnav" value="/teacher/menu.jsp" />
+		<put-attribute name="body" value="/General/edituser.jsp" />
+	</definition>
+	
+	<definition name="student.edituser" extends="baseLayout">
+		<put-attribute name="title" value="Edit User" />
+		<put-attribute name="topnav" value="/student/menu.jsp" />
+		<put-attribute name="body" value="/General/edituser.jsp" />
+	</definition>
 
 	<definition name="edituserreview" extends="baseLayout">
 		<put-attribute name="title" value="Edit Review" />
 		<put-attribute name="header" value="/header.jsp" />
+		<put-attribute name="body" value="/General/edituserreview.jsp" />
+	</definition>
+	
+	<definition name="student.edituserreview" extends="baseLayout">
+		<put-attribute name="title" value="Edit Review" />
+		<put-attribute name="topnav" value="/student/menu.jsp" />
+		<put-attribute name="body" value="/General/edituserreview.jsp" />
+	</definition>
+	
+	<definition name="teacher.edituserreview" extends="baseLayout">
+		<put-attribute name="title" value="Edit Review" />
+		<put-attribute name="topnav" value="/teacher/menu.jsp" />
 		<put-attribute name="body" value="/General/edituserreview.jsp" />
 	</definition>
 
@@ -128,6 +152,18 @@
 		<put-attribute name="title" value="Save" />
 		<put-attribute name="header" value="/header.jsp" />
 		<put-attribute name="body" value="/General/editusersave.jsp" />
+	</definition>
+	
+	<definition name="teacher.editusersuccess" extends="baseLayout">
+		<put-attribute name="title" value="Save" />
+		<put-attribute name="topnav" value="/teacher/menu.jsp" />
+		<put-attribute name="body" value="/General/editusersuccess.jsp" />
+	</definition>
+	
+	<definition name="student.editusersuccess" extends="baseLayout">
+		<put-attribute name="title" value="Save" />
+		<put-attribute name="topnav" value="/student/menu.jsp" />
+		<put-attribute name="body" value="/General/editusersuccess.jsp" />
 	</definition>
 
 	<definition name="editusersuccess" extends="baseLayout">

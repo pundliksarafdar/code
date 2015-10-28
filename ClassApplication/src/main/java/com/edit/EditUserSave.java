@@ -32,6 +32,11 @@ public class EditUserSave extends BaseAction{
 		if(registerTransaction.updateUser(registerBean, userBean.getRegId())){
 			LoginUser loginUser = new LoginUser();
 			loginUser.loadBean(userBean, userBean.getLoginBean(),response,session);
+			if(userBean.getRole()==2){
+				return "teacher.editusersuccess";
+			}else if(userBean.getRole()==3){
+				return "student.editusersuccess";
+			}
 			return "success";
 		}else{
 			

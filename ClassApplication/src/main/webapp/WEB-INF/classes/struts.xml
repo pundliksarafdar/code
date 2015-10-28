@@ -58,14 +58,20 @@
 		</action>
 		<action name="edit" class="com.edit.EditUserAction" method="execute">
 			<result name="success" type="tiles">edituser</result>
+			<result name="teacher.edituser" type="tiles">teacher.edituser</result>
+			<result name="student.edituser" type="tiles">student.edituser</result>
 		</action>
 		<action name="editconfirm" class="com.edit.EditUserConfirm"
 			method="execute">
 			<result name="success" type="tiles">edituserreview</result>
+			<result name="student.edituserreview" type="tiles">student.edituserreview</result>
+			<result name="teacher.edituserreview" type="tiles">teacher.edituserreview</result>
 			<result name="error" type="tiles">edituser</result>
 		</action>
 		<action name="editsave" class="com.edit.EditUserSave" method="execute">
 			<result name="success" type="tiles">editusersuccess</result>
+			<result name="teacher.editusersuccess" type="tiles">teacher.editusersuccess</result>
+			<result name="student.editusersuccess" type="tiles">student.editusersuccess</result>
 			<result name="error" type="tiles">register</result>
 		</action>
 
