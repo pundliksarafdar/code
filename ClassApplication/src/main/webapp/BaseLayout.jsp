@@ -85,6 +85,10 @@ background: rgba(12, 12, 12, 0.71)
 .nav .open .dropdown-menu>li>a{
 color: white;
 }
+
+.nav .open .dropdown-menu>li>a:hover{
+color: black;
+}
 /* .btn-primary{
 background:white;
 color: blue;

@@ -2804,7 +2804,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				for (int i = 0; i < divisions.size(); i++) {
 					if(divisions.get(i).getDivId()==schedules.get(counter).getDiv_id())
 					{
-						division=divisions.get(i).getDivisionName();
+						division=divisions.get(i).getDivisionName()+" "+divisions.get(i).getStream();
 					}
 				}
 			}else{
@@ -2819,7 +2819,7 @@ public class ClassOwnerServlet extends HttpServlet{
 					for (int i = 0; i < divisions.size(); i++) {
 						if(divisions.get(i).getDivId()==schedules.get(counter).getDiv_id())
 						{
-							division=division+","+divisions.get(i).getDivisionName();
+							division=division+","+divisions.get(i).getDivisionName()+" "+divisions.get(i).getStream();
 						}
 					}
 			}
