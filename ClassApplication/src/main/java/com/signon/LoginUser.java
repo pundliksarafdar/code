@@ -270,6 +270,162 @@ public class LoginUser extends BaseAction{
 		}
 	}
 	
+	public String loadUpdatedBean(UserBean userBean,LoginBean loginBean,HttpServletResponse response,Map<String, Object> session){
+		login loginCheck=new login();
+		
+			com.classapp.login.UserBean userBeanLg = loginCheck.UpdatedBean(userBean.getUsername());
+			if(null!=userBeanLg){
+				try {
+					BeanUtils.copyProperties(userBean, userBeanLg);
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+				catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			}else{
+				return ERROR;
+			}
+		
+		
+		if(userBean!=null){
+			loadUserStaticData(userBean, session);
+			//Check for acceptance
+			/*
+			if(null != userBean.getRole() && 0 != userBean.getRole() && 10 != userBean.getRole()){
+				if(null!=userBean.getStartdate()){
+					return SUCCESS;
+				}else{
+					return Constants.UNACCEPTED;
+				}
+			}
+			*/
+			
+			if (null != userBean.getRole() && 0 != userBean.getRole()
+					&& 10 != userBean.getRole()) {
+				if(!userBean.getActivationcode().equals("")){
+					return Constants.ACTIVATION;
+				}else if(userBean.getStatus()!=null){
+					if(userBean.getStatus().equals("F"))
+					return Constants.RESET_PASSWORD;
+				}
+				//if (null != userBean.getStartdate()) {
+					
+					if (null != userBean.getRole() && 9 < userBean.getRole()) {
+						return Constants.ACCESSBLOCKED;
+					}
+					if ((null != userBean.getRole()) && 0 == userBean.getRole()) {
+						return SUCCESS;
+					} else if ((null != userBean.getRole())
+							&& 1 == userBean.getRole()) {
+						TeacherTransaction teacherTransaction=new TeacherTransaction();
+						int teachercount=teacherTransaction.getTeacherCount(userBean.getRegId());
+						StudentTransaction studentTransaction=new StudentTransaction();
+						int studentcount=studentTransaction.getStudentCount(userBean.getRegId());
+						BatchTransactions batchTransactions=new BatchTransactions();
+						int batchcount=batchTransactions.getBatchCount(userBean.getRegId());
+						NotificationTransaction notificationTransaction=new NotificationTransaction();
+						List<Notification> notifications=notificationTransaction.getMessageforOwner(userBean.getRegId());
+						session.put("notifications", notifications);
+						session.put(Constants.BATCHCOUNT, batchcount);
+						session.put(Constants.TEACHERCOUNT, teachercount);
+						session.put(Constants.STUDENTCOUNT, studentcount);
+						return Constants.CLASSOWNER;
+					} else if ((null != userBean.getRole())
+							&& 2 == userBean.getRole()) {
+						TeacherTransaction teacherTransaction=new TeacherTransaction();
+						List<Integer> classids=teacherTransaction.getTeachersClass(userBean.getRegId());
+						RegisterTransaction registerTransaction=new RegisterTransaction();
+						List<RegisterBean> classbeanes=registerTransaction.getTeachersclassNames(classids);
+						List<Notification> notifications=new ArrayList<Notification>();
+						ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
+						List<Scheduledata> scheduledatas=scheduleTransaction.getteacherstodaysSchedule(classids, userBean.getRegId());
+						Map<String, List<Scheduledata>> map=new HashMap<String, List<Scheduledata>>();
+						List<String> divisionNames=new ArrayList<String>();
+						DivisionTransactions divisionTransactions=new DivisionTransactions();
+						if(scheduledatas!=null){
+							if(scheduledatas.size()>0){
+							for (int i = 0; i < classids.size(); i++) {
+								List<Scheduledata> data=new ArrayList<Scheduledata>();
+								for (int j = 0; j < scheduledatas.size(); j++) {
+									if(classids.get(i)==scheduledatas.get(j).getInst_id()){
+										data.add(scheduledatas.get(j));
+									}
+								}
+								if(data.size()>0){
+								map.put(data.get(0).getInst_name(),data);
+								}
+							}
+							}
+						}
+						
+						NotificationTransaction notificationTransaction=new NotificationTransaction();
+						for (int i = 0; i < classids.size(); i++) {
+							List<Notification> notificationsList=  notificationTransaction.getMessageforTeacher(classids.get(i));
+							if(notificationsList!=null){
+								for (int j = 0; j < notificationsList.size(); j++) {
+									notifications.add(notificationsList.get(j));
+								}
+							}
+						}
+						session.put("notifications", notifications);
+						session.put("classes", classbeanes);
+						session.put("todayslect", map);
+						return Constants.CLASSTEACHER;
+					} else if ((null != userBean.getRole())
+							&& 3 == userBean.getRole()) {
+						StudentTransaction studentTransaction=new StudentTransaction();
+						List<Student> list=studentTransaction.getStudent(userBean.getRegId());
+						RegisterTransaction registerTransaction=new RegisterTransaction();
+						List<RegisterBean> beans= registerTransaction.getclassNames(list);
+						NotificationTransaction notificationTransaction=new NotificationTransaction();
+						List<Notification> notifications=new ArrayList<Notification>();
+						for (int i = 0; i < list.size(); i++) {
+							List<Notification> notificationsList=  notificationTransaction.getMessageforStudent(list.get(i));
+							if(notificationsList!=null){
+								for (int j = 0; j < notificationsList.size(); j++) {
+									notifications.add(notificationsList.get(j));
+								}
+							}
+						}
+						ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
+						List<Scheduledata> scheduledatas=scheduleTransaction.gettodaysSchedule(list);
+						Map<String, List<Scheduledata>> map=new HashMap<String, List<Scheduledata>>();
+						if(scheduledatas!=null){
+							if(scheduledatas.size()>0){
+							for (int i = 0; i < beans.size(); i++) {
+								List<Scheduledata> data=new ArrayList<Scheduledata>();
+								for (int j = 0; j < scheduledatas.size(); j++) {
+									if(beans.get(i).getRegId()==scheduledatas.get(j).getInst_id()){
+										scheduledatas.get(j).setInst_name(beans.get(i).getClassName());
+										data.add(scheduledatas.get(j));
+									}
+								}
+								if(data.size()>0){
+								map.put(beans.get(i).getClassName(),data);
+								}
+							}
+							}
+						}
+						session.put("notifications", notifications);
+						session.put("classes", beans);
+						session.put("todayslect", map);
+						return Constants.CLASSSTUDENT;
+					} else {
+						return ERROR;
+					}
+				/*} else {
+					//return Constants.UNACCEPTED;
+					return Constants.SUCCESS;
+				}*/
+			} else {
+				return SUCCESS;
+			}
+		}else{
+			return ERROR;
+		}
+	}
+	
 	public void loadUserStaticData(UserBean userBean, Map<String, Object> session){
 		UserStatic userStatic = new UserStatic();
 		String storagePath = Constants.STORAGE_PATH+File.separator+userBean.getRegId();

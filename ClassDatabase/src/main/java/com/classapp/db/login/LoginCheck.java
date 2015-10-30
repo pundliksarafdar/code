@@ -79,6 +79,61 @@ public class LoginCheck implements Serializable{
 		
 	}
 	
+	public UserBean loadUpdatedUserObject(String username){
+		Gson gson = new Gson();
+		Session session = HibernateUtil.getSessionfactory().openSession();
+		session.beginTransaction();
+		Query query = session.createQuery("from RegisterBean where loginName = :lname");
+		query.setParameter("lname", username);
+		/*query.setParameter("lpass", password);*/
+		List list = query.list();
+		System.out.println(list);
+		LOGGER.debug("In LoginCheck......");
+		
+		UserBean userBean = new UserBean();
+		Iterator iterator = list.iterator();
+		
+		while (iterator.hasNext()) {
+			
+			registerBean = (RegisterBean)iterator.next();
+			System.out.println(registerBean);
+		}
+		try{
+			userBean.setFirstname(registerBean.getFname());
+			userBean.setLastname(registerBean.getLname());
+			userBean.setMiddlename(registerBean.getMname());
+			userBean.setDob(registerBean.getDob());
+			userBean.setAddr1(registerBean.getAddr1());
+			userBean.setAddr2(registerBean.getAddr2());
+			userBean.setCity(registerBean.getCity());
+			userBean.setState(registerBean.getState());
+			userBean.setCountry(registerBean.getCountry());
+			userBean.setPhone1(registerBean.getPhone1());
+			userBean.setPhone2(registerBean.getPhone2());
+			userBean.setRole(registerBean.getRole());
+			userBean.setStartdate(registerBean.getStartDate());
+			userBean.setEnddate(registerBean.getEndDate());
+			userBean.setRegId(registerBean.getRegId());
+			userBean.setActivationcode(registerBean.getActivationcode());
+			userBean.setStatus(registerBean.getStatus());
+			userBean.setUsername(registerBean.getLoginName());
+			userBean.setEmail(registerBean.getEmail());
+			userBean.setClassName(registerBean.getClassName());
+			userBean.setInst_status(registerBean.getInst_status());
+			userBean.setLastlogin(registerBean.getLastlogin());
+			return userBean;
+			//return gson.toJson(userBean);
+		}catch(Exception ex){
+			return null;
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+			
+		
+	}
+	
 	public void updateIdForUser(Integer regId,String googleId, String deviceId){
 		Session session = HibernateUtil.getSessionfactory().openSession();
 		Transaction transaction = session.beginTransaction();

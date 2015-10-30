@@ -1,6 +1,8 @@
 package com.admin.misc;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -16,10 +18,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.util.PDFImageWriter;
 
 import com.classapp.db.Feedbacks.Feedback;
 import com.classapp.db.Notes.Notes;
@@ -48,6 +56,7 @@ import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
 import com.classapp.db.subject.Topics;
 import com.classapp.logger.AppLogger;
+import com.classapp.login.UserStatic;
 import com.classapp.notification.GeneralNotification;
 import com.classapp.notification.GeneralNotification.NOTIFICATION_KEYS;
 import com.classapp.persistence.Constants;
@@ -3044,6 +3053,38 @@ public class ClassOwnerServlet extends HttpServlet{
 		int inst_id = regId;
 		boolean isQuestionAvailable = examTransaction.isQuestionsAvailable(sub_id, inst_id, div_id, marks, count, maximumRepeatation);
 		respObject.addProperty("available", isQuestionAvailable);
+		respObject.addProperty(STATUS, "success");
+	}else if("navigatepage".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		int pageno = Integer.parseInt(req.getParameter("pageno"));
+		Notes notes=(Notes) req.getSession().getAttribute("notes");
+		NotesTransaction notesTransaction=new NotesTransaction();
+		String filename=notesTransaction.getNotepathById(notes.getNotesid(),notes.getClassid(),notes.getSubid(),notes.getDivid());
+		UserStatic userStatic = userBean.getUserStatic();
+		String storagePath = com.config.Constants.STORAGE_PATH+File.separator+notes.getClassid();
+		userStatic.setStorageSpace(storagePath);
+		String path=userStatic.getNotesPath()+File.separator+notes.getSubid()+File.separator+notes.getDivid()+File.separator+filename;
+		File file = new File(path);
+		String base64="";
+        try {
+				PDDocument document = PDDocument.loadNonSeq(new File(path), null);
+				List<PDPage> pdPages = document.getDocumentCatalog().getAllPages();
+				int page = 0;
+				PDFImageWriter imageWriter=new PDFImageWriter();
+					ByteArrayOutputStream stream=new ByteArrayOutputStream();
+				    BufferedImage bim = pdPages.get(pageno).convertToImage(BufferedImage.TYPE_INT_RGB, 100);
+				  
+				     ImageIO.write(bim, "png", stream);
+				     stream.flush();
+				     byte b [] = stream.toByteArray();
+				   	base64= javax.xml.bind.DatatypeConverter.printBase64Binary(b);
+				    	stream.close();
+				document.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        respObject.addProperty("base64", base64);
 		respObject.addProperty(STATUS, "success");
 	}
 		

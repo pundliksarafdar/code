@@ -135,7 +135,7 @@
 		</action>
 		<action name="shownotes" class="com.notes.DisplayNotesAction"
 			method="execute">
-			<result name="success" type="tiles">displaynoteslist.success</result>
+			<result name="displaynotes">/Notes/DisplayNotes.jsp</result>
 		</action>
 		<action name="managestudent" class="com.classowner.ManageStudentAction"
 			method="execute">

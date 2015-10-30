@@ -64,4 +64,11 @@ public class login {
 			loginCheck.updateIdForUser(userBean.getRegId(),loginBean.getUserid(),loginBean.getDeviceId());
 		}*/
 	}
+	
+	public UserBean UpdatedBean(String loginname) {
+		LoginCheck loginCheck = new LoginCheck();
+		UserBean userBeanJson = loginCheck.loadUpdatedUserObject(loginname);
+		
+		return userBeanJson;
+	}
 }
