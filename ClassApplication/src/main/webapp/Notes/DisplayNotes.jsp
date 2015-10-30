@@ -239,7 +239,7 @@ $.ajax({
 <div class="col-md-2">
  <input type="number" class="form-control " min="1" id="gotopageno" placeholder="Page No"></div>
 <div class="col-md-3" style="width: 0;"> <button class="btn btn-primary " id="goto">GO</button></div>
-<div class="col-md-2" style="font-size: x-large;cursor: pointer;">|<label id="currentpageno">1</label>/44</div>
+<div class="col-md-2" style="font-size: x-large;cursor: pointer;">|<label id="currentpageno">1</label>/<c:out value="${totalpages}"></c:out></div>
 
 </div>
 </div>
