@@ -83,7 +83,7 @@ public class DisplayNotesAction extends BaseAction{
 				PDFImageWriter imageWriter=new PDFImageWriter();
 					ByteArrayOutputStream stream=new ByteArrayOutputStream();
 				    BufferedImage bim = pdPages.get(0).convertToImage(BufferedImage.TYPE_INT_RGB, 100);
-				  
+				    request.getSession().setAttribute("notesimage_0", bim);
 				     ImageIO.write(bim, "png", stream);
 				     stream.flush();
 				     byte b [] = stream.toByteArray();
@@ -95,6 +95,7 @@ public class DisplayNotesAction extends BaseAction{
 			e.printStackTrace();
 		}
 		}
+		
 		Notes notes=new Notes();
 		notes.setClassid(inst_id);
 		notes.setSubid(Integer.parseInt(subject));

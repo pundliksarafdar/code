@@ -3073,7 +3073,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				PDFImageWriter imageWriter=new PDFImageWriter();
 					ByteArrayOutputStream stream=new ByteArrayOutputStream();
 				    BufferedImage bim = pdPages.get(pageno).convertToImage(BufferedImage.TYPE_INT_RGB, 100);
-				  
+				  req.getSession().setAttribute("notesimage_"+pageno, bim);
 				     ImageIO.write(bim, "png", stream);
 				     stream.flush();
 				     byte b [] = stream.toByteArray();

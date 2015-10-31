@@ -439,5 +439,9 @@
 			method="execute">
 			<result name="success" type="tiles">admin.instituteupgrade</result>
 		</action>
+		<action name="ImageAction" class="com.notes.ImageAction"
+			method="execute">
+			<result name="success" type="tiles">admin.instituteupgrade</result>
+		</action>
 	</package>
 </struts>
