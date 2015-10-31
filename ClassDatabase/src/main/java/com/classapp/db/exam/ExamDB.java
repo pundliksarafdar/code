@@ -410,7 +410,7 @@ return list;
 					query.setParameter("que_ids"+i+"a", ques_id.get(i)+",%");
 					query.setParameter("que_ids"+i+"b","%,"+ques_id.get(i)+",%");	
 					query.setParameter("que_ids"+i+"c", "%,"+ques_id.get(i));
-					query.setParameter("que_ids"+i+"d", ques_id.get(i));
+					query.setParameter("que_ids"+i+"d", ques_id.get(i)+"");
 			}
 			
 			
@@ -603,4 +603,6 @@ return list;
 		session.close();
 		return false;
 	}
+	
+	
 }

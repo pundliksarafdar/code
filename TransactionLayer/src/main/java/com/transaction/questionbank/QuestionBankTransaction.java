@@ -67,4 +67,29 @@ public class QuestionBankTransaction {
 			QuestionbankDB db=new QuestionbankDB();
 			return db.deleteQuestionList(que_id, inst_id, sub_id, div_id);
 	}
+		
+		public List<Integer> getDisabledQuestions(List<Integer> que_id,int inst_id,int sub_id,int div_id) {
+			QuestionbankDB db=new QuestionbankDB();
+			return db.getDisabledQuestions(que_id, inst_id, sub_id, div_id);
+	}
+		public List<Integer> getQuestionrelatedtoSubject(int inst_id,int sub_id) {
+			QuestionbankDB db=new QuestionbankDB();
+			return db.getQuestionrelatedtoSubject(sub_id, inst_id);
+	}
+		
+		public List<Integer> getQuestionrelatedtoClass(int inst_id,int div_id) {
+			QuestionbankDB db=new QuestionbankDB();
+			return db.getQuestionrelatedtoClass(inst_id, div_id);
+	}
+		
+		public boolean deleteQuestionrelatedtoClass(int inst_id,int div_id) {
+			QuestionbankDB db=new QuestionbankDB();
+			return db.deleteQuestionrelatedtoClass(inst_id, div_id);
+	}
+		
+		public boolean deleteQuestionrelatedtoSubject(int inst_id,int sub_id) {
+			QuestionbankDB db=new QuestionbankDB();
+			return db.deleteQuestionrelatedtosubject(sub_id, inst_id);
+	}
+		
 }

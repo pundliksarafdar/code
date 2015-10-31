@@ -230,6 +230,12 @@ public class ExamTransaction {
 		return result;
 	}
 	
+	public Exam getExam(int inst_id,int sub_id,int div_id,int examID) {
+		ExamDB db=new ExamDB();
+	  return db.getExam(examID, inst_id, sub_id, div_id);
+		
+	}
+	
 	public static void main(String[] args) {
 		/*
 		ExamData examData = new ExamData();

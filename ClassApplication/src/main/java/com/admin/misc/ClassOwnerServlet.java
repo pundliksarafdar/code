@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.util.PDFImageWriter;
@@ -1759,6 +1761,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	respObject.addProperty(STATUS, "success");
 }else if("deletesubject".equals(methodToCall)){
 	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+	UserStatic userStatic=userBean.getUserStatic();
 	String subjectid=req.getParameter("subjectid");
 	Subject subject=new Subject();
 	subject.setSubjectId(Integer.parseInt(subjectid));
@@ -1776,6 +1779,12 @@ public class ClassOwnerServlet extends HttpServlet{
 	examTransaction.deleteExamrelatedtosubject(Integer.parseInt(subjectid));
 	SubjectTransaction subjectTransaction=new SubjectTransaction();
 	subjectTransaction.deleteTopicsrelatedToSubject(userBean.getRegId(), Integer.parseInt(subjectid));
+	QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
+	//List<Integer> ques_ids=bankTransaction.getQuestionrelatedtoSubject(userBean.getRegId(), Integer.parseInt(subjectid));
+	String path=userStatic.getExamPath()+File.separator+subjectid;
+	FileUtils.deleteDirectory(new File(userStatic.getExamPath()+File.separator+subjectid));
+	FileUtils.deleteDirectory(new File(userStatic.getNotesPath()+File.separator+subjectid));
+	bankTransaction.deleteQuestionrelatedtoSubject(userBean.getRegId(), Integer.parseInt(subjectid));
 	subjectTransaction.deleteSubject(Integer.parseInt(subjectid));
 	respObject.addProperty(STATUS, "success");
 }else if("modifyclass".equals(methodToCall)){
@@ -1799,6 +1808,7 @@ public class ClassOwnerServlet extends HttpServlet{
 }else if("deleteclass".equals(methodToCall)){
 	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 	String classid=req.getParameter("classid");
+	UserStatic userStatic=userBean.getUserStatic();
 	ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 	scheduleTransaction.deleteschedulerelatedtoclass(Integer.parseInt(classid));
 	StudentTransaction studentTransaction=new StudentTransaction();
@@ -1813,6 +1823,17 @@ public class ClassOwnerServlet extends HttpServlet{
 	batchTransactions.deletebatchrelatdtoclass(Integer.parseInt(classid));
 	SubjectTransaction subjectTransaction=new SubjectTransaction();
 	subjectTransaction.deleteTopicsrelatedToDivision(userBean.getRegId(), Integer.parseInt(classid));
+	QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
+	//List<Integer> ques_ids=bankTransaction.getQuestionrelatedtoSubject(userBean.getRegId(), Integer.parseInt(subjectid));
+	List<Subjects> list=subjectTransaction.getAllClassSubjects(userBean.getRegId()); 
+	if(list!=null){
+	for (int i = 0; i < list.size(); i++) {
+		String path=userStatic.getExamPath()+File.separator+list.get(i).getSubjectId()+File.separator+classid;
+		FileUtils.deleteDirectory(new File(userStatic.getExamPath()+File.separator+list.get(i).getSubjectId()+File.separator+classid));
+		FileUtils.deleteDirectory(new File(userStatic.getExamPath()+File.separator+list.get(i).getSubjectId()+File.separator+classid));
+	}
+	}
+	bankTransaction.deleteQuestionrelatedtoClass(userBean.getRegId(), Integer.parseInt(classid));
 	DivisionTransactions divisionTransactions=new DivisionTransactions();
 	divisionTransactions.deletedivision(Integer.parseInt(classid));
 	respObject.addProperty(STATUS, "success");
@@ -2445,6 +2466,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		respObject.addProperty(STATUS, "success");
 	}else if("deleteTopics".equalsIgnoreCase(methodToCall)){
 		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		UserStatic userStatic=userBean.getUserStatic();
 		Integer regId=userBean.getRegId();;
 		String divisionId = req.getParameter("divisionID");
 		String subjectid = req.getParameter("subID");
@@ -2479,8 +2501,38 @@ public class ClassOwnerServlet extends HttpServlet{
 					}
 				}
 				}
+			if(nonExamQuesIds!=null){
+				for (int i = 0; i < nonExamQuesIds.size(); i++) {
+					String questionPath = userStatic.getExamPath()+File.separator+subjectid+File.separator+divisionId+File.separator+nonExamQuesIds.get(i);
+					//uploadedMarks = (Integer) request.getSession().getAttribute("uploadedMarks");
+					File file = new File(questionPath);
+					if(file.exists()){
+						try {
+							delete(file);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
 			bankTransaction.deleteQuestionList(nonExamQuesIds, userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId));
 			bankTransaction.ExamQuestionStatus(examQuesIds,  userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId));
+			}else{
+				for (int i = 0; i < quesids.size(); i++) {
+					String questionPath = userStatic.getExamPath()+File.separator+subjectid+File.separator+divisionId+File.separator+quesids.get(i);
+					//uploadedMarks = (Integer) request.getSession().getAttribute("uploadedMarks");
+					File file = new File(questionPath);
+					if(file.exists()){
+						try {
+							delete(file);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+				bankTransaction.deleteQuestionList(quesids, userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId));
 			}
 			//respObject.addProperty("examnames", examname);
 			//respObject.addProperty("quesstatus", "Y");
@@ -3242,5 +3294,45 @@ public class ClassOwnerServlet extends HttpServlet{
 	public static String getBookigID() {
 		return new java.util.Date().getTime()+"";
 	}
+	
+	public static void delete(File file)
+	    	throws IOException{
+	 
+	    	if(file.isDirectory()){
+	 
+	    		//directory is empty, then delete it
+	    		if(file.list().length==0){
+	 
+	    		   file.delete();
+	    		   AppLogger.logger("Directory is deleted : " 
+	                                                 + file.getAbsolutePath());
+	 
+	    		}else{
+	 
+	    		   //list all the directory contents
+	        	   String files[] = file.list();
+	 
+	        	   for (String temp : files) {
+	        	      //construct the file structure
+	        	      File fileDelete = new File(file, temp);
+	 
+	        	      //recursive delete
+	        	     delete(fileDelete);
+	        	   }
+	 
+	        	   //check the directory again, if empty then delete it
+	        	   if(file.list().length==0){
+	           	     file.delete();
+	        	     AppLogger.logger("Directory is deleted : " 
+	                                                  + file.getAbsolutePath());
+	        	   }
+	    		}
+	 
+	    	}else{
+	    		//if file, then delete it
+	    		file.delete();
+	    		AppLogger.logger("File is deleted : " + file.getAbsolutePath());
+	    	}
+	    }
 	String overlappedtimeids="";
 }

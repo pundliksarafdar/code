@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.db.exam.CompExam;
+import com.classapp.db.exam.Exam;
 import com.config.BaseAction;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.questionbank.QuestionBankTransaction;
@@ -26,6 +27,24 @@ public class DeleteExamAction extends BaseAction{
 			Map<String, Object> session) {
 		ExamTransaction examTransaction=new ExamTransaction();
 		StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
+		Exam  exam=examTransaction.getExam(userBean.getRegId(), Integer.parseInt(subject), Integer.parseInt(division), examID);
+		String[] quesids=exam.getQue_ids().split(",");
+		List<Integer> quesidsList=new ArrayList<Integer>();
+		for (int i = 0; i < quesids.length; i++) {
+			quesidsList.add(Integer.parseInt(quesids[i]));
+		}
+		QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
+		List<Integer> disabledqueIds=bankTransaction.getDisabledQuestions(quesidsList, userBean.getRegId(), Integer.parseInt(subject), Integer.parseInt(division));
+		if(disabledqueIds!=null){
+		for (int i = 0; i < disabledqueIds.size(); i++) {
+			List<Exam> exams=examTransaction.isQuestionAvailableInExam(userBean.getRegId(), Integer.parseInt(subject), Integer.parseInt(division), quesidsList.get(i)+"");	
+			if(exams!=null){
+				if(exams.size()==1){
+					bankTransaction.deleteQuestion(disabledqueIds.get(i), userBean.getRegId(), Integer.parseInt(subject), Integer.parseInt(division));
+				}
+			}
+		}
+		}
 		marksTransaction.deleteStudentMarksrelatedtoexam(userBean.getRegId(), Integer.parseInt(division), Integer.parseInt(subject), examID);
 		examTransaction.deleteExam(examID, userBean.getRegId(), Integer.parseInt(subject), Integer.parseInt(division));
 		actionname="deleteExam";
