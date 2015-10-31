@@ -97,7 +97,7 @@
      <!-- <listener>
         <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
     </listener> -->
-   <!-- 
+   
 	<security-constraint>
     <web-resource-collection>
         <web-resource-name>ROOT</web-resource-name>
@@ -111,7 +111,6 @@
     </user-data-constraint>
      
 </security-constraint>
--->
 
 	<!-- Auto scan REST service -->
 	
@@ -144,6 +143,7 @@
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
  
+	<!-- 
 	<filter>
 		<filter-name>AuthenticationFilter</filter-name>
 		<filter-class>com.corex.filter.AuthFilter</filter-class>
@@ -152,4 +152,5 @@
 		<filter-name>AuthenticationFilter</filter-name>
 		<url-pattern>/rest/*</url-pattern>
 	</filter-mapping>
+	 -->
 </web-app>
