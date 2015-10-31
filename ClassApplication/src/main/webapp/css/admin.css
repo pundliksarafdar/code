@@ -23,8 +23,9 @@
 	min-height:525px;	
 	height: auto;
 	padding-bottom: 20px;
-	border-radius: 25px;
-	 box-shadow: 5px 5px /* Height of the footer */
+	border-radius: 10px;
+	padding: 10px;
+	box-shadow: 5px 5px /* Height of the footer */
 	/* background:#E9E581; */
 }
 

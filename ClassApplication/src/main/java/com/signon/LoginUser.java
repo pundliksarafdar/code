@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import com.classapp.db.institutestats.InstituteStats;
 import com.classapp.db.login.LoginCheck;
 import com.classapp.db.notificationpkg.Notification;
 import com.classapp.db.register.RegisterBean;
@@ -30,6 +31,7 @@ import com.sun.org.apache.bcel.internal.generic.LUSHR;
 import com.tranaction.login.login;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
+import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.notification.Data;
 import com.transaction.notification.NotificationTransaction;
 import com.transaction.register.RegisterTransaction;
@@ -71,6 +73,13 @@ public class LoginUser extends BaseAction{
 				forward = loadBean(userBean, loginBean, response, session);
 				Cookie cookie = new Cookie("logincreation", "loggedin");
 				response.addCookie(cookie);
+				
+				//If user is classowner then add institute statistics.
+				if(userBean.getRole()==1){
+					InstituteStatTransaction transaction = new InstituteStatTransaction();
+					InstituteStats instituteStats = transaction.getStats(userBean.getRegId());
+					request.setAttribute("instituteStats", instituteStats);
+				}
 			}else{
 				//if register id is not avialable then check for login
 				forward = loadBean(userBean, loginBean, response, session);

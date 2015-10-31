@@ -132,6 +132,8 @@ html,body {
 <script src="js/plugins.js"></script>
 <script src="js/validator.js"></script>
 <script src="js/jquery.validate.min.js"></script>
+<script src="js/raphael.min.js"></script>
+<script src="js/morris.min.js"></script>
 <script>
 $( document ).ajaxStart(function() {
 	  $("#loaderModal").modal("show")

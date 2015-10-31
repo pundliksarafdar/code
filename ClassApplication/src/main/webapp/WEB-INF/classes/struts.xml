@@ -5,7 +5,7 @@
 <struts>
 	<constant name="struts.devMode" value="true" />
 	<constant name="struts.action.excludePattern"
-		value="/admajxsrvlt,/classOwnerServlet,/notificationServlet,/reloadConfig,/notifications" />
+		value="/admajxsrvlt,/classOwnerServlet,/notificationServlet,/reloadConfig,/notifications,/rest.*" />
 	<constant name="struts.multipart.maxSize" value="5000000" />
 	<constant name="struts.custom.i18n.resources" value="global" />
 	<package name="classapp" extends="struts-default">
