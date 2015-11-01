@@ -215,6 +215,9 @@ public List<Questionbank> getSearchedQuestion(int rep,String compexam_id,int mar
 		criterion = Restrictions.eq("topic_id", topic_id);
 		criteria.add(criterion);
 	}
+	
+	criterion = Restrictions.ne("ques_status", "N");
+	criteria.add(criterion);
 	if(currentPage!=0 &&  currentPage!=1){
 		criteria.setFirstResult((currentPage-1)*50);
 	}

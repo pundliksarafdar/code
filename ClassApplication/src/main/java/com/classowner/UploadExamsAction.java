@@ -187,6 +187,7 @@ public class UploadExamsAction extends BaseAction{
 			questionbank.setRep(0);
 			questionbank.setSub_id(Integer.parseInt(subject));
 			questionbank.setTopic_id(topicID);
+			questionbank.setQues_status("");
 			bankTransaction.saveQuestion(questionbank);
 			if(currentPage!=0){
 				result="questioneditsuccess";

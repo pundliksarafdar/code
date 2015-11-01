@@ -65,7 +65,7 @@ public class AttemptExamAction extends BaseAction {
 			ExamTransaction examTransaction=new ExamTransaction();
 			initiateExam=examTransaction.getExamToAttempt(inst_id, Integer.parseInt(subject), Integer.parseInt(division), examID);
 			}else{
-				if("examattempted".equals(actionname) && userBean.getRegId()==3){
+				if("examattempted".equals(actionname) && userBean.getRole()==3){
 					StudentMarks studentMarks=new StudentMarks();
 					studentMarks.setDiv_id(Integer.parseInt(division));
 					studentMarks.setExam_id(examID);
