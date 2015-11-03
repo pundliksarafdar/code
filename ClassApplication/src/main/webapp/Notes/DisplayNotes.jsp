@@ -18,10 +18,29 @@ font-weight: bolder;
 </style>
 
 <script type="text/javascript">
+/* function disableselect(e){
+    return false
+    }
+    function reEnable(){
+    return true
+    }
+    document.onselectstart=new Function (&quot;return false&quot;)
+    if (window.sidebar){
+    document.onmousedown=disableselect
+    document.onClick=reEnable
+    } */
 $(document).ready(function(){
 	 $(document).on("contextmenu",function(){
 		    return false;
 		    });
+	 
+	 $('body').bind('copy paste',function(e) {
+		    e.preventDefault(); return false; 
+		});
+	 
+	 $("#imagesdiv").mousedown("img",function(){
+		    return false;
+		});
 	var visitedpages=[];
 	visitedpages.push(0);
 	  if(parseInt($("#totalpages").val())-1==0){
@@ -235,7 +254,7 @@ $.ajax({
 });
 </script>
 </head>
-<body>
+<body >
 
 <%String base64=(String)request.getAttribute("imagefile"); %>
 <div class="container" style="margin-top: 10px">
@@ -245,7 +264,7 @@ $.ajax({
 <div class="col-md-2"><span id="pagenoerror" style="color: red"></span></div>
 <div class="col-md-2">
  <input type="number" class="form-control " min="1" id="gotopageno" placeholder="Page No" max="<c:out value="${totalpages}"></c:out>"></div>
-<div class="col-md-3" style="width: 0;"> <button class="btn btn-primary " id="goto">GO</button></div>
+<div class="col-md-1"> <button class="btn btn-primary " id="goto">GO</button></div>
 <div class="col-md-2" style="font-size: x-large;cursor: pointer;">|<label id="currentpageno">1</label>/<c:out value="${totalpages}"></c:out></div>
 
 </div>
@@ -258,7 +277,7 @@ $.ajax({
 <div class="col-md-10" id="imagesdiv">
 <%-- <img src="data:image/png;base64, <%=base64 %>" id="notesimage_0"> --%>
 <%-- <table style="background-image:url('data:image/png;base64, <%=base64 %>');width:Wpx;height:Hpx"></table> --%>
-<img src=" <s:url action='ImageAction?imageId=notesimage_0' />"  id="notesimage_0">
+<img src=" <s:url action='ImageAction?imageId=notesimage_0' />"  id="notesimage_0" >
 </div>
 <div class="col-md-1" align="right" style="margin-top: 30%"> <a id="next" class="btn glyphicon glyphicon-step-forward navigationposiotion"></a></div>
 </div>
