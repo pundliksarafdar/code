@@ -9,7 +9,6 @@
   <groupId>com.classapp.db</groupId>
   <artifactId>ClassDatabase</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
   <name>ClassDatabase</name>
   <url>http://maven.apache.org</url>
   <dependencies>

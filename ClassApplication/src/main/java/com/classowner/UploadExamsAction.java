@@ -378,6 +378,7 @@ public class UploadExamsAction extends BaseAction{
 		String finalExamPath = userStatic.getExamPath()+File.separator+examname;
 		writeObject(finalExamPath, questionDatas);
 		
+		
 		request.getSession().removeAttribute("uploadedMarks");
 		request.getSession().removeAttribute("questionNumber");
 		request.getSession().removeAttribute("uploadedMarks");

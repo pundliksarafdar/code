@@ -73,13 +73,6 @@ public class LoginUser extends BaseAction{
 				forward = loadBean(userBean, loginBean, response, session);
 				Cookie cookie = new Cookie("logincreation", "loggedin");
 				response.addCookie(cookie);
-				
-				//If user is classowner then add institute statistics.
-				if(userBean.getRole()==1){
-					InstituteStatTransaction transaction = new InstituteStatTransaction();
-					InstituteStats instituteStats = transaction.getStats(userBean.getRegId());
-					request.setAttribute("instituteStats", instituteStats);
-				}
 			}else{
 				//if register id is not avialable then check for login
 				forward = loadBean(userBean, loginBean, response, session);
@@ -88,6 +81,16 @@ public class LoginUser extends BaseAction{
 				if(!forward.equalsIgnoreCase(ERROR) && !validateTime(userBean)){
 					forward = ERROR;
 				}
+			}
+			
+			if(!forward.equals(ERROR)){
+				//If user is classowner then add institute statistics.
+				if(userBean.getRole()==1){
+					InstituteStatTransaction transaction = new InstituteStatTransaction();
+					InstituteStats instituteStats = transaction.getStats(userBean.getRegId());
+					request.setAttribute("instituteStats", instituteStats);
+				}
+
 			}
 			
 		}

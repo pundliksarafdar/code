@@ -10,7 +10,6 @@
 	</parent>
 	<groupId>MyClassApplication</groupId>
 	<artifactId>TransactionLayer</artifactId>
-	<version>1.0-SNAPSHOT</version>
 	<name>TransactionLayer</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>

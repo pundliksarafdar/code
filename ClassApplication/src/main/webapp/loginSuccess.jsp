@@ -97,31 +97,25 @@ while (it.hasNext()) {
 	
 <div class="col-sm-6">	
 <div class="panel-group">
-    <div class="panel panel-default" >
-      <div class="panel-heading" style="background-color:black;color: white;align:center" ><u>Notice Board</u></div>
+    <div class="panel panel-primary" >
+      <div class="panel-heading">
+      	<strong>Notice Board</strong>
+      </div>
       <%if(notifications.size()>0){ %>
-      <div class="panel-body" style="background-color:black;height: 200px;color: white;">
-		<ul>
+      <div class="panel-body">
+		<ul class="list-group">
 		<%
 		for(int j=0;j<registerBean.size();j++){
 			boolean flag= false;
-		for(int i=0;i<notifications.size();i++){ 
-		if(registerBean.get(j).getRegId()==notifications.get(i).getInstitute_id()){
-		%>
-		
-		<%
-			if(flag==false){
-		%>
-			<u><%=registerBean.get(j).getClassName() %></u>
-			<%
-		flag=true;	
-		} %>
-			
-			<li type="disc"><%=notifications.get(i).getMessage() %></li>
-			
-		<%
-		}
-		}
+			for(int i=0;i<notifications.size();i++){
+				if(registerBean.get(j).getRegId()==notifications.get(i).getInstitute_id()){
+				%>
+					<li class="list-group-item">
+						<span class="badge"><%=registerBean.get(j).getClassName() %> </span><%=notifications.get(i).getMessage() %>
+					</li>
+				<%
+				}
+			}
 		}%>
 		</ul>
 	  </div>
@@ -130,9 +124,7 @@ while (it.hasNext()) {
 		} else{%>
 	  <div class="panel-body" style="background-color:black;height: 200px;"></div>
 	  <%} %>
-	  <div align="center">
-	  <img src=".\images\2.png" align="center">
-		</div>
+	  
 	</div>
   </div>
 </div>

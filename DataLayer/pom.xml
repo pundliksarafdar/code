@@ -9,7 +9,7 @@
   <groupId>com.datalayer</groupId>
   <artifactId>DataLayer</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  
   <name>DataLayer</name>
   <url>http://maven.apache.org</url>
   <dependencies>
