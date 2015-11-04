@@ -17,6 +17,8 @@
 	var BATCH_DROPDOWN = ".batchDropDown";
 	var ADD_BUTTON = "#classownerUploadexamAddExam";
 	var hideBatch = <c:out value="${hideBatch}" ></c:out>;
+	var batchDefault = <c:out value="${batchDefault}" ></c:out>;
+	
 	$(document).ready(function(){
 		//$(SUBJECT_DROPDOWN).hide();
 		//$(BATCH_DROPDOWN).hide();
@@ -51,8 +53,14 @@
 			}else{
 				uploadExam.getBatchFromDivisonNSubject(subjectId,divisionId);	
 			}
+			
+			//If default batch is enabled then enable submit button and fill the batch dropdown also
+			if(batchDefault == true){
+				$("#classownerUploadexamAddExam").prop("disabled",false);
+				uploadExam.getBatchFromDivisonNSubject(subjectId,divisionId);	
+			}
 			}else{
-				if(hideBatch == true){
+				if(hideBatch == true || batchDefault == true){
 					$("#classownerUploadexamAddExam").prop("disabled",true);
 				}else{
 					$("#classownerUploadexamBatchName").prop("disabled",true);

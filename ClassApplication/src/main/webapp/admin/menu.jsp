@@ -323,7 +323,7 @@ function RenderTimer(completedTime,totalTime){
       		<ul class="dropdown-menu">
 	            <li><a class="menuoptions" href="choosesubject?forwardAction=generateexampreaction">Auto Generate Exam</a></li>
 	            <li><a class="menuoptions" href="choosesubject?forwardAction=manualexam">Add Manual Exam</a></li>
-	            <li><a class="menuoptions" href="choosesubject?forwardAction=listExam">Search Exam</a></li>
+	            <li><a class="menuoptions" href="/choosesubject?forwardAction=listExam&batchDefault=true">Search Exam</a></li>
 	            <li><a class="menuoptions" href="choosesubject?forwardAction=attemptexamlist">Attempt Exam</a></li>
 	            <li><a class="menuoptions" href="choosesubject?forwardAction=studentexammarks">Exam marks</a></li>
 	         </ul>
@@ -344,7 +344,7 @@ function RenderTimer(completedTime,totalTime){
     	<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
     	<ul class="dropdown-menu">
 	            <li><a class="menuoptions" href="choosesubject?forwardAction=addnotesoption">Add Notes</a></li>
-	            <li><a class="menuoptions" href="choosesubject?forwardAction=seenotes">See/Update All Notes</a></li>  
+	            <li><a class="menuoptions" href="/choosesubject?forwardAction=listExam&batchDefault=true">See/Update All Notes</a></li>  
 	         </ul>
     	
     	</li>
