@@ -32,6 +32,7 @@ import com.datalayer.exam.QuestionData;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.division.DivisionTransactions;
+import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.questionbank.QuestionBankTransaction;
 import com.user.UserBean;
 
@@ -73,6 +74,13 @@ public class UploadExamsAction extends BaseAction{
 			userStatic.setStorageSpace(storagePath);
 			inst_id=Integer.parseInt(institute);
 		}
+		
+		InstituteStatTransaction transaction = new InstituteStatTransaction();
+		if(transaction.getStats(inst_id).getAvail_memory()<0){
+			addActionError("Running out of memmory");
+			return ERROR;
+		}
+		
 		SubjectTransaction subjectTransaction=new SubjectTransaction();
 		topics=subjectTransaction.getTopics(inst_id, Integer.parseInt(subject), Integer.parseInt(division));
 	
