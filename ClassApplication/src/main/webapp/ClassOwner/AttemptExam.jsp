@@ -10,7 +10,10 @@
 
  window.onbeforeunload = confirmExit;
 function confirmExit() {
-    return "You have attempted to leave this page. Are you sure?";
+	if(showPageCloseWarning)
+		return "You have attempted to leave this page. Are you sure?";
+	else
+		return null;
 } 
 /*
 function showTimeLeft(timeLeft){
@@ -43,6 +46,8 @@ $(document).ready(function(){
 	var that;
 	var startTime = <c:out value="${sessionScope.starttime }"></c:out>; 
 	var endTime = <c:out value="${sessionScope.endtime }"></c:out>;
+	showPageCloseWarning = true;
+	
 	setInterval(function(){
 		var timeLeft = (new Date().getTime()-new Date(endTime).getTime())/(1000);
 		showTimeLeft(timeLeft);
@@ -51,6 +56,7 @@ $(document).ready(function(){
 			$(".examSubmit").trigger('click');	
 		}
 	},1000);
+	
 	
 	$('.hasDatepicker').datetimepicker({
 		inline: true,
@@ -173,6 +179,7 @@ $(".start").on("click",function(){
 		}
 		count++;
 	}
+	showPageCloseWarning = false;
 	$("#answers").val(answers);
 	$("#paginateform").submit();
 });
@@ -195,6 +202,7 @@ $(".end").on("click",function(){
 		}
 		count++;
 	}
+	showPageCloseWarning = false;
 	$("#answers").val(answers);
 	$("#paginateform").submit();
 });
@@ -219,6 +227,7 @@ $(".examSubmit").on("click",function(){
 	}
 	$("#answers").val(answers);
 	$("form#paginateform #actionname").val("examSubmit");
+	showPageCloseWarning = false;
 	$("#paginateform").submit();
 });
 
