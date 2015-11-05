@@ -25,6 +25,10 @@ $(document).ready(function(){
 	var removedIds=[];
 	var addedIndex=0;
 	var removedIndex=0;
+	
+	var editExam = new EditExam();
+	//editExam.getBatchFromDivisonNSubject();
+	
 	$("#uploadexams").on("click",function(){
 		$("#uploadform").attr("action","uploadexams");
 		$("#uploadform").submit();
@@ -286,11 +290,68 @@ $("#createexam").on("click",function(){
 	/* $("#submitExam").click("click",function(){
 		
 	}); */
+	
+	if($("#classownerUploadexamSelectBatchName").length){
+		var editExam = new EditExam();
+		var subject = <c:out value="${subject}" default='-1'></c:out>;
+		var division = <c:out value="${division}" default='-1'></c:out>;
+		
+		if(division!=-1 && subject!=-1){
+			editExam.getBatchFromDivisonNSubject(subject,division);
+			$("#classownerUploadexamSelectBatchName").multiselect();
+		}
+	}
 });
 
 var selectMarks = function(){
 	
 };
+
+function EditExam(){
+	this.getBatchFromDivisonNSubject = function(subjectId,divisionId){
+		
+		$.ajax({
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "getBatchesByDivisionNSubject",
+			    	 divisionId: divisionId,
+					 subjectId:subjectId
+			   		},
+			   type:"POST",
+			   success:function(data){
+				   console.log(data);
+				   displayBatchFromSubjectNDivision(data);
+			   },
+				error:function(){
+			   		modal.launchAlert("Error","Error");
+			   	}
+			   });
+		}
+	
+	var displayBatchFromSubjectNDivision = function (data){
+		var selectOptionDropdown = "#classownerUploadexamBatchName";
+		var classownerUploadexamBatchNameMenu = "#classownerUploadexamBatchNameMenu";
+		data = JSON.parse(data);
+		data = data.batchlist;
+		data = JSON.parse(data);
+		$(classownerUploadexamBatchNameMenu).children().not(".staticMenu").remove();
+		$(classownerUploadexamBatchNameMenu).find(".selectAllCheckbox").prop("checked",false);
+		if(data.length !== 0){
+		var index=0;
+		$.each(data,function(index,subjectData){
+			var batchName = subjectData.batch_name;
+			var batchId = subjectData.batch_id;
+			var optionMenu = '<li><a href="#"> <input id="checkButton'+index+'" type="checkbox" name="batch" value="'+batchId+'"><label for="checkButton'+index+'">'+batchName+'</label></a></li>'
+			$(classownerUploadexamBatchNameMenu).append(optionMenu);
+			index++;
+		});
+		$("#classownerUploadexamBatchName").prop("disabled",false);
+		}else{
+			$("#classownerUploadexamBatchName").prop("disabled",true);
+			$(".alert-danger").text("Subjects for selected batch are not added.").show();
+		}
+	}
+}
 </script>
 </head>
 <body>
@@ -553,6 +614,21 @@ var selectMarks = function(){
     <input type="number" class="form-control" min="0" max="59" maxlength="2" id="examMinute" name="examMinute" placeholder="MM" value='<c:out value="${examMinute}"></c:out>'>
   	</div>
   	<span class="col-sm-5" id="examTimeError" style="display:none;color: red"></span>
+  </div>
+  <div class="form-group">
+    <label for="totalmarks" class="control-label col-sm-2">Batch:</label>
+    <div class="col-sm-5">
+    	<div class="dropdown" id="classownerUploadexamSelectBatchName" >
+		  <button class="btn btn-default dropdown-toggle" type="button" id="classownerUploadexamBatchName" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" disabled="disabled">
+			<label>Select Batch</label>
+			<span class="caret"></span>
+		  </button>
+		  <ul class="dropdown-menu" aria-labelledby="classownerUploadexamSubjectNameMenu" id="classownerUploadexamBatchNameMenu">
+			<li class="staticMenu"><a href="#" id="selectAll"> <input type="checkbox" class="selectAllCheckbox" id="classownerUploadexamSubjectNameMenuselectAllRadio"><label for="classownerUploadexamSubjectNameMenuselectAllRadio">Select All<label></a></li>
+			<li class="staticMenu divider" role="separator" class=""></li>
+		  </ul>
+		</div>
+  	</div>
   </div>
    <div class="col-sm-offset-2 col-sm-5">
   <button type="submit" class="btn btn-default" id="submitExam">Submit</button>
