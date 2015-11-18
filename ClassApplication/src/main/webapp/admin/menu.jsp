@@ -344,7 +344,7 @@ function RenderTimer(completedTime,totalTime){
     	<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
     	<ul class="dropdown-menu">
 	            <li><a class="menuoptions" href="choosesubject?forwardAction=addnotesoption">Add Notes</a></li>
-	            <li><a class="menuoptions" href="/choosesubject?forwardAction=listExam&batchDefault=true">See/Update All Notes</a></li>  
+	            <li><a class="menuoptions" href="/choosesubject?forwardAction=seenotes&batchDefault=true">See/Update All Notes</a></li>  
 	         </ul>
     	
     	</li>
