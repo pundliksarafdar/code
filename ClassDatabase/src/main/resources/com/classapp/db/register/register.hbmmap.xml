@@ -60,7 +60,7 @@
         <property name="endDate" type="string">
             <column name="ENDDATE" length="10" not-null="false" unique="false" />
         </property>
-        <property name="renewedDates" type="string">
+        <property name="renewedDates" type="java.util.Date">
             <column name="RENEWEDDATES" length="10" not-null="false" unique="false" />
         </property>        
         <property name="role" type="java.lang.Integer">
@@ -79,10 +79,13 @@
             <column name="status" length="1" not-null="false" unique="false" />
         </property>
         <property name="inst_status" type="string">
-            <column name="inst_status" length="1" not-null="false" unique="false" />
+            <column name="inst_status" length="10" not-null="false" unique="false" />
         </property>
         <property name="lastlogin" type="java.util.Date">
             <column name="lastlogin" length="1" not-null="false" unique="false" />
-        </property>     
+        </property>
+         <property name="nextRenewalDate" type="java.util.Date">
+            <column name="nextRenewalDate" length="1" not-null="false" unique="false" />
+        </property>      
         </class>
 </hibernate-mapping>

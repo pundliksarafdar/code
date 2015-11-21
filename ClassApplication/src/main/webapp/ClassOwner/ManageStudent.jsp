@@ -914,6 +914,7 @@ function getSelectedStudentsToDelete(){
 					Search Student By Batch
 					<select class="form-control btn btn-default" id="batchselected" >
 					<option value="-1">Select Batch</option>
+					<option value="">Unallocated Students</option>
 					<%for(int counter=0;counter<batches.size();counter++){
 						for(int innercounter=0;innercounter<alldivisions.size();innercounter++){
 						if(alldivisions.get(innercounter).getDivId()==batches.get(counter).getDiv_id()){

@@ -2,6 +2,8 @@ package com.classapp.db.register;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -601,6 +603,7 @@ public List getStudents(List StudentIDs) {
 			query.setParameter("regId", regId);
 			query.setParameter("inst_status", inst_status);
 			query.executeUpdate();
+			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(null!=transaction){
@@ -614,5 +617,65 @@ public List getStudents(List StudentIDs) {
 		}	
 		return true;
 		
+	}
+	
+	public boolean updateScheduler() {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> subidList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update RegisterBean reg set reg.inst_status='disabled' where reg.nextRenewalDate < CURRENT_DATE and " +
+					"reg.regId in (SELECT inst_id FROM InstituteStats where alloc_ids > 25 and alloc_memory > 100)");
+			int rows=query.executeUpdate();
+			query = session.createQuery("update InstituteStats set alloc_ids=25 , alloc_memory=100, avail_memory=0,avail_ids=0 where " +
+					"inst_id in (SELECT regId FROM RegisterBean where inst_status='disabled')");
+			rows=query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return true;
+		
+	}
+	
+	public boolean updateRenewalDates(int inst_id) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> subidList = null;
+		Calendar date = Calendar.getInstance();
+	    date.setTime(new Date());
+	    date.add(Calendar.YEAR,1);
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update RegisterBean set nextRenewalDate=:nextdate,renewedDates=CURRENT_DATE where  regId = :regId" +
+					" and (nextRenewalDate<CURRENT_DATE or nextRenewalDate=null)");
+			query.setParameter("regId", inst_id);
+			query.setParameter("nextdate", date.getTime());
+			query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return true;
 	}
 }

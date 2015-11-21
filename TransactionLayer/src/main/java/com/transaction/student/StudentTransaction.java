@@ -115,9 +115,21 @@ public class StudentTransaction {
 	return students;
 	}
 	
+	public List getUnallocatedStudentIDs(int inst_id) {
+		StudentDB studentDB=new StudentDB();
+		List students =studentDB.getUnallocatedStudentIDs(inst_id);
+		return students;
+		}
+	
 	public Integer getStudentscountrelatedtobatch(String batchname,int inst_id,int div_id) {
 		StudentDB db=new StudentDB();
 		return db.getStudentcountrelatedtobatch(batchname, inst_id, div_id);
+		
+	}
+	
+	public Integer getunallocatedStudentcount(int inst_id) {
+		StudentDB db=new StudentDB();
+		return db.getunallocatedStudentcount(inst_id);
 		
 	}
 	

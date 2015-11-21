@@ -149,6 +149,14 @@ public class ScheduleTransaction {
 		
 	}
 	
+	public List<Schedule> getWeeklySchedule(Date date,int inst_id,int div_id) {
+		List<Schedule> schedulelist=null;
+		ScheduleDB db=new ScheduleDB();
+		schedulelist=db.getWeeklySchedule(date,inst_id,div_id);
+		return schedulelist;
+		
+	}
+	
 	public List<Schedule> getTeachersSchedule(int classid,int teacherid,Date scheduledate) {
 		List<Schedule> schedulelist=null;
 		ScheduleDB db=new ScheduleDB();

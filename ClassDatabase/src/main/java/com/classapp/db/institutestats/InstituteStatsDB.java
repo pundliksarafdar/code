@@ -39,6 +39,9 @@ public class InstituteStatsDB {
 		transaction=session.beginTransaction();
 		stats=(InstituteStats) session.get(InstituteStats.class,inst_id);
 		stats.setAlloc_ids(stats.getAlloc_ids()+noOfIds);
+		if(stats.getAlloc_ids()>stats.getUsed_ids()){
+			stats.setAvail_ids(stats.getAlloc_ids()-stats.getUsed_ids());
+		}
 		session.saveOrUpdate(stats);
 		transaction.commit();
 		session.close();
@@ -54,6 +57,9 @@ public class InstituteStatsDB {
 		transaction=session.beginTransaction();
 		stats=(InstituteStats) session.get(InstituteStats.class,inst_id);
 		stats.setAlloc_memory(stats.getAlloc_memory()+memory);
+		if(stats.getAlloc_memory()>stats.getUsed_memory()){
+			stats.setAvail_memory(stats.getAlloc_memory()-stats.getUsed_memory());
+		}
 		session.saveOrUpdate(stats);
 		transaction.commit();
 		session.close();
@@ -85,7 +91,9 @@ public class InstituteStatsDB {
 		transaction=session.beginTransaction();
 		stats=(InstituteStats) session.get(InstituteStats.class,inst_id);
 		stats.setUsed_ids(stats.getUsed_ids()-1);
+		if(stats.getUsed_ids()<stats.getAlloc_ids()){
 		stats.setAvail_ids(stats.getAvail_ids()+1);
+		}
 		session.saveOrUpdate(stats);
 		transaction.commit();
 		session.close();
@@ -117,7 +125,9 @@ public class InstituteStatsDB {
 		transaction=session.beginTransaction();
 		stats=(InstituteStats) session.get(InstituteStats.class,inst_id);
 		stats.setUsed_memory(stats.getUsed_memory()-memory);
-		stats.setAvail_memory(stats.getAvail_memory()+memory);
+		if(stats.getAlloc_memory()>stats.getUsed_memory()){
+		stats.setAvail_memory(stats.getAlloc_memory()-stats.getUsed_memory());
+		}
 		session.saveOrUpdate(stats);
 		transaction.commit();
 		session.close();

@@ -24,6 +24,15 @@
 		</listener-class>
 	</listener>
  
+ 	<servlet>
+  	<servlet-name>LoadConfig</servlet-name>
+  	<servlet-class>com.corex.config.LoadConfig</servlet-class>
+  	<load-on-startup>0</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LoadConfig</servlet-name>
+    <url-pattern>/reloadConfig</url-pattern>
+  </servlet-mapping>
 	<servlet>
 		<servlet-name>resteasy-servlet</servlet-name>
 		<servlet-class>
@@ -36,12 +45,12 @@
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
  
-	<filter>
+	<!-- <filter>
 		<filter-name>AuthenticationFilter</filter-name>
 		<filter-class>com.corex.filter.AuthFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>AuthenticationFilter</filter-name>
 		<url-pattern>/rest/*</url-pattern>
-	</filter-mapping>
+	</filter-mapping> -->
 </web-app>

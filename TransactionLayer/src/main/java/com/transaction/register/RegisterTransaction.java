@@ -37,12 +37,17 @@ public class RegisterTransaction {
 
 	public List<RegisterBean> getclassNames(List<Student> list) {
 		RegisterDB registerDB=new RegisterDB();
+		registerDB.updateScheduler();
 		int counter=0;
 		List<RegisterBean> registerBeans=new ArrayList<RegisterBean>();
 		while(list.size()>counter)
 		{
 			RegisterBean bean=registerDB.getRegisterclass(list.get(counter).getClass_id());
-			registerBeans.add(bean);
+			if(bean!=null){
+				if(!"disabled".equals(bean.getInst_status())){
+				registerBeans.add(bean);
+				}
+			}
 			counter++;
 		}
 		return registerBeans;
@@ -157,6 +162,11 @@ public class RegisterTransaction {
 	public boolean updateInstituteStatus(int regId,String inst_status) {
 		RegisterDB registerDB=new RegisterDB();
 		return registerDB.updateInstituteStatus(regId, inst_status);
+	}
+	
+	public boolean updateRenewalDates(int regId) {
+		RegisterDB registerDB=new RegisterDB();
+		return registerDB.updateRenewalDates(regId);
 	}
 	}
 	

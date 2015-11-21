@@ -482,6 +482,32 @@ public class StudentDB {
 		return 0;
 	}
 	
+	public Integer getunallocatedStudentcount(int inst_id) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List<Long> list=null;
+		String queryString="select count(student_id) from Student where batch_id=:batch_id  and class_id=:class_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("batch_id", "");
+			query.setParameter("class_id", inst_id);
+			list=(List<Long>)query.list();
+			if(list!=null)
+			{
+				return list.get(0).intValue();
+			}
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		return 0;
+	}
+	
 	public List getStudentIDSrelatedtoBatch(String batchname,int inst_id,int div_id) {
 		Session session = null;
 		boolean status=false;
@@ -498,6 +524,34 @@ public class StudentDB {
 			query.setParameter("batch_id4", batchname);
 			query.setParameter("class_id", inst_id);
 			query.setParameter("div_id", div_id);
+				list=query.list();
+			if(list!=null)
+			{
+				return list;
+			}
+			
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return null;
+	}
+	
+	public List getUnallocatedStudentIDs(int inst_id) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List list=null;
+		String queryString="select student_id from Student where (batch_id =:batch_id) and class_id=:class_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("batch_id", "");
+			query.setParameter("class_id", inst_id);
 				list=query.list();
 			if(list!=null)
 			{

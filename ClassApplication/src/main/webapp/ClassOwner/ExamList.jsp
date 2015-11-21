@@ -60,6 +60,8 @@ $(document).ready(function(){
 		$(that).find("button").text("Enabling...");
 		var starttime=$("#starttime").val();
 		var endtime=$("#endtime").val();
+		subject=$("form#paginateform #subject").val();
+		division=$("form#paginateform #division").val();
 		$.ajax({
 			 
 			   url: "classOwnerServlet",
@@ -79,6 +81,39 @@ $(document).ready(function(){
 			   			$("#"+$(that).prop("id")+"edit").text("View");
 			   			$("#"+$(that).prop("id")+"edit").parent().off();
 			   			$("#"+$(that).prop("id")+"edit").parent().prop("class","viewExam");
+			   		},
+			   		error:function(error){
+			   		
+			   		}
+		});
+	});
+	
+	$("#enableexamOK").on("click",function(){
+		$(that).find("button").text("Enabling...");
+		var starttime=$("#starttime").val();
+		var endtime=$("#endtime").val();
+		subject=$("form#paginateform #subject").val();
+		division=$("form#paginateform #division").val();
+		$.ajax({
+			 
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "publishExam",
+			    	 examID:examID,
+			    	 subject:subject,
+			    	 division:division,
+			    	 starttime:starttime,
+			    	 endtime:endtime
+			   		},
+			   		success:function(data){
+			   			$(that).find("button").text("Disable");
+			   			$(that).off();
+			   			$(that).find("button").prop("class","btn btn-warning");
+			   			$(that).prop("class","disableExam");
+			   			$("#"+$(that).prop("id")+"edit").text("View");
+			   			$("#"+$(that).prop("id")+"edit").parent().off();
+			   			$("#"+$(that).prop("id")+"edit").parent().prop("class","viewExam");
+			   			$("#"+$(that).prop("id")+"status").val("Y");
 			   		},
 			   		error:function(error){
 			   		
@@ -323,7 +358,7 @@ $('#example').popover(option);
 </ul>
 </form>
 </div>
-<div class="modal fade" id="enableexammodal" tabindex="-1" role="dialog" 
+ <div class="modal fade" id="enableexammodal" tabindex="-1" role="dialog" 
    aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog">
       <div class="modal-content">
@@ -336,16 +371,14 @@ $('#example').popover(option);
             </h4>
          </div>
          <div class="modal-body">
-           If you want to enable exam for specific time period then select start and end time below <br>
-          Start Date/Time :- <input type="text" class="form-control hasDatepicker" id="starttime"> <br>
-          End Date/Time :- <input type="text" class="form-control hasDatepicker" id="endtime">
+          Do you want to enable the exam?
          </div>
          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal" id="enableOK">OK</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="enableOK">Yes</button>
          </div>
          </div>
    </div>
-</div>
+</div> 
 
 <div class="modal fade" id="enableexamcontinuemodal" tabindex="-1" role="dialog" 
    aria-labelledby="myModalLabel" aria-hidden="true">
@@ -363,7 +396,7 @@ $('#example').popover(option);
            Once you enable this exam you will not able edit it. Do you want to continue?
          </div>
          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal" id="enablecontinue">Continue</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="enableexamOK">Continue</button>
          </div>
          </div>
    </div>

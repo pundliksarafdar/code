@@ -275,6 +275,36 @@ public List<Schedule> getWeeklySchedule(int batchid,Date date,int inst_id,int di
 	return scheduleList;
 }
 
+public List<Schedule> getWeeklySchedule(Date date,int inst_id,int div_id) {
+	
+	Session session = null;
+	Transaction transaction = null;
+	List<Schedule> scheduleList = null;
+	Calendar cal=Calendar.getInstance();
+	cal.set(date.getYear()+1900, date.getMonth(), date.getDate());
+	cal.add(Calendar.DATE, 7);
+	Date enddate=new Date(cal.getTimeInMillis());
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("from Schedule where date>=:startdate and date<:enddate and class_id=:class_id and div_id=:div_id order by date,start_time");
+		query.setParameter("startdate", date);
+		query.setParameter("enddate", enddate);
+		query.setParameter("class_id", inst_id);
+		query.setParameter("div_id", div_id);
+		scheduleList = query.list();
+		
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+	return scheduleList;
+}
+
 public List<Schedule> getTeachersSchedule(int classid,int teacherid,Date scheduledate) {
 	
 	Session session = null;
@@ -585,6 +615,27 @@ public List<Schedule> getTeachersWeeklySchedule(int classid,int teacherid,Date s
 			}
 		}	
 	return scheduleList;
+}
+
+public boolean deleteScheduler() {
+	
+	Session session = null;
+	Transaction transaction = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("delete from Schedule where date>=CURRENT_DATE-30");
+		query.executeUpdate();
+		transaction.commit();
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+	return true;
 }
 
 public static void main(String[] args) {

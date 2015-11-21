@@ -1694,8 +1694,12 @@ public class ClassOwnerServlet extends HttpServlet{
 	String pagenumber=req.getParameter("pagenumber");
 	String batchdivision=req.getParameter("batchdivision");
 	StudentTransaction studentTransaction=new StudentTransaction();
-	int count=studentTransaction.getStudentscountrelatedtobatch(batchname,userBean.getRegId(),Integer.parseInt(batchdivision));
-	
+	int count=0;
+	if("".equals(batchname)){
+		count=studentTransaction.getunallocatedStudentcount(userBean.getRegId());
+	}else{
+		count=studentTransaction.getStudentscountrelatedtobatch(batchname,userBean.getRegId(),Integer.parseInt(batchdivision));
+	}
 	//Taking data from database
 	int resultPerPage = Integer.parseInt(ServiceMap.getSystemParam(Constants.SERVICE_PAGINATION, "resultsperpage"));
 	if(count>0){
@@ -1707,7 +1711,12 @@ public class ClassOwnerServlet extends HttpServlet{
 		if(Integer.parseInt(pagenumber)>pages){
 			pagenumber=pages+"";
 		}
-		List students=studentTransaction.getStudentsrelatedtobatch(batchname,userBean.getRegId(),Integer.parseInt(batchdivision));
+		List students=new ArrayList();
+		if("".equals(batchname)){
+			students=studentTransaction.getUnallocatedStudentIDs(userBean.getRegId());
+		}else{
+			students=studentTransaction.getStudentsrelatedtobatch(batchname,userBean.getRegId(),Integer.parseInt(batchdivision));
+		}		
 		RegisterTransaction registerTransaction=new RegisterTransaction();
 		List<RegisterBean> registerBeans= registerTransaction.getStudentsInfo(students,Integer.parseInt(pagenumber),resultPerPage);
 		if(registerBeans.size()>0)
@@ -2402,7 +2411,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	       SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
 	       Timestamp startTimestamp=new Timestamp(0000000000);
 	       Timestamp endTimestamp=new Timestamp(0000000000);
-		if(!"".equals(starttime)){
+		if(!"".equals(starttime) && null!=starttime){
 			String[] startarray=starttime.split(" ");	
 			String finalStarttime=startarray[0].split("/")[2]+"-"+startarray[0].split("/")[0]+"-"+startarray[0].split("/")[1];
 			java.util.Date startdate;
@@ -2416,7 +2425,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 			
 		}
-		if(!"".equals(endtime)){
+		if(!"".equals(endtime) && null!=endtime){
 			String[] endarray=endtime.split(" ");
 			String finalEndtime=endarray[0].split("/")[2]+"-"+endarray[0].split("/")[0]+"-"+endarray[0].split("/")[1];	
 		       try {
@@ -3067,6 +3076,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		if(bean!=null){
 			InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
 			instituteStatTransaction.updateMemoryLimit(bean.getRegId(),Double.parseDouble(memoryspace));
+			registerTransaction.updateRenewalDates(bean.getRegId());
 			if("disabled".equals(bean.getInst_status())){
 				InstituteStats instituteStats=instituteStatTransaction.getStats(bean.getRegId());
 				if( (instituteStats.getAlloc_ids()>=instituteStats.getUsed_ids()) && (instituteStats.getAlloc_memory()>=instituteStats.getUsed_memory()))
@@ -3084,6 +3094,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		if(bean!=null){
 			InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
 			instituteStatTransaction.updateStudentIdLimit(bean.getRegId(),Integer.parseInt(noofids));
+			registerTransaction.updateRenewalDates(bean.getRegId());
 			if("disabled".equals(bean.getInst_status())){
 				InstituteStats instituteStats=instituteStatTransaction.getStats(bean.getRegId());
 				if( (instituteStats.getAlloc_ids()>=instituteStats.getUsed_ids()) && (instituteStats.getAlloc_memory()>=instituteStats.getUsed_memory()))

@@ -511,6 +511,8 @@ return list;
 		criterion =Restrictions.not(Restrictions.in("exam_id", examids));
 		criteria.add(criterion);
 		}
+		criterion =Restrictions.eq("exam_status", "Y");
+		criteria.add(criterion);
 		List<Exam> list=  criteria.list();
 		//int count=examListCount;
 		transaction.commit();

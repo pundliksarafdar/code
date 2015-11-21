@@ -18,6 +18,7 @@ private Constants(){
 	public static String SHOW_STACK_TRACE = "4";
 	public static String RESULT_PER_PAGE = "resultsperpage";
 	public static String SERVICE_LOGGER = "8";
+	public static String APP_PAGINATION = "9";
 	
 	public static String BATCH_NAME = "batchName";
 	public static String BATCH_TIME = "batchTime";
@@ -46,6 +47,6 @@ private Constants(){
 	public static final String DIVISION_ID = "divisionId";
 	public static final String DIVISIONS = "divisions";
 	public static final String ALL_LOGINS = "alllogins";
-	
+	public static String STORAGE_PATH = "";
 	
 }

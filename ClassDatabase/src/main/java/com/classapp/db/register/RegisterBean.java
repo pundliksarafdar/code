@@ -30,7 +30,7 @@ public class RegisterBean implements Serializable{
 	private String registrationDate; 
 	private String startDate;
 	private String endDate;
-	private String renewedDates;
+	private Date renewedDates;
 	private String daysLeft;
 	private Integer role = -1;
 	private Integer div_id;
@@ -39,7 +39,7 @@ public class RegisterBean implements Serializable{
 	private String status;
 	private String inst_status;
 	private Date lastlogin;
-	
+	private Date nextRenewalDate;
 	public String getStatus() {
 		return status;
 	}
@@ -180,10 +180,10 @@ public class RegisterBean implements Serializable{
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
-	public String getRenewedDates() {
+	public Date getRenewedDates() {
 		return renewedDates;
 	}
-	public void setRenewedDates(String renewedDates) {
+	public void setRenewedDates(Date renewedDates) {
 		this.renewedDates = renewedDates;
 	}
 	
@@ -220,6 +220,12 @@ public class RegisterBean implements Serializable{
 	}
 	public void setInst_status(String inst_status) {
 		this.inst_status = inst_status;
+	}
+	public Date getNextRenewalDate() {
+		return nextRenewalDate;
+	}
+	public void setNextRenewalDate(Date nextRenewalDate) {
+		this.nextRenewalDate = nextRenewalDate;
 	}
 	
 	
