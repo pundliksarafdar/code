@@ -81,13 +81,18 @@ public class GenerateExamAction extends BaseAction{
 			 
 			 List<QuestionData> questionDataList = new ArrayList<QuestionData>();
 			 for(int index = 0;index<questionIdListsList.size();index++){
-				 String questionPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionIdListsList.get(index);
-				 QuestionData questionData=(QuestionData) readObject(new File(questionPath));
-				 QuestionData questionDataForMinified = new QuestionData();
-				 //Miinified object is used to put the data in page as while object is not required- minimise server load
-				 questionDataForMinified.setQuestion(questionData.getQuestion());
-				 questionDataForMinified.setMarks(questionData.getMarks());
-				 questionDataList.add(questionDataForMinified);
+				 String questionIdListsListStr = questionIdListsList.get(index);
+				 String[] questionIdListsListStrList = questionIdListsListStr.split(",");
+				 
+				 for(int indexListStr=0;indexListStr<questionIdListsListStrList.length;indexListStr++){
+					 String questionPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionIdListsListStrList[indexListStr];
+					 QuestionData questionData=(QuestionData) readObject(new File(questionPath));
+					 QuestionData questionDataForMinified = new QuestionData();
+					 //Miinified object is used to put the data in page as while object is not required- minimise server load
+					 questionDataForMinified.setQuestion(questionData.getQuestion());
+					 questionDataForMinified.setMarks(questionData.getMarks());
+					 questionDataList.add(questionDataForMinified);
+				 }
 			 }
 			 request.setAttribute("questionData", questionDataList);
 			 JsonObject jsonObject = new JsonObject();

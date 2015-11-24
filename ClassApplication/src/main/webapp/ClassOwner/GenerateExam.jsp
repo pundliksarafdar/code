@@ -123,7 +123,7 @@ $(document).ready(function(){
 		if(!$("#autogenerateexamform").valid()){
 			
 		}else if(!isNameIsAvailable){
-			$("#QuestionBankQuestionListCreateExamhModalExamName").prev(".validation-message").html("Exam name already available.Please enter different name").removeClass("hide");
+			$("#QuestionBankQuestionListCreateExamhModalExamName").next(".validation-message").html("Exam name already available.Please enter different name").removeClass("hide");
 		}else if($.isEmptyObject(marksObj)){
 			$("#QuestionBankQuestionListCreateExamhModalErrorBox").html("<div class='alert alert-danger'>Please add atleast one question</div>").focus();
 		}else{	
@@ -144,7 +144,7 @@ $(document).ready(function(){
 		var examname = $("#QuestionBankQuestionListCreateExamhModalExamName").val().trim();
 		isNameIsAvailable = checkExamNameValidation(instituteId,examname,function(){});
 	}).on("click",function(){
-		$("#QuestionBankQuestionListCreateExamhModalExamName").prev(".validation-message").empty().addClass("hide");
+		$("#QuestionBankQuestionListCreateExamhModalExamName").next(".validation-message").empty().addClass("hide");
 	});
 	
 	var validationOption = {rules: {
@@ -314,7 +314,7 @@ function checkExamNameValidation(institute,examname,successfunction){
 		   var examstatus=resultJson.examavailable;
 		   if(examstatus=="true"){
 				isAvailable = false;
-				$("#QuestionBankQuestionListCreateExamhModalExamName").prev(".validation-message").html("Exam name already available.Please enter different name").removeClass("hide");
+				$("#QuestionBankQuestionListCreateExamhModalExamName").next(".validation-message").html("Exam name already available.Please enter different name").removeClass("hide");
 		   }else{
 			   isAvailable = true;
 		   }
@@ -329,7 +329,7 @@ function checkExamNameValidation(institute,examname,successfunction){
 </script>
 </head>
 <body>
-			<div class="container" style="margin-bottom: 5px">
+			<div class="" style="margin-bottom: 5px">
 			<c:choose>
 			<c:when test="${institute ne null }">
 			<a type="button" class="btn btn-primary" href="teachercommoncomponent?forwardAction=searchQuestion" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
@@ -340,21 +340,21 @@ function checkExamNameValidation(institute,examname,successfunction){
 			</c:choose>
 			</div>
     
-    <div class="container" id="QuestionBankQuestionListCreateExamhModal">
+    <div class="" id="QuestionBankQuestionListCreateExamhModal">
  	
 		<div id="QuestionBankQuestionListCreateExamhModalErrorBox">
 			
 		</div>
 		<form class="form-horizontal corex-form-container" id="autogenerateexamform">
 		<label class="control-label">
-				<h4>Add Question</h4>
+				<h4>Create exam</h4>
 			</label>
 		<hr/>	
 		<div class="form-group">
 		<label class="col-sm-2 control-label" for="QuestionBankQuestionListCreateExamhModalExamName">Exam name</label>
 			<div class="col-sm-4">
-				<div class="validation-message hide"></div>
 				<input type="text" id="QuestionBankQuestionListCreateExamhModalExamName" class="form-control" required>
+				<div class="validation-message hide"></div>
 			</div>	
 		
 		<label class="col-sm-2 control-label" for="QuestionBankQuestionListCreateExamhModalPassingMarks1">Passing marks</label>
