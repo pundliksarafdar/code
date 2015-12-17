@@ -32,27 +32,7 @@ public class ManageBatchAction extends BaseAction{
 		batchHelperBean.setBatchDetailsList();
 		DivisionTransactions divisionTransactions = new DivisionTransactions();
 		List<BatchDetails> batchList = new ArrayList<BatchDetails>();
-		if(!"".equals(searchedBatch) && searchedBatch!=null){
-			List<BatchDetails> tempList= batchHelperBean.getBatchDetailsList();;
-			for (BatchDetails batch :tempList) {
-				if(batch.getBatch().getBatch_name().equalsIgnoreCase(searchedBatch)){
-				batchList.add(batch);
-				}
-				}
-			if(batchList.size()<=0){
-				batchList = batchHelperBean.getBatchDetailsList();
-				searchedBatchflag="false";
-				if(deleteBatch==null){
-					deleteBatch="";
-				}
-			}else{
-				searchedBatchflag="true";
-			}
-		}else{
-			batchList = batchHelperBean.getBatchDetailsList();
-			searchedBatch="";
-			searchedBatchflag="false";
-		}		
+		batchList = batchHelperBean.getBatchDetailsList();	
 		request.getSession().setAttribute(Constants.BATCHES_LIST, batchList);	
 		List<Division> divisions= divisionTransactions.getAllDivisions(userBean.getRegId());
 		setDivisionSize(divisions.size());
@@ -65,30 +45,6 @@ public class ManageBatchAction extends BaseAction{
 			divisionNames.add(division.getDivisionName());
 			Streams.add(division.getStream());
 			ids.add(division.getDivId()+"");
-		}
-		if(batchList!=null){
-			int totalcount=batchList.size();
-			int remainder=0;
-			if(totalcount>0){
-				totalPages=totalcount/10;
-				remainder=totalcount%10;
-				if (remainder>0) {
-					totalPages++;
-				}
-		
-			}
-			if (currentPage==0) {
-				currentPage++;
-			}
-			
-			if(currentPage>totalPages){
-				currentPage--;
-			}
-			startIndex=(currentPage-1)*10;
-			endIndex=startIndex+10;
-			if(currentPage==totalPages && remainder>0){
-				endIndex=startIndex+remainder;
-			}
 		}
 		request.setAttribute(Constants.DIVISION_NAMES, divisionNames);
 		request.setAttribute("streams", Streams);

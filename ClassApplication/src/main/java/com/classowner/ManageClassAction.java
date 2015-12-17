@@ -24,31 +24,7 @@ public class ManageClassAction extends BaseAction{
 		DivisionTransactions divisionTransactions =new DivisionTransactions();
 	List<Division>	list=divisionTransactions.getAllDivisions(userBean.getRegId());
 	request.setAttribute("classes", list);
-	if(list!=null){
-		int totalcount=list.size();
-		int remainder=0;
-		if(totalcount>0){
-			totalPages=totalcount/10;
-			remainder=totalcount%10;
-			if (remainder>0) {
-				totalPages++;
-			}
-	
-		}
-		if (currentPage==0) {
-			currentPage++;
-		}
-		
-		if(currentPage>totalPages){
-			currentPage--;
-		}
-		startIndex=(currentPage-1)*10;
-		endIndex=startIndex+10;
-		if(currentPage==totalPages && remainder>0){
-			endIndex=startIndex+remainder;
-		}
-	}
-		return SUCCESS;
+	return SUCCESS;
 	}
 	public int getCurrentPage() {
 		return currentPage;

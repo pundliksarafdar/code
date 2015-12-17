@@ -160,6 +160,13 @@ public class ClassOwnerServlet extends HttpServlet{
 				respObject.addProperty(STATUS, "error");
 				respObject.addProperty(MESSAGE, "Batch already exists.");
 			}else if(batchTransactions.addUpdateDb(batch)){
+				BatchHelperBean batchHelperBean= new BatchHelperBean(regId);
+				batchHelperBean.setBatchDetailsList();
+				List<BatchDetails> batchList = new ArrayList<BatchDetails>();
+				batchList = batchHelperBean.getBatchDetailsList();
+				Gson gson=new Gson();
+				String allbatches=gson.toJson(batchList);
+				respObject.addProperty("allbatches", allbatches);
 				respObject.addProperty(STATUS, "success");
 				respObject.addProperty(MESSAGE, "Successfully added batch!");
 			}else{
@@ -183,13 +190,16 @@ public class ClassOwnerServlet extends HttpServlet{
 				regId = userBean.getRegId();
 			}
 			String subjectName = (String) req.getParameter("subjectName");
-			respObject.addProperty(STATUS, "success");
 			com.classapp.db.subject.Subject subject = new com.classapp.db.subject.Subject();
 			/*subject.setRegId(regId);*/
 			subject.setSubjectName(subjectName);
 			subject.setInstitute_id(regId);
 			SubjectTransaction subjectTransaction = new SubjectTransaction();
 			if(subjectTransaction.addUpdateSubjectToDb(subject,regId)){
+				List<Subjects> subjects=subjectTransaction.getAllClassSubjects(regId);
+				Gson gson=new Gson();
+				String json=gson.toJson(subjects);
+				respObject.addProperty("subjects", json);
 				respObject.addProperty(STATUS, "success");
 			}else{
 				respObject.addProperty(STATUS, "error");
@@ -976,6 +986,10 @@ public class ClassOwnerServlet extends HttpServlet{
 				respObject.addProperty(STATUS, "error");
 				respObject.addProperty(MESSAGE, "Class already exist");
 			}else{
+				List<Division>	list=divisionTransactions.getAllDivisions(userBean.getRegId());
+				Gson gson=new Gson();
+				String allclasses=gson.toJson(list);
+				respObject.addProperty("allclasses", allclasses);
 				respObject.addProperty(STATUS, "success");
 			}
 		}
@@ -1484,6 +1498,13 @@ public class ClassOwnerServlet extends HttpServlet{
 				scheduleTransaction.deleteschedulerelatedtobatchsubject(batch, sub_Ids);
 				batch.setSub_id(sub_Ids);
 				if(batchTransactions.addUpdateDb(batch)){
+					BatchHelperBean batchHelperBean= new BatchHelperBean(regId);
+					batchHelperBean.setBatchDetailsList();
+					List<BatchDetails> batchList = new ArrayList<BatchDetails>();
+					batchList = batchHelperBean.getBatchDetailsList();
+					Gson gson=new Gson();
+					String allbatches=gson.toJson(batchList);
+					respObject.addProperty("allbatches", allbatches);
 					respObject.addProperty(STATUS, "success");
 					respObject.addProperty(MESSAGE, "Successfully updated batch.");
 				}else{
@@ -1519,6 +1540,13 @@ public class ClassOwnerServlet extends HttpServlet{
 			ExamTransaction examTransaction=new ExamTransaction();
 			examTransaction.removebatchfromexam(userBean.getRegId(), batchdivisionid, deleteBatchId+"");
 				if(batchTransactions.deleteBatch(batch)){
+					BatchHelperBean batchHelperBean= new BatchHelperBean(regId);
+					batchHelperBean.setBatchDetailsList();
+					List<BatchDetails> batchList = new ArrayList<BatchDetails>();
+					batchList = batchHelperBean.getBatchDetailsList();
+					Gson gson=new Gson();
+					String allbatches=gson.toJson(batchList);
+					respObject.addProperty("allbatches", allbatches);
 					respObject.addProperty(STATUS, "success");
 					respObject.addProperty(MESSAGE, "Batch Successfully deleted .");
 				}else{
@@ -1763,6 +1791,10 @@ public class ClassOwnerServlet extends HttpServlet{
 	SubjectTransaction subjectTransaction=new SubjectTransaction();
 	Boolean status=subjectTransaction.modifySubject(subject);
 	if(status==false){
+		List<Subjects> subjects=subjectTransaction.getAllClassSubjects(regId);
+		Gson gson=new Gson();
+		String json=gson.toJson(subjects);
+		respObject.addProperty("subjects", json);
 		respObject.addProperty("added", "false");
 	}else{
 		respObject.addProperty("added", "true");
@@ -1795,6 +1827,10 @@ public class ClassOwnerServlet extends HttpServlet{
 	FileUtils.deleteDirectory(new File(userStatic.getNotesPath()+File.separator+subjectid));
 	bankTransaction.deleteQuestionrelatedtoSubject(userBean.getRegId(), Integer.parseInt(subjectid));
 	subjectTransaction.deleteSubject(Integer.parseInt(subjectid));
+	List<Subjects> subjects=subjectTransaction.getAllClassSubjects(userBean.getRegId());
+	Gson gson=new Gson();
+	String json=gson.toJson(subjects);
+	respObject.addProperty("subjects", json);
 	respObject.addProperty(STATUS, "success");
 }else if("modifyclass".equals(methodToCall)){
 	String classname=req.getParameter("classname");
@@ -1810,6 +1846,10 @@ public class ClassOwnerServlet extends HttpServlet{
 	if(divisionTransactions.updateClass(division)){
 		respObject.addProperty("updated", "false");
 	}else{
+		List<Division>	list=divisionTransactions.getAllDivisions(userBean.getRegId());
+		Gson gson=new Gson();
+		String allclasses=gson.toJson(list);
+		respObject.addProperty("allclasses", allclasses);
 		respObject.addProperty("updated", "true");
 	}
 	respObject.addProperty(STATUS, "success");
@@ -1845,6 +1885,10 @@ public class ClassOwnerServlet extends HttpServlet{
 	bankTransaction.deleteQuestionrelatedtoClass(userBean.getRegId(), Integer.parseInt(classid));
 	DivisionTransactions divisionTransactions=new DivisionTransactions();
 	divisionTransactions.deletedivision(Integer.parseInt(classid));
+	List<Division>	classlist=divisionTransactions.getAllDivisions(userBean.getRegId());
+	Gson gson=new Gson();
+	String allclasses=gson.toJson(classlist);
+	respObject.addProperty("allclasses", allclasses);
 	respObject.addProperty(STATUS, "success");
 }else if("forgotpassword".equals(methodToCall)){
 	String email=req.getParameter("email");

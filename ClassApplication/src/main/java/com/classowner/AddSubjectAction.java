@@ -7,12 +7,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.classapp.db.batch.division.Division;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.datalayer.subject.Subject;
 import com.helper.SubjectHelperBean;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.BatchTransactions;
+import com.transaction.batch.division.DivisionTransactions;
 import com.user.UserBean;
 
 
@@ -22,48 +24,20 @@ public class AddSubjectAction extends BaseAction{
 	int endIndex;
 	int startIndex;
 	String actionname;
+	int ClasscurrentPage;
+	int ClasstotalPages;
+	int ClassendIndex;
+	int ClassstartIndex;
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		BatchTransactions batchTransactions = new BatchTransactions();
 		SubjectTransaction subjectTransaction = new SubjectTransaction();
 		List list = batchTransactions.getBatchData(userBean.getRegId());
-		//List subjectList = subjectTransaction.getAllClassSubjects(userBean.getRegId());
-		//request.setAttribute(Constants.BATCH_LIST, list);
 		SubjectHelperBean subjectBean=new SubjectHelperBean();
 		subjectBean.setClass_id(userBean.getRegId());
 		List subjectList=new ArrayList();
-		if("subjectadded".equals(actionname)){
-			subjectList=subjectBean.getrecentlyaddedSubjectsfirst();
-		}else{
-			subjectList=subjectBean.getSubjects();
-		}
+		subjectList=subjectBean.getSubjects();
 		request.setAttribute("listOfSubjects", subjectList);
-		if(subjectList!=null){
-			int totalcount=subjectList.size();
-			int remainder=0;
-			if(totalcount>0){
-				totalPages=totalcount/10;
-				remainder=totalcount%10;
-				if (remainder>0) {
-					totalPages++;
-				}
-		
-			}
-			if (currentPage==0) {
-				currentPage++;
-			}
-			
-			if(currentPage>totalPages){
-				currentPage--;
-			}
-			startIndex=(currentPage-1)*10;
-			endIndex=startIndex+10;
-			if(currentPage==totalPages && remainder>0){
-				endIndex=startIndex+remainder;
-			}
-		}
-	request.setAttribute(Constants.BATCH_LIST, list);
-		//request.setAttribute(Constants.SUBJECT_LIST, subjectList);
 		return SUCCESS;
 	}
 	public int getCurrentPage() {
@@ -95,6 +69,30 @@ public class AddSubjectAction extends BaseAction{
 	}
 	public void setActionname(String actionname) {
 		this.actionname = actionname;
+	}
+	public int getClasscurrentPage() {
+		return ClasscurrentPage;
+	}
+	public void setClasscurrentPage(int classcurrentPage) {
+		ClasscurrentPage = classcurrentPage;
+	}
+	public int getClasstotalPages() {
+		return ClasstotalPages;
+	}
+	public void setClasstotalPages(int classtotalPages) {
+		ClasstotalPages = classtotalPages;
+	}
+	public int getClassendIndex() {
+		return ClassendIndex;
+	}
+	public void setClassendIndex(int classendIndex) {
+		ClassendIndex = classendIndex;
+	}
+	public int getClassstartIndex() {
+		return ClassstartIndex;
+	}
+	public void setClassstartIndex(int classstartIndex) {
+		ClassstartIndex = classstartIndex;
 	}
 	
 	
