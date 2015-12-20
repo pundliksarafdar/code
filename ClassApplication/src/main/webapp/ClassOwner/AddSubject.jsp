@@ -8,20 +8,57 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <html>
 <head>
+<style type="text/css">
+.dataTables_filter {
+     display: none;
+}
+
+.subjectTable .editEnabled .editable{
+	display:block;
+}
+
+.subjectTable .editEnabled .default{
+	display:none;
+}
+
+.subjectTable .editable{
+	display:none;
+}
+
+.subjectTable .default{
+	display:show;
+}
+</style>
 <script type="text/javascript" src="js/AddSubject.js"></script>
 <script>
+var BUTTONS_MANAGE = '<div class="default">' +
+						'<button class="btn btn-primary btn-xs btn-manage">Manage</button>'+
+						'<button class="btn btn-primary btn-xs btn-edit">Edit</button>'+
+						'<button class="btn btn-danger btn-xs btn-delete">Delete</button>'+
+					'</div>';
+					
+var BUTTONS_CANCEL = '<div class="editable">' +
+						'<button class="btn btn-success btn-xs btn-save">Save</button>'+
+						'<button class="btn btn-danger btn-xs btn-cancel">Cancel</button>'+
+					'</div>';
+					
+var SUBJECT_NAME = '<input type="hidden" class="hide editSubjectId" value="{{editSubjectIdValue}}">'+
+					'<div class="default defaultsubjectName">{{defaultsubjectNameValue}}</div>'+
+					'<input type="text" value="{{editSubjectNameValue}}" class="form-control editable editSubjectName">';
+
 var subjectid="";
 function getSubject(subid){
 	subjectid=subid;
 	$("#editsubject").val($("#sub"+subid).val());
 	$('div#ModifysubjectModal .error').hide();
 	$('#ModifysubjectModal').modal('toggle');
-	
 }
 
+/*
+New function
+*/
 function deleteSubject(subid){
-	subjectid=subid;
-	/* $.ajax({
+	$.ajax({
         url: 'classOwnerServlet',
         type: 'post',
         data: {
@@ -29,249 +66,201 @@ function deleteSubject(subid){
 	    	 subjectid:subid
         },
         success: function(){
-        modal.launchAlert("Success","Subject Deleted! Page will refresh in soon");
- 		   setTimeout(function(){
- 			   location.reload();
- 		   },2*1000); 
-        	$("#paginateform").submit();
-        	
+			$.notify({message: 'Deleted'},{type: 'success'});
+			$('input[type="hidden"].editSubjectId[value="'+subid+'"]').closest("tr").remove();
         }, error: function(){
-            alert('ajax failed');
+            $.notify({message: 'Unable to delete'},{type: 'danger'});
         }
-}); */
-$("#subjectdeleteconfirmmodal").modal("toggle");
+});
 }
-	$(document).ready(function(){
-		
-		$("#subjectdeleteconfirm").click(function(){
-			$.ajax({
-		        url: 'classOwnerServlet',
-		        type: 'post',
-		        data: {
-			    	 methodToCall: "deletesubject",
-			    	 subjectid:subjectid
-		        },
-		        success: function(){
-		        	/* modal.launchAlert("Success","Subject Deleted! Page will refresh in soon");
-		 		   setTimeout(function(){
-		 			   location.reload();
-		 		   },2*1000); */
-		        	$("#paginateform").submit();
-		        	
-		        }, error: function(){
-		            alert('ajax failed');
-		        }
-		});
-		});
-		
-		$(".page").on("click",function(e){
-			$("form#paginateform #currentPage").val($(this).text());
-			$("#paginateform").submit();
-			e.preventDefault();
-		});
-		
-		$(".start").on("click",function(e){
-			$("form#paginateform #currentPage").val("1");
-			$("#paginateform").submit();
-			e.preventDefault();
-		});
-		
-		$(".end").on("click",function(e){
-			$("form#paginateform #currentPage").val($("#totalPages").val());
-			$("#paginateform").submit();
-			e.preventDefault();
-		});
-		
-		$("#subjectName").on("keyup",function(){
-			var string = $(this).val();	
-			$(this).val(string.charAt(0).toUpperCase() + string.slice(1));
-		});
-		$('#savesubject').click(function(){
-			var subjectname=$("#editsubject").val();
-			if(subjectname.length>0){
-			$('div#ModifysubjectModal .progress').removeClass('hide');
-			$('div#ModifysubjectModal .savesubject').addClass('hide');
-			 $.ajax({
-	                url: 'classOwnerServlet',
-	                type: 'post',
-	                data: {
-				    	 methodToCall: "modifysubject",
-				    	 subjectname:subjectname,
-				    	 subjectid:subjectid
-	                },
-	                success: function(data){
-	                	var resultJson = JSON.parse(data);
-	                	var result=resultJson.added;
-	                	if(result=="false"){
-	                		$('div#ModifysubjectModal .progress').addClass('hide');
-	                		$('div#ModifysubjectModal .savesubject').removeClass('hide');
-	                		$('div#ModifysubjectModal .error').show();
-	                  		$('div#ModifysubjectModal .error').html('<strong>Error!</strong> Subject Already Present');
-	                	}else{
-	                	$('#ModifysubjectModal').modal('hide');
-	                	$("#paginateform").submit();
-	                	/* modal.launchAlert("Success","Subject Modified! Page will refresh in soon");
-	         		   setTimeout(function(){
-	         			   location.reload();
-	         		   },2*1000); */
-	                	}
-	                }, error: function(data){
-	                    alert('ajax failed');
-	                }
-		});
-			}else{
-				
-				$('div#ModifysubjectModal .error').show();
-          		$('div#ModifysubjectModal .error').html('<strong>Error!</strong> Subject Name cannot be empty');
-			}
-		});
-		
-		/* $("#addteacher").click(function() 
-				{  	alert("Yo Yo1");
-		             $.ajax({
-		                url: 'classOwnerServlet',
-		                type: 'post',
-		                data: {
-					    	 methodToCall: "fetchsubjects",
-					   		},
-		                success: function(){
-		                	$('#addTeacherModal').modal({show:true});
-		                }, error: function(){
-		                    alert('ajax failed');
-		                }
-		            }); 
-		            
-		        }); */
-		
-		$('.batchName').tooltip({'placement':'right','html':'true'}).on('click',function(){
-			$(this).tooltip('hide');
-		});
-		
-		$('.addsubject2batch').tooltip();
-/*		$('[data-toggle="popover"]').popover({container: '.popoverContainer'+$(this).attr('popovername')});
-*/	
-/*
-		$('[data-toggle="popover"]').on('click',function(){
-			$(this).popover('show');
-		});
-		*/
-		
-		$('.addsubject2batch').popover({'placement':'bottom','content':$('#allSubject').html(),'html':true});
 
+/*this function will prompt to delete subject*/
+function deleteSubjectPrompt(){
+	var subjectIdToEdit = $(this).closest("tr").find(".editSubjectId").val();
+	deleteConfirm(subjectIdToEdit);
+}
+
+function deleteConfirm(subId){
+	modal.modalConfirm("Delete","Do you want to delete","Cancel","Delete",deleteSubject,[subId]);
+}
+
+function enableEdit(){
+	var subjectName = $(this).closest("tr").find(".defaultsubjectName").text().trim();
+	$(this).closest("tr").find(".editSubjectName").val(subjectName);
+	$(this).closest("tr").addClass("editEnabled");
+	//$(this).closest("tr").find(".editSubjectName").val("");
+}
+
+function cancelEdit(){
+	$(this).closest("tr").removeClass("editEnabled");
+}
+
+function manageLink(){
+	var subjectIdTo = $(this).closest("tr").find(".editSubjectId").val();
+	var subjectname = $(this).closest("tr").find(".defaultsubjectName").text();
+	var link = "addtopics?actionname=initiate&subid="+subjectIdTo+"&subname="+subjectname;
+	location.href = link;
+}
+
+function saveNewSubjectName(){
+	var that = $(this);
+	var subjectNameToEdit = $(this).closest("tr").find(".editSubjectName").val();
+	var subjectIdToEdit = $(this).closest("tr").find(".editSubjectId").val();
+	 $.ajax({
+		url: 'classOwnerServlet',
+		type: 'post',
+		data: {
+			 methodToCall: "modifysubject",
+			 subjectname:subjectNameToEdit,
+			 subjectid:subjectIdToEdit
+		},
+		success:function(e){
+			that.closest("tr").find(".defaultsubjectName").text(subjectNameToEdit);		
+			cancelEdit.apply(that);
+			e = JSON.parse(e);
+			if (e.status == "success"){
+				if(e.added){
+					$.notify({message: 'Modified'},{type: 'success'});
+				}else{
+					$.notify({message: 'Error'},{type: 'danger'});
+				}
+			}else{
+				$.notify({message: 'Error'},{type: 'danger'});
+			}
+		},
+		error:function(e){
+			console.log(e);
+		}
+	 });
+
+}
+/*functions ends here*/
+
+	var dataTable;
+	function filterGlobal() {
+		$('#subjectTable').DataTable().search(
+			$('#tableSearchCustom').val()
+			).draw();
+	}
+
+	$(document).ready(function(){
+		$('body').on("click",".btn-edit",enableEdit)
+			.on("click",".btn-cancel",cancelEdit)
+			.on("click",".btn-save",saveNewSubjectName)
+			.on("click",".btn-delete",deleteSubjectPrompt)
+			.on("click",".btn-manage",manageLink);
+			
+		$('#tableSearchCustom').on("keyup click",filterGlobal);
+		
+		dataTable = $("#subjectTable").DataTable({oClasses:{sFilterInput:"form-control"},"lengthChange": false,"columnDefs": [
+            {
+                "render": function ( data, type, row ) {
+                    console.log(data);
+					return "data";
+                }
+            },
+        ]});
+				
+		$('#manageSubjectAddSubject').on('click',function(){
+		var subjectName = $('#subjectName').val();
+		if(!subjectName || subjectName.trim()==""){
+			$(this).closest('.addSubjectContainer').find(".error").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Subject name cannot be blank');
+		}else{
+			$(this).closest('.addSubjectContainer').find(".error").empty();
+			allAjax.addSubject('',subjectName,successCallbackSubject,errorCallbackSubject);
+		}
+	});
+		
 	});
 	
+	function errorCallbackSubject(e){
+		/*
+		$('div#addSubjectModal .progress').addClass('hide');
+		$('div#addSubjectModal .add').removeClass('hide');
+		$('div#addSubjectModal .error').show();
+		$('div#addSubjectModal .error').html('<strong>Error!</strong> Unable to add');
+		*/
+	}
+
+	function successCallbackSubject(data){
+		data = JSON.parse(data);
+		dataTable = $('#subjectTable').DataTable({
+			bDestroy:true,
+			data: data.subjects,
+			lengthChange: false,
+			columns: [
+				{title:"#",data:null},
+				{ title: "Name",data:"subjectName",render:function(data,event,row){
+					console.log(row);
+					var modifiedObj = SUBJECT_NAME.replace("{{defaultsubjectNameValue}}",row.subjectName);
+					modifiedObj = modifiedObj.replace("{{editSubjectNameValue}}",row.subjectName);
+					modifiedObj = modifiedObj.replace("{{editSubjectIdValue}}",row.subjectId);
+					return modifiedObj;
+				}},
+				{ title: "",data:null,render:function(data){
+					return BUTTONS_MANAGE+BUTTONS_CANCEL;
+					}}
+			]
+		});
+		
+		dataTable.on( 'order.dt search.dt', function () {
+        dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+			});
+		}).draw();
+	}
 	
 	
 </script>
 </head>
 <body>
-
-<div class="">
- <div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 10px;">
-	<div align="center" style="font-size: larger;"><u>Manage Subject</u></div>
-  <button type="button" class="btn btn-info" data-target="#addSubjectModal" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Subject</button>
-  </div>
+ <br>
+ <div class="container">
+ <div class="row" style="background-color:#eee">
+ 
+ <div class="col-lg-4">
+	<input type="text" class="form-control" id="tableSearchCustom" placeholder="search">
  </div>
-<br><br>
-<%List<Subject> list=(List<Subject>)request.getAttribute("listOfSubjects");
-int endIndex=(Integer)request.getAttribute("endIndex");
-int currentPage=(Integer)request.getAttribute("currentPage");
-int startIndex=(Integer)request.getAttribute("startIndex");
-%>
-<%
-int counter=startIndex;
-if(list!=null){
-if(list.size()>0){
-%>
-<div>
-<table class="table table-bordered table-hover" style="background-color: white;" data-toggle="table">
-
-<tr style="background-color: rgb(0, 148, 255);">
-<th>SR No.</th>
-<th>Subject Name</th>
-<th>Topics/Chapters</th>
-<th>Edit</th>
-<th>Delete</th>
-</tr>
-<%while(counter< endIndex){ %>
-<tr>
-<td><%=counter+1 %></td>
-<td><%=list.get(counter).getSubjectName() %><input type="hidden" id="sub<%=list.get(counter).getSubjectId()%>" value="<%=list.get(counter).getSubjectName()%>"></td>
-<td><a class="btn btn-primary" href="addtopics?actionname=initiate&subid=<%=list.get(counter).getSubjectId() %>&subname=<%=list.get(counter).getSubjectName()%>&currentPage=<%=currentPage %>" id="<%=list.get(counter).getSubjectId()%>">Add Subject Topics/Chapters</a></td>
-<td><a href="#" class="btn btn-primary" id="<%=list.get(counter).getSubjectId()%>" onclick="getSubject(<%=list.get(counter).getSubjectId()%>)">Edit</a></td>
-<td><a href="#" class="btn btn-danger" id="<%=list.get(counter).getSubjectId()%>" onclick="deleteSubject(<%=list.get(counter).getSubjectId()%>)">Delete</a></td>
-</tr>
-<%counter++;}
-%>
-</table>
-</div>
-<div>
- <form action="addsubject" id="paginateform">
-  <input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
-  <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
-  <input type="hidden" name="actionname" id="actionname" value='<c:out value="${actionname}"></c:out>'>
-  <ul class="pagination">
-  <li><a class="start" >&laquo;</a></li>
-  <c:forEach var="item" begin="1" end="${totalPages}">
-  <c:if test="${item eq currentPage}">
-  <li class="active"><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
-  </c:if>
-  <c:if test="${item ne currentPage}">
-  <li><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
-  </c:if>
-  </c:forEach>
-  <li><a href="#" class="end">&raquo;</a></li>
-</ul>
-</form>
-
+ <div class="col-lg-4 addSubjectContainer">
+	
+    <div class="input-group">
+      <input type="text" class="form-control" id="subjectName">
+      <span class="input-group-btn">
+        <button id="manageSubjectAddSubject" class="btn btn-default" type="button">Add subject</button>
+      </span>
+    </div><!-- /input-group -->
+    <div class="error"></div>
+  </div><!-- /.col-lg-6 -->
+  <div class="col-lg-3"></div>
+  </div>
 </div>
 
-<%}else{
-	%>
-	<span class="alert alert-info">No Subject added yet</span>
-	<%
-}
-}%>
-
-<div class="modal fade" id="addTopicModal">
-    <div class="modal-dialog">
-    <div class="modal-content">
- 		<div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title" id="myModalLabel">Small modal</h4>
-        </div>
-        <div class="modal-body" id="mymodalmessage">
-          
-        </div>
-      	<div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
-      	</div>
-    </div>
-</div>
-</div>
-
-<div class="modal fade" id="subjectdeleteconfirmmodal">
-    <div class="modal-dialog">
-    <div class="modal-content">
- 		<div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title" id="myModalLabel">Delete Subject</h4>
-        </div>
-        <div class="modal-body" id="mymodalmessage">
-          Are you sure?
-        </div>
-      	<div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancle</button>
-	        <button type="button" class="btn btn-primary" data-dismiss="modal" id="subjectdeleteconfirm">Yes</button>
-      	</div>
-    </div>
-</div>
-</div>
-<form action="addsubject" id="addsub">
-<input type="hidden" name="actionname" id="actionname" value='subjectadded'>
-  <input type="hidden" name="currentPage" id="currentPage">
-  <input type="hidden" name="totalPages" id="totalPages">
-</form>
+ <table class="table table-striped subjectTable" id="subjectTable">
+	<thead>
+		<th>#</th><th>Subject name</th><th></th>
+	</thead>
+ <c:forEach items="${listOfSubjects}" var="subject" varStatus="counter">
+ 	<tr>
+ 		<td><c:out value="${counter.count}"></c:out></td>
+ 		<td>
+			<input type="hidden" class="hide editSubjectId" value='<c:out value="${subject.subjectId}"></c:out>'/>
+			<div class="default defaultsubjectName"><c:out value="${subject.subjectName}"></c:out></div>
+			<input type="text" value='<c:out value="${subject.subjectName}"></c:out>' class="form-control editable editSubjectName"/>
+		</td>
+ 		<td>
+			<div class="default">
+				<button class="btn btn-primary btn-xs btn-manage">Manage</button>
+				<button class="btn btn-primary btn-xs btn-edit">Edit</button>
+				<button class="btn btn-danger btn-xs btn-delete">Delete</button>
+			</div>
+			<div class="editable">
+				<button class="btn btn-success btn-xs btn-save">Save</button>
+				<button class="btn btn-danger btn-xs btn-cancel">Cancel</button>
+			</div>
+		</td>
+ 		
+ 	</tr>
+ </c:forEach>
+ </table>
 </body>
 </html>

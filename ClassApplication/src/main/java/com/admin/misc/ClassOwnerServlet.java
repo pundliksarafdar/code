@@ -64,6 +64,7 @@ import com.classapp.notification.GeneralNotification.NOTIFICATION_KEYS;
 import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.helper.BatchHelperBean;
 import com.mails.AllMail;
@@ -199,7 +200,8 @@ public class ClassOwnerServlet extends HttpServlet{
 				List<Subjects> subjects=subjectTransaction.getAllClassSubjects(regId);
 				Gson gson=new Gson();
 				String json=gson.toJson(subjects);
-				respObject.addProperty("subjects", json);
+				JsonElement jsonElement = gson.toJsonTree(subjects);
+				respObject.add("subjects", jsonElement);
 				respObject.addProperty(STATUS, "success");
 			}else{
 				respObject.addProperty(STATUS, "error");

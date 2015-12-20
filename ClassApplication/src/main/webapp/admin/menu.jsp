@@ -278,6 +278,7 @@ function RenderTimer(completedTime,totalTime){
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
+	<li><a href="#" id="menu_dashboard"><i class="glyphicon glyphicon-list"></i> Dashboard</a></li>
     <%if(userBean.getRole() == 0 || userBean.getRole() == 10) {%>
       <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
@@ -405,5 +406,299 @@ function RenderTimer(completedTime,totalTime){
 	
 
 </nav>
+
+<!-- Metro Tiles - START -->
+<div class="modal fade" id="tileMenuModal">
+  
+<div class="container dynamicTile">
+    <div class="row">
+		<div class="col-xs-12">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>	
+		</div>
+	</div>
+	<div class="row">
+        <div class="col-sm-4 col-xs-8">
+            <a href="addsubject">
+			<div id="tile8" class="tile">
+			      <div class="carousel slide" data-ride="carousel">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Classes, subject & batch
+                            </div>
+                            
+                        </div>
+						
+                    </div>
+					</div>
+            </div>
+			</a>
+        </div>
+        <div class="col-sm-2 col-xs-4">
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Student
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+        </div>
+		<div class="col-sm-2 col-xs-4">
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Teacher
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+        </div>
+		<div class="col-sm-2 col-xs-4">
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Exam
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+        </div>
+		<div class="col-sm-2 col-xs-4">
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Attendance
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+        </div>
+		<div class="col-sm-2 col-xs-4">
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Fees
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+        </div>
+		<div class="col-sm-2 col-xs-4">
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Alert
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+        </div>
+		<div class="col-sm-2 col-xs-4">
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Timetable
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+        </div>
+		<div class="col-sm-2 col-xs-4">
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Parent control
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+        </div>
+		<div class="col-sm-2 col-xs-4">
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Report
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+        </div>
+		<!---->
+        </div>
+    </div>
+
+
+</div><!-- /.modal -->
+
+<style>
+    .dynamicTile .col-sm-2.col-xs-4 {
+        padding: 5px;
+    }
+	
+	.dynamicTile .col-sm-4.col-xs-8 {
+        padding: 5px;
+    }
+
+    .bigicon {
+        font-size: 67px;
+        color: white;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    .icontext {
+        color: white;
+        font-size: 16px;
+    }
+
+    .bigicondark {
+        font-size: 67px;
+        color: black;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    .icontextdark {
+        color: black;
+        font-size: 27px;
+    }
+
+    
+    #tile1 {
+        background: #7C91C7;
+    }
+
+    #tile2 {
+        background: #3B579D;
+    }
+
+    #tile3 {
+        background: #153178;
+    }
+
+    #tile4 {
+        background: #EACF46;
+    }
+
+    #tile5 {
+        background: #EACF46;
+    }
+
+    #tile6 {
+        background: #FFED94;
+    }
+
+    #tile7 {
+        background: white;
+    }
+
+    #tile8 {
+        background: #7C91C7;
+    }
+
+    #tile9 {
+        background: #EACF46;
+    }
+
+    #tile10 {
+        background: #EACF46;
+    }
+	
+	.modal {
+		-webkit-transition: all 0.5s ease;
+		transition: all 0.5s ease;
+	}
+
+</style>
+<script type="text/javascript">
+$(document).ready(function () {
+    $(".tile").height($("#tile1").width());
+    $(".carousel").height($("#tile1").width());
+    $(".item").height($("#tile1").width());
+
+    $(window).resize(function () {
+        if (this.resizeTO) clearTimeout(this.resizeTO);
+        this.resizeTO = setTimeout(function () {
+            $(this).trigger('resizeEnd');
+        }, 10);
+    });
+
+    $(window).bind('resizeEnd', function () {
+        $(".tile").height($("#tile1").width());
+        $(".carousel").height($("#tile1").width());
+        $(".item").height($("#tile1").width());
+    });
+	
+	var $modal= $('#tileMenuModal');
+	$('#menu_dashboard').on('click', function (e) {
+		//$modal.css({top: e.clientY, left: e.clientX, transform: 'scale(0.2, 0.2)'});
+		$modal.modal();
+		//$modal.css({top: '', left: '', transform: ''});
+	});
+
+});
+</script>
+
+
+<!-- Metro Tiles - END -->
 </div>
 

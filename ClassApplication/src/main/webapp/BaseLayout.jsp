@@ -22,6 +22,8 @@ response.setHeader("Expires", "0");
 <link href="css/common.css" rel="stylesheet">	
 <link href="assets/css/style.css" rel="stylesheet" /> 
 <link href="assets/css/font-awesome.min.css" rel="stylesheet" />
+<link href="css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="css/jquery.dataTables.min.css" rel="stylesheet" />
 <link rel="icon" 
       type="image/jpeg" 
       href="images/cxlogowhite.jpg">
@@ -134,6 +136,8 @@ html,body {
 <script src="js/jquery.validate.min.js"></script>
 <script src="js/raphael.min.js"></script>
 <script src="js/morris.min.js"></script>
+<script src="js/jquery.dataTables.js"></script>
+<script src="js/bootstrap-notify.min.js"></script>
 <script>
 $( document ).ajaxStart(function() {
 	  $("#loaderModal").modal("show")

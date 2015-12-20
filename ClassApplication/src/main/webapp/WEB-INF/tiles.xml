@@ -174,7 +174,7 @@
 
 	<definition name="classowner.addsubject" extends="baseLayout">
 		<put-attribute name="title" value="Add Subject" />
-		<put-attribute name="body" value="/ClassOwner/AddSubject.jsp" />
+		<put-attribute name="body" value="/ClassOwner/CommonManage.jsp" />
 	</definition>
 
 	<definition name="classowner.addbatchsubject" extends="baseLayout">
