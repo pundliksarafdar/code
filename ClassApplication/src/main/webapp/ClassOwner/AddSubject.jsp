@@ -105,6 +105,11 @@ function manageLink(){
 function saveNewSubjectName(){
 	var that = $(this);
 	var subjectNameToEdit = $(this).closest("tr").find(".editSubjectName").val();
+	
+	if(!validateInput(subjectNameToEdit)){
+		$.notify({message: 'Only character and number is allowed'},{type: 'danger'});
+		return; 
+	}
 	var subjectIdToEdit = $(this).closest("tr").find(".editSubjectId").val();
 	 $.ajax({
 		url: 'classOwnerServlet',
@@ -134,6 +139,12 @@ function saveNewSubjectName(){
 	 });
 
 }
+
+function validateInput(inputText){
+	var CHAR_AND_NUM_VALIDATION = /^[a-zA-Z0-9]{1,}$/;
+	var isValidInput = CHAR_AND_NUM_VALIDATION.test(inputText);
+	return isValidInput;
+}
 /*functions ends here*/
 
 	var dataTable;
@@ -152,14 +163,7 @@ function saveNewSubjectName(){
 			
 		$('#tableSearchCustom').on("keyup click",filterGlobal);
 		
-		dataTable = $("#subjectTable").DataTable({oClasses:{sFilterInput:"form-control"},"lengthChange": false,"columnDefs": [
-            {
-                "render": function ( data, type, row ) {
-                    console.log(data);
-					return "data";
-                }
-            },
-        ]});
+		dataTable = $("#subjectTable").DataTable({"lengthChange": false});
 				
 		$('#manageSubjectAddSubject').on('click',function(){
 		var subjectName = $('#subjectName').val();
@@ -167,7 +171,11 @@ function saveNewSubjectName(){
 			$(this).closest('.addSubjectContainer').find(".error").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Subject name cannot be blank');
 		}else{
 			$(this).closest('.addSubjectContainer').find(".error").empty();
-			allAjax.addSubject('',subjectName,successCallbackSubject,errorCallbackSubject);
+			if(validateInput(subjectName)){
+				allAjax.addSubject('',subjectName,successCallbackSubject,errorCallbackSubject);
+			}else{
+				$(this).closest('.addSubjectContainer').find(".error").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Only character and numbers are allowed');
+			}
 		}
 	});
 		
@@ -184,22 +192,23 @@ function saveNewSubjectName(){
 
 	function successCallbackSubject(data){
 		data = JSON.parse(data);
+		if(data.status == "success"){
+		$.notify({message: "Subject successfuly added"},{type: 'success'});
 		dataTable = $('#subjectTable').DataTable({
 			bDestroy:true,
 			data: data.subjects,
 			lengthChange: false,
 			columns: [
-				{title:"#",data:null},
+				{title:"#",data:null,sWidth:"10%"},
 				{ title: "Name",data:"subjectName",render:function(data,event,row){
-					console.log(row);
 					var modifiedObj = SUBJECT_NAME.replace("{{defaultsubjectNameValue}}",row.subjectName);
 					modifiedObj = modifiedObj.replace("{{editSubjectNameValue}}",row.subjectName);
 					modifiedObj = modifiedObj.replace("{{editSubjectIdValue}}",row.subjectId);
 					return modifiedObj;
-				}},
+				},sWidth:"70%"},
 				{ title: "",data:null,render:function(data){
 					return BUTTONS_MANAGE+BUTTONS_CANCEL;
-					}}
+					},sWidth:"20%"}
 			]
 		});
 		
@@ -208,6 +217,10 @@ function saveNewSubjectName(){
             cell.innerHTML = i+1;
 			});
 		}).draw();
+		}else{
+			var message = data.message;
+			$.notify({message: message},{type: 'danger'});
+		}
 	}
 	
 	
@@ -235,19 +248,19 @@ function saveNewSubjectName(){
   </div>
 </div>
 
- <table class="table table-striped subjectTable" id="subjectTable">
+ <table class="table table-striped subjectTable" id="subjectTable" width="100%">
 	<thead>
 		<th>#</th><th>Subject name</th><th></th>
 	</thead>
  <c:forEach items="${listOfSubjects}" var="subject" varStatus="counter">
  	<tr>
- 		<td><c:out value="${counter.count}"></c:out></td>
- 		<td>
+ 		<td width="10%"><c:out value="${counter.count}"></c:out></td>
+ 		<td width="70%">
 			<input type="hidden" class="hide editSubjectId" value='<c:out value="${subject.subjectId}"></c:out>'/>
 			<div class="default defaultsubjectName"><c:out value="${subject.subjectName}"></c:out></div>
 			<input type="text" value='<c:out value="${subject.subjectName}"></c:out>' class="form-control editable editSubjectName"/>
 		</td>
- 		<td>
+ 		<td width="20%">
 			<div class="default">
 				<button class="btn btn-primary btn-xs btn-manage">Manage</button>
 				<button class="btn btn-primary btn-xs btn-edit">Edit</button>
