@@ -991,7 +991,8 @@ public class ClassOwnerServlet extends HttpServlet{
 				List<Division>	list=divisionTransactions.getAllDivisions(userBean.getRegId());
 				Gson gson=new Gson();
 				String allclasses=gson.toJson(list);
-				respObject.addProperty("allclasses", allclasses);
+				JsonElement jsonElement = gson.toJsonTree(list);
+				respObject.add("allclasses", jsonElement);
 				respObject.addProperty(STATUS, "success");
 			}
 		}
@@ -1491,6 +1492,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 			UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 			int batchId=Integer.parseInt(req.getParameter("batchId"));
+			String batchName=req.getParameter("batchName");
 			int batchdivisionid=Integer.parseInt(req.getParameter("batchdivisionid"));
 			Batch batch=batchTransactions.getBatch(batchId,userBean.getRegId(),batchdivisionid);
 			String sub_Ids=req.getParameter("subIds");			
@@ -1499,6 +1501,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 				scheduleTransaction.deleteschedulerelatedtobatchsubject(batch, sub_Ids);
 				batch.setSub_id(sub_Ids);
+				batch.setBatch_name(batchName);
 				if(batchTransactions.addUpdateDb(batch)){
 					BatchHelperBean batchHelperBean= new BatchHelperBean(regId);
 					batchHelperBean.setBatchDetailsList();
@@ -3195,8 +3198,20 @@ public class ClassOwnerServlet extends HttpServlet{
 		}
         respObject.addProperty("base64", base64);
 		respObject.addProperty(STATUS, "success");
+	}else if("addTeacherSearch".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		String username=req.getParameter("username");
+		String email=req.getParameter("email");
+		RegisterTransaction registerTransaction=new RegisterTransaction();
+		RegisterBean registerBean=registerTransaction.getRegisteredTeacher(username, email);
+		if (registerBean!=null) {
+			respObject.addProperty("firstname",registerBean.getFname());
+			respObject.addProperty("lastname",registerBean.getLname());
+		}else{
+			
+		}
+		respObject.addProperty(STATUS,"success");
 	}
-		
 		printWriter.write(respObject.toString());
 	}
 	
