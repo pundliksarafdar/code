@@ -3211,6 +3211,17 @@ public class ClassOwnerServlet extends HttpServlet{
 			
 		}
 		respObject.addProperty(STATUS,"success");
+	}else if("getAllBatches".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		BatchHelperBean batchHelperBean= new BatchHelperBean(userBean.getRegId());
+		batchHelperBean.setBatchDetailsList();
+		List<BatchDetails> batchList = new ArrayList<BatchDetails>();
+		batchList = batchHelperBean.getBatchDetailsList();
+		 req.getSession().setAttribute("instituteBatches", batchList);
+		 Gson gson=new Gson();
+		 JsonElement jsonElement = gson.toJsonTree(batchList);
+		 respObject.add("instituteBatches", jsonElement);
+		 respObject.addProperty(STATUS,"success");
 	}
 		printWriter.write(respObject.toString());
 	}
