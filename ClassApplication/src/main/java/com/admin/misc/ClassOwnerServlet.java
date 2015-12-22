@@ -3222,6 +3222,15 @@ public class ClassOwnerServlet extends HttpServlet{
 		 JsonElement jsonElement = gson.toJsonTree(batchList);
 		 respObject.add("instituteBatches", jsonElement);
 		 respObject.addProperty(STATUS,"success");
+	}else if("getAllSubjects".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		SubjectTransaction subjectTransaction=new SubjectTransaction();
+		List<Subjects> subjects=subjectTransaction.getAllClassSubjects(userBean.getRegId());
+		 req.getSession().setAttribute("instituteSubjects", subjects);
+		 Gson gson=new Gson();
+		 JsonElement jsonElement = gson.toJsonTree(subjects);
+		 respObject.add("instituteSubjects", jsonElement);
+		 respObject.addProperty(STATUS,"success");
 	}
 		printWriter.write(respObject.toString());
 	}
