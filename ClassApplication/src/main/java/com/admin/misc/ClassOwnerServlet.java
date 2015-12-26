@@ -67,6 +67,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.helper.BatchHelperBean;
+import com.helper.TeacherHelperBean;
 import com.mails.AllMail;
 import com.threadrunner.ReEvaluateThreadRunner;
 import com.tranaction.subject.SubjectTransaction;
@@ -606,14 +607,14 @@ public class ClassOwnerServlet extends HttpServlet{
 			}else{
 				regId = userBean.getRegId();
 			}
-			String teacherID = req.getParameter("teacherID");
+			int teacherID = Integer.parseInt(req.getParameter("teacherID"));
 			TeaherTransaction teaherTransaction=new TeaherTransaction();
 			String stat=teaherTransaction.addTeacher(teacherID,regId,subjects,suffix);
 			if("added".equals(stat))
 			{
 				respObject.addProperty(STATUS, "success");
 			}else if("exists".equals(stat)){
-				respObject.addProperty(MESSAGE, " Teacher is already exist");
+				respObject.addProperty(MESSAGE, " Teacher is already added");
 				respObject.addProperty(STATUS, "error");
 			}else if("false".equals(stat)){
 				respObject.addProperty(MESSAGE, "Invalid Teacher ID");
@@ -1502,6 +1503,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				scheduleTransaction.deleteschedulerelatedtobatchsubject(batch, sub_Ids);
 				batch.setSub_id(sub_Ids);
 				batch.setBatch_name(batchName);
+				if(!batchTransactions.isUpdatedBatchExist(batch)){
 				if(batchTransactions.addUpdateDb(batch)){
 					BatchHelperBean batchHelperBean= new BatchHelperBean(regId);
 					batchHelperBean.setBatchDetailsList();
@@ -1515,6 +1517,10 @@ public class ClassOwnerServlet extends HttpServlet{
 				}else{
 					respObject.addProperty(STATUS, "error");
 					respObject.addProperty(MESSAGE, "Error while updating the batch with Id="+batchId+"!");
+				}
+				}else{
+					respObject.addProperty(STATUS, "error");
+					respObject.addProperty(MESSAGE, "Batch name already Exists!");
 				}
 			//	printWriter.write(respObject.toString());
 			}
@@ -3207,10 +3213,12 @@ public class ClassOwnerServlet extends HttpServlet{
 		if (registerBean!=null) {
 			respObject.addProperty("firstname",registerBean.getFname());
 			respObject.addProperty("lastname",registerBean.getLname());
+			respObject.addProperty("teacherID",registerBean.getRegId());
+			respObject.addProperty(STATUS,"available");
 		}else{
-			
+			respObject.addProperty(STATUS,"notavailable");
 		}
-		respObject.addProperty(STATUS,"success");
+		
 	}else if("getAllBatches".equalsIgnoreCase(methodToCall)){
 		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 		BatchHelperBean batchHelperBean= new BatchHelperBean(userBean.getRegId());
@@ -3230,6 +3238,16 @@ public class ClassOwnerServlet extends HttpServlet{
 		 Gson gson=new Gson();
 		 JsonElement jsonElement = gson.toJsonTree(subjects);
 		 respObject.add("instituteSubjects", jsonElement);
+		 respObject.addProperty(STATUS,"success");
+	}else if("getAllTeachers".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		TeacherHelperBean teacherHelperBean= new TeacherHelperBean();
+		teacherHelperBean.setClass_id(userBean.getRegId());
+		List<TeacherDetails> teacherList = teacherHelperBean.getTeachers();
+		 req.getSession().setAttribute("instituteTeachers", teacherList);
+		 Gson gson=new Gson();
+		 JsonElement jsonElement = gson.toJsonTree(teacherList);
+		 respObject.add("instituteTeachers", jsonElement);
 		 respObject.addProperty(STATUS,"success");
 	}
 		printWriter.write(respObject.toString());

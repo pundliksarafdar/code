@@ -88,6 +88,11 @@ public int getNextBatchID(int inst_id,int div_id){
 		return batchData.isBatchExist(batch.getClass_id(), batch.getBatch_name(),batch.getDiv_id());
 	}
 	
+	public boolean isUpdatedBatchExist(Batch batch){
+		BatchData batchData = new BatchData();
+		return batchData.isUpdatedBatchExist(batch.getBatch_id(),batch.getClass_id(), batch.getBatch_name(),batch.getDiv_id());
+	}
+	
 	public boolean deleteBatch(Batch batch){
 		boolean status = false;
 		DeleteBatch deleteBatch = new DeleteBatch();

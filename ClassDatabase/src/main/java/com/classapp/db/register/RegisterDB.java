@@ -678,4 +678,34 @@ public List getStudents(List StudentIDs) {
 		}	
 		return true;
 	}
+	
+	public RegisterBean getRegisteredTeacher(String username,String email) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> subidList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from RegisterBean where  loginName = :loginName and email = :email and role=2");
+			query.setParameter("loginName", username);
+			query.setParameter("email", email);
+			subidList = query.list();
+			if(subidList!=null)
+			{
+				return subidList.get(0);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return null;
+	}
 }

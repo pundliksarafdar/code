@@ -168,6 +168,11 @@ public class RegisterTransaction {
 		RegisterDB registerDB=new RegisterDB();
 		return registerDB.updateRenewalDates(regId);
 	}
+	
+	public RegisterBean getRegisteredTeacher(String username,String email) {
+		RegisterDB registerDB=new RegisterDB();
+		return registerDB.getRegisteredTeacher(username, email);
+	}
 	}
 	
 

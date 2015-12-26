@@ -20,7 +20,7 @@ import com.classapp.persistence.HibernateUtil;
 
 public class TeacherDB {
 
-	public Boolean isTeacherRegistered(String teacherLoginName) {
+	public Boolean isTeacherRegistered(int teacherID) {
 		Transaction transaction = null;
 		Session session = null;
 		List<RegisterBean> list = null;
@@ -28,8 +28,8 @@ public class TeacherDB {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session
-					.createQuery("from RegisterBean where loginName=:userid and role=:role");
-			query.setParameter("userid", teacherLoginName);
+					.createQuery("from RegisterBean where regId=:teacherID and role=:role");
+			query.setParameter("teacherID", teacherID);
 			query.setParameter("role", 2);
 			list = query.list();
 		} catch (Exception e) {
@@ -47,7 +47,7 @@ public class TeacherDB {
 	}
 	
 	
-	public Boolean isTeacherExists(String teacherLoginName,int regid) {
+	public Boolean isTeacherExists(int teacherID,int regid) {
 		Transaction transaction=null;
 		Session session=null;
 		List<RegisterBean> list=null;
@@ -55,21 +55,13 @@ public class TeacherDB {
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
-		Query query=session.createQuery("from RegisterBean where loginName=:userid and role=2");
-		query.setParameter("userid", teacherLoginName);
-		list=query.list();
-		if(list.size()>0)
-		{
-			RegisterBean bean=list.get(0);
 			Teacher teacher=new Teacher();
 			teacher.setClass_id(regid);
-			teacher.setUser_id(bean.getRegId());
-			query=session.createQuery("from Teacher where user_id=:userid and class_id=:regid");
-			query.setParameter("userid", teacher.getUser_id());
-			query.setParameter("regid", teacher.getClass_id());
+			teacher.setUser_id(teacherID);
+			Query query=session.createQuery("from Teacher where user_id=:userid and class_id=:regid");
+			query.setParameter("userid", teacherID);
+			query.setParameter("regid", regid);
 			list2=query.list();
-			
-			
 				
 			if (list2.size()>0) {
 				return true;
@@ -78,7 +70,7 @@ public class TeacherDB {
 				return false;
 			}
 		
-		}
+		
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
@@ -90,7 +82,7 @@ public class TeacherDB {
 	}
 	
 	
-	public Boolean add(String teacherLoginName,int regid,String subjects,String suffix) {
+	public Boolean add(int teacherIID,int regid,String subjects,String suffix) {
 		Transaction transaction=null;
 		Session session=null;
 		List<RegisterBean> list=null;
@@ -98,22 +90,16 @@ public class TeacherDB {
 		try{
 			session=HibernateUtil.getSessionfactory().openSession();
 			transaction=session.beginTransaction();
-			Query query=session.createQuery("from RegisterBean where loginName=:userid and role=2");
-			query.setParameter("userid", teacherLoginName);
-			list=query.list();
-			if(list.size()>0)
-			{
-				RegisterBean bean=list.get(0);
+			
+			//	RegisterBean bean=list.get(0);
 				Teacher teacher=new Teacher();
 				teacher.setClass_id(regid);
-				teacher.setUser_id(bean.getRegId());
+				teacher.setUser_id(teacherIID);
 				teacher.setSub_ids(subjects);
 				teacher.setSuffix(suffix);
 				session.save(teacher);
 				transaction.commit();
-				//session.close();
-			return  true;
-			}
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
@@ -121,7 +107,7 @@ public class TeacherDB {
 				session.close();
 			}
 		}
-		return false;
+		return true;
 	}
 	
 	public List getSubjectTeacher(String subid) {

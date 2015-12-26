@@ -174,7 +174,7 @@
 
 	<definition name="classowner.addsubject" extends="baseLayout">
 		<put-attribute name="title" value="Add Subject" />
-		<put-attribute name="body" value="/ClassOwner/CommonManage.jsp" />
+		<put-attribute name="body" value="/ClassOwner/AddSubject.jsp" />
 	</definition>
 
 	<definition name="classowner.addbatchsubject" extends="baseLayout">
@@ -513,5 +513,9 @@
    <definition name="admin.instituteupgrade" extends="baseLayout">
       <put-attribute name="title"  value="Institute Upgrade"/>
       <put-attribute name="body"   value="/admin/InstituteUpgrade.jsp"/>      
+   </definition>
+   <definition name="classowner.viewteacher" extends="baseLayout">
+      <put-attribute name="title"  value="Manage Teacher"/>
+      <put-attribute name="body"   value="/ClassOwner/ViewTeachers.jsp"/>      
    </definition>
 </tiles-definitions>

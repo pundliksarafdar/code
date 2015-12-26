@@ -246,6 +246,37 @@ public class BatchDB {
 		return false;
 	}
 	
+	public boolean isUpdatedBatchExist(int batch_id,int class_id,String batch_name,int div_id){
+		Session session = null;
+		Transaction transaction = null;
+		List<Batch> batchList = null;
+				
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from Batch where class_id =:class_id and batch_name =:batch_name and div_id=:div_id and batch_id != :batch_id");
+			query.setInteger("class_id", class_id);
+			query.setString("batch_name", batch_name);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", batch_id);
+			batchList = query.list();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		if(null!=batchList && batchList.size()>0){
+			return true;
+		}
+		return false;
+	}
+	
 	public Batch getBatchFromID(int batchId,int inst_id,int div_id){
 		Session session = null;
 		Transaction transaction = null;

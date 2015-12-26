@@ -26,7 +26,7 @@ public class ManageTeacherAction extends BaseAction{
 			TeacherHelperBean teacherHelperBean= new TeacherHelperBean();
 			teacherHelperBean.setClass_id(userBean.getRegId());
 			List<TeacherDetails> teacherList = teacherHelperBean.getTeachers();
-			request.getSession().setAttribute(Constants.TEACHER_LIST,teacherHelperBean.getTeachers());
+			//request.getSession().setAttribute(Constants.TEACHER_LIST,teacherHelperBean.getTeachers());
 			if(null!=teacherList){
 				teacherListSize = teacherList.size();
 			}
