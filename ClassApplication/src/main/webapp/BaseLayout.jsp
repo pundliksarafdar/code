@@ -141,6 +141,7 @@ html,body {
 <script src="js/jquery.dataTables.js"></script>
 <script src="js/bootstrap-notify.min.js"></script>
 <script src="js/select2.min.js"></script>
+<script src="js/REST.js"></script>
 <script>
 $( document ).ajaxStart(function() {
 	  $("#loaderModal").modal("show")

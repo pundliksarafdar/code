@@ -15,6 +15,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -26,8 +27,10 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.spi.HttpRequest;
 
+import com.config.Constants;
+
 @Path("/classownerserviceold")
-public class CorexServiceApi{
+public class CorexServiceApi extends ServiceBase{
 	
 	private static final String UPLOADED_FILE_PATH = "C:"+File.separatorChar+"imageuploaded"+File.separatorChar;
 	@Context
@@ -43,11 +46,14 @@ public class CorexServiceApi{
 	}
 	
 	@GET
-	@Path("/showimage")
+	@Path("/showimage/{imageId}")
 	@Produces("image/jpeg")
-	public byte[] getImageRepresentation(){
+	public byte[] getImageRepresentation(@PathParam("imageId")String imageId){
+		
+		//String imgFolder = Constants.STORAGE_PATH + File.separatorChar+ getRegId() + File.separatorChar + imageId;
+		String imagefileName = Constants.STORAGE_PATH + File.separatorChar+ "imageTemp" + File.separatorChar + getRegId() + imageId;
 		try {
-			FileInputStream stream = new FileInputStream(UPLOADED_FILE_PATH+"a.jpg");
+			FileInputStream stream = new FileInputStream(imagefileName);
 			InputStream resourceStream = new BufferedInputStream(stream);
 			return IOUtils.toByteArray(resourceStream);
 		} catch (IOException e) {
@@ -57,7 +63,7 @@ public class CorexServiceApi{
 	}
 	
 	@POST
-	@Path("/uploadExamImage")
+	@Path("/uploadImage")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response uploadImage(MultipartFormDataInput input){
 		String fileName="";
@@ -86,6 +92,47 @@ public class CorexServiceApi{
 			  } catch (IOException e) {
 				e.printStackTrace();
 			  }
+
+			}
+		return Response.status(200).entity("success").build();
+	}
+	
+	@POST
+	@Path("/uploadImageTemp")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public Response uploadImageTemp(MultipartFormDataInput input){
+		String fileName="";
+		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+		List<InputPart> inputParts = uploadForm.get("uploadedFile");
+		
+		for (InputPart inputPart : inputParts) {
+
+			 try {
+				 	
+				MultivaluedMap<String, String> header = inputPart.getHeaders();
+				fileName = getFileName(header);
+
+				//convert the uploaded file to inputstream
+				InputStream inputStream = inputPart.getBody(InputStream.class,null);
+
+				byte [] bytes = IOUtils.toByteArray(inputStream);
+					
+				//constructs upload file path
+				
+				//create image tempfolder if not exist
+				String imgTempFolder = Constants.STORAGE_PATH + File.separatorChar+ "imageTemp";
+				File file = new File(imgTempFolder);
+				if(!file.exists()){
+					file.mkdirs();
+				}
+				
+				//Above generated folder will be used to save the image temparirily on successfull call files will be moved to main folder and old files will be deleted
+				fileName = Constants.STORAGE_PATH + File.separatorChar+ "imageTemp" + File.separatorChar + getRegId() + fileName ;
+					
+				writeFile(bytes,fileName);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
 			}
 		return Response.status(200).entity("success").build();
