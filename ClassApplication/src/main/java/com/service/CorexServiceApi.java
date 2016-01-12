@@ -10,11 +10,13 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -22,17 +24,21 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.jboss.resteasy.spi.HttpRequest;
 
-@Path("/classownerservice")
-public class CorexServiceApi {
+@Path("/classownerserviceold")
+public class CorexServiceApi{
 	
-	private static final String UPLOADED_FILE_PATH = "F:"+File.separatorChar+"imageuploaded";
+	private static final String UPLOADED_FILE_PATH = "C:"+File.separatorChar+"imageuploaded"+File.separatorChar;
+	@Context
+	private HttpServletRequest request; 
 
 	@GET
 	@Path("/test")
 	public Response serviceOn(){
-		System.out.println("Hello................");
-		return Response.status(200).entity("Successfullllll on").build();
+		String dob = (String) request.getSession().getAttribute("userdob");
+		System.out.println("Hello................"+dob);
+		return Response.status(200).entity("Successfullllll on"+dob).build();
 		
 	}
 	
@@ -41,8 +47,7 @@ public class CorexServiceApi {
 	@Produces("image/jpeg")
 	public byte[] getImageRepresentation(){
 		try {
-			String path = "F:"+File.separator+"imageuploaded"+File.separator+"1.jpg";
-			FileInputStream stream = new FileInputStream(path);
+			FileInputStream stream = new FileInputStream(UPLOADED_FILE_PATH+"a.jpg");
 			InputStream resourceStream = new BufferedInputStream(stream);
 			return IOUtils.toByteArray(resourceStream);
 		} catch (IOException e) {
