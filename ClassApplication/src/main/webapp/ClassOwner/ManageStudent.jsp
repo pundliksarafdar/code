@@ -6,745 +6,349 @@
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
 <%@page import="com.config.Constants"%>
-<%@taglib prefix="s" uri="http://java.sun.com/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
+<html>
+<style>
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
 
+.error{
+color: red;
+}
+</style>
 <script type="text/javascript" src="js/ManageStudent.js"></script>
  <%List list = (List)request.getSession().getAttribute(Constants.STUDENT_LIST); %>
 <script>
-var batchIds;
-var selectedStudentIds;
-var noofpages=0; 
-var pno="";
-function canceledit(){
-	//alert(batchID+" "+pagenumber);
-	$('#studentDetailTable').hide();
-	$('#studentDetailTablebody').empty();
-	  /*  if(batchID!=null){
-	   $('#batchselected').val(batchID+"_"+batchdivision); */
-	   getstudentsrelatedtobatch(pno);
-	   $("#students").show();
-		$("#pagination").show();
-	   
-}
-function getstudentsrelatedtobatch(pagenumber){
-	
-	var batchnamevalue=$("#batchselected").val().split("_");
-	var batchname=batchnamevalue[0];
-	var batchdivision=$("#division"+batchname+"_"+batchnamevalue[1]).val();
-	if(batchname!="-1"){
-		$("#students").hide();
-		$("#pagination").empty();
-		$("#studentDetailTable").hide();
-		$("#noStudentError").hide();
-		pno=pagenumber;
-	$.ajax({
-		url:"classOwnerServlet",
-		data:{
-			batchname:batchname,
-			methodToCall:"getstudentsrelatedtobatch",
-			pagenumber:pagenumber,
-			batchdivision:batchdivision
-		},
-		type:"post",
-		success:function(data){
-			var resultJson = JSON.parse(data);
-			var table=document.getElementById("students");
-			  var rowCount=table.rows.length;
-			  for (var x=rowCount-1; x>0; x--) {
-				  table.deleteRow(x);
-			   }
-			var studentnames=resultJson.studentnames.split(',');
-			var studentids=resultJson.studentids.split(',');
-			var count=resultJson.count;
-			var remain=resultJson.remain;
-			var pages=resultJson.pages;
-			
-			if(studentids[0]!=""){
-				var counter=0;
-			while(counter<studentids.length){
-				$("#students").append("<tr><td>"+studentids[counter]+"</td><td>"+studentnames[counter]+"</td><td><a><button type='button' class='btn btn-info' onclick=searchStudentthroughtable('"+studentids[counter]+"') >Edit</button></a></td></tr>");
-				counter++;
-			}
-			$("#students").show();
-			counter=0;
-			$("#pagest").remove();
-			if(noofpages!=0){
-				while(counter<noofpages){
-					$("#page"+counter).remove();
-					counter++;
-				}
-			}
-			
-			counter=0;
-			if(pagenumber==1)
-			{
-			$("#pagination").append("<li class='disabled' id=pagest><span>&laquo;</span></li>");
-			}else{
-				$("#pagination").append("<li><a href='#' id=pagest onClick=getstudentsrelatedtobatch("+(pagenumber-1)+")><span>&laquo;</span></li>");
-			}
-			while(counter<pages){
-				var temp=counter+1;
-				
-				if(temp==pagenumber){
-					$("#pagination").append("<li class='active' id=page"+counter+"><span>"+temp+"</span></li>");
-				}else{
-				$("#pagination").append("<li><a href='#' id=page"+counter+" onClick=getstudentsrelatedtobatch("+temp+")>"+temp+"</a></li>");
-				}
-				counter++;
-			}
-			
-			noofpages=pages;
-			 $("#pagination").append("<li><a href='#' onClick=getstudentsrelatedtobatch("+noofpages+")>&raquo;</a></li>");
-			}else{
-				$("#noStudentError").show();
-			}
-			if(noofpages>0){
-				$("#pagination").show();
-			}
-			
-		},
-		error:function(e){
-			//modal.launchalert("error","Yo2");
-		}
-		
-	});
-	}else{
-		$("#noStudentError").hide();
-	}
-}
-function getSelectedBatchesForStudent(){
-	var batches;
-	batchIds="";
-	batches=$(".chkBatch:checked").map(function(){
-	return this.value;
-	});
-	$(".chkBatch:checked").removeAttr('checked');
-	var i=0;
-	while(i<batches.size()){
-		if(i==0){
-			batchIds=batches[0]+"";
-		}else{
-			batchIds=batchIds+","+batches[i];
-		}
-		i++;
-	}
-}
-
-function getSelectedStudentsToDelete(){
-	var studentIds;
-	studentIds=$(".chkStudent:checked").map(function(){
-	return this.value;
-	});
-	
-	var i=0;
-	while(i<studentIds.size()){
-		if(i==0){
-			selectedStudentIds=studentIds[0]+"";
-		}else{
-			selectedStudentIds=selectedStudentIds+","+studentIds[i];
-		}
-		i++;
-	}
-}
-
-
-function searchStudent() {
-	$("#modifyStudentModalbody").empty();
-	var studentLoginName=document.getElementById("studentLoginNameSearch").value;
-	var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
-	if(!studentLoginName || studentLoginName.trim()==""||studentLoginName.lenght==0 ){
-		 modal.launchAlert("Error","Error!</strong> Student login name cannot be blank");		
-	}else if($("#studentLoginNameSearch").val().length<5 || !$("#studentLoginNameSearch").val().match(regloginname))
-	{
-		 modal.launchAlert("Error","Error!</strong>Invalid Student login name");
-	}else if($("#studentLoginNameSearch").val().length<5 || !$("#studentLoginNameSearch").val().match(regloginname))
-	{
-		modal.launchAlert("Error","Error!</strong>Invalid Student login name");
-	}else{
-		$("#studentDetailTable").hide();
-		$('#studentDetailTablebody').empty();
-	$.ajax({
-		   url: "classOwnerServlet",
-		    data: {
-		    	 methodToCall: "searchStudent",
-		    	 studentLgName:studentLoginName
-		   		}, 
-		   type:"POST",
-		   success:function(data){
-			   var resultJson = JSON.parse(data);   
-
-			   if(resultJson.status != 'error'){
-				   var firstname= resultJson.studentFname;
-				   var lastname= resultJson.studentLname;
-				   var studentId= resultJson.studentId;
-				   var studentbatchIds= resultJson.studentbatchIds.split(",");
-				   var studentbatchnames= resultJson.studentbatchnames;
-				   var allbatchnames= resultJson.allbatchnames.split(",");
-				   var allbatchIDs= resultJson.allbatchIDs.split(",");
-				   var studentdivision= resultJson.studentdivision;
-				   $("#studentDetailTablebody").append("<tr><td>"+studentLoginName+"</td><td>"+firstname+" "+lastname+"</td><td>"+studentdivision+"</td><td>"+studentbatchnames+"</td>"
-				   +"<td><button type='button' class='btn btn-info' data-target='#modifyStudentModal' data-toggle='modal'>Modify Student Batch</button></td>"
-				   +"<td><button type='button' class='btn btn-info' data-target='#deleteStudentModal' data-toggle='modal'>Delete Student</button></td>"
-					+"<td><a onclick='canceledit()'><button type='button' class='btn btn-info'>Cancel</button></a></td></tr>");
-				   $('#studentDetailTable').show();
-				   var studentbatchnamesarr=studentbatchnames.split(",");
-				   if(allbatchIDs[0]!=""){
-					   
-					   for(var i=0;i<allbatchIDs.length;i++){
-						   var flag=false;
-						   for(var j=0;j<studentbatchIds.length;j++){
-							   if(allbatchIDs[i]==studentbatchIds[j]){
-								   flag=true;
-							   }
-						   }
-						   if(flag==true){
-							   $("#modifyStudentModalbody").append('<div class="col-lg-12">'
-								+'<div class="input-group">'
-								+'<span class="input-group-addon">'
-								+'<input type="checkbox" class="chkBatch" name="batchId" id="batchId"  value="'+allbatchIDs[i]+'" checked/>'
-								+'</span>'
-								+'<input type="text" value="'+allbatchnames[i]+'" class="form-control" disabled="disabled"/>'
-								+'</div>'			
-								+'</div>');  
-						   }else{
-							   $("#modifyStudentModalbody").append('<div class="col-lg-12">'
-										+'<div class="input-group">'
-										+'<span class="input-group-addon">'
-										+'<input type="checkbox" class="chkBatch" name="batchId" id="batchId"  value="'+allbatchIDs[i]+'"/>'
-										+'</span>'
-										+'<input type="text" value="'+allbatchnames[i]+'" class="form-control" disabled="disabled"/>'
-										+'</div>'			
-										+'</div>');  
-						   }
-					   }
-				   }
-				   selectedStudentIds=studentId;
-				   $("#students").hide();
-					$("#pagination").hide();
-			   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
-				/* modal.launchAlert("Success","Found "+firstname+" "+lastname+"! Page will refresh in soon");
-						   setTimeout(function(){
-							   location.reload();
-						   },2*1000); */
-			   }else{
-				 	 if(!resultJson.message){
-				 		modal.launchAlert("Error","Error while searching student!");
-			   	   	}else{
-			   	   		modal.launchAlert("Error",resultJson.message);
-			   	   		
-			   	   	}
-				 	setTimeout(function(){
-				   		location.reload();
-				   	},1000*3);
-			      }			   
-		   	},
-		   error:function(data){
-			   modal.launchAlert("Error","Student with login name : "+studentLoginName+" not found!");
-			   	setTimeout(function(){
-			   		location.reload();
-			   	},1000*3);
-		   }
-			   
-	});
-	}
-}
-
-function searchStudentthroughtable(studentLoginName) {
-	$("#modifyStudentModalbody").empty();
-	var batchnamevalue=$("#batchselected").val().split("_");
-	var batchname=batchnamevalue[0];
-	var batchdivision=$("#division"+batchname+"_"+batchnamevalue[1]).val();
-		$("#studentDetailTable").hide();
-		$('#studentDetailTablebody').empty();
-	$.ajax({
-		   url: "classOwnerServlet",
-		    data: {
-		    	 methodToCall: "searchStudent",
-		    	 studentLgName:studentLoginName,
-		    	 pagenumber:pno,
-		    	 batchID:batchname,
-		    	 batchdivision:batchdivision
-		   		}, 
-		   type:"POST",
-		   success:function(data){
-			   var resultJson = JSON.parse(data);   
-
-			   if(resultJson.status != 'error'){
-			    var firstname= resultJson.studentFname;
-			   var lastname= resultJson.studentLname;
-			   var studentId= resultJson.studentId;
-			   var studentbatchIds= resultJson.studentbatchIds.split(",");
-			   var studentbatchnames= resultJson.studentbatchnames;
-			   var allbatchnames= resultJson.allbatchnames.split(",");
-			   var allbatchIDs= resultJson.allbatchIDs.split(",");
-			   var studentdivision= resultJson.studentdivision;
-			   $("#studentDetailTablebody").append("<tr><td>"+studentLoginName+"</td><td>"+firstname+" "+lastname+"</td><td>"+studentdivision+"</td><td>"+studentbatchnames+"</td>"
-			   +"<td><button type='button' class='btn btn-info' data-target='#modifyStudentModal' data-toggle='modal'>Modify Student Batch</button></td>"
-			   +"<td><button type='button' class='btn btn-info' data-target='#deleteStudentModal' data-toggle='modal'>Delete Student</button></td>"
-				+"<td><a onclick='canceledit()'><button type='button' class='btn btn-info'>Cancel</button></a></td></tr>");
-			   var studentbatchnamesarr=studentbatchnames.split(",");
-			   if(allbatchIDs[0]!=""){
-				   
-				   for(var i=0;i<allbatchIDs.length;i++){
-					   var flag=false;
-					   for(var j=0;j<studentbatchIds.length;j++){
-						   if(allbatchIDs[i]==studentbatchIds[j]){
-							   flag=true;
-						   }
-					   }
-					   if(flag==true){
-						   $("#modifyStudentModalbody").append('<div class="col-lg-12">'
-							+'<div class="input-group">'
-							+'<span class="input-group-addon">'
-							+'<input type="checkbox" class="chkBatch" name="batchId" id="batchId"  value="'+allbatchIDs[i]+'" checked/>'
-							+'</span>'
-							+'<input type="text" value="'+allbatchnames[i]+'" class="form-control" disabled="disabled"/>'
-							+'</div>'			
-							+'</div>');  
-					   }else{
-						   $("#modifyStudentModalbody").append('<div class="col-lg-12">'
-									+'<div class="input-group">'
-									+'<span class="input-group-addon">'
-									+'<input type="checkbox" class="chkBatch" name="batchId" id="batchId"  value="'+allbatchIDs[i]+'"/>'
-									+'</span>'
-									+'<input type="text" value="'+allbatchnames[i]+'" class="form-control" disabled="disabled"/>'
-									+'</div>'			
-									+'</div>');  
-					   }
-				   }
-			   }
-			  
-			   $('#studentDetailTable').show();
-			   selectedStudentIds=studentId;
-			   $("#students").hide();
-				$("#pagination").hide();
-						  /*  setTimeout(function(){
-							   location.reload();
-						   },2*1000); */
-			   }else{
-				 	 if(!resultJson.message){
-				 		modal.launchAlert("Error","Error while searching student!");
-			   	   	}else{
-			   	   		modal.launchAlert("Error",resultJson.message);
-			   	   		
-			   	   	}
-				 	setTimeout(function(){
-				   		location.reload();
-				   	},1000*3);
-			      }			   
-		   	},
-		   error:function(data){
-			   modal.launchAlert("Error","Student with login name : "+studentLoginName+" not found!");
-			   	setTimeout(function(){
-			   		location.reload();
-			   	},1000*3);
-		   }
-			   
-	});
-	
-}
-
-function getSelectedStudentsToDelete(){
-	var studentIds;
-	studentIds=$(".chkStudent:checked").map(function(){
-	return this.value;
-	});
-	
-	var i=0;
-	while(i<studentIds.size()){
-		if(i==0){
-			selectedStudentIds=selectedStudentIds+studentIds[0]+"";
-		}else{
-			selectedStudentIds=selectedStudentIds+","+studentIds[i];
-		}
-		i++;
-	}
-}
-
+var studentID="";
+var wayOfAddition="";
 	$(document).ready(function(){
-		
-		   $('#studentDetailTable').hide();
-		var selectedbatchIDfromsession=$("#selectedbatchIDfromsession").val();
-		if(selectedbatchIDfromsession!=null && selectedbatchIDfromsession!=""){
-			$("#batchselected").attr('selected', selectedbatchIDfromsession);
-		}
-	/* 	$('.batchName').tooltip({'placement':'right','html':'true'}).on('click',function(){
-			$(this).tooltip('hide');
+		$("#statebtn").parents(".btn-group").find("li").on("mouseup",function(){
+			$("#statebtn").parents(".form-group").find('.danger').remove();
+			$('#statebtn').html($(this).text()+'&nbsp;<span class="caret"></span>');
+			$('#state').val($(this).text());
+			$("#statebtn").focus();
 		});
 		
-		$('.addsubject2batch').tooltip();
-
-		$('.addsubject2batch').popover({'placement':'bottom','content':$('#allSubject').html(),'html':true}); */
-		
-		$('div#addStudentModal').on('change','#divisionName',function(){
-			$('div#addStudentModal #checkboxes').empty();
+		$('#datetimepicker').datetimepicker({
+			format : 'YYYY-MM-DD',
+			pickTime : false,
+			maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 		});
 		
+		$("#batches").select2({data:'',placeholder:"type batch name"});
 		
-		$('div#addStudentModal').on('click','button#btn-addStudent',function(){
-			batchIds = "";
-			
-			$('div#addStudentModal .error').html('');
-			$('div#addStudentModal .error').hide();
-			var studentLgName;
-			var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
-			studentLgName = $('div#addStudentModal').find('#studentLoginName').val();
-			var divisionName ="";
-			divisionId = $('div#addStudentModal').find('#divisionName').val();
-
-			getSelectedBatchesForStudent();		
-			if(!studentLgName || studentLgName.trim()==""){
-				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Student login name cannot be blank');
-				$('div#addStudentModal .error').show();
-			}else if($("#studentLoginName").val().length<5 || !$("#studentLoginName").val().match(regloginname))
-			{
-				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Invalid Student login');
-				$('div#addStudentModal .error').show();
-			}else if(!divisionId || divisionId.trim()=="" || divisionId == -1){
-				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Please select Class');
-				$('div#addStudentModal .error').show();
-			}else if(batchIds==""){
-				$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>please select atleast one batch');
-				$('div#addStudentModal .error').show();
-			}else{
-				$('div#addStudentModal .progress').removeClass('hide');
-				$('.add').addClass('hide');
+		$("#division").change(function(){
+			getBatchesOfDivision();
+		});
+		
+		$("#classfloorIDAddition").click(function(){
+			wayOfAddition="byStudentID";
+			$("#addsuccess").hide();
+			$(".studentform").show();
+			$(".classfloorID").show();
+			$(".studentInfobyID").show();
+			$(".studentInfoManually").hide();
+		});
+		
+		$("#manualAddition").click(function(){
+			wayOfAddition="manual";
+			$("#addsuccess").hide();
+			$(".studentform").show();
+			$(".classfloorID").hide();
+			$(".studentInfoManually").show();
+			$(".studentInfobyID").hide();
+		});
+		
+		$("#classfloorID").change(function(){
+			$("#addsuccess").hide();
+			$("#classfloorIDerror").empty();
+			studentID="";
+			$(".studentInfobyID").find("#fname").empty();
+	    	$(".studentInfobyID").find("#lname").empty();
+	    	$(".studentInfobyID").find("#email").empty();
+	    	$(".studentInfobyID").find("#phone").empty();
+			var classfloorID = $("#classfloorID").val();
 			$.ajax({
 				   url: "classOwnerServlet",
 				   data: {
-				    	 methodToCall: "addStudent",
-						 regId:'',
-						 studentLgName:studentLgName,
-						 batchIds:batchIds,	
-						 divisionId:divisionId,				 
+				    	 methodToCall: "getStudentByLoginID",
+				    	 classfloorID:classfloorID					 
 				   		},
 				   type:"POST",
 				   success:function(e){
-					   $('div#addStudentModal .progress').addClass('hide');
-					   var resultJson = JSON.parse(e);
-					      if(resultJson.status != 'error'){
-					   	   $('div#addStudentModal').modal('hide');
-					   	   modal.launchAlert("Success","Student Added! Page will refresh in soon");
-					   	   setTimeout(function(){
-					   		   location.reload();
-					   	   },2*1000);		   
-					      }else{
-					   		   $('div#addStudentModal .add').removeClass('hide');
-					   		   $('div#addStudentModal .error').show();
-					   	   	if(!resultJson.message){
-					   		   $('div#addStudentModal .error').html('<strong>Error!</strong> Unable to add');
-					   	   	}else{
-					   	   		$('div#addStudentModal .error').html('<strong>Error!</strong>'+resultJson.message);
-					   	   	}
-					      	}
+					    var data = JSON.parse(e);
+					    var status=data.status;
+					    if(status=="valid"){
+					    	$(".studentInfobyID").find("#fname").html(data.firstname);
+					    	$(".studentInfobyID").find("#lname").html(data.lastname);
+					    	$(".studentInfobyID").find("#email").html(data.email);
+					    	$(".studentInfobyID").find("#phone").html(data.phone);
+					    	studentID=data.regID;
+					    }else if(status=="invalid"){
+					    	$("#classfloorIDerror").html("Invalid ID");
+					    }else{
+					    	$("#classfloorIDerror").html("Student already exists in institute!!");
+					    }
+					  
 				   	},
 				   error:function(e){
-					   $('div#addStudentModal .progress').addClass('hide');
-						$('div#addStudentModal .add').removeClass('hide');
+					   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Error while fetching batches for division');
 						$('div#addStudentModal .error').show();
-						var resultJson = JSON.parse(e);
-						if(!resultJson.message){
-							   $('div#addStudentModal .error').html('<strong>Error!</strong> Unable to update');
-						   	}else{
-						   		$('div#addStudentModal .error').html('<strong>Error!</strong>'+resultJson.message);
-						   	}
 				   }
 				   
 			});
-			}	
-			$(".chkBatch:checked").removeAttr('checked');
 		});
 		
-		$('div#modifyStudentModal').on('click','button#btn-update',function(){
-			var studentId=selectedStudentIds;
-			batchIds="";
-			$('div#modifyStudentModal .error').html('');
-			$('div#modifyStudentModal .error').hide();
-			getSelectedBatchesForStudent();
-			var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
-			if(!batchIds || batchIds.trim()==""){
-				$('div#modifyStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Batch name cannot be blank');
-				$('div#modifyStudentModal .error').show();
-			}else{
-				
-				$.ajax({
-					 url: "classOwnerServlet",
-					   data: {
-					    	 methodToCall: "updateStudent",
-							 regId:'',
-							 batchIds:batchIds,
-							 studentId:studentId
-					   		},
-					   type:"POST",
-					   success:function(data){
-						   $('div#modifyStudentModal .progress').addClass('hide');
-							var resultJson = JSON.parse(data);
-							var pagenumber=resultJson.pagenumber;
-							var batchID=resultJson.batchID;
-							   if(resultJson.status != 'error'){
-								   $('div#modifyStudentModal').modal('hide');
-								   $('#studentDetailTable').hide(); 
-								   if(batchID!=null){
-								 //  $('#batchselected').val(batchID);
-								   getstudentsrelatedtobatch(pno);
-								   }
-								   modal.launchAlert("Success","Student Updated successfully!");
-								   /* modal.launchAlert("Success","Student Updated! Page will refresh in soon");
-								   setTimeout(function(){
-									   location.reload();
-								   },2*1000); */		   
-							   }else{
-									   $('div#modifyStudentModal .add').removeClass('hide');
-									   $('div#modifyStudentModal .error').show();
-								   	if(!resultJson.message){
-									   $('div#modifyStudentModal .error').html('<strong>Error!</strong> Unable to update');
-								   	}else{
-								   		$('div#modifyStudentModal .error').html('<strong>Error!</strong>'+resultJson.message);
-								   	}
-							   	}
-						  // successCallbackStudentModify(data);
-						   //var resultJson = JSON.parse(data);
-						   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
-							//modal.launchAlert("Success","Student is updated with Student id ="+studentId+"!");
-							/* setTimeout(function(){
-						   		location.reload();
-						   	},1000*3); */
-						   	
-					   	},
-					   error:function(data){
-						   /* $('div#modifyStudentModal .progress').addClass('hide');
-							$('div#modifyStudentModal .add').removeClass('hide');
-							$('div#modifyStudentModal .error').show();
-							$('div#modifyStudentModal .error').html('<strong>Error!</strong> Unable to update');
-						   modal.launchAlert("Error","Error occured while updating the student!");
-						   	setTimeout(function(){
-						   		location.reload();
-						   	},1000*3); */
-						   // errorCallbackStudentModify(data);
-						   $('div#modifyStudentModal .progress').addClass('hide');
-							$('div#modifyStudentModal .add').removeClass('hide');
-							$('div#modifyStudentModal .error').show();
-							var resultJson = JSON.parse(data);
-							
-							if(!resultJson.message){
-								   $('div#modifyStudentModal .error').html('<strong>Error!</strong> Unable to update');
-							   	}else{
-							   		$('div#modifyStudentModal .error').html('<strong>Error!</strong>'+resultJson.message);
-							   	}
-					   }
-				});
-				$('div#modifyStudentModal .progress').removeClass('hide');
-				$('.add').addClass('hide');
+		$("#addStudent").click(function(){
+			$("#addsuccess").hide();
+			if(wayOfAddition=="byStudentID"){
+				addStudentByID();
+			}else if(wayOfAddition=="manual"){
+				addStudentManually();
 			}
-			$(".chkBatch:checked").removeAttr('checked');
-		});
-
-		$('div#deleteStudentModal').on('click','button#btn-delete',function(){
-			var studentId=selectedStudentIds;
-			$('div#deleteStudentModal .error').html('');
-			$('div#deleteStudentModal .error').hide();
-			$('div#deleteStudentModal .progress').removeClass('hide');
-			$('.add').addClass('hide');
-					$.ajax({
-					 url: "classOwnerServlet",
-					   data: {
-					    	 methodToCall: "deleteStudent",
-							 regId:'',
-							 deleteStudentId:studentId
-					   		},
-					   type:"POST",
-					   success:function(e){
-						 /*   var resultJson = JSON.parse(data);
-						   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
-							modal.launchAlert("Success", "Student with Student id ="+studentId+" is deleted from class!");
-						   	setTimeout(function(){
-						   		location.reload();
-						   	},1000*3); */
-						   	//successCallbackStudentDelete(e);  
-						   $('div#deleteStudentModal .progress').addClass('hide');
-							var resultJson = JSON.parse(e);
-							   if(resultJson.status != 'error'){
-								   $('div#deleteStudentModal').modal('hide');
-								   getstudentsrelatedtobatch(pno);
-								   /* modal.launchAlert("Success","Student Deleted! Page will refresh in soon");
-								   setTimeout(function(){
-									   location.reload();
-								   },2*1000); */		   
-							   }else{
-									   $('div#deleteStudentModal .add').removeClass('hide');
-									   $('div#deleteStudentModal .error').show();
-								   	if(!resultJson.message){
-									   $('div#deleteStudentModal .error').html('<strong>Error!</strong> Unable to delete');
-								   	}else{
-								   		$('div#deleteStudentModal .error').html('<strong>Error!</strong>'+resultJson.message);
-								   	}
-							   	}
-					   	},
-					   error:function(e){
-						  /*  modal.launchAlert("Error","Error occured while deleting student!");
-						   	setTimeout(function(){
-						   		location.reload();
-						   	},1000*3); */
-						   	//errorCallbackStudentDelete(e);
-						   $('div#deleteStudentModal .progress').addClass('hide');
-							$('div#deleteStudentModal .add').removeClass('hide');
-							$('div#deleteStudentModal .error').show();
-							var resultJson = JSON.parse(e);
-							if(!resultJson.message){
-								   $('div#deleteStudentModal .error').html('<strong>Error!</strong> Unable to delete');
-							   	}else{
-							   		$('div#deleteStudentModal .error').html('<strong>Error!</strong>'+resultJson.message);
-							   	}
-					   }
-				});
-				
-				
-			
-		});
-
-		$('div#deleteSelectedStudentModal').on('click','button#btn-deleteMultiple',function(){
-			selectedStudentIds="";
-			getSelectedStudentsToDelete();
-			if(!selectedStudentIds || selectedStudentIds.trim()==""||selectedStudentIds.lenght==0 ){
-				 modal.launchAlert("Error","Error!</strong> Select atleast one student to delete.");		
-			}
-			$('div#deleteSelectedStudentModal .error').html('');
-			$('div#deleteSelectedStudentModal .error').hide();
-			$('div#deleteSelectedStudentModal .progress').removeClass('hide');
-			$('.add').addClass('hide');
-					$.ajax({
-					 url: "classOwnerServlet",
-					   data: {
-					    	 methodToCall: "deleteMultipleStudents",
-							 regId:'',
-							 deleteStudentId:studentId
-					   		},
-					   type:"POST",
-					   success:function(e){
-						 /*   var resultJson = JSON.parse(data);
-						   //alert("Found "+firstname+" "+lastname+" with Student id ="+studentId+"!");
-							modal.launchAlert("Success", "Student with Student id ="+studentId+" is deleted from class!");
-						   	setTimeout(function(){
-						   		location.reload();
-						   	},1000*3); */
-						   	successCallbackStudentDelete(e);  	
-					   	},
-					   error:function(e){
-						  /*  modal.launchAlert("Error","Error occured while deleting student!");
-						   	setTimeout(function(){
-						   		location.reload();
-						   	},1000*3); */
-						   	errorCallbackStudentDelete(e);
-					   }
-				});
-				
-				$(".chkStudent:checked").removeAttr('checked');
-			
-		});
-		
-		$("#batchselected").change(function(){
-			getstudentsrelatedtobatch(1);
 		});
 	});
-
-	function errorCallbackStudent(e){
-		$('div#addStudentModal .progress').addClass('hide');
-		$('div#addStudentModal .add').removeClass('hide');
-		$('div#addStudentModal .error').show();
-			$('div#addStudentModal .error').html('<strong>Error!</strong> Unable to add');
+	
+	function addStudentByID(){
+		$(".error").empty();
+		var flag=false;
+		var regStringExpr = /^[a-zA-Z]+$/;
+		var regPhoneNumber = /^[0-9]+$/;
+		var filter = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+		var divisionId = $('#division').val();
+		var batchIDs = $("#batches").val();
+		var parentFname=$(".parentInfo").find("#fname").val().trim();
+		var parentLname=$(".parentInfo").find("#lname").val().trim();
+		var parentPhone=$(".parentInfo").find("#phone").val().trim();
+		var parentEmail=$(".parentInfo").find("#email").val().trim();
+		
+		if(divisionId=="-1"){
+			flag=true;
+			$("#divisionError").html("Please select class");
+		}
+		if(batchIDs=="" || batchIDs==null){
+			flag=true;
+			$("#batchError").html("Please select batch");
+		}else{
+			batchIDs = batchIDs.join(',')
+		}
+		
+		if(parentFname==""){
+			flag=true;
+			$("#parentFnameError").html("Name Cannot be blank");
+		}else if(!parentFname.match(regStringExpr)){
+			flag=true;
+			$("#parentFnameError").html("Only alphabets allowded!");
+		}
+		if(parentLname==""){
+			flag=true;
+			$("#parentLnameError").html("Name Cannot be blank");
+		}else if(!parentLname.match(regStringExpr)){
+			flag=true;
+			$("#parentLnameError").html("Only alphabets allowded!");
+		}
+		
+		if(parentPhone!=""){
+			if(!parentPhone.match(regPhoneNumber)){
+				flag=true;
+				$(".parentInfo").find("#phoneError").html("Only numbers allowded!");
+			}
+		}
+		
+		if(parentEmail!=""){
+			if(!filter.test(parentEmail)){
+				flag=true;
+				$(".parentInfo").find("#emailError").html("Invalid Email ID!");
+			}
+		}
+		
+		if(flag == false){
+		$.ajax({
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "addStudentByID",
+					 studentID:studentID,
+					 divisionId:divisionId,
+					 batchIDs:batchIDs,
+					 parentFname:parentFname,
+					 parentLname:parentLname,
+					 parentPhone:parentPhone,
+					 parentEmail:parentEmail
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   $("#addsuccess").show();
+				   $(".studentform").find("input").val("");
+			   },
+			   error(e){
+				   }
+			   });
+		}
+		
 	}
-
-	function successCallbackStudent(e){
-	$('div#addStudentModal .progress').addClass('hide');
-	var resultJson = JSON.parse(e);
-	   if(resultJson.status != 'error'){
-		   $('div#addStudentModal').modal('hide');
-		   modal.launchAlert("Success","Student Added! Page will refresh in soon");
-		   setTimeout(function(){
-			   location.reload();
-		   },2*1000);		   
-	   }else{
-			   $('div#addStudentModal .add').removeClass('hide');
-			   $('div#addStudentModal .error').show();
-		   	if(!resultJson.message){
-			   $('div#addStudentModal .error').html('<strong>Error!</strong> Unable to add');
-		   	}else{
-		   		$('div#addStudentModal .error').html('<strong>Error!</strong>'+resultJson.message);
-		   	}
-	   	}
-	}
-
-
-	function errorCallbackStudentModify(e){
-		$('div#modifyStudentModal .progress').addClass('hide');
-		$('div#modifyStudentModal .add').removeClass('hide');
-		$('div#modifyStudentModal .error').show();
-		var resultJson = JSON.parse(e);
-		if(!resultJson.message){
-			   $('div#modifyStudentModal .error').html('<strong>Error!</strong> Unable to update');
-		   	}else{
-		   		$('div#modifyStudentModal .error').html('<strong>Error!</strong>'+resultJson.message);
-		   	}
-	}
-
-	function successCallbackStudentModify(e){
-	$('div#modifyStudentModal .progress').addClass('hide');
-	var resultJson = JSON.parse(e);
-	   if(resultJson.status != 'error'){
-		   $('div#modifyStudentModal').modal('hide');
-		   modal.launchAlert("Success","Student Updated! Page will refresh in soon");
-		   setTimeout(function(){
-			   location.reload();
-		   },2*1000);		   
-	   }else{
-			   $('div#modifyStudentModal .add').removeClass('hide');
-			   $('div#modifyStudentModal .error').show();
-		   	if(!resultJson.message){
-			   $('div#modifyStudentModal .error').html('<strong>Error!</strong> Unable to update');
-		   	}else{
-		   		$('div#modifyStudentModal .error').html('<strong>Error!</strong>'+resultJson.message);
-		   	}
-	   	}
-	}
-
-	function errorCallbackStudentDelete(e){
-		$('div#deleteStudentModal .progress').addClass('hide');
-		$('div#deleteStudentModal .add').removeClass('hide');
-		$('div#deleteStudentModal .error').show();
-		var resultJson = JSON.parse(e);
-		if(!resultJson.message){
-			   $('div#deleteStudentModal .error').html('<strong>Error!</strong> Unable to delete');
-		   	}else{
-		   		$('div#deleteStudentModal .error').html('<strong>Error!</strong>'+resultJson.message);
-		   	}
-	}
-
-	function successCallbackStudentDelete(e){
-	$('div#deleteStudentModal .progress').addClass('hide');
-	var resultJson = JSON.parse(e);
-	   if(resultJson.status != 'error'){
-		   $('div#deleteStudentModal').modal('hide');
-		   modal.launchAlert("Success","Student Deleted! Page will refresh in soon");
-		   setTimeout(function(){
-			   location.reload();
-		   },2*1000);		   
-	   }else{
-			   $('div#deleteStudentModal .add').removeClass('hide');
-			   $('div#deleteStudentModal .error').show();
-		   	if(!resultJson.message){
-			   $('div#deleteStudentModal .error').html('<strong>Error!</strong> Unable to delete');
-		   	}else{
-		   		$('div#deleteStudentModal .error').html('<strong>Error!</strong>'+resultJson.message);
-		   	}
-	   	}
+	
+	function addStudentManually(){
+		$(".error").empty();
+		$("#addphoneError").hide();
+		var regStringExpr = /^[a-zA-Z]+$/;
+		var regPhoneNumber = /^[0-9]+$/;
+		var filter = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+		var flag=false;
+		var divisionId = $('#division').val();
+		var batchIDs = $("#batches").val();
+		var parentFname=$(".parentInfo").find("#fname").val().trim();
+		var parentLname=$(".parentInfo").find("#lname").val().trim();
+		var parentPhone=$(".parentInfo").find("#phone").val().trim();
+		var parentEmail=$(".parentInfo").find("#email").val().trim();
+		
+		var studentFname=$(".studentInfoManually").find("#fname").val().trim();
+		var studentLname=$(".studentInfoManually").find("#lname").val().trim();
+		var studentPhone=$(".studentInfoManually").find("#phone").val().trim();
+		var studentEmail=$(".studentInfoManually").find("#email").val().trim();
+		var dob = $(".studentInfoManually").find("#dobfield").val();
+		var address = $(".studentInfoManually").find("#address").val().trim();
+		var state = $(".studentInfoManually").find("#state").val();
+		var city = $(".studentInfoManually").find("#city").val().trim();
+		if(divisionId=="-1"){
+			flag=true;
+			$("#divisionError").html("Please select class");
+		}
+		if(batchIDs=="" || batchIDs==null){
+			flag=true;
+			$("#batchError").html("Please select batch");
+		}else{
+			batchIDs = batchIDs.join(',')
+		}
+		if(parentFname==""){
+			flag=true;
+			$("#parentFnameError").html("Name Cannot be blank");
+		}else if(!parentFname.match(regStringExpr)){
+			flag=true;
+			$("#parentFnameError").html("Only alphabets allowded!");
+		}
+		if(parentLname==""){
+			flag=true;
+			$("#parentLnameError").html("Name Cannot be blank");
+		}else if(!parentLname.match(regStringExpr)){
+			flag=true;
+			$("#parentLnameError").html("Only alphabets allowded!");
+		}
+		
+		if(studentFname==""){
+			flag=true;
+			$("#studentFnameError").html("Name Cannot be blank");
+		}else if(!studentFname.match(regStringExpr)){
+			flag=true;
+			$("#studentFnameError").html("Only alphabets allowded!");
+		}
+		
+		if(studentLname==""){
+			flag=true;
+			$("#studentLnameError").html("Name Cannot be blank");
+		}else if(!studentLname.match(regStringExpr)){
+			flag=true;
+			$("#studentLnameError").html("Only alphabets allowded!");
+		}
+		
+		if(city==""){
+			flag=true;
+			$("#cityError").html("Name Cannot be blank");
+		}else if(!parentFname.match(regStringExpr)){
+			flag=true;
+			$("#cityError").html("Only alphabets allowded!");
+		}
+		
+		if(studentPhone!=""){
+			if(!studentPhone.match(regPhoneNumber)){
+				flag=true;
+				$(".studentInfoManually").find("#phoneError").html("Only numbers allowded!");
+			}
+		}
+		
+		if(parentPhone!=""){
+			if(!parentPhone.match(regPhoneNumber)){
+				flag=true;
+				$(".parentInfo").find("#phoneError").html("Only numbers allowded!");
+			}
+		}
+		
+		if(parentEmail!=""){
+			if(!filter.test(parentEmail)){
+				flag=true;
+				$(".parentInfo").find("#emailError").html("Invalid Email ID!");
+			}
+		}
+		
+		if(studentEmail!=""){
+			if(!filter.test(studentEmail)){
+				flag=true;
+				$(".studentInfoManually").find("#emailError").html("Invalid Email ID!");
+			}
+		}
+		
+		if(dob==""){
+			$("#dobError").html("Select Date of birth!");
+			flag=true;
+		}
+		
+		if(address==""){
+			$("#addressError").html("Enter address!");
+			flag=true;
+		}
+		
+		if(state=="-1"){
+			$("#stateError").html("Select State!");
+			flag=true;
+		}
+		
+		if(parentPhone == "" && studentPhone == ""){
+			$("#addphoneError").show();
+			flag=true;
+		}
+		
+		if(flag==false){
+		$.ajax({
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "addStudentByManually",
+					 divisionId:divisionId,
+					 batchIDs:batchIDs,
+					 parentFname:parentFname,
+					 parentLname:parentLname,
+					 parentPhone:parentPhone,
+					 parentEmail:parentEmail,
+					 studentFname:studentFname,
+					 studentLname:studentLname,
+					 studentPhone:studentPhone,
+					 studentEmail:studentEmail,
+					 dob:dob,
+					 address:address,
+					 state:state,
+					 city:city
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   $("#addsuccess").show();
+				   $(".studentform").find("input").val("");
+				   $("#statebtn").parents(".form-group").find('.danger').remove();
+					$('#statebtn').html('State&nbsp;<span class="caret"></span>');
+					$('#state').val("");
+			   },
+			   error(e){
+				   }
+			   });
+		}
 	}
 	
 	function getBatchesOfDivision(){
 		$(".chkBatch:checked").removeAttr('checked');
 		$('#checkboxes').children().remove();
 		$('div#addStudentModal .error').hide();
-		var divisionId = $('div#addStudentModal').find('#divisionName').val();
+		var divisionId = $('#division').val();
 
 		if(!divisionId || divisionId.trim()=="" || divisionId == -1){
 			$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please select a division');
@@ -758,22 +362,17 @@ function getSelectedStudentsToDelete(){
 				 divisionId:divisionId,						 
 		   		},
 		   type:"POST",
-		   success:function(e){		 
-			   
-			    var resultJson = JSON.parse(e);
-			    
-			      if(resultJson.status != 'error'){
-			   	  	var batchnames=resultJson.batchNames.split(',');
-			   		var batchids=resultJson.batchIds.split(',');
-			   		var i=0;
-			   		while(i<batchnames.length){
-				   		addCheckbox(batchnames[i],batchids[i]);
-			   			i++;
-					   }
-				   } else{
-					   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> '+resultJson.message+' for selected class! <a href="managebatch">Click here</a> to add bacth');
-						$('div#addStudentModal .error').show();
-				}
+		   success:function(e){
+			   $('#batches').empty();
+			   var batchDataArray = [];
+			    var data = JSON.parse(e);
+			    $.each(data.batches,function(key,val){
+					var data = {};
+					data.id = val.batch_id;
+					data.text = val.batch_name;
+					batchDataArray.push(data);
+				});
+			    $("#batches").select2({data:batchDataArray,placeholder:"type batch name"});
 		   	},
 		   error:function(e){
 			   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Error while fetching batches for division');
@@ -785,282 +384,212 @@ function getSelectedStudentsToDelete(){
 	}
 	}
 
-	function addCheckbox(batchname,batchid) {
-		   var container =$('#checkboxes');
-		   var inputGroupDiv ='<div class="input-group" id="'+batchid+'"><div>';
-		   var inputGroupSpan = '<span class="input-group-addon" id="'+batchid+'"></span>';
-		   var label = '<input type="text" class="form-control" disabled="disabled">';
-		   container.append(inputGroupDiv);
-		   container.find("div#"+batchid).html(inputGroupSpan);
-		   var inputGroupSpan = container.find("div#"+batchid).find("span");
-		   $('<input />', { type: 'checkbox', id: batchid, value: batchid, class: "chkBatch" }).appendTo(inputGroupSpan);
-		   var inputGroupLable = container.find("div#"+batchid)
-		   $('<input />', { type: 'text', value: batchname,disabled:'disabled',class:'form-control' }).appendTo(inputGroupLable);
-		}
 </script>
 
-<div class="modal fade" id="addStudentModal" data-backdrop="static">
-  <div class="modal-dialog">
-      <div class="modal-content">
- 		<div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <strong>Add Student</strong>
-        </div>
-        <div class="modal-body" id="">
-        	<div class="error alert alert-danger"></div>
-			<div class="form-group">
-				<s:set value="${requestScope.divisionNames}" var="divisionNames"></s:set>
-				<s:set value="${requestScope.divisionStream}" var="divisionStream"></s:set>
-				<s:set value="${requestScope.divisionId}" var="divisionId"></s:set>
-				<s:set value="${requestScope.divisions}" var="divisions"></s:set>
-				<s:choose>
-				<s:when test="${divisionSize gt 0}">
-				Student Login Name <input type="text" class="form-control" id="studentLoginName"/> 
-				<br>
-				<select class="btn btn-default" name="divisionName" id="divisionName">
-					
-						<option value="-1">Select Class</option>
-						<s:forEach items="${divisions}" var="division">
-							<option value='<s:out value="${division.divId}"></s:out>'><s:out value="${division.divisionName}"></s:out> &nbsp; <s:out value="${division.stream}"></s:out></option>
-						</s:forEach>
-					</select>
-				<button type="button" class="btn btn-primary btn-getBatchesForStudent" id="getBatchesForStudent" onclick="getBatchesOfDivision()">Get available batches</button>
-				</s:when>
-				<s:otherwise>
-					<div style="color: red;">No Class added,<a href="manageclass">Click Here</a> to add class</div>	
-				</s:otherwise>
-				</s:choose>
-				<br>
-				<div id="checkboxes" style="overflow-y:auto; overflow-x:hidden;">
-				
-				</div>
-														
-				<div id="classTimming" class="hide">
-				<div class="container-fluid">
-  				<div class="row">
-  					
-					<div class="col-sm-6">
-					<label for="">Start Time</label>
-					<div class='input-group date' id='fromDate' data-date-format="hh:mm A" style="width: 150px;">
-						<input type='text' class="form-control"/> <span
-							class="input-group-addon"><span
-							class="glyphicon glyphicon-calendar"></span> </span>
-					</div>
-					</div>
-					
-					<div class="col-sm-6">
-					<label for="">End Time</label>
-					<div class='input-group date' id='toDate' data-date-format="hh:mm A" style="width: 150px;">
-						<input type='text' class="form-control"/> <span
-							class="input-group-addon"><span
-							class="glyphicon glyphicon-calendar"></span> </span>
-					</div>
-					</div>
-					
-					
-				</div>
-				</div>
-				</div>				
-			</div>				
-			</div>
-      	<div class="modal-footer">
-	        <div class="progress progress-striped active hide">
-					<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="45"
-						aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-						Processing your request Please wait
-					</div>
-			</div>
-			<div class="add">
-	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Cancel</button>
-	        <button type="button" class="btn btn-primary btn-addStudent" id="btn-addStudent">Add</button>
-	        </div>
-	     
-	        <div class="setTimming hide">
-	        <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Not Now</button>
-	        <button type="button" class="btn btn-primary btn-setTimming" id="btn-setTimming">Done</button>
-	        </div>
-      	</div>
-    </div>
-</div>	
-</div>
-	
-		<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 10px;">
-		<div align="center" style="font-size: larger;margin-bottom: 15px"><u>Manage Student</u></div>
-		<div class="row">
-			<div class="col-md-4">
-			&nbsp;
-			<div class="input-group">
-				<button type="button" class="btn btn-info" data-target="#addStudentModal" data-toggle="modal"><i class="glyphicon glyphicon-user"></i>&nbsp;Add Student</button>
-			</div>
-			</div>
-			
-			<div class="col-md-4">
-			Search Student By Login ID
-			<div class="input-group">
-				<input type="text" class="form-control" id="studentLoginNameSearch" placeholder="Student Login Id" size="20"/>
-				<span class="input-group-btn">
-					<button type="button" class="btn btn-info" id="searchStudent" onclick="searchStudent()" ><i class="glyphicon glyphicon-search"></i>&nbsp;Search</button>
-				</span>
-			</div>
-			</div>
-			
-			<div class="col-md-4">
-				<%List<Batch> batches=(List<Batch>)request.getAttribute("batches"); 
-				String batchdivision=(String)request.getSession().getAttribute("batchdivision"); 
-				String batchID=(String)request.getSession().getAttribute("batchID");
-				List<Division> alldivisions=(List<Division>)request.getAttribute("divisions");
-				%>
-				<%if(null != batches && batches.size()!=0) {%>
-					Search Student By Batch
-					<select class="form-control btn btn-default" id="batchselected" >
-					<option value="-1">Select Batch</option>
-					<option value="">Unallocated Students</option>
-					<%for(int counter=0;counter<batches.size();counter++){
-						for(int innercounter=0;innercounter<alldivisions.size();innercounter++){
-						if(alldivisions.get(innercounter).getDivId()==batches.get(counter).getDiv_id()){
-						%>	
-					<option value="<%=batches.get(counter).getBatch_id() %>_<%=batches.get(counter).getDiv_id() %>"><%=alldivisions.get(innercounter).getDivisionName()%> <%=alldivisions.get(innercounter).getStream()%> <%=batches.get(counter).getBatch_name() %></option>
-					<%
-						}}} %>
-					</select>
-					<%for(int counter=0;counter<batches.size();counter++){ %>
-					<input type="hidden" id="division<%=batches.get(counter).getBatch_id() %>_<%=batches.get(counter).getDiv_id() %>" value="<%=batches.get(counter).getDiv_id() %>">
-					<%} 
-					%>
-					<input type="hidden" id="selectedbatchIDfromsession" value="<%=batchID%>_<%=batchdivision%>">
-					</select>
-				<%}else{ %>
-					<div style="color:red">
-						No batches are added for this class <br>
-						<a href="managebatch">Click here</a> to add batch
-					</div>
-				<%} %>
-				
-			</div>
-		</div>
-		</div>
-		
-	<div>
-			<div id="noStudentError" class="alert alert-danger" style="display:none;">
-				No student for this batch
-			</div>
-			<div>
-			<table id="students" class="table table-bordered searchTable" style="background-color: white;display: none;">
-			<thead>
-			<tr style="background-color: rgb(0, 148, 255);">
-			<th>Student ID</th>
-			<th>Student Name</th>
-			<th>Edit</th>
-			</tr>
-			</thead>
-			</table>
-			<ul class="pagination" id="pagination">	</ul>
-			
-			</div>
-		
-			<%StudentDetails studentSearch=(StudentDetails)request.getSession().getAttribute("studentSearchResult");
-			
-			String pagenumber=(String)request.getSession().getAttribute("pagenumber");
-			//String batchdivision=(String)request.getSession().getAttribute("batchdivision");
-			/* if(studentSearch!=null){ */
-				//AppLogger.logger("studentSearch : "+studentSearch.getStudentUserBean().getLoginName());
-			%>
-			
-			<table  id="studentDetailTable" style="background-color: white;" border="1">
-				<thead>
-					<tr style="background-color: rgb(0, 148, 255);">
-						
-						<th class="col-md-1">Student Login Name</th>
-						<th class="col-md-3">Student Name</th>
-						<th class="col-md-2">Division</th>
-						<th class="col-md-2">Batches</th>
-						<th class="col-md-2"></th>
-						<th class="col-md-1"></th>
-						<th class="col-md-1"></th>
-					 </tr>
-				</thead>
-				<tbody id="studentDetailTablebody">	
-			<!-- 	//	<tr> -->
-						<%-- <INPUT TYPE="hidden" NAME="radioStudent" VALUE="<%=studentSearch.getStudentId() %>" CHECKED> --%>
-						<%-- <td><%=studentSearch.getStudentUserBean().getLoginName() %></td>
-						<td><%= studentSearch.getStudentUserBean().getFname()%> <%= studentSearch.getStudentUserBean().getLname()%></td>
-						<td><%= studentSearch.getDivision().getDivisionName()%>  </td>
-						<td><%= request.getSession().getAttribute("studentBatch")%></td>
-						<td><button type="button" class="btn btn-info" data-target="#modifyStudentModal" data-toggle="modal">Modify Student Batch</button></td>
-						<td><button type="button" class="btn btn-info" data-target="#deleteStudentModal" data-toggle="modal">Delete Student</button></td>
-						<td><a onclick="canceledit(<%=batchID%>,<%=pagenumber%>,<%=batchdivision%>)"><button type="button" class="btn btn-info">Cancel</button></a></td>
-		 --%>			<!-- </tr> -->
-				</tbody>
-			</table>
+<body>
+<ul class="nav nav-tabs" style="border-radius:10px">
+  <li class="active"><a href="#addstudenttab" data-toggle = "tab">Add Student</a></li>
+  <li><a href="viewstudent">View Student</a></li>
+</ul>
 
-		<%-- 	 <table class="visible-xs visible-sm table table-bordered table-hover" id="studentDetailTable" style="background-color: white;" border="1">
-					<tr>
-						<td>Student Login Name</td>
-						<td><%=studentSearch.getStudentUserBean().getLoginName() %></td>
-					</tr>
-					<tr>		
-						<td>Student Name</td>
-						<td><%= studentSearch.getStudentUserBean().getFname()%> <%= studentSearch.getStudentUserBean().getLname()%></td>
-					</tr>
-					<tr>		
-						<td>Division</td>
-						<td><%= studentSearch.getDivision().getDivisionName()%>  </td>
-					</tr>
-					<tr>		
-						<td>Batches</td>
-						<td><%= request.getSession().getAttribute("studentBatch")%></td>
-					</tr>		
-					<tr>
-						<td></td>
-						<td>
-							<button type="button" class="btn btn-info" data-target="#modifyStudentModal" data-toggle="modal">Modify Student Batch</button>
-							<button type="button" class="btn btn-info" data-target="#deleteStudentModal" data-toggle="modal">Delete Student</button>
-							<a onclick="canceledit(<%=batchID%>,<%=pagenumber%>,<%=batchdivision%>)"><button type="button" class="btn btn-info">Cancel</button></a>
-						</td>
-					</tr>
-			</table>	 --%>	
-			<%
-			/* request.getSession().setAttribute("studentSearchResult",null);	
-			} */
-			%>
-			<!--<br><br><br>
-				<button type="button" class="btn btn-info" data-target="#addStudentModal" data-toggle="modal">Add Student</button>
-			 	<button type="button" class="btn btn-info" data-target="#deleteSelectedStudentModal" data-toggle="modal">Delete Student</button>
-			<br><br> -->
-		</div>
-		<br/><br/>
-		<div class="panel-group hide" id="accordion" >
-			<table class="table table-bordered table-hover " id="" style="background-color: white;" border="1">
-				<thead>
-					<tr style="background-color: rgb(0, 148, 255);">
-						<!--<td> <input type="checkbox" class="chk" name="selectAll" id="selectAll" data-label="selectAll">Select All</<input></td>  -->
-						<th>Student Login Name</th>
-						<th>Student Name</th>
-						<th>Division</th>
-					</tr>
-				</thead>
-				<%
-					int i = 0;
-					if(null != list){
-					 Iterator iteratorList = list.iterator();
-					 while(iteratorList.hasNext()){
-					 StudentDetails student = (StudentDetails)iteratorList.next();
-					 //String timmingsTitle = "Start time :"+ batchDataClass.getTimmings().getStartTimming()+"<br>End Time :"+batchDataClass.getTimmings().getEndTimming(); 
-					 String timmingsTitle = "Start time :";
-				%>
-				<tbody>	
-					<tr>
-						<!--<td>  <input type="checkbox" class="chkStudent" name="studentname" id="studentname" data-label="<%=student.getStudentUserBean().getLoginName() %>" value="<%=student.getStudentUserBean().getLoginName() %>"/></td>  -->
-						<td><%=student.getStudentUserBean().getLoginName()%></td>
-						<td> <%= student.getStudentUserBean().getFname()%> </td>
-						<td> <%= student.getDivision().getDivisionName()%> </td>
-					</tr>
-				<%
-					 i++;
-					  } 		
-					}
-				%>
-				</tbody>
-			</table>
-		</div>
+<div id="addstudenttab">
+<div class="container" style="padding: 2%;background: #eee">
+<div class="row">
+<div class="col-md-4">
+<label>Select Class and Batch For Student:</label>
+</div>
+<div class="col-md-3">
+	<select id="division" class="form-control">
+		<option value="-1">Select Class</option>
+		<c:forEach items="${divisions}" var="division">
+			<option value=<c:out value='${division.divId }'></c:out>><c:out value="${division.divisionName }"></c:out> <c:out value="${division.stream }"></c:out></option>
+		</c:forEach>
+	</select>
+	<span class="error" id="divisionError"></span>
+</div>
+<div class="col-md-3">
+<select id="batches" multiple="multiple" style="width:100%">
+	<option>Select Batch</option>
+</select>
+<span class="error" id="batchError"></span>
+</div>
+</div>
+
+<div class="row">
+	<div class="col-md-3">
+		<button id="classfloorIDAddition" class="btn btn-default">Add Student By Class Floor ID</button>
+	</div>
+	<div class="col-md-1">
+		<span class="badge" style="padding: 18%;border-radius:20px">OR</span>
+	</div>
+	<div class="col-md-3">
+		<button id="manualAddition" class="btn btn-default">Add Student Manually</button>
+	</div>
+
+</div>
+</div>
+<div class="container studentform" style="padding-top: 2%;border: 2px solid;border-color: #1FC0C0;margin-top: 2%;border-radius: 5%;display: none;">
+<div class="row">
+<div class="col-md-4 alert alert-success" style="padding: 0px;margin-left: 5%;display: none;" id="addsuccess"><span>Student Added Successfully!!</span></div>
+<div class="col-md-4 alert alert-danger" style="padding: 0px;margin-left: 5%;display: none;" id="addphoneError"><span>Please enter atleast one phone no!!</span></div>
+</div>
+<div class="row classfloorID" style="padding-left: 2%">
+<div class="col-md-2"><strong align="left">Class-Floor ID</strong></div>
+<div class="col-md-1">:</div>
+<div class="col-md-3"><input type="text" id="classfloorID" class="form-control"><span id="classfloorIDerror" style="color: red"></span></div>
+</div>
+
+<div class="studentInfobyID" style="padding-left: 2%">
+<div class="row">
+<div class="col-md-2"><strong align="left">Student Information</strong></div>
+</div>
+
+<div class="row">
+<div class="col-md-2">First Name</div>
+<div class="col-md-1">:</div>
+<div class="col-md-3"><span id="fname"></span></div>
+<div class="col-md-2">Last Name</div>
+<div class="col-md-1">:</div>
+<div class="col-md-3"><span id="lname"></span></div>
+</div>
+
+<div class="row">
+<div class="col-md-2">Phone No</div>
+<div class="col-md-1">:</div>
+<div class="col-md-3"><span id="phone"></span></div>
+<div class="col-md-2">Email ID</div>
+<div class="col-md-1">:</div>
+<div class="col-md-3"><span id="email"></span></div>
+</div>
+</div>
+
+<div class="studentInfoManually" style="padding-left: 2%">
+<div class="row">
+<div class="col-md-2"><strong align="left">Student Information</strong></div>
+</div>
+<div class="row">
+<div class="col-md-2">First Name</div>
+<div class="col-md-1">:</div>
+<div class="col-md-3"><input type="text" id="fname" class="form-control" maxlength="20"><span id="studentFnameError" class="error"></span></div>
+<div class="col-md-2">Last Name</div>
+<div class="col-md-1">:</div>
+<div class="col-md-3"><input type="text" id="lname" class="form-control" maxlength="20"><span id="studentLnameError" class="error"></span></div>
+</div>
+
+<div class="row">
+<div class="col-md-2">Phone No</div>
+<div class="col-md-1">:</div>
+<div class="col-md-3"><input type="text" id="phone" class="form-control" maxlength="11"><span id="phoneError" class="error"></span></div>
+<div class="col-md-2">Email ID</div>
+<div class="col-md-1">:</div>
+<div class="col-md-3"><input type="text" id="email" class="form-control" maxlength="50"><span id="emailError" class="error"></span></div>
+</div>
+
+<div class="row">
+<div class="col-md-2">Date Of Birth</div>
+<div class="col-md-1">:</div>
+<div class="col-sm-3" align="left">	
+					<div id="datetimepicker" class="input-group" style="width :250px;">
+						<input class="form-control" data-format="YYYY-MM-DD"
+							type="text"  id="dobfield" name="registerBean.dob" required="required"  readonly /> <span class="input-group-addon add-on"> <i
+							class="glyphicon glyphicon-calendar glyphicon-time"></i>
+						</span>
+					</div>
+<span id="dobError" class="error"></span>					
+</div>
+<div class="col-md-2">Address</div>
+<div class="col-md-1">:</div>
+<div class="col-sm-3">
+<input type="text" class="form-control" name="registerBean.addr1"  id="address" required="required" maxlength="50"/>
+<span id="addressError" class="error"></span>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-2">city</div>
+<div class="col-md-1">:</div>
+<div class="col-sm-3">
+<input type="text" class="form-control" name="registerBean.city" id="city" required="required" maxlength="20" />
+<span id="cityError" class="error"></span>
+</div>
+<div class="col-md-2">State</div>
+<div class="col-md-1">:</div>
+<div class="col-sm-3" align="left">
+<input type="hidden" class="form-control" name="registerBean.state" id="state" required="required" value="-1"'/>
+			<div class="btn-group">
+					<button type="button" class="btn btn-default dropdown-toggle"
+						data-toggle="dropdown" id="statebtn">
+						State <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu scrollable-menu" role="menu" >
+						<li value="Andhra Pradesh"><a href="javascript:void(0)">Andhra Pradesh</a></li>
+						<li value="Arunachal Pradesh"><a href="javascript:void(0)">Arunachal Pradesh</a><li>
+						<li value="Assam"><a href="javascript:void(0)">Assam</a></li>
+						<li value="Bihar"><a href="javascript:void(0)">Bihar</a></li>
+						<li value="Chhattisgarh"><a href="javascript:void(0)">Chhattisgarh</a></li>
+						<li value="Goa"><a href="javascript:void(0)">Goa</a></li>
+						<li value="Gujarat"><a href="javascript:void(0)">Gujarat</a></li>
+						<li value="Haryana"><a href="javascript:void(0)">Haryana</a></li>
+						<li value="Himachal Pradesh"><a href="javascript:void(0)">Himachal Pradesh</a></li>
+						<li value="Jammu and Kashmir"><a href="javascript:void(0)">Jammu and Kashmir</a></li>
+						<li value="Jharkhand"><a href="javascript:void(0)">Jharkhand</a></li>
+						<li value="Karnataka"><a href="javascript:void(0)">Karnataka</a></li>
+						<li value="Kerala"><a href="javascript:void(0)">Kerala</a></li>
+						<li><a href="javascript:void(0)">Madhya Pradesh</a></li>
+						<li><a href="javascript:void(0)">Maharashtra</a></li>
+						<li><a href="javascript:void(0)">Manipur</a></li>
+						<li><a href="javascript:void(0)">Meghalaya</a></li>
+						<li><a href="javascript:void(0)">Mizoram</a></li>
+						<li><a href="javascript:void(0)">Nagaland</a></li>
+						<li><a href="javascript:void(0)">Orissa</a></li>
+						<li><a href="javascript:void(0)">Punjab</a></li>
+						<li><a href="javascript:void(0)">Rajasthan</a></li>
+						<li><a href="javascript:void(0)">Sikkim</a></li>
+						<li><a href="javascript:void(0)">Tamil Nadu</a></li>
+						<li><a href="javascript:void(0)">Telangana</a></li>
+						<li><a href="javascript:void(0)">Tripura</a></li>
+						<li><a href="javascript:void(0)">Uttar Pradesh</a></li>
+						<li><a href="javascript:void(0)">Uttarakhand</a></li>
+						<li><a href="javascript:void(0)">West Bengal</a></li>
+					</ul>
+			</div>
+			<span id="stateError" class="error"></span>
+			</div>
+			</div>
+</div>
+<div class="parentInfo" style="padding-left: 2%">
+<div class="row">
+<div class="col-md-2"><strong align="left">Parents Information</strong></div>
+</div>
+<div class="row">
+<div class="col-md-2">First Name</div>
+<div class="col-md-1">:</div>
+<div class="col-md-3"><input type="text" id="fname" class="form-control" maxlength="20"><span id="parentFnameError" class="error"></span></div>
+<div class="col-md-2">Last Name</div>
+<div class="col-md-1">:</div>
+<div class="col-md-3"><input type="text" id="lname" class="form-control" maxlength="20"><span id="parentLnameError" class="error"></span></div>
+</div>
+
+<div class="row">
+<div class="col-md-2">Phone No</div>
+<div class="col-md-1">:</div>
+<div class="col-md-3"><input type="text" id="phone" class="form-control" maxlength="11"><span id="phoneError" class="error"></span></div>
+<div class="col-md-2">Email ID</div>
+<div class="col-md-1">:</div>
+<div class="col-md-3"><input type="text" id="email" class="form-control" maxlength="50"><span id="emailError" class="error"></span></div>
+</div>
+
+<div class="row" style="padding: 2%">
+<div class="col-md-offset-6 col-md-1"><button class="btn btn-primary" id="addStudent">Submit</button></div>
+</div>
+
+</div>
+</div>
+
+
+		
+
+</div>
+</body>
+</html>
 		

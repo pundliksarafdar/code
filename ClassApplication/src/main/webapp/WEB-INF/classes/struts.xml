@@ -170,10 +170,10 @@
 			<result name="error" type="tiles">register</result>
 		</action>
 
-		<action name="uploadexams" class="com.classowner.UploadExamsAction"
+		<action name="addquestion" class="com.classowner.AddQuestionAction"
 			method="execute">
 			<result name="success" type="tiles">classowner.uploadexams</result>
-			<result name="startuploadingexam" type="tiles">classowner.startuploadingexam</result>
+			<result name="startaddingquestion" type="tiles">classowner.startaddingquestion</result>
 			<result name="examlandingpage" type="tiles">classowner.uploadexamcomplete</result>
 			<result name="questioneditsuccess" type="tiles">classowner.questioneditsuccess</result>
 			<result name="cancleuploading" type="tiles">classowner.questioneditsuccess</result>
@@ -336,19 +336,19 @@
 			<param name="ignoresession">true</param>
 		</action>
 		
-		<action name="editquestion" class="com.classowner.UploadExamsAction"
+		<action name="editquestion" class="com.classowner.EditQuestionAction"
 			method="execute">
 			<result name="success" type="tiles">classowner.uploadexams</result>
-			<result name="startuploadingexam" type="tiles">classowner.startuploadingexam</result>
-			<result name="examlandingpage" type="tiles">classowner.uploadexamcomplete</result>
+			<result name="starteditingquestion" type="tiles">classowner.starteditingquestion</result>
+			<result name="editSuccess" type="tiles">classowner.listquestionbankquestion</result>
 			<result name="questioneditsuccess" type="tiles">classowner.questioneditsuccess</result>
 			<result name="teacheraddquestion" type="tiles">teacher.teacheraddquestion</result>
 		</action>
 		
-		<action name="deletequestion" class="com.classowner.UploadExamsAction"
+		<action name="deletequestion" class="com.classowner.AddQuestionAction"
 			method="execute">
 			<result name="success" type="tiles">classowner.uploadexams</result>
-			<result name="startuploadingexam" type="tiles">classowner.startuploadingexam</result>
+			<result name="startaddingquestion" type="tiles">classowner.startaddingquestion</result>
 			<result name="examlandingpage" type="tiles">classowner.uploadexamcomplete</result>
 			<result name="questiondelete" type="tiles">classowner.questioneditsuccess</result>
 		</action>
@@ -446,6 +446,11 @@
 		<action name="viewteachers" class="com.classowner.ManageTeacherAction"
 			method="execute">
 			<result name="success" type="tiles">classowner.viewteacher</result>
+		</action>
+		<action name="viewstudent" class="com.classowner.ManageStudentAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.viewstudent</result>
+			<result name="error" type="tiles">register</result>
 		</action>
 	</package>
 </struts>

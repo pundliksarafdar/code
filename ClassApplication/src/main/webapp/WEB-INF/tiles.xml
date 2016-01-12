@@ -196,7 +196,7 @@
 
 	<definition name="classowner.uploadexams" extends="baseLayout">
 		<put-attribute name="title" value="Manage Exams" />
-		<put-attribute name="body" value="/ClassOwner/UploadExams.jsp" />
+		<put-attribute name="body" value="/question/addQuestion.jsp" />
 	</definition>
 
 	<definition name="timetable.TimetableOption" extends="baseLayout">
@@ -341,14 +341,18 @@
 		<put-attribute name="topnav" value="/admin/menu.jsp" />
 		<put-attribute name="body" value="/ClassOwner/sendmessage.jsp" />
 	</definition>	
-	<definition name="classowner.startuploadingexam" extends="baseLayout">
+	<definition name="classowner.startaddingquestion" extends="baseLayout">
 		<put-attribute name="title" value="Start Uploading Exam" />
-		<put-attribute name="body" value="/ClassOwner/startuploadingexam.jsp" />
+		<put-attribute name="body" value="/question/addQuestion.jsp" />
+	</definition>
+	<definition name="classowner.starteditingquestion" extends="baseLayout">
+		<put-attribute name="title" value="Edit Question" />
+		<put-attribute name="body" value="/question/editQuestion.jsp" />
 	</definition>
 	<definition name="teacher.teacheraddquestion" extends="baseLayout">
 		<put-attribute name="title" value="Start Uploading Exam" />
 		<put-attribute name="topnav" value="/teacher/menu.jsp" />
-		<put-attribute name="body" value="/ClassOwner/startuploadingexam.jsp" />
+		<put-attribute name="body" value="/question/addQuestion.jsp" />
 	</definition>
 	<definition name="classowner.questioneditsuccess" extends="baseLayout">
 		<put-attribute name="title" value="Start Uploading Exam" />
@@ -517,5 +521,9 @@
    <definition name="classowner.viewteacher" extends="baseLayout">
       <put-attribute name="title"  value="Manage Teacher"/>
       <put-attribute name="body"   value="/ClassOwner/ViewTeachers.jsp"/>      
+   </definition>
+   <definition name="classowner.viewstudent" extends="baseLayout">
+      <put-attribute name="title"  value="Manage Student"/>
+      <put-attribute name="body"   value="/ClassOwner/ViewStudent.jsp"/>      
    </definition>
 </tiles-definitions>

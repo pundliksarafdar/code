@@ -53,12 +53,15 @@ public class SearchQuestionAction extends BaseAction{
 	int role;
 	List<Integer> createdIds;
 	List<Topics> topics;
+	List<Division> divisions;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
 		int inst_id=userBean.getRegId();
-		role=userBean.getRole();
+		DivisionTransactions divisionTransaction = new DivisionTransactions();
+		divisions=divisionTransaction.getAllDivisions(inst_id);
+		/*role=userBean.getRole();
 		if(institute!=null && !"".equals(institute)){
 			UserStatic userStatic = userBean.getUserStatic();
 			String storagePath = Constants.STORAGE_PATH+File.separator+institute;
@@ -151,7 +154,7 @@ public class SearchQuestionAction extends BaseAction{
 		}
 		if(userBean.getRole()==2){
 			return "teacherquestionsearch";
-		}
+		}*/
 		return SUCCESS;
 	}
 	
@@ -369,6 +372,14 @@ public class SearchQuestionAction extends BaseAction{
 
 	public void setSearchedTopic(String searchedTopic) {
 		this.searchedTopic = searchedTopic;
+	}
+
+	public List<Division> getDivisions() {
+		return divisions;
+	}
+
+	public void setDivisions(List<Division> divisions) {
+		this.divisions = divisions;
 	}
 	
 	

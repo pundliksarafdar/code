@@ -513,7 +513,7 @@ public class StudentDB {
 		boolean status=false;
 		Transaction transaction = null;
 		List list=null;
-		String queryString="select student_id from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4) and class_id=:class_id and div_id=:div_id";
+		String queryString="from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4) and class_id=:class_id and div_id=:div_id order by student_id asc";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
@@ -642,6 +642,31 @@ public class StudentDB {
 		return null;
 	}
 	
+	public Student getStudentByStudentID(int studentID,int class_id) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List<Student> list=new ArrayList<Student>();
+		String queryString=" from Student where student_id=:studentID and class_id=:class_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("studentID", studentID);
+			query.setParameter("class_id", class_id);
+				list= query.list();
+			if(list.size()>0){
+				return list.get(0);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return null;
+	}
+	
 	public List<Integer>  getStudentsFromBatches(int class_id,int div_id,String batchids) {
 		Session session = null;
 		boolean status=false;
@@ -676,6 +701,28 @@ public class StudentDB {
 			}
 				list= query.list();
 			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return list;
+	}
+	
+	public List<Student> getStudentByStudentIDs(List<Integer> studentID,int class_id) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List<Student> list=new ArrayList<Student>();
+		String queryString=" from Student where student_id in :studentID and class_id=:class_id order by student_id asc";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameterList("studentID", studentID);
+			query.setParameter("class_id", class_id);
+				list= query.list();
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{

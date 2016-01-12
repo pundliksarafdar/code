@@ -12,15 +12,15 @@ public class QuestionBankTransaction {
 		return questionbankDB.getNextQuestionID(inst_id, div_id, sub_id);
 	}
 	
-	public boolean saveQuestion(Questionbank questionbank) {
+	public int saveQuestion(Questionbank questionbank) {
 		QuestionbankDB db=new QuestionbankDB();
-		db.saveQuestion(questionbank);
-		return true;
+		return db.saveQuestion(questionbank);
+		
 	}
 	
-	public List<Integer> getDistinctQuestionMarks(int sub_id,int div_id,int inst_id) {
+	public List<Integer> getDistinctQuestionMarks(int sub_id,int div_id,int inst_id,String ques_type) {
 		QuestionbankDB questionbankDB=new QuestionbankDB();
-		return questionbankDB.getdistinctQuestionMarks(sub_id, inst_id, div_id);
+		return questionbankDB.getdistinctQuestionMarks(sub_id, inst_id, div_id,ques_type);
 	}
 	
 	public List<Integer> getDistinctQuestionRep(int sub_id,int div_id,int inst_id) {
@@ -28,19 +28,37 @@ public class QuestionBankTransaction {
 		return questionbankDB.getdistinctQuestionRep(sub_id, inst_id, div_id);
 	}
 	
-	public List<Questionbank> getSearchedQuestions(int rep,String compexam_id,int marks,int sub_id,int inst_id,int div_id,int currentPage,int topic_id) {
+	public List<Questionbank> getSearchedQuestions(int marks,int sub_id,int inst_id,int div_id,int currentPage,int topic_id,String quesType) {
 		QuestionbankDB db=new QuestionbankDB();
-		return db.getSearchedQuestion(rep, compexam_id, marks, sub_id, inst_id, div_id,currentPage,topic_id);
+		return db.getSearchedQuestion( marks, sub_id, inst_id, div_id,currentPage,topic_id,quesType);
 	}
 	
-	public int getTotalSearchedQuestionCount(int rep,String compexam_id,int marks,int sub_id,int inst_id,int div_id,int topic_id) {
+	public int getTotalSearchedQuestionCount(int marks,int sub_id,int inst_id,int div_id,int topic_id,String quesType) {
 		QuestionbankDB questionbankDB=new QuestionbankDB();
-		return questionbankDB.getSearchedQuestionCount(rep, compexam_id, marks, sub_id, inst_id, div_id,topic_id);
+		return questionbankDB.getSearchedQuestionCount(marks, sub_id, inst_id, div_id,topic_id,quesType);
 	}
 	
 	public boolean deleteQuestion(int que_id,int inst_id,int sub_id,int div_id) {
 		QuestionbankDB questionbankDB=new QuestionbankDB();
 		questionbankDB.deleteQuestion(que_id, inst_id, sub_id, div_id);
+		return true;
+	}
+	
+	public boolean updateDeleteQuestionStatus(int que_id,int inst_id,int sub_id,int div_id) {
+		QuestionbankDB questionbankDB=new QuestionbankDB();
+		questionbankDB.updateDeleteQuestionStatus(que_id, inst_id, sub_id, div_id);
+		return true;
+	}
+	
+	public boolean updateSubjectiveQuestion(int que_id,int inst_id,int sub_id,int div_id, String que_text, int marks) {
+		QuestionbankDB questionbankDB=new QuestionbankDB();
+		questionbankDB.updateSubjectiveQuestion(que_id, inst_id, sub_id, div_id, que_text, marks);
+		return true;
+	}
+	
+	public boolean updateParagraphQuestion(int que_id,int inst_id,int sub_id,int div_id, int marks) {
+		QuestionbankDB questionbankDB=new QuestionbankDB();
+		questionbankDB.updateParagraphQuestion(que_id, inst_id, sub_id, div_id, marks);
 		return true;
 	}
 	

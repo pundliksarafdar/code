@@ -13,6 +13,7 @@ public class StudentDetails {
 	private Division division;
 	private List<Batch> batches;	
 	private int divID;
+	private Student student;
 	public int getDivID() {
 		return divID;
 	}
@@ -49,6 +50,12 @@ public class StudentDetails {
 	}
 	public void setBatches(List<Batch> batches) {
 		this.batches = batches;
+	}
+	public Student getStudent() {
+		return student;
+	}
+	public void setStudent(Student student) {
+		this.student = student;
 	}
 	
 }

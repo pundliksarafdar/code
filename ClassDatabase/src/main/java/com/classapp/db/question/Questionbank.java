@@ -19,6 +19,18 @@ public class Questionbank implements Serializable {
 	private String exam_rep;
 	String ques_status;
 	int topic_id;
+	String que_text;
+	String opt_1;
+	String opt_2;
+	String opt_3;
+	String opt_4;
+	String opt_5;
+	String opt_6;
+	String opt_7;
+	String opt_8;
+	String opt_9;
+	String opt_10;
+	String que_type;
 	public int getInst_id() {
 		return inst_id;
 	}
@@ -102,6 +114,78 @@ public class Questionbank implements Serializable {
 	}
 	public void setTopic_id(int topic_id) {
 		this.topic_id = topic_id;
+	}
+	public String getQue_text() {
+		return que_text;
+	}
+	public void setQue_text(String que_text) {
+		this.que_text = que_text;
+	}
+	public String getOpt_1() {
+		return opt_1;
+	}
+	public void setOpt_1(String opt_1) {
+		this.opt_1 = opt_1;
+	}
+	public String getOpt_2() {
+		return opt_2;
+	}
+	public void setOpt_2(String opt_2) {
+		this.opt_2 = opt_2;
+	}
+	public String getOpt_3() {
+		return opt_3;
+	}
+	public void setOpt_3(String opt_3) {
+		this.opt_3 = opt_3;
+	}
+	public String getOpt_4() {
+		return opt_4;
+	}
+	public void setOpt_4(String opt_4) {
+		this.opt_4 = opt_4;
+	}
+	public String getOpt_5() {
+		return opt_5;
+	}
+	public void setOpt_5(String opt_5) {
+		this.opt_5 = opt_5;
+	}
+	public String getOpt_6() {
+		return opt_6;
+	}
+	public void setOpt_6(String opt_6) {
+		this.opt_6 = opt_6;
+	}
+	public String getOpt_7() {
+		return opt_7;
+	}
+	public void setOpt_7(String opt_7) {
+		this.opt_7 = opt_7;
+	}
+	public String getOpt_8() {
+		return opt_8;
+	}
+	public void setOpt_8(String opt_8) {
+		this.opt_8 = opt_8;
+	}
+	public String getOpt_9() {
+		return opt_9;
+	}
+	public void setOpt_9(String opt_9) {
+		this.opt_9 = opt_9;
+	}
+	public String getOpt_10() {
+		return opt_10;
+	}
+	public void setOpt_10(String opt_10) {
+		this.opt_10 = opt_10;
+	}
+	public String getQue_type() {
+		return que_type;
+	}
+	public void setQue_type(String que_type) {
+		this.que_type = que_type;
 	}
 	
 	

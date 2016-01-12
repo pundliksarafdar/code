@@ -18,5 +18,17 @@
         <property name="batch_id" type="string">
             <column name="BATCH_ID" />
         </property>
+        <property name="parentFname" type="string">
+            <column name="parentFname" length="25"/>
+        </property>
+        <property name="parentLname" type="string">
+            <column name="parentLname" length="25"/>
+        </property>
+        <property name="parentPhone" type="string">
+            <column name="parentPhone" length="11"/>
+        </property>
+        <property name="parentEmail" type="string">
+            <column name="parentEmail" length="50"/>
+        </property>
     </class>
 </hibernate-mapping>

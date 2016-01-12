@@ -53,7 +53,7 @@ response.setHeader("Expires", "0");
 body{
     padding-right: 5px;
     padding-left: 5px;
-    font-family: cursive;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     min-height: 525px;
    /* background-color: rgb(141,141,253);*/
      background: radial-gradient(#0094bd,#003442 80%) no-repeat #003442;

@@ -27,6 +27,7 @@ import com.classapp.login.UserStatic;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.datalayer.exam.ExamData;
+import com.datalayer.exam.ParagraphQuestion;
 import com.datalayer.exam.QuestionData;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
@@ -36,7 +37,7 @@ import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.questionbank.QuestionBankTransaction;
 import com.user.UserBean;
 
-public class UploadExamsAction extends BaseAction{
+public class EditQuestionAction extends BaseAction{
 	String actionname,examname,exammarks,question;
 	String answersOptionText[],answersOptionCheckBox;
 	File optionImages[],questionImages[];
@@ -60,11 +61,16 @@ public class UploadExamsAction extends BaseAction{
 	int optionImageCount[];
 	int optionImageEndCount[];
 	String selectedtopicName;
-	
+	String questiontype;
 	/*Edit exam question*/
 	String optionImagesPrev[];
 	String questionImagesStr[];
-	
+	List<Division> divisions;
+	List<Subject> subjects;
+	String paraQuestions[];
+	String paraPerQuestionMarks[];
+	String paragraphText;
+	int preSelectedMarks;
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		int inst_id=userBean.getRegId();
@@ -82,26 +88,34 @@ public class UploadExamsAction extends BaseAction{
 		}
 		
 		SubjectTransaction subjectTransaction=new SubjectTransaction();
-		topics=subjectTransaction.getTopics(inst_id, Integer.parseInt(subject), Integer.parseInt(division));
-	
-		if(null == actionname){
-			
-			actionname="submitquestions";
+		//topics=subjectTransaction.getTopics(inst_id, Integer.parseInt(subject), Integer.parseInt(division));
+		DivisionTransactions divisionTransaction = new DivisionTransactions();
+		divisions = divisionTransaction.getAllDivisions(inst_id);
+		QuestionBankTransaction bankTransaction =new QuestionBankTransaction();
+		if(null == actionname  || "".equals(actionname) ){
+			Questionbank questionbank = bankTransaction.getQuestion(questionNumber, inst_id, Integer.parseInt(subject), Integer.parseInt(division));
+			if("1".equals(questiontype)){
+			question = questionbank.getQue_text();
+			questionmarks = questionbank.getMarks();
+			}else if("3".equals(questiontype)){
+				UserStatic userStatic = userBean.getUserStatic();
+				String questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
+				ParagraphQuestion questionData=(ParagraphQuestion) readObject(new File(questionPath));
+				paragraphText = questionData.getParagraphText();
+				paraQuestions = questionData.getParaQuestions();
+				paraPerQuestionMarks = questionData.getParaPerQuestionMarks();
+				questionmarks = questionbank.getMarks();
+			}
+			return "starteditingquestion";
+		}else if("updateQuestion".equals(actionname)){
+			String result = "editSuccess";
 			if(userBean.getRole()==2){
-				return "teacheraddquestion";
-			}
-			return "startuploadingexam";
-		}else if("submitquestions".equals(actionname)){
-			/*if(null != request.getSession().getAttribute("questionNumber")){
-				questionNumber = (Integer) request.getSession().getAttribute("questionNumber");
-			}else{
-				questionNumber = 0;
-			}*/
-			QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
+				result= "teacheraddquestion";
+			}	
 			
-			if("submitquestions".equals(actionname)){
-			questionNumber=bankTransaction.getNextQuestionID(inst_id,Integer.parseInt(subject), Integer.parseInt(division));
-			}
+			if("1".equals(questiontype)){
+				bankTransaction.updateSubjectiveQuestion(questionNumber, inst_id, Integer.parseInt(subject), Integer.parseInt(division), question, questionmarks);
+			}else if("2".equals(questiontype)){
 			subjectTransaction=new SubjectTransaction();
 			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
 			if(subbean!=null){
@@ -127,50 +141,21 @@ public class UploadExamsAction extends BaseAction{
 			questionData.setOptions(listOption);
 			questionData.setQuestion(question);
 			questionData.setOptionImageCount(optionImageCount);
-			questionData.setQuestionNumber(questionNumber);
+			//questionData.setQuestionNumber(questionNumber);
 			
 			List<String> questionImagesList = new ArrayList<String>();
 			List<String> answerImagesList = new ArrayList<String>();
-			
-			/*
-			if(null!=questionImages){
-				for(File questionImage : questionImages){
-					try {
-						String base64questionImage = Base64.encode(FileUtils.readFileToByteArray(questionImage));
-						questionImagesList.add(Constants.BASE64_IMAGE_PREFIX+base64questionImage);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-			*/
 			
 			if(null!=questionImagesStr){
 				questionImagesList = Arrays.asList(questionImagesStr);
 			}
 			
 			questionData.setQuestionImage(questionImagesList);
-			
-			/*
-			if(null!=optionImages){
-			for(File optionImage : optionImages){
-				try {
-					String base64AnswerImage = Base64.encode(FileUtils.readFileToByteArray(optionImage));
-					answerImagesList.add(Constants.BASE64_IMAGE_PREFIX+base64AnswerImage);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			}*/
-			
 			if(optionImagesPrev!=null){
 				answerImagesList = Arrays.asList(optionImagesPrev);
 			}
 			questionData.setAnswerImage(answerImagesList);
-			String result = "startuploadingexam";
-			if(userBean.getRole()==2){
-				result= "teacheraddquestion";
-			}
+			
 			//Create separate file for each question and join them in the save and submit
 			UserStatic userStatic = userBean.getUserStatic();
 			String examPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
@@ -196,180 +181,75 @@ public class UploadExamsAction extends BaseAction{
 			questionbank.setSub_id(Integer.parseInt(subject));
 			questionbank.setTopic_id(topicID);
 			questionbank.setQues_status("");
-			bankTransaction.saveQuestion(questionbank);
-			if(currentPage!=0){
-				result="questioneditsuccess";
-			}
-			return result;
-		}else if("navigatequestions".equals(actionname)||"editquestion".equals(actionname)){
-			UserStatic userStatic = userBean.getUserStatic();
-			 subjectTransaction=new SubjectTransaction();
-			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
-			if(subbean!=null){
-				subjectname=subbean.getSubjectName();
-			}
-			DivisionTransactions divisionTransactions=new DivisionTransactions();
-			Division divbean= divisionTransactions.getDidvisionByID(Integer.parseInt(division));
-			if(divbean!=null){
-				divisionName=divbean.getDivisionName();
-			}
-			examname = (String) request.getSession().getAttribute("examname");
-			String examPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
-			//uploadedMarks = (Integer) request.getSession().getAttribute("uploadedMarks");
-			File file = new File(examPath);
-			
-			
-			QuestionData questionData = null;
-			if(file.exists()){
-				questionData = (QuestionData) readObject(file);
-			}
-			
-			int endCount = 0;
-			int index = 0;
-			optionImageCount = questionData.getOptionImageCount();
-			if(null != optionImageCount){
-				optionImageEndCount = new int[optionImageCount.length];
-				for(int count:optionImageCount){
-					endCount = endCount+count;
-					optionImageEndCount[index]=endCount;
-					index++;
-				}
-			}
-			
-			if (questionData!=null) {
-				answerList=new ArrayList<Integer>();
-				if (questionData.getAnswers()!=null) {
-					for (int i = 0; i < questionData.getAnswers().size(); i++) {
-						answerList.add(Integer.parseInt(questionData.getAnswers().get(i).trim()));
-					}
-				}
-				indexOption=questionData.getOptions().size();
-			}
-			QuestionBankTransaction questionBankTransaction=new QuestionBankTransaction();
-			Questionbank questionbank=questionBankTransaction.getQuestion(questionNumber, inst_id,Integer.parseInt(subject), Integer.parseInt(division));
-			selectedtopicID=questionbank.getTopic_id();
-			if(topics!=null){
-				for(int i = 0; i < topics.size(); i++) {
-					if(topics.get(i).getTopic_id()==selectedtopicID){
-						selectedtopicName=topics.get(i).getTopic_name();
+			questionbank.setQue_text(question);
+			if(answersOptionText.length>0){
+				for (int i = 0; i < answersOptionText.length; i++) {
+					switch (i) {
+					case 0:
+						questionbank.setOpt_1(answersOptionText[i]);
+						break;
+					case 1:
+						questionbank.setOpt_2(answersOptionText[i]);
+						break;
+					case 2:
+						questionbank.setOpt_3(answersOptionText[i]);
+						break;		
+					case 3:
+						questionbank.setOpt_4(answersOptionText[i]);
+						break;
+					case 4:
+						questionbank.setOpt_5(answersOptionText[i]);
+						break;
+					case 5:
+						questionbank.setOpt_6(answersOptionText[i]);
+						break;
+					case 6:
+						questionbank.setOpt_7(answersOptionText[i]);
+						break;
+					case 7:
+						questionbank.setOpt_8(answersOptionText[i]);
+						break;
+					case 8:
+						questionbank.setOpt_9(answersOptionText[i]);
+						break;
+					case 9:
+						questionbank.setOpt_10(answersOptionText[i]);
 						break;
 					}
 				}
 			}
-			request.setAttribute("questionData", questionData);
-			actionname="SavenSubmit";
-			String result = "startuploadingexam";
-			if(userBean.getRole()==2){
-				result= "teacheraddquestion";
-			}
-			return result;
-		}else if("SavenSubmit".equals(actionname)){
-			 subjectTransaction=new SubjectTransaction();
-			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
-			if(subbean!=null){
-				subjectname=subbean.getSubjectName();
-			}
-			DivisionTransactions divisionTransactions=new DivisionTransactions();
-			Division divbean= divisionTransactions.getDidvisionByID(Integer.parseInt(division));
-			if(divbean!=null){
-				divisionName=divbean.getDivisionName();
-			}
-			//request.getSession().setAttribute("questionNumber", ++questionNumber);
-			
-			QuestionData questionData = new QuestionData();
-			questionData.setMarks(questionmarks);
-			List<String> listOption = new ArrayList<String>();
-			if(null!=answersOptionText){
-				listOption = Arrays.asList(answersOptionText);
-			}
-			List<String> questionImagesList;
-			if(null!=questionImagesStr){
-				questionImagesList = Arrays.asList(questionImagesStr);
-			}else{
-				questionImagesList = new ArrayList<String>();
-			}
-			
-			if(null!=answersOptionCheckBox){
-				questionData.setAnswers(Arrays.asList(answersOptionCheckBox.split(",")));
-			}
-			questionData.setQuestionImage(questionImagesList);
-			questionData.setOptions(listOption);
-			questionData.setQuestion(question);
-			questionData.setQuestionNumber(questionNumber);
-			questionData.setOptionImageCount(optionImageCount);
-			if(null!=optionImagesPrev){
-				questionData.setAnswerImage(Arrays.asList(optionImagesPrev));
-			}else{
-				questionData.setAnswerImage(new ArrayList<String>());
-			}
-			//Create separate file for each question and join them in the save and submit
-			UserStatic userStatic = userBean.getUserStatic();
-			String examPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
-			File file = new File(examPath);
-			
-			if(!file.getParentFile().exists()){
-				file.getParentFile().mkdirs();
-				try {file.createNewFile();} catch (IOException e) {	e.printStackTrace();}
-			}
-			writeObject(examPath, questionData);
-			QuestionBankTransaction questionBankTransaction=new QuestionBankTransaction();
-			Questionbank questionbank=questionBankTransaction.getQuestion(questionNumber, inst_id,Integer.parseInt(subject), Integer.parseInt(division));
-			if(null!=answersOptionCheckBox){
-				questionbank.setAns_id(answersOptionCheckBox.toString());
-			}
-			questionbank.setMarks(questionmarks);
-			questionbank.setTopic_id(topicID);
-			questionBankTransaction.saveQuestion(questionbank);
-			
-			actionname="SavenSubmit";
-			String result = "questioneditsuccess";
-			return result;
-		}else if("deletequestion".equals(actionname)){
-			if("".equals(quesstatus)){
-			UserStatic userStatic = userBean.getUserStatic();
-			 subjectTransaction=new SubjectTransaction();
-			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
-			if(subbean!=null){
-				subjectname=subbean.getSubjectName();
-			}
-			DivisionTransactions divisionTransactions=new DivisionTransactions();
-			Division divbean= divisionTransactions.getDidvisionByID(Integer.parseInt(division));
-			if(divbean!=null){
-				divisionName=divbean.getDivisionName();
-			}
-			String questionPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
-			//uploadedMarks = (Integer) request.getSession().getAttribute("uploadedMarks");
-			File file = new File(questionPath);
-			if(file.exists()){
-				try {
-					delete(file);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			questionbank.setQue_type(questiontype);
+			bankTransaction.saveQuestion(questionbank);
+			}else if("3".equals(questiontype)){
+				bankTransaction.updateParagraphQuestion(questionNumber, inst_id, Integer.parseInt(subject), Integer.parseInt(division), questionmarks);
+				ParagraphQuestion paragraphQuestion =new ParagraphQuestion();
+				paragraphQuestion.setParagraphText(paragraphText);
+				paragraphQuestion.setParaPerQuestionMarks(paraPerQuestionMarks);
+				paragraphQuestion.setParaQuestions(paraQuestions);
+				paragraphQuestion.setQuestionmarks(questionmarks);
+				paragraphQuestion.setQuestionnumber(questionNumber);
+				UserStatic userStatic = userBean.getUserStatic();
+				String examPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
+				File file = new File(examPath);
+				
+				if(!file.getParentFile().exists()){
+					file.getParentFile().mkdirs();
+					try {file.createNewFile();} catch (IOException e) {	e.printStackTrace();}
 				}
+				writeObject(examPath, paragraphQuestion);
 			}
-			QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
-			bankTransaction.deleteQuestion(questionNumber, inst_id, Integer.parseInt(subject), Integer.parseInt(division));
-			}else{
-				QuestionBankTransaction questionBankTransaction=new QuestionBankTransaction();
-				Questionbank questionbank=questionBankTransaction.getQuestion(questionNumber, inst_id,Integer.parseInt(subject), Integer.parseInt(division));
-				questionbank.setQues_status("N");
-				questionBankTransaction.saveQuestion(questionbank);
-			}
-			return "questiondelete";
-		}else if("cancleuploading".equals(actionname)){
-			if (currentPage==0) {
-				actionname="cancleuploading";
-			}else{
-				actionname="";
-			}
-			return "cancleuploading";
+			actionname = "editSuccess";
+			return result;
+		}else if("cancleEdit".equals(actionname)){
+			return "editSuccess";
 		}else{
 			return ERROR;
 		}
 		
 	}
 	
+	
+
 	public String saveExam(UserBean userBean,HttpServletRequest request){
 		UserStatic userStatic = userBean.getUserStatic();
 		String result = "examlandingpage";
@@ -764,6 +644,74 @@ public class UploadExamsAction extends BaseAction{
 		this.questionImagesStr = questionImagesStr;
 	}
 
+	public List<Division> getDivisions() {
+		return divisions;
+	}
+
+	public void setDivisions(List<Division> divisions) {
+		this.divisions = divisions;
+	}
+
+	public String getQueationtype() {
+		return questiontype;
+	}
+
+	public void setQueationtype(String questiontype) {
+		this.questiontype = questiontype;
+	}
+
+
+
+	public String[] getParaQuestions() {
+		return paraQuestions;
+	}
+
+	public void setParaQuestions(String[] paraQuestions) {
+		this.paraQuestions = paraQuestions;
+	}
+
+	public String[] getParaPerQuestionMarks() {
+		return paraPerQuestionMarks;
+	}
+
+	public void setParaPerQuestionMarks(String[] paraPerQuestionMarks) {
+		this.paraPerQuestionMarks = paraPerQuestionMarks;
+	}
+
+	public String getParagraphText() {
+		return paragraphText;
+	}
+
+	public void setParagraphText(String paragraphText) {
+		this.paragraphText = paragraphText;
+	}
+	public String getQuestiontype() {
+		return questiontype;
+	}
+
+	public void setQuestiontype(String questiontype) {
+		this.questiontype = questiontype;
+	}
+
+	public List<Subject> getSubjects() {
+		return subjects;
+	}
+
+	public void setSubjects(List<Subject> subjects) {
+		this.subjects = subjects;
+	}
+
+
+
+	public int getPreSelectedMarks() {
+		return preSelectedMarks;
+	}
+
+
+
+	public void setPreSelectedMarks(int preSelectedMarks) {
+		this.preSelectedMarks = preSelectedMarks;
+	}
 	
 	
 }

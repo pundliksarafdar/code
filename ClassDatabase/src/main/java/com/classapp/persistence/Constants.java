@@ -27,7 +27,7 @@ private Constants(){
 
 	public static String ADD_SUBJECT = "addSubject";
 	public static String ADD_STUDENT= "addStudent";
-	public static String SEARCH_STUDENT= "searchStudent";
+	public static String STUDENT_DETAILS= "getStudentDetails";
 	public static String SEARCH_TEACHER= "searchTeacher";
 	public static String SEARCH_BATCH= "searchBatch";
 	public static String STUDENT_LIST="listOfStudents";

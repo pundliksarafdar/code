@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.sql.Date;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -63,6 +65,7 @@ import com.classapp.notification.GeneralNotification;
 import com.classapp.notification.GeneralNotification.NOTIFICATION_KEYS;
 import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;
+import com.datalayer.exam.ParagraphQuestion;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -234,81 +237,36 @@ public class ClassOwnerServlet extends HttpServlet{
 				respObject.addProperty(STATUS, "error");
 			}
 			printWriter.write(respObject.toString());
-		}*/else if(Constants.SEARCH_STUDENT.equals(methodToCall)){
-			StringBuilder batchName = new StringBuilder();
+		}*/else if(Constants.STUDENT_DETAILS.equals(methodToCall)){
 			UserBean userBean = (UserBean) req.getSession().getAttribute("user");
-			String studentLoginName=req.getParameter("studentLgName");
-			String batchID=req.getParameter("batchID");
-			String pagenumber=req.getParameter("pagenumber");
-			String batchdivision=req.getParameter("batchdivision");
-			req.getSession().setAttribute("pagenumber",pagenumber);
-			req.getSession().setAttribute("batchID",batchID);
-			req.getSession().setAttribute("batchdivision",batchdivision);
-			if(studentLoginName.equals("")){
-				respObject.addProperty(STATUS, "error");
-				respObject.addProperty(MESSAGE, "Login name can not be blank! Please enter login name of Student. ");											
-			}else{
-			/*List<StudentDetails> students=(List<StudentDetails>) req.getSession().getAttribute(Constants.STUDENT_LIST);*/
+			String studentId=req.getParameter("studentId");
+			RegisterTransaction registerTransaction=new RegisterTransaction();
+			RegisterBean studentBean=registerTransaction.getregistereduser(Integer.parseInt(studentId));
+			studentBean.setLoginPass("");
 			StudentTransaction studentTransaction=new StudentTransaction();
-			Student student=studentTransaction.getStudentByStudentID(studentLoginName,userBean.getRegId());
-			req.getSession().setAttribute("studentSearchResult", null);
-			boolean found=false;
-			if(student!=null){
-				RegisterTransaction registerTransaction=new RegisterTransaction();
-				RegisterBean registerBean=registerTransaction.getregistereduser(student.getStudent_id());
-				StudentDetails studentDetails=new StudentDetails();
-				studentDetails.setBatcheIds(student.getBatch_id());
-				studentDetails.setStudentId(student.getStudent_id());
-				DivisionTransactions divisionTransactions=new DivisionTransactions();
-				Division  division=divisionTransactions.getDidvisionByID(student.getDiv_id());
-				List<Batch> list=batchTransactions.getAllBatchesOfDivision(student.getDiv_id()+"", userBean.getRegId());
-				StringBuilder allbatchIDs=new StringBuilder();
-				StringBuilder allbatchnames=new StringBuilder();
-				for (int i = 0; i < list.size(); i++) {
-					allbatchIDs.append(list.get(i).getBatch_id()+",");
-					allbatchnames.append(list.get(i).getBatch_name()+",");
+			Student student = studentTransaction.getStudentByStudentID(Integer.parseInt(studentId), userBean.getRegId());
+			List<Batch> batchList = batchTransactions.getBatchRelatedtoDivision(student.getDiv_id());
+			Division division=divisionTransactions.getDidvisionByID(student.getDiv_id());
+			String batcharray[] = student.getBatch_id().split(",");
+			List<Batch> studentBatchList = new ArrayList<Batch>();
+ 			for (int i = 0; i < batcharray.length; i++) {
+				for (int j = 0; j < batchList.size(); j++) {
+					if(Integer.parseInt(batcharray[i]) == batchList.get(j).getBatch_id()){
+						studentBatchList.add(batchList.get(j));
+						break;
+					}
 				}
-				allbatchIDs.deleteCharAt(allbatchIDs.length()-1);
-				allbatchnames.deleteCharAt(allbatchnames.length()-1);
-				List<Batch> batchs=new ArrayList<Batch>();
-				if(!student.getBatch_id().equals("")){
-				String batchids[]=student.getBatch_id().split(",");
-				batchdivision=student.getDiv_id()+"";
-				for (int i = 0; i < batchids.length; i++) {
-					Batch batch=batchTransactions.getBatch(Integer.parseInt(batchids[i]),userBean.getRegId(),Integer.parseInt(batchdivision));
-					batchs.add(batch);
-					batchName.append(batch.getBatch_name()+",");
-				}
-				batchName.deleteCharAt(batchName.length()-1);
-				}else{
-					batchName.append("");
-				}
-				studentDetails.setBatches(batchs);
-				req.getSession().setAttribute("studentBatch", batchName);
-				studentDetails.setDivision(division);
-				studentDetails.setDivID(student.getDiv_id());
-				studentDetails.setStudentUserBean(registerBean);
-				req.getSession().setAttribute("studentSearchResult", studentDetails);
-				req.getSession().setAttribute("studentSearchResultBatch", studentDetails);
-				respObject.addProperty("studentId", student.getStudent_id());
-				respObject.addProperty("studentFname", registerBean.getFname());
-				respObject.addProperty("studentLname", registerBean.getLname());
-				respObject.addProperty("studentbatchIds", student.getBatch_id());
-				respObject.addProperty("studentbatchnames", batchName.toString());
-				respObject.addProperty("allbatchnames", allbatchnames.toString());
-				respObject.addProperty("allbatchIDs", allbatchIDs.toString());
-				respObject.addProperty("studentdivision", division.getDivisionName());
-				found=true;
+				
 			}
-			
-			if(!found){
-				respObject.addProperty(STATUS, "error");
-				respObject.addProperty(MESSAGE, "Student with login name "+studentLoginName+" does not exists in class!");
-			}else{
-				respObject.addProperty(STATUS, "success");
-			}
-			}
-			//printWriter.write(respObject.toString());
+			StudentDetails studentDetails=new StudentDetails();
+			studentDetails.setStudentUserBean(studentBean);
+			studentDetails.setStudent(student);
+			studentDetails.setBatches(studentBatchList);
+			studentDetails.setDivision(division);
+			Gson gson = new Gson();
+			JsonElement jsonElement = gson.toJsonTree(studentDetails);
+			respObject.add("studentDetails", jsonElement);
+			respObject.addProperty(STATUS, "success");
 			
  		}else if (Constants.ADD_STUDENT.equals(methodToCall)) {
 			Integer regId = null;
@@ -399,8 +357,10 @@ public class ClassOwnerServlet extends HttpServlet{
 					respObject.addProperty(STATUS, "success");
 					respObject.addProperty(MESSAGE,
 							"Batches fetched successfully.");
-					respObject.addProperty("batchIds", batchIds);
-					respObject.addProperty("batchNames", batchNames);
+					Gson gson=new Gson();
+				JsonElement jsonElement=gson.toJsonTree(batches);
+					respObject.add("batches", jsonElement);
+					//respObject.addProperty("batchNames", batchNames);
 				} else {
 					respObject.addProperty(STATUS, "error");
 					respObject.addProperty(MESSAGE, "No batches found");
@@ -421,8 +381,6 @@ public class ClassOwnerServlet extends HttpServlet{
 					regId = userBean.getRegId();
 				}
 			}
-			String pagenumber=(String) req.getSession().getAttribute("pagenumber");
-			String batchID=(String) req.getSession().getAttribute("batchID");
 			int studentId=Integer.parseInt(req.getParameter("studentId"));
 			Student student=studentData.getStudentDetailsFromClass(studentId, regId);			
 			String batchIds=req.getParameter("batchIds");			
@@ -432,8 +390,6 @@ public class ClassOwnerServlet extends HttpServlet{
 				student.setBatch_id(batchIds);
 				if(studentTransaction.updateStudentDb(student)){
 					respObject.addProperty(STATUS, "success");
-					respObject.addProperty("pagenumber", pagenumber);
-					respObject.addProperty("batchID", batchID);
 					respObject.addProperty(MESSAGE, "Successfully updated student.");
 				}else{
 					respObject.addProperty(STATUS, "error");
@@ -457,7 +413,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				}
 			}
 			
-			int deletStudentId=Integer.parseInt(req.getParameter("deleteStudentId"));										
+			int deletStudentId=Integer.parseInt(req.getParameter("studentId"));										
 			
 				if(studentTransaction.deleteStudent(deletStudentId, regId)){
 					StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
@@ -1729,63 +1685,77 @@ public class ClassOwnerServlet extends HttpServlet{
 			respObject.addProperty(STATUS, "success");
 }else if("getstudentsrelatedtobatch".equals(methodToCall)){
 	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
-	String batchname=req.getParameter("batchname");
+	String batchID=req.getParameter("batchID");
 	String pagenumber=req.getParameter("pagenumber");
-	String batchdivision=req.getParameter("batchdivision");
+	String batchdivision=req.getParameter("divisionID");
 	StudentTransaction studentTransaction=new StudentTransaction();
 	int count=0;
-	if("".equals(batchname)){
+	if("".equals(batchID)){
 		count=studentTransaction.getunallocatedStudentcount(userBean.getRegId());
 	}else{
-		count=studentTransaction.getStudentscountrelatedtobatch(batchname,userBean.getRegId(),Integer.parseInt(batchdivision));
+		count=studentTransaction.getStudentscountrelatedtobatch(batchID,userBean.getRegId(),Integer.parseInt(batchdivision));
 	}
+	
 	//Taking data from database
 	int resultPerPage = Integer.parseInt(ServiceMap.getSystemParam(Constants.SERVICE_PAGINATION, "resultsperpage"));
 	if(count>0){
-		int remainder=count%resultPerPage;
-		int pages=count/resultPerPage;
-		if(remainder>0){
-			pages++;
-		}
-		if(Integer.parseInt(pagenumber)>pages){
-			pagenumber=pages+"";
-		}
-		List students=new ArrayList();
-		if("".equals(batchname)){
+		List<Student> students=new ArrayList();
+		if("".equals(batchID)){
 			students=studentTransaction.getUnallocatedStudentIDs(userBean.getRegId());
 		}else{
-			students=studentTransaction.getStudentsrelatedtobatch(batchname,userBean.getRegId(),Integer.parseInt(batchdivision));
-		}		
-		RegisterTransaction registerTransaction=new RegisterTransaction();
-		List<RegisterBean> registerBeans= registerTransaction.getStudentsInfo(students,Integer.parseInt(pagenumber),resultPerPage);
-		if(registerBeans.size()>0)
-		{
-			int counter=0;
-			String studentnames="";
-			String StudentIds="";
-			while(counter<registerBeans.size()){
-				if(counter==0){
-					studentnames=registerBeans.get(counter).getFname()+" "+registerBeans.get(counter).getLname();
-					StudentIds=registerBeans.get(counter).getLoginName();
-				}else{
-					studentnames=studentnames+","+registerBeans.get(counter).getFname()+" "+registerBeans.get(counter).getLname();
-					StudentIds=StudentIds+","+registerBeans.get(counter).getLoginName();
-				}
-				counter++;
-			}
-			respObject.addProperty("studentnames", studentnames);
-			respObject.addProperty("studentids", StudentIds);
+			students=studentTransaction.getStudentsrelatedtobatch(batchID,userBean.getRegId(),Integer.parseInt(batchdivision));
 		}
-		respObject.addProperty("count", count);
-		respObject.addProperty("remain", remainder);
-		respObject.addProperty("pages", pages);
-		
+		List<Integer> studentIDsList = new ArrayList<Integer>();
+		for (int i = 0; i < students.size(); i++) {
+			studentIDsList.add(students.get(i).getStudent_id());
+		}
+		RegisterTransaction registerTransaction=new RegisterTransaction();
+		List<RegisterBean> registerBeans= registerTransaction.getStudentsInfo(studentIDsList,resultPerPage);
+		BatchTransactions batchTransactions=new BatchTransactions();
+		List<Batch> batchList = batchTransactions.getBatchRelatedtoDivision(Integer.parseInt(batchdivision));
+		List<StudentDetails> studentDetailsList = new ArrayList<StudentDetails>();
+		DivisionTransactions divisionTransactions=new DivisionTransactions();
+		Division division = divisionTransactions.getDidvisionByID(Integer.parseInt(batchdivision));
+		if(students != null){
+			for (int i = 0; i < students.size(); i++) {
+				StudentDetails studentDetails=new StudentDetails();
+				registerBeans.get(i).setLoginPass("");
+				studentDetails.setStudentUserBean(registerBeans.get(i));
+				studentDetails.setDivision(division);
+				String batchIDArray[] = students.get(i).getBatch_id().split(",");
+				List<Batch> studentBatchList = new ArrayList<Batch>();
+				if(batchIDArray.length > 1){
+					for (int j = 0; j < batchIDArray.length; j++) {
+							for (int k = 0; k < batchList.size(); k++) {
+								if(Integer.parseInt(batchIDArray[j]) ==  batchList.get(k).getBatch_id()){
+									studentBatchList.add(batchList.get(k));
+									break;
+								}
+							}	
+					}
+				}else{
+					for (int k = 0; k < batchList.size(); k++) {
+						if(Integer.parseInt(batchIDArray[0]) ==  batchList.get(k).getBatch_id()){
+							studentBatchList.add(batchList.get(k));
+							break;
+						}
+					}
+				}
+				studentDetails.setBatches(studentBatchList);
+				studentDetailsList.add(studentDetails);
+			}
+		}
+		Gson gson=new Gson();
+		JsonElement jsonElement = gson.toJsonTree(studentDetailsList);
+		respObject.add("studentList", jsonElement);
 	}else{
-		respObject.addProperty("studentnames", "");
-		respObject.addProperty("studentids", "");
+		Gson gson=new Gson();
+		JsonElement jsonElement = gson.toJsonTree(new StudentDetails());
+		respObject.add("studentList", jsonElement);
+		/*respObject.addProperty("studentids", "");
 		respObject.addProperty("count", "");
 		respObject.addProperty("remain", "");
-		respObject.addProperty("pages", "");
+		respObject.addProperty("pages", "");*/
 	}
 	respObject.addProperty(STATUS, "success");
 }else if("modifysubject".equals(methodToCall)){
@@ -2424,9 +2394,14 @@ public class ClassOwnerServlet extends HttpServlet{
 		}
 		subjectnames.deleteCharAt(subjectnames.length()-1);
 		subjectids.deleteCharAt(subjectids.length()-1);
+		Gson gson=new Gson();
+		JsonElement jsonElement = gson.toJsonTree(subjects);
+		respObject.add("subjectJson",jsonElement);
+		respObject.addProperty(STATUS, "success");
 		}else{
 			subjectnames.append("");
 			subjectids.append("");
+			respObject.addProperty(STATUS, "error");
 		}
 		
 		respObject.addProperty("subjectnames", subjectnames.toString());
@@ -2525,9 +2500,19 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 		}
 		}
+		
 		respObject.addProperty("topic_ids",topic_ids);
 		respObject.addProperty("topic_names", topic_names);
 		respObject.addProperty(STATUS, "success");
+		if(topics !=null){
+			if(topics.size()>0){
+			Gson gson = new Gson();
+			JsonElement jsonElement = gson.toJsonTree(topics);
+			respObject.add("topicJson",jsonElement);
+		}else{
+			respObject.addProperty(STATUS, "error");
+		}
+		}
 	}else if("deleteTopics".equalsIgnoreCase(methodToCall)){
 		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 		UserStatic userStatic=userBean.getUserStatic();
@@ -2680,7 +2665,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		String questionNumber=req.getParameter("questionNumber");
 		String institute=req.getParameter("institute");
 		int inst_id=userBean.getRegId();
-		if(!"".equals(institute)){
+		if(!"".equals(institute) && institute!=null){
 			inst_id=Integer.parseInt(institute);
 		}
 		ExamTransaction examTransaction=new ExamTransaction();
@@ -3249,8 +3234,305 @@ public class ClassOwnerServlet extends HttpServlet{
 		 JsonElement jsonElement = gson.toJsonTree(teacherList);
 		 respObject.add("instituteTeachers", jsonElement);
 		 respObject.addProperty(STATUS,"success");
+	}else if("getStudentByLoginID".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		String classfloorID=req.getParameter("classfloorID");
+		RegisterTransaction registerTransaction=new RegisterTransaction();
+		RegisterBean registerBean=registerTransaction.getRegisteredUserByLoginID(classfloorID);
+		if(registerBean!=null){
+			StudentTransaction studentTransaction=new StudentTransaction();
+			Student student=studentTransaction.getStudentByStudentID(classfloorID, userBean.getRegId());
+			if(student==null){
+			respObject.addProperty("firstname", registerBean.getFname());
+			respObject.addProperty("lastname", registerBean.getLname());
+			respObject.addProperty("email", registerBean.getEmail());
+			respObject.addProperty("regID", registerBean.getRegId());
+			respObject.addProperty("phone", registerBean.getPhone1());
+			respObject.addProperty(STATUS,"valid");
+			}else{
+				respObject.addProperty(STATUS,"exists");
+			}
+		}else{
+			respObject.addProperty(STATUS,"invalid");	
+		}		 
+	}else if("addStudentByID".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		String studentID=req.getParameter("studentID");
+		String divisionId=req.getParameter("divisionId");
+		String batchIDs=req.getParameter("batchIDs");
+		String parentFname=req.getParameter("parentFname");
+		String parentLname=req.getParameter("parentLname");
+		String parentPhone=req.getParameter("parentPhone");
+		String parentEmail=req.getParameter("parentEmail");
+		StudentTransaction studentTransaction=new StudentTransaction();
+		Student student=new Student();
+		student.setBatch_id(batchIDs);
+		student.setClass_id(userBean.getRegId());
+		student.setDiv_id(Integer.parseInt(divisionId));
+		student.setParentEmail(parentEmail);
+		student.setParentFname(parentFname);
+		student.setParentLname(parentLname);
+		student.setParentPhone(parentPhone);
+		student.setStudent_id(Integer.parseInt(studentID));
+		studentTransaction.addUpdateDb(student);
+		respObject.addProperty(STATUS,"success");
+	}else if("addStudentByManually".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		String divisionId=req.getParameter("divisionId");
+		String batchIDs=req.getParameter("batchIDs");
+		String parentFname=req.getParameter("parentFname");
+		String parentLname=req.getParameter("parentLname");
+		String parentPhone=req.getParameter("parentPhone");
+		String parentEmail=req.getParameter("parentEmail");
+		String studentFname=req.getParameter("studentFname");
+		String studentLname=req.getParameter("studentLname");
+		String studentPhone=req.getParameter("studentPhone");
+		String studentEmail=req.getParameter("studentEmail");
+		String dob=req.getParameter("dob");
+		String address=req.getParameter("address");
+		String city=req.getParameter("city");
+		String state=req.getParameter("state");
+		RegisterTransaction registerTransaction=new RegisterTransaction();
+		RegisterBean registerBean=new RegisterBean();
+		registerBean.setFname(studentFname);
+		registerBean.setMname(parentFname);
+		registerBean.setLname(studentLname);
+		registerBean.setPhone1(studentPhone);
+		registerBean.setEmail(studentEmail);
+		registerBean.setRole(3);
+		registerBean.setCity(city);
+		registerBean.setState(state);
+		registerBean.setAddr1(address);
+		registerBean.setDob(dob.replace("-", ""));
+		registerBean.setCountry("INDIA");
+		registerBean.setClassName("");
+		String username="";
+		String phone="";
+		if(!"".equals(studentPhone) && null != studentPhone){
+			phone=studentPhone;
+		}else{
+			phone=parentPhone;
+		}
+		int counter=1;
+		switch (counter) {
+		case 1:
+			username=(studentFname.charAt(0))+""+(studentLname.charAt(0))+""+phone;
+			if(registerTransaction.isUserExits(username)){
+				counter++;
+			}else{
+			break;
+			}
+		case 2:
+		    username=studentFname.charAt(0)+""+parentFname.charAt(0)+""+studentLname.charAt(0)+""+phone;
+			if(registerTransaction.isUserExits(username)){
+				counter++;
+			}else{
+			break;
+			}
+		case 3:
+		    username=studentFname+""+phone;
+			if(registerTransaction.isUserExits(username)){
+				counter++;
+			}else{
+			break;
+			}
+		}
+		registerBean.setLoginName(username);
+		registerBean.setLoginPass(new java.util.Date().getTime()+"");
+		registerTransaction.registerUser(registerBean);
+		registerBean=registerTransaction.getRegisteredUserByLoginID(username);
+		StudentTransaction studentTransaction=new StudentTransaction();
+		Student student=new Student();
+		student.setBatch_id(batchIDs);
+		student.setClass_id(userBean.getRegId());
+		student.setDiv_id(Integer.parseInt(divisionId));
+		student.setParentEmail(parentEmail);
+		student.setParentFname(parentFname);
+		student.setParentLname(parentLname);
+		student.setParentPhone(parentPhone);
+		student.setStudent_id(registerBean.getRegId());
+		studentTransaction.addUpdateDb(student);
+		respObject.addProperty(STATUS,"success");
+	}else if("fetchNamesForSuggestion".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		RegisterTransaction registerTransaction = new RegisterTransaction();
+		List<String> namesList = registerTransaction.getNamesForSuggestion(userBean.getRegId());
+		Gson gson = new Gson();
+		JsonElement jsonElement = gson.toJsonTree(namesList);
+		respObject.add("names",jsonElement);
+		respObject.addProperty(STATUS,"success");
+	}else if("getStudentByName".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		String studentName = req.getParameter("studentName");
+		String nameArray[] = studentName.split(" ");
+		String fname =nameArray[0];
+		String lname = "";
+		if(nameArray.length > 1){
+			lname = nameArray[1];
+		}
+		RegisterTransaction registerTransaction = new RegisterTransaction();
+		List<RegisterBean> namesList = registerTransaction.getStudentByName(userBean.getRegId(), fname, lname);
+		List<Integer> studentIDList = new ArrayList<Integer>();
+		if (namesList != null) {
+			for (int i = 0; i < namesList.size(); i++) {
+				studentIDList.add(namesList.get(i).getRegId());
+			}
+		}
+		StudentTransaction studentTransaction = new StudentTransaction();
+		List<Student> studentsList = studentTransaction.getStudentByStudentIDs(studentIDList, userBean.getRegId());
+		BatchTransactions batchTransactions=new BatchTransactions();
+		List<Batch> batchList = batchTransactions.getAllBatches(userBean.getRegId());
+		List<StudentDetails> studentDetailsList = new ArrayList<StudentDetails>();
+		DivisionTransactions divisionTransactions=new DivisionTransactions();
+		List<Division> division = divisionTransactions.getAllDivisions(userBean.getRegId());
+		if(studentsList != null){
+			for (int i = 0; i < studentsList.size(); i++) {
+				StudentDetails studentDetails=new StudentDetails();
+				namesList.get(i).setLoginPass("");
+				studentDetails.setStudentUserBean(namesList.get(i));
+				for (int j = 0; j < division.size(); j++) {
+					if(studentsList.get(i).getDiv_id() == division.get(j).getDivId())
+					{
+						studentDetails.setDivision(division.get(j));
+						break;
+					}
+				}
+				
+				String batchIDArray[] = studentsList.get(i).getBatch_id().split(",");
+				List<Batch> studentBatchList = new ArrayList<Batch>();
+				if(batchIDArray.length > 1){
+					for (int j = 0; j < batchIDArray.length; j++) {
+							for (int k = 0; k < batchList.size(); k++) {
+								if(Integer.parseInt(batchIDArray[j]) ==  batchList.get(k).getBatch_id()){
+									studentBatchList.add(batchList.get(k));
+									break;
+								}
+							}	
+					}
+				}else{
+					for (int k = 0; k < batchList.size(); k++) {
+						if(Integer.parseInt(batchIDArray[0]) ==  batchList.get(k).getBatch_id()){
+							studentBatchList.add(batchList.get(k));
+							break;
+						}
+					}
+				}
+				studentDetails.setBatches(studentBatchList);
+				studentDetailsList.add(studentDetails);
+			}
+		}
+		Gson gson = new Gson();
+		JsonElement jsonElement = gson.toJsonTree(studentDetailsList);
+		respObject.add("studentList", jsonElement);
+		respObject.addProperty(STATUS,"success");
+	}else if("getAllClasses".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		DivisionTransactions divisionTransactions = new DivisionTransactions();
+		List<Division> divisionList = divisionTransactions.getAllDivisions(userBean.getRegId());
+		 Gson gson=new Gson();
+		 JsonElement jsonElement = gson.toJsonTree(divisionList);
+		 respObject.add("instituteClasses", jsonElement);
+		 respObject.addProperty(STATUS,"success");
+	}else if("getSearchedQuestions".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		int inst_id = userBean.getRegId();
+		String division = req.getParameter("division");
+		String subject = req.getParameter("subject");
+		String questionType = req.getParameter("questionType");
+		int currentPage = Integer.parseInt(req.getParameter("currentPage"));
+		int marks = Integer.parseInt(req.getParameter("marks"));
+		int topic = Integer.parseInt(req.getParameter("topic"));
+		String deleteStatus = req.getParameter("deleteStatus");
+		int totalPages=0;
+		QuestionBankTransaction bankTransaction = new QuestionBankTransaction();
+		int totalCount=bankTransaction.getTotalSearchedQuestionCount(marks, Integer.parseInt(subject), inst_id, Integer.parseInt(division),topic,questionType);
+		if(currentPage==0 || "Y".equals(deleteStatus)){
+		if(totalCount>0){
+			int remainder=totalCount%50;
+			totalPages=totalCount/50;
+			if(remainder>0){
+				totalPages++;
+			}	
+		}
+		if(currentPage == 0){
+		currentPage=1;
+		}
+		
+		if(currentPage > totalPages){
+			currentPage=totalPages;
+			}
+		}
+		List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(marks, Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage,topic,questionType);
+		List<Integer> marksList=bankTransaction.getDistinctQuestionMarks(Integer.parseInt(subject), Integer.parseInt(division), inst_id,questionType);
+		List<ParagraphQuestion> paragraphQuestionList=new ArrayList<ParagraphQuestion>();
+		if("3".equals(questionType)){
+			UserStatic userStatic = userBean.getUserStatic();
+			for (int i = 0; i < questionbanks.size(); i++) {
+				String questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionbanks.get(i).getQue_id();
+				ParagraphQuestion questionData=(ParagraphQuestion) readObject(new File(questionPath));
+				paragraphQuestionList.add(questionData);
+			}
+		}
+		
+		Gson gson=new Gson();
+		 JsonElement jsonElement = gson.toJsonTree(questionbanks);
+		 JsonElement jsonMarksElement = gson.toJsonTree(marksList);
+		 JsonElement jsonParagraphQuestion = gson.toJsonTree(paragraphQuestionList);
+		 respObject.add("questionList", jsonElement);
+		 respObject.addProperty("totalPages",totalPages);
+		 respObject.addProperty("currentPage",currentPage);
+		 respObject.add("marks", jsonMarksElement);
+		 respObject.add("paragraphQuestion", jsonParagraphQuestion);
+		respObject.addProperty(STATUS,"success");
+	}else if("deleteQuestions".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		int inst_id = userBean.getRegId();
+		String division = req.getParameter("division");
+		String subject = req.getParameter("subject");
+		int questionNumber = Integer.parseInt(req.getParameter("questionNumber"));
+		String quesstatus = req.getParameter("quesstatus");
+		String questionType = req.getParameter("questionType");
+		if("".equals(quesstatus)){
+			if("3".equals(questionType)){
+			UserStatic userStatic = userBean.getUserStatic();
+			String questionPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
+			//uploadedMarks = (Integer) request.getSession().getAttribute("uploadedMarks");
+			File file = new File(questionPath);
+			if(file.exists()){
+				try {
+					delete(file);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			}
+			QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
+			bankTransaction.deleteQuestion(questionNumber, inst_id, Integer.parseInt(subject), Integer.parseInt(division));
+			}else{
+				QuestionBankTransaction questionBankTransaction=new QuestionBankTransaction();
+				boolean updateStatus=questionBankTransaction.updateDeleteQuestionStatus(questionNumber, inst_id,Integer.parseInt(subject), Integer.parseInt(division));
+		
+			}
 	}
 		printWriter.write(respObject.toString());
+	}
+	
+	private Object readObject(File file) {
+		Object object = null;
+		FileInputStream fin = null;
+		ObjectInputStream objectInputStream = null;
+		try{
+			fin = new FileInputStream(file);
+			objectInputStream = new ObjectInputStream(fin);
+			object =  objectInputStream.readObject();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=objectInputStream)try {objectInputStream.close();} catch (IOException e) {e.printStackTrace();}
+			if(null!=fin)try {fin.close();} catch (IOException e) {e.printStackTrace();}
+		}
+		return object;
 	}
 	
 	public String getFormattedTime(int hour,int minute) {

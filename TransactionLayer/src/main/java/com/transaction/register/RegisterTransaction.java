@@ -53,9 +53,9 @@ public class RegisterTransaction {
 		return registerBeans;
 	}
 	
-	public List getStudentsInfo(List StudentIDs,int pagenumber,int resultPerPage) {
+	public List getStudentsInfo(List StudentIDs,int resultPerPage) {
 		RegisterDB db=new RegisterDB();
-		List list=db.getStudentInfo(StudentIDs,pagenumber,resultPerPage);
+		List list=db.getStudentInfo(StudentIDs,resultPerPage);
 		return list;
 	}
 	public List getStudents(List StudentIDs) {
@@ -108,6 +108,11 @@ public class RegisterTransaction {
 			String status = registerUser.registerUser(registerRequest);
 			return status;
 		}
+	}
+	
+	public String registerUser(RegisterBean registerRequest){
+		RegisterUser registerUser=new RegisterUser();
+		return registerUser.registerUser(registerRequest);
 	}
 	
 	public boolean isEmailAndMobileValid(String email,String phone) {
@@ -172,6 +177,21 @@ public class RegisterTransaction {
 	public RegisterBean getRegisteredTeacher(String username,String email) {
 		RegisterDB registerDB=new RegisterDB();
 		return registerDB.getRegisteredTeacher(username, email);
+	}
+	
+	public RegisterBean getRegisteredUserByLoginID(String username) {
+		RegisterDB registerDB=new RegisterDB();
+		return registerDB.getRegisteredUserByLoginID(username);
+	}
+	
+	public List<String> getNamesForSuggestion(int inst_id) {
+		RegisterDB registerDB=new RegisterDB();
+		return registerDB.getNamesForSuggestion(inst_id);
+	}
+	
+	public List<RegisterBean> getStudentByName(int inst_id,String fname,String lname) {
+		RegisterDB registerDB=new RegisterDB();
+		return registerDB.getStudentByNames(inst_id, fname, lname);
 	}
 	}
 	

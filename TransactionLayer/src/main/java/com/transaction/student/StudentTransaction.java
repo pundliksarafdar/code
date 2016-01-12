@@ -148,4 +148,14 @@ public class StudentTransaction {
 		StudentDB studentDB=new StudentDB();
 		return studentDB.getStudentByStudentID(studentID,class_id);
 	}
+	
+	public Student getStudentByStudentID(int studentID,int class_id) {
+		StudentDB studentDB=new StudentDB();
+		return studentDB.getStudentByStudentID(studentID,class_id);
+	}
+	
+	public List<Student> getStudentByStudentIDs(List<Integer> studentID,int class_id) {
+		StudentDB studentDB=new StudentDB();
+		return studentDB.getStudentByStudentIDs(studentID,class_id);
+	}
 }

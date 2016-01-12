@@ -130,7 +130,7 @@ public class EditExamAction extends BaseAction{
 		QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
 		SubjectTransaction subjectTransaction=new SubjectTransaction();
 		compExams=examTransaction.getAllCompExamList();
-		marks=bankTransaction.getDistinctQuestionMarks(Integer.parseInt(subject), Integer.parseInt(division), inst_id);
+		marks=bankTransaction.getDistinctQuestionMarks(Integer.parseInt(subject), Integer.parseInt(division), inst_id,"1");
 		repeatation=bankTransaction.getDistinctQuestionRep(Integer.parseInt(subject), Integer.parseInt(division), inst_id);
 		topics=subjectTransaction.getTopics(inst_id, Integer.parseInt(subject), Integer.parseInt(division));
 		if("showaddedquestions".equals(actionname) || "editexam".equals(actionname)){
@@ -175,7 +175,7 @@ public class EditExamAction extends BaseAction{
 		}
 		
 		if(currentPage==0){
-			int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(selectedRep), selectedExamID, Integer.parseInt(selectedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),Integer.parseInt(selectedTopic));
+			int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(selectedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),Integer.parseInt(selectedTopic),"1");
 			if(totalCount>0){
 				int remainder=totalCount%50;
 				totalPages=totalCount/50;
@@ -186,7 +186,7 @@ public class EditExamAction extends BaseAction{
 			currentPage=1;
 			}
 			if("true".equals(questionedit)){
-				int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(searchedRep), searchedExam, Integer.parseInt(searchedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),Integer.parseInt(searchedTopic));
+				int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(searchedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),Integer.parseInt(searchedTopic),"1");
 				if(totalCount>0){
 					int remainder=totalCount%2;
 					totalPages=totalCount/2;
@@ -201,7 +201,7 @@ public class EditExamAction extends BaseAction{
 				currentPage--;
 			}
 		
-		List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(Integer.parseInt(searchedRep), searchedExam, Integer.parseInt(searchedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage,Integer.parseInt(searchedTopic));
+		List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions( Integer.parseInt(searchedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage,Integer.parseInt(searchedTopic),"1");
 		UserStatic userStatic = userBean.getUserStatic();
 		String questionPath = "";
 		if(questionbanks!=null)
@@ -294,7 +294,7 @@ public class EditExamAction extends BaseAction{
 			}
 			
 			if(currentPage==0){
-				int totalCount=bankTransaction.getTotalSearchedQuestionCount(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),-1);
+				int totalCount=bankTransaction.getTotalSearchedQuestionCount(-1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),-1,"1");
 				if(totalCount>0){
 					int remainder=totalCount%50;
 					totalPages=totalCount/50;
@@ -305,7 +305,7 @@ public class EditExamAction extends BaseAction{
 				currentPage=1;
 				}
 				if("true".equals(questionedit)){
-					int totalCount=bankTransaction.getTotalSearchedQuestionCount(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),-1);
+					int totalCount=bankTransaction.getTotalSearchedQuestionCount(-1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),-1,"1");
 					if(totalCount>0){
 						int remainder=totalCount%2;
 						totalPages=totalCount/2;
@@ -320,7 +320,7 @@ public class EditExamAction extends BaseAction{
 					currentPage--;
 				}
 			
-			List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage,-1);
+			List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(-1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage,-1,"1");
 			UserStatic userStatic = userBean.getUserStatic();
 			String questionPath = "";
 			if(questionbanks!=null)

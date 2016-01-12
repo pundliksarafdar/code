@@ -38,6 +38,32 @@ public class RegisterUser {
 	
 	}
 	
+	public String registerUser(RegisterBean registerRequest){
+		AppLogger.logger("");
+		final String success = "success";
+		Gson gson = new Gson();
+		String errorMessage = success;
+		
+		Session session = HibernateUtil.getSessionfactory().openSession();
+		session.beginTransaction();
+		
+		try{
+			session.save(registerRequest);
+			session.getTransaction().commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			session.getTransaction().rollback();
+			errorMessage = formatMessage(e.getCause().getMessage());
+			return errorMessage;
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return errorMessage;
+
+}
+	
 	public String formatMessage(String message){
 		String errorMessage = "";
 		String duplicate = "Duplicate";

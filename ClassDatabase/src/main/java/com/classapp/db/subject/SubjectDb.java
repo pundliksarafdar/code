@@ -439,8 +439,9 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 					}
 				}
 			}
+			if(subjectIds.size()>0){
 			subjectlist=getSubjectList(subjectIds);
-			
+			}
 		}
 		}catch(Exception e){
 			e.printStackTrace();
