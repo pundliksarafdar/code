@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -28,8 +29,10 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.spi.HttpRequest;
 
 import com.config.Constants;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
-@Path("/classownerserviceold")
+@Path("/commonservices")
 public class CorexServiceApi extends ServiceBase{
 	
 	private static final String UPLOADED_FILE_PATH = "C:"+File.separatorChar+"imageuploaded"+File.separatorChar;
@@ -100,6 +103,7 @@ public class CorexServiceApi extends ServiceBase{
 	@POST
 	@Path("/uploadImageTemp")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.MULTIPART_FORM_DATA)
 	public Response uploadImageTemp(MultipartFormDataInput input){
 		String fileName="";
 		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
@@ -111,7 +115,11 @@ public class CorexServiceApi extends ServiceBase{
 				 	
 				MultivaluedMap<String, String> header = inputPart.getHeaders();
 				fileName = getFileName(header);
-
+				
+				//Extract file extention and replace filename with fileid
+				int extentionStart = fileName.lastIndexOf(".");
+				String fileId = UUID.randomUUID().toString()+getRegId();
+				fileName = fileId+fileName.substring(extentionStart);
 				//convert the uploaded file to inputstream
 				InputStream inputStream = inputPart.getBody(InputStream.class,null);
 
@@ -127,15 +135,18 @@ public class CorexServiceApi extends ServiceBase{
 				}
 				
 				//Above generated folder will be used to save the image temparirily on successfull call files will be moved to main folder and old files will be deleted
-				fileName = Constants.STORAGE_PATH + File.separatorChar+ "imageTemp" + File.separatorChar + getRegId() + fileName ;
+				String filePath = Constants.STORAGE_PATH + File.separatorChar+ "imageTemp" + File.separatorChar + getRegId() + fileName ;
 					
-				writeFile(bytes,fileName);
+				writeFile(bytes,filePath);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
 			}
-		return Response.status(200).entity("success").build();
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("fileid", fileName);
+		//jsonObject.
+		return Response.status(200).entity(jsonObject.toString()).type(MediaType.APPLICATION_JSON).build();
 	}
 	
 	/**

@@ -279,21 +279,37 @@ padding-top: 2px;
 			if($(input).parents("div.addMorebuttonImageWrapper").find("#optionImagesDiv").find(".row").length == 0){
 				$(input).parents("div.addMorebuttonImageWrapper").find("#optionImagesDiv").append("<div class='row'></div>");
 			}
+			
+			/*Upload and display image*/
 			for(var index=0;index<input.files.length;index++){
+			
 			if ( input.files && input.files[0] ) {
 	        var FR= new FileReader();
 	        FR.onload = function(e) {
+				var handler = {}
+				
 				var imgTag = "<img src='"+e.target.result+"' width='200px' height='200px' />";
-				var hiddenTag = "<input type='hidden' value='"+e.target.result+"' name='optionImagesPrev'/>";
+				var hiddenTag = "<input type='hidden' id='imageOption"+index+"' value='"+e.target.result+"' name='optionImagesPrev'/>";
 				var closeButton = '<button type="button" class="answer_image_with_btn_remove close" aria-hidden="true">&times;</button>';
-				var imageColElement = "<div class='col-sm-3 image_with_btn'>"+closeButton+imgTag+hiddenTag+"</div>"
+				var loadingMessage = '<div id=loading'+index+'><img src="images/ajax-loader.gif"/>&nbsp;&nbsp;Loading</div>'
+				var imageColElement = "<div class='col-sm-3 image_with_btn'>"+closeButton+imgTag+hiddenTag+loadingMessage+"</div>"
 				var imageRow = $(input).parents("div.addMorebuttonImageWrapper").find("#optionImagesDiv .row");
 				imageRow.append(imageColElement);	
-				
-				
+					
+				handler.success=function(successResp){
+					console.log(successResp);
+					$("#loading"+index).remove();
+					console.log(successResp.fileid,typeof successResp);
+					$("#imageOption"+index).val(successResp.fileid);
+				}
+				handler.error=function(e){console.log("Error",e)}
+				rest.uploadImageFile(input ,handler,false);
+
 	        };
 				FR.readAsDataURL( input.files[index] );
 			}
+			
+			
 	    }
 		}
 		
