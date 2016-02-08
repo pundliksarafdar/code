@@ -452,5 +452,12 @@
 			<result name="success" type="tiles">classowner.viewstudent</result>
 			<result name="error" type="tiles">register</result>
 		</action>
+		
+		<!-- New exam functions -->
+		
+		<action name="manageExam" class="com.classowner.ManageAllExamFunctionAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.ManageAllExamFunctionAction</result>
+		</action>
 	</package>
 </struts>

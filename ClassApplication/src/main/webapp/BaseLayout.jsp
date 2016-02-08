@@ -257,7 +257,8 @@ function storeMenuSelected(){
 	<div id="outerDiv">
 		<div id="innerDiv">
 			<div id="header">
-				<div>				
+				
+				<div>
 					<tiles:insertAttribute name="topnav" />				
 				</div>
 					<br/>							

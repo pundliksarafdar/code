@@ -42,8 +42,8 @@ $.fn.validateCustome = function(globalOption){
 		}else{
 			msgStr = validationMessage;
 		}
-		if($(elm).val().trim().length == 0){
-			$(elm).prev('.validation-message').removeClass('hide').html(msgStr);
+		if(elm.val().trim().length == 0){
+			elm.prev('.validation-message').removeClass('hide').html(msgStr);
 			return false;
 		}
 		return true;
@@ -57,10 +57,10 @@ $.fn.validateCustome = function(globalOption){
 			msgStr = validationMessage.replace("{[val]}",value);
 		}
 		
-		var elmVal = isNaN(parseInt($(elm).val()))?0:parseInt($(elm).val());
+		var elmVal = isNaN(parseInt(elm.val()))?0:parseInt(elm.val());
 		var attrVal = isNaN(parseInt(value))?0:parseInt(value);
 		if(elmVal < attrVal){
-			$(elm).prev('.validation-message').removeClass('hide').html(msgStr);			
+			elm.prev('.validation-message').removeClass('hide').html(msgStr);			
 			return false;
 		}
 		return true;
@@ -73,17 +73,17 @@ $.fn.validateCustome = function(globalOption){
 		}else{
 			msgStr = validationMessage.replace("{[val]}",value);
 		}
-		var elmVal = isNaN(parseInt($(elm).val()))?0:parseInt($(elm).val());
+		var elmVal = isNaN(parseInt(elm.val()))?0:parseInt(elm.val());
 		var attrVal = isNaN(parseInt(value))?0:parseInt(value);
 		if(elmVal > attrVal){
-			$(elm).prev('.validation-message').removeClass('hide').html(msgStr);			
+			elm.prev('.validation-message').removeClass('hide').html(msgStr);			
 			return false;
 		}
 		return true;
 	}
 	
 	var mandatorySelectionValidation = function(elm,value,validationMessage){
-		var selectedLength = $(elm).find("input[type='checkbox']:checked").length;
+		var selectedLength = elm.find("input[type='checkbox']:checked").length;
 		mandateSelValue = isNaN(parseInt(value))?0:parseInt(value);
 		if(selectedLength<mandateSelValue){
 			var msgStr;
@@ -93,7 +93,7 @@ $.fn.validateCustome = function(globalOption){
 				msgStr = validationMessage.replace("{[val]}",value);
 			}
 			
-			$($(elm).find('.validation-message').get(0)).html(msgStr).removeClass("hide");	
+			$(elm.find('.validation-message').get(0)).html(msgStr).removeClass("hide");	
 			return false;
 		}
 		return true;

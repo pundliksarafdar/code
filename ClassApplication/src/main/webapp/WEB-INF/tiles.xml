@@ -526,4 +526,8 @@
       <put-attribute name="title"  value="Manage Student"/>
       <put-attribute name="body"   value="/ClassOwner/ViewStudent.jsp"/>      
    </definition>
+   <definition name="classowner.ManageAllExamFunctionAction" extends="baseLayout">
+      <put-attribute name="title"  value="Manage Exam"/>
+      <put-attribute name="body"   value="/ClassOwner/ManageAllExamFunction.jsp"/>      
+   </definition>
 </tiles-definitions>

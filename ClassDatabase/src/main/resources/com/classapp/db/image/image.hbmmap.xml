@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.image.Image" table="image" catalog="classdb">
+	    <property name="imageid" type="string">
+            <column name="imageid" />
+        </property>
+        <property name="imagetype" type="string">
+            <column name="imagetype"/>
+        </property>
+        <property name="imagename" type="string">
+            <column name="imagename"/>
+        </property>
+    </class>
+</hibernate-mapping>
