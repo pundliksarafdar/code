@@ -31,9 +31,9 @@ public class ImageTransactions {
 		}
 		ImageDB imageDB = new ImageDB();
 		Image image = new Image();
-		image.setImageid("200");
-		image.setImagename("Donashe");
-		image.setImagetype("typo");
+		image.setImage_id("200");
+		image.setImage_name("Donashe");
+		image.setImage_type("typo");
 		imageDB.save(image);
 	}
 	

@@ -327,6 +327,7 @@ function RenderTimer(completedTime,totalTime){
 	            <li><a class="menuoptions" href="/choosesubject?forwardAction=listExam&batchDefault=true">Search Exam</a></li>
 	            <li><a class="menuoptions" href="choosesubject?forwardAction=attemptexamlist">Attempt Exam</a></li>
 	            <li><a class="menuoptions" href="choosesubject?forwardAction=studentexammarks">Exam marks</a></li>
+	            <li><a class="menuoptions" href="createExamPatten">Exam</a></li>
 	         </ul>
       </li>
       </cx:versionswitch>
