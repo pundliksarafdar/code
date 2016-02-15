@@ -464,5 +464,10 @@
 			method="execute">
 			<result name="startcreatingpattern" type="tiles">classowner.startcreatingpattern</result>
 		</action>
+		<action name="viewneditpattern" class="com.exam.ViewNEditPatternAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.viewneditpattern</result>
+		</action>
+		
 	</package>
 </struts>
