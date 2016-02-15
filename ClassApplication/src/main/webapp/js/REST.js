@@ -14,6 +14,7 @@ function REST(){
 			   url: uri,
 			   type:"POST",
 			   data:data,
+			   contentType: "application/json",
 			   global:global,
 			   success:handlers.success,
 			   error:handlers.error

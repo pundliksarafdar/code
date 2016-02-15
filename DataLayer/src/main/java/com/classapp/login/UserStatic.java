@@ -13,6 +13,7 @@ public class UserStatic {
 	private String storageSpace;
 	private String examPath;
 	private String notesPath;
+	private String patternPath;
 	
 	private Set<String> alarms;
 	
@@ -72,6 +73,12 @@ public class UserStatic {
 	}
 	public void setNotesPath(String notesPath) {
 		this.notesPath = notesPath;
+	}
+	public String getPatternPath() {
+		return this.storageSpace+File.separator+"pattern";
+	}
+	public void setPatternPath(String patternPath) {
+		this.patternPath = patternPath;
 	}
 	
 	

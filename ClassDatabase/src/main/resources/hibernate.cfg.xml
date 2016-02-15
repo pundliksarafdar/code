@@ -56,6 +56,7 @@
  		<mapping resource="com/classapp/db/advertisement/Advertisement.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/institutestats/InstituteStats.hbmmap.xml"></mapping> 
  		<mapping resource="com/classapp/db/image/image.hbmmap.xml"></mapping>
+ 		<mapping resource="com/classapp/db/pattern/QuestionPaperPattern.hbmmap.xml"></mapping>
        <!--  <mapping resource="com/classapp/db/classwithsubjects/ClassWithSubjects.hbmmap.xml"></mapping> --> 
     </session-factory>
 </hibernate-configuration>
