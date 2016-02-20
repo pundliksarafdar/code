@@ -261,6 +261,7 @@ var generatePattern = function(){
 	var alternateValue = 0;
 	var preAlternateValue = 0;
 	var questionPaperStructure = [];
+	var patternType = $("#patternType").val();
 	$.each($(".sectionUl"),function(key,elm){
 		var itemType = $(elm).attr("data-item-type");
 		var itemId = $(elm).attr(ID);
@@ -268,6 +269,7 @@ var generatePattern = function(){
 		var itemString = $($(elm).find(".sectionInfo")).find(ITEM_NAME).val();
 		var itemMarks = $($(elm).find(".sectionInfo")).find(ITEM_MARKS).val();
 		var subject = $($(elm).find(".sectionInfo")).find(".createExamSelectQuestionSubject").val();
+		
 		var examPatternObject = new ExamPatternObject();
 		examPatternObject.item_type = itemType;
 		examPatternObject.item_id = itemId;
@@ -277,24 +279,17 @@ var generatePattern = function(){
 		examPatternObject.item_no = "-1";
 		examPatternObject.question_type = "-1";
 		examPatternObject.question_topic = "-1";
-		if($(elm).closest("li").next("li").hasClass("ORClass"))
+		if($(elm).closest("li").prev("li").hasClass("ORClass"))
 		{
-			if(preAlternateValue != 0){
+			preAlternateValue = $($(elm).closest("li").prev("li")).prev("li").find("ul").attr("alternateValue");
 			examPatternObject.alternate_value = preAlternateValue;
-			}else{
-				examPatternObject.alternate_value = ++alternateValue;
-				preAlternateValue = alternateValue;
-			}
-		}else if($(elm).closest("li").prev("li").hasClass("ORClass"))
+			$(elm).attr("alternateValue",preAlternateValue);
+		}else if($(elm).closest("li").next("li").hasClass("ORClass"))
 		{
-			if(preAlternateValue != 0){
-			examPatternObject.alternate_value = preAlternateValue;
-			}else{
-				examPatternObject.alternate_value = ++alternateValue;
-				preAlternateValue = alternateValue;
-			}
+			$(elm).attr("alternateValue",++alternateValue);
+			examPatternObject.alternate_value = alternateValue;
 		}else{
-			preAlternateValue = 0;
+			$(elm).attr("alternateValue",0);
 			examPatternObject.alternate_value = 0;
 		}
 		examPatternObject.subject_id = subject;
@@ -313,8 +308,7 @@ var generatePattern = function(){
 		var questionNo = $(elm).find("#questionNo").val();
 		var createExamSelectQuestionType = $(elm).find("#createExamSelectQuestionType").val();
 		var createExamSelectQuestionTopic = $(elm).find("#createExamSelectQuestionTopic").val();
-		var subject = $(elm).find("#createExamSelectQuestionSubject").val();
-			
+		var subject = $(elm).find("#createExamSelectQuestionSubject").val();	
 		var examPatternObject = new ExamPatternObject();
 		examPatternObject.item_type = itemType;
 		examPatternObject.item_id = itemId;
@@ -325,24 +319,17 @@ var generatePattern = function(){
 		examPatternObject.question_topic = createExamSelectQuestionTopic;
 		examPatternObject.item_no = questionNo;
 		
-		if($(elm).closest("li").next("li").hasClass("ORClass"))
+		if($(elm).closest("li").prev("li").hasClass("ORClass"))
 		{
-			if(preAlternateValue != 0){
+			preAlternateValue = $($(elm).closest("li").prev("li")).prev("li").find("ul").attr("alternateValue");
 			examPatternObject.alternate_value = preAlternateValue;
-			}else{
-				examPatternObject.alternate_value = ++alternateValue;
-				preAlternateValue = alternateValue;
-			}
-		}else if($(elm).closest("li").prev("li").hasClass("ORClass"))
+			$(elm).attr("alternateValue",preAlternateValue);
+		}else if($(elm).closest("li").next("li").hasClass("ORClass"))
 		{
-			if(preAlternateValue != 0){
-			examPatternObject.alternate_value = preAlternateValue;
-			}else{
-				examPatternObject.alternate_value = ++alternateValue;
-				preAlternateValue = alternateValue;
-			}
+			$(elm).attr("alternateValue",++alternateValue);
+			examPatternObject.alternate_value = alternateValue;
 		}else{
-			preAlternateValue = 0;
+			$(elm).attr("alternateValue",0);
 			examPatternObject.alternate_value = 0;
 		}
 		examPatternObject.subject_id = subject;
@@ -362,6 +349,7 @@ var generatePattern = function(){
 	QuestionPaperPattern.class_id = $("#division").val();
 	QuestionPaperPattern.sub_id = $("#subject").val();
 	QuestionPaperPattern.marks = $("#totalMarks").val();
+	QuestionPaperPattern.pattern_type = patternType;
 	QuestionPaperPattern.questionPaperStructure = questionPaperStructure;
 	var QuestionPaperPatternJson = JSON.stringify(QuestionPaperPattern);
 	rest.post("rest/classownerservice/addQuestionPaperPattern",handlers,QuestionPaperPatternJson,false);

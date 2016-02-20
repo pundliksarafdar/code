@@ -10,6 +10,7 @@ public class QuestionPaperPattern implements Serializable {
 	int sub_id;
 	int inst_id;
 	int marks;
+	String pattern_type;
 	List<QuestionPaperStructure> questionPaperStructure;
 	public int getPattern_id() {
 		return pattern_id;
@@ -46,6 +47,12 @@ public class QuestionPaperPattern implements Serializable {
 	}
 	public void setMarks(int marks) {
 		this.marks = marks;
+	}
+	public String getPattern_type() {
+		return pattern_type;
+	}
+	public void setPattern_type(String pattern_type) {
+		this.pattern_type = pattern_type;
 	}
 	public List<QuestionPaperStructure> getQuestionPaperStructure() {
 		return questionPaperStructure;

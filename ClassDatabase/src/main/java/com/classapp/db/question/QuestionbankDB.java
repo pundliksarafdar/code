@@ -17,6 +17,7 @@ import com.classapp.db.exam.Exam;
 import com.classapp.db.notificationpkg.Notification;
 import com.classapp.persistence.HibernateUtil;
 import com.datalayer.exam.QuestionSearchRequest;
+import com.service.beans.GenerateQuestionPaperServicebean;
 
 public class QuestionbankDB {
 public int saveQuestion(Questionbank questionbank) {
@@ -458,6 +459,32 @@ public List<QuestionSearchRequest> getCriteriaQuestion(int sub_id,int inst_id,in
 		}
 		List<Integer> questionList = criteria.list();
 	list.get(i).setQuestionId(questionList);
+	}
+	transaction.commit();
+	session.close();
+return list;
+}
+
+public List<GenerateQuestionPaperServicebean> getQuestionsForGenerateExam(int inst_id,int div_id,List<GenerateQuestionPaperServicebean> list) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	for (int i = 0; i < list.size(); i++) {
+	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.property("que_id")).addOrder(Order.asc("created_dt"));
+	Criterion criterion = Restrictions.eq("inst_id", inst_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("sub_id", list.get(i).getSubject_id());
+	criteria.add(criterion);
+	criterion = Restrictions.eq("div_id", div_id);
+	criteria.add(criterion);
+	
+		if(list.get(i).getMarks()!=-1){
+			criteria.add(Restrictions.eq("marks", list.get(i).getMarks()));
+		}
+		
+		List<Integer> questionList = criteria.list();
+	list.get(i).setQuestion_ids(questionList);
 	}
 	transaction.commit();
 	session.close();

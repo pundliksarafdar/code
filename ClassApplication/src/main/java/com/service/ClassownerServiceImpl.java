@@ -3,7 +3,10 @@ package com.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -19,11 +22,17 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
 
+import com.classapp.db.subject.Subject;
+import com.classapp.db.subject.Topics;
 import com.config.Constants;
 import com.service.beans.AddBatchBean;
+import com.service.beans.GenerateQuestionPaperResponse;
 import com.service.beans.ImageListBean;
 import com.service.beans.QuestionPaperPattern;
+import com.service.beans.QuestionPaperStructure;
+import com.service.beans.SubjectsWithTopics;
 import com.serviceinterface.ClassownerServiceApi;
+import com.tranaction.subject.SubjectTransaction;
 import com.transaction.image.ImageTransactions;
 import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
 import com.user.UserBean;
@@ -73,6 +82,20 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	}
 	
 	@POST
+	@Path("/updateQuestionPaperPattern")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateQuestionPaperPattern(QuestionPaperPattern examPattern){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId());
+		boolean patternStatus= patternTransaction.updateQuestionPaperPattern(examPattern);
+		if(patternStatus == false){
+			return Response.status(Status.OK).entity(patternStatus).build();
+		}
+		return Response.status(Status.OK).entity(patternStatus).build();
+	}
+	
+	@POST
 	@Path("/searchQuestionPaperPattern/{division}/{patternType}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response searchQuestionPaperPattern(@PathParam("division") String division,@PathParam("patternType") String patternType){
@@ -90,6 +113,51 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId());
 		QuestionPaperPattern questionPaperPattern = patternTransaction.getQuestionPaperPattern(Integer.parseInt(division), Integer.parseInt(patternId));
 		return Response.status(Status.OK).entity(questionPaperPattern).build();
+	}
+	
+	@POST
+	@Path("/deleteQuestionPaperPattern/{division}/{patternid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteQuestionPaperPattern(@PathParam("division") String division,@PathParam("patternid") String patternId){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId());
+		boolean status = patternTransaction.deleteQuestionPaperPattern(Integer.parseInt(division), Integer.parseInt(patternId));
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Path("/generateQuestionPaper/{division}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response generateQuestionPaper(@PathParam("division") String division,List<QuestionPaperStructure> paperStructure){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		List<GenerateQuestionPaperResponse> questionPaperResponseList=patternTransaction.generateQuestionPaper(Integer.parseInt(division), paperStructure);
+		return Response.status(Status.OK).entity(questionPaperResponseList).build();
+	}
+	
+	@POST
+	@Path("/getSubjectsAndTopics/{division}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSubjectsAndTopics(@PathParam("division") String division){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId());
+		SubjectTransaction subjectTransaction = new SubjectTransaction();
+		List<Subject> list = subjectTransaction.getSubjectRelatedToDiv(Integer.parseInt(division), userBean.getRegId());
+		Map<Integer, SubjectsWithTopics> map = new HashMap<Integer,SubjectsWithTopics>();
+		if(list != null){
+			if(list.size() > 0){
+				
+				for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+					Subject subject = (Subject) iterator.next();
+					List<Topics> topics = subjectTransaction.getTopics(userBean.getRegId(), subject.getSubjectId(), Integer.parseInt(division));
+					SubjectsWithTopics subjectsWithTopics = new SubjectsWithTopics();
+					subjectsWithTopics.setSubject(subject);
+					subjectsWithTopics.setTopics(topics);
+					map.put(subject.getSubjectId(), subjectsWithTopics);
+				}
+			}
+		}
+		return Response.status(Status.OK).entity(map).build();
 	}
 	
 	@POST

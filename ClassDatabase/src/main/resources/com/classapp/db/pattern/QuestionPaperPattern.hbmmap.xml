@@ -23,5 +23,8 @@
          <property name="marks" type="int">
             <column name="marks"/>
         </property>  
+        <property name="pattern_type" type="string">
+            <column name="pattern_type"/>
+        </property> 
         </class>
 </hibernate-mapping>

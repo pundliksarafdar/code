@@ -9,6 +9,7 @@ public class QuestionPaperPattern implements Serializable{
 	int pattern_id;
 	String pattern_name;
 	int marks;
+	String pattern_type;
 	public int getInst_id() {
 		return inst_id;
 	}
@@ -44,6 +45,12 @@ public class QuestionPaperPattern implements Serializable{
 	}
 	public void setMarks(int marks) {
 		this.marks = marks;
+	}
+	public String getPattern_type() {
+		return pattern_type;
+	}
+	public void setPattern_type(String pattern_type) {
+		this.pattern_type = pattern_type;
 	}
 	
 	
