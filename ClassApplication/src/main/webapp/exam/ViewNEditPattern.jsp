@@ -472,6 +472,7 @@ function recursiveEdit(questionPaperPatternArray,newQuestionPaperPatternArray,ed
 			var itemMarks = newQuestionPaperPatternArray[i].item_marks;
 			var subject_id = newQuestionPaperPatternArray[i].subject_id;
 			var question_topic = newQuestionPaperPatternArray[i].question_topic;
+			var question_type =  newQuestionPaperPatternArray[i].question_type;
 			editString = editString + '<div class="row">'+
 			'<div class="col-md-1">'+
 			'<input type="text" id="questionNo" placeholder="Que No" class="form-control" value="'+itemNo+'">'+
@@ -483,11 +484,25 @@ function recursiveEdit(questionPaperPatternArray,newQuestionPaperPatternArray,ed
 			'</div>'+
 			'<div class="col-md-2">'+
 			'<select class="form-control" id="createExamSelectQuestionType">'+
-			'<option value="-1">Question Type</option>'+
-			'<option value="1">Subjective</option>'+
+			'<option value="-1">Question Type</option>';
+			if( question_type == "1"){
+				editString = editString +'<option value="1" selected>Subjective</option>'+
 			'<option value="2">Objective</option>'+
-			'<option value="3">Paragraph</option>'+
-			'</select>'+
+			'<option value="3">Paragraph</option>';
+			}else if( question_type == "2"){
+				editString = editString + '<option value="1">Subjective</option>'+
+				'<option value="2" selected>Objective</option>'+
+				'<option value="3">Paragraph</option>';
+			}else if( question_type == "3"){
+				editString = editString + '<option value="1">Subjective</option>'+
+				'<option value="2">Objective</option>'+
+				'<option value="3" selected>Paragraph</option>';
+			}else{
+				editString = editString + '<option value="1">Subjective</option>'+
+				'<option value="2">Objective</option>'+
+				'<option value="3">Paragraph</option>';
+			}
+			editString = editString + '</select>'+
 			'</div>'+
 			'<div class="col-md-2">'+
 			'<select class="form-control createExamSelectQuestionSubject" id="createExamSelectQuestionSubject">'+
@@ -707,6 +722,11 @@ function generatePattern(){
 	handlers.success = function(e){if(e==false){
 		$("#examPatternNameError").html("Pattern with same name already available");
 	}else {
+		$("#viewPatternDiv").hide();
+		$("#patternListTableDiv").show();
+		$("#editPatternDiv").hide();
+		$(".actionOptionWS").hide();
+		$(".actionOptionWOS").hide();	
 		$("#patternUpdatedNotification").modal("toggle");}
 	}
 	handlers.error = function(e){console.log("Error",e)}

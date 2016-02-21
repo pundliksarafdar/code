@@ -101,7 +101,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	public Response searchQuestionPaperPattern(@PathParam("division") String division,@PathParam("patternType") String patternType){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId());
-		List<QuestionPaperPattern> questionPaperPatternList = patternTransaction.getQuestionPaperPatternList(Integer.parseInt(division));
+		List<QuestionPaperPattern> questionPaperPatternList = patternTransaction.getQuestionPaperPatternList(Integer.parseInt(division),patternType);
 		return Response.status(Status.OK).entity(questionPaperPatternList).build();
 	}
 	
@@ -131,8 +131,8 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	public Response generateQuestionPaper(@PathParam("division") String division,List<QuestionPaperStructure> paperStructure){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
-		List<GenerateQuestionPaperResponse> questionPaperResponseList=patternTransaction.generateQuestionPaper(Integer.parseInt(division), paperStructure);
-		return Response.status(Status.OK).entity(questionPaperResponseList).build();
+		GenerateQuestionPaperResponse questionPaperResponse=patternTransaction.generateQuestionPaper(Integer.parseInt(division), paperStructure);
+		return Response.status(Status.OK).entity(questionPaperResponse).build();
 	}
 	
 	@POST

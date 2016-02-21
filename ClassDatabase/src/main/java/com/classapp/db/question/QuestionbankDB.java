@@ -482,6 +482,9 @@ public List<GenerateQuestionPaperServicebean> getQuestionsForGenerateExam(int in
 		if(list.get(i).getMarks()!=-1){
 			criteria.add(Restrictions.eq("marks", list.get(i).getMarks()));
 		}
+		if(!"-1".equals(list.get(i).getQuestion_type())){
+			criteria.add(Restrictions.eq("que_type", list.get(i).getQuestion_type()));
+		}
 		
 		List<Integer> questionList = criteria.list();
 	list.get(i).setQuestion_ids(questionList);

@@ -81,7 +81,7 @@ public class QuestionPaperPatternDB {
 	}
 	
 	
-	public List<QuestionPaperPattern> getQuestionPaperPatternList(int inst_id,int div_id) {
+	public List<QuestionPaperPattern> getQuestionPaperPatternList(int inst_id,int div_id,String pattern_type) {
 		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
@@ -91,6 +91,10 @@ public class QuestionPaperPatternDB {
 		criteria.add(criterion);
 		criterion = Restrictions.eq("div_id", div_id);
 		criteria.add(criterion);
+		if(!"-1".equals(pattern_type)){
+			criterion = Restrictions.eq("pattern_type", pattern_type);
+			criteria.add(criterion);
+		}
 		List<QuestionPaperPattern> questionPaperPatternList = criteria.list();
 		if(session!=null){
 			session.close();

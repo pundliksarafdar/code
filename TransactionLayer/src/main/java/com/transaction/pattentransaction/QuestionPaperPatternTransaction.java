@@ -24,6 +24,7 @@ import com.classapp.logger.AppLogger;
 import com.classapp.persistence.Constants;
 import com.datalayer.exam.ParagraphQuestion;
 import com.service.beans.GenerateQuestionPaperResponse;
+import com.service.beans.QuestionPaperData;
 import com.service.beans.GenerateQuestionPaperServicebean;
 import com.service.beans.QuestionPaperStructure;
 
@@ -81,9 +82,9 @@ public class QuestionPaperPatternTransaction {
 		return true;
 	}
 	
-	public List<com.service.beans.QuestionPaperPattern> getQuestionPaperPatternList(int div_id) {
+	public List<com.service.beans.QuestionPaperPattern> getQuestionPaperPatternList(int div_id,String pattern_type) {
 		QuestionPaperPatternDB paperPatternDB = new QuestionPaperPatternDB();
-		List<QuestionPaperPattern> questionPaperPatternList =   paperPatternDB.getQuestionPaperPatternList(inst_id, div_id);
+		List<QuestionPaperPattern> questionPaperPatternList =   paperPatternDB.getQuestionPaperPatternList(inst_id, div_id,pattern_type);
 		List<com.service.beans.QuestionPaperPattern> paperPatternList = new ArrayList<com.service.beans.QuestionPaperPattern>();
 		if(questionPaperPatternList != null){
 			for (int i = 0; i < questionPaperPatternList.size(); i++) {
@@ -117,7 +118,7 @@ public class QuestionPaperPatternTransaction {
 		return true;
 	}
 	
-	public List<GenerateQuestionPaperResponse> generateQuestionPaper(int div_id,List<QuestionPaperStructure> questionPaperPattern) {
+	public GenerateQuestionPaperResponse generateQuestionPaper(int div_id,List<QuestionPaperStructure> questionPaperPattern) {
 		List<GenerateQuestionPaperServicebean> generateQuestionPaperServicebeans = new ArrayList<GenerateQuestionPaperServicebean>();
 		for (int i = 0; i < questionPaperPattern.size(); i++) {
 			boolean flag = false;
@@ -156,7 +157,7 @@ public class QuestionPaperPatternTransaction {
 			generateQuestionPaperServicebean.setQuestion_ids(generateRandomQuestionId(generateQuestionPaperServicebean.getQuestion_ids(),generateQuestionPaperServicebean.getCount()));
 			
 		}
-		List<GenerateQuestionPaperResponse> questionPaperResponseList = new ArrayList<GenerateQuestionPaperResponse>();
+		List<QuestionPaperData> questionPaperDataList = new ArrayList<QuestionPaperData>();
 		for (int i = 0; i < questionPaperPattern.size(); i++) {
 			for (Iterator iterator = generateQuestionPaperServicebeans.iterator(); iterator
 					.hasNext();) {
@@ -166,7 +167,7 @@ public class QuestionPaperPatternTransaction {
 					questionPaperPattern.get(i).getItem_marks() == generateQuestionPaperServicebean.getMarks() &&
 					questionPaperPattern.get(i).getQuestion_type().equals(generateQuestionPaperServicebean.getQuestion_type()) &&
 					Integer.parseInt(questionPaperPattern.get(i).getQuestion_topic()) == generateQuestionPaperServicebean.getTopic_id()){
-					GenerateQuestionPaperResponse generateQuestionPaperResponse = new GenerateQuestionPaperResponse();
+					QuestionPaperData generateQuestionPaperResponse = new QuestionPaperData();
 				  com.classapp.db.question.Questionbank questionbank =  questionbankDB.getQuestion(generateQuestionPaperServicebean.getQuestion_ids().get(generateQuestionPaperServicebean.getQuestion_PickUpCounter()), inst_id, generateQuestionPaperServicebean.getSubject_id(), div_id);
 				  generateQuestionPaperResponse.setQuestionbank(questionbank);
 				  generateQuestionPaperResponse.setItem_id(questionPaperPattern.get(i).getItem_id());
@@ -175,13 +176,21 @@ public class QuestionPaperPatternTransaction {
 					 generateQuestionPaperResponse.setParagraphQuestion(paragraphQuestion);
 				  }
 				  generateQuestionPaperServicebean.setQuestion_PickUpCounter(generateQuestionPaperServicebean.getQuestion_PickUpCounter()+1);
-				  questionPaperResponseList.add(generateQuestionPaperResponse);
+				  questionPaperDataList.add(generateQuestionPaperResponse);
 				}
 			}
 		}
-			
 		
-		return questionPaperResponseList;
+		for (Iterator iterator = generateQuestionPaperServicebeans.iterator(); iterator
+				.hasNext();) {
+			GenerateQuestionPaperServicebean generateQuestionPaperServicebean = (GenerateQuestionPaperServicebean) iterator
+					.next();
+			generateQuestionPaperServicebean.setQuestion_PickUpCounter(0);
+		}
+		GenerateQuestionPaperResponse generateQuestionPaperResponse = new GenerateQuestionPaperResponse();
+		generateQuestionPaperResponse.setQuestionPaperDataList(questionPaperDataList);
+		generateQuestionPaperResponse.setQuestionPaperServicebeanList(generateQuestionPaperServicebeans);
+		return generateQuestionPaperResponse;
 	}
 	
 	private void writeObject(String filePath,Object questionData){

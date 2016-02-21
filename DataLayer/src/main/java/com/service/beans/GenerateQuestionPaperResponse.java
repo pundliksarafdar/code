@@ -1,29 +1,27 @@
 package com.service.beans;
 
+import java.util.List;
+
 import com.classapp.db.question.Questionbank;
 import com.datalayer.exam.ParagraphQuestion;
 
 public class GenerateQuestionPaperResponse {
-	String item_id;
-	Questionbank questionbank;
-	ParagraphQuestion paragraphQuestion;
-	public String getItem_id() {
-		return item_id;
+	List<QuestionPaperData> questionPaperDataList;
+	List<GenerateQuestionPaperServicebean> questionPaperServicebeanList;
+	public List<QuestionPaperData> getQuestionPaperDataList() {
+		return questionPaperDataList;
 	}
-	public void setItem_id(String item_id) {
-		this.item_id = item_id;
+	public void setQuestionPaperDataList(
+			List<QuestionPaperData> questionPaperDataList) {
+		this.questionPaperDataList = questionPaperDataList;
 	}
-	public Questionbank getQuestionbank() {
-		return questionbank;
+	public List<GenerateQuestionPaperServicebean> getQuestionPaperServicebeanList() {
+		return questionPaperServicebeanList;
 	}
-	public void setQuestionbank(Questionbank questionbank) {
-		this.questionbank = questionbank;
+	public void setQuestionPaperServicebeanList(
+			List<GenerateQuestionPaperServicebean> questionPaperServicebeanList) {
+		this.questionPaperServicebeanList = questionPaperServicebeanList;
 	}
-	public ParagraphQuestion getParagraphQuestion() {
-		return paragraphQuestion;
-	}
-	public void setParagraphQuestion(ParagraphQuestion paragraphQuestion) {
-		this.paragraphQuestion = paragraphQuestion;
-	}
+	
 	
 }
