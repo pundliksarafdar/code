@@ -24,6 +24,7 @@ import com.classapp.logger.AppLogger;
 import com.classapp.persistence.Constants;
 import com.datalayer.exam.ParagraphQuestion;
 import com.service.beans.GenerateQuestionPaperResponse;
+import com.service.beans.NewQuestionRequest;
 import com.service.beans.QuestionPaperData;
 import com.service.beans.GenerateQuestionPaperServicebean;
 import com.service.beans.QuestionPaperStructure;
@@ -190,6 +191,37 @@ public class QuestionPaperPatternTransaction {
 		GenerateQuestionPaperResponse generateQuestionPaperResponse = new GenerateQuestionPaperResponse();
 		generateQuestionPaperResponse.setQuestionPaperDataList(questionPaperDataList);
 		generateQuestionPaperResponse.setQuestionPaperServicebeanList(generateQuestionPaperServicebeans);
+		return generateQuestionPaperResponse;
+	}
+	
+	public GenerateQuestionPaperResponse generateQuestionPaperSpecific(int div_id,NewQuestionRequest newQuestionRequest) {
+		GenerateQuestionPaperResponse generateQuestionPaperResponse = new GenerateQuestionPaperResponse();
+		for (Iterator iterator = newQuestionRequest.getGenerateQuestionPaperServicebeanList().iterator(); iterator.hasNext();) {
+			GenerateQuestionPaperServicebean generateQuestionPaperServicebean = (GenerateQuestionPaperServicebean) iterator.next();
+			if(generateQuestionPaperServicebean.getSubject_id() == newQuestionRequest.getQuestionPaperStructure().getSubject_id() &&
+					generateQuestionPaperServicebean.getTopic_id() == Integer.parseInt(newQuestionRequest.getQuestionPaperStructure().getQuestion_topic()) &&
+					generateQuestionPaperServicebean.getQuestion_type().equals(newQuestionRequest.getQuestionPaperStructure().getQuestion_type()) &&
+					generateQuestionPaperServicebean.getMarks() == newQuestionRequest.getQuestionPaperStructure().getItem_marks()){
+				QuestionPaperData questionPaperData = new QuestionPaperData();
+				QuestionbankDB questionbankDB = new QuestionbankDB();
+				GenerateQuestionPaperServicebean generateQuestionPaperService = questionbankDB.getQuestionsForGenerateExam(inst_id, div_id, generateQuestionPaperServicebean);
+				generateQuestionPaperService.setQuestion_ids(generateRandomQuestionId(generateQuestionPaperService.getQuestion_ids(),1));
+				if(generateQuestionPaperService.getQuestion_ids().size() > 0){
+				generateQuestionPaperServicebean.getQuestion_ids().add(generateQuestionPaperService.getQuestion_ids().get(0));
+				Questionbank  questionbank = questionbankDB.getQuestion(generateQuestionPaperService.getQuestion_ids().get(0), inst_id, generateQuestionPaperService.getSubject_id(), div_id);	
+				questionPaperData.setQuestionbank(questionbank);
+				if(generateQuestionPaperService.getQuestion_type().equals("3")){
+					 ParagraphQuestion paragraphQuestion = (ParagraphQuestion) readObject(new File(questionStorageURL+File.separator+generateQuestionPaperServicebean.getSubject_id()+File.separator+div_id+File.separator+generateQuestionPaperServicebean.getQuestion_ids().get(generateQuestionPaperServicebean.getQuestion_PickUpCounter())));
+					 questionPaperData.setParagraphQuestion(paragraphQuestion);
+				  }
+				}
+				List<QuestionPaperData> paperDatasList = new ArrayList<QuestionPaperData>();
+				paperDatasList.add(questionPaperData);
+				generateQuestionPaperResponse.setQuestionPaperDataList(paperDatasList);
+				break;
+			}
+		}
+		generateQuestionPaperResponse.setQuestionPaperServicebeanList(newQuestionRequest.getGenerateQuestionPaperServicebeanList());
 		return generateQuestionPaperResponse;
 	}
 	

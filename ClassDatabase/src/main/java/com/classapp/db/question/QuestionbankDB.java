@@ -485,13 +485,47 @@ public List<GenerateQuestionPaperServicebean> getQuestionsForGenerateExam(int in
 		if(!"-1".equals(list.get(i).getQuestion_type())){
 			criteria.add(Restrictions.eq("que_type", list.get(i).getQuestion_type()));
 		}
-		
+		if(list.get(i).getTopic_id()!=-1){
+			criteria.add(Restrictions.eq("topic_id", list.get(i).getTopic_id()));
+		}
 		List<Integer> questionList = criteria.list();
 	list.get(i).setQuestion_ids(questionList);
 	}
 	transaction.commit();
 	session.close();
 return list;
+}
+
+public GenerateQuestionPaperServicebean getQuestionsForGenerateExam(int inst_id,int div_id,GenerateQuestionPaperServicebean questionPaperServicebean) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.property("que_id")).addOrder(Order.asc("created_dt"));
+	Criterion criterion = Restrictions.eq("inst_id", inst_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("sub_id", questionPaperServicebean.getSubject_id());
+	criteria.add(criterion);
+	criterion = Restrictions.eq("div_id", div_id);
+	criteria.add(criterion);
+	
+		if(questionPaperServicebean.getMarks()!=-1){
+			criteria.add(Restrictions.eq("marks", questionPaperServicebean.getMarks()));
+		}
+		if(!"-1".equals(questionPaperServicebean.getQuestion_type())){
+			criteria.add(Restrictions.eq("que_type", questionPaperServicebean.getQuestion_type()));
+		}
+		if(questionPaperServicebean.getTopic_id()!=-1){
+			criteria.add(Restrictions.eq("topic_id", questionPaperServicebean.getTopic_id()));
+		}
+		criteria.add(Restrictions.not(
+			    Restrictions.in("que_id", questionPaperServicebean.getQuestion_ids())
+				  ));
+		List<Integer> questionList = criteria.list();
+	questionPaperServicebean.setQuestion_ids(questionList);
+	transaction.commit();
+	session.close();
+return questionPaperServicebean;
 }
 
 public List<String> getQuestionAnsIds(int sub_id,int inst_id,int div_id,List<Integer> que_ids) {

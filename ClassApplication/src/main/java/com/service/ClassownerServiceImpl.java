@@ -28,6 +28,7 @@ import com.config.Constants;
 import com.service.beans.AddBatchBean;
 import com.service.beans.GenerateQuestionPaperResponse;
 import com.service.beans.ImageListBean;
+import com.service.beans.NewQuestionRequest;
 import com.service.beans.QuestionPaperPattern;
 import com.service.beans.QuestionPaperStructure;
 import com.service.beans.SubjectsWithTopics;
@@ -188,5 +189,15 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		com.classapp.utils.Constants.IMAGE_TYPE type = com.classapp.utils.Constants.IMAGE_TYPE.LOGO;
 		list = imageTransactions.getImageList(type);
 		return Response.status(200).entity(list).build();
+	}
+	
+	@POST
+	@Path("/generateQuestionPaper/{division}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response generateQuestionPaperSpecific(@PathParam("division") String division,NewQuestionRequest newQuestionRequest){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		GenerateQuestionPaperResponse questionPaperResponse=patternTransaction.generateQuestionPaperSpecific(Integer.parseInt(division), newQuestionRequest);
+		return Response.status(Status.OK).entity(questionPaperResponse).build();
 	}
 }
