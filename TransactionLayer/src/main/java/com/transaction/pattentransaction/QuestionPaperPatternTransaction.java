@@ -225,6 +225,27 @@ public class QuestionPaperPatternTransaction {
 		return generateQuestionPaperResponse;
 	}
 	
+	public List<QuestionPaperData> getQuestionList(int div_id,NewQuestionRequest newQuestionRequest) {
+		QuestionbankDB questionbankDB = new QuestionbankDB();
+		List<Questionbank> questionbankList = questionbankDB.getQuestionBankList(inst_id, div_id, newQuestionRequest.getQuestionPaperStructure().getSubject_id(), Integer.parseInt(newQuestionRequest.getQuestionPaperStructure().getQuestion_topic()), newQuestionRequest.getQuestionPaperStructure().getQuestion_type(), newQuestionRequest.getQuestionPaperStructure().getItem_marks());
+		List<QuestionPaperData> questionPaperDataList = new ArrayList<QuestionPaperData>();
+		for (Iterator iterator = questionbankList.iterator(); iterator
+				.hasNext();) {
+			Questionbank questionbank = (Questionbank) iterator
+					.next();
+			QuestionPaperData questionPaperData = new QuestionPaperData();
+			if(questionbank.getQue_type().equals("3")){
+				 ParagraphQuestion paragraphQuestion = (ParagraphQuestion) readObject(new File(questionStorageURL+File.separator+questionbank.getSub_id()+File.separator+div_id+File.separator+questionbank.getQue_id()));
+				 questionPaperData.setParagraphQuestion(paragraphQuestion);
+			  }
+			questionPaperData.setQuestionbank(questionbank);
+			questionbankList.add(questionbank);
+			
+		}
+		return questionPaperDataList;
+	}
+		
+	
 	private void writeObject(String filePath,Object questionData){
 		FileOutputStream fout = null;
 		ObjectOutputStream oos = null;

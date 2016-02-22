@@ -29,6 +29,7 @@ import com.service.beans.AddBatchBean;
 import com.service.beans.GenerateQuestionPaperResponse;
 import com.service.beans.ImageListBean;
 import com.service.beans.NewQuestionRequest;
+import com.service.beans.QuestionPaperData;
 import com.service.beans.QuestionPaperPattern;
 import com.service.beans.QuestionPaperStructure;
 import com.service.beans.SubjectsWithTopics;
@@ -128,6 +129,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	
 	@POST
 	@Path("/generateQuestionPaper/{division}")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response generateQuestionPaper(@PathParam("division") String division,List<QuestionPaperStructure> paperStructure){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
@@ -192,12 +194,24 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	}
 	
 	@POST
-	@Path("/generateQuestionPaper/{division}")
+	@Path("/generateQuestionPaperSpecific/{division}")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response generateQuestionPaperSpecific(@PathParam("division") String division,NewQuestionRequest newQuestionRequest){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
 		GenerateQuestionPaperResponse questionPaperResponse=patternTransaction.generateQuestionPaperSpecific(Integer.parseInt(division), newQuestionRequest);
 		return Response.status(Status.OK).entity(questionPaperResponse).build();
+	}
+	
+	@POST
+	@Path("/getQuestionList/{division}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getQuestionList(@PathParam("division") String division,NewQuestionRequest newQuestionRequest){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		List<QuestionPaperData> questionPaperDataList = patternTransaction.getQuestionList(Integer.parseInt(division), newQuestionRequest);
+		return Response.status(Status.OK).entity(questionPaperDataList).build();
 	}
 }

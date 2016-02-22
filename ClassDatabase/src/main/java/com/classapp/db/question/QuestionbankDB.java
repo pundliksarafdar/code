@@ -754,4 +754,36 @@ public boolean deleteQuestionrelatedtosubject(int inst_id,int sub_id) {
 	return true;	
 }
 
+public List<Questionbank> getQuestionBankList(int inst_id,int div_id,int sub_id,int topic_id,String ques_type,int marks){
+
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	Criteria criteria = session.createCriteria(Questionbank.class).addOrder(Order.asc("created_dt"));
+	Criterion criterion = Restrictions.eq("inst_id", inst_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("sub_id", sub_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("div_id", div_id);
+	criteria.add(criterion);
+	
+		if(marks!=-1){
+			criteria.add(Restrictions.eq("marks", marks));
+		}
+		if(!"-1".equals(ques_type)){
+			criteria.add(Restrictions.eq("que_type", ques_type));
+		}
+		if(topic_id!=-1){
+			criteria.add(Restrictions.eq("topic_id", topic_id));
+		}
+		
+		List<Questionbank> questionList = criteria.list();
+	
+	transaction.commit();
+	session.close();
+return questionList;
+
+}
+
 }
