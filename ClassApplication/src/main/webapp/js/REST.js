@@ -22,6 +22,19 @@ function REST(){
 			   });
 	}
 	
+	this.postString =function(uri,handlers,data,global){
+		$.ajax({
+			   url: uri,
+			   type:"POST",
+			   data:data,
+			   processData: false,
+			   contentType: "text/plain",
+			   global:global,
+			   success:handlers.success,
+			   error:handlers.error
+			   });
+	}
+	
 	/*
 	 * This is sample code submitquestionsuploadfile is file type id
 	 * 

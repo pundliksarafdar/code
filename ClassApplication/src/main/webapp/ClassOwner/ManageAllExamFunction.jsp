@@ -103,7 +103,7 @@ $(document).ready(function(){
 			var uri = "rest/classownerservice/saveHeader/"+headerName;
 			handlers.success = function(e){console.log(e);}
 			handlers.error = function(e){console.log("Error",e);}
-			rest.post(uri,handlers,data);		
+			rest.postString(uri,handlers,data);		
 		}
 	});
 	var x,y;
