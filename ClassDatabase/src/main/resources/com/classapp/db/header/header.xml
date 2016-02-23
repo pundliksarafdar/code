@@ -3,16 +3,13 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.classapp.db.image.Image" table="images" catalog="classdb">
+    <class name="com.classapp.db.header.Header" table="header" catalog="classdb">
     <composite-id>
     	<key-property name="inst_id" column="inst_id" type="int"></key-property>
-		<key-property name="image_id" column="image_id" length="50" type="string"></key-property>
+		<key-property name="header_id" column="header_id" length="50" type="string"></key-property>
     	</composite-id>
-        <property name="image_type" type="string">
-            <column name="image_type" length="2"/>
-        </property>
-        <property name="image_name" type="string">
-            <column name="image_name" length="30"/>
+        <property name="header_name" type="string">
+            <column name="header_name" length="2"/>
         </property>
     </class>
 </hibernate-mapping>

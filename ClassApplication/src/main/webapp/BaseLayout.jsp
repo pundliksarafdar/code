@@ -1,6 +1,7 @@
 <%@page import="java.util.Map"%>
 <%@page import="com.user.UserBean"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%
@@ -142,6 +143,7 @@ html,body {
 <script src="js/bootstrap-notify.min.js"></script>
 <script src="js/select2.min.js"></script>
 <script src="js/REST.js"></script>
+<script src='js/view/<c:out value="${request.actionName}"></c:out>.js'></script>
 <script>
 $( document ).ajaxStart(function() {
 	  $("#loaderModal").modal("show")

@@ -54,11 +54,11 @@ public class CorexServiceApi extends ServiceBase{
 	public byte[] getImageRepresentation(@PathParam("imageId")String imageId,@PathParam("imageType")String imageType){
 		String imagePath = null;
 		//String imgFolder = Constants.STORAGE_PATH + File.separatorChar+ getRegId() + File.separatorChar + imageId;
-		if (com.classapp.utils.Constants.IMAGE_TYPE.LOGO.toString().equalsIgnoreCase(imageType)){
+		if (com.classapp.utils.Constants.IMAGE_TYPE.L.toString().equalsIgnoreCase(imageType)){
 			imagePath = com.classapp.utils.Constants.LOGO_IMAGE_PATH; 
 		}
 		
-		String imagefileName = Constants.STORAGE_PATH + File.separatorChar+ imagePath + File.separatorChar + getRegId() + imageId;
+		String imagefileName = Constants.STORAGE_PATH + File.separatorChar+ imagePath + File.separatorChar +  imageId;
 		try {
 			FileInputStream stream = new FileInputStream(imagefileName);
 			InputStream resourceStream = new BufferedInputStream(stream);

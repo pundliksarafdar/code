@@ -93,7 +93,7 @@ public List<Image> getImagesByType(int inst_id,String image_type) {
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
 		transaction = session.beginTransaction();
-		Criteria criteria = session.createCriteria(Exam.class);
+		Criteria criteria = session.createCriteria(Image.class);
 		Criterion criterion = Restrictions.eq("inst_id", inst_id);
 		criteria.add(criterion);
 		criterion = Restrictions.eq("image_type", image_type);

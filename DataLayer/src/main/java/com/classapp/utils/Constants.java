@@ -2,8 +2,7 @@ package com.classapp.utils;
 
 public class Constants {
 	public enum IMAGE_TYPE{
-		LOGO
+		L //Logo image
 	}
-	
 	public static String LOGO_IMAGE_PATH = "imageLogo";  
 }

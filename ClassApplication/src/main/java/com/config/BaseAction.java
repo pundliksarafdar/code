@@ -81,6 +81,10 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 			(ActionContext.getContext().getSession()).put("sitemapdata", siteMapData);
 			
 		ActionMapping mapping = (ActionMapping) request.getAttribute("struts.actionMapping");
+		//This action name is used to load view js
+		String actionName = mapping.getName();
+		request.setAttribute("actionName", actionName);
+		
 		if(isHavingAccess(mapping.getName(), roleInt) && !params.containsKey("ignoresession")){
 			return "UNAUTHRISED";
 		}

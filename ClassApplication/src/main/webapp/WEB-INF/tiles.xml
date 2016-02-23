@@ -534,6 +534,10 @@
       <put-attribute name="title"  value="Manage Exam"/>
       <put-attribute name="body"   value="/exam/CreateExamPattern.jsp"/>      
    </definition>
+   <definition name="classowner.generateQuestionPaper" extends="baseLayout">
+      <put-attribute name="title"  value="Generate quuestion paper"/>
+      <put-attribute name="body"   value="/exam/generateQuestionPaper.jsp"/>      
+   </definition>
    <definition name="classowner.viewneditpattern" extends="baseLayout">
       <put-attribute name="title"  value="Manage Exam"/>
       <put-attribute name="body"   value="/exam/ViewNEditPattern.jsp"/>      

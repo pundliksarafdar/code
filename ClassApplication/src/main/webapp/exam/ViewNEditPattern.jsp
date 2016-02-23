@@ -974,15 +974,9 @@ function ExamPatternObject(){
 </script>
 </head>
 <body>
-<ul class="nav nav-tabs" style="border-radius: 10px">
-		<li><a href="createExamPatten">Create
-				Exam Paper Pattern</a></li>
-		<li class="active"><a href="#viewneditpattern">View/Edit Exam Pattern</a></li>
-		<li><a href="viewstudent">Set Question Paper</a></li>
-		<li><a href="viewstudent">View/Edit Question paper</a></li>
-		<li><a href="viewstudent">Create Exam</a></li>
-		<li><a href="viewstudent">View/Edit Exam</a></li>
-	</ul>
+	<jsp:include page="../ExamHeader.jsp" >
+		<jsp:param value="active" name="generateQuestionPaper"/>
+	</jsp:include>
 <div class="container" style="padding: 2%; background: #eee">
 		<div class="row">
 			<div class="col-md-3">

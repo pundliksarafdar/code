@@ -25,6 +25,8 @@ import javax.ws.rs.core.Response.StatusType;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Topics;
 import com.config.Constants;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.service.beans.AddBatchBean;
 import com.service.beans.GenerateQuestionPaperResponse;
 import com.service.beans.ImageListBean;
@@ -34,6 +36,7 @@ import com.service.beans.QuestionPaperPattern;
 import com.service.beans.QuestionPaperStructure;
 import com.service.beans.SubjectsWithTopics;
 import com.serviceinterface.ClassownerServiceApi;
+import com.tranaction.header.HeaderTransaction;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.image.ImageTransactions;
 import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
@@ -74,6 +77,8 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addQuestionPaperPattern(QuestionPaperPattern examPattern){
+		Gson gson = new Gson();
+		System.out.println(gson.toJson(examPattern));
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId());
 		boolean patternStatus= patternTransaction.saveQuestionPaperPattern(examPattern);
@@ -129,8 +134,8 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	
 	@POST
 	@Path("/generateQuestionPaper/{division}")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response generateQuestionPaper(@PathParam("division") String division,List<QuestionPaperStructure> paperStructure){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
@@ -177,7 +182,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	@Produces("application/json")
 	public Response addLogoImage(@PathParam("imageId") String imageId,@PathParam("imageName") String imageName) {
 		ImageTransactions imageTransactions = new ImageTransactions(Constants.STORAGE_PATH);
-		imageTransactions.copyLogoImage(getRegId()+imageId);
+		imageTransactions.copyLogoImage(getRegId()+imageId,imageName,getRegId());
 		return Response.status(200).build();
 	}
 
@@ -188,10 +193,33 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	public Response logoImage() {
 		List<ImageListBean> list = new ArrayList<ImageListBean>(); 
 		ImageTransactions imageTransactions = new ImageTransactions(Constants.STORAGE_PATH);
-		com.classapp.utils.Constants.IMAGE_TYPE type = com.classapp.utils.Constants.IMAGE_TYPE.LOGO;
-		list = imageTransactions.getImageList(type);
+		list = imageTransactions.getImageList(getRegId(),com.classapp.utils.Constants.IMAGE_TYPE.L);
 		return Response.status(200).entity(list).build();
 	}
+	
+	@Override
+	@POST
+	@Path("/saveHeader/{headerName}")
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces("application/json")
+	public Response saveHeader(String headerElement,
+			@PathParam("headerName")String headerName) {
+		HeaderTransaction headerTransaction = new HeaderTransaction(Constants.STORAGE_PATH);
+		headerTransaction.saveHeader(headerName, headerElement, getRegId());
+		return Response.status(200).entity(true).build();
+	}
+	
+	
+	@POST
+	@Path("/testValidation/{headerName}")
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces("application/json")
+	public Response testValidation(@PathParam("headerName")
+    String id){
+		List list = new ArrayList();
+		return Response.status(200).entity(list).build();
+	}
+	
 	
 	@POST
 	@Path("/generateQuestionPaperSpecific/{division}")

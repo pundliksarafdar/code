@@ -469,5 +469,11 @@
 			<result name="success" type="tiles">classowner.viewneditpattern</result>
 		</action>
 		
+		
+		<action name="generateQuestionPaper" class="com.exam.GenerateQuestionPaper"
+			method="execute">
+			<result name="success" type="tiles">classowner.generateQuestionPaper</result>
+		</action>
+		
 	</package>
 </struts>

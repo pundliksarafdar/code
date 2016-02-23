@@ -210,6 +210,7 @@ public class QuestionPaperPatternTransaction {
 				generateQuestionPaperServicebean.getQuestion_ids().add(generateQuestionPaperService.getQuestion_ids().get(0));
 				Questionbank  questionbank = questionbankDB.getQuestion(generateQuestionPaperService.getQuestion_ids().get(0), inst_id, generateQuestionPaperService.getSubject_id(), div_id);	
 				questionPaperData.setQuestionbank(questionbank);
+				questionPaperData.setItem_id(newQuestionRequest.getQuestionPaperStructure().getItem_id());
 				if(generateQuestionPaperService.getQuestion_type().equals("3")){
 					 ParagraphQuestion paragraphQuestion = (ParagraphQuestion) readObject(new File(questionStorageURL+File.separator+generateQuestionPaperServicebean.getSubject_id()+File.separator+div_id+File.separator+generateQuestionPaperServicebean.getQuestion_ids().get(generateQuestionPaperServicebean.getQuestion_PickUpCounter())));
 					 questionPaperData.setParagraphQuestion(paragraphQuestion);
@@ -239,7 +240,8 @@ public class QuestionPaperPatternTransaction {
 				 questionPaperData.setParagraphQuestion(paragraphQuestion);
 			  }
 			questionPaperData.setQuestionbank(questionbank);
-			questionbankList.add(questionbank);
+			questionPaperData.setItem_id(newQuestionRequest.getQuestionPaperStructure().getItem_id());
+			questionPaperDataList.add(questionPaperData);
 			
 		}
 		return questionPaperDataList;
