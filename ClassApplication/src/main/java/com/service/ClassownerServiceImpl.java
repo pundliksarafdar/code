@@ -22,6 +22,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
 
+import com.classapp.db.questionPaper.QuestionPaper;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Topics;
 import com.config.Constants;
@@ -32,6 +33,7 @@ import com.service.beans.GenerateQuestionPaperResponse;
 import com.service.beans.ImageListBean;
 import com.service.beans.NewQuestionRequest;
 import com.service.beans.QuestionPaperData;
+import com.service.beans.QuestionPaperFileObject;
 import com.service.beans.QuestionPaperPattern;
 import com.service.beans.QuestionPaperStructure;
 import com.service.beans.SubjectsWithTopics;
@@ -241,5 +243,38 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
 		List<QuestionPaperData> questionPaperDataList = patternTransaction.getQuestionList(Integer.parseInt(division), newQuestionRequest);
 		return Response.status(Status.OK).entity(questionPaperDataList).build();
+	}
+	
+	@POST
+	@Path("/getQuestionPaperList/{division}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getQuestionPaperList(@PathParam("division") String division){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		List<QuestionPaper> questionPaperList = patternTransaction.getQuestionPaperList(Integer.parseInt(division));
+		return Response.status(Status.OK).entity(questionPaperList).build();
+	}
+	
+	@POST
+	@Path("/getQuestionList/{division}/{paper_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteQuestionPaper(@PathParam("division") String division,@PathParam("paper_id") String paper_id){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		boolean status = patternTransaction.deleteQuestionPaper(Integer.parseInt(division), Integer.parseInt(paper_id));
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Path("/saveQuestionPaper")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveQuestionPaper(QuestionPaperFileObject fileObject){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId());
+		return Response.status(Status.OK).entity(status).build();
 	}
 }

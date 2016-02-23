@@ -7,6 +7,7 @@ public class QuestionPaperData {
 	String item_id;
 	Questionbank questionbank;
 	ParagraphQuestion paragraphQuestion;
+	String dataStatus;
 	public String getItem_id() {
 		return item_id;
 	}
@@ -24,6 +25,12 @@ public class QuestionPaperData {
 	}
 	public void setParagraphQuestion(ParagraphQuestion paragraphQuestion) {
 		this.paragraphQuestion = paragraphQuestion;
+	}
+	public String getDataStatus() {
+		return dataStatus;
+	}
+	public void setDataStatus(String dataStatus) {
+		this.dataStatus = dataStatus;
 	}
 	
 	

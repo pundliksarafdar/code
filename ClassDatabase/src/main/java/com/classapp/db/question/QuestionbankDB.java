@@ -496,7 +496,7 @@ public List<GenerateQuestionPaperServicebean> getQuestionsForGenerateExam(int in
 return list;
 }
 
-public GenerateQuestionPaperServicebean getQuestionsForGenerateExam(int inst_id,int div_id,GenerateQuestionPaperServicebean questionPaperServicebean) {
+public List<Integer> getQuestionsForGenerateExam(int inst_id,int div_id,GenerateQuestionPaperServicebean questionPaperServicebean) {
 	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
@@ -522,10 +522,9 @@ public GenerateQuestionPaperServicebean getQuestionsForGenerateExam(int inst_id,
 			    Restrictions.in("que_id", questionPaperServicebean.getQuestion_ids())
 				  ));
 		List<Integer> questionList = criteria.list();
-	questionPaperServicebean.setQuestion_ids(questionList);
 	transaction.commit();
 	session.close();
-return questionPaperServicebean;
+return questionList;
 }
 
 public List<String> getQuestionAnsIds(int sub_id,int inst_id,int div_id,List<Integer> que_ids) {
