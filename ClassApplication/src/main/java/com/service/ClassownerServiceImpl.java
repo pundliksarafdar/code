@@ -27,12 +27,14 @@ import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Topics;
 import com.config.Constants;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.service.beans.AddBatchBean;
 import com.service.beans.GenerateQuestionPaperResponse;
 import com.service.beans.ImageListBean;
 import com.service.beans.NewQuestionRequest;
 import com.service.beans.QuestionPaperData;
+import com.service.beans.QuestionPaperFileElement;
 import com.service.beans.QuestionPaperFileObject;
 import com.service.beans.QuestionPaperPattern;
 import com.service.beans.QuestionPaperStructure;
@@ -268,12 +270,60 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	}
 	
 	@POST
-	@Path("/saveQuestionPaper")
+	@Path("/saveQuestionPaperold")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response saveQuestionPaper(QuestionPaperFileObject fileObject){
+	public Response saveQuestionPaperOld(QuestionPaperFileObject fileObject){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId());
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Path("/saveQuestionPaper/{patternId}/{questionPaperName}/{divisionId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveQuestionPaper(@PathParam("patternId") String patternId,@PathParam("questionPaperName") String questionPaperName,
+			@PathParam("divisionId") String divisionId
+			,Map<String, String>questionAndItem){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId());
+		QuestionPaperPattern questionPaperPattern = patternTransaction.getQuestionPaperPattern(Integer.parseInt(divisionId), Integer.parseInt(patternId));
+		List questionPaperPatternList = questionPaperPattern.getQuestionPaperStructure();
+		
+		/*Form element to save*/
+		QuestionPaperFileObject fileObject = new QuestionPaperFileObject();
+		fileObject.setClass_id(questionPaperPattern.getClass_id());
+		fileObject.setInst_id(questionPaperPattern.getInst_id());
+		fileObject.setMarks(questionPaperPattern.getMarks());
+		//fileObject.setPaper_description(questionPaperPattern.);
+		fileObject.setPattern_id(questionPaperPattern.getPattern_id());
+		List<QuestionPaperFileElement> questionPaperFileElements = new ArrayList<QuestionPaperFileElement>();
+		for(int index=0;index<questionPaperPatternList.size();index++){
+			QuestionPaperFileElement questionPaperFileElement = new QuestionPaperFileElement();
+			QuestionPaperStructure questionPaperStructure = (QuestionPaperStructure) questionPaperPatternList.get(index);
+			//Check if item is exist in it or not
+			String itemId = questionPaperStructure.getItem_id();
+			if(questionAndItem.containsKey(itemId)){
+				int question_number = Integer.parseInt(questionAndItem.get(itemId));
+				questionPaperFileElement.setAlternate_value(questionPaperStructure.getAlternate_value());
+				questionPaperFileElement.setItem_description(questionPaperStructure.getItem_description());
+				questionPaperFileElement.setItem_id(questionPaperStructure.getItem_id());
+				questionPaperFileElement.setItem_marks(questionPaperStructure.getItem_marks());
+				questionPaperFileElement.setItem_no(questionPaperStructure.getItem_no());
+				questionPaperFileElement.setItem_type(questionPaperStructure.getItem_type());
+				questionPaperFileElement.setParent_id(questionPaperStructure.getParent_id());
+				//questionPaperFileElement.setQues_no(questionPaperStructure.get);
+				questionPaperFileElement.setQuestion_topic(questionPaperStructure.getQuestion_topic());
+				questionPaperFileElement.setQuestion_type(questionPaperStructure.getQuestion_type());
+				questionPaperFileElement.setSubject_id(questionPaperStructure.getSubject_id());
+				questionPaperFileElement.setQues_no(question_number);
+				questionPaperFileElements.add(questionPaperFileElement);
+			}
+		}
+		fileObject.setQuestionPaperFileElementList(questionPaperFileElements);
 		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId());
 		return Response.status(Status.OK).entity(status).build();
 	}
