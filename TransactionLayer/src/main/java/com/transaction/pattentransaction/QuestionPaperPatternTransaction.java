@@ -306,6 +306,33 @@ public class QuestionPaperPatternTransaction {
 		}
 		return true;
 	}
+	
+	public boolean updateQuestionPaper(QuestionPaperFileObject fileObject,int userID) {
+		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
+		if(questionPaperDB.verifyUpdatePaperName(fileObject.getClass_id(), inst_id, fileObject.getPaper_description(),fileObject.getPaper_id())){
+			return false;
+		}else{
+		QuestionPaper questionPaper = new QuestionPaper();
+		questionPaper.setDiv_id(fileObject.getClass_id());
+		questionPaper.setInst_id(inst_id);
+		questionPaper.setMarks(fileObject.getMarks());
+		questionPaper.setPaper_description(fileObject.getPaper_description());
+		questionPaper.setModified_by(userID);
+		questionPaper.setModified_dt(new Date(new java.util.Date().getTime()));
+		questionPaper.setPaper_id(fileObject.getPaper_id());
+		questionPaperDB.save(questionPaper);
+		String filePath = patternStorageURL+File.separator+fileObject.getClass_id()+File.separator+fileObject.getPaper_id();
+		writeObject(filePath, fileObject);
+		}
+		return true;
+	}
+	
+	public QuestionPaperFileObject getQuestionPaper(int div_id,int paper_id) {
+		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
+		File file = new File(patternStorageURL+File.separator+div_id+File.separator+paper_id);
+		QuestionPaperFileObject fileObject = (QuestionPaperFileObject) readObject(file);
+		return fileObject;
+	}
 		
 	
 	private void writeObject(String filePath,Object questionData){

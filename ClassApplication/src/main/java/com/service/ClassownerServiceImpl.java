@@ -259,7 +259,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	}
 	
 	@POST
-	@Path("/getQuestionList/{division}/{paper_id}")
+	@Path("/deleteQuestionPaper/{division}/{paper_id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteQuestionPaper(@PathParam("division") String division,@PathParam("paper_id") String paper_id){
@@ -326,5 +326,27 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		fileObject.setQuestionPaperFileElementList(questionPaperFileElements);
 		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId());
 		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Path("/updateQuestionPaper")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateQuestionPaper(QuestionPaperFileObject fileObject){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId());
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Path("/getQuestionPaper/{division}/{paper_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getQuestionPaper(@PathParam("division") String division,@PathParam("paper_id") String paper_id){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		QuestionPaperFileObject fileObject = patternTransaction.getQuestionPaper(Integer.parseInt(division), Integer.parseInt(paper_id));
+		return Response.status(Status.OK).entity(fileObject).build();
 	}
 }

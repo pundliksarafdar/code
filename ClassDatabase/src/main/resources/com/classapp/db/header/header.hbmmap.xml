@@ -9,7 +9,7 @@
 		<key-property name="header_id" column="header_id" length="50" type="string"></key-property>
     	</composite-id>
         <property name="header_name" type="string">
-            <column name="header_name" length="2"/>
+            <column name="header_name" length="20"/>
         </property>
     </class>
 </hibernate-mapping>

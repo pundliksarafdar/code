@@ -474,6 +474,10 @@
 			method="execute">
 			<result name="success" type="tiles">classowner.generateQuestionPaper</result>
 		</action>
+			<action name="createExam" class="com.exam.CreateExamAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.createExam</result>
+		</action>
 		
 	</package>
 </struts>
