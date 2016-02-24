@@ -27,7 +27,7 @@ import com.corex.requestbean.WeeklyScheduleRequest;
 import com.corex.responsebean.WeeklyScheduleResponse;
 
 import com.classapp.db.Notes.Notes;
-import com.classapp.db.Schedule.Schedule;
+import com.classapp.db.schedule.Schedule;
 import com.classapp.db.Teacher.Teacher;
 import com.classapp.db.Teacher.TeacherDetails;
 import com.classapp.db.batch.Batch;
@@ -163,7 +163,7 @@ public class Service implements IService {
 				scheduleList=scheduleTransaction.getWeeklySchedule(weeklyschedulerequest.getBatch_ID(), new Date(weeklyschedulerequest.getDate()), weeklyschedulerequest.getInst_id(), student.getDiv_id());
 			}	
 		BatchTransactions batchTransactions=new BatchTransactions();
-		List<Batch> batchList= batchTransactions.getAllBatchesOfDivision(student.getDiv_id()+"", weeklyschedulerequest.getInst_id());
+		List<Batch> batchList= batchTransactions.getAllBatchesOfDivision(student.getDiv_id(), weeklyschedulerequest.getInst_id());
 		DateFormat sdf = new SimpleDateFormat("kk:mm");
 		DateFormat f2 = new SimpleDateFormat("h:mma");
 		RegisterTransaction registerTransaction=new RegisterTransaction();

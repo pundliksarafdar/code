@@ -3,18 +3,20 @@ package com.transaction.schedule;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import com.classapp.db.Schedule.Schedule;
-import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.register.RegisterDB;
+import com.classapp.db.schedule.Schedule;
+import com.classapp.db.schedule.ScheduleDB;
 import com.classapp.db.student.Student;
 import com.classapp.db.subject.Subject;
 import com.classapp.schedule.Scheduledata;
@@ -35,14 +37,13 @@ public class ScheduleTransaction {
 		schedule.setBatch_id(Integer.parseInt(batch_id));
 		schedule.setClass_id(Integer.parseInt(class_id));
 		schedule.setDate((Date)date.get(i));
-		schedule.setDay_id(2);
 		schedule.setDiv_id(batch.getDiv_id());
 		schedule.setEnd_time((Time)end_time.get(i));
 		schedule.setStart_time((Time)start_time.get(i));
 		schedule.setSub_id(Integer.parseInt((String)sub_id.get(i)));
 		schedule.setTeacher_id(Integer.parseInt((String)teacher_id.get(i)));
 		ScheduleDB scheduleDB=new ScheduleDB();
-		scheduleDB.addLecture(schedule);
+		scheduleDB.addSchedule(schedule);
 		}
 		return null;
 	}
@@ -58,7 +59,6 @@ public class ScheduleTransaction {
 		schedule.setBatch_id(Integer.parseInt(batch_id));
 		schedule.setClass_id(Integer.parseInt(class_id));
 		schedule.setDate((Date)date.get(i));
-		schedule.setDay_id(2);
 		schedule.setDiv_id(divid);
 		schedule.setEnd_time((Time)end_time.get(i));
 		schedule.setStart_time((Time)start_time.get(i));
@@ -102,7 +102,6 @@ public class ScheduleTransaction {
 		schedule.setBatch_id(Integer.parseInt(batch_id));
 		schedule.setClass_id(Integer.parseInt(class_id));
 		schedule.setDate((Date)date.get(i));
-		schedule.setDay_id(2);
 		schedule.setDiv_id(div_id);
 		schedule.setEnd_time((Time)end_time.get(i));
 		schedule.setStart_time((Time)start_time.get(i));
@@ -173,12 +172,39 @@ public class ScheduleTransaction {
 		
 	}
 	
-	public boolean deleteSchedule(int scheduleid,int inst_id)
+	public int deleteSchedule(int scheduleid,int classId)
 	{
 		
 		ScheduleDB db=new ScheduleDB();
-		db.deleteSchedule(scheduleid,inst_id);
-		return true;
+		return db.deleteSchedule(scheduleid,classId);
+	}
+	
+	public int deleteScheduleOfTeacher(int teacherId,int classId)
+	{
+		
+		ScheduleDB db=new ScheduleDB();
+		return db.deleteSchedulerelatedtoteacher(teacherId,classId);
+	}
+	
+	public int deleteScheduleOfBatchForSubject(int batchId,int subjectId, int divId, int classId)
+	{
+		
+		ScheduleDB db=new ScheduleDB();
+		return db.deleteschedulerelatedtobatchsubject(batchId, subjectId, divId, classId);
+	}
+	
+	public int deleteSubjectSchedulesOfClass(int subjectId, int classId)
+	{
+		
+		ScheduleDB db=new ScheduleDB();
+		return db.deleteSubjectSchedulesOfClass(subjectId, classId);
+	}
+	
+	public int deleteSubjectSchedulesOfTeacher(int subjectId, int teacherId)
+	{
+		
+		ScheduleDB db=new ScheduleDB();
+		return db.deleteschedulerelatedtoteachersubject(teacherId, subjectId);
 	}
 	
 	public String updateLecture(String class_id,String batch_id,List sub_id,List teacher_id,
@@ -191,7 +217,6 @@ public class ScheduleTransaction {
 		schedule.setBatch_id(Integer.parseInt(batch_id));
 		schedule.setClass_id(Integer.parseInt(class_id));
 		schedule.setDate((Date)date.get(i));
-		schedule.setDay_id(2);
 		schedule.setDiv_id(div_id);
 		schedule.setEnd_time((Time)end_time.get(i));
 		schedule.setStart_time((Time)start_time.get(i));
@@ -252,18 +277,21 @@ public class ScheduleTransaction {
 		
 	}
 	
-	public boolean deleteschedulerelatedtoclass(int classid) {
+	public int deleteschedulerelatedtoclass(int classid) {
 		ScheduleDB db=new ScheduleDB();
-		db.deleteschedulerelatedtoclass(classid);
-		return true;
-		
+		return db.deleteschedulerelatedtoclass(classid);		
 	}
 	
-	public boolean deleteschedulerelatedsubject(int subid) {
+	
+	public int deleteAllSchedulesOfBatch(int batchId, int divId, int classId) {
+		ScheduleDB db=new ScheduleDB();
+		return db.deleteAllSchedulesOfBatch(batchId, divId, classId);	
+	}
+	
+	public int deleteschedulerelatedsubject(int subid) {
 		ScheduleDB scheduleDB=new ScheduleDB();
-		scheduleDB.deleteschedulerelatedsubject(subid);
+		return scheduleDB.deleteschedulerelatedsubject(subid);		
 		
-		return true;
 		
 	}
 	
@@ -342,5 +370,139 @@ public class ScheduleTransaction {
 			
 		}
 		return scheduledatas;
+	}
+	
+	public List<Scheduledata> getScheduleOfMonth(){
+		return null;
+	}
+	
+	public List<Scheduledata> getScheduleOfWeek(){
+		java.util.Date date= new java.util.Date();
+		//GregorianCalendar.
+		return null;
+	}
+	
+	public List<Scheduledata> getScheduleOfDay(){
+		return null;
+	}
+	
+	public List<Scheduledata> getScheduleInDateRange(Date startDate, Date endDate){
+		return null;
+	}
+	
+	public List<Scheduledata> getScheduleOfDayInTimeRange(Time startTime, Time endTime){
+		return null;
+	}
+
+	public HashMap<String, String> addSchedule(Integer classid, Integer batchid, Integer subject, Integer teacher, Time starttime,
+			Time endtime, Date startDate, Date endDate, Integer divId, boolean weekly) {
+		//BatchTransactions batchTransactions=new BatchTransactions();
+		//Batch batch=batchTransactions.getBatch(batchid,classid,divId);
+		HashMap<String, String> resultMap=new HashMap<String, String>();
+		String result ="ERROR";
+		ScheduleDB scheduleDB=new ScheduleDB();
+		if (endDate != null) {
+			Date scheduleDate = startDate;
+			while (scheduleDate.compareTo(endDate) <= 0) {
+				Calendar c = Calendar.getInstance();
+				c.setTime(scheduleDate);
+				result = scheduleDB.putSchedule(createScheduleData(classid, batchid, subject, teacher, starttime, endtime, scheduleDate, divId));
+				String key=getAsString(classid.toString(), batchid.toString(), subject.toString(), teacher.toString(), starttime.toString(), endtime.toString(), scheduleDate.toString(), divId.toString());
+				resultMap.put(key, result);	
+				System.out.println(result);
+				if(weekly){
+					c.add(Calendar.DATE, 7);
+				}else{					
+					c.add(Calendar.DATE, 1);
+				}
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				scheduleDate = Date.valueOf(sdf.format(c.getTime())); 
+			}
+		}
+		return resultMap;
+	}
+	
+	public HashMap<String, String> addScheduleByDays(Integer classid, Integer batchid, 
+			Integer subject, Integer teacher, Time starttime,
+			Time endtime, Date startDate, Date endDate, Integer divId, 
+			boolean monday, boolean tuesday, boolean wednesday, boolean thursday, 
+			boolean friday, boolean saturday, boolean sunday) {
+		//BatchTransactions batchTransactions=new BatchTransactions();
+		//Batch batch=batchTransactions.getBatch(batchid,classid,divId);
+		HashMap<String, String> resultMap=new HashMap<String, String>();
+		String result ="ERROR";
+		ScheduleDB scheduleDB=new ScheduleDB();
+		if (endDate != null) {
+			Date scheduleDate = startDate;
+			while (scheduleDate.compareTo(endDate) <= 0) {
+				Calendar c = Calendar.getInstance();
+				c.setTime(scheduleDate);
+				int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+				//boolean isSchuduleDay=false;
+				if((dayOfWeek==1 && monday) || 
+						(dayOfWeek==2 && tuesday) ||
+						(dayOfWeek==3 && wednesday) ||
+						(dayOfWeek==4 && thursday) ||
+						(dayOfWeek==5 && friday) ||
+						(dayOfWeek==6 && saturday) ||
+						(dayOfWeek==7 && sunday)){
+					result = scheduleDB.putSchedule(createScheduleData(classid, batchid, subject, teacher, starttime, endtime, scheduleDate, divId));
+					String key=getAsString(classid.toString(), batchid.toString(), subject.toString(), teacher.toString(), starttime.toString(), endtime.toString(), scheduleDate.toString(), divId.toString());
+					resultMap.put(key, result);	
+					System.out.println("Result of schedule for "+dayOfWeek+" "+scheduleDate+" is "+result);
+				}
+						
+									
+					c.add(Calendar.DATE, 1);
+				
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				scheduleDate = Date.valueOf(sdf.format(c.getTime())); 
+			}
+		}
+		return resultMap;
+	}
+	
+	private Schedule createScheduleData(Integer classid, Integer batchid, Integer subject, Integer teacher, Time starttime,
+			Time endtime, Date date,Integer divId){
+		Schedule schedule=new Schedule();
+		schedule.setBatch_id(batchid);
+		schedule.setClass_id(classid);
+		schedule.setDate(date);
+		schedule.setDiv_id(divId);
+		schedule.setEnd_time(endtime);
+		schedule.setStart_time(starttime);
+		schedule.setSub_id(subject);
+		schedule.setTeacher_id(teacher);
+		
+		return schedule;
+	}
+	
+	private String getAsString(String...params){
+		StringBuilder builder= new StringBuilder();
+		for (String param : params) {
+			builder.append(param);
+		}		
+		return builder.toString();
+	}
+	
+	public String updateSchedule(Integer classid, Integer batchid, Integer subject, Integer teacher, Time starttime,
+			Time endtime, Date date,Integer divId, Integer scheduleId){
+			
+		Schedule schedule=new Schedule();
+		schedule.setBatch_id(batchid);
+		schedule.setClass_id(classid);
+		schedule.setDate(date);
+		schedule.setDiv_id(divId);
+		schedule.setEnd_time(endtime);
+		schedule.setStart_time(starttime);
+		schedule.setSub_id(subject);
+		schedule.setTeacher_id(teacher);
+		schedule.setSchedule_id(scheduleId);
+		System.out.println("calling db..");
+		ScheduleDB scheduleDB=new ScheduleDB();
+		return scheduleDB.updateSchedule(schedule);
+		 
 	}
 }

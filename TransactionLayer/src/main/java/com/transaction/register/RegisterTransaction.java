@@ -4,10 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.register.RegisterDB;
 import com.classapp.db.register.RegisterUser;
+import com.classapp.db.schedule.Schedule;
 import com.classapp.db.student.Student;
 import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;

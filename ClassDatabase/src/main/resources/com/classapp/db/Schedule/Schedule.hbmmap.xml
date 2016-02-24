@@ -1,34 +1,39 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
  
 <hibernate-mapping>
-    <class name="com.classapp.db.Schedule.Schedule" table="schedule" catalog="classdb">
-		
-		<composite-id>
-		<key-property name="teacher_id" column="teacher_id"></key-property>
-		<key-property name="start_time" column="start_time"></key-property>
-		<key-property name="end_time" column="end_time"></key-property>
-		<key-property name="day_id" column="day_id"></key-property>
-		<key-property name="date" column="date"></key-property>
-		<key-property name="class_id" column="class_id"></key-property>
-		<key-property name="schedule_id" column="schedule_id"></key-property>
-		</composite-id>
-		<!-- <property name="class_id" type="java.lang.Integer">
-            <column name="class_id" not-null="false" unique="false" />
-        </property> -->
+    <class name="com.classapp.db.schedule.Schedule" table="schedule" catalog="classdb">	
+		<id name="schedule_id" type="java.lang.Integer">
+            <column name="schedule_id" />
+            <generator class="identity" />
+        </id>
         <property name="div_id" type="java.lang.Integer">
             <column name="div_id" not-null="false" unique="false" />
         </property>  
         <property name="batch_id" type="java.lang.Integer">
             <column name="batch_id" not-null="false" unique="false" />
-        </property>    
+        </property> 
+        <property name="teacher_id" type="java.lang.Integer">
+            <column name="teacher_id" not-null="false" unique="false" />
+        </property>   
+        <property name="start_time" type="java.sql.Time">
+            <column name="start_time" not-null="false" unique="false" />
+        </property>
+         <property name="date" type="java.sql.Date">
+            <column name="date" not-null="false" unique="false" />
+        </property>  
+         <property name="end_time" type="java.sql.Time">
+            <column name="end_time" not-null="false" unique="false" />
+        </property>  
+        <property name="class_id" type="java.lang.Integer">
+            <column name="class_id" not-null="false" unique="false" />
+        </property>
         <property name="sub_id" type="java.lang.Integer">
             <column name="sub_id" not-null="false" unique="false" />
         </property>
-       <!--  <property name="schedule_id" type="java.lang.Integer">
+<!--        <property name="schedule_id" type="java.lang.Integer">
             <column name="schedule_id" not-null="false" unique="false" />
-        </property> -->    
-        
+        </property>   -->  
      </class>
 </hibernate-mapping>

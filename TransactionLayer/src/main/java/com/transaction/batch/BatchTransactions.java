@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.batch.AddBatch;
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.BatchDB;
 import com.classapp.db.batch.BatchData;
 import com.classapp.db.batch.DeleteBatch;
+import com.classapp.db.schedule.Schedule;
 import com.classapp.db.subject.SubjectDb;
 
 
@@ -185,7 +185,7 @@ public int getNextBatchID(int inst_id,int div_id){
 		
 	}
 	
-	public List getAllBatchesOfDivision(String divisionId, int class_id){
+	public List<Batch> getAllBatchesOfDivision(int divisionId, int class_id){
 		BatchDB batchDB=new BatchDB();
 		return batchDB.retriveAllBatchesOfDivision(divisionId, class_id);
 	}

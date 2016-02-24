@@ -412,7 +412,7 @@ public List<Batch> retriveAllBatches(List<String> class_id) {
 
 
 }
-	public List<Batch> retriveAllBatchesOfDivision(String divisionId, int class_id){
+	public List<Batch> retriveAllBatchesOfDivision(int divisionId, int class_id){
 	Session session = null;
 	Transaction transaction = null;
 	List<Batch> batchList = null;

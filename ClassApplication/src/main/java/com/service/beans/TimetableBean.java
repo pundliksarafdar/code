@@ -4,7 +4,7 @@ import java.util.List;
 
 
 public class TimetableBean {
-	/*Bean can be used as requst or response*/
+	/*Bean can be used as request or response*/
 	
 	private int timetableId;
 	private int classid;

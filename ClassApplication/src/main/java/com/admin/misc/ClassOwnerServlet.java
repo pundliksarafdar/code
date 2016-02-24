@@ -35,13 +35,6 @@ import org.apache.pdfbox.util.PDFImageWriter;
 
 import com.classapp.db.Feedbacks.Feedback;
 import com.classapp.db.Notes.Notes;
-
-/*import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-*/
-import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Teacher.Teacher;
 import com.classapp.db.Teacher.TeacherDetails;
 import com.classapp.db.advertisement.*;
@@ -53,6 +46,7 @@ import com.classapp.db.institutestats.InstituteStats;
 import com.classapp.db.notificationpkg.Notification;
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.register.RegisterBean;
+import com.classapp.db.schedule.Schedule;
 import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentData;
 import com.classapp.db.student.StudentDetails;
@@ -334,7 +328,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 
 			String divisionId = req.getParameter("divisionId");
-			List<Batch> batches= batchTransactions.getAllBatchesOfDivision(divisionId, regId); 
+			List<Batch> batches= batchTransactions.getAllBatchesOfDivision(Integer.parseInt(divisionId), regId); 
 			String batchIds="";
 			String batchNames="";
 			
