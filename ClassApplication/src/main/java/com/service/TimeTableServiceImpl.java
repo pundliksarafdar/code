@@ -26,9 +26,9 @@ import com.transaction.batch.BatchTransactions;
 import com.transaction.schedule.ScheduleTransaction;
 
 @Path("/schedule")
-public class TimeTableServiceImpl extends ServiceBase implements TimeTableServiceApi {
+public class TimeTableServiceImpl extends ServiceBase{
 
-	@Context
+/*	@Context
 	private HttpServletRequest request;
 
 	@GET
@@ -510,4 +510,4 @@ public class TimeTableServiceImpl extends ServiceBase implements TimeTableServic
 		System.out.println("No. of rows deleted :" + count);
 		return Response.status(Response.Status.OK).entity(count).build();
 	}
-}
+*/}

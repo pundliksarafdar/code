@@ -233,7 +233,7 @@ $(document).ready(function(){
 		handlers.error = function(e){};
 		var division = $("#division").val();
 		var questionPaperName = $("#saveQuestionPaperName").val();
-		if(questionPaperName && questionPaperName.trim().length()!==0){
+		if(questionPaperName && questionPaperName.trim().length!==0){
 			rest.post("rest/classownerservice/saveQuestionPaper/"+patternId+"/"+questionPaperName+"/"+division,handlers,JSON.stringify(questionPaperData),true);	
 		}else{
 			alert("Please enter name");
