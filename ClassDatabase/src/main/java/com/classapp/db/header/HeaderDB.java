@@ -6,10 +6,12 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.classapp.db.Feedbacks.Feedback;
 import com.classapp.db.exam.Exam;
+import com.classapp.db.question.Questionbank;
 import com.classapp.persistence.HibernateUtil;
 
 public class HeaderDB {
@@ -38,6 +40,19 @@ public class HeaderDB {
 		
 	}
 	
-	
+	public List<Header> getHeaderList(int inst_id) {
+		Exam exam=new Exam();
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Criteria criteria = session.createCriteria(Header.class);
+		Criterion criterion = Restrictions.eq("inst_id", inst_id);
+		criteria.add(criterion);
+		List<Header> headerList = criteria.list();
+		transaction.commit();
+		session.close();
+		return  headerList;	
+	}
 
 }

@@ -15,7 +15,7 @@ public class UserStatic {
 	private String notesPath;
 	private String patternPath;
 	private String questionPaperPath;
-	
+	private String headerPath;
 	private Set<String> alarms;
 	
 	public double getTotalStorage() {
@@ -86,6 +86,12 @@ public class UserStatic {
 	}
 	public void setQuestionPaperPath(String questionPaperPath) {
 		this.questionPaperPath = questionPaperPath;
+	}
+	public String getHeaderPath() {
+		return this.storageSpace+File.separator+"headerFiles";
+	}
+	public void setHeaderPath(String headerPath) {
+		this.headerPath = headerPath;
 	}
 	
 	

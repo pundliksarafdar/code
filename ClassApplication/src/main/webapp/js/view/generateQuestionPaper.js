@@ -24,6 +24,8 @@ var subjectList = [];
 var topicNSubject = {};
 var questionPaperServicebeanList;
 var questionListTable;
+//this pattern id is set when you select pattern
+var patternId;
 
 var SELECT_SUBJECT = ".selectSubject";
 var SELECT_TOPIC = ".selectTopic";
@@ -41,6 +43,7 @@ var QUESTION_LIST_LOADING = "#questionListLoading";
 var QUESTION_LIST = "#questionList";
 var QUESTION_LIST_TABLE = "#questionListTable";
 var CHOOSE_QUESTION = ".chooseQuestionFromTable";
+var SAVE_QUESTION_PAPER = "#saveQuestionPaper";
 function createPatternTable(data){
 	//data = JSON.parse(data);
 	var i=0;
@@ -217,6 +220,27 @@ $(document).ready(function(){
 		$(QUESTION_LIST_MODAL).modal('hide');
 	});
 	
+	$(SAVE_QUESTION_PAPER).on("click",function(){
+		var questionPaperData = {};
+		$.each($(QUESTION),function(key,val){
+			questionPaperData[$(val).closest('[item_id]').attr('item_id')] = $(val).data(QUESTION_ID);
+		});
+		console.log(questionPaperData);
+		var handlers = {};
+		handlers.success = function(resp){
+			loadSubjectAndTopic(resp);
+		};
+		handlers.error = function(e){};
+		var division = $("#division").val();
+		var questionPaperName = $("#saveQuestionPaperName").val();
+		if(questionPaperName && questionPaperName.trim().length()!==0){
+			rest.post("rest/classownerservice/saveQuestionPaper/"+patternId+"/"+questionPaperName+"/"+division,handlers,JSON.stringify(questionPaperData),true);	
+		}else{
+			alert("Please enter name");
+		}
+		
+	});
+	
 	$(QUESTION_LIST_MODAL).on('shown.bs.modal', function () {
 	
 	});
@@ -257,7 +281,7 @@ $(document).ready(function(){
 	$("#patternListTable").on("click",".viewPattern",function(){
 		$("#viewPatternDiv").show();
 		$("#patternListTableDiv").hide();
-		var patternid = $(this).attr("id");
+		patternId = $(this).attr("id");
 		var handlers = {};
 		handlers.success = function(e){
 		$("#viewPatternData").empty();
@@ -272,7 +296,7 @@ $(document).ready(function(){
 		handlers.error = function(e){
 		console.log("Error",e)}
 		editString = "";
-		rest.post("rest/classownerservice/getQuestionPaperPattern/"+division+"/"+patternid,handlers);
+		rest.post("rest/classownerservice/getQuestionPaperPattern/"+division+"/"+patternId,handlers);
 	});
 	
 	$(".cancleView").click(function(){

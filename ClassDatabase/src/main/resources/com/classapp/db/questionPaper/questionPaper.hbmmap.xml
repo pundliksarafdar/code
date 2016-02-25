@@ -20,8 +20,8 @@
         <property name="paper_description" type="java.lang.String">
             <column name="paper_description" length="25"/>
         </property>
-        <property name="added_by" type="int">
-            <column name="added_by" />
+        <property name="created_by" type="int">
+            <column name="created_by" />
         </property>
         <property name="modified_by" type="int">
             <column name="modified_by" />

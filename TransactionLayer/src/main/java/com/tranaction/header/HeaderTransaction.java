@@ -2,10 +2,12 @@ package com.tranaction.header;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 
+import com.classapp.db.header.Header;
 import com.classapp.db.header.HeaderDB;
 
 public class HeaderTransaction {
@@ -38,4 +40,10 @@ public class HeaderTransaction {
 		return false;
 				
 	}
+	
+	public List<Header> getHeaderList(int inst_id) {
+	HeaderDB headerDB = new HeaderDB();
+	return headerDB.getHeaderList(inst_id);
+	}
+	
 }

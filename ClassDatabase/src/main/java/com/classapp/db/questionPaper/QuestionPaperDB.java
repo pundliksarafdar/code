@@ -93,4 +93,28 @@ public class QuestionPaperDB {
 		}
 		return false;
 	}
+	
+	public boolean verifyUpdatePaperName(int div_id,int inst_id,String paper_description,int paper_id) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Criteria criteria = session.createCriteria(QuestionPaper.class);
+		Criterion criterion = Restrictions.eq("inst_id", inst_id);
+		criteria.add(criterion);
+		criterion = Restrictions.eq("div_id", div_id);
+		criteria.add(criterion);
+		criterion = Restrictions.eq("paper_description", paper_description);
+		criteria.add(criterion);
+		criterion = Restrictions.eq("paper_id", paper_id);
+		criteria.add(criterion);
+		List<QuestionPaper> questionPaperList = criteria.list();
+		if(session!=null){
+			session.close();
+		}
+		if(questionPaperList.size()>0){
+			return true;
+		}
+		return false;
+	}
 }

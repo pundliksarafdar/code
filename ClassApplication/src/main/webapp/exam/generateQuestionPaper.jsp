@@ -125,6 +125,13 @@ font-size: 12px;
 		</div>
 		<div id="viewPatternData"></div>
 		<input type="button" value="Generate" class="btn btn-default" id="generateQuestionPaper"/>
+		<div class="input-group">
+		  <input type="text" class="form-control" id="saveQuestionPaperName">
+		  <div class="input-group-btn">
+		    <input type="button" value="Save" class="btn btn-default" id="saveQuestionPaper"/>
+		  </div>
+		</div>
+		
 	</div>
 	
 	<div class="modal fade" id="questionListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

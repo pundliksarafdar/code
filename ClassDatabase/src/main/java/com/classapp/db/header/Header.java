@@ -1,6 +1,8 @@
 package com.classapp.db.header;
 
-public class Header {
+import java.io.Serializable;
+
+public class Header implements Serializable{
 	int inst_id;
 	String header_id;
 	String header_name;

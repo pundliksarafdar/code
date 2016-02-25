@@ -975,7 +975,7 @@ function ExamPatternObject(){
 </head>
 <body>
 	<jsp:include page="../ExamHeader.jsp" >
-		<jsp:param value="active" name="generateQuestionPaper"/>
+		<jsp:param value="active" name="viewneditpattern"/>
 	</jsp:include>
 <div class="container" style="padding: 2%; background: #eee">
 		<div class="row">
