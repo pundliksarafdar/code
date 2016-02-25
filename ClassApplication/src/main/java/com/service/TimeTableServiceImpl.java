@@ -17,8 +17,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.batch.Batch;
-import com.classapp.db.schedule.Schedule;
 import com.google.gson.JsonObject;
 import com.service.beans.ScheduleBean;
 import com.serviceinterface.TimeTableServiceApi;
