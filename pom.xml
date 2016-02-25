@@ -12,10 +12,10 @@
   <url>http://maven.apache.org</url>
  
    <modules>
-    <module>TransactionLayer</module>
-	<module>DataLayer</module>
+    <module>DataLayer</module>
 	<module>ClassDatabase</module>
-    <module>ClassApplication</module>
-	<module>CorexWebService</module>
+    <module>TransactionLayer</module>
+	<module>ClassApplication</module>
+	<!--<module>CorexWebService</module>-->
   </modules> 
 </project>
