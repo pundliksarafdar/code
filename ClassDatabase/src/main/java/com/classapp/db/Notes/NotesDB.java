@@ -12,7 +12,7 @@ import org.hibernate.criterion.Restrictions;
 import com.classapp.db.Teacher.Teacher;
 import com.classapp.db.exam.Exam;
 import com.classapp.db.register.RegisterBean;
-import com.classapp.db.schedule.Schedule;
+import com.classapp.db.Schedule.Schedule;
 import com.classapp.persistence.HibernateUtil;
 
 public class NotesDB {

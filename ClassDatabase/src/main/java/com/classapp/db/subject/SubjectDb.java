@@ -14,7 +14,7 @@ import org.hibernate.criterion.Restrictions;
 
 import com.classapp.db.batch.Batch;
 import com.classapp.db.exam.Exam;
-import com.classapp.db.schedule.Schedule;
+import com.classapp.db.Schedule.Schedule;
 import com.classapp.persistence.HibernateUtil;
 
 public class SubjectDb {

@@ -11,6 +11,7 @@ $(document).ready(function(){
 	$("#division").change(function(){
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
+		createQuestionPaperListTable(e);
 		}
 		handlers.error = function(e){console.log("Error",e)}
 		var division = $("#division").val(); 
@@ -35,7 +36,7 @@ $(document).ready(function(){
 					while(i < subjectnameArray.length){
 				   		$(".subjectDiv").append("<div class='row well'><div class='col-md-3'><input type='checkbox' value='"+subjectidArray[i]+" name='subjectCheckbox' id='subjectCheckbox'>"+
 				   				subjectnameArray[i]+"</div><div class='col-md-5'>"+
-				   				"<button class='btn btn-primary btn-xs chooseQuestionPaper'>Choose</button>"+
+				   				"<button class='btn btn-primary btn-xs chooseQuestionPaper'>Choose Question Paper</button>"+
 				   				"<span class='questionPaperName'></span></div><div class='col-md-1'><input type='text' class='form-control marks'></div>"+
 				   				"</div>");
 				   		i++;
@@ -47,7 +48,37 @@ $(document).ready(function(){
 		   	}
 		   });
 	});
+	
+	$(".subjectDiv").on("click",".chooseQuestionPaper",function(){
+		$("#questionPaperListModal").modal("toggle");
+	});
 });
+
+function createQuestionPaperListTable(data){
+	//data = JSON.parse(data);
+	var i=0;
+	var dataTable = $('#questionPaperListTable').DataTable({
+		bDestroy:true,
+		data: data,
+		lengthChange: false,
+		columns: [
+			{ title: "Paper Description",data:null,render:function(data,event,row){
+				var div = '<div class="default defaultBatchName">'+row.paper_description+'</div>';
+				return div;
+			},sWidth:"40%"},
+			{ title: "Marks",data:null,render:function(data,event,row){
+				return row.marks;
+			},sWidth:"20%"},
+			{ title: "Choose",data:null,render:function(data,event,row){
+				var buttons = '<div class="default">'+
+					'<input type="button" class="btn btn-sm btn-primary viewPattern" value="Choose" id="'+row.paper_id+'">'+
+				'</div>'
+				return buttons;
+			},sWidth:"10%"}
+		]
+	});
+	
+}
 </script>
 </head>
 <body>
@@ -101,5 +132,21 @@ $(document).ready(function(){
 		
 		</div>
 </div>
+
+<div class="modal fade" id="questionPaperListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h4 class="modal-title" id="myModalLabel">Question Paper list</h4>
+		  </div>
+		  <div class="modal-body">
+			<div id="questionPaperList">
+				<table id="questionPaperListTable" style="width:100%;"></table>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
 </body>
 </html>

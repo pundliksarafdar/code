@@ -7,8 +7,8 @@ import com.classapp.db.Teacher.Teacher;
 import com.classapp.db.Teacher.TeacherDB;
 import com.classapp.db.Teacher.TeacherDetails;
 import com.classapp.db.register.RegisterBean;
-import com.classapp.db.schedule.Schedule;
-import com.classapp.db.schedule.ScheduleDB;
+import com.classapp.db.Schedule.Schedule;
+import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.subject.Subject;
 import com.transaction.register.RegisterTransaction;
 

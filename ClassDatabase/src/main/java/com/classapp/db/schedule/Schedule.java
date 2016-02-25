@@ -1,4 +1,4 @@
-package com.classapp.db.schedule;
+package com.classapp.db.Schedule;
 
 import java.io.Serializable;
 import java.sql.Date;

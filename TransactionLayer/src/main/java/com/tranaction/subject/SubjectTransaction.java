@@ -11,7 +11,7 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.BatchDB;
-import com.classapp.db.schedule.Schedule;
+import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.subject.AddSubject;
 import com.classapp.db.subject.GetSubject;
 import com.classapp.db.subject.SubjectDb;

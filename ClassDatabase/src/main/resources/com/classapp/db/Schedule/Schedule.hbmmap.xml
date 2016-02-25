@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
  
 <hibernate-mapping>
-    <class name="com.classapp.db.schedule.Schedule" table="schedule" catalog="classdb">	
+    <class name="com.classapp.db.Schedule.Schedule" table="schedule" catalog="classdb">	
 		<id name="schedule_id" type="java.lang.Integer">
             <column name="schedule_id" />
             <generator class="identity" />

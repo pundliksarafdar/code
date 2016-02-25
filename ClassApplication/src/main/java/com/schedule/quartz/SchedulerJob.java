@@ -6,7 +6,7 @@ import org.quartz.JobExecutionException;
 
 import com.classapp.db.notificationpkg.NotificationDB;
 import com.classapp.db.register.RegisterDB;
-import com.classapp.db.schedule.ScheduleDB;
+import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.logger.AppLogger;
 
 public class SchedulerJob implements Job {

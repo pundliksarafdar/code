@@ -11,7 +11,7 @@ import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.BatchDB;
 import com.classapp.db.batch.BatchData;
 import com.classapp.db.batch.DeleteBatch;
-import com.classapp.db.schedule.Schedule;
+import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.subject.SubjectDb;
 
 

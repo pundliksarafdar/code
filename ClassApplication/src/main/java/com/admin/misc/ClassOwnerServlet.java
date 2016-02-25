@@ -46,7 +46,7 @@ import com.classapp.db.institutestats.InstituteStats;
 import com.classapp.db.notificationpkg.Notification;
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.register.RegisterBean;
-import com.classapp.db.schedule.Schedule;
+import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentData;
 import com.classapp.db.student.StudentDetails;

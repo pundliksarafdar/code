@@ -1,4 +1,4 @@
-package com.classapp.db.schedule;
+package com.classapp.db.Schedule;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;

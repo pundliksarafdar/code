@@ -27,7 +27,7 @@ import com.corex.requestbean.WeeklyScheduleRequest;
 import com.corex.responsebean.WeeklyScheduleResponse;
 
 import com.classapp.db.Notes.Notes;
-import com.classapp.db.schedule.Schedule;
+import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Teacher.Teacher;
 import com.classapp.db.Teacher.TeacherDetails;
 import com.classapp.db.batch.Batch;
