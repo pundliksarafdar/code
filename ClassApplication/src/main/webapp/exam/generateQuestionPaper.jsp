@@ -21,9 +21,7 @@ ul {
 .modal-header{
 background: white;
 }
-.modal-dialog{
-width: 100%;
-}
+
 .col-md-*{
 width: 100%;
 margin : 0%;
@@ -72,6 +70,12 @@ margin-right: 2px
 color: red;
 font-size: 12px;
 }
+
+.noRegenerate{
+	display:none;
+}
+
+
 </style>
 </head>
 <body>
@@ -125,11 +129,14 @@ font-size: 12px;
 		</div>
 		<div id="viewPatternData"></div>
 		<input type="button" value="Generate" class="btn btn-default" id="generateQuestionPaper"/>
-		<div class="input-group">
-		  <input type="text" class="form-control" id="saveQuestionPaperName">
-		  <div class="input-group-btn">
-		    <input type="button" value="Save" class="btn btn-default" id="saveQuestionPaper"/>
-		  </div>
+		<br>
+		<div class="container well" id="saveSection" style="padding:1%;margin:1%;">
+		<div class="row" >
+			<div class="col-xs-5"><input type="text" class="form-control" id="saveQuestionPaperName" placeholder="Question paper name"></div>
+			<div class="col-xs-5"><input type="text" class="form-control" id="saveQuestionPaperDesc" placeholder="Question paper description"></div>
+			<div class="col-xs-2"><input type="button" value="Save" class="btn btn-default" id="saveQuestionPaper"/></div>
+		</div>
+		</div>
 		</div>
 		
 	</div>

@@ -304,6 +304,8 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		fileObject.setMarks(questionPaperPattern.getMarks());
 		//fileObject.setPaper_description(questionPaperPattern.);
 		fileObject.setPattern_id(questionPaperPattern.getPattern_id());
+		//Description is added in question item as its too long to send
+		fileObject.setPaper_description(questionAndItem.get("desc"));
 		List<QuestionPaperFileElement> questionPaperFileElements = new ArrayList<QuestionPaperFileElement>();
 		for(int index=0;index<questionPaperPatternList.size();index++){
 			QuestionPaperFileElement questionPaperFileElement = new QuestionPaperFileElement();

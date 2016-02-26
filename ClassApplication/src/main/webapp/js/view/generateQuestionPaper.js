@@ -44,6 +44,8 @@ var QUESTION_LIST = "#questionList";
 var QUESTION_LIST_TABLE = "#questionListTable";
 var CHOOSE_QUESTION = ".chooseQuestionFromTable";
 var SAVE_QUESTION_PAPER = "#saveQuestionPaper";
+var SAVE_SECTION = "#saveSection";
+var QUESTION_PAPER_DESC = "#saveQuestionPaperDesc";
 function createPatternTable(data){
 	//data = JSON.parse(data);
 	var i=0;
@@ -132,6 +134,7 @@ function getSubjectName(subId){
 
 
 $(document).ready(function(){
+	
 	$("body").on("click",REGENERATE_QUE_BTN,function(e){
 			var RegenerateObj = {};
 			var selectSub = $(this).closest('.row').find(SELECT_SUBJECT);
@@ -186,14 +189,13 @@ $(document).ready(function(){
 		var url = "rest/classownerservice/generateQuestionPaper/"+$("#division").val();
 		var handler = {};
 		handler.success = function(e){
-			console.log(e);
 			questionPaperServicebeanList = e.questionPaperServicebeanList;
 			if(e.questionPaperDataList.length){
 				$.each(e.questionPaperDataList,function(key,val){
 					$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
 					$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
 				});
-				
+			$(".noRegenerate").removeClass("noRegenerate");
 			}
 		}
 		handler.error = function(e){console.log(e);}
@@ -233,10 +235,13 @@ $(document).ready(function(){
 		handlers.error = function(e){};
 		var division = $("#division").val();
 		var questionPaperName = $("#saveQuestionPaperName").val();
+		var desc = $(QUESTION_PAPER_DESC).val();
 		if(questionPaperName && questionPaperName.trim().length!==0){
+			questionPaperData.desc = desc;
 			rest.post("rest/classownerservice/saveQuestionPaper/"+patternId+"/"+questionPaperName+"/"+division,handlers,JSON.stringify(questionPaperData),true);	
 		}else{
-			alert("Please enter name");
+			modal.launchAlert("Error","Please enter exam name");
+			$("#saveQuestionPaperName").focus();
 		}
 		
 	});
@@ -292,6 +297,7 @@ $(document).ready(function(){
 		questionPaperPattern = e;
 		recursiveView(e.questionPaperStructure,0,e.questionPaperStructure);
 		loadSubjectAndTopicSelect();
+		$(SAVE_SECTION).addClass("noRegenerate");
 		};
 		handlers.error = function(e){
 		console.log("Error",e)}
@@ -441,6 +447,8 @@ function recursiveView(data,recursionLevel,dataArray){
 				recursiveView(newDataArray,recursionLevel,dataArray)
 			}
 			
+			$("#viewPatternDiv").find('.regenerateQuestion,.chooseQuestion').addClass("noRegenerate");	
+			
 		}
 	}
 }
@@ -488,6 +496,7 @@ var loadQuestionList = function(subject_id,item_id,question_type,item_type,quest
 					},sWidth:"10%"}
 					]
 					});
+			
 			}
 			handler.error = function(e){console.log(e);}
 			rest.post(url,handler,JSON.stringify(RegenerateObj));
