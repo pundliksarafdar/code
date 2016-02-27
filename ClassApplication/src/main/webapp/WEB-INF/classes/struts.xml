@@ -390,12 +390,9 @@
 			<result name="examadded" type="tiles">classowner.questioneditsuccess</result>
 		</action>
 		
-		<action name="editexam" class="com.exam.EditExamAction"
+		<action name="editExam" class="com.exam.EditExamAction"
 			method="execute">
-			<result name="editexam" type="tiles">classowner.editexam</result>
-			<result name="autosubmit" type="tiles">classowner.autosubmit</result>
-			<result name="teachereditexam" type="tiles">teacher.teachereditexam</result>
-			<result name="editcomplete" type="tiles">classowner.questioneditsuccess</result>
+			<result name="success" type="tiles">classowner.editexam</result>
 		</action>
 		
 		<action name="viewexam" class="com.exam.ViewExamAction"

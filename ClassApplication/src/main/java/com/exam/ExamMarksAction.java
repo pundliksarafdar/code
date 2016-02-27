@@ -40,7 +40,7 @@ public class ExamMarksAction extends BaseAction {
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
-			Map<String, Object> session) {
+			Map<String, Object> session) {/*
 		ExamTransaction examTransaction = new ExamTransaction();
 		
 		int totalCount=0;
@@ -112,7 +112,7 @@ public class ExamMarksAction extends BaseAction {
 				}
 			}
 		}
-		return "viewexammarks";
+	*/	return "viewexammarks";
 	}
 	public String getBatch() {
 		return batch;

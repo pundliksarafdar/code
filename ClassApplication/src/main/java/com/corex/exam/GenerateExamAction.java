@@ -42,7 +42,7 @@ public class GenerateExamAction extends BaseAction{
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
-			Map<String, Object> session) {
+			Map<String, Object> session) {/*
 		ExamTransaction examTransaction = new ExamTransaction();
 		List<QuestionSearchRequest> questionSearchRequestList = new ArrayList();
 		
@@ -115,10 +115,10 @@ public class GenerateExamAction extends BaseAction{
 		
 		
 		
-		return SUCCESS;
+	*/	return SUCCESS;
 	}
 	
-	private Object readObject(File file) {
+	/*private Object readObject(File file) {
 		Object object = null;
 		FileInputStream fin = null;
 		ObjectInputStream objectInputStream = null;
@@ -257,7 +257,7 @@ public class GenerateExamAction extends BaseAction{
 
 	public void setExamMinute(int examMinute) {
 		this.examMinute = examMinute;
-	}
+	}*/
 	
 		
 }

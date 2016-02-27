@@ -22,6 +22,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
 
+import com.classapp.db.exam.Exam;
+import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.questionPaper.QuestionPaper;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Topics;
@@ -34,6 +36,7 @@ import com.service.beans.GenerateQuestionPaperResponse;
 import com.service.beans.ImageListBean;
 import com.service.beans.NewQuestionRequest;
 import com.service.beans.QuestionPaperData;
+import com.service.beans.QuestionPaperEditFileObject;
 import com.service.beans.QuestionPaperFileElement;
 import com.service.beans.QuestionPaperFileObject;
 import com.service.beans.QuestionPaperPattern;
@@ -42,6 +45,7 @@ import com.service.beans.SubjectsWithTopics;
 import com.serviceinterface.ClassownerServiceApi;
 import com.tranaction.header.HeaderTransaction;
 import com.tranaction.subject.SubjectTransaction;
+import com.transaction.exams.ExamTransaction;
 import com.transaction.image.ImageTransactions;
 import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
 import com.user.UserBean;
@@ -335,7 +339,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	public Response updateQuestionPaper(QuestionPaperFileObject fileObject){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
-		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId());
+		boolean status = patternTransaction.updateQuestionPaper(fileObject, getRegId());
 		return Response.status(Status.OK).entity(status).build();
 	}
 	
@@ -346,7 +350,29 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	public Response getQuestionPaper(@PathParam("division") String division,@PathParam("paper_id") String paper_id){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
-		QuestionPaperFileObject fileObject = patternTransaction.getQuestionPaper(Integer.parseInt(division), Integer.parseInt(paper_id));
+		QuestionPaperEditFileObject fileObject = patternTransaction.getQuestionPaper(Integer.parseInt(division), Integer.parseInt(paper_id));
 		return Response.status(Status.OK).entity(fileObject).build();
+	}
+	
+	@POST
+	@Path("/saveExamPaper/{examName}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveExamPaper(@PathParam("examName") String exam,List<Exam_Paper> exam_PaperList){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		ExamTransaction examTransaction = new ExamTransaction();
+		examTransaction.saveExamPaper(userBean.getRegId(), exam, exam_PaperList, userBean.getRegId());
+		return Response.status(Status.OK).entity("test").build();
+	}
+	
+	@POST
+	@Path("/getExamList/{division}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getExamList(@PathParam("division") String division){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		ExamTransaction examTransaction = new ExamTransaction();
+		List<Exam> examList = examTransaction.getExamList(Integer.parseInt(division), userBean.getRegId());
+		return Response.status(Status.OK).entity(examList).build();
 	}
 }

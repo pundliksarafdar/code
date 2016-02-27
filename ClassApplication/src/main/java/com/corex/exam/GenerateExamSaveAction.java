@@ -31,7 +31,7 @@ public class GenerateExamSaveAction extends BaseAction{
 		String answerIdString = jsonObject.get("answerIdString").getAsString();
 		int examHour = jsonObject.get("examHour").getAsInt();
 		int examMinute = jsonObject.get("examMinute").getAsInt();
-		examTransaction.saveExam(examname, instituteId, subject, division,totalMarks , passingmarks, creatorId,batch , questionIdString, answerIdString,examHour,examMinute);
+		//examTransaction.saveExam(examname, instituteId, subject, division,totalMarks , passingmarks, creatorId,batch , questionIdString, answerIdString,examHour,examMinute);
 		return SUCCESS;
 	}
 

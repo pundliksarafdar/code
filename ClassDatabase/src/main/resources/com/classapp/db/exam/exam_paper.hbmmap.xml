@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 18 Jul, 2014 11:15:40 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.exam.Exam_Paper" table="exam_paper" catalog="classdb">
+    	 <id name="exam_paper_id" type="java.lang.Integer">
+            <column name="exam_paper_id" />
+            <generator class="identity" />
+        </id>
+    	<property name="inst_id" type="int">
+            <column name="inst_id" />
+        </property>
+        <property name="div_id" type="int">
+            <column name="div_id" />
+        </property>
+         <property name="exam_id" type="int">
+            <column name="exam_id" />
+        </property>
+        <property name="sub_id" type="int">
+            <column name="sub_id" />
+        </property>
+        <property name="marks" type="int">
+            <column name="marks" />
+        </property>
+          <property name="question_paper_id" type="int">
+            <column name="question_paper_id" />
+        </property>
+        <property name="header_id" type="string">
+            <column name="header_id" />
+        </property>
+        <property name="duration" type="string">
+            <column name="duration" />
+        </property>
+        <property name="created_by" type="int">
+            <column name="created_by" />
+        </property>
+        <property name="modified_by" type="int">
+            <column name="modified_by" />
+        </property>
+          <property name="created_dt" type="date">
+            <column name="created_dt" />
+        </property>
+        <property name="modified_dt" type="date">
+            <column name="modified_dt" />
+        </property>
+    </class>
+</hibernate-mapping>

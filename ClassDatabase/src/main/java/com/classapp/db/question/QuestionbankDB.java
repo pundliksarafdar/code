@@ -1,8 +1,12 @@
 package com.classapp.db.question;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder.In;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -783,6 +787,33 @@ public List<Questionbank> getQuestionBankList(int inst_id,int div_id,int sub_id,
 	session.close();
 return questionList;
 
+}
+
+public List<Questionbank> getQuestionBankList(List<List<Integer>> list){
+	Transaction transaction=null;
+	Session session=null;
+	List<Questionbank> questionlist = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		String queryString="from Questionbank where inst_id = 4 and (div_id,sub_id,que_id) in :list";
+		Integer [] temp = {14,7,4};
+		queryString = queryString.replace(":list", list.toString());
+		Query query = session.createQuery(queryString);
+		questionlist = query.list();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return questionlist;
 }
 
 }

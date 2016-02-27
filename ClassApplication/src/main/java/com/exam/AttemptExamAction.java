@@ -53,7 +53,7 @@ public class AttemptExamAction extends BaseAction {
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
-			Map<String, Object> session) {
+			Map<String, Object> session) {/*
 		int inst_id=userBean.getRegId();
 		if(institute!=0){
 			UserStatic userStatic = userBean.getUserStatic();
@@ -228,7 +228,7 @@ public class AttemptExamAction extends BaseAction {
 		}
 		}
 		}
-		return SUCCESS;
+	*/	return SUCCESS;
 	}
 	
 	private void setStartAndEndTime(HttpServletRequest request,String examTime){

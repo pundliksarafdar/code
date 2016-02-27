@@ -1499,7 +1499,6 @@ public class ClassOwnerServlet extends HttpServlet{
 			NotesTransaction notesTransaction=new NotesTransaction();
 			notesTransaction.removebatchfromnotes(userBean.getRegId(), batchdivisionid, deleteBatchId+"");
 			ExamTransaction examTransaction=new ExamTransaction();
-			examTransaction.removebatchfromexam(userBean.getRegId(), batchdivisionid, deleteBatchId+"");
 				if(batchTransactions.deleteBatch(batch)){
 					BatchHelperBean batchHelperBean= new BatchHelperBean(regId);
 					batchHelperBean.setBatchDetailsList();
@@ -1792,7 +1791,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
 	marksTransaction.deleteStudentMarksrelatedtosubject(Integer.parseInt(subjectid));
 	ExamTransaction examTransaction=new ExamTransaction();
-	examTransaction.deleteExamrelatedtosubject(Integer.parseInt(subjectid));
+	//examTransaction.deleteExamrelatedtosubject(Integer.parseInt(subjectid));
 	SubjectTransaction subjectTransaction=new SubjectTransaction();
 	subjectTransaction.deleteTopicsrelatedToSubject(userBean.getRegId(), Integer.parseInt(subjectid));
 	QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
@@ -1842,7 +1841,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
 	marksTransaction.deleteStudentMarksrelatedtodivision(Integer.parseInt(classid));
 	ExamTransaction examTransaction=new ExamTransaction();
-	examTransaction.deleteExamrelatedtodivision(Integer.parseInt(classid));
+	//examTransaction.deleteExamrelatedtodivision(Integer.parseInt(classid));
 	BatchTransactions batchTransactions=new BatchTransactions();
 	batchTransactions.deletebatchrelatdtoclass(Integer.parseInt(classid));
 	SubjectTransaction subjectTransaction=new SubjectTransaction();
@@ -2423,57 +2422,6 @@ public class ClassOwnerServlet extends HttpServlet{
 		List<Batch> list = batchTransactions.getbachesrelatedtodivandsubject(subjectid, Integer.parseInt(divisionId), regId);
 		Gson gson = new Gson();
 		respObject.addProperty("batchlist", gson.toJson(list));
-	}else if("publishExam".equalsIgnoreCase(methodToCall)){
-		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
-		Integer regId=userBean.getRegId();;
-		String divisionId = req.getParameter("division");
-		String subjectid = req.getParameter("subject");
-		String examID = req.getParameter("examID");
-		String starttime = req.getParameter("starttime");
-		String endtime = req.getParameter("endtime");
-		SimpleDateFormat displayFormat = new SimpleDateFormat("HH:mm:ss");
-	       SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
-	       Timestamp startTimestamp=new Timestamp(0000000000);
-	       Timestamp endTimestamp=new Timestamp(0000000000);
-		if(!"".equals(starttime) && null!=starttime){
-			String[] startarray=starttime.split(" ");	
-			String finalStarttime=startarray[0].split("/")[2]+"-"+startarray[0].split("/")[0]+"-"+startarray[0].split("/")[1];
-			java.util.Date startdate;
-			try {
-				startdate = parseFormat.parse(startarray[1]+" "+startarray[2]);
-				finalStarttime=finalStarttime+" "+displayFormat.format(startdate);
-				startTimestamp=Timestamp.valueOf(finalStarttime);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
-		if(!"".equals(endtime) && null!=endtime){
-			String[] endarray=endtime.split(" ");
-			String finalEndtime=endarray[0].split("/")[2]+"-"+endarray[0].split("/")[0]+"-"+endarray[0].split("/")[1];	
-		       try {
-				java.util.Date enddate=     parseFormat.parse(endarray[1]+" "+endarray[2]);
-				finalEndtime=finalEndtime+" "+displayFormat.format(enddate);
-				endTimestamp=Timestamp.valueOf(finalEndtime);
-		       } catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		ExamTransaction examTransaction=new ExamTransaction();
-		examTransaction.publishExam(Integer.parseInt(examID), regId, Integer.parseInt(subjectid), Integer.parseInt(divisionId), startTimestamp, endTimestamp);
-		respObject.addProperty(STATUS, "success");
-	}else if("disableExam".equalsIgnoreCase(methodToCall)){
-		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
-		Integer regId=userBean.getRegId();;
-		String divisionId = req.getParameter("division");
-		String subjectid = req.getParameter("subject");
-		String examID = req.getParameter("examID");
-		ExamTransaction examTransaction=new ExamTransaction();
-		examTransaction.disableExam(Integer.parseInt(examID), regId, Integer.parseInt(subjectid), Integer.parseInt(divisionId));
-		respObject.addProperty(STATUS, "success");
 	}else if("getDivisionsTopics".equalsIgnoreCase(methodToCall)){
 		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 		Integer regId=userBean.getRegId();;
@@ -2524,7 +2472,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	List<Integer> examQuesIds=new ArrayList<Integer>();
 	List<Integer> nonExamQuesIds=new ArrayList<Integer>();
 		//for (int j = 0; j < quesids.size(); j++) {	
-		List<Exam> list=examTransaction.isQuestionRelatedToTopicAvailableInExam(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId), quesids);
+		/*List<Exam> list=examTransaction.isQuestionRelatedToTopicAvailableInExam(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId), quesids);
 		if(list!=null){
 			
 			for (int i = 0; i < list.size(); i++) {
@@ -2561,7 +2509,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 			bankTransaction.deleteQuestionList(nonExamQuesIds, userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId));
 			bankTransaction.ExamQuestionStatus(examQuesIds,  userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId));
-			}else{
+			}else{*/
 				for (int i = 0; i < quesids.size(); i++) {
 					String questionPath = userStatic.getExamPath()+File.separator+subjectid+File.separator+divisionId+File.separator+quesids.get(i);
 					//uploadedMarks = (Integer) request.getSession().getAttribute("uploadedMarks");
@@ -2576,9 +2524,7 @@ public class ClassOwnerServlet extends HttpServlet{
 					}
 				}
 				bankTransaction.deleteQuestionList(quesids, userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId));
-			}
-			//respObject.addProperty("examnames", examname);
-			//respObject.addProperty("quesstatus", "Y");
+		//	}
 		}
 		subjectTransaction.deleteTopics(userBean.getRegId(), Integer.parseInt(subjectid), Integer.parseInt(divisionId),Integer.parseInt(topicid));
 		respObject.addProperty(STATUS, "success");
@@ -2663,7 +2609,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			inst_id=Integer.parseInt(institute);
 		}
 		ExamTransaction examTransaction=new ExamTransaction();
-		List<Exam> list=examTransaction.isQuestionAvailableInExam(inst_id, Integer.parseInt(subjectid), Integer.parseInt(divisionId), questionNumber);
+		/*List<Exam> list=examTransaction.isQuestionAvailableInExam(inst_id, Integer.parseInt(subjectid), Integer.parseInt(divisionId), questionNumber);
 		if(list!=null){
 			if(list.size()>0){
 			String examname="";
@@ -2681,7 +2627,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 		}else{
 			respObject.addProperty("quesstatus", "");
-		}
+		}*/
 		respObject.addProperty(STATUS, "success");
 	}else if("reevaluate".equalsIgnoreCase(methodToCall)){
 		ReEvaluateThreadRunner evaluateThreadRunner = new ReEvaluateThreadRunner();
@@ -2701,24 +2647,6 @@ public class ClassOwnerServlet extends HttpServlet{
 		respObject.addProperty(STATUS, "success");
 	}else if("removeaddedquestioninexam".equalsIgnoreCase(methodToCall)){
 		req.getSession().setAttribute("questionsIds",null);
-		respObject.addProperty(STATUS, "success");
-	}else if("validateexamname".equalsIgnoreCase(methodToCall)){
-		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
-		String examname = req.getParameter("examname");
-		String institute = req.getParameter("institute");
-		String examID = req.getParameter("examID");
-		ExamTransaction examTransaction=new ExamTransaction();
-		boolean flag=false;
-		if(!"".equals(institute) && institute !=null){
-			flag=examTransaction.isExamExists(Integer.parseInt(institute),examname,examID );
-		}else {
-			flag=examTransaction.isExamExists(userBean.getRegId(), examname,examID);
-		}
-		if(flag==true){
-			respObject.addProperty("examavailable", "true");
-		}else{
-			respObject.addProperty("examavailable", "false");
-		}
 		respObject.addProperty(STATUS, "success");
 	}else if("getweeklyschedule".equals(methodToCall)){
 		Integer regId = null;
@@ -3039,7 +2967,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		String examname="";
 		if(quesids!=null){
 		//for (int j = 0; j < quesids.size(); j++) {	
-		List<Exam> list=examTransaction.isQuestionRelatedToTopicAvailableInExam(inst_id, Integer.parseInt(subjectid), Integer.parseInt(divisionId), quesids);
+		/*List<Exam> list=examTransaction.isQuestionRelatedToTopicAvailableInExam(inst_id, Integer.parseInt(subjectid), Integer.parseInt(divisionId), quesids);
 		if(list!=null){
 			
 			for (int i = 0; i < list.size(); i++) {
@@ -3051,7 +2979,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 			respObject.addProperty("examnames", examname);
 			respObject.addProperty("quesstatus", "Y");
-		}
+		}*/
 		//	}
 		}if("".equals(examname)){
 			respObject.addProperty("quesstatus", "");
@@ -3148,8 +3076,8 @@ public class ClassOwnerServlet extends HttpServlet{
 		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 		Integer regId=userBean.getRegId();;
 		int inst_id = regId;
-		boolean isQuestionAvailable = examTransaction.isQuestionsAvailable(sub_id, inst_id, div_id, marks, count, maximumRepeatation);
-		respObject.addProperty("available", isQuestionAvailable);
+		/*boolean isQuestionAvailable = examTransaction.isQuestionsAvailable(sub_id, inst_id, div_id, marks, count, maximumRepeatation);
+		respObject.addProperty("available", isQuestionAvailable);*/
 		respObject.addProperty(STATUS, "success");
 	}else if("navigatepage".equalsIgnoreCase(methodToCall)){
 		UserBean userBean = (UserBean) req.getSession().getAttribute("user");

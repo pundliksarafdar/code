@@ -1,5 +1,6 @@
 package com.transaction.pattentransaction;
 
+import java.beans.Beans;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.TTCCLayout;
 
 import com.classapp.db.pattern.QuestionPaperPattern;
@@ -31,6 +34,9 @@ import com.service.beans.GenerateQuestionPaperResponse;
 import com.service.beans.NewQuestionRequest;
 import com.service.beans.QuestionPaperData;
 import com.service.beans.GenerateQuestionPaperServicebean;
+import com.service.beans.QuestionPaperEditFileElement;
+import com.service.beans.QuestionPaperEditFileObject;
+import com.service.beans.QuestionPaperFileElement;
 import com.service.beans.QuestionPaperFileObject;
 import com.service.beans.QuestionPaperStructure;
 
@@ -327,12 +333,89 @@ public class QuestionPaperPatternTransaction {
 		return true;
 	}
 	
-	public QuestionPaperFileObject getQuestionPaper(int div_id,int paper_id) {
+	public QuestionPaperEditFileObject getQuestionPaper(int div_id,int paper_id) {
 		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
 		File file = new File(patternStorageURL+File.separator+div_id+File.separator+paper_id);
 		QuestionPaperFileObject fileObject = (QuestionPaperFileObject) readObject(file);
-		return fileObject;
+		List<QuestionPaperFileElement> fileElements=fileObject.getQuestionPaperFileElementList();
+		List<List<Integer>> list = new ArrayListOverride<List<Integer>>();
+		for (Iterator iterator = fileElements.iterator(); iterator.hasNext();) {
+			QuestionPaperFileElement questionPaperFileElement = (QuestionPaperFileElement) iterator.next();
+			List<Integer> IdList = new ArrayListOverride<Integer>();
+			IdList.add(div_id);
+			IdList.add(questionPaperFileElement.getSubject_id());
+			IdList.add(questionPaperFileElement.getQues_no());
+			list.add(IdList);
+		}
+		QuestionbankDB questionbankDB = new QuestionbankDB();
+		List<Questionbank> questionbankList = questionbankDB.getQuestionBankList(list);
+		QuestionPaperEditFileObject editFileObject = new QuestionPaperEditFileObject();
+		editFileObject.setClass_id(fileObject.getClass_id());
+		editFileObject.setInst_id(fileObject.getInst_id());
+		editFileObject.setMarks(fileObject.getMarks());
+		editFileObject.setPaper_description(fileObject.getPaper_description());
+		editFileObject.setPaper_id(fileObject.getPaper_id());
+		editFileObject.setPattern_id(fileObject.getPattern_id());
+		List<QuestionPaperEditFileElement> editFileElementList = new ArrayList<QuestionPaperEditFileElement>();
+		for (Iterator iterator = fileElements.iterator(); iterator
+				.hasNext();) {
+			QuestionPaperFileElement questionbank = (QuestionPaperFileElement) iterator.next();
+			QuestionPaperEditFileElement editFileElement = new QuestionPaperEditFileElement();
+			//editFileElement.setAlternate_value(alternate_value)
+			try {
+				BeanUtils.copyProperties(editFileElement, fileElements);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			editFileElementList.add(editFileElement);
+		}
+		
+		for (Iterator iterator = editFileElementList.iterator(); iterator
+				.hasNext();) {
+			QuestionPaperEditFileElement editFileElement = (QuestionPaperEditFileElement) iterator.next();
+			for (Iterator iterator2 = questionbankList.iterator(); iterator2
+					.hasNext();) {
+				Questionbank questionbank = (Questionbank) iterator2
+						.next();
+				if(editFileElement.getSubject_id() == questionbank.getSub_id() && editFileElement.getQues_no() == questionbank.getQue_id()){
+					editFileElement.setQuestionbank(questionbank);
+					if("3".equals(questionbank.getQue_type())){
+						 ParagraphQuestion paragraphQuestion = (ParagraphQuestion) readObject(new File(questionStorageURL+File.separator+questionbank.getSub_id()+File.separator+div_id+File.separator+questionbank.getQue_id()));
+						 editFileElement.setParagraphQuestion(paragraphQuestion);
+					}
+				}
+				
+			}
+			
+		}
+		editFileObject.setQuestionPaperFileElementList(editFileElementList);
+		return editFileObject;
 	}
+	
+	class ArrayListOverride<E> extends ArrayList<E>{
+		@Override
+		public String toString() {
+			Iterator<E> it = iterator();
+	        if (! it.hasNext())
+	            return "()";
+
+	        StringBuilder sb = new StringBuilder();
+	        sb.append('(');
+	        for (;;) {
+	            E e = it.next();
+	            sb.append(e == this ? "(this Collection)" : e);
+	            if (! it.hasNext())
+	                return sb.append(')').toString();
+	            sb.append(',').append(' ');
+	        }
+	    }
+
+		}
+	
 		
 	
 	private void writeObject(String filePath,Object questionData){
