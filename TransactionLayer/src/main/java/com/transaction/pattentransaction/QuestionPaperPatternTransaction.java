@@ -348,7 +348,7 @@ public class QuestionPaperPatternTransaction {
 			list.add(IdList);
 		}
 		QuestionbankDB questionbankDB = new QuestionbankDB();
-		List<Questionbank> questionbankList = questionbankDB.getQuestionBankList(list);
+		List<Questionbank> questionbankList = questionbankDB.getQuestionBankList(list,inst_id);
 		QuestionPaperEditFileObject editFileObject = new QuestionPaperEditFileObject();
 		editFileObject.setClass_id(fileObject.getClass_id());
 		editFileObject.setInst_id(fileObject.getInst_id());

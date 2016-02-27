@@ -789,17 +789,18 @@ return questionList;
 
 }
 
-public List<Questionbank> getQuestionBankList(List<List<Integer>> list){
+public List<Questionbank> getQuestionBankList(List<List<Integer>> list,int inst_id){
 	Transaction transaction=null;
 	Session session=null;
 	List<Questionbank> questionlist = null;
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
 		transaction = session.beginTransaction();
-		String queryString="from Questionbank where inst_id = 4 and (div_id,sub_id,que_id) in :list";
+		String queryString="from Questionbank where inst_id = :inst_id and (div_id,sub_id,que_id) in :list";
 		Integer [] temp = {14,7,4};
 		queryString = queryString.replace(":list", list.toString());
 		Query query = session.createQuery(queryString);
+		query.setParameter("inst_id", inst_id);
 		questionlist = query.list();
 		transaction.commit();
 	}catch(Exception e){
