@@ -359,11 +359,11 @@ public class QuestionPaperPatternTransaction {
 		List<QuestionPaperEditFileElement> editFileElementList = new ArrayList<QuestionPaperEditFileElement>();
 		for (Iterator iterator = fileElements.iterator(); iterator
 				.hasNext();) {
-			QuestionPaperFileElement questionbank = (QuestionPaperFileElement) iterator.next();
+			QuestionPaperFileElement fileElement = (QuestionPaperFileElement) iterator.next();
 			QuestionPaperEditFileElement editFileElement = new QuestionPaperEditFileElement();
 			//editFileElement.setAlternate_value(alternate_value)
 			try {
-				BeanUtils.copyProperties(editFileElement, fileElements);
+				BeanUtils.copyProperties(editFileElement, fileElement);
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
