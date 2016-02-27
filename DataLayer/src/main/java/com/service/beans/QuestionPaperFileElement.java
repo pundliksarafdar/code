@@ -1,6 +1,8 @@
 package com.service.beans;
 
-public class QuestionPaperFileElement {
+import java.io.Serializable;
+
+public class QuestionPaperFileElement implements Serializable{
 	String item_no;
 	String item_description;
 	String question_type;

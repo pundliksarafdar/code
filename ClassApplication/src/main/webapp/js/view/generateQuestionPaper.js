@@ -219,6 +219,7 @@ $(document).ready(function(){
 	$("body").on("click",CHOOSE_QUESTION,function(){
 		var tRow = $(this).closest('tr');
 		var data = questionListTable.row(tRow).data();
+		updateQuestionList(data);
 		$(QUESTION_LIST_MODAL).modal('hide');
 	});
 	
@@ -327,9 +328,8 @@ $(document).ready(function(){
 			$("#withoutSectionOptions").hide();
 		}
 	});
-	
-	
 });
+
 var alternateValueMap = [];
 function recursiveView(data,recursionLevel,dataArray){
 	recursionLevel++;
@@ -501,3 +501,8 @@ var loadQuestionList = function(subject_id,item_id,question_type,item_type,quest
 			handler.error = function(e){console.log(e);}
 			rest.post(url,handler,JSON.stringify(RegenerateObj));
 			}
+			
+	function updateQuestionList(data){
+		$("[item_id='"+data.item_id+"']").find(QUESTION).text(data.questionbank.que_text);	
+		$("[item_id='"+data.item_id+"']").find(QUESTION).data(QUESTION_ID,data.questionbank.que_id);
+	}

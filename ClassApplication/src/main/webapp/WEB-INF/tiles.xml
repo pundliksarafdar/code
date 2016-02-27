@@ -546,4 +546,8 @@
       <put-attribute name="title"  value="Manage Exam"/>
       <put-attribute name="body"   value="/exam/CreateExam.jsp"/>      
    </definition>
+   <definition name="classowner.editExam" extends="baseLayout">
+      <put-attribute name="title"  value="Manage Exam"/>
+      <put-attribute name="body"   value="/exam/editQuestionPaper.jsp"/>      
+   </definition>
 </tiles-definitions>

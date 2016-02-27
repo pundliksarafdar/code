@@ -475,6 +475,10 @@
 			method="execute">
 			<result name="success" type="tiles">classowner.createExam</result>
 		</action>
+		<action name="editQuestionPaper" class="com.exam.EditQuestionPaperAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.editExam</result>
+		</action>
 		
 	</package>
 </struts>

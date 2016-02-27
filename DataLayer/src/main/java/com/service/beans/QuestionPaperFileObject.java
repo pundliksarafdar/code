@@ -1,8 +1,9 @@
 package com.service.beans;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class QuestionPaperFileObject {
+public class QuestionPaperFileObject implements Serializable{
 	int paper_id;
 	int class_id;
 	int pattern_id;
