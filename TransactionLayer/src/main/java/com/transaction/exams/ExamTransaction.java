@@ -82,6 +82,11 @@ public class ExamTransaction {
 		return examDB.getExamList(inst_id, examIdList);
 	}
 	
+	public List<Exam_Paper> getExamPapers(int div_id,int inst_id,int exam_id) {
+		ExamPaperDB examPaperDB = new ExamPaperDB();
+		return examPaperDB.getExamPapers(inst_id, div_id, exam_id);
+	}
+	
 	class ArrayListOverride<E> extends ArrayList<E>{
 		@Override
 		public String toString() {

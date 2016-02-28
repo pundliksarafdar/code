@@ -46,4 +46,18 @@ public class HeaderTransaction {
 	return headerDB.getHeaderList(inst_id);
 	}
 	
+	public String getHeader(String header_id,int regId,String path){
+		String headerPath = path + File.separatorChar + header_id + ".html";
+		String header = "";
+		File file = new File(headerPath);
+		try {
+		header =	FileUtils.readFileToString(file);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return header;
+				
+	}
+	
 }
