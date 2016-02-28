@@ -176,7 +176,7 @@ var loadQuestionPaperSuccess = function(e){
 	patternId = e.pattern_id;
 	paperId = e.paper_id;
 	$("#viewPatternData").empty();
-		$("#viewPatternData").append("<div class='row' align='center' style='font-weight:bold'>"+e.pattern_name+"</div>")
+		$("#viewPatternData").append("<div class='row' align='center' style='font-weight:bold'>"+e.paper_description+"</div>")
 		questionPaperPattern = e;
 		recursiveView(e.questionPaperFileElementList,0,e.questionPaperFileElementList);
 		loadSubjectAndTopicSelect();
@@ -240,7 +240,9 @@ function loadSubjectAndTopicSelect(){
 		var that= $(this);
 		var val = $(this).attr("value");
 		$(this).val(val);
-		loadTopicSelect(that,topicNSubject[val].topic);
+		if(topicNSubject[val]){
+			loadTopicSelect(that,topicNSubject[val].topic);
+		}
 	});
 }
 
@@ -332,13 +334,13 @@ function recursiveView(data,recursionLevel,dataArray){
 				
 				var question = $("<div/>",{
 					class:"col-md-5 question",
-					text:"Question"
+					html:data[i].questionbank?data[i].questionbank.que_text:"<span class='alert'>Question is not available</span>"
 				});
 				
 				var selectSubject = $("<select/>",{
 					class:"btn btn-default selectSubject btn-xs",
 					style:"width:100%;",
-					value:data[i].subject_id
+					value:data[i].questionbank?data[i].questionbank.sub_id:-1
 				});
 				
 				var subjectDiv = $("<div/>",{
@@ -348,7 +350,7 @@ function recursiveView(data,recursionLevel,dataArray){
 				var selectTopic = $("<select/>",{
 					class:"btn btn-default selectTopic btn-xs",
 					style:"width:100%;",
-					value:data[i].question_topic
+					value:data[i].questionbank?data[i].questionbank.topic_id:-1
 				});
 				
 				var topicDiv = $("<div/>",{

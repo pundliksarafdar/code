@@ -21,129 +21,6 @@ padding-right: 2px;
 padding-left: 2px;
 }
 </style>
-<script>
-$(document).ready(function(){
-	$("#division").change(function(){
-		var handlers = {};
-		handlers.success = function(e){console.log("Success",e);
-		createQuestionPaperListTable(e);
-		}
-		handlers.error = function(e){console.log("Error",e)}
-		var division = $("#division").val(); 
-		rest.post("rest/classownerservice/getQuestionPaperList/"+division,handlers);
-	$.ajax({
-		   url: "classOwnerServlet",
-		   data: {
-		    	 methodToCall: "getSubjectOfDivision",
-		    	 divisionId: division
-		   		},
-		   type:"POST",
-		   success:function(data){
-			   data = JSON.parse(data);
-			   if(data.status == "success"){
-				   var subjectnames = data.subjectnames;
-				   var subjectIds = data.subjectids;
-				   var i = 0;
-				   var subjectnameArray = subjectnames.split(",");
-					var subjectidArray =  subjectIds.split(",");  
-					subjectList = [];
-					$(".subjectDiv").empty();
-					while(i < subjectnameArray.length){
-				   		$(".subjectDiv").append("<div class='row well examSubjectPapers'><div class='col-md-3'><input type='checkbox' value='"+subjectidArray[i]+"' name='subjectCheckbox' id='subjectCheckbox'>"+
-				   				subjectnameArray[i]+"</div><div class='col-md-4'>"+
-				   				"<button class='btn btn-primary btn-xs chooseQuestionPaper'>Choose Question Paper</button>"+
-				   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></div><div class='col-md-1'><input type='text' class='form-control marks'></div>"+
-				   				"<div class='col-md-3'><div class='col-md-6'>Duration  : </div><div class='col-md-3'><input type='number' class='form-control examHour' placeholder='HH'></div><div class='col-md-3'><input type='number' class='form-control examMinute' placeholder='MM'></div></div>"+
-				   				"<div class='col-md-1'><button class='btn btn-primary btn-xs'>Preview</button></div></div>");
-				   		i++;
-				   }
-			   }
-		   },
-			error:function(){
-		   		modal.launchAlert("Error","Error");
-		   	}
-		   });
-	});
-	var that;
-	$(".subjectDiv").on("click",".chooseQuestionPaper",function(){
-		$("#questionPaperListModal").modal("toggle");
-		that = $(this);
-	});
-	
-	$("#questionPaperListModal").on("click",".confirmQuestionPaper",function(){
-		that.closest("div").find(".questionPaperName").html($(this).closest("div").find(".paperDesc").val());
-		that.closest("div").find(".selectedQuestionPaperID").val($(this).attr("id"));
-		$("#questionPaperListModal").modal("toggle");
-	});
-	
-	$("#saveExam").click(function(){
-		var examName = ""
-		var examID = "";
-		if($("#examSelect").val() != "-1"){
-			examID = $("#examSelect").val();
-			examName = "-1";
-		}else{
-			examName = $("#newExamName").val();
-		}
-		var division = $("#division").val();
-		var exam_paperList = [];
-		var i = 0;
-		for(i=0;i<$(".examSubjectPapers").length;i++){
-			
-			if($($(".examSubjectPapers")[i]).find("#subjectCheckbox").is(":checked")){
-			var exam_paper = {};
-			exam_paper.exam_id = examID;	
-			exam_paper.div_id = $("#division").val(); 
-			exam_paper.sub_id = $($(".examSubjectPapers")[i]).find("#subjectCheckbox").val();
-			exam_paper.marks = $($(".examSubjectPapers")[i]).find(".marks").val();
-			exam_paper.duration = $($(".examSubjectPapers")[i]).find(".examHour").val()+":"+$($(".examSubjectPapers")[i]).find(".examMinute").val();
-			exam_paper.question_paper_id = $($(".examSubjectPapers")[i]).find(".selectedQuestionPaperID").val();
-			exam_paper.header_id = $("#headerDesc").val();
-			exam_paperList.push(exam_paper);
-			}
-		}
-		console.log(exam_paperList);
-		var handlers = {};
-		handlers.success = function(e){console.log("Success",e);
-		}
-		handlers.error = function(e){console.log("Error",e)}
-		exam_paperList = JSON.stringify(exam_paperList);
-		rest.post("rest/classownerservice/saveExamPaper/"+examName,handlers,exam_paperList);
-		});
-});
-
-/* function Exam_Paper(){
-	
-}
- */
-
-function createQuestionPaperListTable(data){
-	//data = JSON.parse(data);
-	var i=0;
-	var dataTable = $('#questionPaperListTable').DataTable({
-		bDestroy:true,
-		data: data,
-		lengthChange: false,
-		columns: [
-			{ title: "Paper Description",data:null,render:function(data,event,row){
-				var div = '<div class="default defaultBatchName">'+row.paper_description+'</div>';
-				return div;
-			},sWidth:"40%"},
-			{ title: "Marks",data:null,render:function(data,event,row){
-				return row.marks;
-			},sWidth:"20%"},
-			{ title: "Choose",data:null,render:function(data,event,row){
-				var buttons = '<div class="default">'+
-					'<input type="button" class="btn btn-sm btn-primary confirmQuestionPaper" value="Choose" id="'+row.paper_id+'">'+
-					'<input type="hidden" value="'+row.paper_description+'" class="paperDesc">'+
-				'</div>'
-				return buttons;
-			},sWidth:"10%"}
-		]
-	});
-	
-}
-</script>
 </head>
 <body>
 <jsp:include page="../ExamHeader.jsp" >
@@ -203,6 +80,7 @@ function createQuestionPaperListTable(data){
 		<div class="actionOption">
 			<button class="btn btn-primary btn-sm" value="Save" id="saveExam">Save</button>
 		</div>
+		<div id="preview_page"></div>
 </div>
 
 <div class="modal fade" id="questionPaperListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
