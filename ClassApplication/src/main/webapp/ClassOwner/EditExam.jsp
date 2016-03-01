@@ -58,7 +58,7 @@ $(document).ready(function(){
 					$(".subjectDiv").empty();
 					while(i < subjectnameArray.length){
 				   		$(".subjectDiv").append("<div class='row well examSubjectPapers'><div class='col-md-3'><input type='checkbox' value='"+subjectidArray[i]+"' name='subjectCheckbox' id='subjectCheckbox'>"+
-				   				subjectnameArray[i]+"</div><div class='col-md-4'>"+
+				   				subjectnameArray[i]+"<input type='hidden' class='examPaperID'></div><div class='col-md-4'>"+
 				   				"<button class='btn btn-primary btn-xs chooseQuestionPaper'>Choose Question Paper</button>"+
 				   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></div><div class='col-md-1'><input type='text' class='form-control marks'></div>"+
 				   				"<div class='col-md-3'><div class='col-md-6'>Duration  : </div><div class='col-md-3'><input type='number' class='form-control examHour' placeholder='HH'></div><div class='col-md-3'><input type='number' class='form-control examMinute' placeholder='MM'></div></div>"+
@@ -72,11 +72,13 @@ $(document).ready(function(){
 		   	}
 		   });
 	});
-	
+	var editExamID = "";
 	$("#examList").on("click",".editExam",function(){
 		$("#examListDiv").hide();
 		$("#editModeDiv").show();
 		division = $("#division").val();
+		$(".editExamName").html($(this).closest("tbody").find(".defaultExamName").html());
+		editExamID = $(this).prop("id");
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
 		for(i=0;i<$(".examSubjectPapers").length;i++){
@@ -87,6 +89,7 @@ $(document).ready(function(){
 				 $($(".examSubjectPapers")[i]).find(".marks").val( e[j].marks);
 				 $($(".examSubjectPapers")[i]).find(".examHour").val(e[j].duration.split(":")[0]);
 				 $($(".examSubjectPapers")[i]).find(".examMinute").val(e[j].duration.split(":")[1]);
+				 $($(".examSubjectPapers")[i]).find(".examPaperID").val(e[j].exam_paper_id);
 				 for(k=0;k<queationPaperList.length;k++){
 					 if(queationPaperList[k].paper_id == e[j].question_paper_id){
 						 $($(".examSubjectPapers")[i]).find(".questionPaperName").html(queationPaperList[k].paper_description);
@@ -116,6 +119,35 @@ $(document).ready(function(){
 		that.closest("div").find(".selectedQuestionPaperID").val($(this).attr("id"));
 		$("#questionPaperListModal").modal("toggle");
 	});
+	
+	$("#saveExam").click(function(){
+		var examName = ""
+		var examID = "";
+		var exam_paperList = [];
+		var i = 0;
+		for(i=0;i<$(".examSubjectPapers").length;i++){
+			
+			if($($(".examSubjectPapers")[i]).find("#subjectCheckbox").is(":checked")){
+			var exam_paper = {};
+			exam_paper.exam_id = editExamID;	
+			exam_paper.div_id = $("#division").val(); 
+			exam_paper.sub_id = $($(".examSubjectPapers")[i]).find("#subjectCheckbox").val();
+			exam_paper.marks = $($(".examSubjectPapers")[i]).find(".marks").val();
+			exam_paper.duration = $($(".examSubjectPapers")[i]).find(".examHour").val()+":"+$($(".examSubjectPapers")[i]).find(".examMinute").val();
+			exam_paper.question_paper_id = $($(".examSubjectPapers")[i]).find(".selectedQuestionPaperID").val();
+			exam_paper.header_id = $("#headerDesc").val();
+			exam_paper.exam_paper_id =  $($(".examSubjectPapers")[i]).find(".examPaperID").val();
+			exam_paperList.push(exam_paper);
+			}
+		}
+		console.log(exam_paperList);
+		var handlers = {};
+		handlers.success = function(e){console.log("Success",e);
+		}
+		handlers.error = function(e){console.log("Error",e)}
+		exam_paperList = JSON.stringify(exam_paperList);
+		rest.post("rest/classownerservice/updateExamPaper/"+editExamID+"/"+division,handlers,exam_paperList);
+		});
 });
 
 function createQuestionPaperListTable(data){
@@ -154,7 +186,7 @@ function createExamListTable(data){
 		lengthChange: false,
 		columns: [
 			{ title: "Exam Description",data:null,render:function(data,event,row){
-				var div = '<div class="default defaultBatchName">'+row.exam_name+'</div>';
+				var div = '<div class="default defaultExamName">'+row.exam_name+'</div>';
 				return div;
 			},sWidth:"40%"},
 			{ title: "Edit",data:null,render:function(data,event,row){
@@ -206,6 +238,11 @@ function createExamListTable(data){
 	<div class="row">
 			<div class="col-md-2"><button class="btn btn-primary btn-xs cancelEdit" value="Cancel Edit">Cancel Edit</button></div>
 	</div>
+	<div class="row">
+			<div class="col-md-offset-4 col-md-2">
+				<span class="editExamName"></span>
+			</div>
+	</div>
 		<div class="row">
 			<div class="col-md-2">Select Header</div>
 			<div class="col-md-3">
@@ -220,6 +257,7 @@ function createExamListTable(data){
 			</div>
 		</div>
 		<div class="row subjectDiv">
+			
 		
 		</div>
 		<div class="actionOption">

@@ -60,6 +60,8 @@
  		<mapping resource="com/classapp/db/header/header.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/questionPaper/questionPaper.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/exam/exam_paper.hbmmap.xml"></mapping>
+ 		<mapping resource="com/classapp/db/fees/Fees.hbmmap.xml"></mapping>
+ 		<mapping resource="com/classapp/db/fees/Fees_Structure.hbmmap.xml"></mapping>
        <!--  <mapping resource="com/classapp/db/classwithsubjects/ClassWithSubjects.hbmmap.xml"></mapping> --> 
     </session-factory>
 </hibernate-configuration>

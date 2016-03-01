@@ -11,6 +11,7 @@ private Set<Object> singletons = new HashSet<Object>();
 	public ServiceApp() {
         singletons.add(new CorexServiceApi());
         singletons.add(new ClassownerServiceImpl());
+        singletons.add(new FeeServiceImpl());
     }
     @Override
     public Set<Object> getSingletons() {

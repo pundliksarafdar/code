@@ -87,6 +87,45 @@ public class ExamTransaction {
 		return examPaperDB.getExamPapers(inst_id, div_id, exam_id);
 	}
 	
+	public boolean updateExamPapers(int div_id,int inst_id,int exam_id,List<Exam_Paper> updateExam_PaperList,int modified_by) {
+		ExamPaperDB examPaperDB = new ExamPaperDB();
+		List<Exam_Paper> exam_PaperList = examPaperDB.getExamPapers(inst_id, div_id, exam_id);
+		for (Iterator iterator = exam_PaperList.iterator(); iterator.hasNext();) {
+			Exam_Paper exam_Paper = (Exam_Paper) iterator.next();
+			boolean flag = false;
+			for (Iterator innerIterator = updateExam_PaperList.iterator(); innerIterator
+					.hasNext();) {
+				Exam_Paper updatedExam_Paper = (Exam_Paper) innerIterator.next();
+				if( updatedExam_Paper.getExam_paper_id() == exam_Paper.getExam_paper_id()){
+					exam_Paper.setMarks(updatedExam_Paper.getMarks());
+					exam_Paper.setDuration(updatedExam_Paper.getDuration());
+					exam_Paper.setQuestion_paper_id(updatedExam_Paper.getQuestion_paper_id());
+					exam_Paper.setHeader_id(updatedExam_Paper.getHeader_id());
+					exam_Paper.setModified_by(modified_by);
+					exam_Paper.setModified_dt(new java.sql.Date(new Date().getTime()));
+					examPaperDB.updateExamPaper(exam_Paper);
+					flag = true;
+					break;
+				}
+			}
+			if(flag == false){
+			examPaperDB.deleteExamPaper(exam_Paper);
+			}
+			}
+		for (Iterator innerIterator = updateExam_PaperList.iterator(); innerIterator
+				.hasNext();) {
+			Exam_Paper updatedExam_Paper = (Exam_Paper) innerIterator.next();
+			if(updatedExam_Paper.getExam_paper_id() == 0){
+				updatedExam_Paper.setCreated_by(modified_by);
+				updatedExam_Paper.setCreated_dt(new java.sql.Date(new Date().getTime()));
+				updatedExam_Paper.setInst_id(inst_id);
+				examPaperDB.saveExamPaper(updatedExam_Paper);
+			}
+		}
+			
+		return true;
+	}
+	
 	class ArrayListOverride<E> extends ArrayList<E>{
 		@Override
 		public String toString() {

@@ -440,4 +440,15 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		String header = headerTransaction.getHeader(header_id, userBean.getRegId(), userBean.getUserStatic().getHeaderPath());
 		return Response.status(Status.OK).entity(header).build();
 	}
+	
+	@POST
+	@Path("/updateExamPaper/{examID}/{division}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateExamPaper(@PathParam("examID") String examID,List<Exam_Paper> exam_PaperList,@PathParam("division") String division){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		ExamTransaction examTransaction = new ExamTransaction();
+		boolean status = examTransaction.updateExamPapers(Integer.parseInt(division), userBean.getRegId(), Integer.parseInt(examID), exam_PaperList,userBean.getRegId());
+		return Response.status(Status.OK).entity(status).build();
+	}
 }
