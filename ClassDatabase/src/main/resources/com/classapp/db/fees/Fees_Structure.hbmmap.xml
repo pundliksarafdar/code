@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 18 Jul, 2014 11:15:40 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.classapp.db.fees.FeesStructure" table="fees" catalog="classdb">
+    <class name="com.classapp.db.fees.FeesStructure" table="fees_structure" catalog="classdb">
     	 <id name="fees_structure_id" type="java.lang.Integer">
             <column name="fees_structure_id" />
             <generator class="identity" />
