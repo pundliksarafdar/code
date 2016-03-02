@@ -11,6 +11,7 @@ import com.classapp.db.fees.BatchFeesDistribution;
 import com.classapp.db.fees.Fees;
 import com.classapp.db.fees.FeesDB;
 import com.classapp.db.fees.FeesStructure;
+import com.service.beans.BatchFees;
 import com.service.beans.BatchFeesDistributionServiceBean;
 import com.service.beans.FeeStructure;
 
@@ -120,16 +121,32 @@ public class FeesTransaction {
 		return true;
 	}
 	
-	public boolean saveBatchFeesDistribution(List<BatchFeesDistribution> batchFeesDistributionList,int inst_id){
+	public boolean saveBatchFeesDistribution(BatchFeesDistributionServiceBean serviceBean,int inst_id){
 		FeesDB feesDB = new FeesDB();
-		for (Iterator iterator = batchFeesDistributionList.iterator(); iterator
+		int batch_fees_id = 0;
+		com.classapp.db.fees.BatchFees batchFees = new com.classapp.db.fees.BatchFees();
+		try {
+			BeanUtils.copyProperties(batchFees, serviceBean.getBatchFees());
+			batchFees.setInst_id(inst_id);
+			batch_fees_id = feesDB.saveBatchFees(batchFees);
+		
+		for (Iterator iterator = serviceBean.getBatchFeesDistribution().iterator(); iterator
 				.hasNext();) {
-			BatchFeesDistribution batchFeesDistribution = (BatchFeesDistribution) iterator
+			com.service.beans.BatchFeesDistribution batchFeesDistribution = (com.service.beans.BatchFeesDistribution) iterator
 					.next();
 			batchFeesDistribution.setInst_id(inst_id);
-			feesDB.saveBatchFeesDistribution(batchFeesDistribution);
+			batchFeesDistribution.setBatch_fees_id(batch_fees_id);
+			BatchFeesDistribution feesDistribution = new BatchFeesDistribution();
+			BeanUtils.copyProperties(feesDistribution,batchFeesDistribution);
+			feesDB.saveBatchFeesDistribution(feesDistribution);
 		}
-		
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return true;
 	}
 	
@@ -148,12 +165,6 @@ public class FeesTransaction {
 				FeesStructure feesStructure = (FeesStructure) iterator2.next();
 				if(feesStructure.getFees_structure_id() == batchFeesDistribution.getFees_structure_id()){
 					BatchFeesDistributionServiceBean serviceBean = new BatchFeesDistributionServiceBean();
-					serviceBean.setBatch_id(batch_id);
-					serviceBean.setDiv_id(div_id);
-					serviceBean.setFees_id(fees.getFees_id());
-					serviceBean.setFees_desc(fees.getFees_desc());
-					serviceBean.setFees_structure_id(feesStructure.getFees_structure_id());
-					serviceBean.setFees_structure_desc(feesStructure.getFees_structure_desc());
 					serviceBeanList.add(serviceBean);
 				}	
 			}

@@ -87,9 +87,9 @@ public class FeeServiceImpl  extends ServiceBase {
 	@Path("/saveBatchFeesDistribution")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response saveBatchFeesDistribution(List<BatchFeesDistribution> batchFeesDistribution){
+	public Response saveBatchFeesDistribution(BatchFeesDistributionServiceBean serviceBean){
 		FeesTransaction feesTransaction = new FeesTransaction();
-		boolean status = feesTransaction.saveBatchFeesDistribution(batchFeesDistribution,getRegId());
+		boolean status = feesTransaction.saveBatchFeesDistribution(serviceBean,getRegId());
 		return Response.status(Status.OK).entity(status).build();
 	}
 	
@@ -97,9 +97,9 @@ public class FeeServiceImpl  extends ServiceBase {
 	@Path("/updateBatchFeesDistribution")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateBatchFeesDistribution(List<BatchFeesDistribution> batchFeesDistribution){
+	public Response updateBatchFeesDistribution(BatchFeesDistributionServiceBean serviceBean){
 		FeesTransaction feesTransaction = new FeesTransaction();
-		boolean status = feesTransaction.saveBatchFeesDistribution(batchFeesDistribution,getRegId());
+		boolean status = feesTransaction.saveBatchFeesDistribution(serviceBean,getRegId());
 		return Response.status(Status.OK).entity(status).build();
 	}
 	

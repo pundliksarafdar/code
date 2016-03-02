@@ -1,11 +1,12 @@
 package com.classapp.db.fees;
 
-public class BatchFeesDistribution {
+public class BatchFees {
 	private int inst_id;
 	private int batch_fees_id;
 	private int fees_id;
-	private int fees_structure_id;
-	private int fees_amount;
+	private int div_id;
+	private int batch_id;
+	private int batch_fees;
 	public int getInst_id() {
 		return inst_id;
 	}
@@ -24,17 +25,23 @@ public class BatchFeesDistribution {
 	public void setFees_id(int fees_id) {
 		this.fees_id = fees_id;
 	}
-	public int getFees_structure_id() {
-		return fees_structure_id;
+	public int getDiv_id() {
+		return div_id;
 	}
-	public void setFees_structure_id(int fees_structure_id) {
-		this.fees_structure_id = fees_structure_id;
+	public void setDiv_id(int div_id) {
+		this.div_id = div_id;
 	}
-	public int getFees_amount() {
-		return fees_amount;
+	public int getBatch_id() {
+		return batch_id;
 	}
-	public void setFees_amount(int fees_amount) {
-		this.fees_amount = fees_amount;
+	public void setBatch_id(int batch_id) {
+		this.batch_id = batch_id;
+	}
+	public int getBatch_fees() {
+		return batch_fees;
+	}
+	public void setBatch_fees(int batch_fees) {
+		this.batch_fees = batch_fees;
 	}
 	
 	

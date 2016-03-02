@@ -299,6 +299,28 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 
 	}
 	
+	public int saveBatchFees(BatchFees batchFees) {
+		
+		Session session = null;
+		Transaction transaction = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			session.saveOrUpdate(batchFees);
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return batchFees.getBatch_fees_id();
+	}
+	
 	public boolean saveBatchFeesDistribution(BatchFeesDistribution batchFeesDistribution) {
 		
 		Session session = null;
