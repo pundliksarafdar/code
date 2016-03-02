@@ -550,4 +550,13 @@
       <put-attribute name="title"  value="Manage Exam"/>
       <put-attribute name="body"   value="/exam/editQuestionPaper.jsp"/>      
    </definition>
+   <definition name="classowner.fee" extends="baseLayout">
+      <put-attribute name="title"  value="Manage Fee"/>
+      <put-attribute name="body"   value="/fee/fee.jsp"/>      
+   </definition>
+      <definition name="classowner.viewneditfee" extends="baseLayout">
+      <put-attribute name="title"  value="Manage Fee"/>
+      <put-attribute name="body"   value="/fee/viewneditfee.jsp"/>      
+   </definition>
+   
 </tiles-definitions>

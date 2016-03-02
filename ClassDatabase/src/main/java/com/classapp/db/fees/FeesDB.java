@@ -91,7 +91,7 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 		List<Fees> feesList = criteria.list();
 		if(feesList != null){
 			if(feesList.size()>0){
-				feesList.get(0);
+				return feesList.get(0);
 			}
 		}
 		if(session!=null){
@@ -122,7 +122,7 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
-		Criteria criteria = session.createCriteria(FeesStructure.class);
+		Criteria criteria = session.createCriteria(Fees.class);
 		Criterion criterion = Restrictions.eq("inst_id", inst_id);
 		criteria.add(criterion);
 		List<Fees> feesList = criteria.list();

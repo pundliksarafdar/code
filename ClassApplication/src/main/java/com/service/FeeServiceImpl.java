@@ -37,8 +37,7 @@ public class FeeServiceImpl  extends ServiceBase {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response saveFeeStrucure(FeeStructure feeStructrure){
-		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
-		feeStructrure.getFees().setInst_id(userBean.getRegId());
+		feeStructrure.getFees().setInst_id(getRegId());
 		FeesTransaction feesTransaction = new FeesTransaction();
 		boolean status = feesTransaction.saveFeeStructure(feeStructrure.getFees(), feeStructrure.getFeesStructureList());
 		return Response.status(Status.OK).entity(status).build();
@@ -48,9 +47,8 @@ public class FeeServiceImpl  extends ServiceBase {
 	@Path("/getFeeStructre/{fees_ID}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFeeStrucure(@PathParam("fees_ID") String fees_id){
-		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		FeesTransaction feesTransaction = new FeesTransaction();
-		FeeStructure feeStructureList = feesTransaction.getFeeStructurelist(userBean.getRegId(), Integer.parseInt(fees_id));
+		FeeStructure feeStructureList = feesTransaction.getFeeStructurelist(getRegId(), Integer.parseInt(fees_id));
 		return Response.status(Status.OK).entity(feeStructureList).build();
 	}
 	
@@ -58,9 +56,8 @@ public class FeeServiceImpl  extends ServiceBase {
 	@Path("/getAllFeeStructre")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFeeStrucure(){
-		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		FeesTransaction feesTransaction = new FeesTransaction();
-		List<Fees> feesList = feesTransaction.getAllFees(userBean.getRegId());
+		List<Fees> feesList = feesTransaction.getAllFees(getRegId());
 		return Response.status(Status.OK).entity(feesList).build();
 	}
 	
@@ -69,10 +66,9 @@ public class FeeServiceImpl  extends ServiceBase {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateFeeStrucure(FeeStructure feeStructrure){
-		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
-		feeStructrure.getFees().setInst_id(userBean.getRegId());
+		feeStructrure.getFees().setInst_id(getRegId());
 		FeesTransaction feesTransaction = new FeesTransaction();
-		boolean status = feesTransaction.saveFeeStructure(feeStructrure.getFees(), feeStructrure.getFeesStructureList());
+		boolean status = feesTransaction.updateFeeStructure(feeStructrure.getFees(), feeStructrure.getFeesStructureList());
 		return Response.status(Status.OK).entity(status).build();
 	}
 	
@@ -80,9 +76,8 @@ public class FeeServiceImpl  extends ServiceBase {
 	@Path("/deleteFeeStructre/{fees_id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteFeeStrucure(@PathParam("fees_ID") String fees_id){
-		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		FeesTransaction feesTransaction = new FeesTransaction();
-		boolean status = feesTransaction.deleteFees(userBean.getRegId(), Integer.parseInt(fees_id));
+		boolean status = feesTransaction.deleteFees(getRegId(), Integer.parseInt(fees_id));
 		return Response.status(Status.OK).entity(status).build();
 	}
 }

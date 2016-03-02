@@ -46,7 +46,7 @@ public class FeesTransaction {
 					FeesStructure feesStructure = (FeesStructure) iterator
 							.next();
 					com.service.beans.FeesStructure serviceFeesStructure = new com.service.beans.FeesStructure();
-					BeanUtils.copyProperties(feesStructure, serviceFeesStructure);
+					BeanUtils.copyProperties(serviceFeesStructure,feesStructure);
 					serviceFeesStructureList.add(serviceFeesStructure);
 				}
 			}
@@ -58,7 +58,7 @@ public class FeesTransaction {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		feeStructure.setFees(serviceFees);
+		//feeStructure.setFees(serviceFees);
 		feeStructure.setFeesStructureList(serviceFeesStructureList);
 		return feeStructure;
 	}
