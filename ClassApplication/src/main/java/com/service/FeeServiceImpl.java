@@ -109,7 +109,7 @@ public class FeeServiceImpl  extends ServiceBase {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getBatchFeesDistribution(@PathParam("division") String division,@PathParam("batchID") String batchID){
 		FeesTransaction feesTransaction = new FeesTransaction();
-		List<BatchFeesDistributionServiceBean> serviceBeanList = feesTransaction.getBatchFeesDistribution(getRegId(), Integer.parseInt(division),Integer.parseInt(batchID));
-		return Response.status(Status.OK).entity(serviceBeanList).build();
+		BatchFeesDistributionServiceBean serviceBean = feesTransaction.getBatchFeesDistribution(getRegId(), Integer.parseInt(division),Integer.parseInt(batchID));
+		return Response.status(Status.OK).entity(serviceBean).build();
 	}
 }

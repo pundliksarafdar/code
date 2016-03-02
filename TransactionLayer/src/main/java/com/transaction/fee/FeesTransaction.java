@@ -150,26 +150,73 @@ public class FeesTransaction {
 		return true;
 	}
 	
-	public List<BatchFeesDistributionServiceBean> getBatchFeesDistribution(int inst_id,int div_id,int batch_id){
+	public boolean updateBatchFeesDistribution(BatchFeesDistributionServiceBean serviceBean,int inst_id){
 		FeesDB feesDB = new FeesDB();
-		List<BatchFeesDistribution> batchFeesDistributionList = feesDB.getBatchFeesDistribution(inst_id, div_id, batch_id);
-		if(batchFeesDistributionList != null){
-		List<BatchFeesDistributionServiceBean> serviceBeanList = new ArrayList<BatchFeesDistributionServiceBean>();
-		Fees fees=feesDB.getFees(inst_id, batchFeesDistributionList.get(0).getFees_id());
-		List<FeesStructure> feesStructureList = feesDB.getFeesStructureList(inst_id, fees.getFees_id());
-		for (Iterator iterator = batchFeesDistributionList.iterator(); iterator
-				.hasNext();) {
-			BatchFeesDistribution batchFeesDistribution = (BatchFeesDistribution) iterator.next();
-			for (Iterator iterator2 = feesStructureList.iterator(); iterator2
+		int batch_fees_id = 0;
+		com.classapp.db.fees.BatchFees batchFees = new com.classapp.db.fees.BatchFees();
+		try {
+			BeanUtils.copyProperties(batchFees, serviceBean.getBatchFees());
+			batchFees.setInst_id(inst_id);
+		    feesDB.updateBatchFees(batchFees);
+		    for (Iterator iterator = serviceBean.getBatchFeesDistribution().iterator(); iterator
 					.hasNext();) {
-				FeesStructure feesStructure = (FeesStructure) iterator2.next();
-				if(feesStructure.getFees_structure_id() == batchFeesDistribution.getFees_structure_id()){
-					BatchFeesDistributionServiceBean serviceBean = new BatchFeesDistributionServiceBean();
-					serviceBeanList.add(serviceBean);
-				}	
+				com.service.beans.BatchFeesDistribution batchFeesDistribution = (com.service.beans.BatchFeesDistribution) iterator
+						.next();
+				batchFeesDistribution.setInst_id(inst_id);
+				BatchFeesDistribution feesDistribution = new BatchFeesDistribution();
+				BeanUtils.copyProperties(feesDistribution,batchFeesDistribution);
+				feesDB.updateBatchFeesDistribution(feesDistribution);
 			}
-			return serviceBeanList;
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return true;
+	}
+	
+	public BatchFeesDistributionServiceBean getBatchFeesDistribution(int inst_id,int div_id,int batch_id){
+		FeesDB feesDB = new FeesDB();
+		com.classapp.db.fees.BatchFees batchFees = feesDB.getBatchFees(inst_id, div_id, batch_id);
+		BatchFeesDistributionServiceBean serviceBean = new BatchFeesDistributionServiceBean();
+		List<com.service.beans.BatchFeesDistribution> serviceFeesDistributionList = new ArrayList<com.service.beans.BatchFeesDistribution>();
+		List<com.service.beans.FeesStructure> serviceFeesStructureList = new ArrayList<com.service.beans.FeesStructure>();
+		BatchFees serviceBatchFees = new BatchFees();
+		if(batchFees!=null){
+			List<BatchFeesDistribution> batchFeesDistributionList = feesDB.getBatchFeesDistribution(inst_id, batchFees.getBatch_fees_id());
+			List<FeesStructure> feesStructureList = feesDB.getFeesStructureList(inst_id, batchFees.getFees_id());
+			try {
+				BeanUtils.copyProperties(serviceBatchFees, batchFees);
+				for (Iterator iterator = batchFeesDistributionList.iterator(); iterator
+						.hasNext();) {
+					BatchFeesDistribution batchFeesDistribution = (BatchFeesDistribution) iterator
+							.next();
+					com.service.beans.BatchFeesDistribution feesDistribution = new com.service.beans.BatchFeesDistribution();
+					BeanUtils.copyProperties(feesDistribution, batchFeesDistribution);
+					serviceFeesDistributionList.add(feesDistribution);
+				}
+				for (Iterator iterator = feesStructureList.iterator(); iterator
+						.hasNext();) {
+					FeesStructure feesStructure = (FeesStructure) iterator
+							.next();
+					com.service.beans.FeesStructure structure = new com.service.beans.FeesStructure();
+					BeanUtils.copyProperties(structure, feesStructure);
+					serviceFeesStructureList.add(structure);
+				}
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			BatchFeesDistributionServiceBean batchFeesDistributionServiceBean = new BatchFeesDistributionServiceBean();
+			batchFeesDistributionServiceBean.setBatchFees(serviceBatchFees);
+			batchFeesDistributionServiceBean.setBatchFeesDistribution(serviceFeesDistributionList);
+			batchFeesDistributionServiceBean.setFeesStructureList(serviceFeesStructureList);
+			return batchFeesDistributionServiceBean;
 		}
 		return null;
 	}

@@ -343,7 +343,25 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 		return true;
 	}
 	
-	public List<BatchFeesDistribution> getBatchFeesDistribution(int inst_id,int div_id,int batch_id) {
+	public List<BatchFeesDistribution> getBatchFeesDistribution(int inst_id,int batch_fees_id) {
+		
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Criteria criteria = session.createCriteria(BatchFeesDistribution.class);
+		Criterion criterion = Restrictions.eq("inst_id", inst_id);
+		criteria.add(criterion);
+		criterion = Restrictions.ne("batch_fees_id",batch_fees_id);
+		criteria.add(criterion);
+		List<BatchFeesDistribution> feesList = criteria.list();
+		if(session!=null){
+			session.close();
+		}
+		return  feesList;
+	}
+	
+	public BatchFees getBatchFees(int inst_id,int div_id,int batch_id) {
 		
 		Transaction transaction=null;
 		Session session=null;
@@ -356,11 +374,77 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 		criteria.add(criterion);
 		criterion = Restrictions.eq("batch_id", batch_id);
 		criteria.add(criterion);
-		List<BatchFeesDistribution> feesList = criteria.list();
+		List<BatchFees> feesList = criteria.list();
+		if(feesList != null){
+			if(feesList.size()>0){
+				return feesList.get(0);
+			}
+		}
 		if(session!=null){
 			session.close();
 		}
-		return  feesList;
+		return  null;
+	}
+	
+	public boolean updateBatchFees(BatchFees batchFees) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update BatchFees set batch_fees = :batch_fees, fees_id = :fees_id" +
+					" where inst_id = :inst_id and batch_fees_id = :batch_fees_id");
+			query.setParameter("inst_id", batchFees.getInst_id());
+			query.setParameter("batch_fees_id", batchFees.getBatch_fees_id());
+			query.setParameter("batch_fees", batchFees.getBatch_fees());
+			query.setParameter("fees_id", batchFees.getFees_id());
+			query.executeUpdate();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  true;
+
+	}
+	
+	public boolean updateBatchFeesDistribution(BatchFeesDistribution batchFees) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update BatchFeesDistribution set fees_amount = :fees_amount" +
+					" where inst_id = :inst_id and batch_fees_id = :batch_fees_id and fees_id = :fees_id and fees_structure_id = :fees_structure_id");
+			query.setParameter("inst_id", batchFees.getInst_id());
+			query.setParameter("batch_fees_id", batchFees.getBatch_fees_id());
+			query.setParameter("fees_amount", batchFees.getFees_amount());
+			query.setParameter("fees_id", batchFees.getFees_id());
+			query.setParameter("fees_structure_id", batchFees.getFees_structure_id());
+			query.executeUpdate();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  true;
+
 	}
 
 }
