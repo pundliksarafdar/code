@@ -133,7 +133,7 @@ function addDistribution(data){
 	var itemEdit = $("<input/>",{
 		value:distributionName,
 		class:'form-control distributionItems'
-	}).data("item_id",data.fees_structure_id)
+	}).data("fees_structure_id",data.fees_structure_id)
 	.appendTo(fieldTd);
 	
 	$(DISTRIBUTION_TABLE).append(tr);
@@ -146,9 +146,14 @@ function saveFeeStructure(){
 	var duplicateExist = false;
 	$.each(distribution,function(index){
 		var value = $(this).val();
+		var id = $(this).data("fees_structure_id");
+		
 		var field = {};
 			field.fees_structure_desc = value;
-			feesStructureList.push(field);
+		if(id){
+			field.fees_structure_id = id;
+		}
+		feesStructureList.push(field);
 		/*
 		if(distributionList.indexOf(value)!=-1){
 			duplicateExist = true;	
@@ -158,8 +163,7 @@ function saveFeeStructure(){
 	var feeStructureToSave = new FeeStructureToSave();
 	feeStructureToSave.feesStructureList = feesStructureList;
 	feeStructureToSave.fees.fees_desc = $(FEE_STRUCT_NAME).val();
-	var id = $(FEE_STRUCT_NAME).data("fees_id");
-	feeStructureToSave.fees.fees_id = id;
+	feeStructureToSave.fees.fees_id = $(FEE_STRUCT_NAME).data("fees_id");
 	validateFeeStructure(feeStructureToSave,saveFeeStructureInDb);	
 }
 
