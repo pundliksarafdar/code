@@ -15,7 +15,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.classapp.db.exam.Exam_Paper;
+import com.classapp.db.fees.BatchFeesDistribution;
 import com.classapp.db.fees.Fees;
+import com.service.beans.BatchFeesDistributionServiceBean;
 import com.service.beans.FeeStructure;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.fee.FeesTransaction;
@@ -79,5 +81,35 @@ public class FeeServiceImpl  extends ServiceBase {
 		FeesTransaction feesTransaction = new FeesTransaction();
 		boolean status = feesTransaction.deleteFees(getRegId(), Integer.parseInt(fees_id));
 		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Path("/saveBatchFeesDistribution")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveBatchFeesDistribution(List<BatchFeesDistribution> batchFeesDistribution){
+		FeesTransaction feesTransaction = new FeesTransaction();
+		boolean status = feesTransaction.saveBatchFeesDistribution(batchFeesDistribution,getRegId());
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Path("/updateBatchFeesDistribution")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateBatchFeesDistribution(List<BatchFeesDistribution> batchFeesDistribution){
+		FeesTransaction feesTransaction = new FeesTransaction();
+		boolean status = feesTransaction.saveBatchFeesDistribution(batchFeesDistribution,getRegId());
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	
+	@GET
+	@Path("/getBatchFeesDistribution/{division}/{batchID}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getBatchFeesDistribution(@PathParam("division") String division,@PathParam("batchID") String batchID){
+		FeesTransaction feesTransaction = new FeesTransaction();
+		List<BatchFeesDistributionServiceBean> serviceBeanList = feesTransaction.getBatchFeesDistribution(getRegId(), Integer.parseInt(division),Integer.parseInt(batchID));
+		return Response.status(Status.OK).entity(serviceBeanList).build();
 	}
 }

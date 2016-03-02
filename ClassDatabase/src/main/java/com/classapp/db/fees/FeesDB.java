@@ -66,6 +66,8 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 		Criteria criteria = session.createCriteria(Fees.class);
 		Criterion criterion = Restrictions.eq("inst_id", fees.getInst_id());
 		criteria.add(criterion);
+		criterion = Restrictions.eq("fees_desc", fees.getFees_desc());
+		criteria.add(criterion);
 		List<Fees> feesList = criteria.list();
 		if(feesList != null){
 			if(feesList.size()>0){
@@ -192,8 +194,8 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("update Fees set fees_structure_desc = :fees_structure_desc where inst_id = :inst_id and fees_id = :fees_id" +
-					"and fees_structure_id = :fees_structure_id ");
+			Query query = session.createQuery("update FeesStructure set fees_structure_desc = :fees_structure_desc where inst_id = :inst_id and fees_id = :fees_id" +
+					" and fees_structure_id = :fees_structure_id ");
 			query.setParameter("inst_id", feesStructure.getInst_id());
 			query.setParameter("fees_id",feesStructure.getFees_id());
 			query.setParameter("fees_structure_id", feesStructure.getFees_structure_id());
@@ -295,6 +297,48 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 		}
 		return  true;
 
+	}
+	
+	public boolean saveBatchFeesDistribution(BatchFeesDistribution batchFeesDistribution) {
+		
+		Session session = null;
+		Transaction transaction = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			session.saveOrUpdate(batchFeesDistribution);
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return true;
+	}
+	
+	public List<BatchFeesDistribution> getBatchFeesDistribution(int inst_id,int div_id,int batch_id) {
+		
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Criteria criteria = session.createCriteria(BatchFeesDistribution.class);
+		Criterion criterion = Restrictions.eq("inst_id", inst_id);
+		criteria.add(criterion);
+		criterion = Restrictions.ne("div_id",div_id);
+		criteria.add(criterion);
+		criterion = Restrictions.eq("batch_id", batch_id);
+		criteria.add(criterion);
+		List<BatchFeesDistribution> feesList = criteria.list();
+		if(session!=null){
+			session.close();
+		}
+		return  feesList;
 	}
 
 }

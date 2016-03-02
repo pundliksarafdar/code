@@ -7,9 +7,11 @@ import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import com.classapp.db.fees.BatchFeesDistribution;
 import com.classapp.db.fees.Fees;
 import com.classapp.db.fees.FeesDB;
 import com.classapp.db.fees.FeesStructure;
+import com.service.beans.BatchFeesDistributionServiceBean;
 import com.service.beans.FeeStructure;
 
 public class FeesTransaction {
@@ -116,5 +118,48 @@ public class FeesTransaction {
 		feesDB.deleteFees(inst_id, fees_id);
 		feesDB.deleteFeesStructure(inst_id, fees_id);
 		return true;
+	}
+	
+	public boolean saveBatchFeesDistribution(List<BatchFeesDistribution> batchFeesDistributionList,int inst_id){
+		FeesDB feesDB = new FeesDB();
+		for (Iterator iterator = batchFeesDistributionList.iterator(); iterator
+				.hasNext();) {
+			BatchFeesDistribution batchFeesDistribution = (BatchFeesDistribution) iterator
+					.next();
+			batchFeesDistribution.setInst_id(inst_id);
+			feesDB.saveBatchFeesDistribution(batchFeesDistribution);
+		}
+		
+		return true;
+	}
+	
+	public List<BatchFeesDistributionServiceBean> getBatchFeesDistribution(int inst_id,int div_id,int batch_id){
+		FeesDB feesDB = new FeesDB();
+		List<BatchFeesDistribution> batchFeesDistributionList = feesDB.getBatchFeesDistribution(inst_id, div_id, batch_id);
+		if(batchFeesDistributionList != null){
+		List<BatchFeesDistributionServiceBean> serviceBeanList = new ArrayList<BatchFeesDistributionServiceBean>();
+		Fees fees=feesDB.getFees(inst_id, batchFeesDistributionList.get(0).getFees_id());
+		List<FeesStructure> feesStructureList = feesDB.getFeesStructureList(inst_id, fees.getFees_id());
+		for (Iterator iterator = batchFeesDistributionList.iterator(); iterator
+				.hasNext();) {
+			BatchFeesDistribution batchFeesDistribution = (BatchFeesDistribution) iterator.next();
+			for (Iterator iterator2 = feesStructureList.iterator(); iterator2
+					.hasNext();) {
+				FeesStructure feesStructure = (FeesStructure) iterator2.next();
+				if(feesStructure.getFees_structure_id() == batchFeesDistribution.getFees_structure_id()){
+					BatchFeesDistributionServiceBean serviceBean = new BatchFeesDistributionServiceBean();
+					serviceBean.setBatch_id(batch_id);
+					serviceBean.setDiv_id(div_id);
+					serviceBean.setFees_id(fees.getFees_id());
+					serviceBean.setFees_desc(fees.getFees_desc());
+					serviceBean.setFees_structure_id(feesStructure.getFees_structure_id());
+					serviceBean.setFees_structure_desc(feesStructure.getFees_structure_desc());
+					serviceBeanList.add(serviceBean);
+				}	
+			}
+			return serviceBeanList;
+		}
+		}
+		return null;
 	}
 }
