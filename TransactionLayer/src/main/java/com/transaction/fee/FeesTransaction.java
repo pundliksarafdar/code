@@ -17,19 +17,31 @@ import com.service.beans.FeeStructure;
 
 public class FeesTransaction {
 	
-	public boolean saveFeeStructure(Fees fees,List<FeesStructure> feesStructureList) {
+	public boolean saveFeeStructure(com.service.beans.Fees serviceFees,List<com.service.beans.FeesStructure> feesStructureList) {
 		FeesDB feesDB = new FeesDB();
+		Fees fees = new Fees();
+		try {
+		BeanUtils.copyProperties(fees, serviceFees);	
 		int inst_id = fees.getInst_id();
 		if(!feesDB.verifyFee(fees)){
 		int fees_id = feesDB.saveFees(fees);
 		for (Iterator iterator = feesStructureList.iterator(); iterator.hasNext();) {
-			FeesStructure feesStructure = (FeesStructure) iterator.next();
+			com.service.beans.FeesStructure serviceFeesStructure = (com.service.beans.FeesStructure) iterator.next();
+			FeesStructure feesStructure = new FeesStructure();
+			BeanUtils.copyProperties(feesStructure, serviceFeesStructure);	
 			feesStructure.setFees_id(fees_id);
 			feesStructure.setInst_id(inst_id);
 			feesDB.saveFeesStructure(feesStructure);
 		}
 		}else{
 			return false;
+		}
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return true;
 	}
@@ -61,7 +73,7 @@ public class FeesTransaction {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//feeStructure.setFees(serviceFees);
+		feeStructure.setFees(serviceFees);
 		feeStructure.setFeesStructureList(serviceFeesStructureList);
 		return feeStructure;
 	}
@@ -72,8 +84,11 @@ public class FeesTransaction {
 		
 	}
 	
-	public boolean updateFeeStructure(Fees fees,List<FeesStructure> updatedFeesStructureList) {
+	public boolean updateFeeStructure(com.service.beans.Fees serviceFees,List<com.service.beans.FeesStructure> updatedFeesStructureList) {
 		FeesDB feesDB = new FeesDB();
+		Fees fees = new Fees();
+		try {
+		BeanUtils.copyProperties(fees, serviceFees);
 		int inst_id = fees.getInst_id();
 		List<FeesStructure> feesStructureList = feesDB.getFeesStructureList(inst_id, fees.getFees_id());
 		if(!feesDB.verifyUpdateFee(fees)){
@@ -84,7 +99,7 @@ public class FeesTransaction {
 			FeesStructure feesStructure = (FeesStructure) iterator.next();
 			for (Iterator iterator2 = updatedFeesStructureList.iterator(); iterator2
 					.hasNext();) {
-				FeesStructure updatedFeesStructure = (FeesStructure) iterator2.next();
+				com.service.beans.FeesStructure updatedFeesStructure = (com.service.beans.FeesStructure) iterator2.next();
 				if(updatedFeesStructure.getFees_structure_id() == feesStructure.getFees_structure_id()){
 					feesStructure.setFees_structure_desc(updatedFeesStructure.getFees_structure_desc());
 					feesDB.updateFeesStructure(feesStructure);
@@ -100,8 +115,10 @@ public class FeesTransaction {
 		
 		for (Iterator iterator = updatedFeesStructureList.iterator(); iterator
 				.hasNext();) {
-			FeesStructure feesStructure = (FeesStructure) iterator.next();
-			if(feesStructure.getFees_structure_id() == 0){
+			com.service.beans.FeesStructure serviceFeesStructure = (com.service.beans.FeesStructure) iterator.next();
+			if(serviceFeesStructure.getFees_structure_id() == 0){
+				FeesStructure feesStructure = new FeesStructure();
+				BeanUtils.copyProperties(feesStructure, serviceFeesStructure);	
 				feesStructure.setFees_id(fees.getFees_id());
 				feesStructure.setInst_id(inst_id);
 				feesDB.saveFeesStructure(feesStructure);
@@ -111,6 +128,13 @@ public class FeesTransaction {
 		}else{
 			return false;
 		}
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 		return true;
 	}
 	
