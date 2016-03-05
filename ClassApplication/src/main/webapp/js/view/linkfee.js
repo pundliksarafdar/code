@@ -22,7 +22,7 @@ var LOAD_BATCH_FEE_TABLE = "#batchNFeeTableLoad";
 /**/
 var getListUrl = "rest/feesservice/getAllFeeStructre";
 var getDetailsUrl = "rest/feesservice/getFeeStructre/";
-var getBatchListUrl = "rest/classownerservice/getBatches/";
+var getBatchListUrl = "rest/feesservice/getInstituteBatch/";
 var saveFeeStructUrl = "rest/feesservice/saveBatchFeesDistribution";
 var getBatchFeesDistributionUrl = "rest/feesservice/getBatchFeesDistribution/";
 var updateBatch = "rest/feesservice/updateBatchFeesDistribution";
@@ -36,7 +36,8 @@ $(document).ready(function(){
 		.on('click',LINK_FEE_STRUCT,linkFeeStruct)
 		.on('input',FEE_DIST_AMMOUNT,calculateAmount)
 		.on('click',LOAD_BATCH_FEE_TABLE,loadbatchNFeeTable)
-		.on('click',FEE_DIST_SAVE,saveFee);
+		.on('click',FEE_DIST_SAVE,saveFee)
+		.on('change',BATCH_SELECT,onBatchSelect);
 });
 
 function init(){
@@ -44,12 +45,14 @@ function init(){
 }
 
 function loadbatchNFeeTable(){
+	$(DISTRIBUTION_TABLE).empty();
 	var handler = {};
 	var division = $(DIVISION_SELECT).val();
 	var batch = $(BATCH_SELECT).val();
 	handler.success = function(data){
 		loadFeeStructureSuccess(data,"update");
 		loadAmmount(data);
+		calculateAmount();
 	};
 	handler.error = function(e){console.log(e)}
 	rest.get(getBatchFeesDistributionUrl+division+"/"+batch,handler);
@@ -84,6 +87,7 @@ function loadFeeStructure(id,name){
 	handler.success = function(data){
 		loadFeeStructureSuccess(data,"save");
 		loadAmmount(data);
+		calculateAmount();
 	}
 	handler.error = function(e){console.log(e)}
 	rest.get(getDetailsUrl+id,handler);	
@@ -109,6 +113,7 @@ function loadFeeStructureSuccess(data,state){
 	$.each(data.feesStructureList,function(index,val){
 		addDistribution(val);
 	});
+	
 }
 
 function addDistribution(data){
@@ -160,11 +165,26 @@ function getBatches(){
 
 function getBatchSuccess(batches){
 	$(BATCH_SELECT).find('option').not('option[value="-1"]').remove();
-	var options = "";
+	var optionsHasLink = "";
+	var optionsNoLink = "";
+	var optGroupHasLink;
+	var optGroupNoLink;
 	$.each(batches,function(index,val){
-		options = options + "<option value='"+val.batch_id+"'>"+val.batch_name+"</option>";
+		if(val.feesLinkStatus == "Yes"){
+			optionsHasLink = optionsHasLink + "<option value='"+val.batch.batch_id+"'>"+val.batch.batch_name+"</option>";
+		}else{
+			optionsNoLink = optionsNoLink + "<option value='"+val.batch.batch_id+"'>"+val.batch.batch_name+"</option>";
+		}
 	});
-	$(BATCH_SELECT).append(options);	
+	
+	if(optionsHasLink && optionsHasLink.trim().length){
+		optGroupHasLink = '<optgroup label="Linked" linked="yes">'+optionsHasLink+'</optgroup>'
+	}
+	
+	if(optionsNoLink && optionsNoLink.trim().length){
+		optGroupNoLink = '<optgroup label="No link" linked="no">'+optionsNoLink+'</optgroup>';
+	}
+	$(BATCH_SELECT).append(optGroupHasLink+optGroupNoLink);	
 }
 
 function getBatchError(error){
@@ -197,7 +217,7 @@ function saveFee(){
 	}else{
 		var feeId = $(FEE_STRUCT_SELECT).val();
 		saveBean.batchFees.fees_id = feeId;
-		saveBean.batchFees.div_id = $(BATCH_SELECT).val();
+		saveBean.batchFees.div_id = $(DIVISION_SELECT).val();
 		saveBean.batchFees.batch_id = $(BATCH_SELECT).val();
 		saveBean.batchFees.batch_fees = $(".total").data('total');
 	}
@@ -247,6 +267,16 @@ function loadAmmount(data){
 			}
 		}	
 	});
+}
+
+function onBatchSelect(){
+	var selected = $(':selected',this);
+	console.log(selected.closest('optgroup').attr('linked'));
+	if(selected.closest('optgroup').attr('linked').toLowerCase() == 'yes'){
+		$(LOAD_BATCH_FEE_TABLE).show();
+	}else{
+		$(LOAD_BATCH_FEE_TABLE).hide();
+	}
 }
 
 /*Rest */

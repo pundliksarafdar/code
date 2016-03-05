@@ -277,12 +277,13 @@ public class FeesTransaction {
 				serviceBean.setBatch(serviceBatch);
 				for (Iterator iterator2 = batchFeeList.iterator(); iterator2
 						.hasNext();) {
-					BatchFees batchFees = (BatchFees) iterator2.next();
+					com.classapp.db.fees.BatchFees batchFees = (com.classapp.db.fees.BatchFees) iterator2.next();
 					if(batch.getBatch_id() == batchFees.getBatch_id()){
 						serviceBean.setFeesLinkStatus("Yes");
 						break;
 					}
 				}
+				serviceBeanList.add(serviceBean);
 			}
 		}
 	

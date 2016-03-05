@@ -453,7 +453,7 @@ public List<BatchFees> getBatchFeesList(int inst_id,int div_id,List<Integer> bat
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
-		Criteria criteria = session.createCriteria(BatchFeesDistribution.class);
+		Criteria criteria = session.createCriteria(BatchFees.class);
 		Criterion criterion = Restrictions.eq("inst_id", inst_id);
 		criteria.add(criterion);
 		criterion = Restrictions.eq("div_id",div_id);
