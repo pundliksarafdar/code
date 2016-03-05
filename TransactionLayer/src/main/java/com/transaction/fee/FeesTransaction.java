@@ -289,4 +289,41 @@ public class FeesTransaction {
 	
 		return serviceBeanList;
 	}
+	
+	public boolean reLinkBatchFeesDistribution(BatchFeesDistributionServiceBean serviceBean,int inst_id){
+		FeesDB feesDB = new FeesDB();
+		{
+			com.classapp.db.fees.BatchFees batchFees =  feesDB.getBatchFees(inst_id, serviceBean.getBatchFees().getDiv_id(), serviceBean.getBatchFees().getBatch_id());
+			if(batchFees!=null){
+				feesDB.deleteBatchFees(inst_id, serviceBean.getBatchFees().getDiv_id(), serviceBean.getBatchFees().getBatch_id());
+				feesDB.deleteBatchFeesDistribution(inst_id, batchFees.getBatch_fees_id());
+			}
+			
+		}
+		int batch_fees_id = 0;
+		com.classapp.db.fees.BatchFees batchFees = new com.classapp.db.fees.BatchFees();
+		try {
+			BeanUtils.copyProperties(batchFees, serviceBean.getBatchFees());
+			batchFees.setInst_id(inst_id);
+			batch_fees_id = feesDB.saveBatchFees(batchFees);
+		
+		for (Iterator iterator = serviceBean.getBatchFeesDistribution().iterator(); iterator
+				.hasNext();) {
+			com.service.beans.BatchFeesDistribution batchFeesDistribution = (com.service.beans.BatchFeesDistribution) iterator
+					.next();
+			batchFeesDistribution.setInst_id(inst_id);
+			batchFeesDistribution.setBatch_fees_id(batch_fees_id);
+			BatchFeesDistribution feesDistribution = new BatchFeesDistribution();
+			BeanUtils.copyProperties(feesDistribution,batchFeesDistribution);
+			feesDB.saveBatchFeesDistribution(feesDistribution);
+		}
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+	}
 }

@@ -122,4 +122,14 @@ public class FeeServiceImpl  extends ServiceBase {
 		List<BatchServiceBean> serviceBeanList = feesTransaction.getInstituteBatch(Integer.parseInt(division), getRegId());
 		return Response.status(Status.OK).entity(serviceBeanList).build();
 	}
+	
+	@POST
+	@Path("/reLinkBatchFeesDistribution")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response reLinkBatchFeesDistribution(BatchFeesDistributionServiceBean serviceBean){
+		FeesTransaction feesTransaction = new FeesTransaction();
+		boolean status = feesTransaction.saveBatchFeesDistribution(serviceBean,getRegId());
+		return Response.status(Status.OK).entity(status).build();
+	}
 }

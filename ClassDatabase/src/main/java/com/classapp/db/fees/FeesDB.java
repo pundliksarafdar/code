@@ -467,4 +467,60 @@ public List<BatchFees> getBatchFeesList(int inst_id,int div_id,List<Integer> bat
 		return  feesList;
 	}
 
+public boolean deleteBatchFees(int inst_id,int div_id,int batch_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("Delete From BatchFees where inst_id = :inst_id and div_id = :div_id and batch_id=:batch_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("batch_id", batch_id);
+		query.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  true;
+
+}
+
+public boolean deleteBatchFeesDistribution(int inst_id,int batch_fees_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+
+		Query query = session.createQuery("Delete From BatchFeesDistribution where inst_id = :inst_id and batch_fees_id = :batch_fees_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("batch_fees_id", batch_fees_id);
+		query.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  true;
+
+}
 }
