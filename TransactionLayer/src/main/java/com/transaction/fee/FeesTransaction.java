@@ -7,12 +7,15 @@ import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import com.classapp.db.batch.Batch;
+import com.classapp.db.batch.BatchDB;
 import com.classapp.db.fees.BatchFeesDistribution;
 import com.classapp.db.fees.Fees;
 import com.classapp.db.fees.FeesDB;
 import com.classapp.db.fees.FeesStructure;
 import com.service.beans.BatchFees;
 import com.service.beans.BatchFeesDistributionServiceBean;
+import com.service.beans.BatchServiceBean;
 import com.service.beans.FeeStructure;
 
 public class FeesTransaction {
@@ -243,5 +246,46 @@ public class FeesTransaction {
 			return batchFeesDistributionServiceBean;
 		}
 		return null;
+	}
+	
+	public List<BatchServiceBean> getInstituteBatch(int division,int inst_id) {
+		FeesDB feesDB = new FeesDB();
+		BatchDB batchDB = new BatchDB();
+		List<BatchServiceBean> serviceBeanList = new ArrayList<BatchServiceBean>();
+		List<Batch> batchList = batchDB.retriveAllBatchesOfDivision(division, inst_id);
+		List<Integer> batchIds = new ArrayList<Integer>();
+		if(batchList != null){
+			for (Iterator iterator = batchList.iterator(); iterator.hasNext();) {
+				Batch batch = (Batch) iterator.next();
+				batchIds.add(batch.getBatch_id());
+			}
+			List<com.classapp.db.fees.BatchFees> batchFeeList = feesDB.getBatchFeesList(inst_id, division, batchIds);
+			for (Iterator iterator = batchList.iterator(); iterator
+					.hasNext();) {
+				Batch batch = (Batch) iterator.next();
+				com.service.beans.Batch serviceBatch = new com.service.beans.Batch();
+				BatchServiceBean serviceBean = new BatchServiceBean();
+				try {
+					BeanUtils.copyProperties(serviceBatch, batch);
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				serviceBean.setBatch(serviceBatch);
+				for (Iterator iterator2 = batchFeeList.iterator(); iterator2
+						.hasNext();) {
+					BatchFees batchFees = (BatchFees) iterator2.next();
+					if(batch.getBatch_id() == batchFees.getBatch_id()){
+						serviceBean.setFeesLinkStatus("Yes");
+						break;
+					}
+				}
+			}
+		}
+	
+		return serviceBeanList;
 	}
 }

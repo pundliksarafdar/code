@@ -370,7 +370,7 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 		Criteria criteria = session.createCriteria(BatchFees.class);
 		Criterion criterion = Restrictions.eq("inst_id", inst_id);
 		criteria.add(criterion);
-		criterion = Restrictions.ne("div_id",div_id);
+		criterion = Restrictions.eq("div_id",div_id);
 		criteria.add(criterion);
 		criterion = Restrictions.eq("batch_id", batch_id);
 		criteria.add(criterion);
@@ -445,6 +445,26 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 		}
 		return  true;
 
+	}
+	
+public List<BatchFees> getBatchFeesList(int inst_id,int div_id,List<Integer> batch_id) {
+		
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Criteria criteria = session.createCriteria(BatchFeesDistribution.class);
+		Criterion criterion = Restrictions.eq("inst_id", inst_id);
+		criteria.add(criterion);
+		criterion = Restrictions.eq("div_id",div_id);
+		criteria.add(criterion);
+		criterion = Restrictions.in("batch_id", batch_id);
+		criteria.add(criterion);
+		List<BatchFees> feesList = criteria.list();
+		if(session!=null){
+			session.close();
+		}
+		return  feesList;
 	}
 
 }

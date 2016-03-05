@@ -18,6 +18,7 @@ import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.fees.BatchFeesDistribution;
 import com.classapp.db.fees.Fees;
 import com.service.beans.BatchFeesDistributionServiceBean;
+import com.service.beans.BatchServiceBean;
 import com.service.beans.FeeStructure;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.fee.FeesTransaction;
@@ -111,5 +112,14 @@ public class FeeServiceImpl  extends ServiceBase {
 		FeesTransaction feesTransaction = new FeesTransaction();
 		BatchFeesDistributionServiceBean serviceBean = feesTransaction.getBatchFeesDistribution(getRegId(), Integer.parseInt(division),Integer.parseInt(batchID));
 		return Response.status(Status.OK).entity(serviceBean).build();
+	}
+	
+	@GET
+	@Path("/getInstituteBatch/{division}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getInstituteBatch(@PathParam("division") String division){
+		FeesTransaction feesTransaction = new FeesTransaction();
+		List<BatchServiceBean> serviceBeanList = feesTransaction.getInstituteBatch(Integer.parseInt(division), getRegId());
+		return Response.status(Status.OK).entity(serviceBeanList).build();
 	}
 }
