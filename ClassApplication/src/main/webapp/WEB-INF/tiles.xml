@@ -554,9 +554,13 @@
       <put-attribute name="title"  value="Manage Fee"/>
       <put-attribute name="body"   value="/fee/fee.jsp"/>      
    </definition>
-      <definition name="classowner.viewneditfee" extends="baseLayout">
+   <definition name="classowner.viewneditfee" extends="baseLayout">
       <put-attribute name="title"  value="Manage Fee"/>
       <put-attribute name="body"   value="/fee/viewneditfee.jsp"/>      
+   </definition>
+   <definition name="classowner.linkfee" extends="baseLayout">
+      <put-attribute name="title"  value="Link Fee"/>
+      <put-attribute name="body"   value="/fee/linkfee.jsp"/>      
    </definition>
    
 </tiles-definitions>

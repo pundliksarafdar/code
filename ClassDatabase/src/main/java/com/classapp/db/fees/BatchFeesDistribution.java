@@ -1,6 +1,8 @@
 package com.classapp.db.fees;
 
-public class BatchFeesDistribution {
+import java.io.Serializable;
+
+public class BatchFeesDistribution implements Serializable {
 	private int inst_id;
 	private int batch_fees_id;
 	private int fees_id;

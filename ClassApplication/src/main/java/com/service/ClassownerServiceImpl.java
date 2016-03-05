@@ -22,6 +22,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
 
+import com.classapp.db.batch.Batch;
 import com.classapp.db.exam.Exam;
 import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.questionPaper.QuestionPaper;
@@ -45,6 +46,7 @@ import com.service.beans.SubjectsWithTopics;
 import com.serviceinterface.ClassownerServiceApi;
 import com.tranaction.header.HeaderTransaction;
 import com.tranaction.subject.SubjectTransaction;
+import com.transaction.batch.BatchTransactions;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.image.ImageTransactions;
 import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
@@ -450,5 +452,14 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		ExamTransaction examTransaction = new ExamTransaction();
 		boolean status = examTransaction.updateExamPapers(Integer.parseInt(division), userBean.getRegId(), Integer.parseInt(examID), exam_PaperList,userBean.getRegId());
 		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@GET
+	@Path("/getBatches/{division}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getBatchs(@PathParam("division")String division){
+		BatchTransactions transactions = new BatchTransactions();
+		List<Batch>batches = transactions.getAllBatchesOfDivision(Integer.parseInt(division), getRegId());
+		return Response.status(Status.OK).entity(batches).build();
 	}
 }

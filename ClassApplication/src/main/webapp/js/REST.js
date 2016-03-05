@@ -34,6 +34,16 @@ function REST(){
 			   error:handlers.error
 			   });
 	}
+
+	this.deleteItem =function(uri,handlers,global){
+		$.ajax({
+			   url: uri,
+			   type:"DELETE",
+			   global:global,
+			   success:handlers.success,
+			   error:handlers.error
+			   }); 
+	}
 	
 	/*
 	 * This is sample code submitquestionsuploadfile is file type id

@@ -5,50 +5,18 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<style>
-.tableIcon{
-	margin:3px;
-	cursor:pointer
-}
 
-.tableIcon:hover{
-	color: blue;
-}
-</style>
 </head>
 <body>
 	<jsp:include page="FeeHeader.jsp" >
-		<jsp:param value="active" name="viewneditFeeStruct"/>
+		<jsp:param value="active" name="linkFeeStruct"/>
 	</jsp:include>
+	
 	<div class="container">
-	<div class="row">
-	<div class="col-lg-12">
-	<div id="viewNEditFeeStructWrapper">
-		<table id="viewNEditFeeStruct"></table>
-	</div>
-	</div>
-	  <div class="col-lg-12 editDistributionWrapper">
-		<div class="input-group">
-		  <input type="text" class="form-control" placeholder="Distribution item" id="distributionName">
-		  <span class="input-group-btn">
-			<button id="addDistribution" class="btn btn-default" type="button"><i class="glyphicon glyphicon-plus-sign"></i>&nbsp;Add</button>
-		  </span>
-		</div><!-- /input-group -->
-	  </div>
-	  <div class="col-lg-12 editDistributionWrapper">
-			<table id="distributionTable" class="table table-striped distributionTable"></table>
-			  </div>
-	  <div class="col-lg-12 editDistributionWrapper" id="">
-		<form>
-		<div class="input-group">
-			<input type="text" class="form-control" placeholder="Fee name" id="feeStructName" required="required">
-		  <span class="input-group-btn">
-			<button id="saveFeeStructure" class="btn btn-default" type="button"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;Save</button>
-		  </span>
+		<div class="col-lg-12" id="BatchNFeeListContainer">
+			<table id="BatchNFeeListContainerTable" class="table table-striped"></table>
 		</div>
-		</form>	
-	  </div>
-	<div class="col-lg-12" id="linkBatchContainer">
+		<div class="col-lg-12" id="linkBatchContainer">
 		<div class="row">
 			<div class="col-lg-3">
 				<select class="btn btn-default" id="divisionSelect">
@@ -71,15 +39,19 @@
 				</select>
 			</div>
 			<div class="col-lg-3">
+				<input type="button" class="btn btn-default" value="Load" id="batchNFeeTableLoad"/>
 				<input type="button" class="btn btn-default" value="Link" id="linkFeeStructure"/>
 			</div>
 		</div>
 		<div class="row">
-			
+		<div class="col-lg-12 feeDistributionWrapper">
+			<table id="distributionTable" class="table table-striped distributionTable"></table>
+			<table id="totalDistributionTable" class="table table-striped distributionTable">
+			<tr><td style="text-align: right;width: 50%;">Total</td><td class="total" style="text-align: right;width: 50%;"></td></tr>
+			</table>
+			<button id="distributionSave" value="Save" class="btn btn-success">Save</button>
+		</div>
 		</div>
 	</div>
-	</div>
-		</div>
-	
 </body>
 </html>

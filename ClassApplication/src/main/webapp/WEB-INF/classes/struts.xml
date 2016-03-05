@@ -487,6 +487,11 @@
 			method="execute">
 			<result name="success" type="tiles">classowner.viewneditfee</result>
 		</action>
-		
+
+		<action name="linkfee" class="com.fee.LinkFeeAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.linkfee</result>
+		</action>
+				
 	</package>
 </struts>

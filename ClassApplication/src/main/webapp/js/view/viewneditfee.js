@@ -5,7 +5,7 @@ var LINK = ".tableIconLink";
 var FEE_CONTENT_DIV = "#viewNEditFeeStructContent";
 var FEE_CONTENT_DIV_NAME = FEE_CONTENT_DIV+"Name";
 var FEE_CONTENT_DIV_DATA = FEE_CONTENT_DIV+"Data";
-var DISTRIBUTION_TABLE = "#distributionTable";
+var DISTRIBUTION_TABLE = "#di = stributionTable";
 var BUTTON_REMOVE = ".buttonRemove";
 
 var ADD_DISTRIBUTION = "#addDistribution";
@@ -15,7 +15,13 @@ var SAVE_FEE_STRUCTURE = "#saveFeeStructure";
 var DISTRIBUTION_ITEMS = ".distributionItems";
 var FEE_STRUCT_NAME = "#feeStructName";
 var EDIT_DISTRIBUTION_WRAPPER = ".editDistributionWrapper";
+var FEE_TABLE_CONTAINER = "#viewNEditFeeStructWrapper";
+var LINK_BATCH_CONTAINER = "#linkBatchContainer";
+var LINK_FEE_STRUCT = "#linkFeeStructure";
 
+var DIVISION_SELECT = "#divisionSelect";
+var BATCH_SELECT = "#batchSelect";
+var FEE_STRUCT_SELECT = "#feeStructSelect";
 /**/
 var editIcon = "<i class='glyphicon glyphicon-edit tableIcon tableIconEdit' title='Edit'></i>";
 var deleteIcon = "<i class='glyphicon glyphicon-trash tableIcon tableIconDelete' title='Delete'></i>";
@@ -26,6 +32,8 @@ var buttons = editIcon+deleteIcon+linkIcon;
 var getListUrl = "rest/feesservice/getAllFeeStructre";
 var getDetailsUrl = "rest/feesservice/getFeeStructre/";
 var updateUrl = "rest/feesservice/updateFeeStructre";
+var delelteUrl = "rest/feesservice/deleteFeeStructre/";
+var getBatchListUrl = "rest/classownerservice/getBatches/";
 var dataTable;
 $(document).ready(function(){
 	loadFeeStructureTable();
@@ -34,12 +42,14 @@ $(document).ready(function(){
 		.on("click",DELETE,deleteFeeStrcture)
 		.on("click",LINK,linkFeeStructure)
 		.on('click',BUTTON_REMOVE,removeRow)
+		.on('click',LINK_FEE_STRUCT,linkFeeStruct)
 		.on("click",SAVE_FEE_STRUCTURE,saveFeeStructure);
 		
 });
 
 function loadFeeStructureTable(){
 	$(EDIT_DISTRIBUTION_WRAPPER).hide();
+	$(LINK_BATCH_CONTAINER).hide();
 	var handler = {};
 	handler.success = onGetAllFeeStructureSuccess;
 	handler.error = function(e){console.log(e)};
@@ -60,6 +70,7 @@ function onGetAllFeeStructureSuccess(data){
 	}]});
 }
 function editFeeStructure(){	
+	$(FEE_TABLE_CONTAINER).hide();
 	$(EDIT_DISTRIBUTION_WRAPPER).show();
 	var tRow = $(this).closest('tr');
 	var rowData = dataTable.row(tRow).data();
@@ -68,16 +79,37 @@ function editFeeStructure(){
 function deleteFeeStrcture(){
 	var tRow = $(this).closest('tr');
 	var rowData = dataTable.row(tRow).data();
-	modal.modalConfirm("Delete","Do you want to delete "+rowData.fee_struct_id+" ?","No","Delete",function(){
-			deleteFeeStructureRest(rowData.fee_struct_id);
+	console.log(rowData);
+	modal.modalConfirm("Delete","Do you want to delete "+rowData.fees_desc+" ?","No","Delete",function(){
+			deleteFeeStructureRest(rowData.fees_id);
 	},[]);
 	
 }
 function linkFeeStructure(){
+	$(FEE_TABLE_CONTAINER).hide();
+	$(LINK_BATCH_CONTAINER).show();
+	$(DIVISION_SELECT).on("change",getBatches);
+	$(BATCH_SELECT);
 	
+	var handler = {};
+	handler.success = loadFeeStructList;
+	handler.error = function(e){console.log(e)};
+	rest.get(getListUrl,handler);
+}
+
+function loadFeeStructList(data){
+	var optionText = "";
+	$(FEE_STRUCT_SELECT).find("option").not('option[value="-1"]').remove();
+	$.each(data,function(){
+		optionText = optionText + "<option value='"+this.fees_id+"'>"+this.fees_desc+"</option>";
+	});
+	$(FEE_STRUCT_SELECT).append(optionText);
 }
 function deleteFeeStructureRest(id){
-	console.log("Deleting "+id);
+	var handler = {};
+	handler.success = function(e){console.log(e);loadFeeStructureTable();}
+	handler.error = function(e){console.log(e)}
+	rest.deleteItem(delelteUrl+id,handler);
 }
 
 function deleteFeeStructureSuccess(){}
@@ -200,6 +232,32 @@ function validateFeeStructure(struct,saveFunction){
 
 function removeRow(){
 	$(this).closest('tr').remove();
+}
+
+function getBatches(){
+	var handler = {}
+	var division = $(this).val();
+	handler.success = getBatchSuccess;
+	handler.error = getBatchError;
+	rest.get(getBatchListUrl+division,handler);
+}
+
+function getBatchSuccess(batches){
+	$(BATCH_SELECT).find('option').not('option[value="-1"]').remove();
+	var options = "";
+	$.each(batches,function(index,val){
+		options = options + "<option value='"+val.batch_id+"'>"+val.batch_name+"</option>";
+	});
+	$(BATCH_SELECT).append(options);	
+}
+
+function getBatchError(error){
+}
+
+function linkFeeStruct(){
+	var batchSelect = $(BATCH_SELECT).val();
+	var feeStruct = $(FEE_STRUCT_SELECT).val();
+	console.log(batchSelect,feeStruct);
 }
 
 /*REST objects*/

@@ -11,14 +11,15 @@ import com.config.BaseAction;
 import com.transaction.batch.division.DivisionTransactions;
 import com.user.UserBean;
 
-public class ViewnEditfeeAction extends BaseAction{
-	List<Division> divisions;
+public class LinkFeeAction extends BaseAction{
+	List<Division>divisions;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
 		DivisionTransactions transactions = new DivisionTransactions();
 		divisions = transactions.getAllDivisions(userBean.getRegId());
+		
 		return SUCCESS;
 	}
 	public List<Division> getDivisions() {

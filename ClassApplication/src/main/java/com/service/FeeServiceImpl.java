@@ -77,7 +77,7 @@ public class FeeServiceImpl  extends ServiceBase {
 	@DELETE
 	@Path("/deleteFeeStructre/{fees_id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteFeeStrucure(@PathParam("fees_ID") String fees_id){
+	public Response deleteFeeStrucure(@PathParam("fees_id") String fees_id){
 		FeesTransaction feesTransaction = new FeesTransaction();
 		boolean status = feesTransaction.deleteFees(getRegId(), Integer.parseInt(fees_id));
 		return Response.status(Status.OK).entity(status).build();
