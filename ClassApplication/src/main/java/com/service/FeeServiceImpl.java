@@ -21,6 +21,7 @@ import com.classapp.db.fees.Student_Fees;
 import com.service.beans.BatchFeesDistributionServiceBean;
 import com.service.beans.BatchServiceBean;
 import com.service.beans.FeeStructure;
+import com.service.beans.Student_Fees_Transaction;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.fee.FeesTransaction;
 import com.user.UserBean;
@@ -141,6 +142,16 @@ public class FeeServiceImpl  extends ServiceBase {
 	public Response saveStudentBatchFees(List<com.service.beans.Student_Fees> student_FeesList){
 		FeesTransaction feesTransaction = new FeesTransaction();
 		boolean status = feesTransaction.saveStudentBatchFees(getRegId(), student_FeesList);
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Path("/saveStudentBatchFeesTransaction")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveStudentBatchFeesTransaction(Student_Fees_Transaction serviceFees_Transaction){
+		FeesTransaction feesTransaction = new FeesTransaction();
+		boolean status = feesTransaction.saveStudentBatchFeesTransaction(getRegId(), serviceFees_Transaction)
 		return Response.status(Status.OK).entity(status).build();
 	}
 }
