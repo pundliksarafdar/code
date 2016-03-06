@@ -151,7 +151,7 @@ public class FeeServiceImpl  extends ServiceBase {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response saveStudentBatchFeesTransaction(Student_Fees_Transaction serviceFees_Transaction){
 		FeesTransaction feesTransaction = new FeesTransaction();
-		boolean status = feesTransaction.saveStudentBatchFeesTransaction(getRegId(), serviceFees_Transaction)
+		boolean status = feesTransaction.saveStudentBatchFeesTransaction(getRegId(), serviceFees_Transaction);
 		return Response.status(Status.OK).entity(status).build();
 	}
 }
