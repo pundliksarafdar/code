@@ -1,6 +1,7 @@
 package com.transaction.fee;
 
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +14,8 @@ import com.classapp.db.fees.BatchFeesDistribution;
 import com.classapp.db.fees.Fees;
 import com.classapp.db.fees.FeesDB;
 import com.classapp.db.fees.FeesStructure;
+import com.classapp.db.fees.Student_Fees;
+import com.classapp.db.fees.Student_Fees_Transaction;
 import com.service.beans.BatchFees;
 import com.service.beans.BatchFeesDistributionServiceBean;
 import com.service.beans.BatchServiceBean;
@@ -324,6 +327,54 @@ public class FeesTransaction {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return true;
+	}
+	
+	public boolean saveStudentBatchFees(int inst_id,List<com.service.beans.Student_Fees> student_FeesList ){
+		FeesDB feesDB = new FeesDB();
+		for (Iterator iterator = student_FeesList.iterator(); iterator
+				.hasNext();) {
+			com.service.beans.Student_Fees serciveStudent_Fees = (com.service.beans.Student_Fees) iterator.next();
+			serciveStudent_Fees.setInst_id(inst_id);
+			Student_Fees student_Fees = new Student_Fees();
+			try {
+				BeanUtils.copyProperties(student_Fees, serciveStudent_Fees);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			feesDB.saveStudentFees(student_Fees);
+			Student_Fees_Transaction fees_Transaction = new Student_Fees_Transaction();
+			fees_Transaction.setAdded_by(inst_id);
+			fees_Transaction.setAmt_paid(student_Fees.getFees_paid());
+			fees_Transaction.setBatch_id(student_Fees.getBatch_id());
+			fees_Transaction.setDiv_id(student_Fees.getDiv_id());
+			fees_Transaction.setInst_id(inst_id);
+			fees_Transaction.setStudent_id(student_Fees.getStudent_id());
+			fees_Transaction.setTransaction_dt(new Date(new java.util.Date().getTime()));
+			feesDB.saveStudentFeesTransaction(fees_Transaction);
+		}
+		return true;
+	}
+	
+	public boolean saveStudentBatchFeesTransaction(int inst_id,com.service.beans.Student_Fees_Transaction serviceFees_Transaction ){
+		FeesDB feesDB = new FeesDB();
+		serviceFees_Transaction.setAdded_by(inst_id);
+		serviceFees_Transaction.setInst_id(inst_id);
+		Student_Fees_Transaction fees_Transaction = new Student_Fees_Transaction();
+		try {
+			BeanUtils.copyProperties(fees_Transaction, serviceFees_Transaction);
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		feesDB.saveStudentFeesTransaction(fees_Transaction);
 		return true;
 	}
 }

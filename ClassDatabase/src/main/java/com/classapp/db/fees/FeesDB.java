@@ -523,4 +523,48 @@ public boolean deleteBatchFeesDistribution(int inst_id,int batch_fees_id) {
 	return  true;
 
 }
+
+public boolean saveStudentFees(Student_Fees student_Fees) {
+	
+	Session session = null;
+	Transaction transaction = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		session.saveOrUpdate(student_Fees);
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return true;
+}
+
+public boolean saveStudentFeesTransaction(Student_Fees_Transaction fees_Transaction) {
+	
+	Session session = null;
+	Transaction transaction = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		session.saveOrUpdate(fees_Transaction);
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return true;
+}
 }

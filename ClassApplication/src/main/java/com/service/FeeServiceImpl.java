@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response.Status;
 import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.fees.BatchFeesDistribution;
 import com.classapp.db.fees.Fees;
+import com.classapp.db.fees.Student_Fees;
 import com.service.beans.BatchFeesDistributionServiceBean;
 import com.service.beans.BatchServiceBean;
 import com.service.beans.FeeStructure;
@@ -130,6 +131,16 @@ public class FeeServiceImpl  extends ServiceBase {
 	public Response reLinkBatchFeesDistribution(BatchFeesDistributionServiceBean serviceBean){
 		FeesTransaction feesTransaction = new FeesTransaction();
 		boolean status = feesTransaction.saveBatchFeesDistribution(serviceBean,getRegId());
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Path("/saveStudentBatchFees")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveStudentBatchFees(List<com.service.beans.Student_Fees> student_FeesList){
+		FeesTransaction feesTransaction = new FeesTransaction();
+		boolean status = feesTransaction.saveStudentBatchFees(getRegId(), student_FeesList);
 		return Response.status(Status.OK).entity(status).build();
 	}
 }
