@@ -21,6 +21,7 @@ import com.classapp.db.fees.Student_Fees;
 import com.service.beans.BatchFeesDistributionServiceBean;
 import com.service.beans.BatchServiceBean;
 import com.service.beans.FeeStructure;
+import com.service.beans.StudentFeesServiceBean;
 import com.service.beans.Student_Fees_Transaction;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.fee.FeesTransaction;
@@ -154,4 +155,33 @@ public class FeeServiceImpl  extends ServiceBase {
 		boolean status = feesTransaction.saveStudentBatchFeesTransaction(getRegId(), serviceFees_Transaction);
 		return Response.status(Status.OK).entity(status).build();
 	}
+	
+	@GET
+	@Path("/getStudentsFees/{student_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentsFees(@PathParam("student_id")int student_id) {
+		FeesTransaction feesTransaction = new FeesTransaction();
+		StudentFeesServiceBean serviceBean = feesTransaction.getStudentFees(getRegId(), student_id);
+		return Response.status(Status.OK).entity(serviceBean).build();
+	}
+	
+	@GET
+	@Path("/getAllBatchStudentsFees/{div_id}/{batch_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllBatchStudentsFees(@PathParam("div_id")int div_id,@PathParam("batch_id")int batch_id) {
+		FeesTransaction feesTransaction = new FeesTransaction();
+		List list = feesTransaction.getAllBatchStudentsFees(getRegId(), div_id, batch_id);
+		return Response.status(Status.OK).entity(list).build();
+	}
+	
+	@GET
+	@Path("/updateStudentFeesAmt/{div_id}/{batch_id}/{student_id}/{discount}/{discount_type}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateStudentFeesAmt(@PathParam("div_id")int div_id,@PathParam("batch_id")int batch_id,@PathParam("student_id")int student_id,
+			@PathParam("discount")double discount,@PathParam("discount_type")String discount_type) {
+		FeesTransaction feesTransaction = new FeesTransaction();
+		boolean status = feesTransaction.updateStudentFeesAmt(getRegId(), div_id, batch_id, student_id, discount, discount_type);
+		return Response.status(Status.OK).entity(status).build();
+	}
+		
 }

@@ -19,7 +19,9 @@ import com.classapp.db.fees.Student_Fees_Transaction;
 import com.service.beans.BatchFees;
 import com.service.beans.BatchFeesDistributionServiceBean;
 import com.service.beans.BatchServiceBean;
+import com.service.beans.BatchStudentFees;
 import com.service.beans.FeeStructure;
+import com.service.beans.StudentFeesServiceBean;
 
 public class FeesTransaction {
 	
@@ -375,6 +377,83 @@ public class FeesTransaction {
 			e.printStackTrace();
 		}
 		feesDB.saveStudentFeesTransaction(fees_Transaction);
+		feesDB.updateStudentFees(inst_id, fees_Transaction.getDiv_id(), fees_Transaction.getBatch_id(), fees_Transaction.getStudent_id(), fees_Transaction.getAmt_paid());
+		return true;
+	}
+	
+	public StudentFeesServiceBean getStudentFees(int inst_id,int student_id){
+		FeesDB feesDB = new FeesDB();
+		List<Student_Fees> student_FeesList = feesDB.getStudentFees(inst_id, student_id);
+		List<Student_Fees_Transaction> student_Fees_TransactionList = feesDB.getStudentFeesTransaction(inst_id, student_id);
+		StudentFeesServiceBean studentFeesServiceBean = new StudentFeesServiceBean();
+		List<com.service.beans.Student_Fees> serviceStudent_FeesList = new ArrayList<com.service.beans.Student_Fees>();
+		List<com.service.beans.Student_Fees_Transaction> serviceStudent_Fees_TransactionList = new ArrayList<com.service.beans.Student_Fees_Transaction>();
+		for (Iterator iterator = student_FeesList.iterator(); iterator
+				.hasNext();) {
+			Student_Fees student_Fees = (Student_Fees) iterator
+					.next();
+			com.service.beans.Student_Fees serviceStudent_Fees = new com.service.beans.Student_Fees();
+			try {
+				BeanUtils.copyProperties(serviceStudent_Fees, student_Fees);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			serviceStudent_FeesList.add(serviceStudent_Fees);
+		}
+		
+		for (Iterator iterator = serviceStudent_Fees_TransactionList.iterator(); iterator
+				.hasNext();) {
+			Student_Fees_Transaction student_Fees_Transaction = (Student_Fees_Transaction) iterator
+					.next();
+			com.service.beans.Student_Fees_Transaction serviceStudent_Fees_Transaction = new com.service.beans.Student_Fees_Transaction();
+			
+			try {
+				BeanUtils.copyProperties(serviceStudent_Fees_Transaction, student_Fees_Transaction);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			serviceStudent_Fees_TransactionList.add(serviceStudent_Fees_Transaction);
+		}
+		
+		studentFeesServiceBean.setStudent_FeesList(serviceStudent_FeesList);
+		studentFeesServiceBean.setStudent_Fees_TransactionList(serviceStudent_Fees_TransactionList);
+		
+		return studentFeesServiceBean;
+	}
+	
+	public List<BatchStudentFees> getAllBatchStudentsFees(int inst_id,int div_id,int batch_id) {
+		FeesDB feesDB = new FeesDB();
+		List list = feesDB.getAllBatchStudentsFees(inst_id, div_id, batch_id);
+		List<BatchStudentFees> batchStudentFeesList = new ArrayList<BatchStudentFees>();
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			Object[] object = (Object[]) iterator.next();
+			BatchStudentFees batchStudentFees = new BatchStudentFees();
+			batchStudentFees.setStudent_id(((Number) object[0]).intValue());
+			batchStudentFees.setFname((String) object[1]);
+			batchStudentFees.setLname((String) object[2]);
+			batchStudentFees.setBatch_fees(((Number) object[3]).doubleValue());
+			batchStudentFees.setDiscount(((Number) object[4]).doubleValue());
+			batchStudentFees.setDiscount_type((String) object[5]);
+			batchStudentFees.setFinal_fees_amt(((Number) object[6]).doubleValue());
+			batchStudentFees.setFees_paid(((Number) object[7]).doubleValue());
+			batchStudentFees.setFees_due(((Number) object[8]).doubleValue());
+			batchStudentFeesList.add(batchStudentFees);
+		}
+		return batchStudentFeesList;
+		
+	}
+	
+	public boolean updateStudentFeesAmt(int inst_id,int div_id,int batch_id,int student_id,double discount,String discount_type ){
+		FeesDB feesDB = new FeesDB();
+		feesDB.updateStudentFeesAmt(inst_id, div_id, batch_id, student_id, discount, discount_type);
 		return true;
 	}
 }

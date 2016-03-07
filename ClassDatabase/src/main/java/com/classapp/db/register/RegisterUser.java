@@ -64,6 +64,25 @@ public class RegisterUser {
 
 }
 	
+	public int registerStudent(RegisterBean registerBean){
+		Session session = HibernateUtil.getSessionfactory().openSession();
+		session.beginTransaction();
+		
+		try{
+			session.save(registerBean);
+			session.getTransaction().commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return registerBean.getRegId();
+
+}
+	
 	public String formatMessage(String message){
 		String errorMessage = "";
 		String duplicate = "Duplicate";

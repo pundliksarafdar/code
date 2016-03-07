@@ -42,14 +42,20 @@ import com.service.beans.QuestionPaperFileElement;
 import com.service.beans.QuestionPaperFileObject;
 import com.service.beans.QuestionPaperPattern;
 import com.service.beans.QuestionPaperStructure;
+import com.service.beans.RegisterBean;
+import com.service.beans.Student;
+import com.service.beans.Student_Fees;
 import com.service.beans.SubjectsWithTopics;
 import com.serviceinterface.ClassownerServiceApi;
 import com.tranaction.header.HeaderTransaction;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.exams.ExamTransaction;
+import com.transaction.fee.FeesTransaction;
 import com.transaction.image.ImageTransactions;
 import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
+import com.transaction.register.RegisterTransaction;
+import com.transaction.student.StudentTransaction;
 import com.user.UserBean;
 
 @Path("/classownerservice") 
@@ -461,5 +467,34 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		BatchTransactions transactions = new BatchTransactions();
 		List<Batch>batches = transactions.getAllBatchesOfDivision(Integer.parseInt(division), getRegId());
 		return Response.status(Status.OK).entity(batches).build();
+	}
+	
+	@POST
+	@Path("/addStudentByManually")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addStudentByManually(RegisterBean registerBean,List<Student_Fees> student_FeesList,Student student) {
+		FeesTransaction feesTransaction = new FeesTransaction();
+		RegisterTransaction registerTransaction = new RegisterTransaction();
+		int student_id = registerTransaction.registerStudentManually(registerBean, student);
+		for (Iterator iterator = student_FeesList.iterator(); iterator
+				.hasNext();) {
+			Student_Fees student_Fees = (Student_Fees) iterator.next();
+			student_Fees.setStudent_id(student_id);
+		}
+		boolean status = feesTransaction.saveStudentBatchFees(getRegId(), student_FeesList);
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Path("/addStudentByID")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addStudentByID(List<Student_Fees> student_FeesList,com.classapp.db.student.Student student) {
+		FeesTransaction feesTransaction = new FeesTransaction();
+		StudentTransaction studentTransaction = new StudentTransaction();
+		studentTransaction.addUpdateDb(student);
+		boolean status = feesTransaction.saveStudentBatchFees(getRegId(), student_FeesList);
+		return Response.status(Status.OK).entity(status).build();
 	}
 }

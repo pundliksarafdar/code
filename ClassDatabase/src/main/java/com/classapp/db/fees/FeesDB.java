@@ -171,6 +171,7 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 			query.setParameter("fees_id",fees.getFees_id());
 			query.setParameter("fees_desc", fees.getFees_desc());
 			query.executeUpdate();
+			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(null!=transaction){
@@ -201,6 +202,7 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 			query.setParameter("fees_structure_id", feesStructure.getFees_structure_id());
 			query.setParameter("fees_structure_desc", feesStructure.getFees_structure_desc());
 			query.executeUpdate();
+			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(null!=transaction){
@@ -230,6 +232,7 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 			query.setParameter("fees_id",feesStructure.getFees_id());
 			query.setParameter("fees_structure_id", feesStructure.getFees_structure_id());
 			query.executeUpdate();
+			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(null!=transaction){
@@ -257,6 +260,7 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("fees_id", fees_id);
 			query.executeUpdate();
+			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(null!=transaction){
@@ -284,6 +288,7 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("fees_id", fees_id);
 			query.executeUpdate();
+			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(null!=transaction){
@@ -401,6 +406,7 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 			query.setParameter("batch_fees", batchFees.getBatch_fees());
 			query.setParameter("fees_id", batchFees.getFees_id());
 			query.executeUpdate();
+			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(null!=transaction){
@@ -432,6 +438,7 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 			query.setParameter("fees_id", batchFees.getFees_id());
 			query.setParameter("fees_structure_id", batchFees.getFees_structure_id());
 			query.executeUpdate();
+			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(null!=transaction){
@@ -566,5 +573,143 @@ public boolean saveStudentFeesTransaction(Student_Fees_Transaction fees_Transact
 		}
 	}
 	return true;
+}
+
+public List<Student_Fees_Transaction> getStudentFeesTransaction(int inst_id,int student_id) {
+	
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	Criteria criteria = session.createCriteria(Student_Fees_Transaction.class);
+	Criterion criterion = Restrictions.eq("inst_id", inst_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("student_id",student_id);
+	criteria.add(criterion);
+	List<Student_Fees_Transaction> feesList = criteria.list();
+	if(session!=null){
+		session.close();
+	}
+	return  feesList;
+}
+
+public List<Student_Fees> getStudentFees(int inst_id,int student_id) {
+	
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	Criteria criteria = session.createCriteria(Student_Fees.class);
+	Criterion criterion = Restrictions.eq("inst_id", inst_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("student_id",student_id);
+	criteria.add(criterion);
+	List<Student_Fees> feesList = criteria.list();
+	if(session!=null){
+		session.close();
+	}
+	return  feesList;
+}
+
+public List getAllBatchStudentsFees(int inst_id,int div_id,int batch_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	List BatchFessList = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("Select fees.student_id ,reg.fname,reg.lname,fees.batch_fees,fees.discount,fees.discount_type,fees.final_fees_amt,fees.fees_paid,fees.fees_due  From Student_Fees fees ,RegisterBean reg where fees.inst_id = :inst_id and fees.div_id = :div_id and fees.batch_id=:batch_id " +
+				"and fees.student_id = reg.regId");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("batch_id", batch_id);
+		BatchFessList = query.list();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  BatchFessList;
+}
+
+public boolean updateStudentFees(int inst_id,int div_id,int batch_id, int student_id,double fees_paid) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("update Student_Fees set fees_paid = fees_paid + :fees_paid, fees_due = fees_due - :fees_paid" +
+				" where inst_id = :inst_id and div_id=:div_id and batch_id = :batch_id and student_id = :student_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("batch_id", batch_id);
+		query.setParameter("student_id", student_id);
+		query.setParameter("fees_paid", fees_paid);
+		query.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  true;
+
+}
+
+public boolean updateStudentFeesAmt(int inst_id,int div_id,int batch_id, int student_id,double discount,String discount_type) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("update Student_Fees set discount = :discount,discount_type = :discount_type,final_fees_amt = batch_fees - :discount" +
+				", fees_due = (batch_fees - :discount) - fees_paid" +
+				" where inst_id = :inst_id and div_id=:div_id and batch_id = :batch_id and student_id = :student_id");
+		if("per".equals(discount_type)){
+			query = session.createQuery("update Student_Fees set discount = :discount,discount_type = :discount_type,final_fees_amt = batch_fees * (:discount/100)" +
+					", fees_due = (batch_fees * (:discount/100)) - fees_paid" +
+					" where inst_id = :inst_id and div_id=:div_id and batch_id = :batch_id and student_id = :student_id");
+
+		}
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("batch_id", batch_id);
+		query.setParameter("student_id", student_id);
+		query.setParameter("discount", discount);
+		query.setParameter("discount_type", discount_type);
+		query.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  true;
+
 }
 }
