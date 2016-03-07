@@ -456,4 +456,9 @@ public class FeesTransaction {
 		feesDB.updateStudentFeesAmt(inst_id, div_id, batch_id, student_id, discount, discount_type);
 		return true;
 	}
+	
+	public List<com.classapp.db.fees.BatchFees> getBatchFeesList(int inst_id,int div_id,List<Integer> batchIdList) {
+		FeesDB feesDB = new FeesDB();
+		return feesDB.getBatchFeesList(inst_id, div_id, batchIdList);
+	}
 }

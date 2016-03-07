@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.classapp.db.exam.Exam_Paper;
+import com.classapp.db.fees.BatchFees;
 import com.classapp.db.fees.BatchFeesDistribution;
 import com.classapp.db.fees.Fees;
 import com.classapp.db.fees.Student_Fees;
@@ -174,14 +175,24 @@ public class FeeServiceImpl  extends ServiceBase {
 		return Response.status(Status.OK).entity(list).build();
 	}
 	
-	@GET
-	@Path("/updateStudentFeesAmt/{div_id}/{batch_id}/{student_id}/{discount}/{discount_type}")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/updateStudentFeesAmt")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateStudentFeesAmt(@PathParam("div_id")int div_id,@PathParam("batch_id")int batch_id,@PathParam("student_id")int student_id,
-			@PathParam("discount")double discount,@PathParam("discount_type")String discount_type) {
+	public Response updateStudentFeesAmt(com.service.beans.Student_Fees student_Fees) {
 		FeesTransaction feesTransaction = new FeesTransaction();
-		boolean status = feesTransaction.updateStudentFeesAmt(getRegId(), div_id, batch_id, student_id, discount, discount_type);
+		boolean status = feesTransaction.updateStudentFeesAmt(getRegId(), student_Fees.getDiv_id(), student_Fees.getBatch_id(), student_Fees.getStudent_id(), student_Fees.getDiscount(), student_Fees.getDiscount_type());
 		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/getBatchFees/{div_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getBatchFees(List<Integer> batchIdList,@PathParam("div_id")int div_id) {
+		FeesTransaction feesTransaction = new FeesTransaction();
+		List<BatchFees> batchFeesList = feesTransaction.getBatchFeesList(getRegId(), div_id, batchIdList);
+		return Response.status(Status.OK).entity(batchFeesList).build();
 	}
 		
 }

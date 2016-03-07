@@ -1,6 +1,9 @@
 package com.transaction.student;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+
+import org.apache.commons.beanutils.BeanUtils;
 
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
@@ -157,5 +160,21 @@ public class StudentTransaction {
 	public List<Student> getStudentByStudentIDs(List<Integer> studentID,int class_id) {
 		StudentDB studentDB=new StudentDB();
 		return studentDB.getStudentByStudentIDs(studentID,class_id);
+	}
+	
+	public boolean addStudentByID(int inst_id,com.service.beans.Student serviceStudent) {
+		serviceStudent.setClass_id(inst_id);
+		Student student = new Student();
+		try {
+			BeanUtils.copyProperties(student, serviceStudent);
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return addUpdateDb(student);
 	}
 }

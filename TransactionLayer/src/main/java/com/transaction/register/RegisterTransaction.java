@@ -198,7 +198,7 @@ public class RegisterTransaction {
 		return registerDB.getStudentByNames(inst_id, fname, lname);
 	}
 	
-	public int registerStudentManually(com.service.beans.RegisterBean registerBean,com.service.beans.Student student) {
+	public int registerStudentManually(int inst_id,com.service.beans.RegisterBean registerBean,com.service.beans.Student student) {
 		RegisterUser registerUser = new RegisterUser();
 		String username="";
 		String phone="";
@@ -245,6 +245,7 @@ public class RegisterTransaction {
 		}
 		int student_id = registerUser.registerStudent(bean);
 		student.setStudent_id(student_id);
+		student.setClass_id(inst_id);
 		StudentTransaction studentTransaction = new StudentTransaction();
 		Student studentbean = new Student();
 		try {
