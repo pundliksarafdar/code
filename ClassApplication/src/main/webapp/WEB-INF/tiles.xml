@@ -562,5 +562,9 @@
       <put-attribute name="title"  value="Link Fee"/>
       <put-attribute name="body"   value="/fee/linkfee.jsp"/>      
    </definition>
+   <definition name="classowner.studentFees" extends="baseLayout">
+      <put-attribute name="title"  value="Student Fee"/>
+      <put-attribute name="body"   value="/fee/studentFee.jsp"/>      
+   </definition>
    
 </tiles-definitions>

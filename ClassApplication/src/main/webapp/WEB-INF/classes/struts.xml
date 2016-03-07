@@ -492,6 +492,10 @@
 			method="execute">
 			<result name="success" type="tiles">classowner.linkfee</result>
 		</action>
-				
+		
+		<action name="studentFees" class="com.fee.StudentFeesAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.studentFees</result>
+		</action>		
 	</package>
 </struts>

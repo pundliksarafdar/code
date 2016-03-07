@@ -3,4 +3,5 @@
 		<li class="<c:out value="${param.createFeeStruct}"></c:out>"><a href="fees" data-toggle="tab">Create Fee structure</a></li>
 		<li class="<c:out value="${param.viewneditFeeStruct}"></c:out>"><a href="viewneditfee">View/Edit Fee structure</a></li>
 		<li class="<c:out value="${param.linkFeeStruct}"></c:out>"><a href="linkfee">Link Fee structure</a></li>
+		<li class="<c:out value="${param.studentFees}"></c:out>"><a href="studentFees">Student Fees</a></li>
 	</ul>

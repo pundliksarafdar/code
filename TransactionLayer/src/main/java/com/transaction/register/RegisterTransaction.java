@@ -1,5 +1,6 @@
 package com.transaction.register;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -233,12 +234,28 @@ public class RegisterTransaction {
 		registerBean.setLoginName(username);
 		registerBean.setLoginPass(new java.util.Date().getTime()+"");
 		RegisterBean bean = new RegisterBean();
-		BeanUtils.copyProperties(bean, registerBean);
+		try {
+			BeanUtils.copyProperties(bean, registerBean);
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		int student_id = registerUser.registerStudent(bean);
 		student.setStudent_id(student_id);
 		StudentTransaction studentTransaction = new StudentTransaction();
 		Student studentbean = new Student();
-		BeanUtils.copyProperties(studentbean, student);
+		try {
+			BeanUtils.copyProperties(studentbean, student);
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		studentTransaction.addUpdateDb(studentbean);
 		return student_id;
 	}
