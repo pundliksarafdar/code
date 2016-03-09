@@ -3,6 +3,7 @@ var DIV_SELECT = "#division";
 var ADD_STUDENT = "#addStudent";
 
 var getBatchFeesUrl = "rest/feesservice/getBatchFees/";
+var addStudentManuallyUrl = 'rest/classownerservice/addStudentByManually';
 $(document).ready(function(){
 	$("body").on("change",BATCH_SELECT,selectBacth)
 		.on("click",ADD_STUDENT,addStudent);
@@ -181,27 +182,38 @@ var addStudent = function(){
 		registerBean.addr1 = address;
 		registerBean.city = city;
 		registerBean.state = state;
-		console.log(registerBean);
 		
 		var student = new Student();
 		student.parentFname = parentFname;
 		student.parentLname = parentLname;
 		student.parentPhone = parentPhone;
 		student.parentEmail = parentEmail;
-		}
-		var tRow;
+		
+		var tRow = $('#dataTableForFees tbody').find('tr');
 		var tData = feesDataTable.rows().data();
-		var feesArray
+		var feesArray = [];
 		if(tData && tData.length){
 			for(var index=0;index<tData.length;index++){
 				var student_Fees = new Student_Fees();
 				student_Fees.div_id = (tData[index]).div_id
 				student_Fees.batch_id = (tData[index]).batch_id;
 				student_Fees.batch_fees = (tData[index]).batch_fees;
-				student_Fees.discount = tRow.eq(index).find(".discount");
-				student_Fees.discount_type  = tRow.eq(index).find(".percentage").is(':checked')?'per':'amt';
-				student_Fees.fees_paid  = tRow.eq(index).find(".paidFees");
+				student_Fees.discount = tRow.eq(index).find(".discount").val();
+				student_Fees.discount_type  = tRow.eq(index).find(".percentage").is(':checked')?'amt':'per';
+				student_Fees.fees_paid  = tRow.eq(index).find(".paidFees").val();
+				feesArray.push(student_Fees);
 			}	
+		}
+		
+		var studentRegisterServiceBean = new StudentRegisterServiceBean ();
+		studentRegisterServiceBean.registerBean = registerBean;
+		studentRegisterServiceBean.student = student;
+		studentRegisterServiceBean.student_FeesList = feesArray;
+		console.log(studentRegisterServiceBean);
+		var handler = {};
+		handler.success = function(e){console.log(e)};
+		handler.error = function(e){console.log(e)};
+		rest.post(addStudentManuallyUrl,handler,JSON.stringify(studentRegisterServiceBean));
 		}
 		
 }
@@ -238,7 +250,7 @@ function Student_Fees(){
 }
 
 function StudentRegisterServiceBean(){
-	this.RegisterBean;
-	this.Student;
-	this.Student_Fees = [];
+	this.registerBean;
+	this.student;
+	this.student_FeesList = [];
 }

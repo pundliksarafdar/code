@@ -189,7 +189,7 @@ public class FeeServiceImpl  extends ServiceBase {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/getBatchFees/{div_id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getBatchFees(List<Integer> batchIdList,@PathParam("div_id")int div_id) {
+	public Response getBatchFees(@PathParam("div_id")int div_id,List<Integer> batchIdList) {
 		FeesTransaction feesTransaction = new FeesTransaction();
 		List<BatchFees> batchFeesList = feesTransaction.getBatchFeesList(getRegId(), div_id, batchIdList);
 		return Response.status(Status.OK).entity(batchFeesList).build();

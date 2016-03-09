@@ -142,41 +142,14 @@ var wayOfAddition="";
 			}
 		});
 		
-		var data = [{totalFee:10000,batchName:'batch1'},{totalFee:12000,batchName:'batch2'},{totalFee:14500,batchName:'batch3'}];
-		feesDataTable = $("#dataTableForFees").DataTable({
-			bDestroy:true,
-			data: data,
-			lengthChange: false,
-			columns:[
-			{
-				title: "Batch",data:"batchName"
-			},
-			{
-				title: "Total fee",data:"totalFee"
-			},
-			{
-				title: "Discount",data:null,render:function(){return "<input type='text' class='form-control discount'/>"}
-			},
-			{
-				title: "%/&#x20b9;",data:null,render:function(){return "<input type='checkbox' data-size=\"mini\"/ class='percentage'>"},width:'auto',bSortable: false
-			},
-			{
-				title: "Paid fee",data:null,render:function(){return "<input type='text' class='form-control paidFees'/>"}
-			},
-			{
-				title: "Remaining fee",data:null,render:function(){return "<div class='remaingFee' style='text-align:center;'></div>"}
-			}]
-		});
-		$("input[type=\"checkbox\"]").bootstrapSwitch(optionSelect);
 	});
 	
 	function calculateFee(){
 		var tableRow = $(this).closest('tr');
 		var data = feesDataTable.row(tableRow).data();
-		console.log(data);
 		var discount = tableRow.find('.discount').val();
 		var paidFees = tableRow.find('.paidFees').val();
-		var totalFees = data.totalFee;
+		var totalFees = data.batch_fees;
 		var percentage = tableRow.find('[type="checkbox"]').is(':checked');
 		remainingFee = percentage?(totalFees - (totalFees*discount*0.01) - paidFees):(totalFees-discount - paidFees);
 		console.log(discount,paidFees,totalFees,percentage,remainingFee);
