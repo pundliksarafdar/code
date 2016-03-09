@@ -132,7 +132,7 @@ var wayOfAddition="";
 				   
 			});
 		});
-		
+		/*
 		$("#addStudent").click(function(){
 			$("#addsuccess").hide();
 			if(wayOfAddition=="byStudentID"){
@@ -141,6 +141,7 @@ var wayOfAddition="";
 				addStudentManually();
 			}
 		});
+		*/
 		
 	});
 	

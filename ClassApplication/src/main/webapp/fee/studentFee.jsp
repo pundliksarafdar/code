@@ -31,6 +31,11 @@
 				<input type="button" class="btn btn-default" value="Load" id="batchNFeeTableLoad"/>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<table id="studentFeesTable" class="table table-striped"/>
+			</div>
+		</div>
 	</div>
 </body>
 </html>

@@ -221,6 +221,7 @@ var addStudent = function(){
 function RegisterBean(){
 	this.fname;
 	this.lname;
+	this.mname = "middlename";
 	this.phone1;
 	this.email;
 	this.dob;

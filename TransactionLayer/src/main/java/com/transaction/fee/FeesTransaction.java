@@ -366,6 +366,7 @@ public class FeesTransaction {
 		FeesDB feesDB = new FeesDB();
 		serviceFees_Transaction.setAdded_by(inst_id);
 		serviceFees_Transaction.setInst_id(inst_id);
+		serviceFees_Transaction.setTransaction_dt(new Date(new java.util.Date().getTime()));
 		Student_Fees_Transaction fees_Transaction = new Student_Fees_Transaction();
 		try {
 			BeanUtils.copyProperties(fees_Transaction, serviceFees_Transaction);
