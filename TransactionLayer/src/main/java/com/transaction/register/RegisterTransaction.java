@@ -200,6 +200,9 @@ public class RegisterTransaction {
 	
 	public int registerStudentManually(int inst_id,com.service.beans.RegisterBean registerBean,com.service.beans.Student student) {
 		RegisterUser registerUser = new RegisterUser();
+		registerBean.setDob(registerBean.getDob().replace("-", ""));
+		registerBean.setClassName("");
+		registerBean.setCountry("INDIA");
 		String username="";
 		String phone="";
 		if(!"".equals(registerBean.getPhone1()) && null != registerBean.getPhone1()){
