@@ -1,5 +1,7 @@
 package com.service.beans;
 
+import java.sql.Date;
+
 public class BatchStudentFees {
 	int student_id;
 	String fname;
@@ -10,6 +12,8 @@ public class BatchStudentFees {
 	double final_fees_amt;
 	double fees_paid;
 	double fees_due;
+	Date paidOn;
+	
 	public int getStudent_id() {
 		return student_id;
 	}
@@ -63,6 +67,12 @@ public class BatchStudentFees {
 	}
 	public void setFees_due(double fees_due) {
 		this.fees_due = fees_due;
+	}
+	public Date getPaidOn() {
+		return paidOn;
+	}
+	public void setPaidOn(Date paidOn) {
+		this.paidOn = paidOn;
 	}
 	
 	

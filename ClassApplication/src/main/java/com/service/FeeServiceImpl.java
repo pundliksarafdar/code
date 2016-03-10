@@ -21,7 +21,9 @@ import com.classapp.db.fees.Fees;
 import com.classapp.db.fees.Student_Fees;
 import com.service.beans.BatchFeesDistributionServiceBean;
 import com.service.beans.BatchServiceBean;
+import com.service.beans.BatchStudentFees;
 import com.service.beans.FeeStructure;
+import com.service.beans.PrintDetailResponce;
 import com.service.beans.StudentFeesServiceBean;
 import com.service.beans.Student_Fees_Transaction;
 import com.transaction.exams.ExamTransaction;
@@ -193,6 +195,29 @@ public class FeeServiceImpl  extends ServiceBase {
 		FeesTransaction feesTransaction = new FeesTransaction();
 		List<BatchFees> batchFeesList = feesTransaction.getBatchFeesList(getRegId(), div_id, batchIdList);
 		return Response.status(Status.OK).entity(batchFeesList).build();
+	}
+	
+	@GET
+	@Path("/getPrintDetail/{divId}/{batchId}/{studentId}/{feeStructId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPrintDetail(@PathParam("divId")int div_id,
+			@PathParam("batchId")int batchId,
+			@PathParam("studentId")int studentId,
+			@PathParam("feeStructId")String feeStructId) {
+		int regId = getRegId();
+		PrintDetailResponce responce = new PrintDetailResponce();
+		UserBean userBean = getUserBean();
+		responce.setAddress(userBean.getAddr1()+","+userBean.getAddr1());
+		responce.setContactNo(userBean.getPhone1());
+		responce.setInstituteName(userBean.getClassName());
+		
+		FeesTransaction feesTransaction = new FeesTransaction();
+		FeeStructure feeStructureList = feesTransaction.getFeeStructurelist(regId, Integer.parseInt(feeStructId));
+		responce.setFeeStructure(feeStructureList);
+		
+		BatchStudentFees batchStudentFees  = feesTransaction.getStudentsTransactionForPrint(regId, div_id, batchId, studentId);
+		responce.setBatchStudentFees(batchStudentFees);
+		return Response.status(Status.OK).entity(responce).build();
 	}
 		
 }

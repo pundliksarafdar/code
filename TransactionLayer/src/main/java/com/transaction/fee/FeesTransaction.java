@@ -16,6 +16,7 @@ import com.classapp.db.fees.FeesDB;
 import com.classapp.db.fees.FeesStructure;
 import com.classapp.db.fees.Student_Fees;
 import com.classapp.db.fees.Student_Fees_Transaction;
+import com.classapp.utils.Constants;
 import com.service.beans.BatchFees;
 import com.service.beans.BatchFeesDistributionServiceBean;
 import com.service.beans.BatchServiceBean;
@@ -461,5 +462,22 @@ public class FeesTransaction {
 	public List<com.classapp.db.fees.BatchFees> getBatchFeesList(int inst_id,int div_id,List<Integer> batchIdList) {
 		FeesDB feesDB = new FeesDB();
 		return feesDB.getBatchFeesList(inst_id, div_id, batchIdList);
+	}
+	
+	public BatchStudentFees getStudentsTransactionForPrint(int inst_id,int div_id,int batch_id,int student_id){
+		FeesDB feesDB = new FeesDB();
+		List listTransactions = feesDB.getStudentsTransactionForPrint(inst_id, div_id, batch_id, student_id);
+		Object[] list =  (Object[]) listTransactions.get(0);
+		BatchStudentFees batchStudentFees = new BatchStudentFees();
+		batchStudentFees.setBatch_fees((Double) list[Constants.LAST_FEE_PARAM.BATCH_FEE.getOrdinalvalue()]);
+		batchStudentFees.setDiscount((Double) list[Constants.LAST_FEE_PARAM.DISCOUNT.getOrdinalvalue()]);
+		batchStudentFees.setDiscount_type((String) list[Constants.LAST_FEE_PARAM.DISCOUNT_TYPE.getOrdinalvalue()]);
+		batchStudentFees.setFees_due((Double) list[Constants.LAST_FEE_PARAM.FEES_DUE.getOrdinalvalue()]);
+		batchStudentFees.setFees_paid((Double) list[Constants.LAST_FEE_PARAM.FEES_PAID.getOrdinalvalue()]);
+		batchStudentFees.setFinal_fees_amt((Double) list[Constants.LAST_FEE_PARAM.FINAL_FEES_AMT.getOrdinalvalue()]);
+		batchStudentFees.setPaidOn((Date)list[Constants.LAST_FEE_PARAM.TRANSACTION_DATE.getOrdinalvalue()]);
+		batchStudentFees.setFname((String)list[Constants.LAST_FEE_PARAM.FIRST_NAME.getOrdinalvalue()]);
+		batchStudentFees.setLname((String)list[Constants.LAST_FEE_PARAM.LAST_NAME.getOrdinalvalue()]);
+		return batchStudentFees;		
 	}
 }

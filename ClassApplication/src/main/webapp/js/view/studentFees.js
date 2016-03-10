@@ -2,6 +2,8 @@
 var getBatchListUrl = "rest/feesservice/getInstituteBatch/";
 var getAllBatchStudentsFeesUrl = "rest/feesservice/getAllBatchStudentsFees/";
 var saveStudentBatchFee = "rest/feesservice/saveStudentBatchFeesTransaction/";
+var printReceiptUrl = "rest/feesservice/getPrintDetail/";
+
 /*************/
 var DIVISION_SELECT = "#divisionSelect";
 var BATCH_SELECT = "#batchSelect";
@@ -9,6 +11,8 @@ var STUDENT_FEES_TABLE = "#studentFeesTable";
 var PAY_FEE_INPUT = ".payFeesInput";
 var PAY_FEE = ".payFees";
 var NOTE_TEXT = ".noteText";
+var PRINT_RECEIPT = ".printReceipt";
+var RECEIPT = "#printReceipt";
 /*Static value*/
 var feesDataTable;
 var optionSelect = {
@@ -19,10 +23,36 @@ $(document).ready(function(){
 	$("body").on("change",DIVISION_SELECT,getBatches)
 		.on("change",BATCH_SELECT,loadStudentTable)
 		.on("switchChange.bootstrapSwitch input",STUDENT_FEES_TABLE+" input",calculateFee)
-		.on("click",PAY_FEE,payfee);
+		.on("click",PAY_FEE,payfee)
+		.on("click",PRINT_RECEIPT,printFeeReceipt);
 	
 });
 
+function printFeeReceipt(){
+	var tableRow = $(this).closest('tr');
+	var row = feesDataTable.row(tableRow);
+	var data = row.data();
+	
+	var handler = {}
+	handler.success = printFeesSuccess;//function(e){console.log(e)};
+	handler.error = function(e){console.log(e)};
+	rest.get(printReceiptUrl+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+data.student_id+"/"+1,handler);
+}
+
+function printFeesSuccess(data){
+	
+	console.log(data);
+	
+	$.get('tmpl/feereceipt.tmpl', function(template){
+		var rendered = Mustache.render(template, data);
+		$('#printableReceipt').html(rendered);
+		var receiptData = $('#printableReceipt').html(); 
+		newWin= window.open("");
+		newWin.document.write(receiptData);
+		newWin.print();
+		newWin.close();
+	  });
+}
 function payfee(){
 	var payFeeBean = new PayFeeBean();
 	var tableRow = $(this).closest('tr');
@@ -141,6 +171,9 @@ function loadStudentTableSuccess(data){
 			},
 			{
 				title: "Remaining fee",data:null,render:function(){return "<input type='button' class='btn btn-default payFees' value='Pay'/>"}
+			},
+			{
+				title: "",data:null,render:function(){return "<input type='button' class='btn btn-default printReceipt' value='Print'/>"}
 			}
 			
 			]

@@ -146,6 +146,9 @@ html,body {
 <script src="js/select2.min.js"></script>
 <script src="js/REST.js"></script>
 <script src="js/bootstrap-switch.min.js"></script>
+
+<!-- Doc: https://github.com/janl/mustache.js -->
+<script src="js/mustache.min.js"></script>
 <script src='js/view/<c:out value="${request.actionName}"></c:out>.js'></script>
 <script>
 $( document ).ajaxStart(function() {

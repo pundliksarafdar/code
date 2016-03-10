@@ -641,6 +641,36 @@ public List getAllBatchStudentsFees(int inst_id,int div_id,int batch_id) {
 	return  BatchFessList;
 }
 
+public List getBatchStudentsFees(int inst_id,int div_id,int batch_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	List BatchFessList = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("Select fees.student_id ,reg.fname,reg.lname,fees.batch_fees,fees.discount,fees.discount_type,fees.final_fees_amt,fees.fees_paid,fees.fees_due  From Student_Fees fees ,RegisterBean reg where fees.inst_id = :inst_id and fees.div_id = :div_id and fees.batch_id=:batch_id " +
+				"and fees.student_id = reg.regId");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("batch_id", batch_id);
+		BatchFessList = query.list();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  BatchFessList;
+}
+
 public boolean updateStudentFees(int inst_id,int div_id,int batch_id, int student_id,double fees_paid) {
 	Transaction transaction=null;
 	Session session=null;
@@ -711,5 +741,41 @@ public boolean updateStudentFeesAmt(int inst_id,int div_id,int batch_id, int stu
 	}
 	return  true;
 
+}
+
+public List getStudentsTransactionForPrint(int inst_id,int div_id,int batch_id,int student_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	List BatchFessList = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("Select fees.student_id ,reg.fname,reg.lname,fees.batch_fees," +
+				"fees.discount,fees.discount_type,fees.final_fees_amt,fees.fees_paid,fees.fees_due, " +
+				" trans.amt_paid, trans.transaction_dt From Student_Fees fees ,RegisterBean reg,Student_Fees_Transaction trans where fees.inst_id = :inst_id " +
+				"and fees.div_id = :div_id and fees.batch_id=:batch_id " +
+				"and fees.student_id = reg.regId and fees.student_id = trans.student_id and fees.student_id = :student_id " +
+				"and trans.fees_transaction_id = (select max(fees_transaction_id) from Student_Fees_Transaction where inst_id = :inst_id " +
+				"and student_id = :student_id) ");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("batch_id", batch_id);
+		query.setParameter("student_id", student_id);
+		BatchFessList = query.list();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  BatchFessList;
 }
 }
