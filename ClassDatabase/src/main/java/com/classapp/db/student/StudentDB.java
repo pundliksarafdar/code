@@ -732,4 +732,39 @@ public class StudentDB {
 		return list;
 	}
 	
+	
+	public List getStudentrelatedtoBatchForAttendance(String batchname,int inst_id,int div_id) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List list=null;
+		String queryString="Select reg.fname,reg.lname, reg.regId from Student std,RegisterBean reg " +
+				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
+				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("batch_id1", batchname+",%");
+			query.setParameter("batch_id2","%,"+batchname+",%");	
+			query.setParameter("batch_id3", "%,"+batchname);
+			query.setParameter("batch_id4", batchname);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
+				list=query.list();
+			if(list!=null)
+			{
+				return list;
+			}
+			
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return null;
+	}
+	
 }

@@ -354,7 +354,7 @@ var wayOfAddition="";
 		}
 		
 		if(flag==false){
-		$.ajax({
+		/* $.ajax({
 			   url: "classOwnerServlet",
 			   data: {
 			    	 methodToCall: "addStudentByManually",
@@ -383,7 +383,7 @@ var wayOfAddition="";
 			   },
 			   error(e){
 				   }
-			   });
+			   }); */
 		}
 	}
 	

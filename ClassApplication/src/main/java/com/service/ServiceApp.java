@@ -12,6 +12,7 @@ private Set<Object> singletons = new HashSet<Object>();
         singletons.add(new CorexServiceApi());
         singletons.add(new ClassownerServiceImpl());
         singletons.add(new FeeServiceImpl());
+        singletons.add(new TimeTableServiceImpl());
     }
     @Override
     public Set<Object> getSingletons() {

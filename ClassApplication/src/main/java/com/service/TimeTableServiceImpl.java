@@ -28,17 +28,43 @@ import com.transaction.schedule.ScheduleTransaction;
 @Path("/schedule")
 public class TimeTableServiceImpl extends ServiceBase{
 
-/*	@Context
+	@Context
 	private HttpServletRequest request;
 
 	@GET
 	@Path("/test")
 	public Response serviceOn() {
-		return Response.status(200).entity("Service OK!..").build();
+		return Response.status(200).entity("Service OK sc!..").build();
 	}
 	
+	@GET
+	@Path("/getScheduleForAttendance/{batch}/{division}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSchedule(@PathParam("batch") Integer batch,
+			@PathParam("division") Integer division) {
+		// TODO Auto-generated method stub
+		Long requestDate = Long.parseLong(request.getParameter("date"));
+		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
+		java.util.Date date = new  java.util.Date();
+		List<Schedule> scheduleList = scheduleTransaction.getSchedule(batch, new Date(requestDate), 4, division);
+		for (Schedule schedule : scheduleList) {
+			System.out.println(schedule.toString());
+		}
+		return Response.status(Response.Status.OK).entity(scheduleList).build();
+	}
+	
+	@GET
+	@Path("/getScheduleForMonth/{batch}/{division}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getScheduleForMonth(@PathParam("batch") int batch,
+			@PathParam("division") int division,@PathParam("date") long date) {
+		// TODO Auto-generated method stub
+		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
+		List scheduleList = scheduleTransaction.getMonthSchedule(batch, new Date(date), 4, division);
+		return Response.status(Response.Status.OK).entity(scheduleList).build();
+	}
 
-	@POST
+	/*@POST
 	@Path("/addScheduleObject/{scheduleBean}/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addScheduleObject(@PathParam("scheduleBean") ScheduleBean scheduleBean) {
@@ -510,4 +536,6 @@ public class TimeTableServiceImpl extends ServiceBase{
 		System.out.println("No. of rows deleted :" + count);
 		return Response.status(Response.Status.OK).entity(count).build();
 	}
-*/}
+*/
+	
+}

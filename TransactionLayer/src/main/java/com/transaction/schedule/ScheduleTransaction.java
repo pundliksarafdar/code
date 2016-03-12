@@ -3,10 +3,12 @@ package com.transaction.schedule;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -20,6 +22,7 @@ import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.student.Student;
 import com.classapp.db.subject.Subject;
 import com.classapp.schedule.Scheduledata;
+import com.service.beans.MonthlyScheduleServiceBean;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
@@ -504,5 +507,33 @@ public class ScheduleTransaction {
 		ScheduleDB scheduleDB=new ScheduleDB();
 		return scheduleDB.updateSchedule(schedule);
 		 
+	}
+	
+	public List getMonthSchedule(int batchid, Date date, int inst_id, int div_id) {
+		ScheduleDB db = new ScheduleDB();
+		List list =  db.getMonthSchedule(batchid, date, inst_id, div_id);
+		List<MonthlyScheduleServiceBean> serviceBeanList = new ArrayList<MonthlyScheduleServiceBean>();
+		if(list!=null){
+			for (Iterator iterator = list.iterator(); iterator
+					.hasNext();) {
+				Object[] object = (Object[]) iterator
+						.next();
+				MonthlyScheduleServiceBean bean = new MonthlyScheduleServiceBean();
+				bean.setDivId(((Number) object[0]).intValue());
+				bean.setDivname((String) object[1]+" "+object[2]);
+				bean.setSubId(((Number) object[3]).intValue());
+				bean.setSubjectname((String) object[4]);
+				bean.setBatchId(((Number) object[5]).intValue());
+				bean.setBatchName((String) object[6]);
+				bean.setId(((Number) object[7]).intValue());
+				Timestamp timestamp = new Timestamp(((Date) object[8]).getYear(), ((Date) object[8]).getMonth(), ((Date) object[8]).getDate(), ((Time) object[9]).getHours(), ((Time) object[9]).getMinutes(), ((Time) object[9]).getSeconds(), ((Time) object[9]).getSeconds());
+				bean.setStart(timestamp.getTime());
+				timestamp = new Timestamp(((Date) object[8]).getYear(), ((Date) object[8]).getMonth(), ((Date) object[8]).getDate(), ((Time) object[10]).getHours(), ((Time) object[10]).getMinutes(), ((Time) object[10]).getSeconds(), ((Time) object[10]).getSeconds());
+				bean.setEnd(timestamp.getTime());
+				serviceBeanList.add(bean);
+			}
+		}
+		
+		return serviceBeanList;
 	}
 }

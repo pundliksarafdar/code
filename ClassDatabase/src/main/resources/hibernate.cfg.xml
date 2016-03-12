@@ -66,6 +66,7 @@
  		<mapping resource="com/classapp/db/fees/Batch_Fees_Distribution.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/fees/Student_Fees.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/fees/Student_Fees_Transaction.hbmmap.xml"></mapping>
+ 		<mapping resource="com/classapp/db/attendance/Attendance.hbmmap.xml"></mapping>
        <!--  <mapping resource="com/classapp/db/classwithsubjects/ClassWithSubjects.hbmmap.xml"></mapping> --> 
     </session-factory>
 </hibernate-configuration>

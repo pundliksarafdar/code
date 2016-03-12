@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 18 Jul, 2014 11:15:40 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.attendance.Attendance" table="attendance" catalog="classdb">
+    <id name="att_id" type="java.lang.Integer">
+            <column name="att_id" />
+            <generator class="identity" />
+        </id>
+    	<property name="inst_id" type="int">
+            <column name="inst_id" />
+        </property>
+        <property name="att_date" type="date">
+            <column name="att_date"/>
+        </property>
+        <property name="div_id" type="int">
+            <column name="div_id" />
+        </property>
+        <property name="batch_id" type="int">
+            <column name="batch_id" />
+        </property>
+        <property name="sub_id" type="int">
+            <column name="sub_id" />
+        </property>
+        <property name="student_id" type="int">
+            <column name="student_id" />
+        </property>
+         <property name="presentee" type="string">
+            <column name="presentee" length="1"/>
+        </property>
+         <property name="note" type="string">
+            <column name="note" length="50"/>
+        </property>
+        </class>
+</hibernate-mapping>
