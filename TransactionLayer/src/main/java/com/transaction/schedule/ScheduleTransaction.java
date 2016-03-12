@@ -550,6 +550,9 @@ public class ScheduleTransaction {
 				bean.setStart(timestamp.getTime());
 				timestamp = new Timestamp(((Date) object[8]).getYear(), ((Date) object[8]).getMonth(), ((Date) object[8]).getDate(), ((Time) object[10]).getHours(), ((Time) object[10]).getMinutes(), ((Time) object[10]).getSeconds(), ((Time) object[10]).getSeconds());
 				bean.setEnd(timestamp.getTime());
+				bean.setTeacher(object[11]+" "+object[12]);
+				bean.setTeacher_id(((Number) object[13]).intValue());
+				bean.setGrp_id(((Number) object[14]).intValue());
 				serviceBeanList.add(bean);
 			}
 		}
@@ -578,6 +581,9 @@ public class ScheduleTransaction {
 				bean.setStart(timestamp.getTime());
 				timestamp = new Timestamp(((Date) object[8]).getYear(), ((Date) object[8]).getMonth(), ((Date) object[8]).getDate(), ((Time) object[10]).getHours(), ((Time) object[10]).getMinutes(), ((Time) object[10]).getSeconds(), ((Time) object[10]).getSeconds());
 				bean.setEnd(timestamp.getTime());
+				bean.setTeacher(object[11]+" "+object[12]);
+				bean.setTeacher_id(((Number) object[13]).intValue());
+				bean.setGrp_id(((Number) object[14]).intValue());
 				serviceBeanList.add(bean);
 			}
 		}

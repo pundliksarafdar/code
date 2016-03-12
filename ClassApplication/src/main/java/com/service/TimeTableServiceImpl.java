@@ -64,7 +64,7 @@ public class TimeTableServiceImpl extends ServiceBase{
 		// TODO Auto-generated method stub
 		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
 		List<MonthlyScheduleServiceBean> scheduleList = new ArrayList<MonthlyScheduleServiceBean>();
-		if(endDate != 0){
+		if(endDate == 0){
 			scheduleList = scheduleTransaction.getMonthSchedule(batch, new Date(startDate), getRegId(), division);
 		}else{
 			scheduleList = scheduleTransaction.getMonthSchedule(batch, new Date(startDate),new Date(endDate), getRegId(), division);

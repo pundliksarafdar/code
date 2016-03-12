@@ -12,6 +12,9 @@ public class MonthlyScheduleServiceBean {
 	String batchName;
 	long start;
 	long end;
+	String teacher;
+	int teacher_id;
+	int grp_id;
 	public int getId() {
 		return id;
 	}
@@ -77,6 +80,24 @@ public class MonthlyScheduleServiceBean {
 	}
 	public void setEnd(long end) {
 		this.end = end;
+	}
+	public String getTeacher() {
+		return teacher;
+	}
+	public void setTeacher(String teacher) {
+		this.teacher = teacher;
+	}
+	public int getTeacher_id() {
+		return teacher_id;
+	}
+	public void setTeacher_id(int teacher_id) {
+		this.teacher_id = teacher_id;
+	}
+	public int getGrp_id() {
+		return grp_id;
+	}
+	public void setGrp_id(int grp_id) {
+		this.grp_id = grp_id;
 	}
 	
 	
