@@ -2,6 +2,7 @@ package com.service;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.Response;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.batch.Batch;
 import com.google.gson.JsonObject;
+import com.service.beans.MonthlyScheduleServiceBean;
 import com.service.beans.ScheduleBean;
 import com.serviceinterface.TimeTableServiceApi;
 import com.transaction.batch.BatchTransactions;
@@ -54,15 +56,22 @@ public class TimeTableServiceImpl extends ServiceBase{
 	}
 	
 	@GET
-	@Path("/getScheduleForMonth/{batch}/{division}/{date}")
+	@Path("/getScheduleForMonth/{batch}/{division}/{startDate}/{endDate}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getScheduleForMonth(@PathParam("batch") int batch,
-			@PathParam("division") int division,@PathParam("date") long date) {
+			@PathParam("division") int division,@PathParam("startDate") long startDate,@PathParam("endDate") long endDate) {
 		// TODO Auto-generated method stub
 		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
-		List scheduleList = scheduleTransaction.getMonthSchedule(batch, new Date(date), 4, division);
+		List<MonthlyScheduleServiceBean> scheduleList = new ArrayList<MonthlyScheduleServiceBean>();
+		if(endDate != 0){
+			scheduleList = scheduleTransaction.getMonthSchedule(batch, new Date(startDate), getRegId(), division);
+		}else{
+			scheduleList = scheduleTransaction.getMonthSchedule(batch, new Date(startDate),new Date(endDate), getRegId(), division);
+		}
 		return Response.status(Response.Status.OK).entity(scheduleList).build();
 	}
+	
+	
 
 	/*@POST
 	@Path("/addScheduleObject/{scheduleBean}/")

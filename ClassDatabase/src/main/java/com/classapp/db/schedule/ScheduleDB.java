@@ -954,6 +954,39 @@ public class ScheduleDB {
 		}
 		return scheduleList;
 	}
+	
+	public List getMonthSchedule(int batchid, Date startDate,Date endDate, int inst_id, int div_id) {
+
+		Session session = null;
+		Transaction transaction = null;
+		List scheduleList = null;
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(
+					"Select div.divId , div.divisionName, div.stream,sub.subjectId,sub.subjectName,batch.batch_id,batch.batch_name,schedule.schedule_id," +
+					"  schedule.date, schedule.start_time,schedule.end_time from Schedule schedule,Division div,Subject sub,Batch batch " +
+					"where div.divId=schedule.div_id and div.institute_id = schedule.class_id and sub.subjectId = schedule.sub_id and " +
+					" sub.institute_id = schedule.class_id and batch.div_id = schedule.div_id and batch.class_id = schedule.class_id and " +
+					"batch.batch_id = schedule.batch_id and schedule.batch_id=:batch_id  and schedule.class_id=:class_id and schedule.div_id=:div_id and " +
+					"schedule.date >= :startDate and schedule.date <= :endDate order by schedule.start_time");
+			query.setParameter("batch_id", batchid);
+			query.setParameter("startDate", startDate);
+			query.setParameter("endDate", endDate);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
+			scheduleList = query.list();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != session) {
+				session.close();
+			}
+		}
+		return scheduleList;
+	}
+	
 	public static void main(String[] args) {
 		ScheduleDB db = new ScheduleDB();
 		// db.getScheduleForDate(68, "2014-09-09");
