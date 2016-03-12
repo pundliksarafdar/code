@@ -21,11 +21,6 @@ public class ScheduleDB {
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session
-					.createQuery("select IFNULL(max(schedule_id),1)+1 from Schedule where class_id=:class_id");
-			query.setParameter("class_id", schedule.getClass_id());
-			List<Integer> schedule_id = query.list();
-			schedule.setSchedule_id(schedule_id.get(0));
 			session.saveOrUpdate(schedule);
 			transaction.commit();
 		} catch (Exception e) {
@@ -106,7 +101,7 @@ public class ScheduleDB {
 			query.setParameter("end_time", schedule.getEnd_time());
 			query.setParameter("date", schedule.getDate());
 			query.setParameter("schedule_id", schedule.getSchedule_id());
-			query.setParameter("class_id", schedule.getClass_id());
+			query.setParameter("class_id", schedule.getInst_id());
 			query.executeUpdate();
 			transaction.commit();
 		} catch (Exception e) {
@@ -143,7 +138,7 @@ public class ScheduleDB {
 				query.setParameter("end_time", schedule.getEnd_time());
 				query.setParameter("date", schedule.getDate());
 				query.setParameter("schedule_id", schedule.getSchedule_id());
-				query.setParameter("class_id", schedule.getClass_id());
+				query.setParameter("class_id", schedule.getInst_id());
 				count=query.executeUpdate();
 				transaction.commit();
 				if(count==1){
@@ -202,7 +197,7 @@ public class ScheduleDB {
 			query.setParameter("starttime", schedule.getStart_time());
 			query.setParameter("endtime", schedule.getEnd_time());
 			query.setParameter("date", schedule.getDate());
-			query.setParameter("class_id", schedule.getClass_id());
+			query.setParameter("class_id", schedule.getInst_id());
 			query.setParameter("schedule_id", schedule.getSchedule_id());
 			scheduleList = query.list();
 			if (scheduleList.size() > 0) {
@@ -214,7 +209,7 @@ public class ScheduleDB {
 				query.setParameter("starttime", schedule.getStart_time());
 				query.setParameter("endtime", schedule.getEnd_time());
 				query.setParameter("date", schedule.getDate());
-				query.setParameter("class_id", schedule.getClass_id());
+				query.setParameter("class_id", schedule.getInst_id());
 				query.setParameter("schedule_id", schedule.getSchedule_id());
 				scheduleList = query.list();
 				if (scheduleList.size() > 0) {
@@ -228,7 +223,7 @@ public class ScheduleDB {
 			query.setParameter("starttime", schedule.getStart_time());
 			query.setParameter("endtime", schedule.getEnd_time());
 			query.setParameter("date", schedule.getDate());
-			query.setParameter("class_id", schedule.getClass_id());
+			query.setParameter("class_id", schedule.getInst_id());
 			query.setParameter("div_id", schedule.getDiv_id());
 			query.setParameter("schedule_id", schedule.getSchedule_id());
 			scheduleList = query.list();
@@ -241,7 +236,7 @@ public class ScheduleDB {
 				query.setParameter("starttime", schedule.getStart_time());
 				query.setParameter("endtime", schedule.getEnd_time());
 				query.setParameter("date", schedule.getDate());
-				query.setParameter("class_id", schedule.getClass_id());
+				query.setParameter("class_id", schedule.getInst_id());
 				query.setParameter("div_id", schedule.getDiv_id());
 				query.setParameter("schedule_id", schedule.getSchedule_id());
 				scheduleList = query.list();
@@ -280,7 +275,7 @@ public class ScheduleDB {
 			query.setParameter("starttime", schedule.getStart_time());
 			query.setParameter("endtime", schedule.getEnd_time());
 			query.setParameter("date", schedule.getDate());
-			query.setParameter("class_id", schedule.getClass_id());
+			query.setParameter("class_id", schedule.getInst_id());
 			scheduleList = query.list();
 			if (scheduleList.size() > 0) {
 				return "teacher";
@@ -291,7 +286,7 @@ public class ScheduleDB {
 				query.setParameter("starttime", schedule.getStart_time());
 				query.setParameter("endtime", schedule.getEnd_time());
 				query.setParameter("date", schedule.getDate());
-				query.setParameter("class_id", schedule.getClass_id());
+				query.setParameter("class_id", schedule.getInst_id());
 				scheduleList = query.list();
 				if (scheduleList.size() > 0) {
 					return "teacher";
@@ -304,7 +299,7 @@ public class ScheduleDB {
 			query.setParameter("starttime", schedule.getStart_time());
 			query.setParameter("endtime", schedule.getEnd_time());
 			query.setParameter("date", schedule.getDate());
-			query.setParameter("class_id", schedule.getClass_id());
+			query.setParameter("class_id", schedule.getInst_id());
 			query.setParameter("div_id", schedule.getDiv_id());
 			scheduleList = query.list();
 			if (scheduleList.size() > 0) {
@@ -316,7 +311,7 @@ public class ScheduleDB {
 				query.setParameter("starttime", schedule.getStart_time());
 				query.setParameter("endtime", schedule.getEnd_time());
 				query.setParameter("date", schedule.getDate());
-				query.setParameter("class_id", schedule.getClass_id());
+				query.setParameter("class_id", schedule.getInst_id());
 				query.setParameter("div_id", schedule.getDiv_id());
 				scheduleList = query.list();
 				if (scheduleList.size() > 0) {
@@ -356,7 +351,7 @@ public class ScheduleDB {
 			query.setParameter("endtime", schedule.getEnd_time());
 			query.setParameter("date", schedule.getDate());
 			query.setParameterList("schedule_id", scheduleids);
-			query.setParameter("class_id", schedule.getClass_id());
+			query.setParameter("class_id", schedule.getInst_id());
 			scheduleList = query.list();
 			if (scheduleList.size() > 0) {
 				return "teacher";
@@ -368,7 +363,7 @@ public class ScheduleDB {
 				query.setParameter("endtime", schedule.getEnd_time());
 				query.setParameter("date", schedule.getDate());
 				query.setParameterList("schedule_id", scheduleids);
-				query.setParameter("class_id", schedule.getClass_id());
+				query.setParameter("class_id", schedule.getInst_id());
 				scheduleList = query.list();
 				if (scheduleList.size() > 0) {
 					return "teacher";
@@ -382,7 +377,7 @@ public class ScheduleDB {
 			query.setParameter("date", schedule.getDate());
 			query.setParameterList("schedule_id", scheduleids);
 			query.setParameter("div_id", schedule.getDiv_id());
-			query.setParameter("class_id", schedule.getClass_id());
+			query.setParameter("class_id", schedule.getInst_id());
 			scheduleList = query.list();
 			if (scheduleList.size() > 0) {
 				return "lecture";
@@ -395,7 +390,7 @@ public class ScheduleDB {
 				query.setParameter("date", schedule.getDate());
 				query.setParameterList("schedule_id", scheduleids);
 				query.setParameter("div_id", schedule.getDiv_id());
-				query.setParameter("class_id", schedule.getClass_id());
+				query.setParameter("class_id", schedule.getInst_id());
 				scheduleList = query.list();
 				if (scheduleList.size() > 0) {
 					return "lecture";
@@ -985,6 +980,28 @@ public class ScheduleDB {
 			}
 		}
 		return scheduleList;
+	}
+	
+	public int addGroup(Groups groups) {
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			session.saveOrUpdate(groups);
+			transaction.commit();
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			if (null != transaction) {
+				transaction.rollback();
+			}
+		} finally {
+			if (null != session) {
+				session.close();
+			}
+		}
+		return groups.getGrp_id();
 	}
 	
 	public static void main(String[] args) {

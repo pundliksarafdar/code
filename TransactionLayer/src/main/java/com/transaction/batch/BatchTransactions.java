@@ -177,7 +177,7 @@ public int getNextBatchID(int inst_id,int div_id){
 		batchDB=new BatchDB();
 		int counter=0;
 		while(counter<schedules.size()){
-		Batch batch=batchDB.getBatchFromID(schedules.get(counter).getBatch_id(),schedules.get(counter).getClass_id(),schedules.get(counter).getDiv_id());
+		Batch batch=batchDB.getBatchFromID(schedules.get(counter).getBatch_id(),schedules.get(counter).getInst_id(),schedules.get(counter).getDiv_id());
 		batchs.add(batch);
 		counter++;
 		}

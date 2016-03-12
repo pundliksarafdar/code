@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -71,6 +72,17 @@ public class TimeTableServiceImpl extends ServiceBase{
 		return Response.status(Response.Status.OK).entity(scheduleList).build();
 	}
 	
+	
+	@POST
+	@Path("/schedule")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addSchedule(com.service.beans.Schedule schedule) {
+		// TODO Auto-generated method stub
+		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
+		scheduleTransaction.addSchedule(schedule, getRegId());
+		return Response.status(Response.Status.OK).entity("true").build();
+	}
 	
 
 	/*@POST

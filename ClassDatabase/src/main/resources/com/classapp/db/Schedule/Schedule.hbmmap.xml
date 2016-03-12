@@ -21,16 +21,22 @@
             <column name="start_time" not-null="false" unique="false" />
         </property>
          <property name="date" type="java.sql.Date">
-            <column name="date" not-null="false" unique="false" />
+            <column name="schedule_dt" not-null="false" unique="false" />
         </property>  
          <property name="end_time" type="java.sql.Time">
             <column name="end_time" not-null="false" unique="false" />
         </property>  
-        <property name="class_id" type="java.lang.Integer">
-            <column name="class_id" not-null="false" unique="false" />
+        <property name="inst_id" type="java.lang.Integer">
+            <column name="inst_id" not-null="false" unique="false" />
         </property>
         <property name="sub_id" type="java.lang.Integer">
             <column name="sub_id" not-null="false" unique="false" />
+        </property>
+         <property name="grp_id" type="java.lang.Integer">
+            <column name="grp_id" not-null="false" unique="false" />
+        </property>
+         <property name="rep_days" type="string">
+            <column name="rep_days" not-null="false" unique="false" />
         </property>
 <!--        <property name="schedule_id" type="java.lang.Integer">
             <column name="schedule_id" not-null="false" unique="false" />

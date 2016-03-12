@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +18,7 @@ import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.register.RegisterDB;
+import com.classapp.db.Schedule.Groups;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.student.Student;
@@ -38,7 +40,7 @@ public class ScheduleTransaction {
 		{
 		Schedule schedule=new Schedule();
 		schedule.setBatch_id(Integer.parseInt(batch_id));
-		schedule.setClass_id(Integer.parseInt(class_id));
+		schedule.setInst_id(Integer.parseInt(class_id));
 		schedule.setDate((Date)date.get(i));
 		schedule.setDiv_id(batch.getDiv_id());
 		schedule.setEnd_time((Time)end_time.get(i));
@@ -60,7 +62,7 @@ public class ScheduleTransaction {
 		{
 		Schedule schedule=new Schedule();
 		schedule.setBatch_id(Integer.parseInt(batch_id));
-		schedule.setClass_id(Integer.parseInt(class_id));
+		schedule.setInst_id(Integer.parseInt(class_id));
 		schedule.setDate((Date)date.get(i));
 		schedule.setDiv_id(divid);
 		schedule.setEnd_time((Time)end_time.get(i));
@@ -103,7 +105,7 @@ public class ScheduleTransaction {
 		{
 		Schedule schedule=new Schedule();
 		schedule.setBatch_id(Integer.parseInt(batch_id));
-		schedule.setClass_id(Integer.parseInt(class_id));
+		schedule.setInst_id(Integer.parseInt(class_id));
 		schedule.setDate((Date)date.get(i));
 		schedule.setDiv_id(div_id);
 		schedule.setEnd_time((Time)end_time.get(i));
@@ -218,7 +220,7 @@ public class ScheduleTransaction {
 		{
 		Schedule schedule=new Schedule();
 		schedule.setBatch_id(Integer.parseInt(batch_id));
-		schedule.setClass_id(Integer.parseInt(class_id));
+		schedule.setInst_id(Integer.parseInt(class_id));
 		schedule.setDate((Date)date.get(i));
 		schedule.setDiv_id(div_id);
 		schedule.setEnd_time((Time)end_time.get(i));
@@ -321,13 +323,13 @@ public class ScheduleTransaction {
 				SubjectTransaction subjectTransaction=new SubjectTransaction();
 				for (int i = 0; i < list.size(); i++) {
 					for (int j = 0; j < list.get(i).size(); j++) {
-						Batch batch=batchTransactions.getBatch(list.get(i).get(j).getBatch_id(), list.get(i).get(j).getClass_id(), list.get(i).get(j).getDiv_id());
+						Batch batch=batchTransactions.getBatch(list.get(i).get(j).getBatch_id(), list.get(i).get(j).getInst_id(), list.get(i).get(j).getDiv_id());
 						Subject subject=subjectTransaction.getSubject(list.get(i).get(j).getSub_id());
 						Scheduledata scheduledata=new Scheduledata();
 						scheduledata.setBatch_name(batch.getBatch_name());
 						scheduledata.setStart_time(list.get(i).get(j).getStart_time());
 						scheduledata.setEnd_time(list.get(i).get(j).getEnd_time());
-						scheduledata.setInst_id(list.get(i).get(j).getClass_id());
+						scheduledata.setInst_id(list.get(i).get(j).getInst_id());
 						scheduledata.setSubject_name(subject.getSubjectName());
 						scheduledatas.add(scheduledata);
 					}
@@ -352,7 +354,7 @@ public class ScheduleTransaction {
 				RegisterDB db=new RegisterDB();
 				for (int i = 0; i < list.size(); i++) {
 					for (int j = 0; j < list.get(i).size(); j++) {
-						Batch batch=batchTransactions.getBatch(list.get(i).get(j).getBatch_id(), list.get(i).get(j).getClass_id(), list.get(i).get(j).getDiv_id());
+						Batch batch=batchTransactions.getBatch(list.get(i).get(j).getBatch_id(), list.get(i).get(j).getInst_id(), list.get(i).get(j).getDiv_id());
 						Subject subject=subjectTransaction.getSubject(list.get(i).get(j).getSub_id());
 						DivisionTransactions divisionTransactions=new DivisionTransactions();
 						Division division=new Division();
@@ -361,10 +363,10 @@ public class ScheduleTransaction {
 						scheduledata.setBatch_name(batch.getBatch_name());
 						scheduledata.setStart_time(list.get(i).get(j).getStart_time());
 						scheduledata.setEnd_time(list.get(i).get(j).getEnd_time());
-						scheduledata.setInst_id(list.get(i).get(j).getClass_id());
+						scheduledata.setInst_id(list.get(i).get(j).getInst_id());
 						scheduledata.setSubject_name(subject.getSubjectName());
 						scheduledata.setDivision_name(division.getDivisionName());
-						RegisterBean bean=db.getRegisterclass(list.get(i).get(j).getClass_id());
+						RegisterBean bean=db.getRegisterclass(list.get(i).get(j).getInst_id());
 						scheduledata.setInst_name(bean.getClassName());
 						scheduledatas.add(scheduledata);
 					}
@@ -397,33 +399,51 @@ public class ScheduleTransaction {
 		return null;
 	}
 
-	public HashMap<String, String> addSchedule(Integer classid, Integer batchid, Integer subject, Integer teacher, Time starttime,
-			Time endtime, Date startDate, Date endDate, Integer divId, boolean weekly) {
-		//BatchTransactions batchTransactions=new BatchTransactions();
-		//Batch batch=batchTransactions.getBatch(batchid,classid,divId);
-		HashMap<String, String> resultMap=new HashMap<String, String>();
-		String result ="ERROR";
-		ScheduleDB scheduleDB=new ScheduleDB();
-		if (endDate != null) {
-			Date scheduleDate = startDate;
-			while (scheduleDate.compareTo(endDate) <= 0) {
-				Calendar c = Calendar.getInstance();
-				c.setTime(scheduleDate);
-				result = scheduleDB.putSchedule(createScheduleData(classid, batchid, subject, teacher, starttime, endtime, scheduleDate, divId));
-				String key=getAsString(classid.toString(), batchid.toString(), subject.toString(), teacher.toString(), starttime.toString(), endtime.toString(), scheduleDate.toString(), divId.toString());
-				resultMap.put(key, result);	
-				System.out.println(result);
-				if(weekly){
-					c.add(Calendar.DATE, 7);
-				}else{					
-					c.add(Calendar.DATE, 1);
+	public boolean addSchedule(com.service.beans.Schedule serviceSchedule,int inst_id) {
+		ScheduleDB db = new ScheduleDB();
+		if ("".equals(serviceSchedule.getRep_days())) {
+			Schedule schedule = new Schedule();
+			try {
+				BeanUtils.copyProperties(schedule, serviceSchedule);
+				schedule.setInst_id(inst_id);
+				db.addSchedule(schedule);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+			Groups groups = new Groups();
+			groups.setInst_id(inst_id);
+			groups.setDiv_id(serviceSchedule.getDiv_id());
+			groups.setBatch_id(serviceSchedule.getBatch_id());
+			groups.setStart_date(serviceSchedule.getStart_date());
+			groups.setEnd_date(serviceSchedule.getEnd_date());
+			int grp_id = db.addGroup(groups);
+			String [] days = serviceSchedule.getRep_days().split(",");
+			List<Date> dateList = getScheduleDates(serviceSchedule.getStart_date(), serviceSchedule.getEnd_date(), days);
+			for (Iterator iterator = dateList.iterator(); iterator.hasNext();) {
+				Date date = (Date) iterator.next();
+				Schedule schedule = new Schedule();
+				try {
+					BeanUtils.copyProperties(schedule, serviceSchedule);
+					schedule.setGrp_id(grp_id);
+					schedule.setInst_id(inst_id);
+					schedule.setDate(date);
+					db.addSchedule(schedule);
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				scheduleDate = Date.valueOf(sdf.format(c.getTime())); 
 			}
 		}
-		return resultMap;
+		
+		return true;
 	}
 	
 	public HashMap<String, String> addScheduleByDays(Integer classid, Integer batchid, 
@@ -471,7 +491,7 @@ public class ScheduleTransaction {
 			Time endtime, Date date,Integer divId){
 		Schedule schedule=new Schedule();
 		schedule.setBatch_id(batchid);
-		schedule.setClass_id(classid);
+		schedule.setInst_id(classid);
 		schedule.setDate(date);
 		schedule.setDiv_id(divId);
 		schedule.setEnd_time(endtime);
@@ -495,7 +515,7 @@ public class ScheduleTransaction {
 			
 		Schedule schedule=new Schedule();
 		schedule.setBatch_id(batchid);
-		schedule.setClass_id(classid);
+		schedule.setInst_id(classid);
 		schedule.setDate(date);
 		schedule.setDiv_id(divId);
 		schedule.setEnd_time(endtime);
@@ -564,4 +584,38 @@ public class ScheduleTransaction {
 		
 		return serviceBeanList;
 	}
+	
+	private List<Date> getScheduleDates(Date start_date,Date end_date,String[] days) {
+		Calendar calendar = Calendar.getInstance();
+		List<Date> dateList = new ArrayList<Date>();
+		for (int i = 0; i < days.length; i++) {
+		calendar.setTime(start_date);
+		int weekday = calendar.get(Calendar.DAY_OF_WEEK);
+		int day = Integer.parseInt(days[i]);
+		if(weekday > day){
+			weekday = (day+7)-weekday;
+			calendar.add(Calendar.DAY_OF_YEAR, weekday);
+		}if(weekday < day)
+		{
+			weekday = day - weekday ;
+			calendar.add(Calendar.DAY_OF_YEAR, weekday);
+		}
+		 
+		 Date date = new Date(calendar.getTime().getTime());
+		 System.out.println(date.toString());
+		 dateList.add(date);
+		 boolean flag = true;
+		 while (flag) {
+			    calendar.add(Calendar.DAY_OF_YEAR, 7);
+			     date = new Date(calendar.getTime().getTime());
+				System.out.println(date.toString());
+				if(date.after(end_date)){
+					flag = false;
+				}else{
+					dateList.add(date);
+				}
+				}	
+		}
+		return dateList;
+}
 }
