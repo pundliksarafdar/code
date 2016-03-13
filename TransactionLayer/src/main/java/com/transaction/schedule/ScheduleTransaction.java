@@ -446,6 +446,101 @@ public class ScheduleTransaction {
 		return true;
 	}
 	
+	public boolean updateSchedule(com.service.beans.Schedule serviceSchedule,int inst_id) {
+		ScheduleDB db = new ScheduleDB();
+		if ("".equals(serviceSchedule.getRep_days())) {
+			Schedule schedule = new Schedule();
+			try {
+				BeanUtils.copyProperties(schedule, serviceSchedule);
+				schedule.setInst_id(inst_id);
+				db.updateLecture(schedule);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+			if(serviceSchedule.getGrp_id() != 0){
+				Schedule scheduleBean = new Schedule();
+				try {
+					BeanUtils.copyProperties(scheduleBean, serviceSchedule);
+					scheduleBean.setInst_id(inst_id);
+					db.deleteGroupSchedule(scheduleBean);
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				String [] days = serviceSchedule.getRep_days().split(",");
+				List<Date> dateList = getScheduleDates(serviceSchedule.getStart_date(), serviceSchedule.getEnd_date(), days);
+				for (Iterator iterator = dateList.iterator(); iterator.hasNext();) {
+					Date date = (Date) iterator.next();
+					Schedule schedule = new Schedule();
+					try {
+						BeanUtils.copyProperties(schedule, serviceSchedule);
+						schedule.setGrp_id(serviceSchedule.getGrp_id());
+						schedule.setInst_id(inst_id);
+						schedule.setDate(date);
+						db.addSchedule(schedule);
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			}else{
+				Schedule scheduleBean = new Schedule();
+				try {
+					BeanUtils.copyProperties(scheduleBean, serviceSchedule);
+					scheduleBean.setInst_id(inst_id);
+					db.deleteSchedule(scheduleBean);
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			Groups groups = new Groups();
+			groups.setInst_id(inst_id);
+			groups.setDiv_id(serviceSchedule.getDiv_id());
+			groups.setBatch_id(serviceSchedule.getBatch_id());
+			groups.setStart_date(serviceSchedule.getStart_date());
+			groups.setEnd_date(serviceSchedule.getEnd_date());
+			int grp_id = db.addGroup(groups);
+			String [] days = serviceSchedule.getRep_days().split(",");
+			List<Date> dateList = getScheduleDates(serviceSchedule.getStart_date(), serviceSchedule.getEnd_date(), days);
+			for (Iterator iterator = dateList.iterator(); iterator.hasNext();) {
+				Date date = (Date) iterator.next();
+				Schedule schedule = new Schedule();
+				try {
+					BeanUtils.copyProperties(schedule, serviceSchedule);
+					schedule.setGrp_id(grp_id);
+					schedule.setInst_id(inst_id);
+					schedule.setDate(date);
+					schedule.setSchedule_id(0);
+					db.addSchedule(schedule);
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			}
+		}
+		
+		return true;
+	}
+	
 	public HashMap<String, String> addScheduleByDays(Integer classid, Integer batchid, 
 			Integer subject, Integer teacher, Time starttime,
 			Time endtime, Date startDate, Date endDate, Integer divId, 

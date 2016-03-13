@@ -94,14 +94,18 @@ public class ScheduleDB {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(
-					"update Schedule set sub_id=:sub_id , teacher_id=:teacher_id , start_time=:start_time , end_time=:end_time , date=:date where schedule_id=:schedule_id and class_id=:class_id");
+					"update Schedule set sub_id=:sub_id , teacher_id=:teacher_id , start_time=:start_time , end_time=:end_time , date=:date, grp_id =:grp_id, rep_days=:rep_days where schedule_id=:schedule_id and inst_id=:inst_id and div_id = :div_id and batch_id = :batch_id");
 			query.setParameter("sub_id", schedule.getSub_id());
 			query.setParameter("teacher_id", schedule.getTeacher_id());
 			query.setParameter("start_time", schedule.getStart_time());
 			query.setParameter("end_time", schedule.getEnd_time());
 			query.setParameter("date", schedule.getDate());
 			query.setParameter("schedule_id", schedule.getSchedule_id());
-			query.setParameter("class_id", schedule.getInst_id());
+			query.setParameter("inst_id", schedule.getInst_id());
+			query.setParameter("batch_id", schedule.getBatch_id());
+			query.setParameter("div_id", schedule.getDiv_id());
+			query.setParameter("grp_id", schedule.getGrp_id());
+			query.setParameter("rep_days", schedule.getRep_days());
 			query.executeUpdate();
 			transaction.commit();
 		} catch (Exception e) {
@@ -540,6 +544,58 @@ public class ScheduleDB {
 					.createQuery("delete from Schedule where schedule_id=:schedule_id and class_id=:class_id");
 			query.setParameter("schedule_id", scheduleid);
 			query.setParameter("class_id", inst_id);
+			count=query.executeUpdate();
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != session) {
+				session.close();
+			}
+		}
+		return count;
+	}
+	
+	public int deleteSchedule(Schedule schedule) {
+
+		Session session = null;
+		Transaction transaction = null;
+		int count=0;
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session
+					.createQuery("delete from Schedule where schedule_id=:schedule_id and inst_id=:inst_id and div_id=:div_id and batch_id = :batch_id");
+			query.setParameter("schedule_id", schedule.getSchedule_id());
+			query.setParameter("inst_id", schedule.getInst_id());
+			query.setParameter("div_id", schedule.getDiv_id());
+			query.setParameter("batch_id", schedule.getBatch_id());
+			count=query.executeUpdate();
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != session) {
+				session.close();
+			}
+		}
+		return count;
+	}
+	
+	public int deleteGroupSchedule(Schedule schedule) {
+
+		Session session = null;
+		Transaction transaction = null;
+		int count=0;
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session
+					.createQuery("delete from Schedule where inst_id=:inst_id and div_id=:div_id and batch_id = :batch_id and grp_id=:grp_id");
+			query.setParameter("inst_id", schedule.getInst_id());
+			query.setParameter("div_id", schedule.getDiv_id());
+			query.setParameter("batch_id", schedule.getBatch_id());
+			query.setParameter("grp_id", schedule.getGrp_id());
 			count=query.executeUpdate();
 			transaction.commit();
 		} catch (Exception e) {
