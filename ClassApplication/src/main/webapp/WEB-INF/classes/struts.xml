@@ -500,6 +500,11 @@
 		<action name="attendances" class="com.attendance.AttendanceAction"
 			method="execute">
 			<result name="success" type="tiles">classowner.studentAttendance</result>
-		</action>		
+		</action>
+		
+		<action name="timetableall" class="com.timetable.TimeTableAllAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.timetableall</result>
+		</action>				
 	</package>
 </struts>

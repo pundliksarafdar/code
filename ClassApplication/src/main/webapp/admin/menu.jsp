@@ -542,6 +542,7 @@ function RenderTimer(completedTime,totalTime){
             </div>
         </div>
 		<div class="col-sm-2 col-xs-4">
+		<a href="fees">
             <div id="tile8" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
@@ -556,6 +557,7 @@ function RenderTimer(completedTime,totalTime){
                         </div>
                     </div>
             </div>
+        </a>    
         </div>
 		<div class="col-sm-2 col-xs-4">
             <div id="tile8" class="tile">
