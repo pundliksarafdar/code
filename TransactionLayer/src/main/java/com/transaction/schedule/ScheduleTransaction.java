@@ -70,7 +70,7 @@ public class ScheduleTransaction {
 		schedule.setSub_id(Integer.parseInt((String)sub_id.get(i)));
 		schedule.setTeacher_id(Integer.parseInt((String)teacher_id.get(i)));
 		ScheduleDB scheduleDB=new ScheduleDB();
-		String exists=scheduleDB.isExistsLecture(schedule);
+		/*String exists=scheduleDB.isExistsLecture(schedule);
 		if(exists.equals("teacher"))
 		{
 			if(i==0)
@@ -87,7 +87,7 @@ public class ScheduleTransaction {
 			}else{
 			status=status+","+"lecture/"+i;
 			}
-		}
+		}*/
 		}
 		return status;
 	}
@@ -399,14 +399,20 @@ public class ScheduleTransaction {
 		return null;
 	}
 
-	public boolean addSchedule(com.service.beans.Schedule serviceSchedule,int inst_id) {
+	public String addSchedule(com.service.beans.Schedule serviceSchedule,int inst_id) {
 		ScheduleDB db = new ScheduleDB();
+		String msg = "";
+		List<Date> dateList = new ArrayList<Date>();
 		if ("".equals(serviceSchedule.getRep_days())) {
 			Schedule schedule = new Schedule();
 			try {
 				BeanUtils.copyProperties(schedule, serviceSchedule);
 				schedule.setInst_id(inst_id);
+				dateList.add(schedule.getDate());
+				msg = db.isExistsLecture(schedule, dateList);
+				if("".equals(msg)){
 				db.addSchedule(schedule);
+				}
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -415,6 +421,7 @@ public class ScheduleTransaction {
 				e.printStackTrace();
 			}
 		}else{
+			
 			Groups groups = new Groups();
 			groups.setInst_id(inst_id);
 			groups.setDiv_id(serviceSchedule.getDiv_id());
@@ -423,7 +430,21 @@ public class ScheduleTransaction {
 			groups.setEnd_date(serviceSchedule.getEnd_date());
 			int grp_id = db.addGroup(groups);
 			String [] days = serviceSchedule.getRep_days().split(",");
-			List<Date> dateList = getScheduleDates(serviceSchedule.getStart_date(), serviceSchedule.getEnd_date(), days);
+			 dateList = getScheduleDates(serviceSchedule.getStart_date(), serviceSchedule.getEnd_date(), days);
+			 if(dateList.size() != 0){
+			Schedule tempSchedule = new Schedule();
+			try {
+				BeanUtils.copyProperties(tempSchedule, serviceSchedule);
+				tempSchedule.setInst_id(inst_id);
+			} catch (IllegalAccessException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (InvocationTargetException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			msg = db.isExistsLecture(tempSchedule, dateList);
+			if("".equals(msg)){
 			for (Iterator iterator = dateList.iterator(); iterator.hasNext();) {
 				Date date = (Date) iterator.next();
 				Schedule schedule = new Schedule();
@@ -441,19 +462,36 @@ public class ScheduleTransaction {
 					e.printStackTrace();
 				}
 			}
+			}
+			 }else{
+				 msg = "Invalid Date Range";
+			 }
 		}
 		
-		return true;
+		/*if(!"".equals(msg)){
+			if(msg.contains("and")){
+				msg = msg + " are busy";
+			}else{
+				msg = msg + " is busy";
+			}
+		}*/
+		return msg;
 	}
 	
-	public boolean updateSchedule(com.service.beans.Schedule serviceSchedule,int inst_id) {
+	public String updateSchedule(com.service.beans.Schedule serviceSchedule,int inst_id) {
 		ScheduleDB db = new ScheduleDB();
+		String msg = "";
+		List<Date> dateList = new ArrayList<Date>();
 		if ("".equals(serviceSchedule.getRep_days())) {
 			Schedule schedule = new Schedule();
 			try {
 				BeanUtils.copyProperties(schedule, serviceSchedule);
 				schedule.setInst_id(inst_id);
+				dateList.add(schedule.getDate());
+				msg = db.validateBeforeUpdate(schedule, dateList);
+				if("".equals(msg)){
 				db.updateLecture(schedule);
+				}
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -476,7 +514,10 @@ public class ScheduleTransaction {
 					e.printStackTrace();
 				}
 				String [] days = serviceSchedule.getRep_days().split(",");
-				List<Date> dateList = getScheduleDates(serviceSchedule.getStart_date(), serviceSchedule.getEnd_date(), days);
+				dateList = getScheduleDates(serviceSchedule.getStart_date(), serviceSchedule.getEnd_date(), days);
+				if(dateList.size() > 0){
+				msg = db.validateBeforeUpdate(scheduleBean, dateList);
+				if("".equals(msg)){
 				for (Iterator iterator = dateList.iterator(); iterator.hasNext();) {
 					Date date = (Date) iterator.next();
 					Schedule schedule = new Schedule();
@@ -493,6 +534,10 @@ public class ScheduleTransaction {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+				}
+				}
+				}else{
+					 msg = "Invalid Date Range";
 				}
 				
 			}else{
@@ -516,7 +561,10 @@ public class ScheduleTransaction {
 			groups.setEnd_date(serviceSchedule.getEnd_date());
 			int grp_id = db.addGroup(groups);
 			String [] days = serviceSchedule.getRep_days().split(",");
-			List<Date> dateList = getScheduleDates(serviceSchedule.getStart_date(), serviceSchedule.getEnd_date(), days);
+		    dateList = getScheduleDates(serviceSchedule.getStart_date(), serviceSchedule.getEnd_date(), days);
+		    if(dateList.size() > 0){
+			msg = db.validateBeforeUpdate(scheduleBean, dateList);
+			if("".equals(msg)){
 			for (Iterator iterator = dateList.iterator(); iterator.hasNext();) {
 				Date date = (Date) iterator.next();
 				Schedule schedule = new Schedule();
@@ -536,9 +584,21 @@ public class ScheduleTransaction {
 				}
 			}
 			}
+			}else{
+				
+					 msg = "Invalid Date Range";	
+			}
+			}
 		}
 		
-		return true;
+		/*if(!"".equals(msg)){
+			if(msg.contains("and")){
+				msg = msg + " are busy";
+			}else{
+				msg = msg + " is busy";
+			}
+		}*/
+		return msg;
 	}
 	
 	public HashMap<String, String> addScheduleByDays(Integer classid, Integer batchid, 

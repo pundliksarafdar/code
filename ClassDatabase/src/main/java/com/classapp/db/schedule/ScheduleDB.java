@@ -41,7 +41,7 @@ public class ScheduleDB {
 		Transaction transaction = null;
 		String result = "";
 
-		String isScheduleExists = isExistsLecture(schedule);
+	/*	String isScheduleExists = isExistsLecture(schedule);
 		if (isScheduleExists.equals("notexists")) {
 			try {
 				session = HibernateUtil.getSessionfactory().openSession();
@@ -83,7 +83,7 @@ public class ScheduleDB {
 
 			result = teacherbusy + "," + lectureexists;
 
-		}
+		}*/
 		return result;
 	}
 
@@ -94,7 +94,9 @@ public class ScheduleDB {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(
-					"update Schedule set sub_id=:sub_id , teacher_id=:teacher_id , start_time=:start_time , end_time=:end_time , date=:date, grp_id =:grp_id, rep_days=:rep_days where schedule_id=:schedule_id and inst_id=:inst_id and div_id = :div_id and batch_id = :batch_id");
+					"update Schedule set sub_id=:sub_id , teacher_id=:teacher_id , start_time=:start_time , end_time=:end_time , " +
+					"date=:date, grp_id =:grp_id, rep_days=:rep_days where schedule_id=:schedule_id and inst_id=:inst_id " +
+					"and div_id = :div_id and batch_id = :batch_id and date = :date");
 			query.setParameter("sub_id", schedule.getSub_id());
 			query.setParameter("teacher_id", schedule.getTeacher_id());
 			query.setParameter("start_time", schedule.getStart_time());
@@ -126,7 +128,7 @@ public class ScheduleDB {
 		Transaction transaction = null;
 		String result="";
 		System.out.println("calling validate");
-		String isScheduleExists=validateBeforeUpdate(schedule);
+		String isScheduleExists="";
 		System.out.println("isScheduleExists="+isScheduleExists);
 		//String isScheduleExists="notexists";
 		int count=0;
@@ -187,65 +189,85 @@ public class ScheduleDB {
 		return result;
 	}
 
-	public String validateBeforeUpdate(Schedule schedule) {
+	public String validateBeforeUpdate(Schedule schedule,List<Date> dateList) {
 		Session session = null;
 		Transaction transaction = null;
 		List scheduleList = null;
-
+		String status ="";
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(
-					"from Schedule where teacher_id =:teacherid and start_time=:starttime and end_time=:endtime and date=:date and class_id=:class_id and schedule_id!=:schedule_id");
+					"from Schedule where teacher_id =:teacherid and start_time=:starttime and end_time=:endtime " +
+					"and date in :date and inst_id=:inst_id and  ( (div_id =:div_id and batch_id = :batch_id and schedule_id != :schedule_id) or" +
+					" (div_id =:div_id and batch_id != :batch_id) or " +
+					" (div_id !=:div_id ))");
 			query.setParameter("teacherid", schedule.getTeacher_id());
 			query.setParameter("starttime", schedule.getStart_time());
 			query.setParameter("endtime", schedule.getEnd_time());
-			query.setParameter("date", schedule.getDate());
-			query.setParameter("class_id", schedule.getInst_id());
+			query.setParameterList("date", dateList);
+			query.setParameter("inst_id", schedule.getInst_id());
+			query.setParameter("div_id", schedule.getDiv_id());
+			query.setParameter("batch_id", schedule.getBatch_id());
 			query.setParameter("schedule_id", schedule.getSchedule_id());
 			scheduleList = query.list();
 			if (scheduleList.size() > 0) {
-				return "teacher";
+				status =  "Teacher is busy";
 			} else {
 				query = session.createQuery(
-						"from Schedule where teacher_id =:teacherid and ((start_time <= :starttime and end_time> :starttime) OR (start_time < :endtime and end_time>= :endtime) OR (start_time > :starttime and end_time< :endtime)) and date=:date and class_id=:class_id and schedule_id!=:schedule_id");
+						"from Schedule where teacher_id =:teacherid and ((start_time <= :starttime and end_time> :starttime) " +
+						"OR (start_time < :endtime and end_time>= :endtime) OR (start_time > :starttime and end_time< :endtime)) " +
+						"and date in :date and inst_id=:inst_id and  ( (div_id =:div_id and batch_id = :batch_id and schedule_id != :schedule_id) or" +
+					" (div_id =:div_id and batch_id != :batch_id) or " +
+					" (div_id !=:div_id ))");
 				query.setParameter("teacherid", schedule.getTeacher_id());
 				query.setParameter("starttime", schedule.getStart_time());
 				query.setParameter("endtime", schedule.getEnd_time());
-				query.setParameter("date", schedule.getDate());
-				query.setParameter("class_id", schedule.getInst_id());
+				query.setParameterList("date", dateList);
+				query.setParameter("inst_id", schedule.getInst_id());
+				query.setParameter("div_id", schedule.getDiv_id());
+				query.setParameter("batch_id", schedule.getBatch_id());
 				query.setParameter("schedule_id", schedule.getSchedule_id());
 				scheduleList = query.list();
 				if (scheduleList.size() > 0) {
-					return "teacher";
+					status =  "Teacher is busy";
 				}
 			}
 
 			query = session.createQuery(
-					"from Schedule where batch_id =:batchid and ((start_time <= :starttime and end_time> :starttime) OR (start_time < :endtime and end_time>= :endtime) OR (start_time > :starttime and end_time< :endtime)) and date=:date and class_id=:class_id  and div_id=:div_id and schedule_id!=:schedule_id");
+					"from Schedule where batch_id =:batchid and ((start_time <= :starttime and end_time> :starttime) OR " +
+					"(start_time < :endtime and end_time>= :endtime) OR (start_time > :starttime and end_time< :endtime)) " +
+					"and date in :date and inst_id=:inst_id  and div_id=:div_id and schedule_id != :schedule_id");
 			query.setParameter("batchid", schedule.getBatch_id());
 			query.setParameter("starttime", schedule.getStart_time());
 			query.setParameter("endtime", schedule.getEnd_time());
-			query.setParameter("date", schedule.getDate());
-			query.setParameter("class_id", schedule.getInst_id());
+			query.setParameterList("date", dateList);
+			query.setParameter("inst_id", schedule.getInst_id());
 			query.setParameter("div_id", schedule.getDiv_id());
 			query.setParameter("schedule_id", schedule.getSchedule_id());
 			scheduleList = query.list();
 			if (scheduleList.size() > 0) {
-				return "lecture";
+				if("".equals(status)){
+					return "Batch is busy";
+				}
+				return "Teacher and batch are busy";
 			} else {
 				query = session.createQuery(
-						"from Schedule where batch_id =:batchid and start_time=:starttime and end_time=:endtime and date=:date and class_id=:class_id  and div_id=:div_id and schedule_id!=:schedule_id");
+						"from Schedule where batch_id =:batchid and start_time=:starttime and end_time=:endtime " +
+						"and date in :date and inst_id=:inst_id  and div_id=:div_id and schedule_id != :schedule_id");
 				query.setParameter("batchid", schedule.getBatch_id());
 				query.setParameter("starttime", schedule.getStart_time());
 				query.setParameter("endtime", schedule.getEnd_time());
-				query.setParameter("date", schedule.getDate());
-				query.setParameter("class_id", schedule.getInst_id());
+				query.setParameterList("date", dateList);
+				query.setParameter("inst_id", schedule.getInst_id());
 				query.setParameter("div_id", schedule.getDiv_id());
 				query.setParameter("schedule_id", schedule.getSchedule_id());
 				scheduleList = query.list();
 				if (scheduleList.size() > 0) {
-					return "lecture";
+					if("".equals(status)){
+						return "Batch is busy";
+					}
+					return "Teacher and batch are busy";
 				}
 
 			}
@@ -262,64 +284,70 @@ public class ScheduleDB {
 			}
 		}
 
-		return "notexists";
+		return status;
 
 	}
-	public String isExistsLecture(Schedule schedule) {
+	public String isExistsLecture(Schedule schedule,List<Date> dateList) {
 		Session session = null;
 		Transaction transaction = null;
 		List scheduleList = null;
-
+		String status ="";
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(
-					"from Schedule where teacher_id =:teacherid and start_time=:starttime and end_time=:endtime and date=:date and class_id=:class_id");
+					"from Schedule where teacher_id =:teacherid and start_time=:starttime and end_time=:endtime and date in :date and inst_id=:inst_id");
 			query.setParameter("teacherid", schedule.getTeacher_id());
 			query.setParameter("starttime", schedule.getStart_time());
 			query.setParameter("endtime", schedule.getEnd_time());
-			query.setParameter("date", schedule.getDate());
-			query.setParameter("class_id", schedule.getInst_id());
+			query.setParameterList("date", dateList);
+			query.setParameter("inst_id", schedule.getInst_id());
 			scheduleList = query.list();
 			if (scheduleList.size() > 0) {
-				return "teacher";
+				status =  "Teacher is busy";
 			} else {
 				query = session.createQuery(
-						"from Schedule where teacher_id =:teacherid and ((start_time <= :starttime and end_time> :starttime) OR (start_time < :endtime and end_time>= :endtime) OR (start_time > :starttime and end_time< :endtime)) and date=:date and class_id=:class_id");
+						"from Schedule where teacher_id =:teacherid and ((start_time <= :starttime and end_time> :starttime) OR (start_time < :endtime and end_time>= :endtime) OR (start_time > :starttime and end_time< :endtime)) and date in :date and inst_id=:inst_id");
 				query.setParameter("teacherid", schedule.getTeacher_id());
 				query.setParameter("starttime", schedule.getStart_time());
 				query.setParameter("endtime", schedule.getEnd_time());
-				query.setParameter("date", schedule.getDate());
-				query.setParameter("class_id", schedule.getInst_id());
+				query.setParameterList("date", dateList);
+				query.setParameter("inst_id", schedule.getInst_id());
 				scheduleList = query.list();
 				if (scheduleList.size() > 0) {
-					return "teacher";
+					status =  "Teacher is busy";
 				}
 			}
 
 			query = session.createQuery(
-					"from Schedule where batch_id =:batchid and ((start_time <= :starttime and end_time> :starttime) OR (start_time < :endtime and end_time>= :endtime) OR (start_time > :starttime and end_time< :endtime)) and date=:date and class_id=:class_id  and div_id=:div_id");
+					"from Schedule where batch_id =:batchid and ((start_time <= :starttime and end_time> :starttime) OR (start_time < :endtime and end_time>= :endtime) OR (start_time > :starttime and end_time< :endtime)) and date in :date and inst_id=:inst_id  and div_id=:div_id");
 			query.setParameter("batchid", schedule.getBatch_id());
 			query.setParameter("starttime", schedule.getStart_time());
 			query.setParameter("endtime", schedule.getEnd_time());
-			query.setParameter("date", schedule.getDate());
-			query.setParameter("class_id", schedule.getInst_id());
+			query.setParameterList("date", dateList);
+			query.setParameter("inst_id", schedule.getInst_id());
 			query.setParameter("div_id", schedule.getDiv_id());
 			scheduleList = query.list();
 			if (scheduleList.size() > 0) {
-				return "lecture";
+				if("".equals(status)){
+					return "Batch is busy";
+				}
+				return "Teacher and batch are busy";
 			} else {
 				query = session.createQuery(
-						"from Schedule where batch_id =:batchid and start_time=:starttime and end_time=:endtime and date=:date and class_id=:class_id  and div_id=:div_id");
+						"from Schedule where batch_id =:batchid and start_time=:starttime and end_time=:endtime and date in :date and inst_id=:inst_id  and div_id=:div_id");
 				query.setParameter("batchid", schedule.getBatch_id());
 				query.setParameter("starttime", schedule.getStart_time());
 				query.setParameter("endtime", schedule.getEnd_time());
-				query.setParameter("date", schedule.getDate());
-				query.setParameter("class_id", schedule.getInst_id());
+				query.setParameterList("date", dateList);
+				query.setParameter("inst_id", schedule.getInst_id());
 				query.setParameter("div_id", schedule.getDiv_id());
 				scheduleList = query.list();
 				if (scheduleList.size() > 0) {
-					return "lecture";
+					if("".equals(status)){
+						return "Batch is busy";
+					}
+					return "Teacher and batch are busy";
 				}
 
 			}
@@ -336,7 +364,7 @@ public class ScheduleDB {
 			}
 		}
 
-		return "notexists";
+		return status;
 
 	}
 

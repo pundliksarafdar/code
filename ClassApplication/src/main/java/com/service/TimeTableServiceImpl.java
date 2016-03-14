@@ -81,8 +81,11 @@ public class TimeTableServiceImpl extends ServiceBase{
 	public Response addSchedule(com.service.beans.Schedule schedule) {
 		// TODO Auto-generated method stub
 		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
-		scheduleTransaction.addSchedule(schedule, getRegId());
-		return Response.status(Response.Status.OK).entity("true").build();
+		String msg = scheduleTransaction.addSchedule(schedule, getRegId());
+		if(!"".equals(msg)){
+			return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+		}
+		return Response.status(Response.Status.OK).entity(msg).build();
 	}
 	
 	@PUT
@@ -92,8 +95,11 @@ public class TimeTableServiceImpl extends ServiceBase{
 	public Response updateSchedule(com.service.beans.Schedule schedule) {
 		// TODO Auto-generated method stub
 		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
-		scheduleTransaction.updateSchedule(schedule, 4);
-		return Response.status(Response.Status.OK).entity("true").build();
+		String msg = scheduleTransaction.updateSchedule(schedule, getRegId());
+		if(!"".equals(msg)){
+			return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+		}
+		return Response.status(Response.Status.OK).entity(msg).build();
 	}
 	
 
