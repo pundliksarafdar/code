@@ -50,7 +50,7 @@ public class TimeTableServiceImpl extends ServiceBase{
 		Long requestDate = Long.parseLong(request.getParameter("date"));
 		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
 		java.util.Date date = new  java.util.Date();
-		List<Schedule> scheduleList = scheduleTransaction.getSchedule(batch, new Date(requestDate), 4, division);
+		List<Schedule> scheduleList = scheduleTransaction.getSchedule(batch, new Date(requestDate), getRegId(), division);
 		for (Schedule schedule : scheduleList) {
 			System.out.println(schedule.toString());
 		}

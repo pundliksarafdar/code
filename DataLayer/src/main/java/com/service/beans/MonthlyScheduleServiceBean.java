@@ -15,6 +15,7 @@ public class MonthlyScheduleServiceBean {
 	String teacher;
 	int teacher_id;
 	int grp_id;
+	String rep_days;
 	public int getId() {
 		return id;
 	}
@@ -98,6 +99,12 @@ public class MonthlyScheduleServiceBean {
 	}
 	public void setGrp_id(int grp_id) {
 		this.grp_id = grp_id;
+	}
+	public String getRep_days() {
+		return rep_days;
+	}
+	public void setRep_days(String rep_days) {
+		this.rep_days = rep_days;
 	}
 	
 	

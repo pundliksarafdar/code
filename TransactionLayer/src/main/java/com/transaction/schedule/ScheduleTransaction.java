@@ -708,6 +708,7 @@ public class ScheduleTransaction {
 				bean.setTeacher(object[11]+" "+object[12]);
 				bean.setTeacher_id(((Number) object[13]).intValue());
 				bean.setGrp_id(((Number) object[14]).intValue());
+				bean.setRep_days((String) object[15]);
 				serviceBeanList.add(bean);
 			}
 		}
@@ -739,6 +740,7 @@ public class ScheduleTransaction {
 				bean.setTeacher(object[11]+" "+object[12]);
 				bean.setTeacher_id(((Number) object[13]).intValue());
 				bean.setGrp_id(((Number) object[14]).intValue());
+				bean.setRep_days((String) object[15]);
 				serviceBeanList.add(bean);
 			}
 		}
