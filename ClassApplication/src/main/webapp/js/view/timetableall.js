@@ -151,7 +151,7 @@ function setTimetable(data){
 			$('button[data-calendar-view="' + view + '"]').addClass('active');
 		},
 		onCorexEditBtnClicked:function(event){
-			console.log(event);
+			onEdit(event);	
 		},
 		classes: {
 			months: {
@@ -163,7 +163,11 @@ function setTimetable(data){
 	calendar = $('#calendar').calendar(options);
 	
 	}
-	
+
+function onEdit(event){
+		console.log(event);
+		$(SUBJECT_SELECT).val(event.subId);
+}	
 function editTimeTableFunction(){
 	var scheduleId = $(this).attr('timetableData');
 }

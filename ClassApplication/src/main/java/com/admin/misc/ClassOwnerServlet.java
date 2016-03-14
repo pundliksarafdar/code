@@ -63,6 +63,7 @@ import com.datalayer.exam.ParagraphQuestion;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.helper.BatchHelperBean;
 import com.helper.TeacherHelperBean;
 import com.mails.AllMail;
@@ -1715,6 +1716,16 @@ public class ClassOwnerServlet extends HttpServlet{
 				registerBeans.get(i).setLoginPass("");
 				studentDetails.setStudentUserBean(registerBeans.get(i));
 				studentDetails.setDivision(division);
+				
+				String rollnBatch = students.get(i).getBatchIdNRoll();
+				if(null!=rollnBatch){
+					JsonParser jsonParser = new JsonParser();
+					JsonObject jsonObject = jsonParser.parse(rollnBatch).getAsJsonObject();
+					if(jsonObject.has(batchID)){
+						int rollNo = jsonObject.get(batchID).getAsInt();
+						studentDetails.setRollNo(rollNo);
+					}
+				}
 				String batchIDArray[] = students.get(i).getBatch_id().split(",");
 				List<Batch> studentBatchList = new ArrayList<Batch>();
 				if(batchIDArray.length > 1){

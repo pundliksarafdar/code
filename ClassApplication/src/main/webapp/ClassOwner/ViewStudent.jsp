@@ -306,7 +306,12 @@ var globalDivisionID = "";
 			data: data.studentList,
 			lengthChange: true,
 			columns: [
-				{title:"#",data:null},
+				{title:"Roll no",data:"rollNo",render:function(data,event,row){
+					if(!data){
+						data = '&mdash;'
+					}
+					return data;
+				}},
 				{ title: "Student Name",data:"studentUserBean",render:function(data,event,row){
 					console.log(row);
 					var input = "<input type='hidden' id='studentId' value='"+data.regId +"'>";
@@ -578,7 +583,7 @@ var globalDivisionID = "";
 <div class="container" style="padding-top: 1%">
 <table class="table table-striped classTable" id="classTable" >
 	<thead>
-		<th>#</th><th>Student name</th><th>Division</th><th>Batch</th><th></th>
+		<th>Roll no</th><th>Student name</th><th>Division</th><th>Batch</th><th></th>
 	</thead>
 	<tbody></tbody>
 </table>

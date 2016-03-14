@@ -1,7 +1,6 @@
 package com.service.beans;
 
 import java.io.Serializable;
-
 public class Student implements Serializable{
 	/**
 	 * 
@@ -15,6 +14,8 @@ public class Student implements Serializable{
 	private String parentLname;
 	private String parentPhone;
 	private String parentEmail;
+	private String batchIdNRoll;
+	
 	public int getStudent_id() {
 		return student_id;
 	}
@@ -63,6 +64,12 @@ public class Student implements Serializable{
 	public void setParentEmail(String parentEmail) {
 		this.parentEmail = parentEmail;
 	}
+	public String getBatchIdNRoll() {
+		return batchIdNRoll;
+	}
+	public void setBatchIdNRoll(String batchIdNRoll) {
+		this.batchIdNRoll = batchIdNRoll;
+	}
 	@Override
 	public boolean equals(Object arg0) {
 		Student student1= (Student)arg0;
@@ -84,5 +91,5 @@ public class Student implements Serializable{
 		}
 		
 		return true;
-	}
+	}	
 }

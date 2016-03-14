@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -26,6 +27,7 @@ import com.classapp.db.batch.Batch;
 import com.classapp.db.exam.Exam;
 import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.questionPaper.QuestionPaper;
+import com.classapp.db.student.StudentDetails;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Topics;
 import com.config.Constants;
@@ -497,5 +499,18 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		studentTransaction.addStudentByID(getRegId(),serviceBean.getStudent());
 		boolean status = feesTransaction.saveStudentBatchFees(getRegId(), serviceBean.getStudent_FeesList());
 		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Path("/setRollNumber/{divId}/{batchId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response generateRollNumber(
+			@PathParam("divId")String divId,
+			@PathParam("batchId")String batchId){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		BatchTransactions batchTransactions = new BatchTransactions();
+		List<StudentDetails>studentDetails = studentTransaction.generateRollNumber(batchId, divId, 4);
+		studentTransaction.updateStudentRollNumber(batchId, 4, Integer.parseInt(divId), studentDetails);
+		return Response.status(Status.OK).entity(studentDetails).build();
 	}
 }

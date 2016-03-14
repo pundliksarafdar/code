@@ -30,5 +30,8 @@
         <property name="parentEmail" type="string">
             <column name="parentEmail" length="50"/>
         </property>
+        <property name="batchIdNRoll" type="string">
+            <column name="studentRollNumber" length="50"/>
+        </property>
     </class>
 </hibernate-mapping>

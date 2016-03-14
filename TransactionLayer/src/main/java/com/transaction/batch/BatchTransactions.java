@@ -13,6 +13,7 @@ import com.classapp.db.batch.BatchData;
 import com.classapp.db.batch.DeleteBatch;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.subject.SubjectDb;
+import com.util.ClassAppUtil;
 
 
 public class BatchTransactions {
@@ -249,5 +250,24 @@ public int getNextBatchID(int inst_id,int div_id){
 		return batchs;
 		
 	}
-
+	public void updateBatchRollGeneratedStatus(int batchId,int inst_id,int div_id,String status){
+		String rollGenerated = "rollGenerated";
+		BatchDB batchDB=new BatchDB();
+		Batch batch = batchDB.getBatchFromID(batchId, inst_id, div_id);
+		String currentStatus = batch.getStatus();
+		if(null != currentStatus){
+			String statusValue = ClassAppUtil.getValue(currentStatus, rollGenerated);
+			//rollGenerated status is not updated in db
+			if(null==statusValue){
+				currentStatus = currentStatus+rollGenerated+"="+status+";";
+				batch.setStatus(currentStatus);
+				batchDB.updateDb(batch);
+			}
+		}else{
+			currentStatus = rollGenerated+"="+status+";";
+			batch.setStatus(currentStatus);
+			batchDB.updateDb(batch);
+		}
+		
+	}
 }
