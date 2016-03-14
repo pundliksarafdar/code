@@ -509,8 +509,9 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 			@PathParam("batchId")String batchId){
 		StudentTransaction studentTransaction = new StudentTransaction();
 		BatchTransactions batchTransactions = new BatchTransactions();
-		List<StudentDetails>studentDetails = studentTransaction.generateRollNumber(batchId, divId, 4);
-		studentTransaction.updateStudentRollNumber(batchId, 4, Integer.parseInt(divId), studentDetails);
+		List<StudentDetails>studentDetails = studentTransaction.generateRollNumber(batchId, divId, getRegId());
+		batchTransactions.updateBatchRollGeneratedStatus(Integer.parseInt(batchId), getRegId(), Integer.parseInt(divId), "yes");
+		studentTransaction.updateStudentRollNumber(batchId, getRegId(), Integer.parseInt(divId), studentDetails);
 		return Response.status(Status.OK).entity(studentDetails).build();
 	}
 }
