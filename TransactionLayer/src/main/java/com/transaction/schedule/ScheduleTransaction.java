@@ -490,7 +490,9 @@ public class ScheduleTransaction {
 				dateList.add(schedule.getDate());
 				msg = db.validateBeforeUpdate(schedule, dateList);
 				if("".equals(msg)){
-				db.updateLecture(schedule);
+				db.deleteSchedule(schedule);
+				schedule.setSchedule_id(0);
+				db.addSchedule(schedule);
 				}
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block

@@ -597,11 +597,12 @@ public class ScheduleDB {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session
-					.createQuery("delete from Schedule where schedule_id=:schedule_id and inst_id=:inst_id and div_id=:div_id and batch_id = :batch_id");
+					.createQuery("delete from Schedule where schedule_id=:schedule_id and inst_id=:inst_id and div_id=:div_id and batch_id = :batch_id and date = :date");
 			query.setParameter("schedule_id", schedule.getSchedule_id());
 			query.setParameter("inst_id", schedule.getInst_id());
 			query.setParameter("div_id", schedule.getDiv_id());
 			query.setParameter("batch_id", schedule.getBatch_id());
+			query.setParameter("date", schedule.getDate());
 			count=query.executeUpdate();
 			transaction.commit();
 		} catch (Exception e) {
