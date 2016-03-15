@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <ul class="nav nav-tabs" style="border-radius: 10px">
-		<li class="<c:out value="${param.createExamPatten}"></c:out>"><a href="createExamPatten" data-toggle="tab">Create
+		<li class="<c:out value="${param.createExamPatten}"></c:out>"><a href="createExamPatten">Create
 				Exam Paper Pattern</a></li>
 		<li class="<c:out value="${param.viewneditpattern}"></c:out>"><a href="viewneditpattern">View/Edit Exam Pattern</a></li>
 		<li class="<c:out value="${param.generateQuestionPaper}"></c:out>"><a href="generateQuestionPaper">Set Question Paper</a></li>

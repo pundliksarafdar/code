@@ -103,13 +103,13 @@ public class TimeTableServiceImpl extends ServiceBase{
 	}
 	
 	@DELETE
-	@Path("/schedule/{div_id}/{batch_id}/{schedule_id}/{date}")
+	@Path("/schedule/{div_id}/{batch_id}/{schedule_id}/{date}/{grp_id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteSchedule(@PathParam("div_id")int div_id,@PathParam("batch_id")int batch_id,
-			@PathParam("schedule_id")int schedule_id,@PathParam("date")Date date) {
+			@PathParam("schedule_id")int schedule_id,@PathParam("date")Date date,@PathParam("grp_id")int grp_id) {
 		// TODO Auto-generated method stub
 		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
-		int count = scheduleTransaction.deleteSchedule(schedule_id, getRegId(),div_id,batch_id,date);
+		int count = scheduleTransaction.deleteSchedule(schedule_id, getRegId(),div_id,batch_id,date,grp_id);
 		return Response.status(Response.Status.OK).entity(count).build();
 	}
 	

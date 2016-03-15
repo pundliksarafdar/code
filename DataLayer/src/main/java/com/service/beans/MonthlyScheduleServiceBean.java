@@ -20,6 +20,7 @@ public class MonthlyScheduleServiceBean {
 	String rep_days;
 	Date start_date;
 	Date end_date;
+	Date date;
 	public int getId() {
 		return id;
 	}
@@ -121,6 +122,12 @@ public class MonthlyScheduleServiceBean {
 	}
 	public void setEnd_date(Date end_date) {
 		this.end_date = end_date;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	
 	

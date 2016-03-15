@@ -177,10 +177,17 @@ public class ScheduleTransaction {
 		
 	}
 	
-	public int deleteSchedule(int scheduleid,int inst_id,int div_id,int batch_id,Date date)
+	public int deleteSchedule(int scheduleid,int inst_id,int div_id,int batch_id,Date date,int grp_id)
 	{
-		
+		Schedule schedule = new Schedule();
+		schedule.setInst_id(inst_id);
+		schedule.setDiv_id(div_id);
+		schedule.setBatch_id(batch_id);
+		schedule.setGrp_id(grp_id);
 		ScheduleDB db=new ScheduleDB();
+		if(grp_id != 0){
+		return db.deleteGroupSchedule(schedule);
+		}
 		return db.deleteSchedule(scheduleid, inst_id, div_id, batch_id,date);
 	}
 	
@@ -704,6 +711,7 @@ public class ScheduleTransaction {
 				bean.setBatchId(((Number) object[5]).intValue());
 				bean.setBatchName((String) object[6]);
 				bean.setId(((Number) object[7]).intValue());
+				bean.setDate((Date) object[8]);
 				Timestamp timestamp = new Timestamp(((Date) object[8]).getYear(), ((Date) object[8]).getMonth(), ((Date) object[8]).getDate(), ((Time) object[9]).getHours(), ((Time) object[9]).getMinutes(), ((Time) object[9]).getSeconds(), ((Time) object[9]).getSeconds());
 				bean.setStart(timestamp.getTime());
 				timestamp = new Timestamp(((Date) object[8]).getYear(), ((Date) object[8]).getMonth(), ((Date) object[8]).getDate(), ((Time) object[10]).getHours(), ((Time) object[10]).getMinutes(), ((Time) object[10]).getSeconds(), ((Time) object[10]).getSeconds());
@@ -748,6 +756,7 @@ public class ScheduleTransaction {
 				bean.setBatchId(((Number) object[5]).intValue());
 				bean.setBatchName((String) object[6]);
 				bean.setId(((Number) object[7]).intValue());
+				bean.setDate((Date) object[8]);
 				Timestamp timestamp = new Timestamp(((Date) object[8]).getYear(), ((Date) object[8]).getMonth(), ((Date) object[8]).getDate(), ((Time) object[9]).getHours(), ((Time) object[9]).getMinutes(), ((Time) object[9]).getSeconds(), ((Time) object[9]).getSeconds());
 				bean.setStart(timestamp.getTime());
 				timestamp = new Timestamp(((Date) object[8]).getYear(), ((Date) object[8]).getMonth(), ((Date) object[8]).getDate(), ((Time) object[10]).getHours(), ((Time) object[10]).getMinutes(), ((Time) object[10]).getSeconds(), ((Time) object[10]).getSeconds());
