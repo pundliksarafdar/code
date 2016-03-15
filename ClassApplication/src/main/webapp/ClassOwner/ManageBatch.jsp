@@ -86,7 +86,7 @@
 	function validateElement(batchName,selectSubject){
 		$(batchName).closest("td").find(".error").remove();
 		$(selectSubject).closest("td").find(".error").remove();
-		var CHAR_AND_NUM_VALIDATION = /^[a-zA-Z0-9]{1,}$/;
+		var CHAR_AND_NUM_VALIDATION = /^[a-zA-Z0-9 -]{1,}$/;
 		isValid = true;
 		if(batchName.val().trim()==""){
 			batchName.after("<div class='error'>Field cannot be blank</div>");
@@ -305,6 +305,7 @@
 
 <div class="alert alert-danger alert-edit-batch-error hide"></div>
 
+<div>
 <table id="batchTable" class="table table-hover" width="100%"></table>
 <div class="well">
   <table width="100%" >
@@ -332,6 +333,7 @@
   </tr>
   </table>
   </div>
-  </div>
+</div>
+  
 </body>
 </html>

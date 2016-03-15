@@ -560,7 +560,7 @@ public class ScheduleDB {
 		return scheduleList;
 	}
 
-	public int deleteSchedule(int scheduleid, int inst_id) {
+	public int deleteSchedule(int scheduleid, int inst_id,int div_id,int batch_id,Date date) {
 
 		Session session = null;
 		Transaction transaction = null;
@@ -569,9 +569,13 @@ public class ScheduleDB {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session
-					.createQuery("delete from Schedule where schedule_id=:schedule_id and class_id=:class_id");
+					.createQuery("delete from Schedule where schedule_id=:schedule_id and inst_id=:inst_id and" +
+							" div_id = :div_id and batch_id = :batch_id and date = :date");
 			query.setParameter("schedule_id", scheduleid);
-			query.setParameter("class_id", inst_id);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", batch_id);
+			query.setParameter("date", date);
 			count=query.executeUpdate();
 			transaction.commit();
 		} catch (Exception e) {
@@ -1012,7 +1016,8 @@ public class ScheduleDB {
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(
 					"Select  div.divId , div.divisionName, div.stream,sub.subjectId,sub.subjectName,batch.batch_id,batch.batch_name,schedule.schedule_id," +
-					"  schedule.date, schedule.start_time,schedule.end_time,reg.fname,reg.lname,schedule.teacher_id,schedule.grp_id,schedule.rep_days from Schedule schedule,Division div,Subject sub,Batch batch,RegisterBean reg " +
+					"  schedule.date, schedule.start_time,schedule.end_time,reg.fname,reg.lname,schedule.teacher_id,schedule.grp_id,schedule.rep_days" +
+					" from Schedule schedule,Division div,Subject sub,Batch batch,RegisterBean reg " +
 					"where div.divId=schedule.div_id and div.institute_id = schedule.inst_id and sub.subjectId = schedule.sub_id and " +
 					" sub.institute_id = schedule.inst_id and batch.div_id = schedule.div_id and batch.class_id = schedule.inst_id and " +
 					"batch.batch_id = schedule.batch_id and schedule.batch_id=:batch_id  and schedule.inst_id=:class_id and schedule.div_id=:div_id and " +
@@ -1020,6 +1025,30 @@ public class ScheduleDB {
 			query.setParameter("batch_id", batchid);
 			query.setParameter("startDate", startDate);
 			query.setParameter("endDate", endDate);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
+			scheduleList = query.list();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != session) {
+				session.close();
+			}
+		}
+		return scheduleList;
+	}
+	
+	public List<Groups> getGroups(int batchid, int inst_id, int div_id) {
+
+		Session session = null;
+		Transaction transaction = null;
+		List<Groups> scheduleList = null;
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from Groups where inst_id=:class_id and div_id=:div_id and batch_id = :batch_id");
+			query.setParameter("batch_id", batchid);
 			query.setParameter("class_id", inst_id);
 			query.setParameter("div_id", div_id);
 			scheduleList = query.list();

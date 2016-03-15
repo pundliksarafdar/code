@@ -403,9 +403,9 @@
 			<result name="viewcomplete" type="tiles">classowner.questioneditsuccess</result>
 		</action>
 		
-		<action name="examMarks" class="com.exam.StudentExamMarksAction"
+		<action name="examMarks" class="com.exam.ExamMarksAction"
 			method="execute">
-			<result name="success" type="tiles">student.examMarks</result>
+			<result name="success" type="tiles">classowner.examMarks</result>
 			<result name="studentexamlist" type="tiles">student.examMarks</result>
 		</action>
 		<action name="viewexamans" class="com.exam.ViewExamAnsAction"

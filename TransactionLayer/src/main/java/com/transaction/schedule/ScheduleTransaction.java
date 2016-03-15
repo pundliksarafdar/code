@@ -177,11 +177,11 @@ public class ScheduleTransaction {
 		
 	}
 	
-	public int deleteSchedule(int scheduleid,int classId)
+	public int deleteSchedule(int scheduleid,int inst_id,int div_id,int batch_id,Date date)
 	{
 		
 		ScheduleDB db=new ScheduleDB();
-		return db.deleteSchedule(scheduleid,classId);
+		return db.deleteSchedule(scheduleid, inst_id, div_id, batch_id,date);
 	}
 	
 	public int deleteScheduleOfTeacher(int teacherId,int classId)
@@ -688,6 +688,7 @@ public class ScheduleTransaction {
 		ScheduleDB db = new ScheduleDB();
 		List list =  db.getMonthSchedule(batchid, date, inst_id, div_id);
 		List<MonthlyScheduleServiceBean> serviceBeanList = new ArrayList<MonthlyScheduleServiceBean>();
+		List<Groups> groupList = db.getGroups(batchid, inst_id, div_id);
 		if(list!=null){
 			for (Iterator iterator = list.iterator(); iterator
 					.hasNext();) {
@@ -709,6 +710,17 @@ public class ScheduleTransaction {
 				bean.setTeacher_id(((Number) object[13]).intValue());
 				bean.setGrp_id(((Number) object[14]).intValue());
 				bean.setRep_days((String) object[15]);
+				if(((Number) object[14]).intValue() != 0 ){
+				for (Iterator iterator2 = groupList.iterator(); iterator2
+						.hasNext();) {
+					Groups groups = (Groups) iterator2.next();
+					if(groups.getGrp_id() == ((Number) object[14]).intValue()){
+						bean.setStart_date(groups.getStart_date());
+						bean.setEnd_date(groups.getEnd_date());
+						break;
+					}
+				}
+				}
 				serviceBeanList.add(bean);
 			}
 		}
@@ -720,6 +732,7 @@ public class ScheduleTransaction {
 		ScheduleDB db = new ScheduleDB();
 		List list =  db.getMonthSchedule(batchid, startDate, endDate, inst_id, div_id);
 		List<MonthlyScheduleServiceBean> serviceBeanList = new ArrayList<MonthlyScheduleServiceBean>();
+		List<Groups> groupList = db.getGroups(batchid, inst_id, div_id);
 		if(list!=null){
 			for (Iterator iterator = list.iterator(); iterator
 					.hasNext();) {
@@ -741,6 +754,17 @@ public class ScheduleTransaction {
 				bean.setTeacher_id(((Number) object[13]).intValue());
 				bean.setGrp_id(((Number) object[14]).intValue());
 				bean.setRep_days((String) object[15]);
+				if(((Number) object[14]).intValue() != 0 ){
+					for (Iterator iterator2 = groupList.iterator(); iterator2
+							.hasNext();) {
+						Groups groups = (Groups) iterator2.next();
+						if(groups.getGrp_id() == ((Number) object[14]).intValue()){
+							bean.setStart_date(groups.getStart_date());
+							bean.setEnd_date(groups.getEnd_date());
+							break;
+						}
+					}
+					}
 				serviceBeanList.add(bean);
 			}
 		}

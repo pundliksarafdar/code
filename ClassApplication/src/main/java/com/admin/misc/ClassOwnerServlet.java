@@ -1675,7 +1675,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		
 		String scheduleid=req.getParameter("scheduleid");
 		ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
-		scheduleTransaction.deleteSchedule(Integer.parseInt(scheduleid),userBean.getRegId());
+		/*scheduleTransaction.deleteSchedule(Integer.parseInt(scheduleid),userBean.getRegId());*/
 			respObject.addProperty(STATUS, "success");
 }else if("getstudentsrelatedtobatch".equals(methodToCall)){
 	UserBean userBean = (UserBean) req.getSession().getAttribute("user");

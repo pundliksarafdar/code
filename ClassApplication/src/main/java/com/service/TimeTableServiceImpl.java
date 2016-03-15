@@ -102,6 +102,17 @@ public class TimeTableServiceImpl extends ServiceBase{
 		return Response.status(Response.Status.OK).entity(msg).build();
 	}
 	
+	@DELETE
+	@Path("/schedule/{div_id}/{batch_id}/{schedule_id}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteSchedule(@PathParam("div_id")int div_id,@PathParam("batch_id")int batch_id,
+			@PathParam("schedule_id")int schedule_id,@PathParam("date")Date date) {
+		// TODO Auto-generated method stub
+		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
+		int count = scheduleTransaction.deleteSchedule(schedule_id, getRegId(),div_id,batch_id,date);
+		return Response.status(Response.Status.OK).entity(count).build();
+	}
+	
 
 	/*@POST
 	@Path("/addScheduleObject/{scheduleBean}/")
