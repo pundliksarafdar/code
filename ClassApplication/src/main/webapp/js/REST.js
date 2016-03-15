@@ -45,6 +45,20 @@ function REST(){
 			   }); 
 	}
 	
+	this.put =function(uri,handlers,data,global){
+		$.ajax({
+			   url: uri,
+			   type:"PUT",
+			   data:data,
+			   processData: false,
+			   contentType: "application/json",
+			   global:global,
+			   success:handlers.success,
+			   error:handlers.error
+			   });
+	}
+
+	
 	/*
 	 * This is sample code submitquestionsuploadfile is file type id
 	 * 

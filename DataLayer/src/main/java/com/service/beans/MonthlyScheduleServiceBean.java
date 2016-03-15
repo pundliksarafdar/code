@@ -4,6 +4,7 @@ import java.sql.Date;
 
 public class MonthlyScheduleServiceBean {
 	int id;
+	String dataClass;
 	String description;
 	String title;
 	int divId;
@@ -21,6 +22,14 @@ public class MonthlyScheduleServiceBean {
 	Date start_date;
 	Date end_date;
 	Date date;
+	
+	
+	public String getDataClass() {
+		return dataClass;
+	}
+	public void setDataClass(String dataClass) {
+		this.dataClass = dataClass;
+	}
 	public int getId() {
 		return id;
 	}

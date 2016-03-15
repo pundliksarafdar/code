@@ -118,7 +118,7 @@
 		<div id="buttons">
 			<div class="form-group">
                 <button class="btn btn-success" id="save">Save</button>
-				<button class="btn btn-success hide" id="edit">Save</button>
+				<button class="btn btn-success hide" id="edit">Update</button>
             </div>
 		</div>
 		</form>

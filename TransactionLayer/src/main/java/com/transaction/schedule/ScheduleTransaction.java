@@ -695,6 +695,7 @@ public class ScheduleTransaction {
 	
 	public List getMonthSchedule(int batchid, Date date, int inst_id, int div_id) {
 		ScheduleDB db = new ScheduleDB();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 		List list =  db.getMonthSchedule(batchid, date, inst_id, div_id);
 		List<MonthlyScheduleServiceBean> serviceBeanList = new ArrayList<MonthlyScheduleServiceBean>();
 		List<Groups> groupList = db.getGroups(batchid, inst_id, div_id);
@@ -719,6 +720,14 @@ public class ScheduleTransaction {
 				bean.setTeacher(object[11]+" "+object[12]);
 				bean.setTeacher_id(((Number) object[13]).intValue());
 				bean.setGrp_id(((Number) object[14]).intValue());
+				if(bean.getGrp_id() != 0){
+					bean.setDataClass("event-success");
+				}else{
+					bean.setDataClass("event-warning");
+				}
+				bean.setTitle("Subject : "+bean.getSubjectname()+"<br/>"+
+						"Start time : "+dateFormat.format(new Date(bean.getStart()))+"<br/>"+
+						"End time : "+dateFormat.format(new Date(bean.getEnd()))+"<br/>");
 				bean.setRep_days((String) object[15]);
 				if(((Number) object[14]).intValue() != 0 ){
 				for (Iterator iterator2 = groupList.iterator(); iterator2
@@ -764,6 +773,11 @@ public class ScheduleTransaction {
 				bean.setTeacher(object[11]+" "+object[12]);
 				bean.setTeacher_id(((Number) object[13]).intValue());
 				bean.setGrp_id(((Number) object[14]).intValue());
+				if(bean.getGrp_id() != 0){
+					bean.setDataClass("event-success");
+				}else{
+					bean.setDataClass("event-warning");
+				}
 				bean.setRep_days((String) object[15]);
 				if(((Number) object[14]).intValue() != 0 ){
 					for (Iterator iterator2 = groupList.iterator(); iterator2
