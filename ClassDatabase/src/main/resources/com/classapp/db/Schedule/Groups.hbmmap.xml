@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="com.classapp.db.Schedule.Groups" table="groups" catalog="classdb">
+        <id name="grp_id" type="java.lang.Integer">
+            <column name="grp_id" />
+            <generator class="identity" />
+        </id>
+        <property name="inst_id" type="java.lang.Integer">
+            <column name="inst_id"  />
+        </property>
+        <property name="div_id" type="java.lang.Integer">
+            <column name="div_id" />
+        </property>
+        <property name="batch_id" type="java.lang.Integer">
+            <column name="batch_id"/>
+        </property>
+        <property name="start_date" type="java.sql.Date">
+            <column name="start_date"/>
+        </property>
+        <property name="end_date" type="java.sql.Date">
+            <column name="end_date"/>
+        </property>
+    </class>
+</hibernate-mapping>

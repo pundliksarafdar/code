@@ -42,6 +42,38 @@ public class StudentDB {
 		return status;
 	}
 	
+	/*This is bulk update*/
+	public String updateDb(List<Student> students){
+		String status = "0";
+		Session session = null;
+		Transaction transaction = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			int counter = 0;
+			for(Student student:students){
+				session.update(student);
+				counter++;
+				if(counter%20 == 0){
+					session.flush();
+					session.clear();
+				}
+			}
+			transaction.commit();
+		}catch(Exception e){
+			status = "1";
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return status;
+	}
+	
 	public List<Student> getStudents(int class_id){
 		Session session = null;
 		Transaction transaction = null;
@@ -477,6 +509,7 @@ public class StudentDB {
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
+			if(null!=session)
 			session.close();
 		}
 		return 0;
@@ -508,11 +541,11 @@ public class StudentDB {
 		return 0;
 	}
 	
-	public List getStudentIDSrelatedtoBatch(String batchname,int inst_id,int div_id) {
+	public List<Student> getStudentIDSrelatedtoBatch(String batchname,int inst_id,int div_id) {
 		Session session = null;
 		boolean status=false;
 		Transaction transaction = null;
-		List list=null;
+		List<Student> list=null;
 		String queryString="from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4) and class_id=:class_id and div_id=:div_id order by student_id asc";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();

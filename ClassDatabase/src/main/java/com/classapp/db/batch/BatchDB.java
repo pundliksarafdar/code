@@ -614,6 +614,8 @@ public List<Batch> getbachesrelatedtodivandsubject(String subjectid,int divId,in
 	}
 	return batchList;
 }
+
+
 }
 
 

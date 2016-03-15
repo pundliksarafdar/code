@@ -1,4 +1,4 @@
-package com.classapp.db.Schedule;
+package com.service.beans;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -16,6 +16,8 @@ public class Schedule implements Serializable {
 	int schedule_id;
 	int grp_id;
 	String rep_days;
+	Date start_date;
+	Date end_date;
 	public int getSchedule_id() {
 		return schedule_id;
 	}
@@ -102,6 +104,22 @@ public class Schedule implements Serializable {
 
 	public void setRep_days(String rep_days) {
 		this.rep_days = rep_days;
+	}
+
+	public Date getStart_date() {
+		return start_date;
+	}
+
+	public void setStart_date(Date start_date) {
+		this.start_date = start_date;
+	}
+
+	public Date getEnd_date() {
+		return end_date;
+	}
+
+	public void setEnd_date(Date end_date) {
+		this.end_date = end_date;
 	}
 
 	@Override

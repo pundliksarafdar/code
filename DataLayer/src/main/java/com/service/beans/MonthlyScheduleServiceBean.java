@@ -1,5 +1,7 @@
 package com.service.beans;
 
+import java.sql.Date;
+
 public class MonthlyScheduleServiceBean {
 	int id;
 	String description;
@@ -12,6 +14,13 @@ public class MonthlyScheduleServiceBean {
 	String batchName;
 	long start;
 	long end;
+	String teacher;
+	int teacher_id;
+	int grp_id;
+	String rep_days;
+	Date start_date;
+	Date end_date;
+	Date date;
 	public int getId() {
 		return id;
 	}
@@ -77,6 +86,48 @@ public class MonthlyScheduleServiceBean {
 	}
 	public void setEnd(long end) {
 		this.end = end;
+	}
+	public String getTeacher() {
+		return teacher;
+	}
+	public void setTeacher(String teacher) {
+		this.teacher = teacher;
+	}
+	public int getTeacher_id() {
+		return teacher_id;
+	}
+	public void setTeacher_id(int teacher_id) {
+		this.teacher_id = teacher_id;
+	}
+	public int getGrp_id() {
+		return grp_id;
+	}
+	public void setGrp_id(int grp_id) {
+		this.grp_id = grp_id;
+	}
+	public String getRep_days() {
+		return rep_days;
+	}
+	public void setRep_days(String rep_days) {
+		this.rep_days = rep_days;
+	}
+	public Date getStart_date() {
+		return start_date;
+	}
+	public void setStart_date(Date start_date) {
+		this.start_date = start_date;
+	}
+	public Date getEnd_date() {
+		return end_date;
+	}
+	public void setEnd_date(Date end_date) {
+		this.end_date = end_date;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	
 	

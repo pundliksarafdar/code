@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -48,7 +50,7 @@ public class TimeTableServiceImpl extends ServiceBase{
 		Long requestDate = Long.parseLong(request.getParameter("date"));
 		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
 		java.util.Date date = new  java.util.Date();
-		List<Schedule> scheduleList = scheduleTransaction.getSchedule(batch, new Date(requestDate), 4, division);
+		List<Schedule> scheduleList = scheduleTransaction.getSchedule(batch, new Date(requestDate), getRegId(), division);
 		for (Schedule schedule : scheduleList) {
 			System.out.println(schedule.toString());
 		}
@@ -63,7 +65,7 @@ public class TimeTableServiceImpl extends ServiceBase{
 		// TODO Auto-generated method stub
 		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
 		List<MonthlyScheduleServiceBean> scheduleList = new ArrayList<MonthlyScheduleServiceBean>();
-		if(endDate != 0){
+		if(endDate == 0){
 			scheduleList = scheduleTransaction.getMonthSchedule(batch, new Date(startDate), getRegId(), division);
 		}else{
 			scheduleList = scheduleTransaction.getMonthSchedule(batch, new Date(startDate),new Date(endDate), getRegId(), division);
@@ -71,6 +73,45 @@ public class TimeTableServiceImpl extends ServiceBase{
 		return Response.status(Response.Status.OK).entity(scheduleList).build();
 	}
 	
+	
+	@POST
+	@Path("/schedule")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addSchedule(com.service.beans.Schedule schedule) {
+		// TODO Auto-generated method stub
+		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
+		String msg = scheduleTransaction.addSchedule(schedule, getRegId());
+		if(!"".equals(msg)){
+			return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+		}
+		return Response.status(Response.Status.OK).entity(msg).build();
+	}
+	
+	@PUT
+	@Path("/schedule")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateSchedule(com.service.beans.Schedule schedule) {
+		// TODO Auto-generated method stub
+		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
+		String msg = scheduleTransaction.updateSchedule(schedule, getRegId());
+		if(!"".equals(msg)){
+			return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+		}
+		return Response.status(Response.Status.OK).entity(msg).build();
+	}
+	
+	@DELETE
+	@Path("/schedule/{div_id}/{batch_id}/{schedule_id}/{date}/{grp_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteSchedule(@PathParam("div_id")int div_id,@PathParam("batch_id")int batch_id,
+			@PathParam("schedule_id")int schedule_id,@PathParam("date")Date date,@PathParam("grp_id")int grp_id) {
+		// TODO Auto-generated method stub
+		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
+		int count = scheduleTransaction.deleteSchedule(schedule_id, getRegId(),div_id,batch_id,date,grp_id);
+		return Response.status(Response.Status.OK).entity(count).build();
+	}
 	
 
 	/*@POST

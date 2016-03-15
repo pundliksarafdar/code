@@ -141,7 +141,7 @@ function saveNewSubjectName(){
 }
 
 function validateInput(inputText){
-	var CHAR_AND_NUM_VALIDATION = /^[a-zA-Z0-9]{1,}$/;
+	var CHAR_AND_NUM_VALIDATION = /^[a-zA-Z0-9 ]{1,}$/;
 	var isValidInput = CHAR_AND_NUM_VALIDATION.test(inputText);
 	return isValidInput;
 }
@@ -237,7 +237,7 @@ function validateInput(inputText){
  <div class="col-lg-4 addSubjectContainer">
 	
     <div class="input-group">
-      <input type="text" class="form-control" id="subjectName">
+      <input type="text" class="form-control" id="subjectName" maxlength="25" placeholder="Enter Subject Name">
       <span class="input-group-btn">
         <button id="manageSubjectAddSubject" class="btn btn-default" type="button">Add subject</button>
       </span>
@@ -248,6 +248,7 @@ function validateInput(inputText){
   </div>
 </div>
 
+<div class="container">
  <table class="table table-striped subjectTable" id="subjectTable" width="100%">
 	<thead>
 		<th>#</th><th>Subject name</th><th></th>
@@ -275,5 +276,6 @@ function validateInput(inputText){
  	</tr>
  </c:forEach>
  </table>
+ </div>
 </body>
 </html>
