@@ -62,6 +62,14 @@ padding-left: 2px;
 			</div>
 		</div>
 		<div class="row">
+			<div class="col-md-2">Select Batch</div>
+			<div class="col-md-3">
+				<select class="form-control" id="batchSelect" >
+					<option value="-1">Select Batch</option>
+				</select>
+			</div>
+		</div>
+		<div class="row">
 			<div class="col-md-2">Select Header</div>
 			<div class="col-md-3">
 				<select id="headerDesc" name="headerDesc" class="form-control">

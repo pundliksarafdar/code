@@ -23,15 +23,53 @@ padding-left: 2px;
 </style>
 <script>
 var division = "";
+var batch = "";
 var queationPaperList = [];
 $(document).ready(function(){
+	$("#division").change(function(){
+		var divisionId = $("#division").val();
+		$.ajax({
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "fetchBatchesForDivision",
+					 regId:'',
+					 divisionId:divisionId,						 
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   $('#batchSelect').empty();
+				   var batchDataArray = [];
+				    var data = JSON.parse(e);
+				   /* $.each(data.batches,function(key,val){
+						var data = {};
+						data.id = val.batch_id;
+						data.text = val.batch_name;
+						batchDataArray.push(data);
+					});
+				    $("#batchSelect").select({data:batchDataArray,placeholder:"type batch name"});*/
+				    $("#batchSelect").append("<option value='-1'>Select Batch</option>");
+				    if(data.batches != null){
+				    	$.each(data.batches,function(key,val){
+				    		 $("#batchSelect").append("<option value='"+val.batch_id+"'>"+val.batch_name+"</option>");
+						});
+				    }
+			   	},
+			   error:function(e){
+				   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Error while fetching batches for division');
+					$('div#addStudentModal .error').show();
+			   }
+			   
+		});
+	});
+	
 	$("#searchExam").click(function(){
 		division = $("#division").val();
+		batch =  $("#batchSelect").val();
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
 		createExamListTable(e);};
 		handlers.error = function(e){console.log("Error",e)};
-		rest.post("rest/classownerservice/getExamList/"+division,handlers);
+		rest.post("rest/classownerservice/getExamList/"+division+"/"+batch,handlers);
 		var handler = {};
 		handler.success = function(e){console.log("Success",e);
 		queationPaperList = e;
@@ -42,15 +80,16 @@ $(document).ready(function(){
 	$.ajax({
 		   url: "classOwnerServlet",
 		   data: {
-		    	 methodToCall: "getSubjectOfDivision",
-		    	 divisionId: division
+		    	 methodToCall: "fetchBatchSubject",
+		    	 batchName:batch,
+	    		 batchdivision:division
 		   		},
 		   type:"POST",
 		   success:function(data){
 			   data = JSON.parse(data);
-			   if(data.status == "success"){
-				   var subjectnames = data.subjectnames;
-				   var subjectIds = data.subjectids;
+			   if(data.subjectstatus == ""){
+				   var subjectnames = data.Batchsubjects;
+				   var subjectIds = data.BatchsubjectsIds;
 				   var i = 0;
 				   var subjectnameArray = subjectnames.split(",");
 					var subjectidArray =  subjectIds.split(",");  
@@ -100,7 +139,7 @@ $(document).ready(function(){
 			}
 			}}
 		handlers.error = function(e){console.log("Error",e)};
-		rest.post("rest/classownerservice/getExam/"+division+"/"+$(this).prop("id"),handlers);
+		rest.post("rest/classownerservice/getExam/"+division+"/"+$(this).prop("id")+"/"+batch,handlers);
 	});
 	
 	$(".cancelEdit").click(function(){
@@ -131,6 +170,7 @@ $(document).ready(function(){
 			var exam_paper = {};
 			exam_paper.exam_id = editExamID;	
 			exam_paper.div_id = $("#division").val(); 
+			exam_paper.batch_id = batch; 
 			exam_paper.sub_id = $($(".examSubjectPapers")[i]).find("#subjectCheckbox").val();
 			exam_paper.marks = $($(".examSubjectPapers")[i]).find(".marks").val();
 			exam_paper.duration = $($(".examSubjectPapers")[i]).find(".examHour").val()+":"+$($(".examSubjectPapers")[i]).find(".examMinute").val();
@@ -146,7 +186,7 @@ $(document).ready(function(){
 		}
 		handlers.error = function(e){console.log("Error",e)}
 		exam_paperList = JSON.stringify(exam_paperList);
-		rest.post("rest/classownerservice/updateExamPaper/"+editExamID+"/"+division,handlers,exam_paperList);
+		rest.post("rest/classownerservice/updateExamPaper/"+editExamID+"/"+division+"/"+batch,handlers,exam_paperList);
 		});
 });
 
@@ -225,6 +265,11 @@ function createExamListTable(data){
 					</c:forEach>
 				</select>
 				<span id="divisionError" class="patternError"></span>
+			</div>
+			<div class="col-md-3">
+				<select class="form-control" id="batchSelect" >
+					<option value="-1">Select Batch</option>
+				</select>
 			</div>
 			<div class="col-md-1">
 				<button class="form-control btn btn-primary btn-sm" id="searchExam">Search</button>

@@ -800,4 +800,99 @@ public class StudentDB {
 		return null;
 	}
 	
+	public List getStudentrelatedtoBatchForExamMarks(String batchname,int inst_id,int div_id) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List list=null;
+		String queryString="Select reg.fname,reg.lname, reg.regId from Student std,RegisterBean reg " +
+				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
+				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("batch_id1", batchname+",%");
+			query.setParameter("batch_id2","%,"+batchname+",%");	
+			query.setParameter("batch_id3", "%,"+batchname);
+			query.setParameter("batch_id4", batchname);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
+				list=query.list();
+			if(list!=null)
+			{
+				return list;
+			}
+			
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return null;
+	}
+	
+	public List getStudentrelatedtoBatchForExamMarksUpdate(String batchname,int inst_id,int div_id,int exam_id,int sub_id) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List list=null;
+		String queryString="Select reg.fname,reg.lname, reg.regId,stdMarks.marks from Student std,RegisterBean reg,StudentMarks stdMarks " +
+				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
+				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id and std.class_id=stdMarks.inst_id " +
+				"and std.div_id=stdMarks.div_id and stdMarks.student_id = std.student_id and stdMarks.batch_id = :stdbatchId and " +
+				" stdMarks.exam_id = :exam_id and stdMarks.sub_id = :sub_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("batch_id1", batchname+",%");
+			query.setParameter("batch_id2","%,"+batchname+",%");	
+			query.setParameter("batch_id3", "%,"+batchname);
+			query.setParameter("batch_id4", batchname);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("stdbatchId", Integer.parseInt(batchname));
+			query.setParameter("exam_id", exam_id);
+			query.setParameter("sub_id", sub_id);
+				list=query.list();
+			if(list!=null)
+			{
+				return list;
+			}
+			
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return null;
+	}
+	
+	public String saveStudentMarks(StudentMarks studentMarks){
+		String status = "0";
+		Session session = null;
+		Transaction transaction = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			session.saveOrUpdate(studentMarks);
+			transaction.commit();
+		}catch(Exception e){
+			status = "1";
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return status;
+	}
 }

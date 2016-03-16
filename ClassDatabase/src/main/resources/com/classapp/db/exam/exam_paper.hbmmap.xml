@@ -14,6 +14,9 @@
         <property name="div_id" type="int">
             <column name="div_id" />
         </property>
+         <property name="batch_id" type="int">
+            <column name="batch_id" />
+        </property>
          <property name="exam_id" type="int">
             <column name="exam_id" />
         </property>
