@@ -110,10 +110,12 @@ function editSchedule(){
 		
 		var handler = {};
 		handler.success = function(e){console.log(e)
-			$.notify({message: "Schedule saved successfully"},{type: 'success'});
+			$.notify({message: "Schedule updated successfully"},{type: 'success'});
 			getTimeTableData();
 		}
-		handler.error = function(e){console.log(e)}
+		handler.error = function(e){console.log(e);
+			$.notify({message: e.message},{type: 'error'});
+		}
 		if($(SCHEDULE_FORM).valid()){
 			rest.put(saveScheduleUrl,handler,JSON.stringify(scheduleBean));
 			console.log("Schedule id "+scheduleBean.schedule_id);
@@ -373,10 +375,12 @@ function subjectSelectChange()
 		var handler = {};
 		handler.success = function(e){
 			console.log(e);
-			//$.notify({message: "Schedule saved successfully"},{type: 'success'});
+			$.notify({message: "Schedule saved successfully"},{type: 'success'});
 			getTimeTableData();
 		}
-		handler.error = function(e){console.log(e)}
+		handler.error = function(e){console.log(e);
+			$.notify({message: e.message},{type: 'error'});
+		}
 		if($(SCHEDULE_FORM).valid()){
 			rest.post(saveScheduleUrl,handler,JSON.stringify(scheduleBean));
 		}
