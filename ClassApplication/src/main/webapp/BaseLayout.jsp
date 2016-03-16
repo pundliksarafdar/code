@@ -151,8 +151,9 @@ html,body {
 <script src="js/mustache.min.js"></script>
 <script src='js/view/<c:out value="${request.actionName}"></c:out>.js'></script>
 <script>
+var eventOccuredSience;
 $( document ).ajaxStart(function() {
-	  $("#loaderModal").modal("show")
+	$("#loaderModal").modal("show")
 });
 
 $( document ).ajaxStop(function() {
@@ -161,7 +162,9 @@ $( document ).ajaxStop(function() {
 
 $(document).ready(function(){
 	var cookieValue = commonfunctions.getCookies("logincreation");
-	console.log(cookieValue);
+	$(document).mousemove(function(){
+		eventOccuredSience = new Date();
+	});
 	
 	if(cookieValue == undefined){
 		location.href="login";	
@@ -249,6 +252,7 @@ function storeMenuSelected(){
 							$.ajax({
 								url:"sessionreload",
 								type:"POST",
+								global:false,
 								success:function(data){
 									timeout = <%=request.getSession().getMaxInactiveInterval()%>;
 								},
