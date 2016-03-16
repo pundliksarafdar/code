@@ -133,16 +133,19 @@
 	<div id="calendarContainer" class="col-md-9">
 	<div class="page-header">
 
-		<div class="pull-right form-inline">
-			<div class="btn-group">
-				<button class="btn btn-primary" data-calendar-nav="prev"><< Prev</button>
-				<button class="btn btn-default" data-calendar-nav="today">Today</button>
-				<button class="btn btn-primary" data-calendar-nav="next">Next >></button>
+		<div class="row">
+			<div class="form-inline col-md-6">
+				<div class="form-group" style="width:50%;">
+					<div class='input-group date' id='calendarDate'>
+						<input type='text' class="form-control" name="calendarDate" placeholder="Choose date"/>
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
+						</span>
+					</div>
+				</div>
 			</div>
-			<div class="btn-group">
-				<button class="btn btn-warning" data-calendar-view="year">Year</button>
+			<div class="btn-group col-md-6">
 				<button class="btn btn-warning active" data-calendar-view="month">Month</button>
-				<button class="btn btn-warning" data-calendar-view="week">Week</button>
 				<button class="btn btn-warning" data-calendar-view="day">Day</button>
 			</div>
 		</div>

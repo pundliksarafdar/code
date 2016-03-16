@@ -4,6 +4,7 @@ var START_DATE = "#startDate";
 var END_DATE = "#endDate";
 var START_TIME = "#startTime";
 var END_TIME = "#endTime";
+var CALENDAR_DATE = "#calendarDate";
 var SUBJECT_SELECT = "#subjectSelect";
 var TEACHER_SELECT = "#teacherSelect";
 var REPETITION_SELECT = "#repetitionSelect";
@@ -26,7 +27,8 @@ $(document).ready(function(){
 		.on("change",BATCH_SELECT,getTimeTableData)
 		.on("change",SUBJECT_SELECT,subjectSelectChange)
 		.on("click",SAVE_SCHEDULE,saveSchedule)
-		.on("click",EDIT_SCHEDULE,editSchedule);
+		.on("click",EDIT_SCHEDULE,editSchedule)
+		.on("dp.change",CALENDAR_DATE,onCalendarDateChange);
 		
 		$('.btn-group button[data-calendar-view]').each(function() {
 			var $this = $(this);
@@ -50,6 +52,12 @@ $(document).ready(function(){
 		$(END_TIME).datetimepicker({
 			pickDate: false,
 			format:"HH:mm:ss"
+		});
+		
+		$(CALENDAR_DATE).datetimepicker({
+			pickTime: false,
+			minViewMode:'months',
+			format:"YYYY-MM"
 		});
 		
 		 $.validator.addMethod("valueNotEquals", function(value, element, arg){
@@ -82,6 +90,9 @@ Date.prototype.format = function(){
 	return that.getDate()+"-"+(that.getMonth()+1)+"-"+that.getFullYear()+" "+that.getHours()+":"+that.getMinutes();
 }
 
+function onCalendarDateChange(){
+	getTimeTableData();
+}
 function editSchedule(){
 	var editRole = $(EDIT_SCHEDULE).attr("data-edit-roll");
 	var event = $(EDIT_SCHEDULE).data("eventData")
@@ -110,12 +121,10 @@ function editSchedule(){
 		
 		var handler = {};
 		handler.success = function(e){console.log(e)
-			$.notify({message: "Schedule updated successfully"},{type: 'success'});
+			$.notify({message: "Schedule saved successfully"},{type: 'success'});
 			getTimeTableData();
 		}
-		handler.error = function(e){console.log(e);
-			$.notify({message: e.message},{type: 'error'});
-		}
+		handler.error = function(e){console.log(e)}
 		if($(SCHEDULE_FORM).valid()){
 			rest.put(saveScheduleUrl,handler,JSON.stringify(scheduleBean));
 			console.log("Schedule id "+scheduleBean.schedule_id);
@@ -138,26 +147,11 @@ function getBatches(){
 
 function getBatchSuccess(batches){
 	$(BATCH_SELECT).find('option').not('option[value="-1"]').remove();
-	var optionsHasLink = "";
-	var optionsNoLink = "";
-	var optGroupHasLink;
-	var optGroupNoLink;
+	var options = "";
 	$.each(batches,function(index,val){
-		if(val.feesLinkStatus == "Yes"){
-			optionsHasLink = optionsHasLink + "<option value='"+val.batch.batch_id+"'>"+val.batch.batch_name+"</option>";
-		}else{
-			optionsNoLink = optionsNoLink + "<option value='"+val.batch.batch_id+"'>"+val.batch.batch_name+"</option>";
-		}
+			options = options + "<option value='"+val.batch.batch_id+"'>"+val.batch.batch_name+"</option>";		
 	});
-	
-	if(optionsHasLink && optionsHasLink.trim().length){
-		optGroupHasLink = '<optgroup label="Linked" linked="yes">'+optionsHasLink+'</optgroup>'
-	}
-	
-	if(optionsNoLink && optionsNoLink.trim().length){
-		optGroupNoLink = '<optgroup label="No link" linked="no">'+optionsNoLink+'</optgroup>';
-	}
-	$(BATCH_SELECT).append(optGroupHasLink+optGroupNoLink);	
+	$(BATCH_SELECT).append(options);	
 }
 
 function getBatchError(error){
@@ -166,7 +160,10 @@ function getBatchError(error){
 function getTimeTableData(){
 	var divId = $(DIVISION_SELECT).val();
 	var batchId = $(BATCH_SELECT).val();
-	var dateNow = new Date().getTime();
+	var dateNow = new Date($(CALENDAR_DATE).find('input').val()).getTime();
+	if(isNaN(dateNow)){
+		dateNow = new Date().getTime();
+	}
 	var handler = {};
 	handler.success = function(e){setTimetable(e)};
 	handler.error = function(e){console.log(e);$(CALENDAR_CONTAINER).hide();};
@@ -242,7 +239,7 @@ function onEdit(event){
 			modal.modalConfirm("Timetable", "Do you want to update schedule for all upcomming event", "Current", "All",loadAllUpcommingEvent,[event]);
 		}
 		$(EDIT_SCHEDULE).attr("data-edit-roll","specific");
-		$(SUBJECT_SELECT).val(event.subId);
+		$(SUBJECT_SELECT).val(event.subId).trigger("change");
 		$(START_TIME).find('input').val(startTime);
 		$(END_TIME).find('input').val(endTime);
 }	
@@ -375,12 +372,10 @@ function subjectSelectChange()
 		var handler = {};
 		handler.success = function(e){
 			console.log(e);
-			$.notify({message: "Schedule saved successfully"},{type: 'success'});
+			//$.notify({message: "Schedule saved successfully"},{type: 'success'});
 			getTimeTableData();
 		}
-		handler.error = function(e){console.log(e);
-			$.notify({message: e.message},{type: 'error'});
-		}
+		handler.error = function(e){console.log(e)}
 		if($(SCHEDULE_FORM).valid()){
 			rest.post(saveScheduleUrl,handler,JSON.stringify(scheduleBean));
 		}
