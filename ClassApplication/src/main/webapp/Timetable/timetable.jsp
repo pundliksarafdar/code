@@ -100,19 +100,25 @@
 		<label for="repetitionSelect">Select repetition</label>
 		<div id="repetitionSelect">
 			<label for="sun">S</label>
-			<input type="checkbox" value="7" id="sun">
+			<input type="checkbox" value="1" id="sun"  title="Sunday"/ >
+			&nbsp;
 			<label for="mon">M</label>
-			<input type="checkbox" value="1" id="mon">
+			<input type="checkbox" value="2" id="mon" title="Monday"/>
+			&nbsp;
 			<label for="tue">T</label>
-			<input type="checkbox" value="2" id="tue">
+			<input type="checkbox" value="3" id="tue" title="Tuesday"/>
+			&nbsp;
 			<label for="wed">W</label>
-			<input type="checkbox" value="3" id="wed">
+			<input type="checkbox" value="4" id="wed" title="Wednsday"/>
+			&nbsp;
 			<label for="thu">T</label>
-			<input type="checkbox" value="4" id="thu">
+			<input type="checkbox" value="5" id="thu" title="Thursday"/>
+			&nbsp;
 			<label for="fri">F</label>
-			<input type="checkbox" value="5" id="fri">
+			<input type="checkbox" value="6" id="fri" title="Friday"/>
+			&nbsp;
 			<label for="sat">S</label>
-			<input type="checkbox" value="6" id="sat">
+			<input type="checkbox" value="7" id="sat" title="Saturday"/>
 		</div>
 		
 		<div id="buttons">

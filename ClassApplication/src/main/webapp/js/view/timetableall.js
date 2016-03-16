@@ -205,20 +205,17 @@ function setTimetable(data){
 		},
 		onCorexDeleteBtnClicked:function(event){
 			var handler = {};
-			handler.success = function(e){console.log(e)
-				$.notify({message: "Schedule deleted successfully"},{type: 'success'});
-				getTimeTableData();
-			}
+			handler.success = function(e){console.log(e)}
 			handler.error = function(e){console.log(e)}
 			if(event.grp_id){
 				modal.modalYesAndNo("Delete","Do you want to delete?","Current",function(){
-					rest.deleteItem(saveScheduleUrl+"/"+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+event.id+"/"+event.date+"/0",handler);
+					rest.deleteItem(saveScheduleUrl+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+event.schedule_id+"/"+event.date+"/0",handler);
 				},"All",function(){
-					rest.deleteItem(saveScheduleUrl+"/"+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/0/"+event.date+"/"+event.grp_id,handler);
+					rest.deleteItem(saveScheduleUrl+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/0/"+event.date+"/"+event.grp_id,handler);
 				});
 			}else{
 				modal.confirmModal("Delete","Do you want to delete?","No","Yes",function(){
-					rest.deleteItem(saveScheduleUrl+"/"+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+event.id+"/"+event.date+"/0",handler);
+					rest.deleteItem(saveScheduleUrl+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+event.schedule_id+"/"+event.date+"/0",handler);
 				},undefined);
 			}	
 		},
@@ -237,8 +234,8 @@ function onEdit(event){
 		$(SAVE_SCHEDULE).addClass('hide');
 		$(EDIT_SCHEDULE).removeClass('hide');
 		$(EDIT_SCHEDULE).data("eventData",event);
-		var startTime = moment(event.start).format("HH:mm");
-		var endTime = moment(event.end).format("HH:mm");
+		var startTime = moment(event.start).format("HH:mm:ss");
+		var endTime = moment(event.end).format("HH:mm:ss");
 		if(event.grp_id){
 			modal.modalConfirm("Timetable", "Do you want to update schedule for all upcomming event", "Current", "All",loadAllUpcommingEvent,[event]);
 		}
@@ -260,8 +257,8 @@ function loadAllUpcommingEvent(event){
 			}
 		}
 		var startDate = moment(event.start).format("YYYY-MM-DD");
-		var startTime = moment(event.start).format("HH:mm");
-		var endTime = moment(event.end).format("HH:mm");
+		var startTime = moment(event.start).format("HH:mm:ss");
+		var endTime = moment(event.end).format("HH:mm:ss");
 		$(SUBJECT_SELECT).val(event.subId);
 		$(START_DATE).find('input').val(startDate);
 		$(START_TIME).find('input').val(startTime);
@@ -374,8 +371,9 @@ function subjectSelectChange()
 		scheduleBean.end_date = $(END_DATE).find('input').val();
 		
 		var handler = {};
-		handler.success = function(e){console.log(e)
-			$.notify({message: "Schedule saved successfully"},{type: 'success'});
+		handler.success = function(e){
+			console.log(e);
+			//$.notify({message: "Schedule saved successfully"},{type: 'success'});
 			getTimeTableData();
 		}
 		handler.error = function(e){console.log(e)}
