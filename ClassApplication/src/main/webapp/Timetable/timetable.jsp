@@ -100,25 +100,31 @@
 		<label for="repetitionSelect">Select repetition</label>
 		<div id="repetitionSelect">
 			<label for="sun">S</label>
-			<input type="checkbox" value="7" id="sun">
+			<input type="checkbox" value="1" id="sun"  title="Sunday"/ >
+			&nbsp;
 			<label for="mon">M</label>
-			<input type="checkbox" value="1" id="mon">
+			<input type="checkbox" value="2" id="mon" title="Monday"/>
+			&nbsp;
 			<label for="tue">T</label>
-			<input type="checkbox" value="2" id="tue">
+			<input type="checkbox" value="3" id="tue" title="Tuesday"/>
+			&nbsp;
 			<label for="wed">W</label>
-			<input type="checkbox" value="3" id="wed">
+			<input type="checkbox" value="4" id="wed" title="Wednsday"/>
+			&nbsp;
 			<label for="thu">T</label>
-			<input type="checkbox" value="4" id="thu">
+			<input type="checkbox" value="5" id="thu" title="Thursday"/>
+			&nbsp;
 			<label for="fri">F</label>
-			<input type="checkbox" value="5" id="fri">
+			<input type="checkbox" value="6" id="fri" title="Friday"/>
+			&nbsp;
 			<label for="sat">S</label>
-			<input type="checkbox" value="6" id="sat">
+			<input type="checkbox" value="7" id="sat" title="Saturday"/>
 		</div>
 		
 		<div id="buttons">
 			<div class="form-group">
                 <button class="btn btn-success" id="save">Save</button>
-				<button class="btn btn-success hide" id="edit">Save</button>
+				<button class="btn btn-success hide" id="edit">Update</button>
             </div>
 		</div>
 		</form>
@@ -127,16 +133,19 @@
 	<div id="calendarContainer" class="col-md-9">
 	<div class="page-header">
 
-		<div class="pull-right form-inline">
-			<div class="btn-group">
-				<button class="btn btn-primary" data-calendar-nav="prev"><< Prev</button>
-				<button class="btn btn-default" data-calendar-nav="today">Today</button>
-				<button class="btn btn-primary" data-calendar-nav="next">Next >></button>
+		<div class="row">
+			<div class="form-inline col-md-6">
+				<div class="form-group" style="width:50%;">
+					<div class='input-group date' id='calendarDate'>
+						<input type='text' class="form-control" name="calendarDate" placeholder="Choose date"/>
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
+						</span>
+					</div>
+				</div>
 			</div>
-			<div class="btn-group">
-				<button class="btn btn-warning" data-calendar-view="year">Year</button>
+			<div class="btn-group col-md-6">
 				<button class="btn btn-warning active" data-calendar-view="month">Month</button>
-				<button class="btn btn-warning" data-calendar-view="week">Week</button>
 				<button class="btn btn-warning" data-calendar-view="day">Day</button>
 			</div>
 		</div>

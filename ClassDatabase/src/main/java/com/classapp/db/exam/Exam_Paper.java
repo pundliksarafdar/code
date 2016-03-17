@@ -6,6 +6,7 @@ public class Exam_Paper {
 	private int exam_paper_id;
 	private int inst_id;
 	private int div_id;
+	private int batch_id;
 	private int exam_id;
 	private int sub_id;
 	private int marks;
@@ -93,6 +94,12 @@ public class Exam_Paper {
 	}
 	public void setHeader_id(String header_id) {
 		this.header_id = header_id;
+	}
+	public int getBatch_id() {
+		return batch_id;
+	}
+	public void setBatch_id(int batch_id) {
+		this.batch_id = batch_id;
 	}
 	
 	

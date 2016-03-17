@@ -72,8 +72,8 @@ $(document).ready(function(){
 	$('#subjectTable').on("click",".fillMarks",function(){
 		var division = $("#division").val();
 		var batch = $("#batchSelect").val();
-		var exam = $("#exam").val();
 		exam_marks = $(this).closest("div").find(".subject_marks").val();
+		var exam = $("#exam").val();
 		subject = $(this).attr("id");
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
@@ -83,7 +83,7 @@ $(document).ready(function(){
 		}
 		handlers.error = function(e){console.log("Error",e)};
 		
-		rest.post("rest/classownerservice/getStudentForMarksFill/"+division+"/"+batch+"/"+exam,handlers);
+		rest.post("rest/classownerservice/getStudentMarksForUpdate/"+division+"/"+batch+"/"+exam+"/"+subject,handlers);
 	});
 	
 	$(".backToSubjectList").click(function(){
@@ -163,7 +163,7 @@ function createStudentMarksTable(data){
 				return div;
 			},sWidth:"50%"},
 			{ title: "Marks",data:null,render:function(data,event,row){
-				return "<div class='presenteeDiv'><input type='text' class='form-control Marks'><input type='hidden' value='"+row.student_id+"' id='student_id'></div>"}
+				return "<div class='presenteeDiv'><input type='text' class='form-control Marks'  value='"+row.marks+"'><input type='hidden' value='"+row.student_id+"' id='student_id'></div>"}
 			,swidth:'30%'
 			}
 		]
@@ -174,7 +174,7 @@ function createStudentMarksTable(data){
 </head>
 <body>
 <jsp:include page="ExamMarksHeader.jsp" >
-		<jsp:param value="active" name="examMarks"/>
+		<jsp:param value="active" name="editExamMarks"/>
 	</jsp:include>
 <div class="container" style="padding: 2%; background: #eee">
 		<div class="row">

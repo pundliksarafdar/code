@@ -574,5 +574,9 @@
       <put-attribute name="title"  value="Student Attendance"/>
       <put-attribute name="body"   value="/attendance/studentAttendance.jsp"/>      
    </definition>
+    <definition name="classowner.editExamMarks" extends="baseLayout">
+      <put-attribute name="title"  value="Manual Exam"/>
+      <put-attribute name="body"   value="/ClassOwner/EditExamMarks.jsp"/>      
+   </definition>
    
 </tiles-definitions>

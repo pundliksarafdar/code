@@ -80,12 +80,14 @@ public class TimeTableServiceImpl extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addSchedule(com.service.beans.Schedule schedule) {
 		// TODO Auto-generated method stub
+		HashMap<String, String>map = new HashMap<String, String>();
 		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
 		String msg = scheduleTransaction.addSchedule(schedule, getRegId());
+		map.put("message", msg);
 		if(!"".equals(msg)){
-			return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(map).build();
 		}
-		return Response.status(Response.Status.OK).entity(msg).build();
+		return Response.status(Response.Status.OK).entity(map).build();
 	}
 	
 	@PUT
@@ -94,12 +96,14 @@ public class TimeTableServiceImpl extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateSchedule(com.service.beans.Schedule schedule) {
 		// TODO Auto-generated method stub
+		HashMap<String, String>map = new HashMap<String, String>();
 		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
 		String msg = scheduleTransaction.updateSchedule(schedule, getRegId());
+		map.put("message", msg);
 		if(!"".equals(msg)){
-			return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(map).build();
 		}
-		return Response.status(Response.Status.OK).entity(msg).build();
+		return Response.status(Response.Status.OK).entity(map).build();
 	}
 	
 	@DELETE

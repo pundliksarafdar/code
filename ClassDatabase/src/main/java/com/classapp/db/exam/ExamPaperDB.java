@@ -10,6 +10,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
+import com.classapp.db.subject.Subject;
 import com.classapp.persistence.HibernateUtil;
 
 public class ExamPaperDB {
@@ -93,7 +94,7 @@ public class ExamPaperDB {
 
 	}
 	
-	public List<Integer> getDistinctExams(int inst_id,int div_id) {
+	public List<Integer> getDistinctExams(int inst_id,int div_id,int batch_id) {
 		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
@@ -104,13 +105,15 @@ public class ExamPaperDB {
 		criteria.add(criterion);
 		 criterion = Restrictions.eq("div_id", div_id);
 		criteria.add(criterion);
+		 criterion = Restrictions.eq("batch_id", batch_id);
+			criteria.add(criterion);
 		List<Integer> examList = criteria.list();
 		transaction.commit();
 		session.close();
 		return  examList;	
 	}
 	
-	public List<Exam_Paper> getExamPapers(int inst_id,int div_id,int exam_id) {
+	public List<Exam_Paper> getExamPapers(int inst_id,int div_id,int exam_id,int batch_id) {
 		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
@@ -122,10 +125,44 @@ public class ExamPaperDB {
 		criteria.add(criterion);
 		criterion = Restrictions.eq("exam_id", exam_id);
 		criteria.add(criterion);
+		 criterion = Restrictions.eq("batch_id", batch_id);
+			criteria.add(criterion);
 		List<Exam_Paper> examList = criteria.list();
 		transaction.commit();
 		session.close();
 		return  examList;	
+	}
+	
+	public List<Subject> getExamSubjects(int inst_id,int div_id,int batch_id,int exam_id) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		List<Subject> list = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("Select sub.subjectName,sub.subjectId,examPaper.marks from Exam_Paper examPaper , Subject sub where sub.institute_id = examPaper.inst_id and" +
+					" sub.subjectId = examPaper.sub_id and examPaper.inst_id =:inst_id and examPaper.div_id = :div_id and examPaper.batch_id = :batch_id" +
+					" and examPaper.exam_id = :exam_id   ");
+			query.setParameter("inst_id",inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("exam_id", exam_id);
+			query.setParameter("batch_id", batch_id);
+			list = query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  list;
+
 	}
 
 }

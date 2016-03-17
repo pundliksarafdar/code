@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -21,12 +22,15 @@ import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentDB;
 import com.classapp.db.student.StudentData;
 import com.classapp.db.student.StudentDetails;
+import com.classapp.db.student.StudentMarks;
 import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.service.beans.AttendanceScheduleServiceBean;
+import com.service.beans.StudentListForAttendance;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.register.RegisterTransaction;
@@ -318,5 +322,74 @@ public class StudentTransaction {
 		StudentDB studentDB = new StudentDB();
 		studentDB.updateDb(students);
 		return students;
+	}
+	
+	public List<com.service.beans.StudentData> getStudentForExamMarks(String batchid, int inst_id, int div_id,int exam_id) {
+		StudentDB db = new StudentDB();
+	//	List<com.service.beans.StudentData> attendanceScheduleServiceBeanList = new ArrayList<com.service.beans.StudentData>(); 
+		List list =  db.getStudentrelatedtoBatchForExamMarks(batchid, inst_id, div_id);
+		List<com.service.beans.StudentData> studentDatas = new ArrayList<com.service.beans.StudentData>();
+		if(list != null){
+			int i = 1;
+			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+				Object[] object = (Object[]) iterator.next();
+				com.service.beans.StudentData bean = new com.service.beans.StudentData();
+				bean.setFname((String) object[0]);
+				bean.setLname((String) object[1]);
+				bean.setStudent_id(((Number) object[2]).intValue());	
+				bean.setRoll_no(i++);
+				bean.setDiv_id(div_id);
+				bean.setInst_id(inst_id);
+				bean.setBatch_id(Integer.parseInt(batchid));
+				bean.setExam_id(exam_id);
+				studentDatas.add(bean);
+			}
+		}
+		return studentDatas;
+	}
+	
+	public List<com.service.beans.StudentData> getStudentForExamMarksUpdate(String batchid, int inst_id, int div_id,int exam_id,int sub_id) {
+		StudentDB db = new StudentDB();
+	//	List<com.service.beans.StudentData> attendanceScheduleServiceBeanList = new ArrayList<com.service.beans.StudentData>(); 
+		List list =  db.getStudentrelatedtoBatchForExamMarksUpdate(batchid, inst_id, div_id, exam_id, sub_id);
+		List<com.service.beans.StudentData> studentDatas = new ArrayList<com.service.beans.StudentData>();
+		if(list != null){
+			int i = 1;
+			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+				Object[] object = (Object[]) iterator.next();
+				com.service.beans.StudentData bean = new com.service.beans.StudentData();
+				bean.setFname((String) object[0]);
+				bean.setLname((String) object[1]);
+				bean.setStudent_id(((Number) object[2]).intValue());	
+				bean.setRoll_no(i++);
+				bean.setDiv_id(div_id);
+				bean.setInst_id(inst_id);
+				bean.setBatch_id(Integer.parseInt(batchid));
+				bean.setMarks(((Number) object[3]).intValue());
+				bean.setExam_id(exam_id);
+				studentDatas.add(bean);
+			}
+		}
+		return studentDatas;
+	}
+	
+	public boolean saveStudentMarks(List<com.service.beans.StudentData> studentDataList) {
+		StudentDB db = new StudentDB();
+		for (Iterator iterator = studentDataList.iterator(); iterator.hasNext();) {
+			com.service.beans.StudentData studentData = (com.service.beans.StudentData) iterator.next();
+			StudentMarks studentMarks = new StudentMarks();
+			
+			try {
+				BeanUtils.copyProperties(studentMarks, studentData);
+				db.saveStudentMarks(studentMarks);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return true;
 	}
 }

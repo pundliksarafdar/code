@@ -35,6 +35,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.service.beans.AddBatchBean;
+import com.service.beans.ExamSubject;
 import com.service.beans.GenerateQuestionPaperResponse;
 import com.service.beans.ImageListBean;
 import com.service.beans.NewQuestionRequest;
@@ -46,6 +47,7 @@ import com.service.beans.QuestionPaperPattern;
 import com.service.beans.QuestionPaperStructure;
 import com.service.beans.RegisterBean;
 import com.service.beans.Student;
+import com.service.beans.StudentData;
 import com.service.beans.StudentRegisterServiceBean;
 import com.service.beans.Student_Fees;
 import com.service.beans.SubjectsWithTopics;
@@ -421,24 +423,24 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	}
 	
 	@POST
-	@Path("/getExamList/{division}")
+	@Path("/getExamList/{division}/{batch_id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getExamList(@PathParam("division") String division){
+	public Response getExamList(@PathParam("division") String division,@PathParam("batch_id") int batch_id){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		ExamTransaction examTransaction = new ExamTransaction();
-		List<Exam> examList = examTransaction.getExamList(Integer.parseInt(division), userBean.getRegId());
+		List<Exam> examList = examTransaction.getExamList(Integer.parseInt(division), userBean.getRegId(),batch_id);
 		return Response.status(Status.OK).entity(examList).build();
 	}
 	
 	@POST
-	@Path("/getExam/{division}/{exam_id}")
+	@Path("/getExam/{division}/{exam_id}/{batch_id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getExam(@PathParam("division") String division,@PathParam("exam_id") String exam_id){
+	public Response getExam(@PathParam("division") String division,@PathParam("exam_id") String exam_id,@PathParam("batch_id") int batch_id){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		ExamTransaction examTransaction = new ExamTransaction();
-		List<Exam_Paper> exam_PaperList = examTransaction.getExamPapers(Integer.parseInt(division), userBean.getRegId(), Integer.parseInt(exam_id));
+		List<Exam_Paper> exam_PaperList = examTransaction.getExamPapers(Integer.parseInt(division), userBean.getRegId(), Integer.parseInt(exam_id),batch_id);
 		return Response.status(Status.OK).entity(exam_PaperList).build();
 	}
 	
@@ -453,13 +455,13 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	}
 	
 	@POST
-	@Path("/updateExamPaper/{examID}/{division}")
+	@Path("/updateExamPaper/{examID}/{division}/{batch_id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateExamPaper(@PathParam("examID") String examID,List<Exam_Paper> exam_PaperList,@PathParam("division") String division){
+	public Response updateExamPaper(@PathParam("examID") String examID,List<Exam_Paper> exam_PaperList,@PathParam("division") String division,@PathParam("batch_id") int batch_id){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		ExamTransaction examTransaction = new ExamTransaction();
-		boolean status = examTransaction.updateExamPapers(Integer.parseInt(division), userBean.getRegId(), Integer.parseInt(examID), exam_PaperList,userBean.getRegId());
+		boolean status = examTransaction.updateExamPapers(Integer.parseInt(division), userBean.getRegId(), Integer.parseInt(examID), exam_PaperList,userBean.getRegId(),batch_id);
 		return Response.status(Status.OK).entity(status).build();
 	}
 	
@@ -513,5 +515,49 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		batchTransactions.updateBatchRollGeneratedStatus(Integer.parseInt(batchId), getRegId(), Integer.parseInt(divId), "yes");
 		studentTransaction.updateStudentRollNumber(batchId, getRegId(), Integer.parseInt(divId), studentDetails);
 		return Response.status(Status.OK).entity(studentDetails).build();
+	}
+	
+	@POST
+	@Path("/getExamSubjects/{divId}/{batchId}/{exam_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getExamSubjects(
+			@PathParam("divId")int div_id,
+			@PathParam("batchId")int batch_id,@PathParam("exam_id")int exam_id){
+		ExamTransaction examTransaction = new ExamTransaction();
+		List<ExamSubject> subjectList = new ArrayList<ExamSubject>();
+		subjectList = examTransaction.getExamSubjects(getRegId(), div_id, batch_id, exam_id);
+		return Response.status(Status.OK).entity(subjectList).build();
+	}
+	
+	@POST
+	@Path("/getStudentForMarksFill/{divId}/{batchId}/{exam}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentForMarksFill(
+			@PathParam("divId")int div_id,@PathParam("exam")int exam_id,
+			@PathParam("batchId")String batch_id){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		List<StudentData> studentDatas = studentTransaction.getStudentForExamMarks(batch_id, getRegId(), div_id,exam_id);
+		return Response.status(Status.OK).entity(studentDatas).build();
+	}
+	
+	@POST
+	@Path("/saveStudentMarks")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveStudentMarks(List<StudentData> studentDataList){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		boolean status = studentTransaction.saveStudentMarks(studentDataList);
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Path("/getStudentMarksForUpdate/{divId}/{batchId}/{exam_id}/{sub_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentMarksForUpdate(
+			@PathParam("divId")int div_id,@PathParam("exam_id")int exam_id,@PathParam("sub_id")int sub_id,
+			@PathParam("batchId")String batch_id){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		List<StudentData> studentDatas = studentTransaction.getStudentForExamMarksUpdate(batch_id, getRegId(), div_id, exam_id, sub_id);
+		return Response.status(Status.OK).entity(studentDatas).build();
 	}
 }

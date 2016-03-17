@@ -59,8 +59,8 @@ if(!String.prototype.formatNum) {
 		// Initial date. No matter month, week or day this will be a starting point. Can be 'now' or a date in format 'yyyy-mm-dd'
 		day: 'now',
 		// Day Start time and end time with time intervals. Time split 10, 15 or 30.
-		time_start: '06:00',
-		time_end: '22:00',
+		time_start: '00:00',
+		time_end: '23:30',
 		time_split: '30',
 		// Source of events data. It can be one of the following:
 		// - URL to return JSON list of events in special format.
@@ -149,6 +149,11 @@ if(!String.prototype.formatNum) {
 		
 		//This is custom added event
 		onCorexEditBtnClicked:function(event){
+			
+		},
+		
+		//This is custom added event
+		onCorexDeleteBtnClicked:function(event){
 			
 		},
 		// -------------------------------------------------------------
@@ -994,7 +999,7 @@ if(!String.prototype.formatNum) {
 	Calendar.prototype._update = function() {
 		var self = this;
 
-		$('*[data-toggle="tooltip"]').tooltip({container: 'body'});
+		$('*[data-toggle="tooltip"]').tooltip({container: 'body',html:true});
 
 		$('*[data-cal-date]').click(function() {
 			var view = $(this).data('cal-view');
@@ -1044,6 +1049,14 @@ if(!String.prototype.formatNum) {
 				return event.id == id
 			});
 			self.options.onCorexEditBtnClicked.call(self, event);
+		});
+		
+		$('a[data-event-id]', this.context).closest("td").find(".corex-delete").on('click', function(event) {
+			var id = $(this).closest("td").find('a[data-event-id]').data('event-id');
+			var event = _.find(self.options.events, function(event){
+				return event.id == id
+			});
+			self.options.onCorexDeleteBtnClicked.call(self, event);
 		});
 		
 		$('a[data-event-id]', this.context).on('click', function(event) {

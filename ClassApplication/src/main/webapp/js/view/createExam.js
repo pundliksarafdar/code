@@ -9,7 +9,7 @@ var ITEM_TYPE = {
 	QUESTION:"Question",
 	INSTRUCTION:"Instruction"
 }
-
+var BATCH_SELECT = "#batchSelect";
 var PREVIEW_PAGE = "#preview_page";
 
 /************************/
@@ -19,25 +19,63 @@ var getHeaderUrl = baseURL+"getHeader/";
 
 $(document).ready(function(){
 	$("#division").change(function(){
+		var divisionId = $("#division").val();
+		$.ajax({
+			   url: "classOwnerServlet",
+			   data: {
+			    	 methodToCall: "fetchBatchesForDivision",
+					 regId:'',
+					 divisionId:divisionId,						 
+			   		},
+			   type:"POST",
+			   success:function(e){
+				   $('#batchSelect').empty();
+				   var batchDataArray = [];
+				    var data = JSON.parse(e);
+				   /* $.each(data.batches,function(key,val){
+						var data = {};
+						data.id = val.batch_id;
+						data.text = val.batch_name;
+						batchDataArray.push(data);
+					});
+				    $("#batchSelect").select({data:batchDataArray,placeholder:"type batch name"});*/
+				    $("#batchSelect").append("<option value='-1'>Select Batch</option>");
+				    if(data.batches != null){
+				    	$.each(data.batches,function(key,val){
+				    		 $("#batchSelect").append("<option value='"+val.batch_id+"'>"+val.batch_name+"</option>");
+						});
+				    }
+			   	},
+			   error:function(e){
+				   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Error while fetching batches for division');
+					$('div#addStudentModal .error').show();
+			   }
+			   
+		});
+	});
+	
+	$("#batchSelect").change(function(){
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
 		createQuestionPaperListTable(e);
 		}
 		handlers.error = function(e){console.log("Error",e)}
 		var division = $("#division").val(); 
+		var batch = $("#batchSelect").val(); 
 		rest.get("rest/classownerservice/getQuestionPaperList/"+division,handlers);
 	$.ajax({
 		   url: "classOwnerServlet",
 		   data: {
-		    	 methodToCall: "getSubjectOfDivision",
-		    	 divisionId: division
+				 methodToCall: "fetchBatchSubject",
+	    		 batchName:batch,
+	    		 batchdivision:division
 		   		},
 		   type:"POST",
 		   success:function(data){
 			   data = JSON.parse(data);
-			   if(data.status == "success"){
-				   var subjectnames = data.subjectnames;
-				   var subjectIds = data.subjectids;
+			   if(data.subjectstatus == ""){
+				   var subjectnames = data.Batchsubjects;
+				   var subjectIds = data.BatchsubjectsIds;
 				   var i = 0;
 				   var subjectnameArray = subjectnames.split(",");
 					var subjectidArray =  subjectIds.split(",");  
@@ -89,6 +127,7 @@ $(document).ready(function(){
 			var exam_paper = {};
 			exam_paper.exam_id = examID;	
 			exam_paper.div_id = $("#division").val(); 
+			exam_paper.batch_id = $("#batchSelect").val(); 
 			exam_paper.sub_id = $($(".examSubjectPapers")[i]).find("#subjectCheckbox").val();
 			exam_paper.marks = $($(".examSubjectPapers")[i]).find(".marks").val();
 			exam_paper.duration = $($(".examSubjectPapers")[i]).find(".examHour").val()+":"+$($(".examSubjectPapers")[i]).find(".examMinute").val();
