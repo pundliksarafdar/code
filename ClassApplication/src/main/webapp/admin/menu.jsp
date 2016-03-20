@@ -417,6 +417,7 @@ function RenderTimer(completedTime,totalTime){
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>	
 		</div>
 	</div>
+	<% if(userBean.getRole() == 1 ){ %>
 	<div class="row">
         <div class="col-sm-4 col-xs-8">
             <a href="addsubject">
@@ -593,6 +594,30 @@ function RenderTimer(completedTime,totalTime){
         </div>
 		<!---->
         </div>
+    <%} %>
+    
+    <% if(userBean.getRole() == 0 ){ %>
+	<div class="row">
+        <div class="col-sm-2 col-xs-4">
+            <a href="manageClassFeature">
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Class
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+            </a>
+        </div>
+       </div>
+    <%} %>
     </div>
 
 

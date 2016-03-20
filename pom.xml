@@ -14,7 +14,8 @@
    <modules>
     <module>DataLayer</module>
 	<module>ClassDatabase</module>
-    <module>TransactionLayer</module>
+    <module>NotificationLayer</module>
+	<module>TransactionLayer</module>
 	<module>ClassApplication</module>
 	<!--<module>CorexWebService</module>-->
   </modules> 

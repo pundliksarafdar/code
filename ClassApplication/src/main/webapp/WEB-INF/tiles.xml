@@ -579,4 +579,8 @@
       <put-attribute name="body"   value="/ClassOwner/EditExamMarks.jsp"/>      
    </definition>
    
+   <definition name="admin.ManageClassFeature" extends="baseLayout">
+      <put-attribute name="title"  value="Manage Class"/>
+      <put-attribute name="body"   value="/admin/ManageClassFeature.jsp"/>      
+   </definition>
 </tiles-definitions>
