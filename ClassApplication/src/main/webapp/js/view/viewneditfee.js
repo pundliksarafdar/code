@@ -1,244 +1,268 @@
-var BATCH_SELECT = "#batches"; 
-var DIV_SELECT = "#division";
-var ADD_STUDENT = "#addStudent";
+var TABLE = "#viewNEditFeeStruct";
+var EDIT = ".tableIconEdit";
+var DELETE = ".tableIconDelete";
+var LINK = ".tableIconLink";
+var FEE_CONTENT_DIV = "#viewNEditFeeStructContent";
+var FEE_CONTENT_DIV_NAME = FEE_CONTENT_DIV+"Name";
+var FEE_CONTENT_DIV_DATA = FEE_CONTENT_DIV+"Data";
+var DISTRIBUTION_TABLE = "#distributionTable";
+var BUTTON_REMOVE = ".buttonRemove";
 
-var getBatchFeesUrl = "rest/feesservice/getBatchFees/";
+var ADD_DISTRIBUTION = "#addDistribution";
+var DISTRIBUTION_NAME = "#distributionName";
+var DISTRIBUTION_TABLE_ID = "#distributionTable";
+var SAVE_FEE_STRUCTURE = "#saveFeeStructure";
+var DISTRIBUTION_ITEMS = ".distributionItems";
+var FEE_STRUCT_NAME = "#feeStructName";
+var EDIT_DISTRIBUTION_WRAPPER = ".editDistributionWrapper";
+var FEE_TABLE_CONTAINER = "#viewNEditFeeStructWrapper";
+var LINK_BATCH_CONTAINER = "#linkBatchContainer";
+var LINK_FEE_STRUCT = "#linkFeeStructure";
+
+var DIVISION_SELECT = "#divisionSelect";
+var BATCH_SELECT = "#batchSelect";
+var FEE_STRUCT_SELECT = "#feeStructSelect";
+/**/
+var editIcon = "<i class='glyphicon glyphicon-edit tableIcon tableIconEdit' title='Edit'></i>";
+var deleteIcon = "<i class='glyphicon glyphicon-trash tableIcon tableIconDelete' title='Delete'></i>";
+var linkIcon = "<i class='glyphicon glyphicon-hand-right tableIcon tableIconLink' title='Link'></i>";
+var buttons = editIcon+deleteIcon+linkIcon;
+
+/**/
+var getListUrl = "rest/feesservice/getAllFeeStructre";
+var getDetailsUrl = "rest/feesservice/getFeeStructre/";
+var updateUrl = "rest/feesservice/updateFeeStructre";
+var delelteUrl = "rest/feesservice/deleteFeeStructre/";
+var getBatchListUrl = "rest/classownerservice/getBatches/";
+var dataTable;
 $(document).ready(function(){
-	$("body").on("change",BATCH_SELECT,selectBacth)
-		.on("click",ADD_STUDENT,addStudent);
+	loadFeeStructureTable();
+	$("body").on("click",EDIT,editFeeStructure)
+		.on("click",ADD_DISTRIBUTION,addDistribution)
+		.on("click",DELETE,deleteFeeStrcture)
+		.on("click",LINK,linkFeeStructure)
+		.on('click',BUTTON_REMOVE,removeRow)
+		.on('click',LINK_FEE_STRUCT,linkFeeStruct)
+		.on("click",SAVE_FEE_STRUCTURE,saveFeeStructure);
+		
 });
 
-function selectBacth(){
-	var batch = $(this).val();
-	var divisionId = $(DIV_SELECT).val();
+function loadFeeStructureTable(){
+	$(EDIT_DISTRIBUTION_WRAPPER).hide();
+	$(LINK_BATCH_CONTAINER).hide();
 	var handler = {};
-	handler.success = getBatchFeesSuccess;
-	handler.error = getBatchFeesError;
-	rest.post(getBatchFeesUrl+divisionId,handler,JSON.stringify(batch));
+	handler.success = onGetAllFeeStructureSuccess;
+	handler.error = function(e){console.log(e)};
+	rest.get(getListUrl,handler);
+	//onGetAllFeeStructureSuccess(data);
 }
-
-var getBatchFeesSuccess = function(data){
-	console.log(data);
-	showTable(data);
+function onGetAllFeeStructureSuccess(data){
+	dataTable = $(TABLE).DataTable({
+		bDestroy:true,
+		data: data,
+		lengthChange: false,
+		columns:[
+	{
+		title: "Fee structure",data:'fees_desc',sWidth:"70%"
+	},
+	{
+		title: "",data:null,sWidth:"10%",render:function(){return buttons}
+	}]});
 }
-
-var getBatchFeesError = function(e){console.log(e);}
-
-var showTable = function(data){
-	feesDataTable = $("#dataTableForFees").DataTable({
-			bDestroy:true,
-			data: data,
-			lengthChange: false,
-			columns:[
-			{
-				title: "Batch",data:null,sDefault:'Batch name'
-			},
-			{
-				title: "Total fee",data:"batch_fees"
-			},
-			{
-				title: "Discount",data:null,render:function(){return "<input type='text' class='form-control discount'/>"}
-			},
-			{
-				title: "%/&#x20b9;",data:null,render:function(){return "<input type='checkbox' data-size=\"mini\"/ class='percentage'>"},width:'auto',bSortable: false
-			},
-			{
-				title: "Paid fee",data:null,render:function(){return "<input type='text' class='form-control paidFees'/>"}
-			},
-			{
-				title: "Remaining fee",data:null,render:function(){return "<div class='remaingFee' style='text-align:center;'></div>"}
-			}]
-		});
-		$("#dataTableForFees input[type=\"checkbox\"]").bootstrapSwitch(optionSelect);
+function editFeeStructure(){	
+	$(FEE_TABLE_CONTAINER).hide();
+	$(EDIT_DISTRIBUTION_WRAPPER).show();
+	var tRow = $(this).closest('tr');
+	var rowData = dataTable.row(tRow).data();
+	loadFeeStructure(rowData.fees_id,rowData.fees_desc);
 }
-
-var addStudent = function(){
-	$(".error").empty();
-		$("#addphoneError").hide();
-		var regStringExpr = /^[a-zA-Z]+$/;
-		var regPhoneNumber = /^[0-9]+$/;
-		var filter = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
-		var flag=false;
-		var divisionId = $('#division').val();
-		var batchIDs = $("#batches").val();
-		var parentFname=$(".parentInfo").find("#fname").val().trim();
-		var parentLname=$(".parentInfo").find("#lname").val().trim();
-		var parentPhone=$(".parentInfo").find("#phone").val().trim();
-		var parentEmail=$(".parentInfo").find("#email").val().trim();
-		
-		var studentFname=$(".studentInfoManually").find("#fname").val().trim();
-		var studentLname=$(".studentInfoManually").find("#lname").val().trim();
-		var studentPhone=$(".studentInfoManually").find("#phone").val().trim();
-		var studentEmail=$(".studentInfoManually").find("#email").val().trim();
-		var dob = $(".studentInfoManually").find("#dobfield").val();
-		var address = $(".studentInfoManually").find("#address").val().trim();
-		var state = $(".studentInfoManually").find("#state").val();
-		var city = $(".studentInfoManually").find("#city").val().trim();
-		if(divisionId=="-1"){
-			flag=true;
-			$("#divisionError").html("Please select class");
-		}
-		if(batchIDs=="" || batchIDs==null){
-			flag=true;
-			$("#batchError").html("Please select batch");
-		}else{
-			batchIDs = batchIDs.join(',')
-		}
-		if(parentFname==""){
-			flag=true;
-			$("#parentFnameError").html("Name Cannot be blank");
-		}else if(!parentFname.match(regStringExpr)){
-			flag=true;
-			$("#parentFnameError").html("Only alphabets allowded!");
-		}
-		if(parentLname==""){
-			flag=true;
-			$("#parentLnameError").html("Name Cannot be blank");
-		}else if(!parentLname.match(regStringExpr)){
-			flag=true;
-			$("#parentLnameError").html("Only alphabets allowded!");
-		}
-		
-		if(studentFname==""){
-			flag=true;
-			$("#studentFnameError").html("Name Cannot be blank");
-		}else if(!studentFname.match(regStringExpr)){
-			flag=true;
-			$("#studentFnameError").html("Only alphabets allowded!");
-		}
-		
-		if(studentLname==""){
-			flag=true;
-			$("#studentLnameError").html("Name Cannot be blank");
-		}else if(!studentLname.match(regStringExpr)){
-			flag=true;
-			$("#studentLnameError").html("Only alphabets allowded!");
-		}
-		
-		if(city==""){
-			flag=true;
-			$("#cityError").html("Name Cannot be blank");
-		}else if(!parentFname.match(regStringExpr)){
-			flag=true;
-			$("#cityError").html("Only alphabets allowded!");
-		}
-		
-		if(studentPhone!=""){
-			if(!studentPhone.match(regPhoneNumber)){
-				flag=true;
-				$(".studentInfoManually").find("#phoneError").html("Only numbers allowded!");
-			}
-		}
-		
-		if(parentPhone!=""){
-			if(!parentPhone.match(regPhoneNumber)){
-				flag=true;
-				$(".parentInfo").find("#phoneError").html("Only numbers allowded!");
-			}
-		}
-		
-		if(parentEmail!=""){
-			if(!filter.test(parentEmail)){
-				flag=true;
-				$(".parentInfo").find("#emailError").html("Invalid Email ID!");
-			}
-		}
-		
-		if(studentEmail!=""){
-			if(!filter.test(studentEmail)){
-				flag=true;
-				$(".studentInfoManually").find("#emailError").html("Invalid Email ID!");
-			}
-		}
-		
-		if(dob==""){
-			$("#dobError").html("Select Date of birth!");
-			flag=true;
-		}
-		
-		if(address==""){
-			$("#addressError").html("Enter address!");
-			flag=true;
-		}
-		
-		if(state=="-1"){
-			$("#stateError").html("Select State!");
-			flag=true;
-		}
-		
-		if(parentPhone == "" && studentPhone == ""){
-			$("#addphoneError").show();
-			flag=true;
-		}
-		
-		if(flag == false){
-		var registerBean = new RegisterBean();
-		registerBean.fname = studentFname;
-		registerBean.lname = studentLname;
-		registerBean.phone1 = studentPhone;
-		registerBean.email = studentEmail;
-		registerBean.dob = dob;
-		registerBean.addr1 = address;
-		registerBean.city = city;
-		registerBean.state = state;
-		console.log(registerBean);
-		
-		var student = new Student();
-		student.parentFname = parentFname;
-		student.parentLname = parentLname;
-		student.parentPhone = parentPhone;
-		student.parentEmail = parentEmail;
-		}
-		var tRow;
-		var tData = feesDataTable.rows().data();
-		var feesArray
-		if(tData && tData.length){
-			for(var index=0;index<tData.length;index++){
-				var student_Fees = new Student_Fees();
-				student_Fees.div_id = (tData[index]).div_id
-				student_Fees.batch_id = (tData[index]).batch_id;
-				student_Fees.batch_fees = (tData[index]).batch_fees;
-				student_Fees.discount = tRow.eq(index).find(".discount");
-				student_Fees.discount_type  = tRow.eq(index).find(".percentage").is(':checked')?'per':'amt';
-				student_Fees.fees_paid  = tRow.eq(index).find(".paidFees");
-			}	
-		}
-		
-}
-/*Save bean*/
-function RegisterBean(){
-	this.fname;
-	this.lname;
-	this.phone1;
-	this.email;
-	this.dob;
-	this.addr1;
-	this.city;
-	this.state;	
-}
-
-function Student(){
-	this.parentFname;
-	this.parentLname;
-	this.parentPhone;
-	this.parentEmail;
-}
-
-function Student_Fees(){
-	this.div_id;
-	this.batch_id;
-	this.batch_fees;
+function deleteFeeStrcture(){
+	var tRow = $(this).closest('tr');
+	var rowData = dataTable.row(tRow).data();
+	console.log(rowData);
+	modal.modalConfirm("Delete","Do you want to delete "+rowData.fees_desc+" ?","No","Delete",function(){
+			deleteFeeStructureRest(rowData.fees_id);
+	},[]);
 	
-	this.student_id;
-	this.discount;
-	this.discount_type;
-	this.final_fees_amt;
-	this.fees_paid;
-	this.fees_due;
+}
+function linkFeeStructure(){
+	$(FEE_TABLE_CONTAINER).hide();
+	$(LINK_BATCH_CONTAINER).show();
+	$(DIVISION_SELECT).on("change",getBatches);
+	$(BATCH_SELECT);
+	
+	var handler = {};
+	handler.success = loadFeeStructList;
+	handler.error = function(e){console.log(e)};
+	rest.get(getListUrl,handler);
 }
 
-function StudentRegisterServiceBean(){
-	this.RegisterBean;
-	this.Student;
-	this.Student_Fees = [];
+function loadFeeStructList(data){
+	var optionText = "";
+	$(FEE_STRUCT_SELECT).find("option").not('option[value="-1"]').remove();
+	$.each(data,function(){
+		optionText = optionText + "<option value='"+this.fees_id+"'>"+this.fees_desc+"</option>";
+	});
+	$(FEE_STRUCT_SELECT).append(optionText);
+}
+function deleteFeeStructureRest(id){
+	var handler = {};
+	handler.success = function(e){console.log(e);loadFeeStructureTable();}
+	handler.error = function(e){console.log(e)}
+	rest.deleteItem(delelteUrl+id,handler);
+}
+
+function deleteFeeStructureSuccess(){}
+function deleteFeeStructureError(){}
+
+function loadFeeStructure(id,name){
+	$(DISTRIBUTION_TABLE).empty();
+	$(FEE_STRUCT_NAME).val(name);
+	$(FEE_STRUCT_NAME).data("fees_id",id);
+	var handler = {};
+	handler.success = loadFeeStructureSuccess;
+	handler.error = function(e){console.log(e)}
+	rest.get(getDetailsUrl+id,handler);	
+	//loadFeeStructureSuccess(data);
+}
+
+function loadFeeStructureSuccess(data){
+	//$(FEE_STRUCT_NAME).val(data.structureName);
+	
+	$.each(data.feesStructureList,function(index,val){
+		addDistribution(val);
+	});
+}
+
+function addDistribution(data){
+	var distributionName = "";
+	if(data.fees_structure_desc){
+		distributionName = data.fees_structure_desc;
+	}else{
+		distributionName = $(this).closest('.row').find(DISTRIBUTION_NAME).val();
+	}
+	var tr = $("<tr/>",{});
+	
+	var fieldTd = $("<td/>",{
+	}).appendTo(tr);
+	
+	var removeBtnTd = $("<td/>",{
+		style:"vertical-align: middle;",
+		title:'Remove'
+	}).appendTo(tr);
+	
+	var buttonRemove = $('<button/>',{
+		type:"button",
+		text:"Remove ",
+		class:"btn btn-danger buttonRemove"
+	}).appendTo(removeBtnTd);
+	
+	var iButtonRemove = $('<i/>',{
+		class:"glyphicon glyphicon-minus-sign",
+		style:"color:white"
+	}).appendTo(buttonRemove);
+	
+	var itemEdit = $("<input/>",{
+		value:distributionName,
+		class:'form-control distributionItems'
+	}).data("fees_structure_id",data.fees_structure_id)
+	.appendTo(fieldTd);
+	
+	$(DISTRIBUTION_TABLE).append(tr);
+}
+
+/*From create fee structure*/
+function saveFeeStructure(){
+	var feesStructureList = [];
+	var distribution = $(DISTRIBUTION_TABLE_ID).find(DISTRIBUTION_ITEMS);
+	var duplicateExist = false;
+	$.each(distribution,function(index){
+		var value = $(this).val();
+		var id = $(this).data("fees_structure_id");
+		
+		var field = {};
+			field.fees_structure_desc = value;
+		if(id){
+			field.fees_structure_id = id;
+		}
+		feesStructureList.push(field);
+		/*
+		if(distributionList.indexOf(value)!=-1){
+			duplicateExist = true;	
+		}
+		*/
+	});
+	var feeStructureToSave = new FeeStructureToSave();
+	feeStructureToSave.feesStructureList = feesStructureList;
+	feeStructureToSave.fees.fees_desc = $(FEE_STRUCT_NAME).val();
+	feeStructureToSave.fees.fees_id = $(FEE_STRUCT_NAME).data("fees_id");
+	validateFeeStructure(feeStructureToSave,saveFeeStructureInDb);	
+}
+
+function saveFeeStructureInDb(struct){
+	var handler = {};
+	handler.success = saveFeeStructureInDbSuccess;
+	handler.error = saveFeeStructureInDbError;
+	console.log("Saving....",JSON.stringify(struct));
+	rest.post(updateUrl,handler,JSON.stringify(struct));
+}
+
+function saveFeeStructureInDbSuccess(e){
+	console.log(e);
+}
+
+function saveFeeStructureInDbError(e){
+	console.log(e);
+}
+
+function validateFeeStructure(struct,saveFunction){
+	var isValid = true;
+	if(!$(FEE_STRUCT_NAME).closest('form').valid()){
+		isValid = false;
+	}else if(!struct.feesStructureList || !struct.feesStructureList.length){
+		modal.modalConfirm("Error","Distribution not exist","Add Distribution","Continue anyway",function(){
+			saveFunction(struct);
+		},[]);
+	}else{
+		saveFunction(struct);
+	}
+	
+	return isValid;
+}
+
+function removeRow(){
+	$(this).closest('tr').remove();
+}
+
+function getBatches(){
+	var handler = {}
+	var division = $(this).val();
+	handler.success = getBatchSuccess;
+	handler.error = getBatchError;
+	rest.get(getBatchListUrl+division,handler);
+}
+
+function getBatchSuccess(batches){
+	$(BATCH_SELECT).find('option').not('option[value="-1"]').remove();
+	var options = "";
+	$.each(batches,function(index,val){
+		options = options + "<option value='"+val.batch_id+"'>"+val.batch_name+"</option>";
+	});
+	$(BATCH_SELECT).append(options);	
+}
+
+function getBatchError(error){
+}
+
+function linkFeeStruct(){
+	var batchSelect = $(BATCH_SELECT).val();
+	var feeStruct = $(FEE_STRUCT_SELECT).val();
+	console.log(batchSelect,feeStruct);
+}
+
+/*REST objects*/
+function FeeStructureToSave(){
+	this.fees = {};
+	this.feesStructureList;
+	this.structureName;
 }
