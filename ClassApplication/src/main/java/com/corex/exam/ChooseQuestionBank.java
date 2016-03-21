@@ -23,9 +23,9 @@ public class ChooseQuestionBank extends BaseAction{
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
 		ExamTransaction examTransaction=new ExamTransaction();
-		compExams=examTransaction.getAllCompExamList();
+		//compExams=examTransaction.getAllCompExamList();
 		QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
-		marks=bankTransaction.getDistinctQuestionMarks(Integer.parseInt(subject), Integer.parseInt(division), userBean.getRegId());
+		marks=bankTransaction.getDistinctQuestionMarks(Integer.parseInt(subject), Integer.parseInt(division), userBean.getRegId(),"1");
 		repeatation=bankTransaction.getDistinctQuestionRep(Integer.parseInt(subject), Integer.parseInt(division), userBean.getRegId());
 		return SUCCESS;
 	}

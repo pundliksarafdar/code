@@ -186,7 +186,12 @@ public class DivisionDB {
 			
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		
 		return 0;
 	}
@@ -206,7 +211,12 @@ public class DivisionDB {
 			
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		
 		return divisions;
 		
@@ -234,7 +244,12 @@ public class DivisionDB {
 			
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		
 		return false;
 		
@@ -263,7 +278,7 @@ public class DivisionDB {
 		return (Division)queryResult;
 	}
 	
-	public Division retriveByDivisionId(String divisionId){
+	public Division retriveByDivisionId(int divisionId){
 		Session session = null;
 		Transaction transaction = null;
 		Object queryResult=null;
@@ -272,7 +287,7 @@ public class DivisionDB {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
-			query.setString("div_id", divisionId);  
+			query.setInteger("div_id", divisionId);  
 			queryResult = query.uniqueResult();
 			transaction.commit();
 		}catch(Exception e){

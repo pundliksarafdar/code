@@ -25,5 +25,8 @@
         <property name="sub_id" type="java.lang.String">
             <column name="SUB_ID" />
         </property>
+        <property name="status" type="java.lang.String">
+            <column name="status" />
+        </property>
     </class>
 </hibernate-mapping>

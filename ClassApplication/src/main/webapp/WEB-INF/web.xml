@@ -83,7 +83,20 @@
             com.schedule.listner.QuartzSchedulerListener
           </listener-class>
 	</listener>
-	
+	<!-- 
+	 <servlet> 
+     <servlet-name>log4j-init</servlet-name>
+     <servlet-class>com.admin.misc.Log4jInit</servlet-class> 
+     <init-param>
+       <param-name>log4j-init-file</param-name>
+       <param-value>WEB-INF/classes/log4j.properties</param-value>
+     </init-param>
+     <load-on-startup>1</load-on-startup>
+</servlet>
+ -->
+     <!-- <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener> -->
    <!-- 
 	<security-constraint>
     <web-resource-collection>
@@ -99,4 +112,46 @@
      
 </security-constraint>
 -->
+
+	<!-- Auto scan REST service -->
+	
+	<context-param>
+		<param-name>resteasy.scan</param-name>
+		<param-value>true</param-value>
+	</context-param>
+ 
+	<!-- this need same with resteasy servlet url-pattern -->
+	<context-param>
+		<param-name>resteasy.servlet.mapping.prefix</param-name>
+		<param-value>/rest</param-value>
+	</context-param>
+ 
+	<listener>
+		<listener-class>
+			org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
+		</listener-class>
+	</listener>
+ 
+	<servlet>
+		<servlet-name>resteasy-servlet</servlet-name>
+		<servlet-class>
+			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+		</servlet-class>
+	</servlet>
+ 
+	<servlet-mapping>
+		<servlet-name>resteasy-servlet</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+ 
+	<!-- 
+	<filter>
+		<filter-name>AuthenticationFilter</filter-name>
+		<filter-class>com.corex.filter.AuthFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+	</filter-mapping>
+	 -->
 </web-app>

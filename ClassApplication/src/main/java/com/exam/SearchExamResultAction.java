@@ -24,7 +24,7 @@ public class SearchExamResultAction extends BaseAction {
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
-			Map<String, Object> session) {
+			Map<String, Object> session) {/*
 		ExamTransaction examTransaction = new ExamTransaction();
 		int inst_id= userBean.getRegId();
 		role=userBean.getRole();
@@ -51,7 +51,7 @@ public class SearchExamResultAction extends BaseAction {
 		if(userBean.getRole()==2){
 			return "teacherexamsearch";
 		}
-		return SUCCESS;
+	*/	return SUCCESS;
 	}
 	public String getBatch() {
 		return batch;

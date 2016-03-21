@@ -19,6 +19,7 @@ import javax.servlet.ServletContext;
 
 import org.apache.struts2.ServletActionContext;
 
+import com.classapp.logger.AppLogger;
 import com.miscfunction.MiscFunction;
 
 public class AllMail {
@@ -52,7 +53,7 @@ public class AllMail {
 		Iterator it = hashMap.entrySet().iterator();
 	    while (it.hasNext()) {
 	        Map.Entry pair = (Map.Entry)it.next();
-	        System.out.println(pair.getKey() + " = " + pair.getValue());
+	        AppLogger.logger(pair.getKey() + " = " + pair.getValue());
 	        String key = (String) pair.getKey();
 	        String value = (String) pair.getValue();
 	        rawEmail = rawEmail.replace("%"+key+"%", value);
@@ -130,10 +131,10 @@ public class AllMail {
 			// Send message
 			Transport.send(message);
 
-			System.out.println("Sent message successfully....");
+			AppLogger.logger("Sent message successfully....");
 			return true;
 		} catch (MessagingException e) {
-			System.out.println("Invalid Internet Address");
+			AppLogger.logger("Invalid Internet Address");
 			return false;
 		}
 	}

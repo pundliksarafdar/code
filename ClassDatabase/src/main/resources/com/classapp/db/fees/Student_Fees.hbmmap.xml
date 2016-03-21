@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.fees.Student_Fees" table="student_fees" catalog="classdb">
+    <composite-id>
+    	<key-property name="inst_id" column="inst_id" type="int"></key-property>
+    	<key-property name="div_id" column="div_id" type="int"></key-property>
+		<key-property name="batch_id" column="batch_id" type="int"></key-property>
+		<key-property name="student_id" column="student_id" type="int"></key-property>
+    </composite-id>
+          <property name="batch_fees" type="double">
+            <column name="batch_fees"/>
+        </property>
+         <property name="discount" type="double">
+            <column name="discount"/>
+        </property>
+         <property name="discount_type" type="string">
+            <column name="discount_type" length="10"/>
+        </property>
+         <property name="final_fees_amt" type="double">
+            <column name="final_fees_amt"/>
+        </property>
+         <property name="fees_paid" type="double">
+            <column name="fees_paid"/>
+        </property>
+        <property name="fees_due" type="double">
+            <column name="fees_due"/>
+        </property>
+    </class>
+</hibernate-mapping>

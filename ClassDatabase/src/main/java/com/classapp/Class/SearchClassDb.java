@@ -6,6 +6,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.classapp.logger.AppLogger;
 import com.classapp.persistence.HibernateUtil;
 import com.google.gson.Gson;
 
@@ -25,7 +26,7 @@ public class SearchClassDb {
 		if(queryStr.contains("cname"))
 			query.setParameter("cname",classSearchForm.getCname()+"%");
 		list = query.list();
-		System.out.println("In ClassSeachForm-DB.."+classSearchForm);
+		AppLogger.logger("In ClassSeachForm-DB.."+classSearchForm);
 		
 		}catch(Exception e){
 			e.printStackTrace();

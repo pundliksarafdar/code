@@ -9,10 +9,10 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
-import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Teacher.Teacher;
 import com.classapp.db.exam.Exam;
 import com.classapp.db.register.RegisterBean;
+import com.classapp.db.Schedule.Schedule;
 import com.classapp.persistence.HibernateUtil;
 
 public class NotesDB {
@@ -25,6 +25,7 @@ public class NotesDB {
 		notes.setNotesid(notesID);
 			session.save(notes);
 			transaction.commit();
+			session.close();
 		return  true;
 	
 	}
@@ -51,7 +52,12 @@ public int getNotesNextID(int subid,int classid,int div_id) {
 			}catch(Exception e)
 			{
 				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
 			}
+				
 		return 1;
 	}
 	
@@ -100,7 +106,12 @@ public int getNotesNextID(int subid,int classid,int div_id) {
 			}catch(Exception e)
 			{
 				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
 			}
+				
 		return notesList;
 	}
 	
@@ -144,7 +155,12 @@ public int getNotescount(int divid,int subid,int classid,String batchids) {
 			}catch(Exception e)
 			{
 				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
 			}
+				
 		return 0;
 	}
 	
@@ -170,7 +186,12 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 			}catch(Exception e)
 			{
 				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
 			}
+				
 		return notesList;
 	}
 	
@@ -192,7 +213,12 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 			}catch(Exception e)
 			{
 				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
 			}
+				
 		return notesList;
 		
 	}
@@ -215,7 +241,12 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 			}catch(Exception e)
 			{
 				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
 			}
+				
 		return false;
 		
 	}
@@ -238,7 +269,12 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 			}catch(Exception e)
 			{
 				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
 			}
+				
 		return false;
 		
 	}
@@ -264,7 +300,12 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 			}catch(Exception e)
 			{
 				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
 			}
+				
 		
 	}
 	
@@ -286,7 +327,12 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 			}catch(Exception e)
 			{
 				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
 			}
+				
 		
 	}
 	
@@ -299,6 +345,7 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 		transaction=session.beginTransaction();
 			session.delete(notes);
 			transaction.commit();
+			session.close();
 		return  true;
 	
 	}
@@ -312,6 +359,7 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 		transaction=session.beginTransaction();
 			session.delete(notes);
 			transaction.commit();
+			session.close();
 		return  true;
 	
 	}

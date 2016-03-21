@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <properties><currentVersion>2.6.1-SNAPSHOT</currentVersion></properties>
+  <properties>
+	<currentVersion>1.1-SNAPSHOT</currentVersion>
+  </properties>
   <groupId>MyClassApplication</groupId>
   <artifactId>MyClassApplication</artifactId>
   <packaging>pom</packaging>
@@ -10,10 +12,11 @@
   <url>http://maven.apache.org</url>
  
    <modules>
-    <module>TransactionLayer</module>
-	<module>DataLayer</module>
+    <module>DataLayer</module>
 	<module>ClassDatabase</module>
-    <module>ClassApplication</module>
+    <module>NotificationLayer</module>
+	<module>TransactionLayer</module>
+	<module>ClassApplication</module>
 	<!--<module>CorexWebService</module>-->
   </modules> 
 </project>

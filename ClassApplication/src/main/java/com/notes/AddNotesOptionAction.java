@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.db.batch.division.Division;
+import com.classapp.logger.AppLogger;
 import com.config.BaseAction;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.division.DivisionTransactions;
@@ -32,7 +33,7 @@ public class AddNotesOptionAction extends BaseAction{
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
 		// TODO Auto-generated method stub
-		System.out.println("Names"+names);
+		AppLogger.logger("Names"+names);
 		String notes=(String) request.getParameter("notesadded");
 		SubjectTransaction subjectTransaction=new SubjectTransaction();
 		List list=subjectTransaction.getAllClassSubjects(userBean.getRegId());

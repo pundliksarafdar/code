@@ -12,5 +12,15 @@ var commonfunctions={
 						
 				}
 			}
+		},
+		getCookies:function(name){
+			var cookies = document.cookie;
+			var cookiesArray = cookies.split(";");
+			for(var index in cookiesArray){
+				if(cookiesArray[index] && cookiesArray[index].indexOf(name)!=-1){
+					return cookiesArray[index].substring(cookiesArray[index].indexOf(name)+name.length+1);
+				}
+			}
 		}
 }
+

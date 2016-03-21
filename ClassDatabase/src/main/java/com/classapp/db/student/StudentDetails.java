@@ -1,6 +1,8 @@
 package com.classapp.db.student;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.division.Division;
@@ -13,6 +15,16 @@ public class StudentDetails {
 	private Division division;
 	private List<Batch> batches;	
 	private int divID;
+	private Student student;
+	private int rollNo;
+	private Map<Integer, Integer>batchIdNRoll;
+	
+	public int getRollNo() {
+		return rollNo;
+	}
+	public void setRollNo(int rollNo) {
+		this.rollNo = rollNo;
+	}
 	public int getDivID() {
 		return divID;
 	}
@@ -50,5 +62,18 @@ public class StudentDetails {
 	public void setBatches(List<Batch> batches) {
 		this.batches = batches;
 	}
+	public Student getStudent() {
+		return student;
+	}
+	public void setStudent(Student student) {
+		this.student = student;
+	}
+	public Map<Integer, Integer> getBatchIdNRoll() {
+		return batchIdNRoll;
+	}
+	public void setBatchIdNRoll(Map<Integer, Integer> batchIdNRoll) {
+		this.batchIdNRoll = batchIdNRoll;
+	}
+	
 	
 }

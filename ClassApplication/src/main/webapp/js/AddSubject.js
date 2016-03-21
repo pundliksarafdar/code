@@ -229,31 +229,6 @@ function successCallback(e){
 	   	}
 }
 
-function errorCallbackSubject(e){
-	$('div#addSubjectModal .progress').addClass('hide');
-	$('div#addSubjectModal .add').removeClass('hide');
-	$('div#addSubjectModal .error').show();
-		$('div#addSubjectModal .error').html('<strong>Error!</strong> Unable to add');
-}
-
-function successCallbackSubject(e){
-$('div#addSubjectModal .progress').addClass('hide');
-var resultJson = JSON.parse(e);
-   if(resultJson.status != 'error'){
-	   $('div#addSubjectModal').modal('hide');
-	   modal.launchAlert("Success","Subject Added! Page will refresh in soon");
-	   $("#addsub").submit();	   
-   }else{
-	   $('div#addSubjectModal .add').removeClass('hide');
-	   $('div#addSubjectModal .error').show();
-   	if(!resultJson.message){
-	   $('div#addSubjectModal .error').html('<strong>Error!</strong> Unable to add');
-   	}else{
-   		$('div#addSubjectModal .error').html('<strong>Error!</strong>'+resultJson.message);
-   	}
-   	}
-}
-
 
 function errorCallbackBatch(e){
 	$('div#addclassModal .progress').addClass('hide');

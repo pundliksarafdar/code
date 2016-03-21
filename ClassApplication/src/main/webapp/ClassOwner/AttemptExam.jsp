@@ -7,11 +7,57 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
 <script>
+
+ window.onbeforeunload = confirmExit;
+function confirmExit() {
+	if(showPageCloseWarning)
+		return "You have attempted to leave this page. Are you sure?";
+	else
+		return null;
+} 
+/*
+function showTimeLeft(timeLeft){
+	var hoursLeft = timeLeft/3600;
+	var minLeft = timeLeft/60;
+	var secondsLeft = timeLeft%3600;
+	$("#timeLeft").text(hoursLeft+":"+minLeft+":"+secondsLeft);
+}
+*/
+function showTimeLeft(sec){
+	sec = sec*-1;
+	console.log(sec);
+    
+	var minits = Math.floor(sec/60);
+	var seconds = Math.floor(sec%60);
+	var hours = Math.floor(minits/60);
+	var minits = Math.floor(minits%60);
+	
+	seconds = seconds.toString().length>1?seconds:"0"+seconds;
+	hours = hours.toString().length>1?hours:"0"+hours;
+	minits = minits.toString().length>1?minits:"0"+minits;
+	
+        $('#timeLeft').html(hours+':'+minits+':'+seconds);  
+}
+
 $(document).ready(function(){
 	var examID;
 	var subject;
 	var division;
 	var that;
+	var startTime = <c:out value="${sessionScope.starttime }"></c:out>; 
+	var endTime = <c:out value="${sessionScope.endtime }"></c:out>;
+	showPageCloseWarning = true;
+	
+	setInterval(function(){
+		var timeLeft = (new Date().getTime()-new Date(endTime).getTime())/(1000);
+		showTimeLeft(timeLeft);
+		endTime = endTime-1;
+		if(timeLeft > 0){
+			$(".examSubmit").trigger('click');	
+		}
+	},1000);
+	
+	
 	$('.hasDatepicker').datetimepicker({
 		inline: true,
         sideBySide: true
@@ -107,7 +153,7 @@ $(".page").on("click",function(){
 			
 			answers=checkedanswers;
 		}else{
-			answers=answers+"/"+checkedanswers;
+			answers=answers+" /"+checkedanswers;
 		}
 		count++;
 	}
@@ -129,10 +175,11 @@ $(".start").on("click",function(){
 			
 			answers=checkedanswers;
 		}else{
-			answers=answers+"/"+checkedanswers;
+			answers=answers+" /"+checkedanswers;
 		}
 		count++;
 	}
+	showPageCloseWarning = false;
 	$("#answers").val(answers);
 	$("#paginateform").submit();
 });
@@ -151,10 +198,11 @@ $(".end").on("click",function(){
 			
 			answers=checkedanswers;
 		}else{
-			answers=answers+"/"+checkedanswers;
+			answers=answers+" /"+checkedanswers;
 		}
 		count++;
 	}
+	showPageCloseWarning = false;
 	$("#answers").val(answers);
 	$("#paginateform").submit();
 });
@@ -173,12 +221,13 @@ $(".examSubmit").on("click",function(){
 			
 			answers=checkedanswers;
 		}else{
-			answers=answers+"/"+checkedanswers;
+			answers=answers+" /"+checkedanswers;
 		}
 		count++;
 	}
 	$("#answers").val(answers);
 	$("form#paginateform #actionname").val("examSubmit");
+	showPageCloseWarning = false;
 	$("#paginateform").submit();
 });
 
@@ -227,9 +276,12 @@ $(".examSubmit").on("click",function(){
 </c:if>
  <c:if test="${(questionDataList != null)}">
 	<div class="container">
+	
   <h2><font face="cursive">Exam</font> </h2>            
+  <div class="pull-right"><strong id="timeLeft"></strong></div>
   <table class="table table-striped">
     <thead>
+    
       <tr>
         <th>Sr No.</th>
         <th>Question</th>
@@ -244,7 +296,13 @@ $(".examSubmit").on("click",function(){
         <c:if test="${currentPage gt 1 }">
         <td class="col-md-1"><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
         </c:if>
-        <td class="col-md-10"><c:out value="${item.question}"></c:out></td>
+        <td class="col-md-10">
+			<c:out value="${item.question}"></c:out>
+			<br/>
+			<c:forEach items="${item.questionImage}" var="image">
+				<img src='<c:out value="${image }"></c:out>' width="200px" height="200px" tyle="padding:5px;"/>
+			</c:forEach>
+		</td>
       </tr>
       <tr>
       <td class="col-md-1"></td>
@@ -269,10 +327,43 @@ $(".examSubmit").on("click",function(){
     		
     		<c:choose>
     		<c:when test="${optionstatus eq 'Y' }">
-    		<td><input type="radio" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>'' checked="checked"><c:out value="${option}"></c:out></td>
+    		<td>
+    			<input type="radio" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>'' checked="checked"><c:out value="${option}"></c:out>
+    			<br/>
+						<c:choose>
+							<c:when test="${innercounter.index eq 0}">
+								<c:set var="startCountIndex" value="0"></c:set>
+							</c:when>
+							<c:otherwise>
+								<c:set var="startCountIndex" value="${requestScope.optionImageEndCount[innercounter.index-1]}"></c:set>
+							</c:otherwise>
+						</c:choose>	
+								<c:set var="endCountIndex" value="${requestScope.optionImageEndCount[innercounter.index-1]}"></c:set>
+						
+						<c:forEach items="${item.answerImage}" var="optionImage" begin="${startCountIndex}" end="${endCountIndex}">
+							<img src='<c:out value="${optionImage}"></c:out>' width="200px" height="200px" tyle="padding:5px;"/>
+						</c:forEach>			
+    		</td>
     		</c:when>
     			<c:otherwise>
-    			<td><input type="radio" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>''><c:out value="${option}"></c:out></td>
+    			<td>
+    				<input type="radio" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>''><c:out value="${option}"></c:out>
+						<br/>
+						<c:choose>
+							<c:when test="${innercounter.index eq 0}">
+								<c:set var="startCountIndex" value="0"></c:set>
+							</c:when>
+							<c:otherwise>
+								<c:set var="startCountIndex" value="${requestScope.optionImageEndCount[innercounter.index-1]}"></c:set>
+							</c:otherwise>
+						</c:choose>	
+								<c:set var="endCountIndex" value="${requestScope.optionImageEndCount[innercounter.index-1]}"></c:set>
+						
+						<c:forEach items="${item.answerImage}" var="optionImage" begin="${startCountIndex}" end="${endCountIndex}">
+							<img src='<c:out value="${optionImage}"></c:out>' width="200px" height="200px" tyle="padding:5px;"/>
+						</c:forEach>	
+						
+    			</td>
     			</c:otherwise>
     		</c:choose>
     		</c:when>

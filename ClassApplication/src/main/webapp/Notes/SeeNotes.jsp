@@ -125,7 +125,8 @@ function deletenotes(notesid){
 	$("form#actionform #notesid").val(notesid);
 	$("form#actionform #actionname").val("deletenotes");
 	$("#actionform").prop("action","seenotes");
-	$("#actionform").submit();
+	$("#notesdeleteconfirmmodal").modal("toggle");
+	//$("#actionform").submit();
 	/* $.ajax({
 		 
 		   url: "classOwnerServlet",
@@ -148,6 +149,10 @@ function deletenotes(notesid){
 
 
 $(document).ready(function(){
+	$("#notesdeleteconfirm").click(function(){
+		$("#actionform").submit();
+	});
+	
 	$(".shownotes").on("click",function(){
 		$("form#actionform #notesid").val($(this).prop("id"));
 		$("#actionform").prop("action","shownotes");
@@ -167,7 +172,7 @@ $(document).ready(function(){
 			flag=false;
 		}
 		if(division=="-1"){
-			$("#divisionerror").html("Please select Division");
+			$("#divisionerror").html("Please select class");
 			flag=false;
 		}
 		if(flag==true){
@@ -338,7 +343,13 @@ $(document).ready(function(){
    <tbody>
    <c:forEach items="${noteslist}" var="item" varStatus="counter">
    <tr>
-   <td><c:out value="${counter.count}"></c:out></td>
+   
+  <c:if test="${currentPage eq 1}">
+        <td class="col-md-1"><c:out value="${counter.count}"></c:out></td>
+        </c:if>
+        <c:if test="${currentPage gt 1 }">
+        <td class="col-md-1"><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
+        </c:if>
    <td><c:out value="${item.name}"></c:out></td>
     <td><button class="btn btn-primary shownotes" id='<c:out value="${item.notesid}"></c:out>'>Open</button></td>
     <c:choose>
@@ -491,5 +502,22 @@ $(document).ready(function(){
 <c:if test="${(totalPage==0)}">
 <div class="alert alert-info" align="center">Notes not available for selected criteria.</div>
 </c:if>
+<div class="modal fade" id="notesdeleteconfirmmodal">
+    <div class="modal-dialog">
+    <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="myModalLabel">Delete Notes</h4>
+        </div>
+        <div class="modal-body" id="mymodalmessage">
+          Are you sure?
+        </div>
+      	<div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancle</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal" id="notesdeleteconfirm">Yes</button>
+      	</div>
+    </div>
+</div>
+</div>
 </body>
 </html>

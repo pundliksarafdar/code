@@ -26,7 +26,7 @@ public class SubjectHelperBean {
 		SubjectDb db=new SubjectDb();
 		subjects = db.retrivesublist(class_id);
 		/*for (Subject subject : this.subjects) {
-			System.out.println("Subject name :"+subject.getSubjectName());	
+			AppLogger.logger("Subject name :"+subject.getSubjectName());	
 			
 		}*/
 		return subjects;
@@ -36,7 +36,7 @@ public class SubjectHelperBean {
 		SubjectDb db=new SubjectDb();
 		subjects = db.recentlyaddedsubfirst(class_id);
 		/*for (Subject subject : this.subjects) {
-			System.out.println("Subject name :"+subject.getSubjectName());	
+			AppLogger.logger("Subject name :"+subject.getSubjectName());	
 			
 		}*/
 		return subjects;

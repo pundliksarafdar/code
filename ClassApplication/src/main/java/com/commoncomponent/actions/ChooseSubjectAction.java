@@ -16,6 +16,7 @@ public class ChooseSubjectAction extends BaseAction{
 	List<Division> divisions;
 	String forwardAction;
 	String hideBatch;
+	String batchDefault;
 	String lable;
 	@Override
 	public String performBaseAction(UserBean userBean,
@@ -46,6 +47,17 @@ public class ChooseSubjectAction extends BaseAction{
 		this.lable = lable;
 	}
 	
+	
+	public String getBatchDefault() {
+		if(null == batchDefault || batchDefault.trim().length()==0){
+			return "false";
+		}else{
+			return batchDefault;
+		}
+	}
+	public void setBatchDefault(String batchDefault) {
+		this.batchDefault = batchDefault;
+	}
 	public String getHideBatch() {
 		//Return false is hiebatch is not specified
 		if(null == hideBatch || hideBatch.trim().length()==0){

@@ -1,7 +1,12 @@
 package com.classapp.db.question;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder.In;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -16,16 +21,21 @@ import com.classapp.db.exam.Exam;
 import com.classapp.db.notificationpkg.Notification;
 import com.classapp.persistence.HibernateUtil;
 import com.datalayer.exam.QuestionSearchRequest;
+import com.service.beans.GenerateQuestionPaperServicebean;
 
 public class QuestionbankDB {
-public boolean saveQuestion(Questionbank questionbank) {
+public int saveQuestion(Questionbank questionbank) {
 	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
 	transaction=session.beginTransaction();
 	session.saveOrUpdate(questionbank);
 	transaction.commit();
-	return  true;
+	System.out.println("Quesbank ID:-"+questionbank.getQue_id());
+	if(session!=null){
+		session.close();
+	}
+	return  questionbank.getQue_id();
 
 }
 
@@ -36,39 +46,156 @@ public boolean editQuestion(Questionbank questionbank) {
 	transaction=session.beginTransaction();
 	session.saveOrUpdate(questionbank);
 	transaction.commit();
+	if(session!=null){
+		session.close();
+	}
+	return  true;
+
+}
+
+public boolean updateSubjectiveQuestion(int que_id,int inst_id,int sub_id,int div_id,String que_text,int marks) {
+	Transaction transaction=null;
+	Session session=null;
+	try{
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	Query query = session.createQuery("update Questionbank set que_text = :que_text , marks = :marks where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id = :que_id");
+	query.setParameter("inst_id", inst_id);
+	query.setParameter("div_id", div_id);
+	query.setParameter("sub_id", sub_id);
+	query.setParameter("que_id", que_id);
+	query.setParameter("que_text", que_text);
+	query.setParameter("marks", marks);
+	query.executeUpdate();
+	transaction.commit();
+	}catch(Exception e){
+	e.printStackTrace();
+	if(null!=transaction){
+		transaction.rollback();
+	}
+	
+	}finally{
+	if(session!=null){
+		session.close();
+	}
+	}
+	return  true;
+
+}
+
+public boolean updateParagraphQuestion(int que_id,int inst_id,int sub_id,int div_id,int marks) {
+	Transaction transaction=null;
+	Session session=null;
+	try{
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	Query query = session.createQuery("update Questionbank set marks = :marks where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id = :que_id");
+	query.setParameter("inst_id", inst_id);
+	query.setParameter("div_id", div_id);
+	query.setParameter("sub_id", sub_id);
+	query.setParameter("que_id", que_id);
+	query.setParameter("marks", marks);
+	query.executeUpdate();
+	transaction.commit();
+	}catch(Exception e){
+	e.printStackTrace();
+	if(null!=transaction){
+		transaction.rollback();
+	}
+	
+	}finally{
+	if(session!=null){
+		session.close();
+	}
+	}
+	return  true;
+
+}
+
+public boolean updateDeleteQuestionStatus(int que_id,int inst_id,int sub_id,int div_id) {
+	Transaction transaction=null;
+	Session session=null;
+	try{
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	Query query = session.createQuery("update Questionbank set ques_status = 'N' where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id = :que_id");
+	query.setParameter("inst_id", inst_id);
+	query.setParameter("div_id", div_id);
+	query.setParameter("sub_id", sub_id);
+	query.setParameter("que_id", que_id);
+	transaction.commit();
+	query.executeUpdate();
+	}catch(Exception e){
+	e.printStackTrace();
+	if(null!=transaction){
+		transaction.rollback();
+	}
+	
+	}finally{
+	if(session!=null){
+		session.close();
+	}
+	}
 	return  true;
 
 }
 
 public boolean deleteQuestion(int que_id,int inst_id,int sub_id,int div_id) {
-	Questionbank questionbank=new Questionbank();
-	questionbank.setInst_id(inst_id);
-	questionbank.setDiv_id(div_id);
-	questionbank.setSub_id(sub_id);
-	questionbank.setQue_id(que_id);
 	Transaction transaction=null;
 	Session session=null;
+	try{
 	session=HibernateUtil.getSessionfactory().openSession();
 	transaction=session.beginTransaction();
-	session.delete(questionbank);
+	Query query = session.createQuery("delete from Questionbank where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id = :que_id");
+	query.setParameter("inst_id", inst_id);
+	query.setParameter("div_id", div_id);
+	query.setParameter("sub_id", sub_id);
+	query.setParameter("que_id", que_id);
 	transaction.commit();
+	query.executeUpdate();
+	}catch(Exception e){
+	e.printStackTrace();
+	if(null!=transaction){
+		transaction.rollback();
+	}
+	
+	}finally{
+	if(session!=null){
+		session.close();
+	}
+	}
 	return  true;
 
 }
 
 public Questionbank getQuestion(int que_id,int inst_id,int sub_id,int div_id) {
 	Questionbank questionbank=new Questionbank();
-	questionbank.setInst_id(inst_id);
-	questionbank.setDiv_id(div_id);
-	questionbank.setSub_id(sub_id);
-	questionbank.setQue_id(que_id);
 	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
 	transaction=session.beginTransaction();
-	Questionbank question=(Questionbank) session.get(Questionbank.class,questionbank);
-	transaction.commit();
-	return  question;
+	try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("from Questionbank where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id = :que_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("sub_id", sub_id);
+		query.setParameter("que_id", que_id);
+		transaction.commit();
+		questionbank=(Questionbank) query.uniqueResult();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+	return  questionbank;
 }
 
 public HashMap<Integer, Integer> getQuestionIds(int inst_id,int sub_id,int div_id,int repeat,List<Integer> marks) {
@@ -105,7 +232,12 @@ public HashMap<Integer, Integer> getQuestionIds(int inst_id,int sub_id,int div_i
 			transaction.rollback();
 		}
 		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
 	}
+		
 return quesids;
 }
 
@@ -128,7 +260,12 @@ public List<Integer> getQuestionMarks(int inst_id,int sub_id,int div_id,List<Int
 			transaction.rollback();
 		}
 		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
 	}
+		
 return list;
 }
 
@@ -153,11 +290,16 @@ public int getNextQuestionID(int inst_id,int div_id,int sub_id) {
 			transaction.rollback();
 		}
 		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
 	}
+		
 return 1;
 }
 
-public List<Questionbank> getSearchedQuestion(int rep,String compexam_id,int marks,int sub_id,int inst_id,int div_id,int currentPage,int topic_id) {
+public List<Questionbank> getSearchedQuestion(int marks,int sub_id,int inst_id,int div_id,int currentPage,int topic_id,String quesType) {
 	Exam exam=new Exam();
 	Transaction transaction=null;
 	Session session=null;
@@ -170,15 +312,7 @@ public List<Questionbank> getSearchedQuestion(int rep,String compexam_id,int mar
 	criteria.add(criterion);
 	criterion = Restrictions.eq("div_id", div_id);
 	criteria.add(criterion);
-	if(rep!=-1){
-		criterion = Restrictions.eq("rep", rep);
-		criteria.add(criterion);
-	}
-	if(!"-1".equals(compexam_id)){
-		
-		criterion=Restrictions.or(Restrictions.like("exam_rep", compexam_id+",%"),Restrictions.like("exam_rep","%,"+compexam_id),Restrictions.like("exam_rep", "%,"+compexam_id+",%"),Restrictions.eq("exam_rep", compexam_id));
-		criteria.add(criterion);
-	}
+
 	if(marks!=-1){
 		criterion = Restrictions.eq("marks", marks);
 		criteria.add(criterion);
@@ -188,18 +322,23 @@ public List<Questionbank> getSearchedQuestion(int rep,String compexam_id,int mar
 		criterion = Restrictions.eq("topic_id", topic_id);
 		criteria.add(criterion);
 	}
+	criterion = Restrictions.eq("que_type", quesType);
+	criteria.add(criterion);
+	criterion = Restrictions.ne("ques_status", "N");
+	criteria.add(criterion);
 	if(currentPage!=0 &&  currentPage!=1){
 		criteria.setFirstResult((currentPage-1)*50);
 	}
 	
 	criteria.setMaxResults(50);
+	criteria.addOrder(Order.asc("que_id"));
 	List<Questionbank> questionList = criteria.list();
 	transaction.commit();
 	session.close();
 	return  questionList;	
 }
 
-public int getSearchedQuestionCount(int rep,String compexam_id,int marks,int sub_id,int inst_id,int div_id,int topic_id) {
+public int getSearchedQuestionCount(int marks,int sub_id,int inst_id,int div_id,int topic_id,String quesType) {
 	Exam exam=new Exam();
 	Transaction transaction=null;
 	Session session=null;
@@ -212,15 +351,6 @@ public int getSearchedQuestionCount(int rep,String compexam_id,int marks,int sub
 	criteria.add(criterion);
 	criterion = Restrictions.eq("div_id", div_id);
 	criteria.add(criterion);
-	if(rep!=-1){
-		criterion = Restrictions.eq("rep", rep);
-		criteria.add(criterion);
-	}
-	if(!"-1".equals(compexam_id)){
-		
-		criterion=Restrictions.or(Restrictions.like("exam_rep", compexam_id+",%"),Restrictions.like("exam_rep","%,"+compexam_id),Restrictions.like("exam_rep", "%,"+compexam_id+",%"),Restrictions.eq("exam_rep", compexam_id));
-		criteria.add(criterion);
-	}
 	if(marks!=-1){
 		criterion = Restrictions.eq("marks", marks);
 		criteria.add(criterion);
@@ -229,7 +359,10 @@ public int getSearchedQuestionCount(int rep,String compexam_id,int marks,int sub
 		criterion = Restrictions.eq("topic_id", topic_id);
 		criteria.add(criterion);
 	}
-	
+	criterion = Restrictions.eq("que_type", quesType);
+	criteria.add(criterion);
+	criterion = Restrictions.ne("ques_status", "N");
+	criteria.add(criterion);
 	//criteria.setMaxResults(10);
 	List<Questionbank> questionList = criteria.list();
 	transaction.commit();
@@ -240,7 +373,7 @@ public int getSearchedQuestionCount(int rep,String compexam_id,int marks,int sub
 	return  0;	
 }
 
-public List<Integer> getdistinctQuestionMarks(int sub_id,int inst_id,int div_id) {
+public List<Integer> getdistinctQuestionMarks(int sub_id,int inst_id,int div_id,String ques_type) {
 	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
@@ -251,6 +384,8 @@ public List<Integer> getdistinctQuestionMarks(int sub_id,int inst_id,int div_id)
 	criterion = Restrictions.eq("sub_id", sub_id);
 	criteria.add(criterion);
 	criterion = Restrictions.eq("div_id", div_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("que_type", ques_type);
 	criteria.add(criterion);
 	
 	List<Integer> questionList = criteria.list();
@@ -334,6 +469,68 @@ public List<QuestionSearchRequest> getCriteriaQuestion(int sub_id,int inst_id,in
 return list;
 }
 
+public List<GenerateQuestionPaperServicebean> getQuestionsForGenerateExam(int inst_id,int div_id,List<GenerateQuestionPaperServicebean> list) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	for (int i = 0; i < list.size(); i++) {
+	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.property("que_id")).addOrder(Order.asc("created_dt"));
+	Criterion criterion = Restrictions.eq("inst_id", inst_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("sub_id", list.get(i).getSubject_id());
+	criteria.add(criterion);
+	criterion = Restrictions.eq("div_id", div_id);
+	criteria.add(criterion);
+	
+		if(list.get(i).getMarks()!=-1){
+			criteria.add(Restrictions.eq("marks", list.get(i).getMarks()));
+		}
+		if(!"-1".equals(list.get(i).getQuestion_type())){
+			criteria.add(Restrictions.eq("que_type", list.get(i).getQuestion_type()));
+		}
+		if(list.get(i).getTopic_id()!=-1){
+			criteria.add(Restrictions.eq("topic_id", list.get(i).getTopic_id()));
+		}
+		List<Integer> questionList = criteria.list();
+	list.get(i).setQuestion_ids(questionList);
+	}
+	transaction.commit();
+	session.close();
+return list;
+}
+
+public List<Integer> getQuestionsForGenerateExam(int inst_id,int div_id,GenerateQuestionPaperServicebean questionPaperServicebean) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.property("que_id")).addOrder(Order.asc("created_dt"));
+	Criterion criterion = Restrictions.eq("inst_id", inst_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("sub_id", questionPaperServicebean.getSubject_id());
+	criteria.add(criterion);
+	criterion = Restrictions.eq("div_id", div_id);
+	criteria.add(criterion);
+	
+		if(questionPaperServicebean.getMarks()!=-1){
+			criteria.add(Restrictions.eq("marks", questionPaperServicebean.getMarks()));
+		}
+		if(!"-1".equals(questionPaperServicebean.getQuestion_type())){
+			criteria.add(Restrictions.eq("que_type", questionPaperServicebean.getQuestion_type()));
+		}
+		if(questionPaperServicebean.getTopic_id()!=-1){
+			criteria.add(Restrictions.eq("topic_id", questionPaperServicebean.getTopic_id()));
+		}
+		criteria.add(Restrictions.not(
+			    Restrictions.in("que_id", questionPaperServicebean.getQuestion_ids())
+				  ));
+		List<Integer> questionList = criteria.list();
+	transaction.commit();
+	session.close();
+return questionList;
+}
+
 public List<String> getQuestionAnsIds(int sub_id,int inst_id,int div_id,List<Integer> que_ids) {
 	Exam exam=new Exam();
 	Transaction transaction=null;
@@ -397,7 +594,12 @@ public boolean deleteQuestionList(List<Integer> que_id,int inst_id,int sub_id,in
 			transaction.rollback();
 		}
 		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
 	}
+		
 return true;
 
 }
@@ -424,8 +626,195 @@ public boolean ExamQuestionStatus(List<Integer> que_id,int inst_id,int sub_id,in
 			transaction.rollback();
 		}
 		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
 	}
+		
 return true;
 
 }
+
+public List<Integer> getDisabledQuestions(List<Integer> que_id,int inst_id,int sub_id,int div_id) {
+	Transaction transaction=null;
+	Session session=null;
+	List<Integer> list = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		String queryString="select que_id from Questionbank where ques_status ='N' and inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id in :que_id";
+		
+		Query query = session.createQuery(queryString);
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("sub_id", sub_id);
+		query.setParameterList("que_id", que_id);
+		list= query.list();
+		
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+		
+return list;
+
+}
+
+public List<Integer> getQuestionrelatedtoSubject(int sub_id,int inst_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.distinct(Projections.property("que_id"))).addOrder(Order.asc("que_id"));;
+	Criterion criterion = Restrictions.eq("inst_id", inst_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("sub_id", sub_id);
+	criteria.add(criterion);
+	List<Integer> questionList = criteria.list();
+	transaction.commit();
+	session.close();
+	return  questionList;	
+}
+
+public List<Integer> getQuestionrelatedtoClass(int inst_id,int div_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.distinct(Projections.property("que_id"))).addOrder(Order.asc("que_id"));;
+	Criterion criterion = Restrictions.eq("inst_id", inst_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("div_id", div_id);
+	criteria.add(criterion);
+	List<Integer> questionList = criteria.list();
+	transaction.commit();
+	session.close();
+	return  questionList;	
+}
+
+public boolean deleteQuestionrelatedtoClass(int inst_id,int div_id) {
+	Transaction transaction=null;
+	Session session=null;
+	List<Integer> list = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		String queryString="delete from Questionbank where  inst_id = :inst_id and div_id=:div_id ";
+		
+		Query query = session.createQuery(queryString);
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.executeUpdate();
+		
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+		
+	return  true;	
+}
+
+public boolean deleteQuestionrelatedtosubject(int inst_id,int sub_id) {
+	Transaction transaction=null;
+	Session session=null;
+	List<Integer> list = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		String queryString="delete from Questionbank where inst_id = :inst_id and sub_id=:sub_id";
+		
+		Query query = session.createQuery(queryString);
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("sub_id", sub_id);
+		query.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return true;	
+}
+
+public List<Questionbank> getQuestionBankList(int inst_id,int div_id,int sub_id,int topic_id,String ques_type,int marks){
+
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	Criteria criteria = session.createCriteria(Questionbank.class).addOrder(Order.asc("created_dt"));
+	Criterion criterion = Restrictions.eq("inst_id", inst_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("sub_id", sub_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("div_id", div_id);
+	criteria.add(criterion);
+	
+		if(marks!=-1){
+			criteria.add(Restrictions.eq("marks", marks));
+		}
+		if(!"-1".equals(ques_type)){
+			criteria.add(Restrictions.eq("que_type", ques_type));
+		}
+		if(topic_id!=-1){
+			criteria.add(Restrictions.eq("topic_id", topic_id));
+		}
+		
+		List<Questionbank> questionList = criteria.list();
+	
+	transaction.commit();
+	session.close();
+return questionList;
+
+}
+
+public List<Questionbank> getQuestionBankList(List<List<Integer>> list,int inst_id){
+	Transaction transaction=null;
+	Session session=null;
+	List<Questionbank> questionlist = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		String queryString="from Questionbank where inst_id = :inst_id and (div_id,sub_id,que_id) in :list";
+		Integer [] temp = {14,7,4};
+		queryString = queryString.replace(":list", list.toString());
+		Query query = session.createQuery(queryString);
+		query.setParameter("inst_id", inst_id);
+		questionlist = query.list();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return questionlist;
+}
+
 }

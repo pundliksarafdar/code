@@ -1,6 +1,7 @@
 package com.classapp.db.student;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class Student implements Serializable{
 	/**
@@ -11,6 +12,12 @@ public class Student implements Serializable{
 	private int class_id;
 	private int div_id;
 	private String batch_id;
+	private String parentFname;
+	private String parentLname;
+	private String parentPhone;
+	private String parentEmail;
+	private String batchIdNRoll;
+	
 	public int getStudent_id() {
 		return student_id;
 	}
@@ -34,6 +41,36 @@ public class Student implements Serializable{
 	}
 	public void setBatch_id(String batch_id) {
 		this.batch_id = batch_id;
+	}
+	public String getParentFname() {
+		return parentFname;
+	}
+	public void setParentFname(String parentFname) {
+		this.parentFname = parentFname;
+	}
+	public String getParentLname() {
+		return parentLname;
+	}
+	public void setParentLname(String parentLname) {
+		this.parentLname = parentLname;
+	}
+	public String getParentPhone() {
+		return parentPhone;
+	}
+	public void setParentPhone(String parentPhone) {
+		this.parentPhone = parentPhone;
+	}
+	public String getParentEmail() {
+		return parentEmail;
+	}
+	public void setParentEmail(String parentEmail) {
+		this.parentEmail = parentEmail;
+	}
+	public String getBatchIdNRoll() {
+		return batchIdNRoll;
+	}
+	public void setBatchIdNRoll(String batchIdNRoll) {
+		this.batchIdNRoll = batchIdNRoll;
 	}
 	@Override
 	public boolean equals(Object arg0) {

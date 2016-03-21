@@ -2,6 +2,8 @@ package com.classapp.db.register;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -31,7 +33,12 @@ public class RegisterDB {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return subidList;
 	}
 	
@@ -58,7 +65,12 @@ public List getTeachersClassName(List classIDs) {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return subidList;
 	}
 	
@@ -83,7 +95,12 @@ public List getTeachersClassName(List classIDs) {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return subidList.get(0);
 	}
 	
@@ -108,7 +125,12 @@ public List getTeachersClassName(List classIDs) {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return subidList.get(0);
 	}
 	
@@ -137,7 +159,12 @@ public List getTeachersClassName(List classIDs) {
 			if(null!=transaction){
 				transaction.rollback();
 			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return true;
 	}
 
@@ -166,7 +193,12 @@ public List getTeachersClassName(List classIDs) {
 			if(null!=transaction){
 				transaction.rollback();
 			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return true;
 	}
 
@@ -192,7 +224,12 @@ public List getTeachersClassName(List classIDs) {
 				transaction.rollback();
 			}
 			return false;
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return true;
 	}
 	
@@ -225,7 +262,7 @@ public List getTeachersClassName(List classIDs) {
 	    }
 	}
 	
-public List getStudentInfo(List StudentIDs,int pagenumber, int resultPerPage) {
+public List getStudentInfo(List StudentIDs, int resultPerPage) {
 		
 		Session session = null;
 		Transaction transaction = null;
@@ -236,10 +273,10 @@ public List getStudentInfo(List StudentIDs,int pagenumber, int resultPerPage) {
 			transaction = session.beginTransaction();
 			//Query query = session.createQuery("SELECT  reg.fname,reg.lname,reg.loginName FROM SELECT  :rownum := :rownum + 1 RowNumber, t.fname,t.lname,t.loginName FROM RegisterBean t, (SELECT :rownum := 0) s where regId=:studentids  ORDER BY t.regId reg where reg.RowNumber>:lowerlimit and reg.RowNumber<:upperlimit");
 			
-			Query query = session.createQuery("from RegisterBean where  regId in :studentids order by regId");
+			Query query = session.createQuery("from RegisterBean where  regId in :studentids order by regId asc");
 			query.setParameterList("studentids", StudentIDs);
-			query.setFirstResult((pagenumber -1)*resultPerPage);
-			query.setMaxResults(resultPerPage);			
+			//query.setFirstResult((pagenumber -1)*resultPerPage);
+			//query.setMaxResults(resultPerPage);			
 			subidList = query.list();
 			
 		}catch(Exception e){
@@ -248,7 +285,12 @@ public List getStudentInfo(List StudentIDs,int pagenumber, int resultPerPage) {
 				transaction.rollback();
 			}
 			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
 		}
+			
 		return subidList;
 	}
 
@@ -273,7 +315,12 @@ public List getStudents(List StudentIDs) {
 			transaction.rollback();
 		}
 		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
 	}
+		
 	return students;
 }
 
@@ -299,7 +346,11 @@ public List getStudents(List StudentIDs) {
 				transaction.rollback();
 			}
 			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}			
 		return false;
 	}
 	
@@ -325,7 +376,11 @@ public List getStudents(List StudentIDs) {
 				transaction.rollback();
 			}
 			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 		return false;
 	}
 	
@@ -347,7 +402,11 @@ public List getStudents(List StudentIDs) {
 				transaction.rollback();
 			}
 			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	}
 	
 	public String getPassword(String email,String phone) {
@@ -377,7 +436,11 @@ public List getStudents(List StudentIDs) {
 				transaction.rollback();
 			}
 			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 		return "";
 	}
 	
@@ -404,7 +467,11 @@ public List getStudents(List StudentIDs) {
 				transaction.rollback();
 			}
 			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 	}
 	
 	public boolean isEmailExists(String email) {
@@ -431,7 +498,11 @@ public List getStudents(List StudentIDs) {
 			if(null!=transaction){
 				transaction.rollback();
 			}
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 		return true;
 	}
 	
@@ -451,7 +522,11 @@ public List getStudents(List StudentIDs) {
 			list = query.list();
 		}catch(Exception e){
 			list = new ArrayList<RegisterBean>();
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}		
 		}
 		return list;
 	}
@@ -477,8 +552,241 @@ public List getStudents(List StudentIDs) {
 				transaction.rollback();
 			}
 			
-		}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
 		return null;
 		
+	}
+	
+	public RegisterBean getInstitute(String loginName) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> subidList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from RegisterBean where  loginName = :loginName and role=1");
+			query.setParameter("loginName", loginName);
+			subidList = query.list();
+			if(subidList!=null)
+			{
+				return subidList.get(0);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return null;
+		
+	}
+	
+	public boolean updateInstituteStatus(int regId,String inst_status) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> subidList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update RegisterBean set inst_status=:inst_status where  regId = :regId and role=1");
+			query.setParameter("regId", regId);
+			query.setParameter("inst_status", inst_status);
+			query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return true;
+		
+	}
+	
+	public boolean updateScheduler() {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> subidList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update RegisterBean reg set reg.inst_status='disabled' where reg.nextRenewalDate < CURRENT_DATE and " +
+					"reg.regId in (SELECT inst_id FROM InstituteStats where alloc_ids > 25 and alloc_memory > 100)");
+			int rows=query.executeUpdate();
+			query = session.createQuery("update InstituteStats set alloc_ids=25 , alloc_memory=100, avail_memory=0,avail_ids=0 where " +
+					"inst_id in (SELECT regId FROM RegisterBean where inst_status='disabled')");
+			rows=query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return true;
+		
+	}
+	
+	public boolean updateRenewalDates(int inst_id) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> subidList = null;
+		Calendar date = Calendar.getInstance();
+	    date.setTime(new Date());
+	    date.add(Calendar.YEAR,1);
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update RegisterBean set nextRenewalDate=:nextdate,renewedDates=CURRENT_DATE where  regId = :regId" +
+					" and (nextRenewalDate<CURRENT_DATE or nextRenewalDate=null)");
+			query.setParameter("regId", inst_id);
+			query.setParameter("nextdate", date.getTime());
+			query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return true;
+	}
+	
+	public RegisterBean getRegisteredTeacher(String username,String email) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> subidList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from RegisterBean where  loginName = :loginName and email = :email and role=2");
+			query.setParameter("loginName", username);
+			query.setParameter("email", email);
+			subidList = query.list();
+			if(subidList!=null)
+			{
+				return subidList.get(0);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return null;
+	}
+	
+	public RegisterBean getRegisteredUserByLoginID(String username) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> subidList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from RegisterBean where  loginName = :loginName and role=3");
+			query.setParameter("loginName", username);
+			subidList = query.list();
+			if(subidList!=null)
+			{
+				return subidList.get(0);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return null;
+	}
+	
+	public List<String> getNamesForSuggestion(int inst_id) {
+		Session session = null;
+		Transaction transaction = null;
+		List<String> namesList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("select CONCAT(fname,' ',lname) from RegisterBean where  regId in (select student_id from Student where class_id=:inst_id)");
+			query.setParameter("inst_id", inst_id);
+			namesList = query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return namesList;
+	}
+	
+	public List<RegisterBean> getStudentByNames(int inst_id,String fname,String lname) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> namesList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from RegisterBean where  regId in (select student_id from Student where class_id=:inst_id) and fname like :fname and lname like :lname order by regId asc");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("fname", fname+"%");
+			query.setParameter("lname", lname+"%");
+			namesList = query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return namesList;
 	}
 }

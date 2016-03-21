@@ -66,7 +66,7 @@ public class ViewExamAnsAction extends BaseAction{
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
-			Map<String, Object> session) {
+			Map<String, Object> session) {/*
 		 if("viewanscomplete".equals(actionname)){
 				currentPage=searchcurrentPage;
 				totalPages=searchtotalPages;
@@ -103,7 +103,7 @@ public class ViewExamAnsAction extends BaseAction{
 		ExamTransaction examTransaction=new ExamTransaction();
 		QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
 		compExams=examTransaction.getAllCompExamList();
-		marks=bankTransaction.getDistinctQuestionMarks(Integer.parseInt(subject), Integer.parseInt(division), inst_id);
+		marks=bankTransaction.getDistinctQuestionMarks(Integer.parseInt(subject), Integer.parseInt(division), inst_id,"1");
 		repeatation=bankTransaction.getDistinctQuestionRep(Integer.parseInt(subject), Integer.parseInt(division), inst_id);
 
 			SubjectTransaction subjectTransaction=new SubjectTransaction();
@@ -140,8 +140,8 @@ public class ViewExamAnsAction extends BaseAction{
 						ArrayList<String> templist=new ArrayList<String>();
 						String temparr[]=answersarr[i].split(",");
 						for (int j = 0; j < temparr.length; j++) {
-							if(!"".equals(temparr[j]) && !"-1".equals(temparr[j])){
-							templist.add((Integer.parseInt(temparr[j])+1)+"");
+							if(!"".equals(temparr[j].trim()) && !"-1".equals(temparr[j].trim())){
+							templist.add((Integer.parseInt(temparr[j].trim())+1)+"");
 							}else{
 								templist.add("");
 							}
@@ -151,7 +151,7 @@ public class ViewExamAnsAction extends BaseAction{
 				}
 				//Set<Integer> keys=questionIdsMap.keySet();
 				for (int i = startIndex; i < endIndex; i++) {
-					questionPath=userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionIdsList.get(i);
+					questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionIdsList.get(i);
 					QuestionData questionData=(QuestionData) readObject(new File(questionPath));
 					if(questionData!=null){
 						for (int j = 0; j < questionData.getAnswers().size(); j++) {
@@ -164,7 +164,7 @@ public class ViewExamAnsAction extends BaseAction{
 				}
 			}
 		
-		return "viewexamans";
+	*/	return "viewexamans";
 	}
 	
 	private Object readObject(File file) {

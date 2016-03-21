@@ -1,5 +1,9 @@
 package com.corex.exam;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,9 +18,14 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
 import org.omg.CORBA.Request;
 
+import com.classapp.logger.AppLogger;
+import com.classapp.login.UserStatic;
 import com.config.BaseAction;
 import com.config.Constants;
+import com.datalayer.exam.QuestionData;
 import com.datalayer.exam.QuestionSearchRequest;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.transaction.exams.ExamTransaction;
 import com.user.UserBean;
 
@@ -33,7 +42,7 @@ public class GenerateExamAction extends BaseAction{
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
-			Map<String, Object> session) {
+			Map<String, Object> session) {/*
 		ExamTransaction examTransaction = new ExamTransaction();
 		List<QuestionSearchRequest> questionSearchRequestList = new ArrayList();
 		
@@ -46,7 +55,7 @@ public class GenerateExamAction extends BaseAction{
 		
 		List<QuestionSearchRequest> exam = null;
 		List<String> answerId = new ArrayList<String>();
-		boolean valid = validateCriteria(subject,division, userBean.getRegId(), questionSearchRequestList);
+		boolean valid = validateCriteria(this.examname,subject,division, userBean.getRegId(), questionSearchRequestList);
 		if(valid){
 			 exam = generateExam(subject,division, userBean.getRegId(), questionSearchRequestList);
 			 String questionId = "";
@@ -65,19 +74,77 @@ public class GenerateExamAction extends BaseAction{
 			}
 			 questionIdString = StringUtils.join(questionIdListsList,",");
 			 answerIdString = StringUtils.join(questionAnswerIdListsList,"/");
-			 System.out.println(questionIdString+"<>"+answerIdString);
+			 AppLogger.logger(questionIdString+"<>"+answerIdString);
 			 int instituteId = userBean.getRegId();
 			 int creatorId = userBean.getRegId();
-			 examTransaction.saveExam(examname, instituteId, subject, division,totalMarks , passingmarks, creatorId,batch , questionIdString, answerIdString,examHour,examMinute);
+			 UserStatic userStatic = userBean.getUserStatic();
+			 
+			 List<QuestionData> questionDataList = new ArrayList<QuestionData>();
+			 for(int index = 0;index<questionIdListsList.size();index++){
+				 String questionIdListsListStr = questionIdListsList.get(index);
+				 String[] questionIdListsListStrList = questionIdListsListStr.split(",");
+				 
+				 for(int indexListStr=0;indexListStr<questionIdListsListStrList.length;indexListStr++){
+					 String questionPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionIdListsListStrList[indexListStr];
+					 QuestionData questionData=(QuestionData) readObject(new File(questionPath));
+					 QuestionData questionDataForMinified = new QuestionData();
+					 //Miinified object is used to put the data in page as while object is not required- minimise server load
+					 questionDataForMinified.setQuestion(questionData.getQuestion());
+					 questionDataForMinified.setMarks(questionData.getMarks());
+					 questionDataList.add(questionDataForMinified);
+				 }
+			 }
+			 request.setAttribute("questionData", questionDataList);
+			 JsonObject jsonObject = new JsonObject();
+			 jsonObject.addProperty("examname", examname);
+			 jsonObject.addProperty("instituteId",instituteId);
+			 jsonObject.addProperty("subject",subject);
+			 jsonObject.addProperty("division",division);
+			 jsonObject.addProperty("totalMarks",totalMarks);
+			 jsonObject.addProperty("passingmarks",passingmarks);
+			 jsonObject.addProperty("creatorId",creatorId);
+			 jsonObject.addProperty("batch",batch);
+			 jsonObject.addProperty("questionIdString",questionIdString);
+			 jsonObject.addProperty("answerIdString",answerIdString);
+			 jsonObject.addProperty("examHour",examHour);
+			 jsonObject.addProperty("examMinute",examMinute);
+			 
+			 request.getSession().setAttribute("examsaveobject", jsonObject);
+			 //examTransaction.saveExam(examname, instituteId, subject, division,totalMarks , passingmarks, creatorId,batch , questionIdString, answerIdString,examHour,examMinute);
 		}
 		
 		
 		
-		return SUCCESS;
+	*/	return SUCCESS;
 	}
 	
-	public boolean validateCriteria(Integer sub_id,Integer div_id,int classId,List<QuestionSearchRequest> list){
+	/*private Object readObject(File file) {
+		Object object = null;
+		FileInputStream fin = null;
+		ObjectInputStream objectInputStream = null;
+		try{
+			fin = new FileInputStream(file);
+			objectInputStream = new ObjectInputStream(fin);
+			object =  objectInputStream.readObject();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=objectInputStream)try {objectInputStream.close();} catch (IOException e) {e.printStackTrace();}
+			if(null!=fin)try {fin.close();} catch (IOException e) {e.printStackTrace();}
+		}
+		return object;
+	}
+	
+	public boolean validateCriteria(String examName,Integer sub_id,Integer div_id,int classId,List<QuestionSearchRequest> list){
+		if(null==examName || examName.trim().length()==0){
+			return false;
+		}
+
 		ExamTransaction examTransaction = new ExamTransaction();
+		boolean isExamExist = examTransaction.isExamExists(classId,examName,"");
+		if(isExamExist){
+			return false;
+		}
 		return examTransaction.validateSearchCriteria(sub_id, classId, div_id, list);
 	}
 	
@@ -190,7 +257,7 @@ public class GenerateExamAction extends BaseAction{
 
 	public void setExamMinute(int examMinute) {
 		this.examMinute = examMinute;
-	}
+	}*/
 	
 		
 }

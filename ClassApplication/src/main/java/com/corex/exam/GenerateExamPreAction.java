@@ -58,8 +58,8 @@ public class GenerateExamPreAction extends BaseAction{
 		}
 		ExamTransaction examTransaction=new ExamTransaction();
 		QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
-		compExams=examTransaction.getAllCompExamList();
-		marks=bankTransaction.getDistinctQuestionMarks(Integer.parseInt(subject), Integer.parseInt(division), inst_id);
+	//	compExams=examTransaction.getAllCompExamList();
+		marks=bankTransaction.getDistinctQuestionMarks(Integer.parseInt(subject), Integer.parseInt(division), inst_id,"1");
 		repeatation=bankTransaction.getDistinctQuestionRep(Integer.parseInt(subject), Integer.parseInt(division), inst_id);
 		if(userBean.getRole()==2){
 			return "teacherquestionsearch";

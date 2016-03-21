@@ -9,6 +9,7 @@
 		<key-property name="inst_id" column="inst_id"></key-property>
 		<key-property name="sub_id" column="sub_id"></key-property>
 		<key-property name="div_id" column="div_id"></key-property>
+		<key-property name="batch_id" column="batch_id"></key-property>
 		<key-property name="exam_id" column="exam_id"></key-property>
     </composite-id>
         <property name="marks">

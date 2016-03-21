@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.fees.Student_Fees_Transaction" table="student_fees_transaction" catalog="classdb">
+    <id name="fees_transaction_id" type="int">
+            <column name="fees_transaction_id" />
+            <generator class="identity" />
+        </id>
+        <property name="inst_id" type="int">
+            <column name="inst_id"/>
+        </property>
+        <property name="div_id" type="int">
+            <column name="div_id"/>
+        </property>
+        <property name="batch_id" type="int">
+            <column name="batch_id"/>
+        </property>
+        <property name="student_id" type="int">
+            <column name="student_id"/>
+        </property>
+        <property name="amt_paid" type="double">
+            <column name="amt_paid"/>
+        </property>
+         <property name="added_by" type="int">
+            <column name="added_by"/>
+        </property>
+         <property name="note" type="string">
+            <column name="note" length="100"/>
+        </property>
+        <property name="transaction_dt" type="date">
+            <column name="transaction_dt"/>
+        </property>
+    </class>
+</hibernate-mapping>

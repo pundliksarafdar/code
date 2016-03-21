@@ -13,20 +13,20 @@ public class NotificationWebSocketApi {
 //    
 //    @OnMessage
 //    public String hello(String message) {
-//        System.out.println("Received : "+ message);
+//        AppLogger.logger("Received : "+ message);
 //        sendToAllConnectedSessions(message);
 //        return message;
 //    }
 //
 //    @OnOpen
 //    public void myOnOpen(Session session) {
-//        System.out.println("WebSocket opened: " + session.getId());
+//        AppLogger.logger("WebSocket opened: " + session.getId());
 //        sessions.add(session);
 //    }
 //
 //    @OnClose
 //    public void myOnClose(CloseReason reason) {
-//        System.out.println("Closing a WebSocket due to " + reason.getReasonPhrase());
+//        AppLogger.logger("Closing a WebSocket due to " + reason.getReasonPhrase());
 //    }
 //    
 //    private void sendToAllConnectedSessions(String message ) {

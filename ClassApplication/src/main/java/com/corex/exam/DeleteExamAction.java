@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.db.exam.CompExam;
+import com.classapp.db.exam.Exam;
 import com.config.BaseAction;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.questionbank.QuestionBankTransaction;
@@ -25,10 +26,6 @@ public class DeleteExamAction extends BaseAction{
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
 		ExamTransaction examTransaction=new ExamTransaction();
-		StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
-		marksTransaction.deleteStudentMarksrelatedtoexam(userBean.getRegId(), Integer.parseInt(division), Integer.parseInt(subject), examID);
-		examTransaction.deleteExam(examID, userBean.getRegId(), Integer.parseInt(subject), Integer.parseInt(division));
-		actionname="deleteExam";
 		return SUCCESS;
 	}
 	

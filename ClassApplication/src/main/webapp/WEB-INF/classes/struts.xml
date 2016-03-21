@@ -5,8 +5,9 @@
 <struts>
 	<constant name="struts.devMode" value="true" />
 	<constant name="struts.action.excludePattern"
-		value="/admajxsrvlt,/classOwnerServlet,/notificationServlet,/reloadConfig,/notifications" />
+		value="/admajxsrvlt,/classOwnerServlet,/notificationServlet,/reloadConfig,/notifications,/rest.*" />
 	<constant name="struts.multipart.maxSize" value="5000000" />
+	<constant name="struts.custom.i18n.resources" value="global" />
 	<package name="classapp" extends="struts-default">
 		<result-types>
 			<result-type name="tiles"
@@ -19,6 +20,7 @@
 		</global-results>
 
 		<action name="login" class="com.signon.LoginUser" method="execute">
+		    
 			<result name="success" type="tiles">admin.loginsuccess</result>
 			<result name="success_classowner" type="tiles">classowner.loginsuccess
 			</result>
@@ -32,22 +34,11 @@
 			<result name="input" type="tiles">login</result>
 			<result name="activation" type="tiles">activation</result>
 			<result name="resetpassword" type="tiles">resetpassword</result>
+			<result name="invalid.token" type="tiles">accessblocked</result>
 			<param name="ignoresession">true</param>
 		</action>
 
 		<action name="logout" class="com.signon.Logout" method="execute">
-			<result name="success" type="tiles">logoutcomplete</result>
-			<param name="ignoresession">true</param>
-		</action>
-
-		<action name="logoutComplete" class="com.signon.LogoutCompleteAction"
-			method="execute">
-			<result name="success" type="tiles">logoutsuccess</result>
-			<param name="ignoresession">true</param>
-		</action>
-
-		<action name="logoutsuccess" class="com.signon.LogoutSuccessAction"
-			method="execute">
 			<result name="success" type="tiles">login</result>
 			<param name="ignoresession">true</param>
 		</action>
@@ -67,14 +58,20 @@
 		</action>
 		<action name="edit" class="com.edit.EditUserAction" method="execute">
 			<result name="success" type="tiles">edituser</result>
+			<result name="teacher.edituser" type="tiles">teacher.edituser</result>
+			<result name="student.edituser" type="tiles">student.edituser</result>
 		</action>
 		<action name="editconfirm" class="com.edit.EditUserConfirm"
 			method="execute">
 			<result name="success" type="tiles">edituserreview</result>
+			<result name="student.edituserreview" type="tiles">student.edituserreview</result>
+			<result name="teacher.edituserreview" type="tiles">teacher.edituserreview</result>
 			<result name="error" type="tiles">edituser</result>
 		</action>
 		<action name="editsave" class="com.edit.EditUserSave" method="execute">
 			<result name="success" type="tiles">editusersuccess</result>
+			<result name="teacher.editusersuccess" type="tiles">teacher.editusersuccess</result>
+			<result name="student.editusersuccess" type="tiles">student.editusersuccess</result>
 			<result name="error" type="tiles">register</result>
 		</action>
 
@@ -138,7 +135,7 @@
 		</action>
 		<action name="shownotes" class="com.notes.DisplayNotesAction"
 			method="execute">
-			<result name="success" type="tiles">displaynoteslist.success</result>
+			<result name="displaynotes">/Notes/DisplayNotes.jsp</result>
 		</action>
 		<action name="managestudent" class="com.classowner.ManageStudentAction"
 			method="execute">
@@ -173,10 +170,10 @@
 			<result name="error" type="tiles">register</result>
 		</action>
 
-		<action name="uploadexams" class="com.classowner.UploadExamsAction"
+		<action name="addquestion" class="com.classowner.AddQuestionAction"
 			method="execute">
 			<result name="success" type="tiles">classowner.uploadexams</result>
-			<result name="startuploadingexam" type="tiles">classowner.startuploadingexam</result>
+			<result name="startaddingquestion" type="tiles">classowner.startaddingquestion</result>
 			<result name="examlandingpage" type="tiles">classowner.uploadexamcomplete</result>
 			<result name="questioneditsuccess" type="tiles">classowner.questioneditsuccess</result>
 			<result name="cancleuploading" type="tiles">classowner.questioneditsuccess</result>
@@ -324,29 +321,34 @@
 			<param name="ignoresession">true</param>
 		</action>
 		
-		<action name="generateexamaction" class="com.corex.exam.GenerateExamAction" method="execute">
-			<result name="success" type="tiles">classowner.generateexamsuccess</result>
-			<param name="ignoresession">true</param>
-		</action>
-		
 		<action name="generateexampreaction" class="com.corex.exam.GenerateExamPreAction" method="execute">
 			<result name="success" type="tiles">classowner.generateexampre</result>
 			<param name="ignoresession">true</param>
 		</action>
-
-		<action name="editquestion" class="com.classowner.UploadExamsAction"
+		
+		<action name="generateexamaction" class="com.corex.exam.GenerateExamAction" method="execute">
+			<result name="success" type="tiles">classowner.generateexamreview</result>
+			<param name="ignoresession">true</param>
+		</action>
+		
+		<action name="generateexamsaveaction" class="com.corex.exam.GenerateExamSaveAction" method="execute">
+			<result name="success" type="tiles">classowner.generateexamsuccess</result>
+			<param name="ignoresession">true</param>
+		</action>
+		
+		<action name="editquestion" class="com.classowner.EditQuestionAction"
 			method="execute">
 			<result name="success" type="tiles">classowner.uploadexams</result>
-			<result name="startuploadingexam" type="tiles">classowner.startuploadingexam</result>
-			<result name="examlandingpage" type="tiles">classowner.uploadexamcomplete</result>
+			<result name="starteditingquestion" type="tiles">classowner.starteditingquestion</result>
+			<result name="editSuccess" type="tiles">classowner.listquestionbankquestion</result>
 			<result name="questioneditsuccess" type="tiles">classowner.questioneditsuccess</result>
 			<result name="teacheraddquestion" type="tiles">teacher.teacheraddquestion</result>
 		</action>
 		
-		<action name="deletequestion" class="com.classowner.UploadExamsAction"
+		<action name="deletequestion" class="com.classowner.AddQuestionAction"
 			method="execute">
 			<result name="success" type="tiles">classowner.uploadexams</result>
-			<result name="startuploadingexam" type="tiles">classowner.startuploadingexam</result>
+			<result name="startaddingquestion" type="tiles">classowner.startaddingquestion</result>
 			<result name="examlandingpage" type="tiles">classowner.uploadexamcomplete</result>
 			<result name="questiondelete" type="tiles">classowner.questioneditsuccess</result>
 		</action>
@@ -388,12 +390,9 @@
 			<result name="examadded" type="tiles">classowner.questioneditsuccess</result>
 		</action>
 		
-		<action name="editexam" class="com.exam.EditExamAction"
+		<action name="editExam" class="com.exam.EditExamAction"
 			method="execute">
-			<result name="editexam" type="tiles">classowner.editexam</result>
-			<result name="autosubmit" type="tiles">classowner.autosubmit</result>
-			<result name="teachereditexam" type="tiles">teacher.teachereditexam</result>
-			<result name="editcomplete" type="tiles">classowner.questioneditsuccess</result>
+			<result name="success" type="tiles">classowner.editexam</result>
 		</action>
 		
 		<action name="viewexam" class="com.exam.ViewExamAction"
@@ -404,10 +403,14 @@
 			<result name="viewcomplete" type="tiles">classowner.questioneditsuccess</result>
 		</action>
 		
-		<action name="examMarks" class="com.exam.StudentExamMarksAction"
+		<action name="examMarks" class="com.exam.ExamMarksAction"
 			method="execute">
-			<result name="success" type="tiles">student.examMarks</result>
+			<result name="success" type="tiles">classowner.examMarks</result>
 			<result name="studentexamlist" type="tiles">student.examMarks</result>
+		</action>
+		<action name="editExamMarks" class="com.exam.ExamMarksAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.editExamMarks</result>
 		</action>
 		<action name="viewexamans" class="com.exam.ViewExamAnsAction"
 			method="execute">
@@ -433,5 +436,91 @@
 			<result name="success" type="tiles">teacher.teacherweeklytimetable</result>
 			<result name="error" type="tiles">register</result>
 		</action>
+		<action name="instituteupgrade" class="com.admin.actions.InstituteUpgradeAction"
+			method="execute">
+			<result name="success" type="tiles">admin.instituteupgrade</result>
+		</action>
+		<action name="ImageAction" class="com.notes.ImageAction"
+			method="execute">
+			<result name="success" type="tiles">admin.instituteupgrade</result>
+		</action>
+		<action name="viewteachers" class="com.classowner.ManageTeacherAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.viewteacher</result>
+		</action>
+		<action name="viewstudent" class="com.classowner.ManageStudentAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.viewstudent</result>
+			<result name="error" type="tiles">register</result>
+		</action>
+		
+		<!-- New exam functions -->
+		
+		<action name="manageExam" class="com.classowner.ManageAllExamFunctionAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.ManageAllExamFunctionAction</result>
+		</action>
+		
+		<action name="createExamPatten" class="com.exam.CreateExamPatternAction"
+			method="execute">
+			<result name="startcreatingpattern" type="tiles">classowner.startcreatingpattern</result>
+		</action>
+		<action name="viewneditpattern" class="com.exam.ViewNEditPatternAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.viewneditpattern</result>
+		</action>
+		
+		
+		<action name="generateQuestionPaper" class="com.exam.GenerateQuestionPaper"
+			method="execute">
+			<result name="success" type="tiles">classowner.generateQuestionPaper</result>
+		</action>
+			<action name="createExam" class="com.exam.CreateExamAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.createExam</result>
+		</action>
+		<action name="editQuestionPaper" class="com.exam.EditQuestionPaperAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.editExam</result>
+		</action>
+		<action name="fees" class="com.fee.FeeAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.fee</result>
+		</action>
+		<action name="viewneditfee" class="com.fee.ViewnEditfeeAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.viewneditfee</result>
+		</action>
+
+		<action name="linkfee" class="com.fee.LinkFeeAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.linkfee</result>
+		</action>
+		
+		<action name="studentFees" class="com.fee.StudentFeesAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.studentFees</result>
+		</action>
+		<action name="attendances" class="com.attendance.AttendanceAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.studentAttendance</result>
+		</action>
+		
+		<action name="timetableall" class="com.timetable.TimeTableAllAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.timetableall</result>
+		</action>
+		<action name="editAttendance" class="com.attendance.AttendanceAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.studentEditAttendance</result>
+		</action>	
+		<action name="viewAttendance" class="com.attendance.AttendanceAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.studentviewAttendance</result>
+		</action>			
+		<action name="manageClassFeature" class="com.admin.actions.ManageClassFeature"
+			method="execute">
+			<result name="success" type="tiles">admin.ManageClassFeature</result>
+		</action>				
 	</package>
 </struts>

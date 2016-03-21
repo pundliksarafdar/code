@@ -1,7 +1,6 @@
 package com.classapp.login;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.Date;
 
 public class UserBean{
 	private String username;
@@ -11,7 +10,6 @@ public class UserBean{
 	private String middlename;
 	private Integer role;
 	private String dob;
-	private LoginBeanMobile loginBean;
 	private String addr1;
 	private String addr2;
 	private String city;
@@ -22,9 +20,32 @@ public class UserBean{
 	private String startdate;
 	private String enddate;
 	private Integer regId;
-	private HashMap<String, List> studentData;
+	private String activationcode;
+	private String status;
+	private String email;
 	private String className;
+	private Date lastlogin;
+	private String inst_status;
 	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getActivationcode() {
+		return activationcode;
+	}
+	public void setActivationcode(String activationcode) {
+		this.activationcode = activationcode;
+	}
 	public String getDob() {
 		return dob;
 	}
@@ -70,13 +91,6 @@ public class UserBean{
 		}else{
 			this.role = role;
 		}
-
-	}
-	public LoginBeanMobile getLoginBean() {
-		return loginBean;
-	}
-	public void setLoginBean(LoginBeanMobile loginBean) {
-		this.loginBean = loginBean;
 	}
 	public String getAddr1() {
 		return addr1;
@@ -138,17 +152,23 @@ public class UserBean{
 	public void setRegId(Integer regId) {
 		this.regId = regId;
 	}
-	public HashMap<String, List> getStudentData() {
-		return studentData;
-	}
-	public void setStudentData(HashMap<String, List> studentData) {
-		this.studentData = studentData;
-	}
 	public String getClassName() {
 		return className;
 	}
 	public void setClassName(String className) {
 		this.className = className;
+	}
+	public String getInst_status() {
+		return inst_status;
+	}
+	public void setInst_status(String inst_status) {
+		this.inst_status = inst_status;
+	}
+	public Date getLastlogin() {
+		return lastlogin;
+	}
+	public void setLastlogin(Date lastlogin) {
+		this.lastlogin = lastlogin;
 	}
 	
 }

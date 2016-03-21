@@ -433,35 +433,35 @@
 						State <span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu scrollable-menu" role="menu" >
-						<li value="Andhra Pradesh"><a href="#">Andhra Pradesh</a></li>
-						<li value="Arunachal Pradesh"><a href="#">Arunachal Pradesh</a><li>
-						<li value="Assam"><a href="#">Assam</a></li>
-						<li value="Bihar"><a href="#">Bihar</a></li>
-						<li value="Chhattisgarh"><a href="#">Chhattisgarh</a></li>
-						<li value="Goa"><a href="#">Goa</a></li>
-						<li value="Gujarat"><a href="#">Gujarat</a></li>
-						<li value="Haryana"><a href="#">Haryana</a></li>
-						<li value="Himachal Pradesh"><a href="#">Himachal Pradesh</a></li>
-						<li value="Jammu and Kashmir"><a href="#">Jammu and Kashmir</a></li>
-						<li value="Jharkhand"><a href="#">Jharkhand</a></li>
-						<li value="Karnataka"><a href="#">Karnataka</a></li>
-						<li value="Kerala"><a href="#">Kerala</a></li>
-						<li><a href="#">Madhya Pradesh</a></li>
-						<li><a href="#">Maharashtra</a></li>
-						<li><a href="#">Manipur</a></li>
-						<li><a href="#">Meghalaya</a></li>
-						<li><a href="#">Mizoram</a></li>
-						<li><a href="#">Nagaland</a></li>
-						<li><a href="#">Orissa</a></li>
-						<li><a href="#">Punjab</a></li>
-						<li><a href="#">Rajasthan</a></li>
-						<li><a href="#">Sikkim</a></li>
-						<li><a href="#">Tamil Nadu</a></li>
-						<li><a href="#">Telangana</a></li>
-						<li><a href="#">Tripura</a></li>
-						<li><a href="#">Uttar Pradesh</a></li>
-						<li><a href="#">Uttarakhand</a></li>
-						<li><a href="#">West Bengal</a></li>
+						<li value="Andhra Pradesh">Andhra Pradesh</li>
+						<li value="Arunachal Pradesh">Arunachal Pradesh<li>
+						<li value="Assam">Assam</li>
+						<li value="Bihar">Bihar</li>
+						<li value="Chhattisgarh">Chhattisgarh</li>
+						<li value="Goa">Goa</li>
+						<li value="Gujarat">Gujarat</li>
+						<li value="Haryana">Haryana</li>
+						<li value="Himachal Pradesh">Himachal Pradesh</li>
+						<li value="Jammu and Kashmir">Jammu and Kashmir</li>
+						<li value="Jharkhand">Jharkhand</li>
+						<li value="Karnataka">Karnataka</li>
+						<li value="Kerala">Kerala</li>
+						<li>Madhya Pradesh</li>
+						<li>Maharashtra</li>
+						<li>Manipur</li>
+						<li>Meghalaya</li>
+						<li>Mizoram</li>
+						<li>Nagaland</li>
+						<li>Orissa</li>
+						<li>Punjab</li>
+						<li>Rajasthan</li>
+						<li>Sikkim</li>
+						<li>Tamil Nadu</li>
+						<li>Telangana</li>
+						<li>Tripura</li>
+						<li>Uttar Pradesh</li>
+						<li>Uttarakhand</li>
+						<li>West Bengal</li>
 					</ul>
 			</div>
 			</div>

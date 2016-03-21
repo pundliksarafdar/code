@@ -12,7 +12,6 @@ int sub_id;
 int teacher_id;
 Time start_time;
 Time end_time;
-int day_id;
 Date date;
 int schedule_id;
 
@@ -64,19 +63,10 @@ public Time getEnd_time() {
 public void setEnd_time(Time end_time) {
 	this.end_time = end_time;
 }
-public int getDay_id() {
-	return day_id;
-}
-public void setDay_id(int day_id) {
-	this.day_id = day_id;
-}
 public Date getDate() {
 	return date;
 }
 public void setDate(Date date) {
 	this.date = date;
 }
-
-
-
 }

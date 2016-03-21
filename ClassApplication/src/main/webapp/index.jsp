@@ -55,7 +55,7 @@ ul{
 			<div class="page-header">
 				<h1>Class Application</h1>
 			</div>
-			
+			<!--<s:property value="getText('global.name')" />-->			
 			<div class="row">
 				<div class="col-md-4">
 					<img src="images/cxlogowhite.jpg" alt="cxlogo" style="height: 100%;width: 100%" class="img-rounded"/>
@@ -82,7 +82,7 @@ ul{
 								</div>
 							</s:if>
 							</s:if>
-								
+							<input type="hidden" name="loginBean.lastLogin" value="<%=new java.util.Date().getTime()%>"/>
 							<div class="form-group">
 								<label for="lgname" class="col-sm-4 control-label">*Login
 									Name</label>
