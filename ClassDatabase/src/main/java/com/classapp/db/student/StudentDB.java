@@ -1,6 +1,7 @@
 package com.classapp.db.student;
 
 import java.lang.ProcessBuilder.Redirect;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -784,6 +785,46 @@ public class StudentDB {
 			query.setParameter("batch_id4", batchname);
 			query.setParameter("class_id", inst_id);
 			query.setParameter("div_id", div_id);
+				list=query.list();
+			if(list!=null)
+			{
+				return list;
+			}
+			
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return null;
+	}
+	
+	public List getStudentrelatedtoBatchForAttendanceUpdate(String batchname,int inst_id,int div_id,int sub_id,
+															Date date) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List list=null;
+		String queryString="Select reg.fname,reg.lname, reg.regId,att.presentee,att.att_id from Student std,RegisterBean reg, Attendance att " +
+				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
+				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id and att.student_id = reg.regId and " +
+				"att.div_id = std.div_id and att.batch_id = :attbatch_id and att.att_date = :date and att.sub_id = :sub_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("batch_id1", batchname+",%");
+			query.setParameter("batch_id2","%,"+batchname+",%");	
+			query.setParameter("batch_id3", "%,"+batchname);
+			query.setParameter("batch_id4", batchname);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("attbatch_id", Integer.parseInt(batchname));
+			query.setParameter("date", date);
+			query.setParameter("sub_id", sub_id);
+			
 				list=query.list();
 			if(list!=null)
 			{

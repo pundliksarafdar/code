@@ -2,7 +2,6 @@
 var getBatchListUrl = "rest/feesservice/getInstituteBatch/";
 var getAllBatchStudentsFeesUrl = "rest/feesservice/getAllBatchStudentsFees/";
 var subject_id = "";
-var schedule_id = "";
 /*************/
 var DIVISION_SELECT = "#divisionSelect";
 var BATCH_SELECT = "#batchSelect";
@@ -26,7 +25,6 @@ $(document).ready(function(){
 	 });
 	 $('#attendanceScheduleTable').on("click",".markAttendance",function(){
 		 subject_id = $(this).closest("div").find("#sub_id").val();
-		 schedule_id= $(this).closest("div").find("#schedule_id").val();
 		 getStudents();
 	 });
 	 
@@ -43,11 +41,11 @@ $(document).ready(function(){
 			var attendanceArr = [];
 			for(var i=0 ; i<$(".presentee").length;i++){
 				attendance={};
-				attendance.schedule_id = schedule_id;
 				attendance.sub_id = subject_id;
 				attendance.div_id = division;
 				attendance.batch_id = batch;
 				attendance.student_id = $($(".presentee")[i]).closest(".presenteeDiv").find("#student_id").val();
+				attendance.att_id = $($(".presentee")[i]).closest(".presenteeDiv").find("#att_id").val();
 				if($(".presentee")[i].checked){ 
 				attendance.presentee = "P";
 				}else{
@@ -62,7 +60,7 @@ $(document).ready(function(){
 			
 			}
 			handler.error = function(e){console.log("Error",e)}
-			rest.post("rest/attendance/saveStudentAttendance",handler,JSON.stringify(attendanceArr));
+			rest.post("rest/attendance/updateStudentAttendance",handler,JSON.stringify(attendanceArr));
 	 });
 	 
 	 $('#myInput').on( 'keyup', function () {
@@ -180,6 +178,7 @@ function createAttendanceScheduleTable(data){
 function getStudents(){
 	var division = $("#divisionSelect").val();
 	var batch = $("#batchSelect").val();
+	var date = $("#date").val().split("/");
 	var handler = {};
 	handler.success = function(e){console.log("Success",e);	
 	createStudentAttendanceTable(e);
@@ -187,7 +186,7 @@ function getStudents(){
 	$("#attendanceScheduleDiv").hide();
 	}
 	handler.error = function(e){console.log("Error",e)}
-	rest.get("rest/attendance/getStudentsForAttendance/"+division+"/"+batch,handler);
+	rest.get("rest/attendance/getStudentsForAttendanceUpdate/"+division+"/"+batch+"/"+subject_id+"/"+new Date(date[2],parseInt(date[1])-1,date[0]).getTime(),handler);
 }
 
 function createStudentAttendanceTable(data){
@@ -207,7 +206,21 @@ function createStudentAttendanceTable(data){
 				return div;
 			},sWidth:"50%"},
 			{ title: "Attendance",data:null,render:function(data,event,row){
-				return "<div class='presenteeDiv'><input type='checkbox' data-size=\"mini\"/ class='presentee' checked><input type='hidden' value='"+row.student_id+"' id='student_id'></div>"}
+										if (row.presentee == "P") {
+											return "<div class='presenteeDiv'><input type='checkbox' data-size=\"mini\"/ class='presentee' checked><input type='hidden' value='"
+													+ row.student_id
+													+ "' id='student_id'><input type='hidden' value='"
+													+ row.att_id
+													+ "' id='att_id'></div>"
+										} else {
+											return "<div class='presenteeDiv'><input type='checkbox' data-size=\"mini\"/ class='presentee'><input type='hidden' value='"
+													+ row.student_id
+													+ "' id='student_id'><input type='hidden' value='"
+													+ row.att_id
+													+ "' id='att_id'></div>"
+										}
+			}
+				
 			,swidth:'30%'
 			}
 		]

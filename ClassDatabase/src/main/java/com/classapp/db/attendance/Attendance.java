@@ -9,6 +9,7 @@ public class Attendance {
 	int div_id;
 	int batch_id;
 	int sub_id;
+	int schedule_id;
 	int student_id;
 	String presentee;
 	String note;
@@ -47,6 +48,12 @@ public class Attendance {
 	}
 	public void setSub_id(int sub_id) {
 		this.sub_id = sub_id;
+	}
+	public int getSchedule_id() {
+		return schedule_id;
+	}
+	public void setSchedule_id(int schedule_id) {
+		this.schedule_id = schedule_id;
 	}
 	public int getStudent_id() {
 		return student_id;

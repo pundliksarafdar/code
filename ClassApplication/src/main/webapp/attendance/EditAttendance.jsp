@@ -14,7 +14,7 @@
 </head>
 <body>
 <jsp:include page="attendanceHeader.jsp" >
-		<jsp:param value="active" name="attendances"/>
+		<jsp:param value="active" name="editAttendance"/>
 	</jsp:include>
 	<div class="container" style="padding: 2%;background: #eee">
 		<div class="row">

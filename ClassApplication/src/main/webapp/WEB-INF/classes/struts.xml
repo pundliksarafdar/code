@@ -510,6 +510,14 @@
 			method="execute">
 			<result name="success" type="tiles">classowner.timetableall</result>
 		</action>
+		<action name="editAttendance" class="com.attendance.AttendanceAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.studentEditAttendance</result>
+		</action>	
+		<action name="viewAttendance" class="com.attendance.AttendanceAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.studentviewAttendance</result>
+		</action>			
 		<action name="manageClassFeature" class="com.admin.actions.ManageClassFeature"
 			method="execute">
 			<result name="success" type="tiles">admin.ManageClassFeature</result>

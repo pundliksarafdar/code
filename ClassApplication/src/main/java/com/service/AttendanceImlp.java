@@ -63,4 +63,60 @@ public class AttendanceImlp extends ServiceBase{
 		boolean status = attendanceTransaction.save(attendanceList,getRegId());
 		return Response.status(Response.Status.OK).entity(status).build();
 	}
+	
+	@GET
+	@Path("/getStudentsForAttendanceUpdate/{division}/{batch}/{sub_id}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentsForAttendanceUpdate(@PathParam("batch") String batch,
+			@PathParam("division") Integer division,@PathParam("sub_id") Integer sub_id,
+			@PathParam("date") long date) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		List studentList = attendanceTransaction.getStudentForAttendanceUpdate(batch, getRegId(), division, sub_id, new Date(date));
+		return Response.status(Response.Status.OK).entity(studentList).build();
+	}
+	
+	@POST
+	@Path("/updateStudentAttendance")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateStudentAttendance(List<Attendance> attendanceList) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		boolean status = attendanceTransaction.updateAttendance(attendanceList,getRegId());
+		return Response.status(Response.Status.OK).entity(status).build();
+	}
+	
+	@GET
+	@Path("/getStudentsDailyAttendance/{division}/{batch}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentsDailyAttendance(@PathParam("batch") String batch,
+			@PathParam("division") Integer division,@PathParam("date") long date) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		List studentList = attendanceTransaction.getStudentsDailyAttendance(batch, getRegId(), division, new Date(date));
+		return Response.status(Response.Status.OK).entity(studentList).build();
+	}
+	
+	@GET
+	@Path("/getStudentsMonthlyAttendance/{division}/{batch}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentsMonthlyAttendance(@PathParam("batch") String batch,
+			@PathParam("division") Integer division,@PathParam("date") long date) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		List studentList = attendanceTransaction.getStudentsMonthlyAttendance(batch, getRegId(), division, new Date(date));
+		return Response.status(Response.Status.OK).entity(studentList).build();
+	}
+	
+	@GET
+	@Path("/getStudentsWeeklyAttendance/{division}/{batch}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentsWeeklyAttendance(@PathParam("batch") String batch,
+			@PathParam("division") Integer division,@PathParam("date") long date) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		List studentList = attendanceTransaction.getStudentsWeeklyAttendance(batch, getRegId(), division, new Date(date));
+		return Response.status(Response.Status.OK).entity(studentList).build();
+	}
 }

@@ -14,7 +14,7 @@
 </head>
 <body>
 <jsp:include page="attendanceHeader.jsp" >
-		<jsp:param value="active" name="attendances"/>
+		<jsp:param value="active" name="viewAttendance"/>
 	</jsp:include>
 	<div class="container" style="padding: 2%;background: #eee">
 		<div class="row">
@@ -32,6 +32,13 @@
 				</select>
 			</div>
 			<div class="col-md-3">
+				<select class="btn btn-default" id="attendanceType">
+					<option value="1" selected="selected">Daily Attendance</option>
+					<option value="2">Weekly Attendance</option>
+					<option value="3">Monthly Attendance</option>
+				</select>
+			</div>
+			<div class="col-md-3">
 				<div id="datetimepicker" class="input-group" style="width :190px;">
 					<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
 						type="text" id="date" placeholder="Select Date" readonly/> <span class="input-group-addon add-on"> <i
@@ -44,23 +51,12 @@
 			</div>
 		</div>
 	</div>
-	<div class="container" id="attendanceScheduleDiv">
-	<table id="attendanceScheduleTable" class="table" style="width: 100%"></table>
+	<div class="container" id="dailyAttendance" style="width: 100%;display: none;overflow-x: auto">
+	<table id="attendanceScheduleTable" class="table-bordered" style="width: 100%"></table>
 	
 	</div>
-	<div class="container" style="display: none;" id="attendanceStudentListDiv">
-	<div class="row" style="padding: 2%;">
-	<div class="col-md-2">
-	<button class="btn btn-primary btn-sm backtoSchedule">Back</button>
-	</div>
-	<div class="col-md-2">
-	<button class="btn btn-primary btn-sm saveAttendance">Save Attendance</button>
-	</div>
-		<div class="col-md-offset-6 col-md-2">
-	<input type="text" id="myInput" class="form-control input-sm">
-	</div>
-	</div>
-	<table id="attendanceStudentListTable" class="table" style="width: 100%"></table>
+	<div class="container" id="monthlyAttendance" style="width: 100%;display: none;overflow-x: auto">
+	<table id="attendanceStudentListTable" class="table-bordered" style="width: 100%"></table>
 	</div>
 </body>
 </html>

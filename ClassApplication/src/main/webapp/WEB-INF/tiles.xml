@@ -578,7 +578,14 @@
       <put-attribute name="title"  value="Manual Exam"/>
       <put-attribute name="body"   value="/ClassOwner/EditExamMarks.jsp"/>      
    </definition>
-   
+   <definition name="classowner.studentEditAttendance" extends="baseLayout">
+      <put-attribute name="title"  value="Student Attendance"/>
+      <put-attribute name="body"   value="/attendance/EditAttendance.jsp"/>      
+   </definition>
+    <definition name="classowner.studentviewAttendance" extends="baseLayout">
+      <put-attribute name="title"  value="Student Attendance"/>
+      <put-attribute name="body"   value="/attendance/ViewAttendance.jsp"/>      
+   </definition>
    <definition name="admin.ManageClassFeature" extends="baseLayout">
       <put-attribute name="title"  value="Manage Class"/>
       <put-attribute name="body"   value="/admin/ManageClassFeature.jsp"/>      
