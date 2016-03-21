@@ -11,17 +11,29 @@ public class ServiceBase {
 	private HttpServletRequest request;
 	
 	private int regId;
+	private UserBean userBean;
 
 	public int getRegId() {
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		if(null==userBean){
 				throw new NoUserBeanException();
+		}else
+		{
+			setUserBean(userBean);
 		}
 		return userBean.getRegId();
 	}
 
 	public void setRegId(int regId) {
 		this.regId = regId;
+	}
+
+	public UserBean getUserBean() {
+		return userBean;
+	}
+
+	public void setUserBean(UserBean userBean) {
+		this.userBean = userBean;
 	}
 	
 	

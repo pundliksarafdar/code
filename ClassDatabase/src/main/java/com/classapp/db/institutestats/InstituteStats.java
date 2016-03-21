@@ -10,6 +10,21 @@ public class InstituteStats{
 	double alloc_memory;
 	double used_memory;
 	double avail_memory;
+	private Integer regId;
+	private boolean smsAccess;
+	private Integer smsAlloted;
+	private Integer smsLeft;
+	private boolean emailAccess;
+	private String classname;
+	
+	
+	
+	public String getClassname() {
+		return classname;
+	}
+	public void setClassname(String classname) {
+		this.classname = classname;
+	}
 	public int getInst_id() {
 		return inst_id;
 	}
@@ -51,6 +66,36 @@ public class InstituteStats{
 	}
 	public void setAvail_memory(double avail_memory) {
 		this.avail_memory = avail_memory;
+	}
+	public Integer getRegId() {
+		return regId;
+	}
+	public void setRegId(Integer regId) {
+		this.regId = regId;
+	}
+	public boolean isSmsAccess() {
+		return smsAccess;
+	}
+	public void setSmsAccess(boolean smsAccess) {
+		this.smsAccess = smsAccess;
+	}
+	public Integer getSmsAlloted() {
+		return smsAlloted;
+	}
+	public void setSmsAlloted(Integer smsAlloted) {
+		this.smsAlloted = smsAlloted;
+	}
+	public Integer getSmsLeft() {
+		return smsLeft;
+	}
+	public void setSmsLeft(Integer smsLeft) {
+		this.smsLeft = smsLeft;
+	}
+	public boolean isEmailAccess() {
+		return emailAccess;
+	}
+	public void setEmailAccess(boolean emailAccess) {
+		this.emailAccess = emailAccess;
 	}
 	
 	

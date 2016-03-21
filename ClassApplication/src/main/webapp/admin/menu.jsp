@@ -326,7 +326,7 @@ function RenderTimer(completedTime,totalTime){
 	            <li><a class="menuoptions" href="choosesubject?forwardAction=manualexam">Add Manual Exam</a></li>
 	            <li><a class="menuoptions" href="/choosesubject?forwardAction=listExam&batchDefault=true">Search Exam</a></li>
 	            <li><a class="menuoptions" href="choosesubject?forwardAction=attemptexamlist">Attempt Exam</a></li>
-	            <li><a class="menuoptions" href="choosesubject?forwardAction=studentexammarks">Exam marks</a></li>
+	            <li><a class="menuoptions" href="examMarks">Exam marks</a></li>
 	            <li><a class="menuoptions" href="createExamPatten">Exam</a></li>
 	         </ul>
       </li>
@@ -417,6 +417,7 @@ function RenderTimer(completedTime,totalTime){
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>	
 		</div>
 	</div>
+	<% if(userBean.getRole() == 1 ){ %>
 	<div class="row">
         <div class="col-sm-4 col-xs-8">
             <a href="addsubject">
@@ -490,6 +491,7 @@ function RenderTimer(completedTime,totalTime){
             </a>
         </div>
 		<div class="col-sm-2 col-xs-4">
+		 <a href="attendances">
             <div id="tile8" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
@@ -504,8 +506,10 @@ function RenderTimer(completedTime,totalTime){
                         </div>
                     </div>
             </div>
+            </a>
         </div>
 		<div class="col-sm-2 col-xs-4">
+            <a href="fees">
             <div id="tile8" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
@@ -520,6 +524,7 @@ function RenderTimer(completedTime,totalTime){
                         </div>
                     </div>
             </div>
+            </a>
         </div>
 		<div class="col-sm-2 col-xs-4">
             <div id="tile8" class="tile">
@@ -538,6 +543,7 @@ function RenderTimer(completedTime,totalTime){
             </div>
         </div>
 		<div class="col-sm-2 col-xs-4">
+		<a href="timetableall">
             <div id="tile8" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
@@ -552,6 +558,7 @@ function RenderTimer(completedTime,totalTime){
                         </div>
                     </div>
             </div>
+        </a>    
         </div>
 		<div class="col-sm-2 col-xs-4">
             <div id="tile8" class="tile">
@@ -587,6 +594,30 @@ function RenderTimer(completedTime,totalTime){
         </div>
 		<!---->
         </div>
+    <%} %>
+    
+    <% if(userBean.getRole() == 0 ){ %>
+	<div class="row">
+        <div class="col-sm-2 col-xs-4">
+            <a href="manageClassFeature">
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Class
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+            </a>
+        </div>
+       </div>
+    <%} %>
     </div>
 
 

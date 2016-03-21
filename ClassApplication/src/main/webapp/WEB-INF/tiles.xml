@@ -493,14 +493,14 @@
    <definition name="student.examMarks" extends="baseLayout">
       <put-attribute name="title"  value="Manual Exam"/>
       <put-attribute name="topnav" value="/student/menu.jsp" />
-      <put-attribute name="body"   value="/student/StudentExamMarks.jsp"/>      
+      <put-attribute name="body"   value="/student/ExamMarks.jsp"/>      
    </definition>
     <definition name="student.viewexamans" extends="baseLayout">
       <put-attribute name="title"  value="Manual Exam"/>
       <put-attribute name="topnav" value="/student/menu.jsp" />
       <put-attribute name="body"   value="/ClassOwner/ViewExamAns.jsp"/>      
    </definition>
-    <definition name="classowner.viewexammarks" extends="baseLayout">
+    <definition name="classowner.examMarks" extends="baseLayout">
       <put-attribute name="title"  value="Manual Exam"/>
       <put-attribute name="body"   value="/ClassOwner/ExamMarks.jsp"/>      
    </definition>
@@ -533,5 +533,61 @@
    <definition name="classowner.startcreatingpattern" extends="baseLayout">
       <put-attribute name="title"  value="Manage Exam"/>
       <put-attribute name="body"   value="/exam/CreateExamPattern.jsp"/>      
+   </definition>
+   <definition name="classowner.generateQuestionPaper" extends="baseLayout">
+      <put-attribute name="title"  value="Generate quuestion paper"/>
+      <put-attribute name="body"   value="/exam/generateQuestionPaper.jsp"/>      
+   </definition>
+   <definition name="classowner.viewneditpattern" extends="baseLayout">
+      <put-attribute name="title"  value="Manage Exam"/>
+      <put-attribute name="body"   value="/exam/ViewNEditPattern.jsp"/>      
+   </definition>
+    <definition name="classowner.createExam" extends="baseLayout">
+      <put-attribute name="title"  value="Manage Exam"/>
+      <put-attribute name="body"   value="/exam/CreateExam.jsp"/>      
+   </definition>
+   <definition name="classowner.editExam" extends="baseLayout">
+      <put-attribute name="title"  value="Manage Exam"/>
+      <put-attribute name="body"   value="/exam/editQuestionPaper.jsp"/>      
+   </definition>
+   <definition name="classowner.fee" extends="baseLayout">
+      <put-attribute name="title"  value="Manage Fee"/>
+      <put-attribute name="body"   value="/fee/fee.jsp"/>      
+   </definition>
+   <definition name="classowner.viewneditfee" extends="baseLayout">
+      <put-attribute name="title"  value="Manage Fee"/>
+      <put-attribute name="body"   value="/fee/viewneditfee.jsp"/>      
+   </definition>
+   <definition name="classowner.linkfee" extends="baseLayout">
+      <put-attribute name="title"  value="Link Fee"/>
+      <put-attribute name="body"   value="/fee/linkfee.jsp"/>      
+   </definition>
+   <definition name="classowner.studentFees" extends="baseLayout">
+      <put-attribute name="title"  value="Student Fee"/>
+      <put-attribute name="body"   value="/fee/studentFee.jsp"/>      
+   </definition>
+   <definition name="classowner.timetableall" extends="baseLayout">
+      <put-attribute name="title"  value="Student Fee"/>
+      <put-attribute name="body"   value="/Timetable/timetable.jsp"/>      
+   </definition>
+   <definition name="classowner.studentAttendance" extends="baseLayout">
+      <put-attribute name="title"  value="Student Attendance"/>
+      <put-attribute name="body"   value="/attendance/studentAttendance.jsp"/>      
+   </definition>
+    <definition name="classowner.editExamMarks" extends="baseLayout">
+      <put-attribute name="title"  value="Manual Exam"/>
+      <put-attribute name="body"   value="/ClassOwner/EditExamMarks.jsp"/>      
+   </definition>
+   <definition name="classowner.studentEditAttendance" extends="baseLayout">
+      <put-attribute name="title"  value="Student Attendance"/>
+      <put-attribute name="body"   value="/attendance/EditAttendance.jsp"/>      
+   </definition>
+    <definition name="classowner.studentviewAttendance" extends="baseLayout">
+      <put-attribute name="title"  value="Student Attendance"/>
+      <put-attribute name="body"   value="/attendance/ViewAttendance.jsp"/>      
+   </definition>
+   <definition name="admin.ManageClassFeature" extends="baseLayout">
+      <put-attribute name="title"  value="Manage Class"/>
+      <put-attribute name="body"   value="/admin/ManageClassFeature.jsp"/>      
    </definition>
 </tiles-definitions>

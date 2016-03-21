@@ -390,12 +390,9 @@
 			<result name="examadded" type="tiles">classowner.questioneditsuccess</result>
 		</action>
 		
-		<action name="editexam" class="com.exam.EditExamAction"
+		<action name="editExam" class="com.exam.EditExamAction"
 			method="execute">
-			<result name="editexam" type="tiles">classowner.editexam</result>
-			<result name="autosubmit" type="tiles">classowner.autosubmit</result>
-			<result name="teachereditexam" type="tiles">teacher.teachereditexam</result>
-			<result name="editcomplete" type="tiles">classowner.questioneditsuccess</result>
+			<result name="success" type="tiles">classowner.editexam</result>
 		</action>
 		
 		<action name="viewexam" class="com.exam.ViewExamAction"
@@ -406,10 +403,14 @@
 			<result name="viewcomplete" type="tiles">classowner.questioneditsuccess</result>
 		</action>
 		
-		<action name="examMarks" class="com.exam.StudentExamMarksAction"
+		<action name="examMarks" class="com.exam.ExamMarksAction"
 			method="execute">
-			<result name="success" type="tiles">student.examMarks</result>
+			<result name="success" type="tiles">classowner.examMarks</result>
 			<result name="studentexamlist" type="tiles">student.examMarks</result>
+		</action>
+		<action name="editExamMarks" class="com.exam.ExamMarksAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.editExamMarks</result>
 		</action>
 		<action name="viewexamans" class="com.exam.ViewExamAnsAction"
 			method="execute">
@@ -464,5 +465,62 @@
 			method="execute">
 			<result name="startcreatingpattern" type="tiles">classowner.startcreatingpattern</result>
 		</action>
+		<action name="viewneditpattern" class="com.exam.ViewNEditPatternAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.viewneditpattern</result>
+		</action>
+		
+		
+		<action name="generateQuestionPaper" class="com.exam.GenerateQuestionPaper"
+			method="execute">
+			<result name="success" type="tiles">classowner.generateQuestionPaper</result>
+		</action>
+			<action name="createExam" class="com.exam.CreateExamAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.createExam</result>
+		</action>
+		<action name="editQuestionPaper" class="com.exam.EditQuestionPaperAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.editExam</result>
+		</action>
+		<action name="fees" class="com.fee.FeeAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.fee</result>
+		</action>
+		<action name="viewneditfee" class="com.fee.ViewnEditfeeAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.viewneditfee</result>
+		</action>
+
+		<action name="linkfee" class="com.fee.LinkFeeAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.linkfee</result>
+		</action>
+		
+		<action name="studentFees" class="com.fee.StudentFeesAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.studentFees</result>
+		</action>
+		<action name="attendances" class="com.attendance.AttendanceAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.studentAttendance</result>
+		</action>
+		
+		<action name="timetableall" class="com.timetable.TimeTableAllAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.timetableall</result>
+		</action>
+		<action name="editAttendance" class="com.attendance.AttendanceAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.studentEditAttendance</result>
+		</action>	
+		<action name="viewAttendance" class="com.attendance.AttendanceAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.studentviewAttendance</result>
+		</action>			
+		<action name="manageClassFeature" class="com.admin.actions.ManageClassFeature"
+			method="execute">
+			<result name="success" type="tiles">admin.ManageClassFeature</result>
+		</action>				
 	</package>
 </struts>

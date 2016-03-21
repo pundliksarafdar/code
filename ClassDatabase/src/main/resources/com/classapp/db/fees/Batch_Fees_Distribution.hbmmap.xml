@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.fees.BatchFeesDistribution" table="batch_fees_distribution" catalog="classdb">
+    <composite-id>
+    	<key-property name="inst_id" column="inst_id" type="int"></key-property>
+		<key-property name="batch_fees_id" column="batch_fees_id" type="int"></key-property>
+		<key-property name="fees_id" column="fees_id" type="int"></key-property>
+		<key-property name="fees_structure_id" column="fees_structure_id" type="int"></key-property>
+    </composite-id>
+          <property name="fees_amount" type="int">
+            <column name="fees_amount"/>
+        </property>
+    </class>
+</hibernate-mapping>

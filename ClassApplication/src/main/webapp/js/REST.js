@@ -14,11 +14,50 @@ function REST(){
 			   url: uri,
 			   type:"POST",
 			   data:data,
+			   processData: false,
+			   contentType: "application/json",
 			   global:global,
 			   success:handlers.success,
 			   error:handlers.error
 			   });
 	}
+	
+	this.postString =function(uri,handlers,data,global){
+		$.ajax({
+			   url: uri,
+			   type:"POST",
+			   data:data,
+			   processData: false,
+			   contentType: "text/plain",
+			   global:global,
+			   success:handlers.success,
+			   error:handlers.error
+			   });
+	}
+
+	this.deleteItem =function(uri,handlers,global){
+		$.ajax({
+			   url: uri,
+			   type:"DELETE",
+			   global:global,
+			   success:handlers.success,
+			   error:handlers.error
+			   }); 
+	}
+	
+	this.put =function(uri,handlers,data,global){
+		$.ajax({
+			   url: uri,
+			   type:"PUT",
+			   data:data,
+			   processData: false,
+			   contentType: "application/json",
+			   global:global,
+			   success:handlers.success,
+			   error:handlers.error
+			   });
+	}
+
 	
 	/*
 	 * This is sample code submitquestionsuploadfile is file type id

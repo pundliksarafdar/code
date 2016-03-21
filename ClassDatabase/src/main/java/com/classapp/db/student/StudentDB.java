@@ -1,6 +1,7 @@
 package com.classapp.db.student;
 
 import java.lang.ProcessBuilder.Redirect;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,6 +28,38 @@ public class StudentDB {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			session.saveOrUpdate(student);
+			transaction.commit();
+		}catch(Exception e){
+			status = "1";
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return status;
+	}
+	
+	/*This is bulk update*/
+	public String updateDb(List<Student> students){
+		String status = "0";
+		Session session = null;
+		Transaction transaction = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			int counter = 0;
+			for(Student student:students){
+				session.update(student);
+				counter++;
+				if(counter%20 == 0){
+					session.flush();
+					session.clear();
+				}
+			}
 			transaction.commit();
 		}catch(Exception e){
 			status = "1";
@@ -477,6 +510,7 @@ public class StudentDB {
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
+			if(null!=session)
 			session.close();
 		}
 		return 0;
@@ -508,11 +542,11 @@ public class StudentDB {
 		return 0;
 	}
 	
-	public List getStudentIDSrelatedtoBatch(String batchname,int inst_id,int div_id) {
+	public List<Student> getStudentIDSrelatedtoBatch(String batchname,int inst_id,int div_id) {
 		Session session = null;
 		boolean status=false;
 		Transaction transaction = null;
-		List list=null;
+		List<Student> list=null;
 		String queryString="from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4) and class_id=:class_id and div_id=:div_id order by student_id asc";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
@@ -732,4 +766,174 @@ public class StudentDB {
 		return list;
 	}
 	
+	
+	public List getStudentrelatedtoBatchForAttendance(String batchname,int inst_id,int div_id) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List list=null;
+		String queryString="Select reg.fname,reg.lname, reg.regId from Student std,RegisterBean reg " +
+				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
+				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("batch_id1", batchname+",%");
+			query.setParameter("batch_id2","%,"+batchname+",%");	
+			query.setParameter("batch_id3", "%,"+batchname);
+			query.setParameter("batch_id4", batchname);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
+				list=query.list();
+			if(list!=null)
+			{
+				return list;
+			}
+			
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return null;
+	}
+	
+	public List getStudentrelatedtoBatchForAttendanceUpdate(String batchname,int inst_id,int div_id,int sub_id,
+															Date date) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List list=null;
+		String queryString="Select reg.fname,reg.lname, reg.regId,att.presentee,att.att_id from Student std,RegisterBean reg, Attendance att " +
+				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
+				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id and att.student_id = reg.regId and " +
+				"att.div_id = std.div_id and att.batch_id = :attbatch_id and att.att_date = :date and att.sub_id = :sub_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("batch_id1", batchname+",%");
+			query.setParameter("batch_id2","%,"+batchname+",%");	
+			query.setParameter("batch_id3", "%,"+batchname);
+			query.setParameter("batch_id4", batchname);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("attbatch_id", Integer.parseInt(batchname));
+			query.setParameter("date", date);
+			query.setParameter("sub_id", sub_id);
+			
+				list=query.list();
+			if(list!=null)
+			{
+				return list;
+			}
+			
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return null;
+	}
+	
+	public List getStudentrelatedtoBatchForExamMarks(String batchname,int inst_id,int div_id) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List list=null;
+		String queryString="Select reg.fname,reg.lname, reg.regId from Student std,RegisterBean reg " +
+				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
+				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("batch_id1", batchname+",%");
+			query.setParameter("batch_id2","%,"+batchname+",%");	
+			query.setParameter("batch_id3", "%,"+batchname);
+			query.setParameter("batch_id4", batchname);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
+				list=query.list();
+			if(list!=null)
+			{
+				return list;
+			}
+			
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return null;
+	}
+	
+	public List getStudentrelatedtoBatchForExamMarksUpdate(String batchname,int inst_id,int div_id,int exam_id,int sub_id) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List list=null;
+		String queryString="Select reg.fname,reg.lname, reg.regId,stdMarks.marks from Student std,RegisterBean reg,StudentMarks stdMarks " +
+				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
+				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id and std.class_id=stdMarks.inst_id " +
+				"and std.div_id=stdMarks.div_id and stdMarks.student_id = std.student_id and stdMarks.batch_id = :stdbatchId and " +
+				" stdMarks.exam_id = :exam_id and stdMarks.sub_id = :sub_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("batch_id1", batchname+",%");
+			query.setParameter("batch_id2","%,"+batchname+",%");	
+			query.setParameter("batch_id3", "%,"+batchname);
+			query.setParameter("batch_id4", batchname);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("stdbatchId", Integer.parseInt(batchname));
+			query.setParameter("exam_id", exam_id);
+			query.setParameter("sub_id", sub_id);
+				list=query.list();
+			if(list!=null)
+			{
+				return list;
+			}
+			
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			session.close();
+		}
+		
+		return null;
+	}
+	
+	public String saveStudentMarks(StudentMarks studentMarks){
+		String status = "0";
+		Session session = null;
+		Transaction transaction = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			session.saveOrUpdate(studentMarks);
+			transaction.commit();
+		}catch(Exception e){
+			status = "1";
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return status;
+	}
 }

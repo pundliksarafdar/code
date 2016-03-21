@@ -8,6 +8,8 @@ public class Batch implements Serializable {
 	private int div_id;
 	private String batch_name;
 	private String sub_id;
+	private String status;
+	
 	public int getBatch_id() {
 		return batch_id;
 	}
@@ -39,6 +41,12 @@ public class Batch implements Serializable {
 		this.sub_id = sub_id;
 	}
 	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	@Override
 	public boolean equals(Object obj) {
 		Batch batch=(Batch)obj;

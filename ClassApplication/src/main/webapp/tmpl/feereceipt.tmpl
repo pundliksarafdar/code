@@ -1,0 +1,44 @@
+	<div id="printReceipt">
+		<div id="printReceiptHeader">
+			<h3 field="instituteName">{{instituteName}}</h3>
+			<h5 field="address">{{address}}</h5>
+			<h5 field="contactNo">{{contactNo}}</h5>
+		</div>
+		<div>
+			Received from:{{batchStudentFees.fname}},{{batchStudentFees.lname}}
+		</div>
+		<table id="printReceiptTable" class="table">
+			<thead>
+			<tr>
+				<td>Distribution</td>
+				<td>Amount</td>				
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td id="printReceiptDistribution"></td>
+				<td id="printReceiptAmount"></td>				
+			</tr>
+			<tr>
+				<td>Total fee</td>
+				<td>{{batchStudentFees.batch_fees}}</td>				
+			</tr>
+			<tr>
+				<td>Discount</td>
+				<td>{{batchStudentFees.discount}} {{batchStudentFees.discount_type}}</td>				
+			</tr>
+			<tr>
+				<td>Final fees</td>
+				<td>{{batchStudentFees.final_fees_amt}}</td>				
+			</tr>
+			<tr>
+				<td>Fee paid on {{batchStudentFees.paidOn}}</td>
+				<td>{{batchStudentFees.fees_paid}}</td>				
+			</tr>
+			<tr>
+				<td>Remaining fees</td>
+				<td>{{batchStudentFees.fees_due}}</td>				
+			</tr>
+			</tbody>
+		</table>
+	</div>

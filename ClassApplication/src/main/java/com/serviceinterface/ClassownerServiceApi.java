@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 
 import com.service.beans.AddBatchBean;
 
+@Path("/classownerservice") 
 public interface ClassownerServiceApi {
 	@GET
 	@Path("/test")
@@ -31,5 +32,13 @@ public interface ClassownerServiceApi {
 	@Path("/logoImages")
 	@Produces("application/json")
 	public Response logoImage();
+
+	@POST
+	@Path("/saveHeader/headerName")
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces("application/json")
+	public Response saveHeader(String headerElement,@PathParam("headerName")String headerName);
+
+	
 	
 }

@@ -6,13 +6,13 @@
     <class name="com.classapp.db.image.Image" table="images" catalog="classdb">
     <composite-id>
     	<key-property name="inst_id" column="inst_id" type="int"></key-property>
-		<key-property name="image_id" column="image_id" length="25" type="string"></key-property>
+		<key-property name="image_id" column="image_id" length="50" type="string"></key-property>
     	</composite-id>
         <property name="image_type" type="string">
             <column name="image_type" length="2"/>
         </property>
         <property name="image_name" type="string">
-            <column name="image_name" length="25"/>
+            <column name="image_name" length="30"/>
         </property>
     </class>
 </hibernate-mapping>

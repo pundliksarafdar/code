@@ -35,7 +35,7 @@ public class AttemptExamList extends BaseAction {
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
-			Map<String, Object> session) {
+			Map<String, Object> session) {/*
 		ExamTransaction examTransaction = new ExamTransaction();
 		
 		int totalCount=0;
@@ -76,10 +76,10 @@ public class AttemptExamList extends BaseAction {
 			currentPage++;
 		}
 		if(userBean.getRole()==3){
-			/*examlist=examTransaction.getExam(institute, Integer.parseInt(subject), -1, "Y",currentPage,"-1");
+			examlist=examTransaction.getExam(institute, Integer.parseInt(subject), -1, "Y",currentPage,"-1");
 			StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
 			List<StudentMarks> studentMarks=marksTransaction.getStudentMarksList(institute, userBean.getRegId(), Integer.parseInt(subject), Integer.parseInt(division));
-		*/
+		
 			int startindex=0;
 			if(currentPage>1){
 				startindex=(currentPage-1)*10;
@@ -106,7 +106,7 @@ public class AttemptExamList extends BaseAction {
 		if (userBean.getRole()==3) {
 			return "studentexamlist";
 		}
-		return SUCCESS;
+	*/	return SUCCESS;
 	}
 	public String getBatch() {
 		return batch;

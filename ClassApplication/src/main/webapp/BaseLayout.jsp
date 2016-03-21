@@ -1,6 +1,7 @@
 <%@page import="java.util.Map"%>
 <%@page import="com.user.UserBean"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%
@@ -15,6 +16,8 @@ response.setHeader("Expires", "0");
 <title><tiles:insertAttribute name="title" ignore="true" /></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="css/bootstrap.min.css" rel="stylesheet">
+<!-- Switch is used from http://www.bootstrap-switch.org/  -->
+<link href="css/bootstrap-switch.min.css" rel="stylesheet">
  <link href="css/bootstrap-responsive.css" rel="stylesheet">
  <link href="css/admin.css" rel="stylesheet">
  <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
@@ -23,7 +26,6 @@ response.setHeader("Expires", "0");
 <link href="assets/css/style.css" rel="stylesheet" /> 
 <link href="assets/css/font-awesome.min.css" rel="stylesheet" />
 <link href="css/dataTables.bootstrap.min.css" rel="stylesheet" />
-<link href="css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="css/select2.min.css" rel="stylesheet" />
 
 <link rel="icon" 
@@ -139,12 +141,19 @@ html,body {
 <script src="js/raphael.min.js"></script>
 <script src="js/morris.min.js"></script>
 <script src="js/jquery.dataTables.js"></script>
+<script src="js/dataTables.bootstrap.min.js"></script>
 <script src="js/bootstrap-notify.min.js"></script>
 <script src="js/select2.min.js"></script>
 <script src="js/REST.js"></script>
+<script src="js/bootstrap-switch.min.js"></script>
+
+<!-- Doc: https://github.com/janl/mustache.js -->
+<script src="js/mustache.min.js"></script>
+<script src='js/view/<c:out value="${request.actionName}"></c:out>.js'></script>
 <script>
+var eventOccuredSience;
 $( document ).ajaxStart(function() {
-	  $("#loaderModal").modal("show")
+	$("#loaderModal").modal("show")
 });
 
 $( document ).ajaxStop(function() {
@@ -153,7 +162,9 @@ $( document ).ajaxStop(function() {
 
 $(document).ready(function(){
 	var cookieValue = commonfunctions.getCookies("logincreation");
-	console.log(cookieValue);
+	$(document).mousemove(function(){
+		eventOccuredSience = new Date();
+	});
 	
 	if(cookieValue == undefined){
 		location.href="login";	
@@ -241,6 +252,7 @@ function storeMenuSelected(){
 							$.ajax({
 								url:"sessionreload",
 								type:"POST",
+								global:false,
 								success:function(data){
 									timeout = <%=request.getSession().getMaxInactiveInterval()%>;
 								},

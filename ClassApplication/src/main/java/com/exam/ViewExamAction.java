@@ -63,7 +63,7 @@ public class ViewExamAction extends BaseAction{
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
-			Map<String, Object> session) {
+			Map<String, Object> session) {/*
 		 if("viewcomplete".equals(actionname)){
 				currentPage=searchcurrentPage;
 				totalPages=searchtotalPages;
@@ -137,7 +137,7 @@ public class ViewExamAction extends BaseAction{
 		if(userBean.getRole()==2){
 			return "teacherviewexam";
 		}
-		return "viewexam";
+	*/	return "viewexam";
 	}
 	
 	private Object readObject(File file) {

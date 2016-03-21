@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="com.classapp.db.pattern.QuestionPaperPattern" table="questionpaper_pattern" catalog="classdb">
+    <id name="pattern_id" type="java.lang.Integer">
+            <column name="pattern_id" />
+             <generator class="identity" />
+        </id>
+        <property name="inst_id" type="int">
+            <column name="inst_id"/>
+        </property>
+        <property name="div_id" type="int">
+            <column name="div_id"/>
+        </property>
+        <property name="sub_id" type="int">
+            <column name="sub_id"/>
+        </property>
+        <property name="pattern_name" type="string">
+            <column name="pattern_name"/>
+        </property>         
+         <property name="marks" type="int">
+            <column name="marks"/>
+        </property>  
+        <property name="pattern_type" type="string">
+            <column name="pattern_type"/>
+        </property> 
+        </class>
+</hibernate-mapping>

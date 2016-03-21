@@ -163,7 +163,7 @@ public class Service implements IService {
 				scheduleList=scheduleTransaction.getWeeklySchedule(weeklyschedulerequest.getBatch_ID(), new Date(weeklyschedulerequest.getDate()), weeklyschedulerequest.getInst_id(), student.getDiv_id());
 			}	
 		BatchTransactions batchTransactions=new BatchTransactions();
-		List<Batch> batchList= batchTransactions.getAllBatchesOfDivision(student.getDiv_id()+"", weeklyschedulerequest.getInst_id());
+		List<Batch> batchList= batchTransactions.getAllBatchesOfDivision(student.getDiv_id(), weeklyschedulerequest.getInst_id());
 		DateFormat sdf = new SimpleDateFormat("kk:mm");
 		DateFormat f2 = new SimpleDateFormat("h:mma");
 		RegisterTransaction registerTransaction=new RegisterTransaction();

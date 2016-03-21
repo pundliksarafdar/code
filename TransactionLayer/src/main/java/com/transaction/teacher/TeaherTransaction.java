@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Teacher.TeacherDB;
 import com.classapp.db.register.RegisterBean;
+import com.classapp.db.Schedule.Schedule;
 import com.datalayer.teacher.Teacher;
 import com.transaction.register.RegisterTransaction;
 

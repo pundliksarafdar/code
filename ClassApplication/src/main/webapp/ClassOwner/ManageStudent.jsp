@@ -19,13 +19,43 @@
 .error{
 color: red;
 }
+
+.discount .selectToggle:not(.active){
+	    border-right: 5px solid red;
+}
+
+.discount .selectToggle.active{
+	    border-left: 5px solid red;
+}
+
+.discount .selectToggle .percentage{
+	display:block;
+}
+
+.discount .selectToggle .amount{
+	display:none;
+}
+
+.discount .selectToggle.active .percentage{
+	display:none;
+}
+
+.discount .selectToggle.active .amount{
+	display:block;
+}
 </style>
 <script type="text/javascript" src="js/ManageStudent.js"></script>
  <%List list = (List)request.getSession().getAttribute(Constants.STUDENT_LIST); %>
 <script>
+var optionSelect = {
+	onText:"%",
+	offText:"&#x20b9;"
+}
+
 var studentID="";
 var wayOfAddition="";
 	$(document).ready(function(){
+		$("body").on("switchChange.bootstrapSwitch input","#dataTableForFees input",calculateFee);
 		$("#statebtn").parents(".btn-group").find("li").on("mouseup",function(){
 			$("#statebtn").parents(".form-group").find('.danger').remove();
 			$('#statebtn').html($(this).text()+'&nbsp;<span class="caret"></span>');
@@ -102,7 +132,7 @@ var wayOfAddition="";
 				   
 			});
 		});
-		
+		/*
 		$("#addStudent").click(function(){
 			$("#addsuccess").hide();
 			if(wayOfAddition=="byStudentID"){
@@ -111,8 +141,21 @@ var wayOfAddition="";
 				addStudentManually();
 			}
 		});
+		*/
+		
 	});
 	
+	function calculateFee(){
+		var tableRow = $(this).closest('tr');
+		var data = feesDataTable.row(tableRow).data();
+		var discount = tableRow.find('.discount').val();
+		var paidFees = tableRow.find('.paidFees').val();
+		var totalFees = data.batch_fees;
+		var percentage = tableRow.find('[type="checkbox"]').is(':checked');
+		remainingFee = percentage?(totalFees - (totalFees*discount*0.01) - paidFees):(totalFees-discount - paidFees);
+		console.log(discount,paidFees,totalFees,percentage,remainingFee);
+		tableRow.find('.remaingFee').html(remainingFee+' &#x20b9;');
+	}
 	function addStudentByID(){
 		$(".error").empty();
 		var flag=false;
@@ -311,7 +354,7 @@ var wayOfAddition="";
 		}
 		
 		if(flag==false){
-		$.ajax({
+		/* $.ajax({
 			   url: "classOwnerServlet",
 			   data: {
 			    	 methodToCall: "addStudentByManually",
@@ -340,7 +383,7 @@ var wayOfAddition="";
 			   },
 			   error(e){
 				   }
-			   });
+			   }); */
 		}
 	}
 	
@@ -579,15 +622,15 @@ var wayOfAddition="";
 <div class="col-md-3"><input type="text" id="email" class="form-control" maxlength="50"><span id="emailError" class="error"></span></div>
 </div>
 
+<div>
+	<table id="dataTableForFees" class="table table-striped" style="width:100%"></table>
+</div>
 <div class="row" style="padding: 2%">
 <div class="col-md-offset-6 col-md-1"><button class="btn btn-primary" id="addStudent">Submit</button></div>
 </div>
 
 </div>
 </div>
-
-
-		
 
 </div>
 </body>

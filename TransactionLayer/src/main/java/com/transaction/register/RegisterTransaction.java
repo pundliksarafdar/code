@@ -1,16 +1,20 @@
 package com.transaction.register;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.classapp.db.Schedule.Schedule;
+import org.apache.commons.beanutils.BeanUtils;
+
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.register.RegisterDB;
 import com.classapp.db.register.RegisterUser;
+import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.student.Student;
 import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;
+import com.transaction.student.StudentTransaction;
 
 public class RegisterTransaction {
 
@@ -192,6 +196,72 @@ public class RegisterTransaction {
 	public List<RegisterBean> getStudentByName(int inst_id,String fname,String lname) {
 		RegisterDB registerDB=new RegisterDB();
 		return registerDB.getStudentByNames(inst_id, fname, lname);
+	}
+	
+	public int registerStudentManually(int inst_id,com.service.beans.RegisterBean registerBean,com.service.beans.Student student) {
+		RegisterUser registerUser = new RegisterUser();
+		registerBean.setDob(registerBean.getDob().replace("-", ""));
+		registerBean.setClassName("");
+		registerBean.setCountry("INDIA");
+		String username="";
+		String phone="";
+		if(!"".equals(registerBean.getPhone1()) && null != registerBean.getPhone1()){
+			phone=registerBean.getPhone1();
+		}else{
+			phone=student.getParentPhone();
+		}
+		int counter=1;
+		switch (counter) {
+		case 1:
+			username=(registerBean.getFname().charAt(0))+""+(registerBean.getLname().charAt(0))+""+phone;
+			if(isUserExits(username)){
+				counter++;
+			}else{
+			break;
+			}
+		case 2:
+		    username=registerBean.getFname().charAt(0)+""+student.getParentFname().charAt(0)+""+registerBean.getLname().charAt(0)+""+phone;
+			if(isUserExits(username)){
+				counter++;
+			}else{
+			break;
+			}
+		case 3:
+		    username=registerBean.getFname()+""+phone;
+			if(isUserExits(username)){
+				counter++;
+			}else{
+			break;
+			}
+		}
+		registerBean.setLoginName(username);
+		registerBean.setLoginPass(new java.util.Date().getTime()+"");
+		RegisterBean bean = new RegisterBean();
+		try {
+			BeanUtils.copyProperties(bean, registerBean);
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int student_id = registerUser.registerStudent(bean);
+		student.setStudent_id(student_id);
+		student.setClass_id(inst_id);
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student studentbean = new Student();
+		try {
+			BeanUtils.copyProperties(studentbean, student);
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		studentTransaction.addUpdateDb(studentbean);
+		return student_id;
 	}
 	}
 	

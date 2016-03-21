@@ -285,12 +285,12 @@ function saveNewclassName(){
 
  <div class="col-lg-9 addclassContainer">
 	
-    <div class="input-group col-lg-3">
-      <input type="text" class="form-control" id="className" maxlength="100">
+    <div class="input-group col-lg-4">
+      <input type="text" class="form-control" id="className" maxlength="25" placeholder="Enter Class">
       <div class="addclassnameerror"></div>
     </div>
-    <div class="input-group  col-lg-3">
-       <input type="text" class="form-control" id="streamName" maxlength="100">
+    <div class="input-group  col-lg-4">
+       <input type="text" class="form-control" id="streamName" maxlength="25" placeholder="Enter Stream/Part(Optional)">
        <div class="addstreamerror"></div>
     </div>
     <!-- /input-group -->
@@ -299,15 +299,16 @@ function saveNewclassName(){
       </div>
     
   </div><!-- /.col-lg-6 -->
-  <div class="col-lg-3"></div>
+  <div class="col-lg-3"><input type="text" class="form-control" id="tableSearchCustom" placeholder="search"></div>
   </div>
-  <div class="row">
+  <!-- <div class="row">
    <div class="col-lg-4">
 	<input type="text" class="form-control" id="tableSearchCustom" placeholder="search">
  </div>
-  </div>
+  </div> -->
 </div>
 
+<div class="container">
  <table class="table table-striped classTable" id="classTable">
 	<thead>
 		<th>#</th><th>Class name</th><th>Stream/Part</th><th></th>
@@ -340,5 +341,6 @@ function saveNewclassName(){
  	</tr>
  </c:forEach>
  </table>
+ </div>
 </body>
 </html>
