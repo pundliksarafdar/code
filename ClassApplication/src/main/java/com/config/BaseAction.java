@@ -2,6 +2,9 @@ package com.config;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -9,9 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.ws.ServiceMode;
 
+import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
+import com.classapp.logger.AppLogger;
 import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;
 import com.classapp.servicetable.SiteMap;
@@ -33,6 +38,7 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 	Map<String, String> params;
 	String forward;
 	String sessionMessageError;
+	private static final Logger logger = Logger.getLogger(BaseAction.class);
 	public abstract String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session);
 	@Override
 	public String execute() throws Exception{
@@ -40,14 +46,13 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 		request = ServletActionContext.getRequest();
 		response = ServletActionContext.getResponse();
 		session = ServletActionContext.getContext().getSession();
-
 		
 		HttpSession sessionHttp = request.getSession();
 		sessionHttp.setMaxInactiveInterval(10*60);
 		
 		
 		//HttpSession sessionHttp = request.getSession();
-		System.out.println(sessionHttp.getMaxInactiveInterval());
+		AppLogger.logger(sessionHttp.getMaxInactiveInterval());
 		ServletContext servletContext = ServletActionContext.getServletContext();
 		MiscFunction.setServletContext(servletContext);
 		
@@ -76,6 +81,10 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 			(ActionContext.getContext().getSession()).put("sitemapdata", siteMapData);
 			
 		ActionMapping mapping = (ActionMapping) request.getAttribute("struts.actionMapping");
+		//This action name is used to load view js
+		String actionName = mapping.getName();
+		request.setAttribute("actionName", actionName);
+		
 		if(isHavingAccess(mapping.getName(), roleInt) && !params.containsKey("ignoresession")){
 			return "UNAUTHRISED";
 		}

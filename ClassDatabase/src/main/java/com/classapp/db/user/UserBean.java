@@ -1,5 +1,7 @@
 package com.classapp.db.user;
 
+import java.util.Date;
+
 public class UserBean{
 	private String username;
 	private String fullname;
@@ -22,6 +24,8 @@ public class UserBean{
 	private String status;
 	private String email;
 	private String className;
+	private Date lastlogin;
+	private String inst_status;
 	
 	public String getEmail() {
 		return email;
@@ -153,6 +157,18 @@ public class UserBean{
 	}
 	public void setClassName(String className) {
 		this.className = className;
+	}
+	public String getInst_status() {
+		return inst_status;
+	}
+	public void setInst_status(String inst_status) {
+		this.inst_status = inst_status;
+	}
+	public Date getLastlogin() {
+		return lastlogin;
+	}
+	public void setLastlogin(Date lastlogin) {
+		this.lastlogin = lastlogin;
 	}
 	
 }

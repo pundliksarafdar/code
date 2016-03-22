@@ -1,6 +1,7 @@
 <%@page import="java.util.Map"%>
 <%@page import="com.user.UserBean"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%
@@ -15,6 +16,8 @@ response.setHeader("Expires", "0");
 <title><tiles:insertAttribute name="title" ignore="true" /></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="css/bootstrap.min.css" rel="stylesheet">
+<!-- Switch is used from http://www.bootstrap-switch.org/  -->
+<link href="css/bootstrap-switch.min.css" rel="stylesheet">
  <link href="css/bootstrap-responsive.css" rel="stylesheet">
  <link href="css/admin.css" rel="stylesheet">
  <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
@@ -22,6 +25,9 @@ response.setHeader("Expires", "0");
 <link href="css/common.css" rel="stylesheet">	
 <link href="assets/css/style.css" rel="stylesheet" /> 
 <link href="assets/css/font-awesome.min.css" rel="stylesheet" />
+<link href="css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="css/select2.min.css" rel="stylesheet" />
+
 <link rel="icon" 
       type="image/jpeg" 
       href="images/cxlogowhite.jpg">
@@ -49,7 +55,11 @@ response.setHeader("Expires", "0");
 body{
     padding-right: 5px;
     padding-left: 5px;
-    font-family: cursive;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    min-height: 525px;
+   /* background-color: rgb(141,141,253);*/
+     background: radial-gradient(#0094bd,#003442 80%) no-repeat #003442;
+    background-size: 100% 100%;
 }
 
 .white-back{
@@ -60,6 +70,51 @@ color: white;
 /* #footer-sec{
 padding-bottom: 20px;
 padding-top: 10px;
+} */
+.modal-header{
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#0095be+23,003442+100 */
+background: #0095be; /* Old browsers */
+background: -moz-linear-gradient(top, #0095be 23%, #003442 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(23%,#0095be), color-stop(100%,#003442)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #0095be 23%,#003442 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #0095be 23%,#003442 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, #0095be 23%,#003442 100%); /* IE10+ */
+background: linear-gradient(to bottom, #0095be 23%,#003442 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0095be', endColorstr='#003442',GradientType=0 ); /* IE6-9 */
+
+}
+
+.nav .open .dropdown-menu{
+background: rgba(12, 12, 12, 0.71)
+}
+
+.nav .open .dropdown-menu>li>a{
+color: white;
+}
+
+.nav .open .dropdown-menu>li>a:hover{
+color: black;
+}
+/* .btn-primary{
+background:white;
+color: blue;
+}
+
+.btn-success{
+background:white;
+color: green;
+}
+
+.btn-danger{
+background:white;
+color: red;
+} */
+/* .modal-body{
+background:linear-gradient(to bottom, rgba(230,225,211,1) 0%,rgb(251, 226, 154) 100%);
+}
+.modal-footer{
+margin: 0px;
+padding: 0px;
 } */
 </style>
 <style type="text/css">
@@ -77,20 +132,62 @@ html,body {
 <script src="js/bootstrap-datetimepicker.min.js"></script>
 <script src="js/jquery.autocomplete.js"></script>
 <script src="js/global.js"></script>
+<script src="js/notifications.js"></script>
 <script src="js/angular.min.js"></script>
 <script type="text/javascript" src="js/Chart.min.js"></script>
 <script src="js/plugins.js"></script>
+<script src="js/validator.js"></script>
+<script src="js/jquery.validate.min.js"></script>
+<script src="js/raphael.min.js"></script>
+<script src="js/morris.min.js"></script>
+<script src="js/jquery.dataTables.js"></script>
+<script src="js/dataTables.bootstrap.min.js"></script>
+<script src="js/bootstrap-notify.min.js"></script>
+<script src="js/select2.min.js"></script>
+<script src="js/REST.js"></script>
+<script src="js/bootstrap-switch.min.js"></script>
+
+<!-- Doc: https://github.com/janl/mustache.js -->
+<script src="js/mustache.min.js"></script>
+<script src='js/view/<c:out value="${request.actionName}"></c:out>.js'></script>
 <script>
+var eventOccuredSience;
 $( document ).ajaxStart(function() {
-	  $("#loaderModal").modal("show")
+	$("#loaderModal").modal("show")
 });
 
 $( document ).ajaxStop(function() {
 	  $("#loaderModal").modal("hide")
 });
 
+$(document).ready(function(){
+	var cookieValue = commonfunctions.getCookies("logincreation");
+	$(document).mousemove(function(){
+		eventOccuredSience = new Date();
+	});
+	
+	if(cookieValue == undefined){
+		location.href="login";	
+	}
+	$(".navbar-nav .dropdown-toggle").on("click",storeMenuSelected);
+	setMenuSelected();
+});
+
+function setMenuSelected(){
+	if(typeof(Storage) !== "undefined" && sessionStorage.clickedMenu !== "undefined") {
+		var clickedMenu = sessionStorage.clickedMenu;
+		$(".navbar-nav a:contains('"+clickedMenu+"')").css("border-bottom-style","inset");
+	}
+}
+
+function storeMenuSelected(){
+	if(typeof(Storage) !== "undefined") {
+		sessionStorage.clickedMenu = $(this).text();
+	}
+}
 
 </script>
+
 </head>
 <body>
 
@@ -121,7 +218,7 @@ $( document ).ajaxStop(function() {
 			%>
 			<script>
 			var timeout = <%=request.getSession().getMaxInactiveInterval()%>;
-				
+				x = document.cookie;
 				setMessage();
 				function setMessage(){
 					setTimeout(function(){
@@ -155,6 +252,7 @@ $( document ).ajaxStop(function() {
 							$.ajax({
 								url:"sessionreload",
 								type:"POST",
+								global:false,
 								success:function(data){
 									timeout = <%=request.getSession().getMaxInactiveInterval()%>;
 								},
@@ -171,20 +269,24 @@ $( document ).ajaxStop(function() {
 	<div id="outerDiv">
 		<div id="innerDiv">
 			<div id="header">
-				<div>				
+				
+				<div>
 					<tiles:insertAttribute name="topnav" />				
 				</div>
 					<br/>							
 			</div>
-			<div id="body" style="margin: 10px;background-color: rgb(221, 225, 216)" >
+			<div id="body" style="margin: 10px;background-color: white" >
 				<div>
 					<tiles:insertAttribute name="body" />
 					<br />
+					<div class="corex-toast-wrapper">
+						<div class='corex-toast' style="display:none"> </div>
+					</div>
 				</div>	
 			</div>
-			<div id="footer">
+			<div id="footer" style="background-color: black;color: white;" align="center">
 				<tiles:insertAttribute name="footer" />		
-				
+				© 2015 Corex. All rights reserved
 			</div>
 		</div>
 	</div>

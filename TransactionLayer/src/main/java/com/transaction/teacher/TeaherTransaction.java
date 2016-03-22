@@ -6,19 +6,17 @@ import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Teacher.TeacherDB;
 import com.classapp.db.register.RegisterBean;
+import com.classapp.db.Schedule.Schedule;
 import com.datalayer.teacher.Teacher;
 import com.transaction.register.RegisterTransaction;
 
 public class TeaherTransaction {
 	
-	public String addTeacher(String teacherID,int regID,String subjects,String suffix) {
+	public String addTeacher(int teacherID,int regID,String subjects,String suffix) {
 		TeacherDB teacherDB=new TeacherDB();
-		com.classapp.db.Teacher.Teacher teacherbean=new com.classapp.db.Teacher.Teacher();
-		
-			
+		com.classapp.db.Teacher.Teacher teacherbean=new com.classapp.db.Teacher.Teacher();	
 			if(teacherDB.isTeacherRegistered(teacherID))
 			{
 				if(!teacherDB.isTeacherExists(teacherID,regID))

@@ -30,10 +30,10 @@
             <column name="LGPASS" length="20" not-null="true" unique="false" />
         </property>
         <property name="addr1" type="string">
-            <column name="ADDR1"  length="10" not-null="true" unique="false" />
+            <column name="ADDR1"  length="50" not-null="true" unique="false" />
         </property>
         <property name="addr2" type="string">
-            <column name="ADDR2"  length="20" not-null="false" unique="false"  />
+            <column name="ADDR2"  length="50" not-null="false" unique="false"  />
         </property>
         <property name="city" type="string">
             <column name="CITY"  length="20" not-null="true" unique="false"  />
@@ -42,7 +42,7 @@
             <column name="STATE"  length="20" not-null="true" unique="false" />
         </property>
         <property name="country" type="string">
-            <column name="COUNTRY" length="10" not-null="true" unique="false" />
+            <column name="COUNTRY" length="20" not-null="true" unique="false" />
         </property>
         <property name="phone1" type="string">
             <column name="PHONE1" length="10" not-null="true" unique="true" />
@@ -60,7 +60,7 @@
         <property name="endDate" type="string">
             <column name="ENDDATE" length="10" not-null="false" unique="false" />
         </property>
-        <property name="renewedDates" type="string">
+        <property name="renewedDates" type="java.util.Date">
             <column name="RENEWEDDATES" length="10" not-null="false" unique="false" />
         </property>        
         <property name="role" type="java.lang.Integer">
@@ -77,6 +77,15 @@
         </property>
         <property name="status" type="string">
             <column name="status" length="1" not-null="false" unique="false" />
-        </property>     
+        </property>
+        <property name="inst_status" type="string">
+            <column name="inst_status" length="10" not-null="false" unique="false" />
+        </property>
+        <property name="lastlogin" type="java.util.Date">
+            <column name="lastlogin" length="1" not-null="false" unique="false" />
+        </property>
+         <property name="nextRenewalDate" type="java.util.Date">
+            <column name="nextRenewalDate" length="1" not-null="false" unique="false" />
+        </property>      
         </class>
 </hibernate-mapping>

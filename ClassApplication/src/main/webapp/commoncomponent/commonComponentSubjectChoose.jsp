@@ -17,6 +17,8 @@
 	var BATCH_DROPDOWN = ".batchDropDown";
 	var ADD_BUTTON = "#classownerUploadexamAddExam";
 	var hideBatch = <c:out value="${hideBatch}" ></c:out>;
+	var batchDefault = <c:out value="${batchDefault}" ></c:out>;
+	
 	$(document).ready(function(){
 		//$(SUBJECT_DROPDOWN).hide();
 		//$(BATCH_DROPDOWN).hide();
@@ -51,8 +53,14 @@
 			}else{
 				uploadExam.getBatchFromDivisonNSubject(subjectId,divisionId);	
 			}
+			
+			//If default batch is enabled then enable submit button and fill the batch dropdown also
+			if(batchDefault == true){
+				$("#classownerUploadexamAddExam").prop("disabled",false);
+				uploadExam.getBatchFromDivisonNSubject(subjectId,divisionId);	
+			}
 			}else{
-				if(hideBatch == true){
+				if(hideBatch == true || batchDefault == true){
 					$("#classownerUploadexamAddExam").prop("disabled",true);
 				}else{
 					$("#classownerUploadexamBatchName").prop("disabled",true);
@@ -138,7 +146,9 @@
 		}else{
 			$("#classownerUploadexamSubjectNameSelect").prop("disabled",true);
 			$("#classownerUploadexamBatchName").prop("disabled",true);
-			$(".alert-danger").text("Batch for selected division are not added.").show();
+			if(!hideBatch){
+				$(".alert-danger").text("Batch for selected division are not added.").show();
+			}
 		}
 		
 	}
@@ -187,7 +197,7 @@
 		<div class="row">
 			<div class="col-md-3">
 				<select name="division" id="classownerUploadexamDivisionName" class="form-control" width="100px">
-					<option value="-1">Select Division</option>
+					<option value="-1">Select Class</option>
 					<c:forEach items="${requestScope.divisions}" var="division">
 						<option value="<c:out value="${division.divId}"></c:out>"><c:out value="${division.divisionName}"></c:out>&nbsp;<c:out value="${division.stream}"></c:out></option>
 					</c:forEach>							

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.institutestats.InstituteStats" table="institute_stats" catalog="classdb">
+    <id name="inst_id" type="int">
+            <column name="inst_id" />
+        </id>
+        <property name="alloc_ids" type="int">
+            <column name="alloc_ids"/>
+        </property>
+        <property name="used_ids" type="int">
+            <column name="used_ids"/>
+        </property>
+        <property name="avail_ids" type="int">
+            <column name="avail_ids"/>
+        </property>
+        <property name="alloc_memory" type="double">
+            <column name="alloc_memory"/>
+        </property>
+        <property name="used_memory" type="double">
+            <column name="used_memory"/>
+        </property>
+        <property name="avail_memory" type="double">
+            <column name="avail_memory"/>
+        </property>
+    </class>
+</hibernate-mapping>

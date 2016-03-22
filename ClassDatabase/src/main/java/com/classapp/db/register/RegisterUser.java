@@ -7,9 +7,11 @@ import com.classapp.persistence.Constants;
 import com.classapp.persistence.HibernateUtil;
 import com.classapp.servicetable.ServiceMap;
 import com.google.gson.Gson;
+import com.classapp.logger.AppLogger;
 
 public class RegisterUser {
 	public String registerUser(String registerRequest){
+			AppLogger.logger("");
 			final String success = "success";
 			Gson gson = new Gson();
 			RegisterBean registerBean = gson.fromJson(registerRequest, RegisterBean.class);
@@ -23,6 +25,7 @@ public class RegisterUser {
 				session.save(registerBeantoSave);
 				session.getTransaction().commit();
 			}catch(Exception e){
+				e.printStackTrace();
 				session.getTransaction().rollback();
 				errorMessage = formatMessage(e.getCause().getMessage());
 				return errorMessage;
@@ -34,6 +37,51 @@ public class RegisterUser {
 			return errorMessage;
 	
 	}
+	
+	public String registerUser(RegisterBean registerRequest){
+		AppLogger.logger("");
+		final String success = "success";
+		Gson gson = new Gson();
+		String errorMessage = success;
+		
+		Session session = HibernateUtil.getSessionfactory().openSession();
+		session.beginTransaction();
+		
+		try{
+			session.save(registerRequest);
+			session.getTransaction().commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			session.getTransaction().rollback();
+			errorMessage = formatMessage(e.getCause().getMessage());
+			return errorMessage;
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return errorMessage;
+
+}
+	
+	public int registerStudent(RegisterBean registerBean){
+		Session session = HibernateUtil.getSessionfactory().openSession();
+		session.beginTransaction();
+		
+		try{
+			session.save(registerBean);
+			session.getTransaction().commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return registerBean.getRegId();
+
+}
 	
 	public String formatMessage(String message){
 		String errorMessage = "";

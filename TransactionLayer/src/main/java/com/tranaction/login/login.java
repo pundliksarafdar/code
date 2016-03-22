@@ -7,18 +7,18 @@ import com.google.gson.Gson;
 
 public class login {
 
-	public String loginck(String loginname, String loginpass) {
+	public UserBean loginck(String loginname, String loginpass) {
 		LoginCheck loginCheck = new LoginCheck();
-		String userBeanJson = loginCheck.loadUserObject(loginname, loginpass);
+		UserBean userBeanJson = loginCheck.loadUserObject(loginname, loginpass);
 		
 		return userBeanJson;
 	}
 
 	public void loadBean(UserBean userBean, LoginBeanMobile loginBean) {
 		LoginCheck loginCheck = new LoginCheck();
-		String userBeanJson = loginck(loginBean.getUsername(),
+		UserBean userBeanJson = loginck(loginBean.getUsername(),
 				loginBean.getPassword());
-		
+		/*
 		if (null != userBeanJson) {
 			Gson gson = new Gson();
 			userBean.setAddr1(gson.fromJson(userBeanJson, UserBean.class)
@@ -55,9 +55,20 @@ public class login {
 					.getRegId());
 			userBean.setClassName(gson.fromJson(userBeanJson, UserBean.class)
 					.getClassName());
-			userBean.setLoginBean(loginBean);
-
+			userBean.setInst_status(gson.fromJson(userBeanJson, UserBean.class)
+					.getInst_status());
+			userBean.setLastlogin(gson.fromJson(userBeanJson, UserBean.class)
+					.getLastlogin());
+			//userBean.setLoginBean(loginBean);
+		 
 			loginCheck.updateIdForUser(userBean.getRegId(),loginBean.getUserid(),loginBean.getDeviceId());
-		}
+		}*/
+	}
+	
+	public UserBean UpdatedBean(String loginname) {
+		LoginCheck loginCheck = new LoginCheck();
+		UserBean userBeanJson = loginCheck.loadUpdatedUserObject(loginname);
+		
+		return userBeanJson;
 	}
 }

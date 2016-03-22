@@ -34,6 +34,11 @@ public class BatchData {
 		
 	}
 	
+	public boolean isUpdatedBatchExist(int batch_id,int regID,String batchName,int div_id){
+		return batchDB.isUpdatedBatchExist(batch_id, regID, batchName, div_id);		
+		
+	}
+	
 	public List<Batch> getAllBatchesOfClass(int class_id){
 		return batchDB.retriveAllBatches(class_id);
 	}

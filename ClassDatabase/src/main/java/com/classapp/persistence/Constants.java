@@ -17,7 +17,9 @@ private Constants(){
 	public static String DEBUGGING_MODE = "6";
 	public static String SHOW_STACK_TRACE = "4";
 	public static String RESULT_PER_PAGE = "resultsperpage";
-
+	public static String SERVICE_LOGGER = "8";
+	public static String APP_PAGINATION = "9";
+	
 	public static String BATCH_NAME = "batchName";
 	public static String BATCH_TIME = "batchTime";
 	public static String START_TIME = "startTime";
@@ -25,7 +27,7 @@ private Constants(){
 
 	public static String ADD_SUBJECT = "addSubject";
 	public static String ADD_STUDENT= "addStudent";
-	public static String SEARCH_STUDENT= "searchStudent";
+	public static String STUDENT_DETAILS= "getStudentDetails";
 	public static String SEARCH_TEACHER= "searchTeacher";
 	public static String SEARCH_BATCH= "searchBatch";
 	public static String STUDENT_LIST="listOfStudents";
@@ -45,6 +47,6 @@ private Constants(){
 	public static final String DIVISION_ID = "divisionId";
 	public static final String DIVISIONS = "divisions";
 	public static final String ALL_LOGINS = "alllogins";
-	
+	public static String STORAGE_PATH = "";
 	
 }

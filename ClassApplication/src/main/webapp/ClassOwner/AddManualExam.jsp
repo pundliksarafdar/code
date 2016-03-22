@@ -235,6 +235,14 @@ $(document).ready(function(){
 			$("#examTimeError").html("Exam Minute should be in between 1 and 60!!");
 			$("#examTimeError").show();
 			flag=true;
+		}else if(parseInt($("form#saveExamForm #examHour").val())==0 && parseInt($("form#saveExamForm #examMinute").val())==0){
+			$("#examTimeError").html("Exam Time can't be 0!!");
+			$("#examTimeError").show();
+			flag=true;
+		}else if(parseInt($("form#examsubmitform #noofquestions").val())==0){
+			$("#noofquestionsError").html("Please add questions!!");
+			$("#noofquestionsError").show();
+			flag=true;
 		}
 		var examname=$("form#examsubmitform #examname").val().trim();
 		var institute=$("form#examsubmitform #institute").val();
@@ -289,25 +297,43 @@ var selectMarks = function(){
 			<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
 			<div align="center" style="font-size: larger;margin-bottom: 15px"><u>Manual Exam</u></div>
 			<c:if test="${(totalPages!=0)}">
-			<div class="btn-group" role="group" aria-label="..." style="width:90%">
+			<div class="" role="group" aria-label="..." style="width:100%">
 			<form action="" id="uploadform" method="post">
 			<input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
 			<input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
 			<input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
 			<input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
 			<input type="hidden" id="noofquestions" value=<c:out value="${noofquestions}"></c:out>>
-			  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#QuestionBankQuestionListQuestionSearchModal">Advance Search</button>
+			<div class="row" style="width: 100%">
+			<div class="col-md-3">
+				<c:if test="${actionname ne 'createexam'}">
 			  <button type="button" class="btn btn-default" id="createexam">Create Exam</button>
+			  </c:if>
+			  </div>
+			  <div class="col-md-offset-5 col-md-4" align="right">
+			  Total Marks:-<span class="badge" id="temptotalmarks" name="temptotalmarks"><c:out value="${totalmarks}"></c:out></span><br>
+			</div>
+			</div>
+			<div class="row" style="width: 100%">
+				<div class="col-md-3">
+			  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#QuestionBankQuestionListQuestionSearchModal">Advance Search</button>
+			  </div>
+			  <div class="col-md-3">
 			  <c:if test="${actionname ne 'showaddedquestions'}">
 			  <button type="button" class="btn btn-default" id="showaddedquestion">Show All Added Questions</button>
 			 </c:if>
+			 </div>
+			 <div class="col-md-3">
 			 <c:if test="${(actionname eq 'showaddedquestions') || (actionname eq 'createexam') }">
 			  <button type="button" class="btn btn-default" id="backtoquestions">Back To Questions</button>
 			 </c:if>	
-			  Total Marks:-<span class="badge" id="temptotalmarks" name="temptotalmarks"><c:out value="${totalmarks}"></c:out></span><br>
+			  </div>
+			  <div class="col-md-3">
 			  <c:if test='${actionname eq "advancesearch"}'>
 			   <button type="button" class="btn btn-default" id="clearadvancesearch">Clear Advance Search Criteria <span class="badge">x</span></button>
 			  </c:if>
+			  </div>
+			  </div>
 			</form>
 			</div>
 			</c:if>
@@ -496,6 +522,7 @@ var selectMarks = function(){
  	 <div class="col-sm-5">
     <input type="text" class="form-control col-md-4" id="noofquestions" name="noofquestions" value=<c:out value="${noofquestions}"></c:out> disabled="disabled">
   	</div>
+  	<span class="col-sm-5" id="noofquestionsError" style="display:none;color: red"></span>
   </div>
   <div class="form-group">
     <label for="totalmarks" class="control-label col-sm-2">Total Marks:</label>

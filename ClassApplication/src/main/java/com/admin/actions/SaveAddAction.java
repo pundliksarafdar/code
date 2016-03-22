@@ -20,7 +20,7 @@ public class SaveAddAction extends BaseAction {
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
-		// System.out.println(globaladd+":"+advertiseOptionCountry+":"+advertiseOptionState+":"+advertiseOptionCity+":"+textadvertise);
+		// AppLogger.logger(globaladd+":"+advertiseOptionCountry+":"+advertiseOptionState+":"+advertiseOptionCity+":"+textadvertise);
 		if ("no".equals(globaladd)) {
 			if (advertiseOptionCountry == null
 					|| advertiseOptionCountry.trim().length() == 0) {

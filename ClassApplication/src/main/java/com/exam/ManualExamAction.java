@@ -67,7 +67,7 @@ public class ManualExamAction extends BaseAction{
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
-			Map<String, Object> session) {
+			Map<String, Object> session) {/*
 		int inst_id=userBean.getRegId();
 		if(institute!=null && !"".equals(institute)){
 			UserStatic userStatic = userBean.getUserStatic();
@@ -98,12 +98,27 @@ public class ManualExamAction extends BaseAction{
 		}
 		
 		session.put("questionsIds",questionIdsMap);
+		if(questionIdsMap!=null){
+		questionIds=new ArrayList<Integer>();
+		for (Integer key:questionIdsMap.keySet()) {
+			questionIds.add(key);
+		}
+		QuestionBankTransaction  bankTransaction=new QuestionBankTransaction();
+		List<Integer> questionmarks= bankTransaction.getQuestionMarks(inst_id, Integer.parseInt(subject), Integer.parseInt(division), questionIds);
+		if (questionmarks!=null) {
+			totalmarks=0;
+			for (int i = 0; i < questionmarks.size(); i++) {
+				totalmarks=totalmarks+questionmarks.get(i);
+			}
+		}
+		questionIds=null;
+		}
 		noofquestions=questionIdsMap.size();
 		ExamTransaction examTransaction=new ExamTransaction();
 		QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
 		SubjectTransaction subjectTransaction=new SubjectTransaction();
 		compExams=examTransaction.getAllCompExamList();
-		marks=bankTransaction.getDistinctQuestionMarks(Integer.parseInt(subject), Integer.parseInt(division), inst_id);
+		marks=bankTransaction.getDistinctQuestionMarks(Integer.parseInt(subject), Integer.parseInt(division), inst_id,"1");
 		repeatation=bankTransaction.getDistinctQuestionRep(Integer.parseInt(subject), Integer.parseInt(division), inst_id);
 		topics=subjectTransaction.getTopics(inst_id, Integer.parseInt(subject), Integer.parseInt(division));
 		if("advancesearch".equals(actionname)){
@@ -125,7 +140,7 @@ public class ManualExamAction extends BaseAction{
 		}
 		
 		if(currentPage==0){
-			int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(selectedRep), selectedExamID, Integer.parseInt(selectedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),Integer.parseInt(selectedTopic));
+			int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(selectedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),Integer.parseInt(selectedTopic),"1");
 			if(totalCount>0){
 				int remainder=totalCount%50;
 				totalPages=totalCount/50;
@@ -136,7 +151,7 @@ public class ManualExamAction extends BaseAction{
 			currentPage=1;
 			}
 			if("true".equals(questionedit)){
-				int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(searchedRep), searchedExam, Integer.parseInt(searchedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),Integer.parseInt(searchedTopic));
+				int totalCount=bankTransaction.getTotalSearchedQuestionCount(Integer.parseInt(searchedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),Integer.parseInt(searchedTopic),"1");
 				if(totalCount>0){
 					int remainder=totalCount%50;
 					totalPages=totalCount/50;
@@ -151,7 +166,7 @@ public class ManualExamAction extends BaseAction{
 				currentPage--;
 			}
 		
-		List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(Integer.parseInt(searchedRep), searchedExam, Integer.parseInt(searchedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage,Integer.parseInt(searchedTopic));
+		List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(Integer.parseInt(searchedMarks), Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage,Integer.parseInt(searchedTopic),"1");
 		UserStatic userStatic = userBean.getUserStatic();
 		String questionPath = "";
 		if(questionbanks!=null)
@@ -159,7 +174,7 @@ public class ManualExamAction extends BaseAction{
 			questionIds=new ArrayList<Integer>();
 			questionDataList=new ArrayList<QuestionData>();
 			for (int i = 0; i < questionbanks.size(); i++) {
-				questionPath=userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionbanks.get(i).getQue_id();
+				questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionbanks.get(i).getQue_id();
 				if (questionIdsMap.containsKey(questionbanks.get(i).getQue_id())) {
 					questionIds.add(1);
 				}else {
@@ -187,7 +202,7 @@ public class ManualExamAction extends BaseAction{
 				String questionPath = "";
 				//Set<Integer> keys=questionIdsMap.keySet();
 				for (Integer key:questionIdsMap.keySet()) {
-					questionPath=userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionIdsMap.get(key);
+					questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionIdsMap.get(key);
 					QuestionData questionData=(QuestionData) readObject(new File(questionPath));
 					questionDataList.add(questionData);
 				}
@@ -222,6 +237,13 @@ public class ManualExamAction extends BaseAction{
 							queIds=queIds+","+questionIds.get(i);
 						}
 					}
+				} 
+				List<Integer> questionmarks= bankTransaction.getQuestionMarks(inst_id, Integer.parseInt(subject), Integer.parseInt(division), questionIds);
+				if (questionmarks!=null) {
+					totalmarks=0;
+					for (int i = 0; i < questionmarks.size(); i++) {
+						totalmarks=totalmarks+questionmarks.get(i);
+					}
 				}
 				Exam exam=new Exam();
 				examTransaction.saveExam(examname, inst_id, Integer.parseInt(subject), Integer.parseInt(division), totalmarks, passmarks, userBean.getRegId(), batch, queIds, ansIds,examHour,examMinute);
@@ -252,7 +274,7 @@ public class ManualExamAction extends BaseAction{
 			}
 			
 			if(currentPage==0){
-				int totalCount=bankTransaction.getTotalSearchedQuestionCount(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),-1);
+				int totalCount=bankTransaction.getTotalSearchedQuestionCount( -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),-1,"1");
 				if(totalCount>0){
 					int remainder=totalCount%50;
 					totalPages=totalCount/50;
@@ -263,7 +285,7 @@ public class ManualExamAction extends BaseAction{
 				currentPage=1;
 				}
 				if("true".equals(questionedit)){
-					int totalCount=bankTransaction.getTotalSearchedQuestionCount(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),-1);
+					int totalCount=bankTransaction.getTotalSearchedQuestionCount( -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),-1,"1");
 					if(totalCount>0){
 						int remainder=totalCount%2;
 						totalPages=totalCount/2;
@@ -278,7 +300,7 @@ public class ManualExamAction extends BaseAction{
 					currentPage--;
 				}
 			
-			List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(-1, "-1", -1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage,-1);
+			List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(-1, Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage,-1,"1");
 			UserStatic userStatic = userBean.getUserStatic();
 			String questionPath = "";
 			if(questionbanks!=null)
@@ -286,7 +308,7 @@ public class ManualExamAction extends BaseAction{
 				questionIds=new ArrayList<Integer>();
 				questionDataList=new ArrayList<QuestionData>();
 				for (int i = 0; i < questionbanks.size(); i++) {
-					questionPath=userStatic.getExamPath()+File.separator+subjectname+divisionName+File.separator+questionbanks.get(i).getQue_id();
+					questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionbanks.get(i).getQue_id();
 					if (questionIdsMap.containsKey(questionbanks.get(i).getQue_id())) {
 						questionIds.add(1);
 					}else {
@@ -305,7 +327,7 @@ public class ManualExamAction extends BaseAction{
 		if(userBean.getRole()==2){
 			return "teachermanualexam";
 		}
-		return "addmanualexam";
+	*/	return "addmanualexam";
 	}
 	
 	private Object readObject(File file) {

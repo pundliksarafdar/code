@@ -125,7 +125,7 @@ $(document).ready(function(){
 			}
 		
 		if(division=="-1"){
-			divisionerror.html("Please select division");
+			divisionerror.html("Please select class");
 			flag=false;
 		}
 		if(subject=="-1"){
@@ -240,7 +240,7 @@ if(notes!=null){
       </div>
       
       <div class="form-group">
-	<label for="division"  class="col-sm-4 control-label" align="right">Select Division :</label>
+	<label for="division"  class="col-sm-4 control-label" align="right">Select Class :</label>
       <div class="col-sm-5" align="left">
 	<select name="division" class="form-control" id="division">
       <option value="-1">Select one</option>

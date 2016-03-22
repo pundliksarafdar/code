@@ -6,13 +6,14 @@ import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.batch.AddBatch;
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.BatchDB;
 import com.classapp.db.batch.BatchData;
 import com.classapp.db.batch.DeleteBatch;
+import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.subject.SubjectDb;
+import com.util.ClassAppUtil;
 
 
 public class BatchTransactions {
@@ -86,6 +87,11 @@ public int getNextBatchID(int inst_id,int div_id){
 	public boolean isBatchExist(Batch batch){
 		BatchData batchData = new BatchData();
 		return batchData.isBatchExist(batch.getClass_id(), batch.getBatch_name(),batch.getDiv_id());
+	}
+	
+	public boolean isUpdatedBatchExist(Batch batch){
+		BatchData batchData = new BatchData();
+		return batchData.isUpdatedBatchExist(batch.getBatch_id(),batch.getClass_id(), batch.getBatch_name(),batch.getDiv_id());
 	}
 	
 	public boolean deleteBatch(Batch batch){
@@ -172,7 +178,7 @@ public int getNextBatchID(int inst_id,int div_id){
 		batchDB=new BatchDB();
 		int counter=0;
 		while(counter<schedules.size()){
-		Batch batch=batchDB.getBatchFromID(schedules.get(counter).getBatch_id(),schedules.get(counter).getClass_id(),schedules.get(counter).getDiv_id());
+		Batch batch=batchDB.getBatchFromID(schedules.get(counter).getBatch_id(),schedules.get(counter).getInst_id(),schedules.get(counter).getDiv_id());
 		batchs.add(batch);
 		counter++;
 		}
@@ -180,7 +186,7 @@ public int getNextBatchID(int inst_id,int div_id){
 		
 	}
 	
-	public List getAllBatchesOfDivision(String divisionId, int class_id){
+	public List<Batch> getAllBatchesOfDivision(int divisionId, int class_id){
 		BatchDB batchDB=new BatchDB();
 		return batchDB.retriveAllBatchesOfDivision(divisionId, class_id);
 	}
@@ -244,5 +250,24 @@ public int getNextBatchID(int inst_id,int div_id){
 		return batchs;
 		
 	}
-
+	public void updateBatchRollGeneratedStatus(int batchId,int inst_id,int div_id,String status){
+		String rollGenerated = "rollGenerated";
+		BatchDB batchDB=new BatchDB();
+		Batch batch = batchDB.getBatchFromID(batchId, inst_id, div_id);
+		String currentStatus = batch.getStatus();
+		if(null != currentStatus){
+			String statusValue = ClassAppUtil.getValue(currentStatus, rollGenerated);
+			//rollGenerated status is not updated in db
+			if(null==statusValue){
+				currentStatus = currentStatus+rollGenerated+"="+status+";";
+				batch.setStatus(currentStatus);
+				batchDB.updateDb(batch);
+			}
+		}else{
+			currentStatus = rollGenerated+"="+status+";";
+			batch.setStatus(currentStatus);
+			batchDB.updateDb(batch);
+		}
+		
+	}
 }

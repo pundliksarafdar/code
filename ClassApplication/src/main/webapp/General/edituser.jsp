@@ -407,7 +407,7 @@
 		<div class="form-group">
     		<label for="inputLoginName" class="col-sm-4 control-label">Desired Login Name</label>
     		<div class="col-sm-5">
-				<input type="text" class="form-control" id="loginname" name="registerBean.loginName" value="<c:out value="${user.loginBean.loginname}"></c:out>"/>
+				<input type="text" class="form-control" id="loginname" name="registerBean.loginName" value="<c:out value="${user.username}"></c:out>"/>
 			</div>
 		</div>
 		

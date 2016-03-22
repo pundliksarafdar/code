@@ -3,12 +3,12 @@ package com.transaction.teacher;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.classapp.db.Schedule.Schedule;
-import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.Teacher.Teacher;
 import com.classapp.db.Teacher.TeacherDB;
 import com.classapp.db.Teacher.TeacherDetails;
 import com.classapp.db.register.RegisterBean;
+import com.classapp.db.Schedule.Schedule;
+import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.subject.Subject;
 import com.transaction.register.RegisterTransaction;
 

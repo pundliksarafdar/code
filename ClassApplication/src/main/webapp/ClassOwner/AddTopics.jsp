@@ -43,11 +43,11 @@ $(document).ready(function(){
 						   if(quesstatus=="Y"){
 							   $("#DeleteConfirmBody").empty();
 							  var examnames=resultJson.examnames.split(",");
-							   $("#DeleteConfirmBody").append("This Question is present in following exams-<br>")
+							   $("#DeleteConfirmBody").append("Few Questions related to this topic is present in following exams-<br>")
 							   for(var i=0;i<examnames.length;i++){
 								   $("#DeleteConfirmBody").append((i+1)+"."+examnames[i]+"<br>");
 							   }
-							   $("#DeleteConfirmBody").append("Still you delete, this question will remain in exams but will not be available in search. Once you delete that exams this question will get deleted.<br>")
+							   $("#DeleteConfirmBody").append("Still you delete, those questions will remain in exams but will not be available in search. Once you delete that exams this question will get deleted.<br>")
 						   		$("#DeleteConfirmBody").append("Do you want to continue?");
 							   $("#quesstatus").val("Y");
 							   $("#DeleteConfirmModal").modal("toggle");
@@ -258,7 +258,7 @@ function fetchTopic(){
 			<option value="-1">Select Class</option>
 			<c:if test="${ (divisionList != null) }">
 			<c:forEach items="${divisionList}" var="item">
-				<option value="<c:out value="${item.divId}"> </c:out>"> <c:out value="${item.divisionName}"> </c:out></option>
+				<option value="<c:out value="${item.divId}"> </c:out>"> <c:out value="${item.divisionName}"> </c:out> <c:out value="${item.stream}"> </c:out></option>
 			</c:forEach>
 			</c:if> 
 			</select>

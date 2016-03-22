@@ -1,10 +1,11 @@
 package com.classapp.db.register;
 
+import java.util.Date;
+
 public class AllUserId {
 	private Integer regId;
 	private String deviceId;
 	private String googleId;
-	
 	
 	public Integer getRegId() {
 		return regId;

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+
+import com.classapp.logger.AppLogger;
 import com.classapp.persistence.HibernateUtil;
 
 public class AdvertiseDb {
@@ -65,12 +67,12 @@ public class AdvertiseDb {
 	public static void main(String[] args) {
 		AdvertiseDb advertiseDb = new AdvertiseDb();
 		List<String> advCountryList = advertiseDb.getAllCounrty();
-		System.out.println(advCountryList);
+		AppLogger.logger(advCountryList);
 		
 		List<String> advStateList = advertiseDb.getAllStateInCountry("India");
-		System.out.println(advStateList);
+		AppLogger.logger(advStateList);
 		
 		List<String> advCityList = advertiseDb.getAllCityInStateAndCountry("India", "Mah");
-		System.out.println(advCityList);
+		AppLogger.logger(advCityList);
 	}
 }

@@ -15,9 +15,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 
 import com.classapp.db.Notes.Notes;
+import com.classapp.logger.AppLogger;
 import com.classapp.login.UserStatic;
 import com.config.BaseAction;
 import com.config.Constants;
+import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.notes.NotesTransaction;
 import com.transaction.notification.NotificationGlobalTransation;
 import com.user.UserBean;
@@ -71,13 +73,14 @@ public class AddNotesAction extends BaseAction{
 			Map<String, Object> session) {
 		/* Copy file to a safe location */
 	    //  destPath = "D:/"+userBean.getRegId()+"/"+division+"/"+subject+"/"; 
+		InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
 		for (int j = 0; j < myFile.length; j++) {
 			
 		
 	      Notes notes=new Notes();
 	      UserStatic userStatic = userBean.getUserStatic();
 	      destPath=  userStatic.getNotesPath()+File.separator+subject+File.separator+division;
-	      String DBPAth="";
+	      String DBPAth="";	
 	      if(userBean.getRole()==2){
 				String storagePath = Constants.STORAGE_PATH+File.separator+institute;
 				userStatic.setStorageSpace(storagePath);
@@ -87,18 +90,21 @@ public class AddNotesAction extends BaseAction{
 	      
 	      
 	      try{
-	     	 System.out.println("Src File name: " + myFile[j]);
-	     	 System.out.println("Dst File name: " + myFileFileName.split(",")[j]);
+	     	 AppLogger.logger("Src File name: " + myFile[j]);
+	     	 AppLogger.logger("Dst File name: " + myFileFileName.split(",")[j]);
 	     	    	 
-	     	 File destFile  = new File(destPath, myFileFileName.split(",")[j]);
+	     	 File destFile  = new File(destPath, notesname[j]+".pdf");
 	    	 FileUtils.copyFile(myFile[j], destFile);
+	    	 double filesize=(myFile[j].length()/1024)/1024;
 	    	 if(userBean.getRole()==2){
 	    		 notes.setClassid(Integer.parseInt(institute));
+	    		 instituteStatTransaction.increaseUsedMemory(Integer.parseInt(institute), filesize);
 	    	 }else{
+	    		 instituteStatTransaction.increaseUsedMemory(userBean.getRegId(), filesize);
 	    	 notes.setClassid(userBean.getRegId());
 	    	 }
 	    	 notes.setDivid(Integer.parseInt(division));
-	    	 notes.setNotespath(DBPAth+myFileFileName.split(",")[j]);
+	    	 notes.setNotespath(DBPAth+notesname[j]+".pdf");
 	    	 notes.setSubid(Integer.parseInt(subject));
 	    	 notes.setName(notesname[j]);
 	    	 notes.setAddedby(userBean.getRegId());

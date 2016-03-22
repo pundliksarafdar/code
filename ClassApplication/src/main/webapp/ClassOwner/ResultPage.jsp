@@ -14,13 +14,19 @@ $(document).on("keydown", function (e) {
 });
 </script>
 </head>
-<body>
+<body style="margin: 10px">
+<div class="col-md-3">
 <c:if test="${flag eq 'Y' }">
-Congratulation.. You have passed. 
+<img alt="Congrats" src="/images/congrats.png"><br>
+Congratulation.. You have passed.
+You got <c:out value="${Total_Marks }"></c:out> out of <c:out value="${TotalExam_Marks }"></c:out>
 </c:if>
 <c:if test="${flag eq 'N' }">
+<img alt="Sorry" src="/images/fail.png"><br>
 Sorry. You have Failed
-</c:if>
 You got <c:out value="${Total_Marks }"></c:out> out of <c:out value="${TotalExam_Marks }"></c:out>
+
+</c:if>
+</div>
 </body>
 </html>

@@ -4,55 +4,15 @@
 <!-- Generated 18 Jul, 2014 11:15:40 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.classapp.db.exam.Exam" table="exam" catalog="classdb">
-    	<composite-id>
-    	<key-property name="institute_id" column="institute_id"></key-property>
-		<key-property name="div_id" column="div_id"></key-property>
-		<key-property name="sub_id" column="sub_id"></key-property>
-		<key-property name="exam_id" column="exam_id"></key-property>
-    	</composite-id>
-    	<property name="exam_name" type="java.lang.String">
-            <column name="exam_name" />
+    	 <id name="exam_id" type="java.lang.Integer">
+            <column name="exam_id" />
+            <generator class="identity" />
+        </id>
+    	<property name="inst_id" type="int">
+            <column name="inst_id" />
         </property>
-        <property name="total_marks" type="int">
-            <column name="total_marks" />
-        </property>
-        <property name="pass_marks" type="int">
-            <column name="pass_marks" />
-        </property>
-    	
-        <property name="created_by" type="int">
-            <column name="created_by" />
-        </property>
-        <property name="modified_by" type="int">
-            <column name="modified_by" />
-        </property>
-        <property name="created_dt" type="date">
-            <column name="created_dt" />
-        </property>
-        <property name="modified_dt" type="date">
-            <column name="modified_dt" />
-        </property>
-         <property name="que_ids" type="java.lang.String">
-            <column name="que_ids" />
-        </property>
-        <property name="start_time">
-            <column name="start_time" />
-        </property>
-        <property name="end_time">
-            <column name="end_time" />
-        </property>
-        
-        <property name="exam_status" type="java.lang.String">
-            <column name="exam_status" />
-        </property>
-        <property name="batch_id" type="java.lang.String">
-            <column name="batch_id" />
-        </property>
-        <property name="ans_ids" type="java.lang.String">
-            <column name="ans_ids" />
-        </property>
-        <property name="exam_time" type="java.lang.String">
-            <column name="exam_time" />
+        <property name="exam_name" type="string">
+            <column name="exam_name" length="50"/>
         </property>
     </class>
 </hibernate-mapping>

@@ -59,8 +59,8 @@ public class StudentNotesAction extends BaseAction{
 		int totalCount=notesTransaction.getNotescount(student.getDiv_id(), Integer.parseInt(subject), inst_id,batch);
 		noteslist =notesTransaction.getNotesPath(student.getDiv_id(), Integer.parseInt(subject), inst_id,currentPage,batch);
 		if(totalCount>0){
-			int remainder=totalCount%2;
-			totalPage=totalCount/2;
+			int remainder=totalCount%10;
+			totalPage=totalCount/10;
 			if(remainder>0){
 				totalPage++;
 			}

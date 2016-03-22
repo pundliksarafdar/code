@@ -9,11 +9,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.db.Notes.Notes;
 import com.classapp.db.batch.division.Division;
+import com.classapp.db.institutestats.InstituteStats;
+import com.classapp.db.register.RegisterBean;
 import com.classapp.login.UserStatic;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.division.DivisionTransactions;
+import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.notes.NotesTransaction;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.teacher.TeacherTransaction;
@@ -57,8 +60,26 @@ public class DisplayNotesListAction extends BaseAction{
 		    	  filePath=  userStatic.getNotesPath()+File.separator+subject+File.separator+division+File.separator+name;
 			      
 		      }
-		      
+		      InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
 			File file = new File(filePath);
+			double filesize=0;
+			if (file!=null) {
+				filesize=(file.length()/1024)/1024;
+			}
+			if(userBean.getRole()==2){
+				instituteStatTransaction.decreaseUsedMemory(inst_id, filesize);
+			}else{
+				instituteStatTransaction.decreaseUsedMemory(inst_id, filesize);
+			}
+			RegisterTransaction registerTransaction=new RegisterTransaction();
+			RegisterBean bean=registerTransaction.getregistereduser(inst_id);
+			if("disabled".equals(bean.getInst_status())){
+				InstituteStats instituteStats=instituteStatTransaction.getStats(bean.getRegId());
+				if( (instituteStats.getAlloc_ids()>=instituteStats.getUsed_ids()) && (instituteStats.getAlloc_memory()>=instituteStats.getUsed_memory()))
+				{
+					registerTransaction.updateInstituteStatus(bean.getRegId(), "enabled");
+				}
+			}
 			  file.delete();
 			
 			notesTransaction.deleteNotes(notesid,inst_id,Integer.parseInt(division),Integer.parseInt(subject));

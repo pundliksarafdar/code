@@ -30,14 +30,16 @@ public class RegisterBean implements Serializable{
 	private String registrationDate; 
 	private String startDate;
 	private String endDate;
-	private String renewedDates;
+	private Date renewedDates;
 	private String daysLeft;
 	private Integer role = -1;
 	private Integer div_id;
 	private String email;
 	private String activationcode;
 	private String status;
-	
+	private String inst_status;
+	private Date lastlogin;
+	private Date nextRenewalDate;
 	public String getStatus() {
 		return status;
 	}
@@ -178,11 +180,18 @@ public class RegisterBean implements Serializable{
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
-	public String getRenewedDates() {
+	public Date getRenewedDates() {
 		return renewedDates;
 	}
-	public void setRenewedDates(String renewedDates) {
+	public void setRenewedDates(Date renewedDates) {
 		this.renewedDates = renewedDates;
+	}
+	
+	public Date getLastlogin() {
+		return lastlogin;
+	}
+	public void setLastlogin(Date lastlogin) {
+		this.lastlogin = lastlogin;
 	}
 	public String getDaysLeft() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -206,5 +215,18 @@ public class RegisterBean implements Serializable{
 	public void setRole(Integer role) {
 		this.role = role;
 	}
-
+	public String getInst_status() {
+		return inst_status;
+	}
+	public void setInst_status(String inst_status) {
+		this.inst_status = inst_status;
+	}
+	public Date getNextRenewalDate() {
+		return nextRenewalDate;
+	}
+	public void setNextRenewalDate(Date nextRenewalDate) {
+		this.nextRenewalDate = nextRenewalDate;
+	}
+	
+	
 }

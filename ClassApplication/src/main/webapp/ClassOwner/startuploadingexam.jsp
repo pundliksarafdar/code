@@ -9,7 +9,32 @@ $(document).ready(function(){
 	var currentOptionUploadImageBtn;
 	indexOption=$("#indexOption").val();
 	$(".addOptionUploadExam").on('click',function(){
-		var submitquestionsuploadoptionsText = "<div class='form-group'><div class='input-group'><span class='input-group-addon'><input type='checkbox' name='answersOptionCheckBox' value='"+indexOption+"' id='answersOptionCheckBox"+indexOption+"'></span><textarea class='form-control' name='answersOptionText'></textarea><span class='input-group-addon'><i class='glyphicon glyphicon-picture uploadAnswerImage'></i></span><span class='input-group-addon'><i class='glyphicon glyphicon-trash removeOption' id='removeOption_"+indexOption+"'></i></span></div><div id='optionImagesDiv"+indexOption+"'></div></div>";
+		var imgBtn = '<span class="btn btn-success fileinput-button">'+
+			'<i class="glyphicon glyphicon-folder-open"></i> '+
+					'<span>Add images </span>'+
+			'<input type="file" class="uploadOptionImageModalFileBtn" multiple>'+
+		'</span>';
+		var submitquestionsuploadoptionsText = 
+			"<div class='form-group'>"+
+				"<input type='hidden' id='optionImageCount' name='optionImageCount' value='0'>"+
+				"<label class='col-sm-2 control-label'>&nbsp;</label>"+
+				"<div class='col-sm-10'>"+
+					"<div class='input-group'>"+
+						"<span class='input-group-addon'>"+
+						"<input type='checkbox' name='answersOptionCheckBox' value='"+indexOption+"' id='answersOptionCheckBox"+indexOption+"'>"+
+						"</span>"+
+						"<textarea class='form-control' name='answersOptionText'></textarea>"+
+						"<span class='input-group-addon'>"+
+						"<i class='glyphicon glyphicon-trash removeOption' id='removeOption_"+indexOption+"'></i>"+
+						"</span>"+
+					"</div>"+
+					"<div class='row images_row_with_btn'></div>"+
+					"<div class='addMorebuttonImageWrapper'>"+
+						"<div id='optionImagesDiv'></div>"+
+					imgBtn+
+					"</div>"+
+			"</div>";
+			
 		$("#submitquestionsuploadoptions").append(submitquestionsuploadoptionsText);
 		indexOption++;
 	});
@@ -40,19 +65,14 @@ $(document).ready(function(){
 	});
 	
 	
-	$("#uploadOptionImageModal #uploadOptionImageModalSaveImage").on("click",function(){
-		var modalOptionImageFiles = $("#uploadOptionImageModal input#uploadOptionImageModalFileBtn");
-		currentOptionUploadImageBtn.parents(".form-group").find("input[name='optionImages']").remove();
-		currentOptionUploadImageBtn.parents(".form-group").append("<input type='file' name='optionImages' class='hide'/>");
-		var fileInput = currentOptionUploadImageBtn.parents(".form-group").find("input[name='optionImages']")[0];
-		fileInput.files = modalOptionImageFiles[0].files;
-		var imageDivId = currentOptionUploadImageBtn.parents(".form-group").find("[id^='optionImagesDiv']");
-		readURL(fileInput,imageDivId.attr("id"));
-	});
-	
-	
 	$("input.startuplodingexamSave").on('click',function(){
-		$('form[action="uploadexams"]').submit();
+		var inValid = $('form[action="uploadexams"]').validateCustome();
+		if(!inValid){
+			var invalidOption = validateOption();
+			if(!invalidOption){
+				$('form[action="uploadexams"]').submit();
+			}
+		}
 	});
 	
 	$("#CancleUploading").on("click",function(){
@@ -61,6 +81,77 @@ $(document).ready(function(){
 		$("#uploadexams").submit();
 	});
 	
+	function onAddMoreOptionImage(){
+		var input = this;
+		var hiddenVariable = $(input).parents(".form-group").find("input#optionImageCount");
+		//if imagecount variable is not present then create a variable
+		if(!hiddenVariable || hiddenVariable.length == 0){
+			$(input).parents(".form-group").append("<input type='hidden' id='optionImageCount' name='optionImageCount' value='0' />");
+			hiddenVariable = $(input).parents(".form-group").find("input#optionImageCount");
+		}
+		var prevHiddenVariable = parseInt(hiddenVariable.val());
+		if(isNaN(prevHiddenVariable)){
+			prevHiddenVariable = 0;
+		}
+		hiddenVariable.val(prevHiddenVariable+parseInt(input.files.length));
+		if($(input).parents("div.addMorebuttonImageWrapper").find("#optionImagesDiv").find(".row").length == 0){
+			$(input).parents("div.addMorebuttonImageWrapper").find("#optionImagesDiv").append("<div class='row'></div>");
+		}
+		for(var index=0;index<input.files.length;index++){
+		if ( input.files && input.files[0] ) {
+        var FR= new FileReader();
+        FR.onload = function(e) {
+			var imgTag = "<img src='"+e.target.result+"' width='200px' height='200px'/>";
+			var hiddenTag = "<input type='hidden' value='"+e.target.result+"' name='optionImagesPrev'/>";
+			var closeButton = '<button type="button" class="answer_image_with_btn_remove close" aria-hidden="true">&times;</button>';
+			var imageColElement = "<div class='col-sm-3 image_with_btn'>"+closeButton+imgTag+hiddenTag+"</div>"
+			var imageRow = $(input).parents("div.addMorebuttonImageWrapper").find("#optionImagesDiv .row");
+			imageRow.append(imageColElement);	
+			
+			
+        };
+			FR.readAsDataURL( input.files[index] );
+		}
+    }
+	}
+	
+	function addQuestionImages(){
+		var input = this;
+		for(var index=0;index<input.files.length;index++){
+		if ( input.files && input.files[0] ) {
+        var FR= new FileReader();
+        FR.onload = function(e) {
+			var imgTag = "<img src='"+e.target.result+"' width='200px' height='200px'/>";
+			var hiddenTag = "<input type='hidden' value='"+e.target.result+"' name='questionImagesStr'/>";
+			var closeButton = '<button type="button" class="Question_image_with_btn_remove close" aria-hidden="true">&times;</button>';
+			<!-- This element contains the object -->
+			var imageColElement = "<div class='col-sm-3 image_with_btn'>"+closeButton+imgTag+hiddenTag+"</div>"
+			var imageRow = $("#questionImageFileList");
+			imageRow.append(imageColElement);	
+			
+			
+        };
+			FR.readAsDataURL( input.files[index] );
+		}
+	}
+	}
+	
+	function removeQuestionImage(){
+		$(this).parent("div").remove();
+	}
+	
+	function removeAnswerImage(){
+		var imageCount = $(this).parents(".form-group").find("#optionImageCount").val();
+		$(this).parents(".form-group").find("#optionImageCount").val(imageCount-1);
+		$(this).parent("div").remove();
+	}
+	
+	$('form[action="uploadexams"]').on("change","input[type='file']",setQuestionSize);
+		//function for edit option images
+	$("body").on("change",".uploadOptionImageModalFileBtn",onAddMoreOptionImage);
+	$("#submitquestionsuploadfile").on("change",addQuestionImages);
+	$("body").on("click",".Question_image_with_btn_remove",removeQuestionImage);
+	$("body").on("click",".answer_image_with_btn_remove",removeAnswerImage);
 });
 
 	function readURL(input,id) {
@@ -78,36 +169,49 @@ $(document).ready(function(){
         }
 		}
     }
+	
+	function appendCount(input,id){
+		var imageCount = $("<input/>",
+		{
+			name:"optionImageCount",
+			value:input.files.length,
+			type:'hidden'
+		});
+		$("#"+id).append(imageCount);
+	}
+	
+	function validateOption(){
+		var options = $('input.uploadOptionImageModalFileBtn');
+		var hasError = false;
+		$.each(options,function(index,fileChooser){
+			$(fileChooser).parents(".form-group").removeClass("has-error");
+			$(fileChooser).parents(".form-group").find(".validation-message").remove();
+			if($(fileChooser).parents(".form-group").find("textarea").val().trim().length==0 && $(fileChooser).parents(".form-group").find("#optionImageCount").val() == 0){
+					$(fileChooser).parents(".form-group").addClass("has-error");
+					$(fileChooser).parents(".form-group").find(".col-sm-10").prepend("<div class='validation-message'>Error Please add either option text or image </div>");
+					hasError = true;
+					
+			}
+		});
+		return hasError;
+	}
+	
+	function setQuestionSize(){
+		var size = 0;
+		var allImageFiles = $("input[type='file']");
+		$.each(allImageFiles,function(index,file){
+			$.each(file.files,function(indexx,fileInner){
+				size = size + fileInner.size;	
+			});
+			
+		});
+		if(allImageFiles.length != 0){
+			$("#startuplodingexamImageFileSize").removeClass("hide").html("Question size is "+(size/(1024*1024)).toFixed(3) +"MB approximately");
+		}else{
+			$("#startuplodingexamImageFileSize").addClass("hide");
+		}
+	}
 </script>
-
-<div class="modal fade" id="uploadOptionImageModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Upload Image for options</h4>
-      </div>
-      <div class="modal-body">
-        <form>
-		<p id="optionText"></p>
-		<hr/>
-		<span class="btn btn-success fileinput-button">
-			<i class="glyphicon glyphicon-folder-open"></i>
-					<span>Add images </span>
-			<input type="file" id="uploadOptionImageModalFileBtn" multiple onchange="readURL(this,'uploadOptionImageModalAnswerImages');">
-		</span>
-		<div id="uploadOptionImageModalAnswerImages">
-		
-		</div>
-		</form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="uploadOptionImageModalSaveImage">Save Files</button>
-      </div>
-    </div>
-  </div>
-</div>
 <div>
 <c:if test="${actionname eq 'submitquestions'}">
 <c:choose>
@@ -119,10 +223,8 @@ $(document).ready(function(){
  </c:otherwise>
  </c:choose>
  </c:if>
- <div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
-			<div align="center" style="font-size: larger;">Add Question</div>
-</div>
- <form action="uploadexams" method="post" enctype="multipart/form-data" id="uploadexams" >
+ 
+ <form action="uploadexams" method="post" enctype="multipart/form-data" id="uploadexams" class="form-horizontal corex-form-container">
 	<input type="hidden" id="batch" name="batch" value="<c:out value="${batch}" ></c:out>">
 	<input type="hidden" id="division" name="division" value="<c:out value="${division}" ></c:out>">
 	<input type="hidden" id="subject" name="subject" value="<c:out value="${subject}" ></c:out>">
@@ -133,51 +235,81 @@ $(document).ready(function(){
 	<input type="hidden" name="searchedMarks" value='<c:out value="${searchedMarks}"></c:out>'>
 	<input type="hidden" name="searchedExam" value='<c:out value="${searchedExam}"></c:out>'>
 	<input type="hidden" name="searchedRep" value='<c:out value="${searchedRep}"></c:out>'>
-  <input type="hidden" name="searchedTopic" value='<c:out value="${searchedTopic}"></c:out>'>
+	<input type="hidden" name="searchedTopic" value='<c:out value="${searchedTopic}"></c:out>'>
 	<input type="hidden" name="actionname" value='<c:out value="${actionname }"></c:out>' id="actionname"/>
 	<input type="hidden" name="examname" value="<c:out value="${requestScope.examname}"></c:out>"/>
 	<input type="hidden" name="uploadedMarks" value="<c:out value="${sessionScope.uploadedMarks}"></c:out>"/>
 	<input type="hidden" name="institute" value="<c:out value="${institute}"></c:out>"/>
-		
+			<label class="control-label">
+				<h4>Add Question</h4>
+			</label>
+			<hr>
 			<div class="form-group">
-				<label for="examname">Question </label>
-				<textarea class="form-control" id="question" name="question"><c:out value="${requestScope.questionData.question}"></c:out></textarea>
+				<label for="examname" class="col-sm-2 control-label">Question </label>
+				<div class="col-sm-10">
+					<div class="validation-message hide"></div>
+					<textarea class="form-control" id="question" name="question" required><c:out value="${requestScope.questionData.question}"></c:out></textarea>
+				</div>
 			</div>
 			<div class="form-group">
-				<label for="questionmarks">Marks</label>
-				<input type="number" class="form-control" id="questionmarks" name="questionmarks" maxlength="5" min="0" size="5" style="width: 10%;" value="<c:out value="${requestScope.questionData.marks}"></c:out>"></input>
-			</div>
-			<div class="form-group">
-				<label for="questionmarks">Topic</label>
-				<select class="form-control" id="topicID" name="topicID">
-				<option value="-1">Select Topic</option>
-				<c:if test="${selectedtopicID ne 0 && selectedtopicID ne -1}">
-				<option value="<c:out value="${selectedtopicID}"></c:out>" selected="selected"><c:out value="${selectedtopicName}"></c:out></option>
-				</c:if>
-				<c:forEach items="${topics}" var="topic">
-				<c:if test="${topic.topic_id ne selectedtopicID}">
-				<option value="<c:out value="${topic.topic_id}"></c:out>"><c:out value="${topic.topic_name}"></c:out></option>	
-				</c:if>
-				</c:forEach>
-				</select>
-			</div>
-			
-			<div class="form-group">
+				<label for="questionmarks" class="col-sm-2 control-label">Marks</label>
+				<div class="col-sm-2">
+					<div class="validation-message hide"></div>
+					<input type="number" required class="form-control" id="questionmarks" name="questionmarks" maxlength="5" size="5" style="width: 50%;" min="1" value="<c:out value="${requestScope.questionData.marks}"></c:out>"></input>
+				</div>
+				
+				<label for="questionmarks" class="col-sm-2 control-label">Topic</label>
+				<div class="col-sm-2">
+					<select class="form-control" id="topicID" name="topicID">
+					<option value="-1">Select Topic</option>
+					<c:if test="${selectedtopicID ne 0 && selectedtopicID ne -1}">
+					<option value="<c:out value="${selectedtopicID}"></c:out>" selected="selected"><c:out value="${selectedtopicName}"></c:out></option>
+					</c:if>
+					<c:forEach items="${topics}" var="topic">
+					<c:if test="${topic.topic_id ne selectedtopicID}">
+					<option value="<c:out value="${topic.topic_id}"></c:out>"><c:out value="${topic.topic_name}"></c:out></option>	
+					</c:if>
+					</c:forEach>
+					</select>
+				</div>
+				
+				<label class="col-sm-2 control-label">&nbsp;</label>
+				<div class="col-sm-2">
 				<span class="btn btn-success fileinput-button">
 					<i class="glyphicon glyphicon-folder-open"></i>
 					<span>Add images </span>
-					<input type="file" onchange="readURL(this,'fileList');" id="submitquestionsuploadfile" multiple name="questionImages" value="<c:out value="${requestScope.questionData.marks}"></c:out>">
+					<input type="file" id="submitquestionsuploadfile" multiple>
 				</span>	
-			</div>
-			<div id="fileList">
+				</div>
 			</div>
 			<div class="form-group">
-				<a class="btn btn-default addOptionUploadExam">Add Option</a>
+				<label class="col-sm-2 control-label">&nbsp;</label>
+				<div class="col-sm-10">
+					<div id="questionImageFileList" class="row">
+					<c:forEach items="${requestScope.questionData.questionImage}" var="image">
+						<div class="col-sm-3">
+							<input type="hidden" value='<c:out value="${image }"></c:out>' name="questionImagesStr">
+							<button type="button" class="Question_image_with_btn_remove close" aria-hidden="true">&times;</button>
+							<img src='<c:out value="${image }"></c:out>' width="200px" height="200px" tyle="padding:5px;"/>
+						</div>
+					</c:forEach>
+					</div>
+				</div>
 			</div>
-			<div class="" id="submitquestionsuploadoptions">
+			
+			<div class="form-group">
+				<label class="col-sm-2 control-label">&nbsp;</label>
+				<div class="col-sm-10">
+					<a class="btn btn-default addOptionUploadExam">Add Option</a>
+				</div>
+			</div>
+			<div class="form-btn-group" id="submitquestionsuploadoptions" mandatorySelection="1" validationMessage="Please select atleast an answer">
+						<div class="validation-message hide"></div>
 			<c:forEach items="${requestScope.questionData.options}" var="options" varStatus="counter">
-				
-				<div class='form-group'>
+				<div class="form-group">
+				<input type="hidden" id="optionImageCount" name="optionImageCount" value='<c:out value="${requestScope.questionData.optionImageCount[counter.index]}"></c:out>'/>
+				<label class="col-sm-2 control-label">&nbsp;</label>
+				<div class="col-sm-10">
 					<div class='input-group'>
 						<span class='input-group-addon'>
 						<c:choose>
@@ -205,22 +337,61 @@ $(document).ready(function(){
 							</span>
 						<textarea class='form-control' name='answersOptionText'><c:out value="${options}"></c:out></textarea>
 						<span class='input-group-addon'> <i
-							class='glyphicon glyphicon-picture uploadAnswerImage'></i>
-						</span> <span class='input-group-addon'> <i
 							class='glyphicon glyphicon-trash removeOption' id='removeOption_<c:out value="${counter.index}"></c:out>'></i>
 						</span>
 					</div>
-					<div id='optionImagesDiv"+indexOption+"'></div>
+					
+					<c:if test="${not empty requestScope.optionImageEndCount}">
+						<c:set var="lastCountIndex" value="${requestScope.optionImageEndCount[counter.index]}"></c:set>
+						<c:choose>
+							<c:when test="${counter.index eq 0 }">
+								<c:set var="startCountIndex" value="0"></c:set>	
+							</c:when>
+							<c:otherwise>
+								<c:set var="startCountIndex" value="${requestScope.optionImageEndCount[counter.index-1]}"></c:set>
+							</c:otherwise>
+						</c:choose>
+							<div class="row images_row_with_btn">
+							<c:choose>
+							<c:when test="${lastCountIndex gt 0 }">
+							<c:forEach items="${requestScope.questionData.answerImage}" var="optionImage" begin='${startCountIndex }' end="${lastCountIndex-1}" varStatus="optionImageCounter">
+								<div class="col-sm-3 image_with_btn">
+									<button type="button" class="answer_image_with_btn_remove close" aria-hidden="true">&times;</button>
+									<img src='<c:out value="${optionImage }"></c:out>' width="200px" style="padding:5px;" id="optionImages<c:out value='${optionImageCounter.index }'></c:out>"/>
+									<input type="hidden" value='<c:out value="${optionImage }"></c:out>' name="optionImagesPrev">
+								</div>
+							</c:forEach>
+							</c:when>
+							</c:choose>	
+							</div>
+							
+						</c:if>
+					<div class="addMorebuttonImageWrapper">	
+						<div id='optionImagesDiv'></div>
+						<span class="btn btn-success fileinput-button">
+							<i class="glyphicon glyphicon-folder-open"></i> 
+							<span>Add images </span>
+							<input type="file" class="uploadOptionImageModalFileBtn" multiple>
+						</span>	
+					
+					</div>
+				
+				</div>
 				</div>
 			</c:forEach>
 			
 		</div>
+		<div id="startuplodingexamImageFileSize" class="alert alert-info hide">
 		
+		</div>
 		<div class="form-group">
-			<input type="button" class="btn btn-default startuplodingexamSave" value="Save"/>
-			<c:if test="${actionname ne 'submitquestions'}">
-			<input type="button" class="btn btn-default CancleUploading" value="Cancel" id="CancleUploading"/>
-			</c:if>
+			<label class="col-sm-2 control-label">&nbsp;</label>
+				<div class="col-sm-10">
+					<input type="button" class="btn btn-default startuplodingexamSave" value="Save"/>
+					<c:if test="${actionname ne 'submitquestions'}">
+					<input type="button" class="btn btn-default CancleUploading" value="Cancel" id="CancleUploading"/>
+					</c:if>
+				</div>
 		</div>
 </form>
 </div>

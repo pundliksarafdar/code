@@ -16,6 +16,11 @@ public class EditUserAction extends BaseAction{
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
+		if (userBean.getRole()==2) {
+			return "teacher.edituser";
+		}else if (userBean.getRole()==3) {
+			return "student.edituser";
+		}
 		return SUCCESS;
 	}
 }

@@ -7,6 +7,7 @@ public class StudentMarks implements Serializable {
 	private int inst_id;
 	private int sub_id;
 	private int div_id;
+	private int batch_id;
 	private int exam_id;
 	private int marks;
 	private String ans_ids;
@@ -51,5 +52,11 @@ public class StudentMarks implements Serializable {
 	}
 	public void setAns_ids(String ans_ids) {
 		this.ans_ids = ans_ids;
+	}
+	public int getBatch_id() {
+		return batch_id;
+	}
+	public void setBatch_id(int batch_id) {
+		this.batch_id = batch_id;
 	}
 }

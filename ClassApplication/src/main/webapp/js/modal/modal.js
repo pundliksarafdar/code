@@ -29,13 +29,55 @@ Modal.prototype.modalConfirm = function(heading, question, cancelButtonTxt, okBu
 
     	confirmModal.find('#okButton').click(function(event) {
       
-    	callback.apply(undefined,params);
+    	callback.apply(this,params);
       confirmModal.modal('hide');
     });
 
     confirmModal.modal('show');
   }
+
+Modal.prototype.modalYesAndNo = function(heading, question, noButtonTxt,noBtnCallBack, okButtonTxt,yesBtnCallback) {
 	
+    var confirmModal = 
+      $('<div class="modal fade"><div class="modal-dialog"><div class="modal-content">' +    
+          '<div class="modal-header">' +
+            '<a class="close" data-dismiss="modal" >&times;</a>' +
+            '<h4>' + heading +'</h4>' +
+          '</div>' +
+
+          '<div class="modal-body">' +
+            '<p>' + question + '</p>' +
+          '</div>' +
+
+          '<div class="modal-footer">' +
+            '<a href="#" id="noButton" class="btn btn-default" data-dismiss="modal">' + 
+            	noButtonTxt + 
+            '</a>' +
+            '<a href="#" id="okButton" class="btn btn-primary" data-dismiss="modal">' + 
+              okButtonTxt + 
+            '</a>' +
+            '<a href="#" id="cancelButton" class="btn btn-primary" data-dismiss="modal">' + 
+            "Cancel" + 
+          '</a>' +
+          '</div>' +
+        '</div></div></div>');
+
+    	confirmModal.find('#okButton').click(function(event) {
+    		yesBtnCallback();
+    		confirmModal.modal('hide');
+    	});
+    	
+    	confirmModal.find('#noButton').click(function(event) {
+    		noBtnCallback();
+    		confirmModal.modal('hide');
+    	});
+    	confirmModal.find('#cancelButton').click(function(event) {
+    		noBtnCallback();
+    		confirmModal.modal('hide');
+    	});
+
+    confirmModal.modal('show');
+  }
 	Modal.prototype.acceptClass = function(regId,that){
 	$.ajax({
 		   url: "admajxsrvlt",

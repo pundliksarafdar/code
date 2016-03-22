@@ -32,7 +32,7 @@ public class EditExamAction extends BaseAction{
 		String batch = (String) request.getSession().getAttribute(Constants.BATCH);
 		
 		ExamTransaction examTransaction = new ExamTransaction();
-		mcqDatas = examTransaction.searchExamData(userBean.getRegId(), null, null, Integer.parseInt(division), false, Integer.parseInt(subject), null, null,null);
+		//mcqDatas = examTransaction.searchExamData(userBean.getRegId(), null, null, Integer.parseInt(division), false, Integer.parseInt(subject), null, null,null);
 		
 		DivisionTransactions divisionTransactions = new DivisionTransactions();
 		List<Division> divisions = divisionTransactions.getAllDivisions(userBean.getRegId());

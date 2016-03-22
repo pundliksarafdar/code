@@ -1,16 +1,18 @@
 package com.threadrunner;
 
+import com.classapp.logger.AppLogger;
+
 public class ReEvaluateThreadRunner extends Thread{
 	@Override
 	public void run() {
-		System.out.println("Starting thread....");
+		AppLogger.logger("Starting thread....");
 		try {
 			Thread.sleep(5*1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Ending thread......");
+		AppLogger.logger("Ending thread......");
 	}
 	
 	public ReEvaluateThreadRunner() {

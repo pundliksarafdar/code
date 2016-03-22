@@ -1,182 +1,346 @@
-<%@page import="com.classapp.db.batch.division.Division"%>
+<%@page import="java.util.Iterator"%>
 <%@page import="java.util.List"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="com.config.Constants"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
-<script type="text/javascript" src="js/AddSubject.js"></script>
-<script type="text/javascript">
-function editclass(id){
-	$('div#ModifyClassModal .error').hide();
-	$("#editclassname").val($("#name"+id).val());
-	$("#editstream").val($("#stream"+id).val());
-	$("#hidclassid").val(id);
-	$('#ModifyClassModal').modal('toggle');
-	
+<style type="text/css">
+.dataTables_filter {
+     display: none;
 }
 
-function deleteclass(classid){
-	var result=confirm("Are You Sure?");
-	if(result){
+.classTable .editEnabled .editable{
+	display:block;
+}
+
+.classTable .editEnabled .default{
+	display:none;
+}
+
+.classTable .editable{
+	display:none;
+}
+
+.classTable .default{
+	display:show;
+}
+
+.editclassnameerror, .editstreamerror, .addstreamerror, .addclassnameerror{
+	color: red;
+}
+</style>
+<!-- <script type="text/javascript" src="js/Addclass.js"></script> -->
+<script>
+var BUTTONS_MANAGE = '<div class="default">' +
+						'<button class="btn btn-primary btn-xs btn-edit">Edit</button>'+
+						'<button class="btn btn-danger btn-xs btn-delete">Delete</button>'+
+					'</div>';
+					
+var BUTTONS_CANCEL = '<div class="editable">' +
+						'<button class="btn btn-success btn-xs btn-save">Save</button>'+
+						'<button class="btn btn-danger btn-xs btn-cancel">Cancel</button>'+
+					'</div>';
+					
+var class_NAME = '<input type="hidden" class="hide editclassId" value="{{editclassIdValue}}">'+
+					'<div class="default defaultclassName">{{defaultclassNameValue}}</div>'+
+					'<input type="text" value="{{editclassNameValue}}" class="form-control editable editclassName" maxlength="100">'+
+					'<div class="editclassnameerror"></div>';
+					
+var stream_NAME =	'<div class="default defaultstreamName">{{defaultstreamNameValue}}</div>'+
+					'<input type="text" value="{{editstreamNameValue}}" class="form-control editable editstreamName" maxlength="100">'+
+					'<div class="editstreamerror"></div>';
+
+function validateInput(inputText){
+	var CHAR_AND_NUM_VALIDATION = /^[a-zA-Z0-9]{1,}$/;
+	var isValidInput = CHAR_AND_NUM_VALIDATION.test(inputText);
+	return isValidInput;
+}
+var classid="";
+function getclass(subid){
+	classid=subid;
+	$("#editclass").val($("#sub"+subid).val());
+	$('div#ModifyclassModal .error').hide();
+	$('#ModifyclassModal').modal('toggle');
+}
+
+/*
+New function
+*/
+function deleteclass(subid){
 	$.ajax({
         url: 'classOwnerServlet',
         type: 'post',
         data: {
 	    	 methodToCall: "deleteclass",
-	    	 classid:classid
+	    	 classid:subid
         },
-        success: function(data){
-        	modal.launchAlert("Success","Class Deleted!");
-  		  /*  setTimeout(function(){
-  			   location.reload();
-  		   },2*1000); */
-        	$("#paginateform").submit();
-        },error:function(data){
-        	
+        success: function(){
+			$.notify({message: 'Deleted'},{type: 'success'});
+			$('input[type="hidden"].editclassId[value="'+subid+'"]').closest("tr").remove();
+        }, error: function(){
+            $.notify({message: 'Unable to delete'},{type: 'danger'});
         }
-	});
-	}
+});
 }
 
-$(document).ready(function(){
-	$("#classname,#stream").on("keyup",function(){
-		var string = $(this).val();	
-		$(this).val(string.charAt(0).toUpperCase() + string.slice(1));
-	});
-	$(".page").on("click",function(e){
-		$("form#paginateform #currentPage").val($(this).text());
-		$("#paginateform").submit();
-		e.preventDefault();
-	});
+/*this function will prompt to delete class*/
+function deleteclassPrompt(){
+	var classIdToEdit = $(this).closest("tr").find(".editclassId").val();
+	deleteConfirm(classIdToEdit);
+}
+
+function deleteConfirm(subId){
+	modal.modalConfirm("Delete","Do you want to delete","Cancel","Delete",deleteclass,[subId]);
+}
+
+function enableEdit(){
+	var className = $(this).closest("tr").find(".defaultclassName").text().trim();
+	var streamname = $(this).closest("tr").find(".defaultstreamName").text().trim();
+	$(this).closest("tr").find(".editclassName").val(className);
+	$(this).closest("tr").find(".editstreamName").val(streamname);
+	$(this).closest("tr").addClass("editEnabled");
+	//$(this).closest("tr").find(".editclassName").val("");
+}
+
+function cancelEdit(){
+	$(this).closest("tr").find(".editclassnameerror").empty();
+	$(this).closest("tr").find(".editstreamerror").empty();
+	$(this).closest("tr").removeClass("editEnabled");
+}
+
+function manageLink(){
+	var classIdTo = $(this).closest("tr").find(".editclassId").val();
+	var classname = $(this).closest("tr").find(".defaultclassName").text();
+	var link = "addtopics?actionname=initiate&subid="+classIdTo+"&subname="+classname;
+	location.href = link;
+}
+
+function saveNewclassName(){
+	var that = $(this);
+	$(this).closest("tr").find(".editclassnameerror").empty();
+	$(this).closest("tr").find(".editstreamerror").empty();
+	var classNameToEdit = $(this).closest("tr").find(".editclassName").val();
+	var classIdToEdit = $(this).closest("tr").find(".editclassId").val();
+	var stream = $(this).closest("tr").find(".editstreamName").val();
+	var flag=false;
+	if(!classNameToEdit || classNameToEdit.trim()==""){
+		$(this).closest("tr").find(".editclassnameerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> class name cannot be blank');
+		flag=true;
+	}else if(!validateInput(classNameToEdit)){
+		$(this).closest("tr").find(".editclassnameerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Only character and numbers are allowed');
+		flag=true;
+	}
 	
-	$(".start").on("click",function(e){
-		$("form#paginateform #currentPage").val("1");
-		$("#paginateform").submit();
-		e.preventDefault();
-	});
+	if(!stream.trim()==""){
+		if(!validateInput(stream)){
+			$(this).closest("tr").find(".editstreamerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Only character and numbers are allowed');
+			flag=true;
+		}
+		}
 	
-	$(".end").on("click",function(e){
-		$("form#paginateform #currentPage").val($("#totalPages").val());
-		$("#paginateform").submit();
-		e.preventDefault();
-	});
-	
-	$('#saveclass').click(function(){
-		var classname=$("#editclassname").val();
-		var stream=$("#editstream").val();
-		var classid=$("#hidclassid").val();
-		if(classname.length>0){
-		$('div#ModifyClassModal .progress').removeClass('hide');
-		$('div#ModifyClassModal .saveclass').addClass('hide');
-		 $.ajax({
-                url: 'classOwnerServlet',
-                type: 'post',
-                data: {
-			    	 methodToCall: "modifyclass",
-			    	 classname:classname,
-			    	 stream:stream,
-			    	 classid:classid
-                },
-                success: function(data){
-                	var resultJson = JSON.parse(data);
-                	var result=resultJson.updated;
-                	if(result=="false"){
-                		$('div#ModifyClassModal .progress').addClass('hide');
-                		$('div#ModifyClassModal .saveclass').removeClass('hide');
-                		$('div#ModifyClassModal .error').show();
-                  		$('div#ModifyClassModal .error').html('<strong>Error!</strong> Class Already Present');
-                	}else{
-                	$('#ModifyClassModal').modal('hide');
-                	modal.launchAlert("Success","Class Modified!");
-         		  /*  setTimeout(function(){
-         			   location.reload();
-         		   },2*1000); */
-                	$("#paginateform").submit();
-                	}
-                }, error: function(data){
-                    alert('ajax failed');
-                }
-	});
-		}else{
+	if(flag==false){
+		$(this).closest("tr").find(".editclassnameerror").empty();
+	 $.ajax({
+		url: 'classOwnerServlet',
+		type: 'post',
+		data: {
+			 methodToCall: "modifyclass",
+			 classname:classNameToEdit,
+			 classid:classIdToEdit,
+			 stream:stream
+		},
+		success:function(e){
 			
-			$('div#ModifyClassModal .error').show();
-      		$('div#ModifyClassModal .error').html('<strong>Error!</strong> Class Name cannot be empty');
+			e = JSON.parse(e);
+			if (e.status == "success"){
+				if(e.updated=="true"){
+					$.notify({message: 'Modified'},{type: 'success'});
+					that.closest("tr").find(".defaultclassName").text(classNameToEdit);		
+					that.closest("tr").find(".defaultstreamName").text(stream);
+					cancelEdit.apply(that);
+				}else{
+					that.closest("tr").find(".editclassnameerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Class already exists!!');
+				}
+			}else{
+				$.notify({message: 'Error'},{type: 'danger'});
+			}
+		},
+		error:function(e){
+			console.log(e);
+		}
+	 });
+	}
+
+}
+/*functions ends here*/
+
+	var dataTable;
+	var that;
+	function filterGlobal() {
+		$('#classTable').DataTable().search(
+			$('#tableSearchCustom').val()
+			).draw();
+	}
+
+	$(document).ready(function(){
+		$('body').on("click",".btn-edit",enableEdit)
+			.on("click",".btn-cancel",cancelEdit)
+			.on("click",".btn-save",saveNewclassName)
+			.on("click",".btn-delete",deleteclassPrompt)
+			.on("click",".btn-manage",manageLink);
+			
+		$('#tableSearchCustom').on("keyup click",filterGlobal);
+		
+		dataTable = $("#classTable").DataTable({oClasses:{sFilterInput:"form-control"},"lengthChange": false,"columnDefs": [
+            {
+                "render": function ( data, type, row ) {
+                    console.log(data);
+					return "data";
+                }
+            },
+        ]});
+				
+		$('#manageclassAddclass').on('click',function(){
+			that=$(this);
+		var className = $('#className').val();
+		var streamName = $('#streamName').val();
+		$(this).closest('.addclassContainer').find(".addclassnameerror").empty();
+		$(this).closest('.addclassContainer').find(".addstreamerror").empty();
+		var flag= false;
+		if(!className || className.trim()==""){
+			$(this).closest('.addclassContainer').find(".addclassnameerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> class name cannot be blank');
+			flag=true;
+		}else if(!validateInput(className)){
+			$(this).closest('.addclassContainer').find(".addclassnameerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Only character and numbers are allowed');
+			flag=true;
+		}
+		if(!streamName.trim()==""){
+		if(!validateInput(streamName)){
+			$(this).closest('.addclassContainer').find(".addstreamerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Only character and numbers are allowed');
+			flag=true;
+		}
+		}
+		if(flag==false){
+			allAjax.addclass('',className,streamName,successCallbackclass,errorCallbackclass);
 		}
 	});
-});
+		
+	});
+	
+	function errorCallbackclass(e){
+		/*
+		$('div#addclassModal .progress').addClass('hide');
+		$('div#addclassModal .add').removeClass('hide');
+		$('div#addclassModal .error').show();
+		$('div#addclassModal .error').html('<strong>Error!</strong> Unable to add');
+		*/
+	}
+
+	function successCallbackclass(data){
+		data = JSON.parse(data);
+		var status = data.status;
+		if(status != "error"){
+		dataTable = $('#classTable').DataTable({
+			bDestroy:true,
+			data: data.allclasses,
+			lengthChange: false,
+			columns: [
+				{title:"#",data:null},
+				{ title: "Class Name",data:"divisionName",render:function(data,event,row){
+					console.log(row);
+					var modifiedObj = class_NAME.replace("{{defaultclassNameValue}}",row.divisionName);
+					modifiedObj = modifiedObj.replace("{{editclassNameValue}}",row.divisionName);
+					modifiedObj = modifiedObj.replace("{{editclassIdValue}}",row.divId);
+					return modifiedObj;
+				}},
+				{ title: "Stream",data:"stream",render:function(data,event,row){
+					console.log(row);
+					var modifiedObj = stream_NAME.replace("{{defaultstreamNameValue}}",row.stream);
+					modifiedObj = modifiedObj.replace("{{editstreamNameValue}}",row.stream);
+					return modifiedObj;
+				}},
+				{ title: "",data:null,render:function(data){
+					return BUTTONS_MANAGE+BUTTONS_CANCEL;
+					}}
+			]
+		});
+		
+		dataTable.on( 'order.dt search.dt', function () {
+        dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+			});
+		}).draw();
+		}else{
+			that.closest('.addclassContainer').find(".addclassnameerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Class already exists!!');
+		}
+	}
+	
+	
 </script>
 </head>
 <body>
-<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 10px;">
-<div align="center" style="font-size: larger;"><u>Manage Class</u></div>
-<button data-target="#addclassModal" type="button" class="btn btn-info" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Class</button>
-</div>
-<br>
-<%List<Division> list=(List<Division>)request.getAttribute("classes"); 
-int endIndex=(Integer)request.getAttribute("endIndex");
-int currentPage=(Integer)request.getAttribute("currentPage");
-int startIndex=(Integer)request.getAttribute("startIndex");
-if(list!=null)
-{
-if(list.size()>0)
-{
-%>
+ <br>
+ <div class="container" style="background-color:#eee">
+ <div class="row" >
 
-<div>
-<table class="table table-bordered table-hover" style="background-color: white;" data-toggle="table">
-<tr style="background-color: rgb(0, 148, 255);">
-<th>Sr.</th>
-<th>Class Name</th>
-<th>Stream/Part</th>
-<th>Edit</th>
-<th>Delete</th>
-</tr>
-<%
-int counter=startIndex;
-while(endIndex>counter)
-{
-%>
-<tr>
-<td><%=counter+1 %></td>
-<td><%=list.get(counter).getDivisionName() %><input type="hidden" id="name<%=list.get(counter).getDivId()%>" value="<%=list.get(counter).getDivisionName()%>"></td>
-<td><%=list.get(counter).getStream() %><input type="hidden" id="stream<%=list.get(counter).getDivId()%>" value="<%=list.get(counter).getStream()%>"></td>
-<td><a href="#" class="btn btn-primary" onclick="editclass(<%=list.get(counter).getDivId()%>)">Edit</a></td>
-<td><a href="#" class="btn btn-danger" onclick="deleteclass(<%=list.get(counter).getDivId()%>)">Delete</a></td>
-</tr>
-<%
-counter++;
-}
-%>
-</table>
+ <div class="col-lg-9 addclassContainer">
+	
+    <div class="input-group col-lg-4">
+      <input type="text" class="form-control" id="className" maxlength="25" placeholder="Enter Class">
+      <div class="addclassnameerror"></div>
+    </div>
+    <div class="input-group  col-lg-4">
+       <input type="text" class="form-control" id="streamName" maxlength="25" placeholder="Enter Stream/Part(Optional)">
+       <div class="addstreamerror"></div>
+    </div>
+    <!-- /input-group -->
+    <div class="input-group-btn  col-lg-3">
+        <button id="manageclassAddclass" class="btn btn-default" type="button">Add class</button>
+      </div>
+    
+  </div><!-- /.col-lg-6 -->
+  <div class="col-lg-3"><input type="text" class="form-control" id="tableSearchCustom" placeholder="search"></div>
+  </div>
+  <!-- <div class="row">
+   <div class="col-lg-4">
+	<input type="text" class="form-control" id="tableSearchCustom" placeholder="search">
+ </div>
+  </div> -->
 </div>
-<div>
- <form action="manageclass" id="paginateform">
-  <input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
-  <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
-  <ul class="pagination">
-  <li><a class="start" >&laquo;</a></li>
-  <c:forEach var="item" begin="1" end="${totalPages}">
-  <c:if test="${item eq currentPage}">
-  <li class="active"><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
-  </c:if>
-  <c:if test="${item ne currentPage}">
-  <li><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
-  </c:if>
-  </c:forEach>
-  <li><a href="#" class="end">&raquo;</a></li>
-</ul>
-</form>
-</div>
-<%}else{
-%>
-<span class="alert alert-info">No Class added yet</span>
-<%	
-}
 
-} %>
+<div class="container">
+ <table class="table table-striped classTable" id="classTable">
+	<thead>
+		<th>#</th><th>Class name</th><th>Stream/Part</th><th></th>
+	</thead>
+ <c:forEach items="${classes}" var="class" varStatus="counter">
+ 	<tr>
+ 		<td><c:out value="${counter.count}"></c:out></td>
+ 		<td>
+			<input type="hidden" class="hide editclassId" value='<c:out value="${class.divId}"></c:out>'/>
+			<div class="default defaultclassName"><c:out value="${class.divisionName}"></c:out></div>
+			<input type="text" value='<c:out value="${class.divisionName}"></c:out>' class="form-control editable editclassName" maxlength="100"/>
+			<div class="editclassnameerror"></div>
+		</td>
+		<td>
+			<div class="default defaultstreamName"><c:out value="${class.stream}"></c:out></div>
+			<input type="text" value='<c:out value="${class.stream}"></c:out>' class="form-control editable editstreamName" maxlength="100"/>
+			<div class="editstreamerror"></div>
+		</td>
+ 		<td>
+			<div class="default">
+				<button class="btn btn-primary btn-xs btn-edit">Edit</button>
+				<button class="btn btn-danger btn-xs btn-delete">Delete</button>
+			</div>
+			<div class="editable">
+				<button class="btn btn-success btn-xs btn-save">Save</button>
+				<button class="btn btn-danger btn-xs btn-cancel">Cancel</button>
+			</div>
+		</td>
+ 		
+ 	</tr>
+ </c:forEach>
+ </table>
+ </div>
 </body>
 </html>

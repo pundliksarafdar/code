@@ -88,7 +88,7 @@ $(document).ready(function(){
 				   var divisionselect=$('#division');
 				   $("#divisionerror").html("");
 				   divisionselect.empty();
-				   divisionselect.append("<option value='-1'>Select Division</option>");
+				   divisionselect.append("<option value='-1'>Select Class</option>");
 				   if(divisionids[0]!=""){
 					   var i=0;
 					   while(i<divisionids.length){
@@ -241,7 +241,7 @@ $(document).ready(function(){
 			}
 		}
 		if(division=="-1"){
-			divisionerror.html("Please select division");
+			divisionerror.html("Please select class");
 			flag=false;
 		}
 		if(subject=="-1"){
