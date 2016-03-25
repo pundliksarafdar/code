@@ -40,6 +40,7 @@ import com.user.UserBean;
 public class EditQuestionAction extends BaseAction{
 	String actionname,examname,exammarks,question;
 	String answersOptionText[],answersOptionCheckBox;
+	String[] answersCheckbox;
 	File optionImages[],questionImages[];
 	int uploadedMarks,questionmarks,questionNumber;
 	ExamData examData;
@@ -105,6 +106,45 @@ public class EditQuestionAction extends BaseAction{
 				paraQuestions = questionData.getParaQuestions();
 				paraPerQuestionMarks = questionData.getParaPerQuestionMarks();
 				questionmarks = questionbank.getMarks();
+			}else if("2".equals(questiontype)){
+				question = questionbank.getQue_text();
+				questionmarks = questionbank.getMarks();
+				answersCheckbox = questionbank.getAns_id().replaceAll(" ", "").split(",");
+				answersOptionText = new String[10];
+				for (int i = 0; i < 10; i++) {
+					switch (i) {
+					case 0:
+						answersOptionText[i]=questionbank.getOpt_1();
+						break;
+					case 1:
+						answersOptionText[i]=questionbank.getOpt_2();
+						break;
+					case 2:
+						answersOptionText[i]=questionbank.getOpt_3();
+						break;		
+					case 3:
+						answersOptionText[i]=questionbank.getOpt_4();
+						break;
+					case 4:
+						answersOptionText[i]=questionbank.getOpt_5();
+						break;
+					case 5:
+						answersOptionText[i]=questionbank.getOpt_6();
+						break;
+					case 6:
+						answersOptionText[i]=questionbank.getOpt_7();
+						break;
+					case 7:
+						answersOptionText[i]=questionbank.getOpt_8();
+						break;
+					case 8:
+						answersOptionText[i]=questionbank.getOpt_9();
+						break;
+					case 9:
+						answersOptionText[i]=questionbank.getOpt_10();
+						break;
+					}
+				}
 			}
 			return "starteditingquestion";
 		}else if("updateQuestion".equals(actionname)){
@@ -219,7 +259,7 @@ public class EditQuestionAction extends BaseAction{
 				}
 			}
 			questionbank.setQue_type(questiontype);
-			bankTransaction.saveQuestion(questionbank);
+			bankTransaction.updateObjectiveQuestion(questionbank);
 			}else if("3".equals(questiontype)){
 				bankTransaction.updateParagraphQuestion(questionNumber, inst_id, Integer.parseInt(subject), Integer.parseInt(division), questionmarks);
 				ParagraphQuestion paragraphQuestion =new ParagraphQuestion();
@@ -711,6 +751,18 @@ public class EditQuestionAction extends BaseAction{
 
 	public void setPreSelectedMarks(int preSelectedMarks) {
 		this.preSelectedMarks = preSelectedMarks;
+	}
+
+
+
+	public String[] getAnswersCheckbox() {
+		return answersCheckbox;
+	}
+
+
+
+	public void setAnswersCheckbox(String[] answersCheckbox) {
+		this.answersCheckbox = answersCheckbox;
 	}
 	
 	

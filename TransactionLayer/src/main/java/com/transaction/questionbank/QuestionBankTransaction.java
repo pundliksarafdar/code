@@ -56,6 +56,12 @@ public class QuestionBankTransaction {
 		return true;
 	}
 	
+	public boolean updateObjectiveQuestion(Questionbank questionbank) {
+		QuestionbankDB questionbankDB=new QuestionbankDB();
+		questionbankDB.updateObjectiveQuestion(questionbank);
+		return true;
+	}
+	
 	public boolean updateParagraphQuestion(int que_id,int inst_id,int sub_id,int div_id, int marks) {
 		QuestionbankDB questionbankDB=new QuestionbankDB();
 		questionbankDB.updateParagraphQuestion(que_id, inst_id, sub_id, div_id, marks);

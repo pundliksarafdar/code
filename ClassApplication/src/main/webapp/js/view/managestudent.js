@@ -51,6 +51,7 @@ var showTable = function(data){
 			}]
 		});
 		$("#dataTableForFees input[type=\"checkbox\"]").bootstrapSwitch(optionSelect);
+		$('.dataTables_filter').find('input').attr("placeholder", "Search Fees");
 }
 
 var addStudent = function(){

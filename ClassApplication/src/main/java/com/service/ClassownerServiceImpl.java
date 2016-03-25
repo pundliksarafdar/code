@@ -197,6 +197,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		return Response.status(200).entity("Service.."+examPattern).build();
 	}
 
+	@Override
 	@POST
 	@Path("/addLogoImages/{imageId}/{imageName}")
 	@Produces("application/json")
@@ -206,6 +207,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		return Response.status(200).build();
 	}
 
+	@Override
 	@GET
 	@Path("/logoImages")
 	@Produces("application/json")
@@ -216,6 +218,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		return Response.status(200).entity(list).build();
 	}
 	
+	@Override
 	@POST
 	@Path("/saveHeader/{headerName}")
 	@Consumes(MediaType.TEXT_PLAIN)

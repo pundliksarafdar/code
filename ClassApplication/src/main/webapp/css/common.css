@@ -24,7 +24,7 @@
 }
 
 .navbar-apple-custom{
-	background:rgba(0,0,0,0.6);
+	background:rgb(5, 116, 148);
 	color:#FFFFFF;
 	margin-bottom: 0px; 
 }
@@ -54,7 +54,7 @@
 }
 
 .nav .open .dropdown-menu{
-	background: #DDDDDD;
+	background: rgba(0, 58, 85, 0.71);
 }
 
 div[class^="col-"]{

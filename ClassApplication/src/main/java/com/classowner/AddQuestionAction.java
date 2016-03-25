@@ -168,15 +168,7 @@ public class AddQuestionAction extends BaseAction{
 			questionData.setAnswerImage(answerImagesList);
 			
 			//Create separate file for each question and join them in the save and submit
-			UserStatic userStatic = userBean.getUserStatic();
-			String examPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
-			File file = new File(examPath);
 			
-			if(!file.getParentFile().exists()){
-				file.getParentFile().mkdirs();
-				try {file.createNewFile();} catch (IOException e) {	e.printStackTrace();}
-			}
-			writeObject(examPath, questionData);
 			Questionbank questionbank=new Questionbank();
 			questionbank.setAdded_by(userBean.getRegId());
 			if(null!=answersOptionCheckBox){
@@ -230,7 +222,16 @@ public class AddQuestionAction extends BaseAction{
 				}
 			}
 			questionbank.setQue_type(questiontype);
-			bankTransaction.saveQuestion(questionbank);
+			 questionNumber= bankTransaction.saveQuestion(questionbank);
+			UserStatic userStatic = userBean.getUserStatic();
+			String examPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
+			File file = new File(examPath);
+			
+			if(!file.getParentFile().exists()){
+				file.getParentFile().mkdirs();
+				try {file.createNewFile();} catch (IOException e) {	e.printStackTrace();}
+			}
+			writeObject(examPath, questionData);
 			}else if("3".equals(questiontype)){
 				Questionbank questionbank = new Questionbank();
 				questionbank.setCreated_dt(new Date(new java.util.Date().getTime()));

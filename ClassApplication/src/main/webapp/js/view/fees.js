@@ -78,6 +78,9 @@ function saveFeeStructureInDb(struct){
 
 function saveFeeStructureInDbSuccess(e){
 	console.log(e);
+	if(e==false){
+		$("#feeStructName").closest("div").append("<div class='error'>Fee Structure with same name already exists.</div>");
+	}
 }
 
 function saveFeeStructureInDbError(e){

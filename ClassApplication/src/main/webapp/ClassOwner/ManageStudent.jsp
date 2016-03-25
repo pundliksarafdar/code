@@ -409,6 +409,7 @@ var wayOfAddition="";
 			   $('#batches').empty();
 			   var batchDataArray = [];
 			    var data = JSON.parse(e);
+			    if(data.status != "error"){
 			    $.each(data.batches,function(key,val){
 					var data = {};
 					data.id = val.batch_id;
@@ -416,6 +417,9 @@ var wayOfAddition="";
 					batchDataArray.push(data);
 				});
 			    $("#batches").select2({data:batchDataArray,placeholder:"type batch name"});
+			    }else{
+			    	 $("#batches").select2({data:null,placeholder:"Batch not found"});
+			    }
 		   	},
 		   error:function(e){
 			   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Error while fetching batches for division');
@@ -621,16 +625,19 @@ var wayOfAddition="";
 <div class="col-md-1">:</div>
 <div class="col-md-3"><input type="text" id="email" class="form-control" maxlength="50"><span id="emailError" class="error"></span></div>
 </div>
-
+</div>
+<div style="padding-left: 2%">
+<div class="row">
+<div class="col-md-2"><strong align="left">Fees Details</strong></div>
+</div>
 <div>
 	<table id="dataTableForFees" class="table table-striped" style="width:100%"></table>
+</div>
 </div>
 <div class="row" style="padding: 2%">
 <div class="col-md-offset-6 col-md-1"><button class="btn btn-primary" id="addStudent">Submit</button></div>
 </div>
 
-</div>
-</div>
 
 </div>
 </body>

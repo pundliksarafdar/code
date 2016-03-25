@@ -84,8 +84,8 @@
 	}
 	
 	function validateElement(batchName,selectSubject){
-		$(batchName).closest("td").find(".error").remove();
-		$(selectSubject).closest("td").find(".error").remove();
+		$(batchName).closest("div").find(".error").remove();
+		$(selectSubject).closest("div").find(".error").remove();
 		var CHAR_AND_NUM_VALIDATION = /^[a-zA-Z0-9 -]{1,}$/;
 		isValid = true;
 		if(batchName.val().trim()==""){
@@ -96,7 +96,7 @@
 			isValid = false;
 		}
 		if(selectSubject.val() == null || selectSubject.val().length < 1){
-			selectSubject.closest("td").append("<div class='error'>Field cannot be blank</div>");
+			selectSubject.closest("div").append("<div class='error'>Field cannot be blank</div>");
 			isValid = false;
 		}
 		return isValid;
@@ -268,8 +268,13 @@
 					},
 			   type:"POST",
 			   success:function(e){
+				   e = JSON.parse(e);
+				   if(e.status != "error"){
 					$.notify({message: "Batch successfuly added"},{type: 'success'});
 					getAllBatches();		
+				   }else{
+					   $("#addBatchBatchName").after("<div class='error'>Batch with same name already exists</div>");
+				   }
 				},
 			   error:function(e){
 					$.notify({message: "Error"},{type: 'danger'});
@@ -294,9 +299,35 @@
 </script>
 </head>
 <body>
+<jsp:include page="ClassSubjectNBatchHeaders.jsp" >
+		<jsp:param value="active" name="managebatch"/>
+	</jsp:include>
+
+<div class="well">
+  <div class="row">
+  <div class="col-md-3">
+	<input type="text" class="form-control" id="addBatchBatchName" placeholder="Batch name">
+	<span id='batchNameError' class='error'></span>
+	</div>
+	 <div class="col-md-3">
+	<select id="addBatchSelectDivision" class="form-control">
+		<!--Thought it is batch id written its division id only-->
+		<c:forEach items="${batcheids}" var="divId" varStatus="counter">
+				<option value='<c:out value="${divId}"></c:out>'><c:out value="${divisionNames[counter.index]}"></c:out> &nbsp; <c:out value="${streams[counter.index]}"></c:out></option>
+		</c:forEach>
+	</select>
+ 	</div>
+ 	<div class="col-md-3">
+		<select id="addBatchSelectSubject" multiple="multiple" style="width:100%"></select>
+	</div>
+	<div class="col-md-2">
+		<input type="button" class="btn btn-success btn-add-batch" value="Add"/>
+	</div>
+  </div>
+  </div>
 <div class="container">
  <div class="row">
-  <div class="col-lg-4">
+  <div class="col-lg-offset-9 col-lg-3">
 	<input type="text" class="form-control" id="batchTableSearchCustom" placeholder="search">
  </div>
  </div>
@@ -307,32 +338,6 @@
 
 <div>
 <table id="batchTable" class="table table-hover" width="100%"></table>
-<div class="well">
-  <table width="100%" >
-  <tr>
-	<td colspan="4">Add batch</td>
-  </tr>
-  <tr class="active">
-  <td width="20%">
-	<input type="text" class="form-control" id="addBatchBatchName" placeholder="Batch name">
-  </td>
-  <td width="20%">
-	<select id="addBatchSelectDivision" class="form-control">
-		<!--Thought it is batch id written its division id only-->
-		<c:forEach items="${batcheids}" var="divId" varStatus="counter">
-				<option value='<c:out value="${divId}"></c:out>'><c:out value="${divisionNames[counter.index]}"></c:out> &nbsp; <c:out value="${streams[counter.index]}"></c:out></option>
-		</c:forEach>
-	</select>
-  </td>
-  <td width="40%">
-		<select id="addBatchSelectSubject" multiple="multiple" style="width:100%"></select>
-  </td>
-  <td width="20%">
-		<input type="button" class="btn btn-success btn-add-batch" value="Add"/>
-  </td>
-  </tr>
-  </table>
-  </div>
 </div>
   
 </body>

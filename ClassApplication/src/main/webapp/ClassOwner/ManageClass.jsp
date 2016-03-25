@@ -94,6 +94,7 @@ function deleteConfirm(subId){
 }
 
 function enableEdit(){
+	$("#classTable").find(".editEnabled").find(".btn-cancel").trigger("click");
 	var className = $(this).closest("tr").find(".defaultclassName").text().trim();
 	var streamname = $(this).closest("tr").find(".defaultstreamName").text().trim();
 	$(this).closest("tr").find(".editclassName").val(className);
@@ -208,15 +209,15 @@ function saveNewclassName(){
 		$(this).closest('.addclassContainer').find(".addstreamerror").empty();
 		var flag= false;
 		if(!className || className.trim()==""){
-			$(this).closest('.addclassContainer').find(".addclassnameerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> class name cannot be blank');
+			$(this).closest('.addclassContainer').find(".addclassnameerror").html('class name cannot be blank');
 			flag=true;
 		}else if(!validateInput(className)){
-			$(this).closest('.addclassContainer').find(".addclassnameerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Only character and numbers are allowed');
+			$(this).closest('.addclassContainer').find(".addclassnameerror").html('Only character and numbers are allowed');
 			flag=true;
 		}
 		if(!streamName.trim()==""){
 		if(!validateInput(streamName)){
-			$(this).closest('.addclassContainer').find(".addstreamerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Only character and numbers are allowed');
+			$(this).closest('.addclassContainer').find(".addstreamerror").html('Only character and numbers are allowed');
 			flag=true;
 		}
 		}
@@ -265,11 +266,11 @@ function saveNewclassName(){
 			]
 		});
 		
-		dataTable.on( 'order.dt search.dt', function () {
+		/* dataTable.on( 'order.dt search.dt', function () {
         dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             cell.innerHTML = i+1;
 			});
-		}).draw();
+		}).draw(); */
 		}else{
 			that.closest('.addclassContainer').find(".addclassnameerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Class already exists!!');
 		}
@@ -279,8 +280,10 @@ function saveNewclassName(){
 </script>
 </head>
 <body>
- <br>
- <div class="container" style="background-color:#eee">
+<jsp:include page="ClassSubjectNBatchHeaders.jsp" >
+		<jsp:param value="active" name="manageclass"/>
+	</jsp:include>
+ <div class="container" style="background-color:#eee;padding: 2%">
  <div class="row" >
 
  <div class="col-lg-9 addclassContainer">

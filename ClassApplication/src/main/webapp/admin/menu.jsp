@@ -298,7 +298,7 @@ function RenderTimer(completedTime,totalTime){
 	         </ul>
       </li> -->
       
-      <li>
+      <!-- <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Manage <b class="caret"></b></a>
       		<ul class="dropdown-menu">
       			<li><a class="menuoptions" href="addsubject">Manage Subject</a></li>
@@ -307,7 +307,7 @@ function RenderTimer(completedTime,totalTime){
 	            <li><a class="menuoptions" href="manageteacher">Manage Teacher</a></li>
 	            <li><a class="menuoptions" href="managebatch">Manage Batch</a></li>
 	         </ul>
-      </li>
+      </li> -->
       
       <cx:versionswitch switchId="3">
       <li>
@@ -332,15 +332,15 @@ function RenderTimer(completedTime,totalTime){
       </li>
       </cx:versionswitch>
       
-      <li>
+      <!-- <li>
       	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Time Table <b class="caret"></b></a>
       		<ul class="dropdown-menu">
 	            <li><a class="menuoptions" href="createtimetable">Create Time Table</a></li>
 	            <li><a class="menuoptions" href="updatetimetable">View & Update Time Table</a></li>
 	             <li><a class="menuoptions" href="weeklytimetable">Weekly Time Table</a></li>
-	            <!-- <li><a href="showtimetable">See Time Table</a></li>  -->
+	            <li><a href="showtimetable">See Time Table</a></li> 
 	         </ul>
-      </li>
+      </li> -->
     <%}%>
 <%--     <cx:versionswitch switchId="3"> --%>
     	<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
@@ -420,7 +420,7 @@ function RenderTimer(completedTime,totalTime){
 	<% if(userBean.getRole() == 1 ){ %>
 	<div class="row">
         <div class="col-sm-4 col-xs-8">
-            <a href="addsubject">
+            <a href="manageclass">
 			<div id="tile8" class="tile">
 			      <div class="carousel slide" data-ride="carousel">
                     <!-- Wrapper for slides -->
@@ -441,6 +441,7 @@ function RenderTimer(completedTime,totalTime){
 			</a>
         </div>
         <div class="col-sm-2 col-xs-4">
+        	<a href="managestudent">
             <div id="tile8" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
@@ -455,8 +456,10 @@ function RenderTimer(completedTime,totalTime){
                         </div>
                     </div>
             </div>
+            </a>
         </div>
 		<div class="col-sm-2 col-xs-4">
+			<a href="manageteacher">
             <div id="tile8" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
@@ -471,6 +474,7 @@ function RenderTimer(completedTime,totalTime){
                         </div>
                     </div>
             </div>
+            </a>
         </div>
 		<div class="col-sm-2 col-xs-4">
             <a href="manageExam">

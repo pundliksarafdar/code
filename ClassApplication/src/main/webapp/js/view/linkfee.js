@@ -165,6 +165,7 @@ function getBatches(){
 
 function getBatchSuccess(batches){
 	$(BATCH_SELECT).find('option').not('option[value="-1"]').remove();
+	$(BATCH_SELECT).find('optgroup').remove();
 	var optionsHasLink = "";
 	var optionsNoLink = "";
 	var optGroupHasLink;

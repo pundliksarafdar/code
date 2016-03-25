@@ -16,7 +16,7 @@
 				<select class="btn btn-default" id="divisionSelect">
 					<option value="-1">Select Division</option>
 					<c:forEach var="division" items="${divisions}">
-						<option value='<c:out value="${division.divId}"></c:out>'><c:out value="${division.divisionName}"></c:out></option>
+						<option value='<c:out value="${division.divId}"></c:out>'><c:out value="${division.divisionName}"></c:out> <c:out value="${division.stream}"></c:out></option>
 					</c:forEach>
 				</select>
 			</div>

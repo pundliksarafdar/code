@@ -209,11 +209,11 @@ padding-top: 2px;
 			if(!inValid){
 				var invalidOption = validateOption();
 				if(!invalidOption){
-					$("#MCQDiv").find("#division").val($("#classownerUploadexamDivisionName").val());
+					/* $("#MCQDiv").find("#division").val($("#classownerUploadexamDivisionName").val());
 					$("#MCQDiv").find("#subject").val($("#classownerUploadexamSubjectNameSelect").val());
 					$("#MCQDiv").find("#topicID").val($("#classownerUploadQuestionTopicSelect").val());
-					$("#MCQDiv").find("#actionname").val("submitquestions");
-					$("#MCQDiv").find("#questiontype").val($("#classownerQuestionTypeSelect").val());
+					//$("#MCQDiv").find("#actionname").val("submitquestions");
+					$("#MCQDiv").find("#questiontype").val($("#classownerQuestionTypeSelect").val()); */
 					$("#MCQDiv").find('form[action="editquestion"]').submit();
 				}
 			}
@@ -536,25 +536,28 @@ padding-top: 2px;
 	</div>
 	<div id="MCQDiv" style="display: none"> 
  <form action="editquestion" method="post" enctype="multipart/form-data" id="editquestion" class="form-horizontal corex-form-container">
- 			<input type="hidden" id="division" name="division">
- 			<input type="hidden" id="subject" name="subject">
+ 			<input type="hidden" id="division" name="division" value="<c:out value='${division}'></c:out>">
+ 			<input type="hidden" id="subject" name="subject" value="<c:out value='${subject}'></c:out>">
  			<input type="hidden" id="actionname" name="actionname" value="updateQuestion">
- 			<input type="hidden" id="questiontype" name="questiontype">
+ 			<input type="hidden" id="questiontype" name="questiontype" value="<c:out value='${questiontype}'></c:out>">
  			<input type="hidden" id="indexOption" name="indexOption" value="<c:out value="${indexOption}" ></c:out>">
- 			<input type="hidden" id="topicID" name="topicID">
- 			<input type="hidden" id="preSelectedMarks" name="preSelectedMarks" value='<c:out value="${preSelectedMarks}"></c:out>'>
+ 			<input type="hidden" id="topicID" name="topicID" value="<c:out value='${topicID}'></c:out>">
+ 			<input type="hidden" id="currentPage" name="currentPage" value='<c:out value="${currentPage}"></c:out>'>
+ 		<input type="hidden" id="totalPages" name="totalPages" value='<c:out value="${totalPages}"></c:out>'>
+ 		<input type="hidden" id="questionNumber" name="questionNumber" value='<c:out value="${questionNumber}"></c:out>'>
+ 		<input type="hidden" id="preSelectedMarks" name="preSelectedMarks" value='<c:out value="${preSelectedMarks}"></c:out>'>
 			<div class="form-group">
 				<label for="examname" class="col-sm-2 control-label">Question </label>
 				<div class="col-sm-10">
 					<div class="validation-message hide"></div>
-					<textarea class="form-control" id="question" name="question" required><c:out value="${requestScope.questionData.question}"></c:out></textarea>
+					<textarea class="form-control" id="question" name="question" required><c:out value="${question}"></c:out></textarea>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="questionmarks" class="col-sm-2 control-label">Marks</label>
 				<div class="col-sm-2">
 					<div class="validation-message hide"></div>
-					<input type="number" required class="form-control" id="questionmarks" name="questionmarks" maxlength="5" size="5" style="width: 50%;" min="1" value="<c:out value="${requestScope.questionData.marks}"></c:out>"></input>
+					<input type="number" required class="form-control" id="questionmarks" name="questionmarks" maxlength="5" size="5" style="width: 50%;" min="1" value="<c:out value="${questionmarks}"></c:out>"></input>
 				</div>
 				
 				<label class="col-sm-2 control-label">&nbsp;</label>
@@ -589,17 +592,18 @@ padding-top: 2px;
 			</div>
 			<div class="form-btn-group" id="submitquestionsuploadoptions" mandatorySelection="1" validationMessage="Please select atleast an answer">
 						<div class="validation-message hide"></div>
-			<c:forEach items="${requestScope.questionData.options}" var="options" varStatus="counter">
+			<c:forEach items="${answersOptionText}" var="options" varStatus="counter">
+			<c:if test="${options ne null }">
 				<div class="form-group">
-				<input type="hidden" id="optionImageCount" name="optionImageCount" value='<c:out value="${requestScope.questionData.optionImageCount[counter.index]}"></c:out>'/>
+				<input type="hidden" id="optionImageCount" name="optionImageCount" value="0"/>
 				<label class="col-sm-2 control-label">&nbsp;</label>
 				<div class="col-sm-10">
 					<div class='input-group'>
 						<span class='input-group-addon'>
 						<c:choose>
-						<c:when test="${not empty requestScope.questionData.answers}">
+						<c:when test="${not empty answersCheckbox}">
 						<c:set var="ansstatus" value="N" scope="page" />
-							<c:forEach items="${answerList}" var="ans">
+							<c:forEach items="${answersCheckbox}" var="ans">
 							<c:if test="${ans eq counter.index}">
 							<c:set var="ansstatus" value="Y" scope="page" />
 							</c:if>
@@ -662,6 +666,7 @@ padding-top: 2px;
 				
 				</div>
 				</div>
+				</c:if>
 			</c:forEach>
 			
 		</div>

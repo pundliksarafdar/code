@@ -37,8 +37,8 @@ public int saveQuestion(Questionbank questionbank) {
 	}
 	return  questionbank.getQue_id();
 
-}
 
+}
 public boolean editQuestion(Questionbank questionbank) {
 	Transaction transaction=null;
 	Session session=null;
@@ -66,6 +66,49 @@ public boolean updateSubjectiveQuestion(int que_id,int inst_id,int sub_id,int di
 	query.setParameter("que_id", que_id);
 	query.setParameter("que_text", que_text);
 	query.setParameter("marks", marks);
+	query.executeUpdate();
+	transaction.commit();
+	}catch(Exception e){
+	e.printStackTrace();
+	if(null!=transaction){
+		transaction.rollback();
+	}
+	
+	}finally{
+	if(session!=null){
+		session.close();
+	}
+	}
+	return  true;
+
+}
+
+public boolean updateObjectiveQuestion(Questionbank questionbank) {
+	Transaction transaction=null;
+	Session session=null;
+	try{
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	Query query = session.createQuery("update Questionbank set que_text = :que_text , marks = :marks, opt_1 = :opt_1, opt_2 = :opt_2 " +
+			", opt_3 = :opt_3, opt_4 = :opt_4, opt_5 = :opt_5, opt_6 = :opt_6, opt_7 = :opt_7, opt_8 = :opt_8, opt_9 = :opt_9, opt_10 = :opt_10 " +
+			",ans_id=:ans_id where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id = :que_id");
+	query.setParameter("inst_id", questionbank.getInst_id());
+	query.setParameter("div_id", questionbank.getDiv_id());
+	query.setParameter("sub_id", questionbank.getSub_id());
+	query.setParameter("que_id", questionbank.getQue_id());
+	query.setParameter("que_text", questionbank.getQue_text());
+	query.setParameter("marks", questionbank.getMarks());
+	query.setParameter("opt_1", questionbank.getOpt_1());
+	query.setParameter("opt_2", questionbank.getOpt_2());
+	query.setParameter("opt_3", questionbank.getOpt_3());
+	query.setParameter("opt_4", questionbank.getOpt_4());
+	query.setParameter("opt_5", questionbank.getOpt_5());
+	query.setParameter("opt_6", questionbank.getOpt_6());
+	query.setParameter("opt_7", questionbank.getOpt_7());
+	query.setParameter("opt_8", questionbank.getOpt_8());
+	query.setParameter("opt_9", questionbank.getOpt_9());
+	query.setParameter("opt_10", questionbank.getOpt_10());
+	query.setParameter("ans_id", questionbank.getAns_id());
 	query.executeUpdate();
 	transaction.commit();
 	}catch(Exception e){

@@ -92,6 +92,7 @@ function enableEdit(){
 }
 
 function cancelEdit(){
+	$(this).closest("tr").find(".error").empty();
 	$(this).closest("tr").removeClass("editEnabled");
 }
 
@@ -105,9 +106,13 @@ function manageLink(){
 function saveNewSubjectName(){
 	var that = $(this);
 	var subjectNameToEdit = $(this).closest("tr").find(".editSubjectName").val();
-	
+	$(this).closest("tr").find(".error").empty();
+	if(subjectNameToEdit.trim() == ""){
+		that.closest("tr").find("#subjectError").html("Subject name cannot be blank");
+		return; 
+	}
 	if(!validateInput(subjectNameToEdit)){
-		$.notify({message: 'Only character and number is allowed'},{type: 'danger'});
+		that.closest("tr").find("#subjectError").html("Only character and number is allowed");
 		return; 
 	}
 	var subjectIdToEdit = $(this).closest("tr").find(".editSubjectId").val();
@@ -120,14 +125,16 @@ function saveNewSubjectName(){
 			 subjectid:subjectIdToEdit
 		},
 		success:function(e){
-			that.closest("tr").find(".defaultsubjectName").text(subjectNameToEdit);		
-			cancelEdit.apply(that);
+			
+		
 			e = JSON.parse(e);
 			if (e.status == "success"){
-				if(e.added){
-					$.notify({message: 'Modified'},{type: 'success'});
+				if(e.added == "true"){
+					cancelEdit.apply(that);
+					that.closest("tr").find(".defaultsubjectName").text(subjectNameToEdit);		
+					$.notify({message: 'Subject modified'},{type: 'success'});
 				}else{
-					$.notify({message: 'Error'},{type: 'danger'});
+					that.closest("tr").find("#subjectError").html("Subject already exists");
 				}
 			}else{
 				$.notify({message: 'Error'},{type: 'danger'});
@@ -168,13 +175,13 @@ function validateInput(inputText){
 		$('#manageSubjectAddSubject').on('click',function(){
 		var subjectName = $('#subjectName').val();
 		if(!subjectName || subjectName.trim()==""){
-			$(this).closest('.addSubjectContainer').find(".error").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Subject name cannot be blank');
+			$(this).closest('.addSubjectContainer').find(".error").html('Subject name cannot be blank');
 		}else{
 			$(this).closest('.addSubjectContainer').find(".error").empty();
 			if(validateInput(subjectName)){
 				allAjax.addSubject('',subjectName,successCallbackSubject,errorCallbackSubject);
 			}else{
-				$(this).closest('.addSubjectContainer').find(".error").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Only character and numbers are allowed');
+				$(this).closest('.addSubjectContainer').find(".error").html('Only character and numbers are allowed');
 			}
 		}
 	});
@@ -192,19 +199,27 @@ function validateInput(inputText){
 
 	function successCallbackSubject(data){
 		data = JSON.parse(data);
+	
 		if(data.status == "success"){
+			if(data.subjects.length > 0){
+				for(i=0;i<data.subjects.length;i++){
+					data.subjects[i].index = (i+1);
+				}
+			}
 		$.notify({message: "Subject successfuly added"},{type: 'success'});
 		dataTable = $('#subjectTable').DataTable({
 			bDestroy:true,
 			data: data.subjects,
 			lengthChange: false,
 			columns: [
-				{title:"#",data:null,sWidth:"10%"},
+				{title:"Sr No.",data:null,render:function(data,event,row){
+					return row.index;
+				},sWidth:"10%"},
 				{ title: "Name",data:"subjectName",render:function(data,event,row){
 					var modifiedObj = SUBJECT_NAME.replace("{{defaultsubjectNameValue}}",row.subjectName);
 					modifiedObj = modifiedObj.replace("{{editSubjectNameValue}}",row.subjectName);
 					modifiedObj = modifiedObj.replace("{{editSubjectIdValue}}",row.subjectId);
-					return modifiedObj;
+					return modifiedObj + '<span id="subjectError" class="error"></span>';
 				},sWidth:"70%"},
 				{ title: "",data:null,render:function(data){
 					return BUTTONS_MANAGE+BUTTONS_CANCEL;
@@ -212,14 +227,15 @@ function validateInput(inputText){
 			]
 		});
 		
-		dataTable.on( 'order.dt search.dt', function () {
+		/* dataTable.on( 'order.dt search.dt', function () {
         dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             cell.innerHTML = i+1;
 			});
-		}).draw();
+		}).draw(); */
 		}else{
 			var message = data.message;
-			$.notify({message: message},{type: 'danger'});
+		//	$.notify({message: message},{type: 'danger'});
+			$('.addSubjectContainer').find(".error").html(message);
 		}
 	}
 	
@@ -227,24 +243,23 @@ function validateInput(inputText){
 </script>
 </head>
 <body>
- <br>
+<jsp:include page="ClassSubjectNBatchHeaders.jsp" >
+		<jsp:param value="active" name="addsubject"/>
+	</jsp:include>
  <div class="container">
- <div class="row" style="background-color:#eee">
- 
- <div class="col-lg-4">
-	<input type="text" class="form-control" id="tableSearchCustom" placeholder="search">
- </div>
+ <div class="row" style="background-color:#eee;padding: 2%">
  <div class="col-lg-4 addSubjectContainer">
-	
     <div class="input-group">
       <input type="text" class="form-control" id="subjectName" maxlength="25" placeholder="Enter Subject Name">
       <span class="input-group-btn">
         <button id="manageSubjectAddSubject" class="btn btn-default" type="button">Add subject</button>
       </span>
     </div><!-- /input-group -->
-    <div class="error"></div>
+    <div class="error"> &nbsp;</div>
   </div><!-- /.col-lg-6 -->
-  <div class="col-lg-3"></div>
+  <div class="col-lg-offset-4 col-lg-4">
+	<input type="text" class="form-control" id="tableSearchCustom" placeholder="search">
+ </div>
   </div>
 </div>
 
@@ -260,6 +275,7 @@ function validateInput(inputText){
 			<input type="hidden" class="hide editSubjectId" value='<c:out value="${subject.subjectId}"></c:out>'/>
 			<div class="default defaultsubjectName"><c:out value="${subject.subjectName}"></c:out></div>
 			<input type="text" value='<c:out value="${subject.subjectName}"></c:out>' class="form-control editable editSubjectName"/>
+			<span id="subjectError" class="error"></span>
 		</td>
  		<td width="20%">
 			<div class="default">

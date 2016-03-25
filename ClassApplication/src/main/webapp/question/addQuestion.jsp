@@ -194,7 +194,7 @@ padding-top: 2px;
 				$("#subjectiveDiv").find('form[action="addquestion"]').submit();
 				}
 			}else if(quesType == "2"){
-			var inValid = $('form[action="addquestion"]').validateCustome();
+			var inValid = $("#MCQDiv").find('form[action="addquestion"]').validateCustome();
 			if(!inValid){
 				var invalidOption = validateOption();
 				if(!invalidOption){
