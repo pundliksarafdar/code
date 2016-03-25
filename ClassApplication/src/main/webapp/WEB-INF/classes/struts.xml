@@ -522,5 +522,10 @@
 			method="execute">
 			<result name="success" type="tiles">admin.ManageClassFeature</result>
 		</action>				
+		<action name="classownerSettings" class="com.classowner.ClassownerSettingsAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.ClassownerSettings</result>
+		</action>				
+
 	</package>
 </struts>

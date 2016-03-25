@@ -10,7 +10,7 @@ table.distributionTable {border:1px solid #000}
 </style>
 </head>
 <body>
-<jsp:include page="FeeHeader.jsp" >
+	<jsp:include page="FeeHeader.jsp" >
 		<jsp:param value="active" name="createFeeStruct"/>
 	</jsp:include>
 
