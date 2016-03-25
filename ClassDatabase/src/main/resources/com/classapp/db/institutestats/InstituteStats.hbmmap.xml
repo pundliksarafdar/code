@@ -25,5 +25,17 @@
         <property name="avail_memory" type="double">
             <column name="avail_memory"/>
         </property>
+        <property name="smsAccess" type="boolean">
+            <column name="smsAccess"/>
+        </property>
+        <property name="smsAlloted" type="int">
+            <column name="smsAlloted"/>
+        </property>
+        <property name="smsLeft" type="int">
+            <column name="smsLeft"/>
+        </property>
+        <property name="emailAccess" type="boolean">
+            <column name="emailAccess"/>
+        </property>
     </class>
 </hibernate-mapping>

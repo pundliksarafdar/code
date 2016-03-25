@@ -1,4 +1,4 @@
-package com.service.beans;
+package com.classapp.db.classOwnerSettings;
 
 public class ClassOwnerNotificationBean {
 	boolean smsPayment;
@@ -18,9 +18,12 @@ public class ClassOwnerNotificationBean {
 	boolean smsProgressCardAfterEveryExam;
 	boolean emailProgressCardAfterEveryExam;
 
+
 	int emailAttendanceWeeklyThreshold;
 	int emailAttendanceMonthlyThreshold;
+	
 	int regId;
+	
 	
 	public int getRegId() {
 		return regId;
@@ -28,7 +31,6 @@ public class ClassOwnerNotificationBean {
 	public void setRegId(int regId) {
 		this.regId = regId;
 	}
-	
 	public boolean isSmsPayment() {
 		return smsPayment;
 	}

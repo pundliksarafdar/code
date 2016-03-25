@@ -70,12 +70,14 @@ public class LoadConfig extends HttpServlet{
 		ServletContext servletContext = getServletContext();
 		String servletPath = getServletContext().getRealPath("/");
 		File file = new File(servletPath);
-		String parent = "";
+		String parent = System.getProperty("catalina.base");
+		/*
 		do{
 			parent = file.getParent();
 			file = new File(parent);
 		}while(!parent.endsWith("standalone"));
-		parent = file.getParent();
+		*/
+		//parent = file.getParent();
 		System.setProperty("catalina.home", parent);
 		try{
 		file = new File(parent+"/storage");

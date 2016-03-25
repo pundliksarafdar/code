@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.service.beans.ClassOwnerNotificationBean" table="ClassOwnerNotification" catalog="classdb">
+    	<id name="regId" type="int">
+            <column name="regId" />
+        </id>
+        <property name="smsPayment" type="boolean">
+            <column name="smsPayment"/>
+        </property>
+        <property name="emailPayment" type="boolean">
+            <column name="emailPayment"/>
+        </property>
+        <property name="smsPaymentDue" type="boolean">
+            <column name="smsPaymentDue"/>
+        </property>
+        <property name="emailPaymentDue" type="boolean">
+            <column name="emailPaymentDue"/>
+        </property>
+        <property name="smsAttendanceDaily" type="boolean">
+            <column name="smsAttendanceDaily"/>
+        </property>
+        <property name="emailAttendanceDaily" type="boolean">
+            <column name="emailAttendanceDaily"/>
+        </property>
+        <property name="smsAttendanceWeekly" type="boolean">
+            <column name="smsAttendanceWeekly"/>
+        </property>
+        
+        <property name="emailAttendanceWeekly" type="boolean">
+            <column name="emailAttendanceWeekly"/>
+        </property>
+        
+        <property name="smsTimetableNewEntry" type="boolean">
+            <column name="smsTimetableNewEntry"/>
+        </property>
+        
+        <property name="emailTimetableNewEntry" type="boolean">
+            <column name="emailTimetableNewEntry"/>
+        </property>
+        
+        <property name="smsTimetableEditEntry" type="boolean">
+            <column name="smsTimetableEditEntry"/>
+        </property>
+        
+        <property name="emailTimetableEditEntry" type="boolean">
+            <column name="emailTimetableEditEntry"/>
+        </property>
+        
+        <property name="smsProgressCardManual" type="boolean">
+            <column name="smsProgressCardManual"/>
+        </property>
+        
+        <property name="emailProgressCardManual" type="boolean">
+            <column name="emailProgressCardManual"/>
+        </property>
+        
+        <property name="smsProgressCardAfterEveryExam" type="boolean">
+            <column name="smsProgressCardAfterEveryExam"/>
+        </property>
+        
+        <property name="emailProgressCardAfterEveryExam" type="boolean">
+            <column name="emailProgressCardAfterEveryExam"/>
+        </property>
+        
+        <property name="emailAttendanceWeeklyThreshold" type="int">
+            <column name="emailAttendanceWeeklyThreshold"/>
+        </property>
+        
+        <property name="emailAttendanceMonthlyThreshold" type="int">
+            <column name="emailAttendanceMonthlyThreshold"/>
+        </property>
+    </class>
+</hibernate-mapping>

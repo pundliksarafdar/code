@@ -10,7 +10,6 @@ import javax.ws.rs.core.Response;
 
 import com.service.beans.ClassOwnerNotificationBean;
 import com.service.beans.ClassownerSettingsNotification;
-import com.transaction.classownersettingtransaction.ClassownerSettingstransaction;
 
 @Path("ClassownerSettings")
 public class ClassownerSettingsServiceImpl extends ServiceBase{
@@ -25,17 +24,13 @@ public class ClassownerSettingsServiceImpl extends ServiceBase{
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(){
 		ClassownerSettingsNotification classownerSettingsNotification = new ClassownerSettingsNotification();
-		ClassownerSettingstransaction classownerSettingstransaction = new ClassownerSettingstransaction();
-		ClassownerSettingsNotification settings = classownerSettingstransaction.getSettings(getRegId());
-		return Response.ok().entity(settings).build();
+		return Response.ok().entity(classownerSettingsNotification).build();
 	}
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response save(ClassOwnerNotificationBean classOwnerNotificationBean){
-		ClassownerSettingstransaction classownerSettingstransaction = new ClassownerSettingstransaction();
-		classownerSettingstransaction.saveSettings(classOwnerNotificationBean, getRegId());
 		classOwnerNotificationBean = new ClassOwnerNotificationBean();
 		return Response.ok().build();
 	}
