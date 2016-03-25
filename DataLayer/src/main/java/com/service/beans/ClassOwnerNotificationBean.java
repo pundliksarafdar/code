@@ -9,6 +9,8 @@ public class ClassOwnerNotificationBean {
 	boolean emailAttendanceDaily;
 	boolean smsAttendanceWeekly;
 	boolean emailAttendanceWeekly;
+	boolean smsAttendanceMonthly;
+	boolean emailAttendanceMonthly;
 	boolean smsTimetableNewEntry;
 	boolean emailTimetableNewEntry;
 	boolean smsTimetableEditEntry;
@@ -136,6 +138,18 @@ public class ClassOwnerNotificationBean {
 	}
 	public void setEmailAttendanceMonthlyThreshold(int emailAttendanceMonthlyThreshold) {
 		this.emailAttendanceMonthlyThreshold = emailAttendanceMonthlyThreshold;
+	}
+	public boolean isSmsAttendanceMonthly() {
+		return smsAttendanceMonthly;
+	}
+	public void setSmsAttendanceMonthly(boolean smsAttendanceMonthly) {
+		this.smsAttendanceMonthly = smsAttendanceMonthly;
+	}
+	public boolean isEmailAttendanceMonthly() {
+		return emailAttendanceMonthly;
+	}
+	public void setEmailAttendanceMonthly(boolean emailAttendanceMonthly) {
+		this.emailAttendanceMonthly = emailAttendanceMonthly;
 	}
 	
 	

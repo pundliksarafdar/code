@@ -72,9 +72,9 @@
 		  <label class="form-label" for="">Monthly</label>
 		  <div>
 		  	<label for="">Sms</label>
-		  	<input type="checkbox" data-size="mini" id="sms-attendance-monthly">
+		  	<input type="checkbox" data-size="mini" id="smsAttendanceMonthly">
 		  	<label for="">Email</label>
-		  	<input type="checkbox" data-size="mini" id="email-attendance-monthly">
+		  	<input type="checkbox" data-size="mini" id="emailAttendanceMonthly">
 		  	<div>
 			  	<label for="">Below %</label>
 			  	<input id="emailAttendanceMonthlyThreshold" type="number" class="form-control" min="0" max="100" style='width:10%;'/>
@@ -116,6 +116,7 @@
 		  	<input type="checkbox" data-size="mini" id="emailProgressCardAfterEveryExam">
 		  </div>
 	  </div>
+	  <input type="button" class="btn btn-default" value="Save" id="save"/>
 	  
 	 </form>
 </body>

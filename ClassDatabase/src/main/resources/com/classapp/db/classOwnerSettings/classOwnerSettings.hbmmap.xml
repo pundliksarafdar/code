@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.service.beans.ClassOwnerNotificationBean" table="ClassOwnerNotification" catalog="classdb">
+    <class name="com.classapp.db.classOwnerSettings.ClassOwnerNotificationBean" table="ClassOwnerNotification" catalog="classdb">
     	<id name="regId" type="int">
             <column name="regId" />
         </id>
@@ -31,6 +31,14 @@
         
         <property name="emailAttendanceWeekly" type="boolean">
             <column name="emailAttendanceWeekly"/>
+        </property>
+        
+        <property name="smsAttendanceMonthly" type="boolean">
+            <column name="smsAttendanceMonthly"/>
+        </property>
+        
+        <property name="emailAttendanceMonthly" type="boolean">
+            <column name="emailAttendanceMonthly"/>
         </property>
         
         <property name="smsTimetableNewEntry" type="boolean">

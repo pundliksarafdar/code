@@ -3,6 +3,7 @@ package com.classapp.db.classOwnerSettings;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.classapp.db.institutestats.InstituteStats;
 import com.classapp.persistence.HibernateUtil;
 
 public class ClassOwnerNotificationDb {
@@ -32,6 +33,12 @@ public class ClassOwnerNotificationDb {
 	
 	public ClassOwnerNotificationBean getClassOwnerNotification(int inst_id){
 		ClassOwnerNotificationBean classOwnerNotificationBean = new ClassOwnerNotificationBean();
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		classOwnerNotificationBean =(ClassOwnerNotificationBean) session.get(ClassOwnerNotificationBean.class,inst_id);
+		if(null!=session){session.close();}
 		return classOwnerNotificationBean;
 	}
 }
