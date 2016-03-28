@@ -34,19 +34,12 @@
 				</select>
 			</div>
 			<div class="col-lg-3">
-				<input type="button" class="btn btn-default" value="Load" id="batchNFeeTableLoad"/>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-3">
 				<select class="btn btn-default" id="feeStructSelect">
 					<option value="-1">Select fee structure</option>
 				</select>
 			</div>
-			<div class="col-lg-3">
-				<input type="button" class="btn btn-default" value="Link" id="linkFeeStructure"/>
-			</div>
 		</div>
+		
 		<div class="row">
 		<div class="col-lg-12 feeDistributionWrapper">
 			<table id="distributionTable" class="table table-striped distributionTable"></table>

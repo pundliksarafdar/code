@@ -33,15 +33,16 @@ $(document).ready(function(){
 	linkFeeStructure();
 	init();
 	$("body").on("click",ADD_DISTRIBUTION,addDistribution)
-		.on('click',LINK_FEE_STRUCT,linkFeeStruct)
 		.on('input',FEE_DIST_AMMOUNT,calculateAmount)
-		.on('click',LOAD_BATCH_FEE_TABLE,loadbatchNFeeTable)
 		.on('click',FEE_DIST_SAVE,saveFee)
-		.on('change',BATCH_SELECT,onBatchSelect);
+		.on('change',BATCH_SELECT,onBatchSelect)
+		.on('change',FEE_STRUCT_SELECT,linkFeeStruct);
 });
 
 function init(){
 	$(FEE_DISTRIBUTION_WRAPPER).hide();
+	$(FEE_STRUCT_SELECT).attr("disabled","disabled");
+	$(BATCH_SELECT).attr("disabled","disabled");
 }
 
 function loadbatchNFeeTable(){
@@ -51,6 +52,7 @@ function loadbatchNFeeTable(){
 	var batch = $(BATCH_SELECT).val();
 	handler.success = function(data){
 		loadFeeStructureSuccess(data,"update");
+		$(FEE_STRUCT_SELECT).val(data.batchFees.fees_id);
 		loadAmmount(data);
 		calculateAmount();
 	};
@@ -156,6 +158,8 @@ function addDistribution(data){
 }
 
 function getBatches(){
+	$(FEE_STRUCT_SELECT).attr("disabled","disabled");
+	$(FEE_STRUCT_SELECT).val(-1);
 	var handler = {}
 	var division = $(this).val();
 	handler.success = getBatchSuccess;
@@ -164,6 +168,7 @@ function getBatches(){
 }
 
 function getBatchSuccess(batches){
+	$(BATCH_SELECT).removeAttr("disabled","disabled");
 	$(BATCH_SELECT).find('option').not('option[value="-1"]').remove();
 	$(BATCH_SELECT).find('optgroup').remove();
 	var optionsHasLink = "";
@@ -185,10 +190,12 @@ function getBatchSuccess(batches){
 	if(optionsNoLink && optionsNoLink.trim().length){
 		optGroupNoLink = '<optgroup label="No link" linked="no">'+optionsNoLink+'</optgroup>';
 	}
-	$(BATCH_SELECT).append(optGroupHasLink+optGroupNoLink);	
+	$(BATCH_SELECT).append(optGroupHasLink+optGroupNoLink).trigger('change');	
 }
 
 function getBatchError(error){
+	$(BATCH_SELECT).attr("disabled","disabled");
+	$(BATCH_SELECT).find('option').not('option[value="-1"]').remove();
 }
 
 function calculateAmount(){
@@ -272,11 +279,18 @@ function loadAmmount(data){
 
 function onBatchSelect(){
 	var selected = $(':selected',this);
-	console.log(selected.closest('optgroup').attr('linked'));
-	if(selected.closest('optgroup').attr('linked').toLowerCase() == 'yes'){
-		$(LOAD_BATCH_FEE_TABLE).show();
+	if(selected.val()==-1){
+		$(FEE_STRUCT_SELECT).attr("disabled","disabled");
 	}else{
-		$(LOAD_BATCH_FEE_TABLE).hide();
+		$(FEE_STRUCT_SELECT).val(-1);
+		$(FEE_STRUCT_SELECT).removeAttr("disabled");
+	}
+	
+	if(selected.closest('optgroup') && selected.closest('optgroup').attr('linked') && selected.closest('optgroup').attr('linked').toLowerCase() == 'yes'){
+		loadbatchNFeeTable();
+		//$(LOAD_BATCH_FEE_TABLE).show();
+	}else{
+		$(FEE_DISTRIBUTION_WRAPPER).hide();
 	}
 }
 

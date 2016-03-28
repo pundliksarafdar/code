@@ -1,5 +1,6 @@
 package com.classapp.db.fees;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -456,6 +457,9 @@ public void saveFeesStructure(FeesStructure feesStructure) {
 	
 public List<BatchFees> getBatchFeesList(int inst_id,int div_id,List<Integer> batch_id) {
 		
+		if(null == batch_id || batch_id.isEmpty()){
+			return new ArrayList<BatchFees>();
+		}
 		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();

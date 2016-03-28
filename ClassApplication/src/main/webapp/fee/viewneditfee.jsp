@@ -24,9 +24,11 @@
 	<div class="row">
 	<div class="col-lg-12">
 	<div id="viewNEditFeeStructWrapper">
-		<table id="viewNEditFeeStruct"></table>
+		<table id="viewNEditFeeStruct" class="table table-striped"></table>
 	</div>
 	</div>
+	</div>
+	<div class="row">
 	  <div class="col-lg-12 editDistributionWrapper">
 		<div class="input-group">
 		  <input type="text" class="form-control" placeholder="Distribution item" id="distributionName">
@@ -35,9 +37,13 @@
 		  </span>
 		</div><!-- /input-group -->
 	  </div>
+	  </div>
+	  <div class="row">
 	  <div class="col-lg-12 editDistributionWrapper">
 			<table id="distributionTable" class="table table-striped distributionTable"></table>
-			  </div>
+		</div>
+		</div>
+	<div class="row">
 	  <div class="col-lg-12 editDistributionWrapper" id="">
 		<form>
 		<div class="input-group">
@@ -48,6 +54,8 @@
 		</div>
 		</form>	
 	  </div>
+	  </div>
+	  <div class="row">
 	<div class="col-lg-12" id="linkBatchContainer">
 		<div class="row">
 			<div class="col-lg-3">
@@ -77,6 +85,7 @@
 		<div class="row">
 			
 		</div>
+	</div>
 	</div>
 	</div>
 		</div>
