@@ -8,6 +8,7 @@ import com.notification.bean.MessageDetailBean;
 import com.notification.email.EmailNotification;
 import com.notification.push.PushNotification;
 import com.notification.sms.SmsNotification;
+import com.util.NotificationEnum;
 
 public class NotifcationAccess implements iNotificationAccess{
 	String msg = "";
@@ -22,12 +23,6 @@ public class NotifcationAccess implements iNotificationAccess{
 	public String send(List<MessageDetailBean> messageDetailBeans) {
 		HashMap<MessageDetailBean,List<String>>  invalidIdMap = validate(messageDetailBeans);
 		for(MessageDetailBean messageDetailBean:messageDetailBeans){
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			if(!invalidIdMap.containsKey(messageDetailBean)){
 				if(messageDetailBean.isMessageTypeEmail()){
 					sendEmail(messageDetailBean);
@@ -48,8 +43,8 @@ public class NotifcationAccess implements iNotificationAccess{
 	
 	public HashMap<MessageDetailBean,List<String>> validate(List<MessageDetailBean> messageDetailBeans) {
 		HashMap<MessageDetailBean,List<String>> map = new HashMap<MessageDetailBean,List<String>>();
-		List<String> messageList = new ArrayList<String>();
 		for(MessageDetailBean messageDetailBean:messageDetailBeans){
+			List<String> messageList = new ArrayList<String>();
 			System.out.println("Starting message "+messageDetailBean.getStudentId());
 			//Student messages
 			if(messageDetailBean.isSendToStudent()){
@@ -108,7 +103,9 @@ public class NotifcationAccess implements iNotificationAccess{
 			
 			@Override
 			public void run() {
-				inotify.send(messageDetailBean);
+				MessageFormatter formatter = new MessageFormatter();
+				String message = formatter.formatMessage(messageDetailBean, NotificationEnum.MessageType.EMAIL);
+				inotify.send(messageDetailBean,message);
 			}
 		}).start();
 		
@@ -119,7 +116,9 @@ public class NotifcationAccess implements iNotificationAccess{
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				inotify.send(messageDetailBean);
+				MessageFormatter formatter = new MessageFormatter();
+				String message = formatter.formatMessage(messageDetailBean, NotificationEnum.MessageType.SMS);
+				inotify.send(messageDetailBean,message);
 			}
 		}).start();
 		
@@ -131,7 +130,9 @@ public class NotifcationAccess implements iNotificationAccess{
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				inotify.send(messageDetailBean);
+				MessageFormatter formatter = new MessageFormatter();
+				String message = formatter.formatMessage(messageDetailBean, NotificationEnum.MessageType.SMS);
+				inotify.send(messageDetailBean,message);
 			}
 		}).start();
 	}

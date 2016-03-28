@@ -9,7 +9,7 @@ import com.notification.bean.MessageDetailBean;
 public class PushNotification implements iNotify{
 
 	@Override
-	public String send(MessageDetailBean messageDetailBean){
+	public String send(MessageDetailBean messageDetailBean,String message){
 		System.out.println("Start sending push message for "+messageDetailBean.getStudentId()+" wait time:3sec");
 		try {
 			//wait(3000);

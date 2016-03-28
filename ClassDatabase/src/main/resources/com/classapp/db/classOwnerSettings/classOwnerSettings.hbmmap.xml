@@ -80,5 +80,10 @@
         <property name="emailAttendanceMonthlyThreshold" type="int">
             <column name="emailAttendanceMonthlyThreshold"/>
         </property>
+		
+		<property name="weeklyRecurrence" type="string">
+            <column name="weeklyRecurrence" length="300" not-null="true" unique="false"/>
+        </property>
+		
     </class>
 </hibernate-mapping>

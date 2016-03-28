@@ -1,0 +1,20 @@
+<html>
+<head>
+<style>
+table tr.Absent{
+	background-color:red;
+}
+</style>
+</head>
+<body>
+Hi {{name}}
+Your attendance for {{montj}}
+<table style="width:100%">
+{{#thisMonths}}
+<tr class={{absentOrPresent}}>
+<td>{{date}}<td>{{absentOrPresent}}</td>
+</tr>
+{{/thisMonths}}
+</table>
+</body>
+</html>

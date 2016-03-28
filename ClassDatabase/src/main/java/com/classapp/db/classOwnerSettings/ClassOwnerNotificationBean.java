@@ -23,7 +23,14 @@ public class ClassOwnerNotificationBean {
 	int emailAttendanceWeeklyThreshold;
 	int emailAttendanceMonthlyThreshold;
 	int regId;
+	String weeklyRecurrence;
 	
+	public String getWeeklyRecurrence() {
+		return weeklyRecurrence;
+	}
+	public void setWeeklyRecurrence(String weeklyRecurrence) {
+		this.weeklyRecurrence = weeklyRecurrence;
+	}
 	public int getRegId() {
 		return regId;
 	}

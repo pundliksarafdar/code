@@ -3,7 +3,7 @@ var NO_SMS_ACCESS = "You dont have access to sms";
 var NO_EMAIL_ACCESS = "You dont have access to email";
 var NO_SMS_EMAIL_ACCESS = "You dont have access to sms and mail";
 var NO_OF_SMS_LEFT = "You have {{smsleft}} out of {{smsTotal}}";
-
+var WEEKLY_DAY_SELECTION = "#weeklyDaySelection";
 var SAVE = "#save";
 $(document).ready(function(){
 	loadData();
@@ -16,6 +16,16 @@ $(document).ready(function(){
 		});
 		objectToSave.emailAttendanceWeeklyThreshold = $("#editNotificationSettingForm").find("#emailAttendanceWeeklyThreshold").val();
 		objectToSave.emailAttendanceMonthlyThreshold = $("#editNotificationSettingForm").find("#emailAttendanceMonthlyThreshold").val();
+		var recurrenceSelection = $(WEEKLY_DAY_SELECTION).find('input[type="checkbox"]');
+		
+		var weeklyRecurrence = {};
+		$.each(recurrenceSelection,function(key,val){
+			var key = $(val).attr("id");
+			var isChecked = $(val).is(':checked');
+			weeklyRecurrence[key] = isChecked;
+		});
+		//console.log(weeklyRecurrence);
+		objectToSave.weeklyRecurrence = JSON.stringify(weeklyRecurrence);
 		var  handler = {};
 		handler.success = function(e){console.log(e)}
 		handler.error = function(e){console.log(e)}
@@ -49,7 +59,18 @@ function onDataLoad(data){
 					$(val).prop('checked',true);
 				}
 			});
+			var recurrenceSelection = $(WEEKLY_DAY_SELECTION).find('input[type="checkbox"]');
+			
+			var weeklyRecurrence = JSON.parse(data.classOwnerNotificationBean.weeklyRecurrence);
+			$.each(recurrenceSelection,function(key,val){
+				var key = $(val).attr("id");
+				if(weeklyRecurrence[key]){
+					$(val).prop("checked",true);
+				}
+			});
 			$("#editNotificationSettingForm").find("[type='checkbox'][data-size='mini']").bootstrapSwitch();
+			$("#editNotificationSettingForm").find("#emailAttendanceWeeklyThreshold").val(data.classOwnerNotificationBean.emailAttendanceWeeklyThreshold);
+			$("#editNotificationSettingForm").find("#emailAttendanceMonthlyThreshold").val(data.classOwnerNotificationBean.emailAttendanceMonthlyThreshold);
 		}
 	}
 }

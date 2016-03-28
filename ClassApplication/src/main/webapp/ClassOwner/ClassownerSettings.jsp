@@ -54,7 +54,7 @@
 		  	<label for="">Email</label>
 		  	<input type="checkbox" data-size="mini" id="emailAttendanceWeekly">
 		  	
-		  	<div>
+		  	<div id="weeklyDaySelection">
 		  		<label for="">Send on &nbsp;</label>
 		  		<input type="checkbox" id="Sun"><label for="Sun">Sun</label>&nbsp;
 		  		<input type="checkbox" id="Mon"><label for="Mon">Mon</label>&nbsp;
