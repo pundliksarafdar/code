@@ -526,6 +526,10 @@
 			method="execute">
 			<result name="success" type="tiles">classowner.ClassownerSettings</result>
 		</action>				
+		<action name="viewexamMarks" class="com.exam.ExamMarksAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.viewexamMarks</result>
+		</action>
 
 	</package>
 </struts>

@@ -430,7 +430,9 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		ExamTransaction examTransaction = new ExamTransaction();
 		List<Exam> examList = examTransaction.getExamList(Integer.parseInt(division), userBean.getRegId(),batch_id);
-		return Response.status(Status.OK).entity(examList).build();
+		Gson gson = new Gson();
+		String jsonElement = gson.toJson(examList);
+		return Response.status(Status.OK).entity(jsonElement).build();
 	}
 	
 	@POST
@@ -475,13 +477,13 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	}
 	
 	@POST
-	@Path("/addStudentByManually")
+	@Path("/addStudentByManually/{division}/{batch}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addStudentByManually(StudentRegisterServiceBean serviceBean) {
+	public Response addStudentByManually(StudentRegisterServiceBean serviceBean,@PathParam("division")int division,@PathParam("batch")String batch ) {
 		FeesTransaction feesTransaction = new FeesTransaction();
 		RegisterTransaction registerTransaction = new RegisterTransaction();
-		int student_id = registerTransaction.registerStudentManually(getRegId(),serviceBean.getRegisterBean(), serviceBean.getStudent());
+		int student_id = registerTransaction.registerStudentManually(getRegId(),serviceBean.getRegisterBean(), serviceBean.getStudent(),division,batch);
 		for (Iterator iterator = serviceBean.getStudent_FeesList().iterator(); iterator
 				.hasNext();) {
 			Student_Fees student_Fees = (Student_Fees) iterator.next();

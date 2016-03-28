@@ -2,9 +2,6 @@
 <html>
 <head>
 <style type="text/css">
-.dataTables_filter {
-     display: none;
-}
 
 #teacherTable .editEnabled .editable{
 	display:block;
@@ -287,7 +284,7 @@ color:red;
   <li class="active"><a href="viewteacherstab"  data-toggle = "tab">View Teachers</a></li>
 </ul>
   
-<div class = "tab-content">
+<div class = "tab-content" style="padding: 2%">
  <div id="viewteacherstab" class = "tab-pane fade in active">
 <table id="teacherTable" class="table" width="100%">
 </table>

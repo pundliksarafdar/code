@@ -4,6 +4,7 @@ var ADD_STUDENT = "#addStudent";
 
 var getBatchFeesUrl = "rest/feesservice/getBatchFees/";
 var addStudentManuallyUrl = 'rest/classownerservice/addStudentByManually';
+var addStudentByID = 'rest/classownerservice/addStudentByID';
 $(document).ready(function(){
 	$("body").on("change",BATCH_SELECT,selectBacth)
 		.on("click",ADD_STUDENT,addStudent);
@@ -55,6 +56,93 @@ var showTable = function(data){
 }
 
 var addStudent = function(){
+	if(wayOfAddition=="byStudentID"){
+		$(".error").empty();
+		var flag=false;
+		var regStringExpr = /^[a-zA-Z]+$/;
+		var regPhoneNumber = /^[0-9]+$/;
+		var filter = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+		var divisionId = $('#division').val();
+		var batchIDs = $("#batches").val();
+		var parentFname=$(".parentInfo").find("#fname").val().trim();
+		var parentLname=$(".parentInfo").find("#lname").val().trim();
+		var parentPhone=$(".parentInfo").find("#phone").val().trim();
+		var parentEmail=$(".parentInfo").find("#email").val().trim();
+		
+		if(divisionId=="-1"){
+			flag=true;
+			$("#divisionError").html("Please select class");
+		}
+		if(batchIDs=="" || batchIDs==null){
+			flag=true;
+			$("#batchError").html("Please select batch");
+		}else{
+			batchIDs = batchIDs.join(',')
+		}
+		
+		if(parentFname==""){
+			flag=true;
+			$("#parentFnameError").html("Name Cannot be blank");
+		}else if(!parentFname.match(regStringExpr)){
+			flag=true;
+			$("#parentFnameError").html("Only alphabets allowded!");
+		}
+		if(parentLname==""){
+			flag=true;
+			$("#parentLnameError").html("Name Cannot be blank");
+		}else if(!parentLname.match(regStringExpr)){
+			flag=true;
+			$("#parentLnameError").html("Only alphabets allowded!");
+		}
+		
+		if(parentPhone!=""){
+			if(!parentPhone.match(regPhoneNumber)){
+				flag=true;
+				$(".parentInfo").find("#phoneError").html("Only numbers allowded!");
+			}
+		}
+		
+		if(parentEmail!=""){
+			if(!filter.test(parentEmail)){
+				flag=true;
+				$(".parentInfo").find("#emailError").html("Invalid Email ID!");
+			}
+		}
+		
+		if(flag == false){
+			var student = new Student();
+			student.parentFname = parentFname;
+			student.parentLname = parentLname;
+			student.parentPhone = parentPhone;
+			student.parentEmail = parentEmail;
+			student.student_id = studentID;
+			student.div_id = divisionId;
+			student.batch_id = batchIDs;
+			var tRow = $('#dataTableForFees tbody').find('tr');
+			var tData = feesDataTable.rows().data();
+			var feesArray = [];
+			if(tData && tData.length){
+				for(var index=0;index<tData.length;index++){
+					var student_Fees = new Student_Fees();
+					student_Fees.div_id = (tData[index]).div_id
+					student_Fees.batch_id = (tData[index]).batch_id;
+					student_Fees.batch_fees = (tData[index]).batch_fees;
+					student_Fees.discount = tRow.eq(index).find(".discount").val();
+					student_Fees.discount_type  = tRow.eq(index).find(".percentage").is(':checked')?'amt':'per';
+					student_Fees.fees_paid  = tRow.eq(index).find(".paidFees").val();
+					feesArray.push(student_Fees);
+				}	
+			}
+			
+			var studentRegisterServiceBean = new StudentRegisterServiceBean ();
+			studentRegisterServiceBean.student = student;
+			studentRegisterServiceBean.student_FeesList = feesArray;
+			var handler = {};
+			handler.success = function(e){console.log(e)};
+			handler.error = function(e){console.log(e)};
+			rest.post(addStudentByID,handler,JSON.stringify(studentRegisterServiceBean));
+		}
+	}else{
 	$(".error").empty();
 		$("#addphoneError").hide();
 		var regStringExpr = /^[a-zA-Z]+$/;
@@ -214,8 +302,9 @@ var addStudent = function(){
 		var handler = {};
 		handler.success = function(e){console.log(e)};
 		handler.error = function(e){console.log(e)};
-		rest.post(addStudentManuallyUrl,handler,JSON.stringify(studentRegisterServiceBean));
+		rest.post(addStudentManuallyUrl+"/"+divisionId+"/"+batchIDs,handler,JSON.stringify(studentRegisterServiceBean));
 		}
+	}
 		
 }
 /*Save bean*/

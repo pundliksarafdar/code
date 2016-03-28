@@ -13,6 +13,7 @@ private Set<Object> singletons = new HashSet<Object>();
         singletons.add(new ClassownerServiceImpl());
         singletons.add(new FeeServiceImpl());
         singletons.add(new TimeTableServiceImpl());
+        singletons.add(new StudentMarksImpl());
     }
     @Override
     public Set<Object> getSingletons() {

@@ -594,4 +594,8 @@
       <put-attribute name="title"  value="Classowner setting"/>
       <put-attribute name="body"   value="/ClassOwner/ClassownerSettings.jsp"/>      
    </definition>
+    <definition name="classowner.viewexamMarks" extends="baseLayout">
+      <put-attribute name="title"  value="Classowner setting"/>
+      <put-attribute name="body"   value="/ClassOwner/ViewMarks.jsp"/>      
+   </definition>
 </tiles-definitions>

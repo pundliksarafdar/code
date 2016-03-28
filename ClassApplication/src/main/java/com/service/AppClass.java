@@ -16,6 +16,7 @@ public class AppClass extends Application{
 		singletons.add(new FeeServiceImpl());
 		singletons.add(new TimeTableServiceImpl());
 		singletons.add(new ClassownerSettingsServiceImpl());
+		singletons.add(new StudentMarksImpl());
         
     }
     @Override

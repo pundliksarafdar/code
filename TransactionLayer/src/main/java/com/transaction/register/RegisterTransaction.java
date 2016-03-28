@@ -198,7 +198,7 @@ public class RegisterTransaction {
 		return registerDB.getStudentByNames(inst_id, fname, lname);
 	}
 	
-	public int registerStudentManually(int inst_id,com.service.beans.RegisterBean registerBean,com.service.beans.Student student) {
+	public int registerStudentManually(int inst_id,com.service.beans.RegisterBean registerBean,com.service.beans.Student student,int div_id,String batch) {
 		RegisterUser registerUser = new RegisterUser();
 		registerBean.setDob(registerBean.getDob().replace("-", ""));
 		registerBean.setClassName("");
@@ -260,6 +260,8 @@ public class RegisterTransaction {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		studentbean.setDiv_id(div_id);
+		studentbean.setBatch_id(batch);
 		studentTransaction.addUpdateDb(studentbean);
 		return student_id;
 	}

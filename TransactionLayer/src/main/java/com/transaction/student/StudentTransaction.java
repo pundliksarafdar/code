@@ -352,11 +352,16 @@ public class StudentTransaction {
 		StudentDB db = new StudentDB();
 	//	List<com.service.beans.StudentData> attendanceScheduleServiceBeanList = new ArrayList<com.service.beans.StudentData>(); 
 		List list =  db.getStudentrelatedtoBatchForExamMarksUpdate(batchid, inst_id, div_id, exam_id, sub_id);
+		List  studentList =db.getStudentrelatedtoBatchForExamMarks(batchid, inst_id, div_id);
 		List<com.service.beans.StudentData> studentDatas = new ArrayList<com.service.beans.StudentData>();
-		if(list != null){
+		if(studentList != null){
 			int i = 1;
+			for (Iterator iterator2 = studentList.iterator(); iterator2.hasNext();) {
+				Object[] obj = (Object[]) iterator2.next();
+				boolean flag = false;
 			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 				Object[] object = (Object[]) iterator.next();
+				if(((Number) object[2]).intValue() == ((Number) obj[2]).intValue()){
 				com.service.beans.StudentData bean = new com.service.beans.StudentData();
 				bean.setFname((String) object[0]);
 				bean.setLname((String) object[1]);
@@ -368,6 +373,23 @@ public class StudentTransaction {
 				bean.setMarks(((Number) object[3]).intValue());
 				bean.setExam_id(exam_id);
 				studentDatas.add(bean);
+				flag = true;
+				break;
+				}
+			}
+			if(flag == false){
+				com.service.beans.StudentData bean = new com.service.beans.StudentData();
+				bean.setFname((String) obj[0]);
+				bean.setLname((String) obj[1]);
+				bean.setStudent_id(((Number) obj[2]).intValue());	
+				bean.setRoll_no(i++);
+				bean.setDiv_id(div_id);
+				bean.setInst_id(inst_id);
+				bean.setBatch_id(Integer.parseInt(batchid));
+				bean.setMarks(0);
+				bean.setExam_id(exam_id);
+				studentDatas.add(bean);
+			}
 			}
 		}
 		return studentDatas;

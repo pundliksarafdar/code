@@ -156,7 +156,7 @@ var wayOfAddition="";
 		console.log(discount,paidFees,totalFees,percentage,remainingFee);
 		tableRow.find('.remaingFee').html(remainingFee+' &#x20b9;');
 	}
-	function addStudentByID(){
+	/* function addStudentByID(){
 		$(".error").empty();
 		var flag=false;
 		var regStringExpr = /^[a-zA-Z]+$/;
@@ -232,7 +232,7 @@ var wayOfAddition="";
 			   });
 		}
 		
-	}
+	} */
 	
 	function addStudentManually(){
 		$(".error").empty();
@@ -526,7 +526,7 @@ var wayOfAddition="";
 <div class="row">
 <div class="col-md-2">Phone No</div>
 <div class="col-md-1">:</div>
-<div class="col-md-3"><input type="text" id="phone" class="form-control" maxlength="11"><span id="phoneError" class="error"></span></div>
+<div class="col-md-3"><input type="text" id="phone" class="form-control" maxlength="10"><span id="phoneError" class="error"></span></div>
 <div class="col-md-2">Email ID</div>
 <div class="col-md-1">:</div>
 <div class="col-md-3"><input type="text" id="email" class="form-control" maxlength="50"><span id="emailError" class="error"></span></div>
@@ -620,7 +620,7 @@ var wayOfAddition="";
 <div class="row">
 <div class="col-md-2">Phone No</div>
 <div class="col-md-1">:</div>
-<div class="col-md-3"><input type="text" id="phone" class="form-control" maxlength="11"><span id="phoneError" class="error"></span></div>
+<div class="col-md-3"><input type="text" id="phone" class="form-control" maxlength="10"><span id="phoneError" class="error"></span></div>
 <div class="col-md-2">Email ID</div>
 <div class="col-md-1">:</div>
 <div class="col-md-3"><input type="text" id="email" class="form-control" maxlength="50"><span id="emailError" class="error"></span></div>

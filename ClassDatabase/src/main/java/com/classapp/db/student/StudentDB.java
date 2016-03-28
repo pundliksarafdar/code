@@ -848,7 +848,7 @@ public class StudentDB {
 		List list=null;
 		String queryString="Select reg.fname,reg.lname, reg.regId from Student std,RegisterBean reg " +
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
-				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id";
+				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id order by std.student_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
@@ -884,7 +884,7 @@ public class StudentDB {
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
 				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id and std.class_id=stdMarks.inst_id " +
 				"and std.div_id=stdMarks.div_id and stdMarks.student_id = std.student_id and stdMarks.batch_id = :stdbatchId and " +
-				" stdMarks.exam_id = :exam_id and stdMarks.sub_id = :sub_id";
+				" stdMarks.exam_id = :exam_id and stdMarks.sub_id = :sub_id order by std.student_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();

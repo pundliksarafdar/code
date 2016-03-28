@@ -81,10 +81,14 @@ var enumData = {addSection:"addSection",addInstruction:"addInstruction",addQuest
 var errorFlag;
 var patternType;
 var subjectList = [];
+var wosSubjectID = "";
+var wosTopicID = "";
 
 $(document).ready(function(){
 	$("#patternType").change(function(){
 		patternType = $("#patternType").val();
+		 wosSubjectID = "";
+		 wosTopicID = "";
 		$("#examPattern").empty();
 		$("#actionOptions").hide();
 		if(patternType == "WS"){
@@ -116,6 +120,8 @@ $(document).ready(function(){
 		   		},
 		   type:"POST",
 		   success:function(data){
+			   wosSubjectID = "";
+			   wosTopicID = "";
 			   $("#subject").empty();
 			   $("#subject").append("<option value='-1'>Select Subject</option>");
 			   data = JSON.parse(data);
@@ -150,7 +156,17 @@ $(document).ready(function(){
 	
 	$("#examPattern").on("change",".createExamSelectQuestionSubject",function(){
 		var subID = $(this).val();
+		if(wosSubjectID == ""){
+		wosSubjectID = subID;
+		}
 		getTopics(subID,$(this));
+	});
+	
+	$("#examPattern").on("change",".createExamSelectQuestionTopic",function(){
+		var topicID = $(this).val();
+		if(wosTopicID == ""){
+			wosTopicID = topicID;
+		}
 	});
 	
 	$("#addWOS").click(function(){
@@ -445,7 +461,11 @@ function getItem(parent,itemType,that){
 		var topicSelectString = "<div class='col-md-2'><select class='form-control createExamSelectQuestionTopic' id='createExamSelectQuestionTopic'><option value='-1'>Select Topic</option>";
 		while(i < topic_names.length)	
 		{
-			topicSelectString = topicSelectString + "<option value='"+topic_ids[i]+"'>"+topic_names[i]+"</option>";
+			if((wosTopicID != "" && wosTopicID==topic_ids[i] && $("#patternType").val() == "WOS")){
+			topicSelectString = topicSelectString + "<option value='"+topic_ids[i]+"' selected>"+topic_names[i]+"</option>";
+			}else{
+				topicSelectString = topicSelectString + "<option value='"+topic_ids[i]+"'>"+topic_names[i]+"</option>";
+			}
 			i++;
 		}
 		topicSelectString = topicSelectString +	"</select></div>";
@@ -463,7 +483,7 @@ function getItem(parent,itemType,that){
 			var subjectSelectString = "<div class='col-md-2'><select class='form-control createExamSelectQuestionSubject' id='createExamSelectQuestionSubject'><option value='-1'>Select Subject</option>";
 			while(i < subjectList.length)	
 			{
-				if(selectedSectionSubject != "" && selectedSectionSubject != "-1" && selectedSectionSubject == subjectList[i].id){
+				if((selectedSectionSubject != "" && selectedSectionSubject != "-1" && selectedSectionSubject == subjectList[i].id) || (wosSubjectID != "" && wosSubjectID==subjectList[i].id && $("#patternType").val() == "WOS")){
 					subjectSelectString = subjectSelectString + "<option value='"+subjectList[i].id+"' selected>"+subjectList[i].name+"</option>";
 				}else{
 				subjectSelectString = subjectSelectString + "<option value='"+subjectList[i].id+"'>"+subjectList[i].name+"</option>";

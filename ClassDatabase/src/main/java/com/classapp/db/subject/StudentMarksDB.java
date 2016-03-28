@@ -1,8 +1,11 @@
 package com.classapp.db.subject;
 
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
@@ -251,6 +254,66 @@ public class StudentMarksDB {
 		}
 		return  null;
 	}
+	
+	public List getStudentExamMarks(int inst_id, int div_id,int batch_id, int exam_id) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List list = null;
+		String queryString = "select reg.fname,reg.lname,std.marks,sub.subjectName,sub.subjectId,reg.regId from StudentMarks std,RegisterBean reg,Subject sub"
+							+ " where reg.regId=std.student_id and sub.subjectId = std.sub_id and sub.institute_id = std.inst_id and "
+							+ "std.inst_id = :inst_id and std.div_id = :div_id and std.batch_id = :batch_id and std.exam_id = :exam_id"
+							+ " order by reg.regId,sub.subjectId";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", batch_id);
+			query.setParameter("exam_id", exam_id);
+			list = query.list();
+		
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return list;
+}
+	
+	public List getStudentExamSubjectMarks(int inst_id, int div_id,int batch_id, int sub_id) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List list = null;
+		String queryString = "select reg.fname,reg.lname,std.marks,sub.subjectId,exm.exam_id,reg.regId from StudentMarks std,RegisterBean reg,Subject sub,Exam exm"
+							+ " where reg.regId=std.student_id and sub.subjectId = std.sub_id and sub.institute_id = std.inst_id and "
+							+ "std.inst_id = :inst_id and std.div_id = :div_id and std.batch_id = :batch_id and std.sub_id = :sub_id and exm.exam_id = std.exam_id and "
+							+ "exm.inst_id = std.inst_id order by reg.regId,sub.subjectId";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", batch_id);
+			query.setParameter("sub_id", sub_id);
+			list = query.list();
+		
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return list;
+}
+	
+	
 	
 	
 }
