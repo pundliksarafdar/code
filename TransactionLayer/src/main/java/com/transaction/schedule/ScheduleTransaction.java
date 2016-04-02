@@ -725,6 +725,7 @@ public class ScheduleTransaction {
 				}else{
 					bean.setDataClass("event-warning");
 				}
+				bean.setWeekTitle(bean.getSubjectname()+"<br/>"+dateFormat.format(new Date(bean.getStart()))+" - "+dateFormat.format(new Date(bean.getEnd())));
 				bean.setTitle("Subject : "+bean.getSubjectname()+"<br/>"+
 						"Start time : "+dateFormat.format(new Date(bean.getStart()))+"<br/>"+
 						"End time : "+dateFormat.format(new Date(bean.getEnd()))+"<br/>");

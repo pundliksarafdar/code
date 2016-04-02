@@ -146,6 +146,7 @@
 			</div>
 			<div class="btn-group col-md-6">
 				<button class="btn btn-warning active" data-calendar-view="month">Month</button>
+				<button class="btn btn-warning active" data-calendar-view="week">Week</button>
 				<button class="btn btn-warning" data-calendar-view="day">Day</button>
 			</div>
 		</div>

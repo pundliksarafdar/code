@@ -20,6 +20,8 @@ response.setHeader("Expires", "0");
 <link href="css/bootstrap-switch.min.css" rel="stylesheet">
  <link href="css/bootstrap-responsive.css" rel="stylesheet">
  <link href="css/admin.css" rel="stylesheet">
+ 
+ <!-- refer http://eonasdan.github.io/bootstrap-datetimepicker -->
  <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
  <link href="css/jquery.autocomplete.css" rel="stylesheet">
 <link href="css/common.css" rel="stylesheet">	

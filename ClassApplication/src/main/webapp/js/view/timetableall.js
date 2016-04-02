@@ -30,11 +30,26 @@ $(document).ready(function(){
 		.on("click",EDIT_SCHEDULE,editSchedule)
 		.on("dp.change",CALENDAR_DATE,onCalendarDateChange);
 		
-		$('.btn-group button[data-calendar-view]').each(function() {
-			var $this = $(this);
-			$this.click(function() {
-				calendar.view($this.data('calendar-view'));
-			});
+		$('.btn-group button[data-calendar-view]').click(function() {
+			var viewCalendar = $(this).data('calendar-view');
+			calendar.view(viewCalendar);
+			
+			if(viewCalendar=="day"){
+				$(CALENDAR_DATE).data("DateTimePicker").destroy();
+				$(CALENDAR_DATE).datetimepicker({
+					pickTime: false,
+					minViewMode:'days',
+					format:"YYYY-MM-DD"
+				});
+			}else if(viewCalendar=="month"){
+				$(CALENDAR_DATE).data("DateTimePicker").destroy();
+				$(CALENDAR_DATE).datetimepicker({
+					pickTime: false,
+					minViewMode:'months',
+					format:"YYYY-MM"
+				});
+			}
+			
 		});
 		
 		$(START_DATE).datetimepicker({
@@ -124,7 +139,9 @@ function editSchedule(){
 			$.notify({message: "Schedule saved successfully"},{type: 'success'});
 			getTimeTableData();
 		}
-		handler.error = function(e){console.log(e)}
+		handler.error = function(e){console.log(e);
+			$.notify({message: e.message},{type: 'error'});
+		}
 		if($(SCHEDULE_FORM).valid()){
 			rest.put(saveScheduleUrl,handler,JSON.stringify(scheduleBean));
 			console.log("Schedule id "+scheduleBean.schedule_id);
@@ -173,10 +190,12 @@ function getTimeTableData(){
 
 function setTimetable(data){
 	$(CALENDAR_CONTAINER).show();
+	var view = $('.btn-group button[data-calendar-view].active').data('calendar-view');
+	console.log(view);
 	timtableData = data;
 	var options = {
 		events_source: data,
-		view: 'month',
+		view: view,
 		tmpl_path: 'tmpls/',
 		tmpl_cache: false,
 		day: 'now',
@@ -372,10 +391,12 @@ function subjectSelectChange()
 		var handler = {};
 		handler.success = function(e){
 			console.log(e);
-			//$.notify({message: "Schedule saved successfully"},{type: 'success'});
+			$.notify({message: "Schedule saved successfully"},{type: 'success'});
 			getTimeTableData();
 		}
-		handler.error = function(e){console.log(e)}
+		handler.error = function(e){console.log(e);
+		$.notify({message: e.responseJSON.message},{type: 'danger'});
+		}
 		if($(SCHEDULE_FORM).valid()){
 			rest.post(saveScheduleUrl,handler,JSON.stringify(scheduleBean));
 		}

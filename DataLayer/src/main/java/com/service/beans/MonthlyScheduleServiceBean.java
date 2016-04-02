@@ -22,8 +22,14 @@ public class MonthlyScheduleServiceBean {
 	Date start_date;
 	Date end_date;
 	Date date;
+	String weekTitle;
 	
-	
+	public String getWeekTitle() {
+		return weekTitle;
+	}
+	public void setWeekTitle(String weekTitle) {
+		this.weekTitle = weekTitle;
+	}
 	public String getDataClass() {
 		return dataClass;
 	}

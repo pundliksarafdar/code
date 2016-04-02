@@ -1,3 +1,10 @@
+/*corex override*/
+
+.cal-week-box [data-event-class]{
+	height:auto !important;
+}
+
+/*corex override*/
 [class*="cal-cell"] {
   float: left;
   margin-left: 0;
