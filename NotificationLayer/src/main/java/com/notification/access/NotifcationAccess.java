@@ -23,6 +23,7 @@ public class NotifcationAccess implements iNotificationAccess{
 	public String send(List<MessageDetailBean> messageDetailBeans) {
 		HashMap<MessageDetailBean,List<String>>  invalidIdMap = validate(messageDetailBeans);
 		for(MessageDetailBean messageDetailBean:messageDetailBeans){
+			messageDetailBean.setSendToStudent(true);
 			if(!invalidIdMap.containsKey(messageDetailBean)){
 				if(messageDetailBean.isMessageTypeEmail()){
 					sendEmail(messageDetailBean);

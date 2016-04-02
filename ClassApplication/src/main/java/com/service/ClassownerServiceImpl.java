@@ -562,4 +562,14 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		List<StudentData> studentDatas = studentTransaction.getStudentForExamMarksUpdate(batch_id, getRegId(), div_id, exam_id, sub_id);
 		return Response.status(Status.OK).entity(studentDatas).build();
 	}
+	
+	@GET
+	@Path("/getStudentForProgressCard/{divId}/{batchId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentForProgressCard(
+			@PathParam("divId")int div_id,@PathParam("batchId")String batch_id){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		List<StudentData> studentDatas = studentTransaction.getStudentForProgress(batch_id, getRegId(), div_id);
+		return Response.status(Status.OK).entity(studentDatas).build();
+	}
 }

@@ -196,5 +196,69 @@ public class ExamPaperDB {
 		return  list;
 
 	}
+	
+	public List getDistinctExamSubjects(int inst_id,int div_id,int batch_id,List<Integer> exam_id) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		List list = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("Select distinct sub.subjectId,sub.subjectName from Exam_Paper examPaper , Subject sub where sub.institute_id = examPaper.inst_id and" +
+					" sub.subjectId = examPaper.sub_id and examPaper.inst_id =:inst_id and examPaper.div_id = :div_id and examPaper.batch_id = :batch_id" +
+					" and examPaper.exam_id in :exam_id  order by sub.subjectId ");
+			query.setParameter("inst_id",inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameterList("exam_id", exam_id);
+			query.setParameter("batch_id", batch_id);
+			list = query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  list;
+
+	}
+	
+	public List getExamSubjects(int inst_id,int div_id,int batch_id,List<Integer> exam_id) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		List<Subject> list = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("Select examPaper.exam_id,sub.subjectId,examPaper.marks from Exam_Paper examPaper , Subject sub where sub.institute_id = examPaper.inst_id and" +
+					" sub.subjectId = examPaper.sub_id and examPaper.inst_id =:inst_id and examPaper.div_id = :div_id and examPaper.batch_id = :batch_id" +
+					" and examPaper.exam_id in :exam_id  order by examPaper.exam_id, sub.subjectId ");
+			query.setParameter("inst_id",inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameterList("exam_id", exam_id);
+			query.setParameter("batch_id", batch_id);
+			list = query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  list;
+
+	}
 
 }

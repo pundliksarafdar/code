@@ -313,6 +313,63 @@ public class StudentMarksDB {
 		return list;
 }
 	
+	public List getStudentExamMarks(int inst_id, int div_id,int batch_id, List<Integer> exam_id,int student_id) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List list = null;
+		String queryString = "select reg.regId,reg.fname,reg.lname,std.marks,sub.subjectId,std.exam_id from StudentMarks std,RegisterBean reg,Subject sub"
+							+ " where reg.regId=std.student_id and sub.subjectId = std.sub_id and sub.institute_id = std.inst_id and "
+							+ "std.inst_id = :inst_id and std.div_id = :div_id and std.batch_id = :batch_id and std.exam_id in :exam_id"
+							+ " and std.student_id = :student_id order by reg.regId,std.exam_id,sub.subjectId";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", batch_id);
+			query.setParameterList("exam_id", exam_id);
+			query.setParameter("student_id", student_id);
+			list = query.list();
+		
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return list;
+}
+	public List<StudentMarks> getStudentsExamMarks(int inst_id, int div_id,int batch_id, List<Integer> exam_id) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List<StudentMarks> list = null;
+		String queryString = "select std from StudentMarks std,RegisterBean reg,Subject sub"
+							+ " where reg.regId=std.student_id and sub.subjectId = std.sub_id and sub.institute_id = std.inst_id and "
+							+ "std.inst_id = :inst_id and std.div_id = :div_id and std.batch_id = :batch_id and std.exam_id in :exam_id"
+							+ " order by std.student_id,std.exam_id,std.sub_id";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", batch_id);
+			query.setParameterList("exam_id", exam_id);
+			list = query.list();
+		
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return list;
+}
 	
 	
 	

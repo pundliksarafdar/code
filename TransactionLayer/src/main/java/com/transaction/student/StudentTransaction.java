@@ -414,4 +414,24 @@ public class StudentTransaction {
 		}
 		return true;
 	}
+	
+	public List<com.service.beans.StudentData> getStudentForProgress(String batchid, int inst_id, int div_id) {
+		StudentDB db = new StudentDB();
+	//	List<com.service.beans.StudentData> attendanceScheduleServiceBeanList = new ArrayList<com.service.beans.StudentData>(); 
+		List list =  db.getStudentrelatedtoBatchForProgressCard(batchid, inst_id, div_id);
+		List<com.service.beans.StudentData> studentDatas = new ArrayList<com.service.beans.StudentData>();
+		if(list != null){
+			int i = 1;
+			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+				Object[] object = (Object[]) iterator.next();
+				com.service.beans.StudentData bean = new com.service.beans.StudentData();
+				bean.setFname((String) object[0]);
+				bean.setLname((String) object[1]);
+				bean.setStudent_id(((Number) object[2]).intValue());	
+				bean.setRoll_no(i++);
+				studentDatas.add(bean);
+			}
+		}
+		return studentDatas;
+	}
 }

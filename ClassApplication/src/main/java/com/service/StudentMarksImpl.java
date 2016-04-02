@@ -1,6 +1,10 @@
 package com.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -12,11 +16,18 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.classapp.notification.GeneralNotification.NOTIFICATION_KEYS;
 import com.google.gson.Gson;
+import com.notification.access.Notification;
+import com.notification.bean.MessageDafaultInterface;
 import com.service.beans.BatchStudentExamMarks;
+import com.service.beans.ProgressCardMessage;
+import com.service.beans.ProgressCardServiceBean;
+import com.service.beans.StudentProgressCard;
 import com.service.beans.StudentSubjectMarks;
 import com.serviceinterface.ClassownerServiceApi;
 import com.transaction.studentmarks.StudentMarksTransaction;
+import com.util.NotificationEnum;
 
 @Path("/studentmarks") 
 public class StudentMarksImpl extends ServiceBase{
@@ -48,5 +59,34 @@ public class StudentMarksImpl extends ServiceBase{
 		StudentMarksTransaction marksTransaction = new StudentMarksTransaction();
 		StudentSubjectMarks studentSubjectMarks = marksTransaction.getStudentExamSubjectMarks(getRegId(), div_id, batch_id, sub_id);
 		return Response.status(200).entity(studentSubjectMarks).build();
+	}
+	
+	@GET
+	@Path("/getStudentProgressCard/{div_id}/{batch_id}/{exam_ids}/{student_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentProgressCard(@PathParam("div_id") int div_id,@PathParam("batch_id") int batch_id,
+										@PathParam("exam_ids") String exam_ids,@PathParam("student_id") int student_id) {
+		StudentMarksTransaction marksTransaction = new StudentMarksTransaction();
+		ProgressCardServiceBean progressCardServiceBean = marksTransaction.getStudentProgressCard(getRegId(), div_id, batch_id, exam_ids, student_id);
+		return Response.status(200).entity(progressCardServiceBean).build();
+	}
+	
+	@GET
+	@Path("/sendStudentProgressCard/{div_id}/{batch_id}/{exam_ids}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response sendStudentProgressCard(@PathParam("div_id") int div_id,@PathParam("batch_id") int batch_id,
+										@PathParam("exam_ids") String exam_ids) {
+		StudentMarksTransaction marksTransaction = new StudentMarksTransaction();
+		List<StudentProgressCard> progressCardList = marksTransaction.sendStudentProgressCard(getRegId(), div_id, batch_id, exam_ids);
+		Map<Integer, MessageDafaultInterface> map = new HashMap<Integer, MessageDafaultInterface>();
+		for (StudentProgressCard studentProgressCard : progressCardList) {
+			MessageDafaultInterface cardMessage = new ProgressCardMessage();
+			cardMessage.setEmailObject(studentProgressCard);
+			cardMessage.setEmailTemplate("progressCard.tmpl");
+			map.put(studentProgressCard.getStudent_id(), cardMessage);
+		}
+		Notification notification = new Notification();
+		notification.send(NotificationEnum.MessageCategery.PROGRESS_CARD_MANUAL, (HashMap<Integer, MessageDafaultInterface>) map, getRegId());
+		return Response.status(200).entity(progressCardList).build();
 	}
 }

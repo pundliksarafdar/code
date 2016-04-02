@@ -172,19 +172,25 @@ $(document).ready(function(){
 });
 
 function createStudentExamMarksTable(data){
-	$("#studentMarksTable").empty();
+	//$("#studentMarksTable").clear();
+	$("#studentTableDiv").empty();
+	var examTotalMarks = 0;
 	var htmlString = "";
-	htmlString = htmlString +"<thead><tr><th>Student Name</th>";
+	htmlString = htmlString +"<table class='table' style='width:100%'><thead><tr><th>Student Name</th>";
 	for(i=0;i<data.examSubjectList.length;i++){
-		htmlString = htmlString + "<th>"+data.examSubjectList[i].subjectName+"</th>"
+		htmlString = htmlString + "<th>"+data.examSubjectList[i].subjectName+"<font style='color:red'>/"+data.examSubjectList[i].marks+"</font></th>"
+		examTotalMarks = examTotalMarks + data.examSubjectList[i].marks;
 	}
+	htmlString = htmlString + "<th>Total<font style='color:red'>/"+examTotalMarks+"</font></th><th>Percentage</th>"
 	htmlString = htmlString + "</tr></thead>";
 	htmlString = htmlString + "<tbody>";
 	for(i=0;i<data.studentDataList.length;i++){
 		htmlString = htmlString + "<tr><td>"+data.studentDataList[i].fname+" "+data.studentDataList[i].lname+"</td>";
+		var studentTotalMarks = 0 ;
 		for(j=0;j<data.examSubjectList.length;j++){
 			if(i<data.studentDataList.length){
 			htmlString = htmlString + "<td>"+data.studentDataList[i].marks+"</td>";
+			studentTotalMarks = studentTotalMarks + data.studentDataList[i].marks;
 			if((j+1)<data.examSubjectList.length){
 			i++;
 			}
@@ -192,20 +198,23 @@ function createStudentExamMarksTable(data){
 				break;
 			}
 		}
+		htmlString = htmlString + "<td>"+studentTotalMarks+"</td>"
+		htmlString = htmlString + "<td>"+parseFloat(((studentTotalMarks/examTotalMarks)*100).toFixed(2))+"%</td>"
 		htmlString = htmlString + "</tr>"
 	}
 	
-	htmlString = htmlString + "</tbody>";
-	$("#studentMarksTable").append(htmlString);
+	htmlString = htmlString + "</tbody></table>";
+	$("#studentTableDiv").append(htmlString);
 	$("#studentTableDiv").show();
-	$("#studentMarksTable").DataTable();
+	$("#studentTableDiv").find("table").DataTable();
 	
 }
 
 function createStudentExamSubjectMarksTable(data){
-	$("#studentMarksTable").empty();
+	//$("#studentMarksTable").clear();
+	$("#studentTableDiv").empty();
 	var htmlString = "";
-	htmlString = htmlString +"<thead><tr><th>Student Name</th>";
+	htmlString = htmlString +"<table class='table' style='width:100%'><thead><tr><th>Student Name</th>";
 	for(i=0;i<data.examList.length;i++){
 		htmlString = htmlString + "<th>"+data.examList[i].exam_name+"</th>"
 	}
@@ -226,10 +235,10 @@ function createStudentExamSubjectMarksTable(data){
 		htmlString = htmlString + "</tr>"
 	}
 	
-	htmlString = htmlString + "</tbody>";
-	$("#studentMarksTable").append(htmlString);
+	htmlString = htmlString + "</tbody></table>";
+	$("#studentTableDiv").append(htmlString);
 	$("#studentTableDiv").show();
-	$("#studentMarksTable").DataTable();
+	$("#studentTableDiv").find("table").DataTable();
 }
 
 </script>
@@ -283,9 +292,6 @@ function createStudentExamSubjectMarksTable(data){
 	</div>
 	
 	<div class="container" id="studentTableDiv" style="display: none">
-	<div>
-	<table class="table" id="studentMarksTable" style="width: 100%"></table>
-	</div>
 	</div>
 </body>
 </html>

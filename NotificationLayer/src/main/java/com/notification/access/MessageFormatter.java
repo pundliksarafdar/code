@@ -30,7 +30,7 @@ public class MessageFormatter {
 				return writer.toString();
 			}
 		}else if(NotificationEnum.MessageType.EMAIL.equals(messageType)){
-			if(messageDetailBean.getEmailMessage() != null && messageDetailBean.getEmailMessage().trim().length() != 0){
+			if(messageDetailBean.getEmailMessage() != null /*|| messageDetailBean.getEmailMessage().trim().length() != 0*/){
 				return messageDetailBean.getEmailMessage();
 			}else{
 				String templates =  messageDetailBean.getEmailTemplate();

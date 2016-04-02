@@ -598,4 +598,8 @@
       <put-attribute name="title"  value="Classowner setting"/>
       <put-attribute name="body"   value="/ClassOwner/ViewMarks.jsp"/>      
    </definition>
+    <definition name="classowner.examProgressCard" extends="baseLayout">
+      <put-attribute name="title"  value="Progress Card"/>
+      <put-attribute name="body"   value="/ClassOwner/ProgressCard.jsp"/>      
+   </definition>
 </tiles-definitions>

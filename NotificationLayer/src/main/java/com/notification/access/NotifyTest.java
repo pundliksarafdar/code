@@ -53,7 +53,7 @@ public class NotifyTest {
 			
 			messageDetailBean.setMessageTypeSms(false);
 			
-			messageDetailBean.setStudentPhone(1000);
+			//messageDetailBean.setStudentPhone(1000);
 			
 			messageDetailBean.setSendToStudent(true);
 			messageDetailBean.setFrom("My test class");
@@ -66,7 +66,7 @@ public class NotifyTest {
 			messageDetailBean.setParentPhoneType("Android");
 			
 			messageDetailBean.setMessageTypeSms(false);
-			messageDetailBean.setParentPhone(1000);
+			//messageDetailBean.setParentPhone(1000);
 			
 			messageDetailBean.setSendToParent(true);
 			//messageDetailBean.setEmailMessage("hello....");

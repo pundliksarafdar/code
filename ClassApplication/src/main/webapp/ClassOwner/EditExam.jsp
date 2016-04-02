@@ -113,10 +113,11 @@ $(document).ready(function(){
 	});
 	var editExamID = "";
 	$("#examList").on("click",".editExam",function(){
+		$("input[name=subjectCheckbox]").prop("checked",false);
 		$("#examListDiv").hide();
 		$("#editModeDiv").show();
 		division = $("#division").val();
-		$(".editExamName").html($(this).closest("tbody").find(".defaultExamName").html());
+		$(".editExamName").html($(this).closest("tr").find(".defaultExamName").html());
 		editExamID = $(this).prop("id");
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);

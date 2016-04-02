@@ -36,6 +36,7 @@ public class Notification {
 	private List<MessageDetailBean> formObject(NotificationEnum.MessageCategery messageCategery,
 			HashMap<Integer,MessageDafaultInterface> studentIdNMessageBeanMap,
 			int instId){
+		
 		List<MessageDetailBean> messageDetailBeans = new ArrayList<MessageDetailBean>();
 		
 		Iterator iterator = studentIdNMessageBeanMap.entrySet().iterator();
@@ -50,12 +51,14 @@ public class Notification {
 		ClassOwnerNotificationDb db = new ClassOwnerNotificationDb();
 		List<ContactDetailBean> contacts = db.getContactDetailStudentParent(studentIds, instId);
 		
+		iterator = studentIdNMessageBeanMap.entrySet().iterator();
 		while (iterator.hasNext()) {
 			MessageDetailBean messageDetailBean = new MessageDetailBean();
 			Map.Entry<Integer, MessageDafaultInterface> entry = 
 					(Map.Entry<Integer, MessageDafaultInterface>)iterator.next();
 			MessageDafaultInterface dafaultInterface = entry.getValue();
 			ContactDetailBean contactBean = contacts.stream().filter(c->c.getStudentId() == entry.getKey()).collect(Collectors.toList()).get(0);
+			messageDetailBean.setStudentId(entry.getKey());
 			messageDetailBean.setEmailMessage(dafaultInterface.getEmailMessage());
 			messageDetailBean.setEmailTemplate(dafaultInterface.getEmailTemplate());
 			messageDetailBean.setEmailObject(dafaultInterface.getEmailObject());
@@ -73,7 +76,12 @@ public class Notification {
 			messageDetailBean.setParentEmail(contactBean.getParentEmail());
 			messageDetailBean.setParentPhone(contactBean.getParentPhone());
 			messageDetailBean.setFrom(instId+"");
+			/*Need to modify to etch from db*/
+			messageDetailBean.setMessageTypeEmail(true);
+			
 			messageDetailBeans.add(messageDetailBean);
+			
+			
 		}
 		return messageDetailBeans;
 	}

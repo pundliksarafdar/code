@@ -64,15 +64,15 @@ public class ClassOwnerNotificationDb {
 		for(Object object:list){
 			Object[] objects = (Object[]) object;
 			ContactDetailBean contactDetailBean = new ContactDetailBean();
-			if(null!=objects[0]){
+			if(null!=objects[0] && !"".equals(objects[0])){
 				contactDetailBean.setParentPhone(Long.parseLong((String)objects[0]));
 			}
 			contactDetailBean.setParentEmail((String)objects[1]);
-			if(null!=objects[2]){
+			if(null!=objects[2] && !"".equals(objects[2])){
 				contactDetailBean.setStudentPhone(Long.parseLong((String) objects[2]));
 			}
 			contactDetailBean.setStudentEmail((String)objects[3]);
-			contactDetailBean.setStudentId(Integer.parseInt((String)objects[3]));
+			contactDetailBean.setStudentId(((Number)objects[4]).intValue());
 			contacts.add(contactDetailBean);
 		}
 		

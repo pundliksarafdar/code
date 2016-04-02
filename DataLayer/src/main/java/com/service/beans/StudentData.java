@@ -11,6 +11,7 @@ public class StudentData {
 	int batch_id;
 	int exam_id;
 	int sub_id;
+	String examPresentee;
 	public int getRoll_no() {
 		return roll_no;
 	}
@@ -70,5 +71,11 @@ public class StudentData {
 	}
 	public void setSub_id(int sub_id) {
 		this.sub_id = sub_id;
+	}
+	public String getExamPresentee() {
+		return examPresentee;
+	}
+	public void setExamPresentee(String examPresentee) {
+		this.examPresentee = examPresentee;
 	}
 }

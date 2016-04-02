@@ -4,12 +4,12 @@ public class MessageDetailBean {
 	String from;
 	Integer studentId;
 	String studentEmail;
-	long studentPhone;
+	Long studentPhone;
 	String studentPhoneId;
 	String studentPhoneType;
 	
 	String parentEmail;
-	long parentPhone;
+	Long parentPhone;
 	String parentPhoneId;
 	String parentPhoneType;
 	
@@ -54,10 +54,10 @@ public class MessageDetailBean {
 	public void setStudentEmail(String studentEmail) {
 		this.studentEmail = studentEmail;
 	}
-	public long getStudentPhone() {
+	public Long getStudentPhone() {
 		return studentPhone;
 	}
-	public void setStudentPhone(long studentPhone) {
+	public void setStudentPhone(Long studentPhone) {
 		this.studentPhone = studentPhone;
 	}
 	public String getStudentPhoneId() {
@@ -78,10 +78,10 @@ public class MessageDetailBean {
 	public void setParentEmail(String parentEmail) {
 		this.parentEmail = parentEmail;
 	}
-	public long getParentPhone() {
+	public Long getParentPhone() {
 		return parentPhone;
 	}
-	public void setParentPhone(long parentPhone) {
+	public void setParentPhone(Long parentPhone) {
 		this.parentPhone = parentPhone;
 	}
 	public String getParentPhoneId() {
