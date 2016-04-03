@@ -34,7 +34,8 @@ $(document).ready(function(){
 			var viewCalendar = $(this).data('calendar-view');
 			calendar.view(viewCalendar);
 			
-			if(viewCalendar=="day"){
+			if(viewCalendar=="day" || viewCalendar=="week"){
+				$(CALENDAR_DATE).find('input').val("");
 				$(CALENDAR_DATE).data("DateTimePicker").destroy();
 				$(CALENDAR_DATE).datetimepicker({
 					pickTime: false,
@@ -42,6 +43,7 @@ $(document).ready(function(){
 					format:"YYYY-MM-DD"
 				});
 			}else if(viewCalendar=="month"){
+				$(CALENDAR_DATE).find('input').val("");
 				$(CALENDAR_DATE).data("DateTimePicker").destroy();
 				$(CALENDAR_DATE).datetimepicker({
 					pickTime: false,
@@ -135,17 +137,16 @@ function editSchedule(){
 		scheduleBean.end_date = $(END_DATE).find('input').val();
 		
 		var handler = {};
-		handler.success = function(e){console.log(e)
+		handler.success = function(e){
 			$.notify({message: "Schedule saved successfully"},{type: 'success'});
 			getTimeTableData();
 		}
-		handler.error = function(e){console.log(e);
-			$.notify({message: e.message},{type: 'error'});
+		handler.error = function(e){
+			$.notify({message: e.message},{type: 'danger'});
 		}
 		if($(SCHEDULE_FORM).valid()){
 			rest.put(saveScheduleUrl,handler,JSON.stringify(scheduleBean));
-			console.log("Schedule id "+scheduleBean.schedule_id);
-			console.log("Group id "+scheduleBean.grp_id);
+			
 		}
 }
 
@@ -183,22 +184,27 @@ function getTimeTableData(){
 	}
 	var handler = {};
 	handler.success = function(e){setTimetable(e)};
-	handler.error = function(e){console.log(e);$(CALENDAR_CONTAINER).hide();};
+	handler.error = function(e){$(CALENDAR_CONTAINER).hide();};
 	rest.get(getTimetable+batchId+"/"+divId+"/"+dateNow+"/0",handler);
 	filldropdown();
 }
 
 function setTimetable(data){
+	var dateTime = $(CALENDAR_DATE).find('input').val();
+	if(dateTime.trim().length == 0){
+		dateTime = "now";
+	}else if(dateTime.trim().length<=7){
+		dateTime = dateTime+"-01";
+	}
 	$(CALENDAR_CONTAINER).show();
 	var view = $('.btn-group button[data-calendar-view].active').data('calendar-view');
-	console.log(view);
 	timtableData = data;
 	var options = {
 		events_source: data,
 		view: view,
 		tmpl_path: 'tmpls/',
 		tmpl_cache: false,
-		day: 'now',
+		day: dateTime,
 		modal:"#events-modal",
 		onAfterEventsLoad: function(events) {
 			if(!events) {
@@ -223,8 +229,8 @@ function setTimetable(data){
 		},
 		onCorexDeleteBtnClicked:function(event){
 			var handler = {};
-			handler.success = function(e){console.log(e)}
-			handler.error = function(e){console.log(e)}
+			handler.success = function(e){}
+			handler.error = function(e){}
 			if(event.grp_id){
 				modal.modalYesAndNo("Delete","Do you want to delete?","Current",function(){
 					rest.deleteItem(saveScheduleUrl+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+event.schedule_id+"/"+event.date+"/0",handler);
@@ -390,11 +396,10 @@ function subjectSelectChange()
 		
 		var handler = {};
 		handler.success = function(e){
-			console.log(e);
 			$.notify({message: "Schedule saved successfully"},{type: 'success'});
 			getTimeTableData();
 		}
-		handler.error = function(e){console.log(e);
+		handler.error = function(e){
 		$.notify({message: e.responseJSON.message},{type: 'danger'});
 		}
 		if($(SCHEDULE_FORM).valid()){

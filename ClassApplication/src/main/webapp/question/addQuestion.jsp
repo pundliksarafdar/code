@@ -17,6 +17,7 @@ padding-top: 2px;
 	<body>
 	<script>
 	$(document).ready(function(){
+		$("#subjectiveQuestion").addExpresssion();
 		if($("#quesstatus").val() == "success"){
 			$.notify({message: "Question successfuly added"},{type: 'success'});
 			$("#classownerUploadexamSubjectNameSelect").prop("disabled",false);
@@ -527,6 +528,17 @@ padding-top: 2px;
 				<label for="questionmarks" class="col-sm-2 control-label">Marks</label>
 				<div class="col-sm-2">
 					<input type="number" required class="form-control" id="questionmarks" name="questionmarks" maxlength="5" size="5" style="width: 50%;" min="1" value="<c:out value="${requestScope.questionData.marks}"></c:out>"></input>
+					<span class="validation-message" id="questionMarksError"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="questionmarks" class="col-sm-2 control-label">Marks</label>
+				<div class="col-sm-2">
+					<span class="btn btn-success fileinput-button">
+						<i class="glyphicon glyphicon-folder-open"></i>
+						<span>Add images </span>
+						<input type="file" id="addSubjectiveQuestionImage" multiple>
+					</span>
 					<span class="validation-message" id="questionMarksError"></span>
 				</div>
 			</div>

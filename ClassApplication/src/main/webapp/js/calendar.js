@@ -1045,8 +1045,9 @@ if(!String.prototype.formatNum) {
 		/*Custom function to capture events*/
 		$('a[data-event-id]', this.context).closest("td").find(".corex-edit").on('click', function(event) {
 			var id = $(this).closest("td").find('a[data-event-id]').data('event-id');
+			console.log(self.options.events);
 			var event = _.find(self.options.events, function(event){
-				return event.id == id
+				return event.id == id;
 			});
 			self.options.onCorexEditBtnClicked.call(self, event);
 		});

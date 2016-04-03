@@ -63,4 +63,25 @@ $(document).ready(function(){
 					$("#comment").val("");
 				   $("#form").show();
 	});
+	
+	$.fn.addExpresssion = function(){
+		var option = {
+				triggerOn:'focus',
+				triggerOff:'blur',
+				triggerTarget:'#subjectiveQuestion'
+		}
+		
+		$(this).on(option.triggerOn,function(){
+			$(".floatButton").show();
+			$(".floatButton").on("click",function(){
+				$("#mathsExpressionModal").modal('show');
+			});
+		});
+		
+		$(this).on(option.triggerOff,function(){
+			$(".floatButton").off("click");
+			$(".floatButton").hide();
+		});
+		
+	}
 });

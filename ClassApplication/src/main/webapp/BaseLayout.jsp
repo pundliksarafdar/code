@@ -124,6 +124,29 @@ html,body {
 	margin: 0;
 	padding: 0;
 		}
+		
+a.floatButton {
+	display: none;
+	width: 60px;
+	height: 60px;
+	padding:10px;
+	position: fixed;
+	z-index: 999;
+	right: 20px;
+	bottom: 20px;
+	background: #27AE61 url("up-arrow.png") no-repeat center 43%;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+	border-radius: 30px;
+}
+
+a.floatButton>div{
+	height: 100%;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 3;
+}
 </style>
 <script src="js/jquery-1.10.2.min.js"></script>
 <script src="js/allAjax.js"></script>
@@ -279,6 +302,9 @@ function storeMenuSelected(){
 			</div>
 			<div id="body" style="margin: 10px;background-color: white" >
 				<div>
+					<a href="#" class="floatButton">
+					<div class="glyphicon glyphicon-plus"></div>
+					</a>
 					<tiles:insertAttribute name="body" />
 					<br />
 					<div class="corex-toast-wrapper">
