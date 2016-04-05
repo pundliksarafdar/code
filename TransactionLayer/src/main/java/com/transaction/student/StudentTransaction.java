@@ -17,6 +17,7 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.division.Division;
+import com.classapp.db.fees.FeesDB;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentDB;
@@ -31,9 +32,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.service.beans.AttendanceScheduleServiceBean;
 import com.service.beans.StudentListForAttendance;
+import com.transaction.attendance.AttendanceTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.register.RegisterTransaction;
+import com.transaction.studentmarks.StudentMarksTransaction;
 
 public class StudentTransaction {
 	StudentData studentData;
@@ -70,9 +73,17 @@ public class StudentTransaction {
 		return status;
 	}
 
-	public boolean deleteStudent(int studentId, int classId) {
-		
-		return this.studentData.deleteStudentFromClass(studentId, classId);
+	public boolean deleteStudent(int student_id, int inst_id) {
+		AttendanceTransaction attendanceTransaction = new  AttendanceTransaction();
+		attendanceTransaction.deleteAttendanceRelatedToStudent(inst_id, student_id);
+		FeesDB feesDB =new FeesDB();
+		feesDB.deleteStudentFeesRelatedToStudent(inst_id, student_id);
+		feesDB.deleteStudentFeesTransactionRelatedToStudent(inst_id, student_id);
+		StudentMarksTransaction marksTransaction = new StudentMarksTransaction();
+		marksTransaction.deleteStudentMarksrelatedtostudentID(inst_id, student_id);
+		StudentDB studentDB = new StudentDB();
+		studentDB.deleteStudent(student_id, inst_id);
+		return true;
 	}
 	public RegisterBean getStudent(String studentLoginName){
 		return  this.studentData.getStudent(studentLoginName);
@@ -132,7 +143,7 @@ public class StudentTransaction {
 	
 	public boolean removebatchfromstudentlist(int classid) {
 		StudentDB db=new StudentDB();
-		db.deletestudentrelatedtoclass(classid);
+		//db.deletestudentrelatedtoclass(classid);
 	return true;
 	}
 	
@@ -433,5 +444,10 @@ public class StudentTransaction {
 			}
 		}
 		return studentDatas;
+	}
+	
+	public boolean updateStudentRelatedToClass(int inst_id,int div_id) {
+		StudentDB studentDB = new StudentDB();
+		return studentDB.updatestudentrelatedtoclass(div_id, inst_id);
 	}
 }

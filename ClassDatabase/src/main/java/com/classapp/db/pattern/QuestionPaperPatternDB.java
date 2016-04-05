@@ -130,4 +130,32 @@ public class QuestionPaperPatternDB {
 		return  true;
 
 	}
+	
+	public boolean deleteQuestionPaperPatternRelatedToClass(int inst_id,int div_id) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("delete from QuestionPaperPattern where inst_id = :inst_id and div_id = :div_id");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  true;
+
+	}
 }

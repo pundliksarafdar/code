@@ -311,7 +311,7 @@ function createAttendanceScheduleTable(data){
 	if(data.length>0){
 	for(i=0;i<data.length;i++){
 		htmlString = htmlString + "<tr><td>"+data[i].student_name+"</td>";
-		for(j=0;j<data[j].presentee.length;j++){
+		for(j=0;j<data[i].presentee.length;j++){
 			if(data[i].presentee[j] == "P"){
 			htmlString = htmlString + "<td style='color:green'>"+data[i].presentee[j]+"</td>";
 			}else{

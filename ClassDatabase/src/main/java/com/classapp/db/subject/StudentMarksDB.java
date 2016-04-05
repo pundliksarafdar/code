@@ -162,62 +162,129 @@ public class StudentMarksDB {
 		return  count.intValue();
 	}
 	
-	public boolean deleteStudentMarksrelatedtosubject(int sub_id) {
-		Transaction transaction=null;
-		Session session=null;
-		StudentMarks studentMarks=new StudentMarks();
-		studentMarks.setSub_id(sub_id);
-		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
-		session.delete(studentMarks);
-		transaction.commit();
-		session.close();
+	public boolean deleteStudentMarksrelatedtosubject(int inst_id,int sub_id) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List<StudentMarks> list = null;
+		String queryString = "delete from StudentMarks where "
+							+ "inst_id = :inst_id and sub_id = :sub_id";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("sub_id", sub_id);
+			query.executeUpdate();
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+
 		return  true;
 
 	}
 	
-	public boolean deleteStudentMarksrelatedtodivision(int div_id) {
-		Transaction transaction=null;
-		Session session=null;
-		StudentMarks studentMarks=new StudentMarks();
-		studentMarks.setDiv_id(div_id);
-		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
-		session.delete(studentMarks);
-		transaction.commit();
-		session.close();
+	public boolean deleteStudentMarksrelatedtodivision(int inst_id,int div_id) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List<StudentMarks> list = null;
+		String queryString = "delete from StudentMarks where "
+							+ "inst_id = :inst_id and div_id = :div_id";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.executeUpdate();
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
 		return  true;
 
 	}
 	
-	public boolean deleteStudentMarksrelatedtoexam(int inst_id,int div_id,int sub_id,int exam_ID) {
-		Transaction transaction=null;
-		Session session=null;
-		StudentMarks studentMarks=new StudentMarks();
-		studentMarks.setExam_id(exam_ID);
-		studentMarks.setInst_id(inst_id);
-		studentMarks.setSub_id(sub_id);
-		studentMarks.setDiv_id(div_id);
-		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
-		session.delete(studentMarks);
-		transaction.commit();
-		session.close();
+	public boolean deleteStudentMarksrelatedtobatch(int inst_id,int div_id,int batch_id) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List<StudentMarks> list = null;
+		String queryString = "delete from StudentMarks where "
+							+ "inst_id = :inst_id and div_id = :div_id and batch_id=:batch_id";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", batch_id);
+			query.executeUpdate();
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return  true;
+
+	}
+	
+	public boolean deleteStudentMarksrelatedtoexam(int inst_id,int exam_ID) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List<StudentMarks> list = null;
+		String queryString = "delete from StudentMarks "
+							+ "inst_id = :inst_id and exam_id=:exam_id";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("exam_id", exam_ID);
+			query.executeUpdate();
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
 		return  true;
 
 	}
 	
 	public boolean deleteStudentMarksrelatedtostudentID(int inst_id,int student_id) {
-		Transaction transaction=null;
-		Session session=null;
-		StudentMarks studentMarks=new StudentMarks();
-		studentMarks.setInst_id(inst_id);
-		studentMarks.setStudent_id(student_id);
-		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
-		session.delete(studentMarks);
-		transaction.commit();
-		session.close();
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List<StudentMarks> list = null;
+		String queryString = "delete from StudentMarks where "
+							+ "inst_id = :inst_id and student_id=:student_id";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("student_id", student_id);
+			query.executeUpdate();
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
 		return  true;
 
 	}

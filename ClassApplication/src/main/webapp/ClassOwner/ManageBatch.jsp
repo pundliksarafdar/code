@@ -36,10 +36,11 @@
 			$('#batchTableSearchCustom').val()
 			).draw();
 	}
-	
+	var that = "";
 	function deleteBatchPrompt(){
 		var batchIdToDelete = $(this).closest("tr").find("#batchId").val();
 		var divisionId = $(this).closest("tr").find("#divisionId").val();
+		that = $(this);
 		deleteBatchConfirm(divisionId,batchIdToDelete);	
 	}
 	
@@ -48,7 +49,7 @@
 	}
 	
 	function deleteBatch(divisionId,batchIdToDelete){
-				$.ajax({
+				/* $.ajax({
 				 url: "classOwnerServlet",
 				   data: {
 				    	 methodToCall: "deleteBatch",
@@ -64,7 +65,17 @@
 				   error:function(data){
 				
 				   }
-			});
+			}); */
+				var handlers = {};
+				handlers.success = function(){
+					that.closest("tr").remove();
+					$.notify({message: "Batch successfuly deleted"},{type: 'success'});
+				}
+				handlers.error = function(){
+					that.closest("tr").remove();
+					$.notify({message: "Batch successfuly deleted"},{type: 'success'});
+				}
+				rest.deleteItem("rest/commonDelete/deleteBatch/"+divisionId+"/"+batchIdToDelete,handlers);
 	}
 	
 	function enableEdit(){

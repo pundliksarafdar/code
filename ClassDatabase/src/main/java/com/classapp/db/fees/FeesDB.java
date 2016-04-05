@@ -10,6 +10,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
+import com.classapp.db.exam.Exam;
 import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.pattern.QuestionPaperPattern;
 import com.classapp.persistence.HibernateUtil;
@@ -782,4 +783,255 @@ public List getStudentsTransactionForPrint(int inst_id,int div_id,int batch_id,i
 	}
 	return  BatchFessList;
 }
+
+public boolean deleteBatchFeesRelatedToClass(int inst_id,int div_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		
+		Query query2 = session.createQuery("Delete From BatchFeesDistribution where inst_id = :inst_id "
+											+ "and batch_fees_id in (select batch_fees_id from BatchFees "
+											+ "where inst_id = :inst_id and div_id = :div_id)");
+		query2.setParameter("inst_id", inst_id);
+		query2.setParameter("div_id", div_id);
+		query2.executeUpdate();
+		Query query1 = session.createQuery("Delete From BatchFees where inst_id = :inst_id "
+											+ "and div_id = :div_id");
+		query1.setParameter("inst_id", inst_id);
+		query1.setParameter("div_id", div_id);
+		query1.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  true;
+
+}
+
+public boolean updateStudentFeesRelatedToClass(int inst_id,int div_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("update Student_Fees set div_id = 0,batch_id = 0" +
+				" where inst_id = :inst_id and div_id=:div_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  true;
+
+}
+
+public boolean updateStudentFeesTransactionRelatedToClass(int inst_id,int div_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("update Student_Fees_Transaction set div_id = 0,batch_id = 0" +
+				" where inst_id = :inst_id and div_id=:div_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  true;
+
+}
+
+public boolean deleteBatchFeesRelatedToBatch(int inst_id,int div_id,int batch_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		
+		Query query2 = session.createQuery("Delete From BatchFeesDistribution where inst_id = :inst_id "
+											+ "and batch_fees_id in (select batch_fees_id from BatchFees "
+											+ "where inst_id = :inst_id and div_id = :div_id  and batch_id=:batch_id)");
+		query2.setParameter("inst_id", inst_id);
+		query2.setParameter("div_id", div_id);
+		query2.setParameter("batch_id", batch_id);
+		query2.executeUpdate();
+		Query query1 = session.createQuery("Delete From BatchFees where inst_id = :inst_id "
+											+ "and div_id = :div_id and batch_id=:batch_id");
+		query1.setParameter("inst_id", inst_id);
+		query1.setParameter("div_id", div_id);
+		query1.setParameter("batch_id", batch_id);
+		query1.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  true;
+
+}
+
+public boolean updateStudentFeesRelatedToBatch(int inst_id,int div_id,int batch_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("update Student_Fees set div_id = 0,batch_id = 0" +
+				" where inst_id = :inst_id and div_id=:div_id and batch_id= :batch_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("batch_id", batch_id);
+		query.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  true;
+
+}
+
+public boolean updateStudentFeesTransactionRelatedToBatch(int inst_id,int div_id,int batch_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("update Student_Fees_Transaction set div_id = 0,batch_id = 0" +
+				" where inst_id = :inst_id and div_id=:div_id and batch_id=:batch_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("batch_id", batch_id);
+		query.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  true;
+
+}
+	
+public boolean deleteStudentFeesRelatedToStudent(int inst_id,int student_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("delete from  Student_Fees" +
+				" where inst_id = :inst_id and student_id = :student_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("student_id", student_id);
+		query.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  true;
+
+}
+
+public boolean deleteStudentFeesTransactionRelatedToStudent(int inst_id,int student_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("delete from Student_Fees_Transaction " +
+				" where inst_id = :inst_id and student_id = :student_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("student_id", student_id);
+		query.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  true;
+
+}
+
 }

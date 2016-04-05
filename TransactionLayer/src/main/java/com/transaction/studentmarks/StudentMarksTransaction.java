@@ -1,6 +1,7 @@
 package com.transaction.studentmarks;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,6 +14,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import com.classapp.db.batch.Batch;
+import com.classapp.db.batch.division.Division;
 import com.classapp.db.exam.Exam;
 import com.classapp.db.exam.ExamDB;
 import com.classapp.db.exam.ExamPaperDB;
@@ -28,6 +31,8 @@ import com.service.beans.StudentData;
 import com.service.beans.StudentProgressCard;
 import com.service.beans.StudentSubjectMarks;
 import com.service.beans.SubjectsExam;
+import com.transaction.batch.BatchTransactions;
+import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.student.StudentTransaction;
 
 public class StudentMarksTransaction {
@@ -56,19 +61,24 @@ public class StudentMarksTransaction {
 		return marksDB.getStudentMarks(inst_id, student_id, sub_id, div_id,currentPage,examID);
 	}
 	
-	public boolean deleteStudentMarksrelatedtosubject(int sub_id) {
+	public boolean deleteStudentMarksrelatedtosubject(int inst_id,int sub_id) {
 		StudentMarksDB marksDB=new StudentMarksDB();
-		return marksDB.deleteStudentMarksrelatedtosubject(sub_id);
+		return marksDB.deleteStudentMarksrelatedtosubject(inst_id,sub_id);
 	}
 	
-	public boolean deleteStudentMarksrelatedtodivision(int div_id) {
+	public boolean deleteStudentMarksrelatedtodivision(int inst_id,int div_id) {
 		StudentMarksDB marksDB=new StudentMarksDB();
-		return marksDB.deleteStudentMarksrelatedtodivision(div_id);
+		return marksDB.deleteStudentMarksrelatedtodivision(inst_id,div_id);
 	}
 	
-	public boolean deleteStudentMarksrelatedtoexam(int inst_id,int div_id,int sub_id,int exam_ID) {
+	public boolean deleteStudentMarksrelatedtobatch(int inst_id,int div_id,int batch_id) {
 		StudentMarksDB marksDB=new StudentMarksDB();
-		return marksDB.deleteStudentMarksrelatedtoexam(inst_id, div_id, sub_id, exam_ID);
+		return marksDB.deleteStudentMarksrelatedtobatch(inst_id, div_id, batch_id);
+	}
+	
+	public boolean deleteStudentMarksrelatedtoexam(int inst_id,int exam_ID) {
+		StudentMarksDB marksDB=new StudentMarksDB();
+		return marksDB.deleteStudentMarksrelatedtoexam(inst_id, exam_ID);
 	}
 	
 	public boolean deleteStudentMarksrelatedtostudentID(int inst_id,int student_id) {
@@ -309,6 +319,10 @@ public class StudentMarksTransaction {
 	}
 	
 	public List<StudentProgressCard> sendStudentProgressCard(int inst_id,int div_id,int batch_id,String exam_ids) {
+		DivisionTransactions divisionTransactions = new DivisionTransactions();
+		Division division =divisionTransactions.getDidvisionByID(div_id);
+		BatchTransactions batchTransactions = new BatchTransactions();
+		Batch batch = batchTransactions.getBatch(batch_id, inst_id, div_id);
 		int[] numbers = Arrays.stream(exam_ids.split(","))
                 .map(String::trim).mapToInt(Integer::parseInt).toArray();
 		List<Integer> list= Arrays.stream(numbers)
@@ -407,11 +421,7 @@ public class StudentMarksTransaction {
 				}
 			}
 		}
-		ProgressCardServiceBean cardServiceBean = new ProgressCardServiceBean();
-		cardServiceBean.setExamList(examList);
-		cardServiceBean.setExamSubjectList(examSubjectServiceList);
-		cardServiceBean.setStudentDataList(dataList);
-		cardServiceBean.setSubjectList(distinctSubjectsList);
+		 DecimalFormat df2 = new DecimalFormat("###.##");
 		List<StudentProgressCard> studentProgressCardList = new ArrayList<StudentProgressCard>();
 		List<Integer> result = studentDatas.stream().map(StudentData::getStudent_id).collect(Collectors.toList());
 		for (StudentData studentData : studentDatas) {
@@ -422,8 +432,9 @@ public class StudentMarksTransaction {
 			List<String[]> dataArrayList = new ArrayList<String[]>();
 			for (com.service.beans.Exam exam : examList) {
 				int pos=0;
-				String examData[] = new String[distinctSubjectsList.size()+1];
+				String examData[] = new String[distinctSubjectsList.size()+4];
 				examData[pos] =exam.getExam_name();
+				int total_marks = 0;
 				for (com.datalayer.subject.Subject subject : distinctSubjectsList) {
 					pos++;
 					List<StudentData> studentMarksObj = dataList.stream().filter(
@@ -433,6 +444,7 @@ public class StudentMarksTransaction {
 					if(!studentMarksObj.isEmpty()){
 						if("P".equals(studentMarksObj.get(0).getExamPresentee())){
 						examData[pos] = String.valueOf(studentMarksObj.get(0).getMarks());
+						total_marks = total_marks + studentMarksObj.get(0).getMarks();
 					}else{
 						examData[pos] = "A";
 					}
@@ -441,9 +453,14 @@ public class StudentMarksTransaction {
 					}	
 				
 				}
+				examData[++pos] = String.valueOf(total_marks);
+				examData[++pos] = String.valueOf(exam.getTotal_marks());
+				examData[++pos] = String.valueOf(df2.format(((float)total_marks/(float)exam.getTotal_marks())*100)+"%");
 				dataArrayList.add(examData);
 			}
 			studentProgressCard.setDataList(dataArrayList);
+			studentProgressCard.setBatch_name(batch.getBatch_name());
+			studentProgressCard.setClass_name(division.getDivisionName());
 			studentProgressCardList.add(studentProgressCard);
 		}
 		return studentProgressCardList;

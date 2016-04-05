@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
 
 import com.classapp.db.batch.Batch;
+import com.classapp.db.batch.division.Division;
 import com.classapp.db.exam.Exam;
 import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.questionPaper.QuestionPaper;
@@ -55,6 +56,7 @@ import com.serviceinterface.ClassownerServiceApi;
 import com.tranaction.header.HeaderTransaction;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.BatchTransactions;
+import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.fee.FeesTransaction;
 import com.transaction.image.ImageTransactions;
@@ -474,6 +476,15 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		BatchTransactions transactions = new BatchTransactions();
 		List<Batch>batches = transactions.getAllBatchesOfDivision(Integer.parseInt(division), getRegId());
 		return Response.status(Status.OK).entity(batches).build();
+	}
+	
+	@GET
+	@Path("/getAllClasses")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllClasses(){
+		DivisionTransactions divisionTransactions = new DivisionTransactions();
+		List<Division> divisionList = divisionTransactions.getAllDivisions(getRegId());
+		return Response.status(Status.OK).entity(divisionList).build();
 	}
 	
 	@POST

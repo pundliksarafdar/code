@@ -24,6 +24,7 @@ import com.datalayer.exambean.ExamData;
 import com.service.beans.ExamSubject;
 import com.service.beans.QuestionPaperEditFileElement;
 import com.service.beans.QuestionPaperFileElement;
+import com.transaction.studentmarks.StudentMarksTransaction;
 
 
 public class ExamTransaction {
@@ -145,6 +146,15 @@ public class ExamTransaction {
 			subjectlist.add(subject);
 		}
 		return subjectlist;
+	}
+	
+	public boolean deleteExam(int inst_id,int exam_id) {
+		ExamPaperDB examPaperDB = new ExamPaperDB();
+		examPaperDB.deleteExamPaperRelatedToExam(inst_id, exam_id);
+		StudentMarksTransaction marksTransaction = new StudentMarksTransaction();
+		marksTransaction.deleteStudentMarksrelatedtoexam(inst_id, exam_id);
+		ExamDB examDB = new ExamDB();
+		return examDB.deleteExam(inst_id, exam_id);
 	}
 	
 	class ArrayListOverride<E> extends ArrayList<E>{

@@ -480,7 +480,7 @@ public List<Batch> retriveAllRelatedBatches(int class_id, int div_id){
 		return batches;
 	}
 
-public List<Batch> getbachesrelatedtosubject(String subjectid) {
+public List<Batch> getbachesrelatedtosubject(int inst_id,String subjectid) {
 	Session session = null;
 	Transaction transaction = null;
 	List<Batch> batchList = null;
@@ -488,12 +488,14 @@ public List<Batch> getbachesrelatedtosubject(String subjectid) {
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
 		transaction = session.beginTransaction();
-		Query query = session.createQuery("from Batch where sub_id LIKE :sub_id1 OR sub_id LIKE :sub_id2 OR sub_id LIKE :sub_id3 OR sub_id = :sub_id4");
+		Query query = session.createQuery("from Batch where (sub_id LIKE :sub_id1 OR "
+										+ "sub_id LIKE :sub_id2 OR sub_id LIKE :sub_id3 OR "
+										+ "sub_id = :sub_id4) and class_id = :class_id");
 		query.setParameter("sub_id1", subjectid+",%");
 		query.setParameter("sub_id2", "%,"+subjectid);
 		query.setParameter("sub_id3", "%,"+subjectid+",%");
 		query.setParameter("sub_id4", subjectid);
-		
+		query.setParameter("class_id", inst_id);
 		batchList = query.list();
 		
 	}catch(Exception e){
@@ -615,6 +617,33 @@ public List<Batch> getbachesrelatedtodivandsubject(String subjectid,int divId,in
 	return batchList;
 }
 
+public boolean deleteBatch(int inst_id,int div_id,int batch_id) {
+	Session session = null;
+	Transaction transaction = null;
+	List<Batch> batchList = null;
+	List<Batch> batches = new ArrayList<Batch>();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("DELETE from Batch where class_id = :inst_id "
+										+ "and div_id=:div_id and batch_id = :batch_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("batch_id", batch_id);
+		query.executeUpdate();
+		transaction.commit();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return true;
+}
 
 }
 

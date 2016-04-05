@@ -78,14 +78,14 @@ public boolean validatenotesnamebyID(String notesname,int regID,int notesID) {
 	return db.validatenotesnamebyID(notesname, regID, notesID);
 }
 
-public boolean deleteNotesRelatedToSubject(int sub_id) {
+public boolean deleteNotesRelatedToSubject(int inst_id,int sub_id) {
 	NotesDB db=new NotesDB();
-	return db.deleteNotesRelatedToSubject(sub_id);
+	return db.deleteNotesRelatedToSubject(inst_id,sub_id);
 }
 
-public boolean deleteNotesRelatedToDivision(int div_d) {
+public boolean deleteNotesRelatedToDivision(int inst_id,int div_d) {
 	NotesDB db=new NotesDB();
-	return db.deleteNotesRelatedToDivision(div_d);
+	return db.deleteNotesRelatedToDivision(inst_id,div_d);
 }
 
 public boolean removebatchfromnotes(int inst_id,int div_id,String batchid) {

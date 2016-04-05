@@ -154,7 +154,49 @@ var globalDivisionID = "";
 		$("#back").click(function(){
 			$(".studentList").show();
 			$(".studentDetailsDiv").hide();
-		})
+		});
+		
+		$("#classTable").on("change",".selectDivision",function(){
+			var divisionId	 = $(this).val();
+			var batchDataArray = [];
+			var that = $(this);
+			 $.ajax({
+				   url: "classOwnerServlet",
+				   data: {
+				    	 methodToCall: "fetchBatchesForDivision",
+						 regId:'',
+						 divisionId:divisionId						 
+				   		},
+				   type:"POST",
+				   async:false,
+				   success:function(e){
+					   that.closest("tr").find(".selectBatch").empty();
+					    var data = JSON.parse(e);
+					    if(data.status!="error"){
+					    var tempData ={};
+					    tempData.id = "-1";
+					    tempData.text = "Select Batch";
+					    batchDataArray.push(tempData);
+						var batchData = {};
+					    $.each(data.batches,function(key,val){
+							var data = {};
+							data.id = val.batch_id;
+							data.text = val.batch_name;
+							batchDataArray.push(data);
+							batchData[data.id] = val;
+						});
+					    that.closest("tr").find(".selectBatch").select2({data:batchDataArray,placeholder:"type batch name"}).data("batchData",batchData);
+					    }else{
+					    	that.closest("tr").find(".selectBatch").select2({data:"",placeholder:"No batch found"});
+					    }
+				   	},
+				   error:function(e){
+					   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Error while fetching batches for division');
+						$('div#addStudentModal .error').show();
+				   }
+				   
+			});
+		});
 	});
 	
 	function generateRoll(){
@@ -219,18 +261,12 @@ var globalDivisionID = "";
 		$(".studentList").hide();
 	}
 	function enableEdit(){
-		var batchData = getBatchesForStudent();
-		//var classData = getAllClasses();
-		 var preselectedsubjects=$(this).closest("tr").find(".selectBatch").val();
-				$(this).closest("tr").find(".selectBatch").select2({
-			data:batchData
-		}).val(preselectedsubjects).change(); 
+		var batchData = getBatchesForStudent($(this));
+		var classData = getAllClasses($(this));
 		
 		
-		/*  var preselectedclass=$(this).closest("tr").find(".selectDivision").val();
-		$(this).closest("tr").find(".selectDivision").select2({
-			data:classData
-		}).val(preselectedclass).change(); */ 
+		
+		 
 		//var subjectName = $(this).closest("tr").find(".defaultteacherSuffix").text().trim();
 		//$(this).closest("tr").find(".editteacherSuffix").val(subjectName);
 		$(this).closest("tr").addClass("editEnabled");
@@ -256,6 +292,8 @@ var globalDivisionID = "";
 	function updateStudentAjax(studentId,batchIds){
 		var flag=false;
 		var batchIdsStr = "";
+		var divstr = that.closest("tr").find(".selectDivision").select2('data')[0].text;
+		var div = that.closest("tr").find(".selectDivision").val();
 		if(batchIds == "" || batchIds == null){
 			flag = true;
 			that.closest("tr").find(".batchError").html("Select Batch!");
@@ -270,7 +308,8 @@ var globalDivisionID = "";
 				    	 methodToCall: "updateStudent",
 						 regId:'',
 						 batchIds:batchIdsStr,
-						 studentId:studentId
+						 studentId:studentId,
+						 div:div
 				   		},
 				   type:"POST",
 				   success:function(data){					  
@@ -281,6 +320,7 @@ var globalDivisionID = "";
 						});
 					   batchStr = batchStr.replace(",","");
 					   that.closest("tr").find(".defaultBatchname").html(batchStr);
+					   that.closest("tr").find(".defaultDiv").html(divstr);
 					   that.closest("tr").removeClass("editEnabled");
 				   	},
 				   error:function(data){
@@ -301,7 +341,7 @@ var globalDivisionID = "";
 	}
 	
 	function deleteStudent(studentId){
-				$.ajax({
+				/* $.ajax({
 				 url: "classOwnerServlet",
 				   data: {
 				    	 methodToCall: "deleteStudent",
@@ -316,7 +356,16 @@ var globalDivisionID = "";
 				   error:function(data){
 				
 				   }
-			});
+			}); */
+		var handlers = {};
+		handlers.success=function(){
+			$.notify({message: "Student successfuly deleted"},{type: 'success'});
+		};   
+		handlers.error=function(){
+			$.notify({message: "Student successfuly deleted"},{type: 'success'});
+		};   
+		
+		rest.deleteItem("rest/commonDelete/deleteStudent/"+studentId,handlers);
 	}
 	
 	function successCallbackclass(data){
@@ -345,10 +394,16 @@ var globalDivisionID = "";
 					return modifiedObj; */
 					var divisionNames = "";
 					var selectTag = '<div class="editable"><select class="selectDivision" style="width:100%">';
-					var subjects;
-					selectTag = selectTag + '<option selected="selected" value="'+data.divId+'">'+data.divisionName+'</option>';
-					divisionNames = '<div class="default">'+data.divisionName+'</div>';
 					selectTag = selectTag+"</select></div>";
+					var subjects;
+					if(data != null){
+					selectTag = selectTag + '<input type="hidden" class="editDivID" value="'+data.divId+'">';
+					divisionNames = '<div class="default defaultDiv">'+data.divisionName+" "+data.stream+'</div>';
+				}else{
+					divisionNames = '<div class="default defaultDiv"></div>';
+					selectTag = selectTag + '<input type="hidden" class="editDivID" value="-1">';
+				}
+					
 					var span = '<span class="editable subjectError"></span>'
 					return divisionNames + selectTag + span;
 				}},
@@ -391,18 +446,20 @@ var globalDivisionID = "";
 			that.closest('.addclassContainer').find(".addclassnameerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Class already exists!!');
 		}
 	}
-	
-	function getBatchesForStudent(){
+	var preselectedsubjects="";
+	function getBatchesForStudent(that){
+		preselectedsubjects=that.closest("tr").find(".selectBatch").val();
 		$(".chkBatch:checked").removeAttr('checked');
 		$('#checkboxes').children().remove();
 		$('div#addStudentModal .error').hide();
-		var divisionId = $('#division').val();
+		var divisionId = that.closest("tr").find(".editDivID").val();
 		var batchDataArray = [];
 		if(!divisionId || divisionId.trim()=="" || divisionId == -1){
 			$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please select a division');
 			$('div#addStudentModal .error').show();
+			that.closest("tr").find(".selectBatch").select2({data:"",placeholder:"Select Batch"});
 		}else{		
-		  $.ajax({
+		  /* $.ajax({
 		   url: "classOwnerServlet",
 		   data: {
 		    	 methodToCall: "fetchBatchesForDivision",
@@ -412,7 +469,6 @@ var globalDivisionID = "";
 		   type:"POST",
 		   async:false,
 		   success:function(e){
-			   $('#batch').empty();
 			    var data = JSON.parse(e);
 			    if(data.status!="error"){
 				var batchData = {};
@@ -423,9 +479,6 @@ var globalDivisionID = "";
 					batchDataArray.push(data);
 					batchData[data.id] = val;
 				});
-			    $("#batch").select2({data:batchDataArray,placeholder:"type batch name"});
-			    }else{
-			    	$("#batch").select2({data:"",placeholder:"No batch found"});
 			    }
 		   	},
 		   error:function(e){
@@ -433,8 +486,32 @@ var globalDivisionID = "";
 				$('div#addStudentModal .error').show();
 		   }
 		   
-	});
-		return batchDataArray;
+	}); */
+	
+			var handlers = {};
+			handlers.success=function(data){
+				 $.each(data,function(key,val){
+						var data = {};
+						data.id = val.batch_id;
+						data.text = val.batch_name;
+						batchDataArray.push(data);
+						//batchData[data.id] = val;
+					});
+				console.log(batchDataArray);
+				
+					that.closest("tr").find(".selectBatch").select2({
+				data:batchDataArray
+			}).val(preselectedsubjects).change();
+				return batchDataArray;
+			};   
+			handlers.error=function(){
+				//$.notify({message: "Student successfuly deleted"},{type: 'success'});
+			};   
+			if(divisionId != "-1"){
+			rest.get("rest/classownerservice/getBatches/"+divisionId,handlers);
+			}else{
+				that.closest("tr").find(".selectBatch").select2({data:"",placeholder:"Select Batch"});
+			}
 	}
 	}
 	
@@ -510,10 +587,10 @@ var globalDivisionID = "";
 		return names;
 	}
 	
-	function getAllClasses(){
+	function getAllClasses(that){
 		var classDataArray = [];
 		var classData = {};
-		$.ajax({
+		/* $.ajax({
 				 url: "classOwnerServlet",
 				   data: {
 				    	 methodToCall: "getAllClasses"
@@ -526,16 +603,34 @@ var globalDivisionID = "";
 				   error:function(data){
 				   
 				   }
-			});
-			
-			$.each(classData.instituteClasses,function(key,val){
+			}); */
+		var handlers = {};
+		handlers.success=function(e){
+			$.each(e,function(data,val){
 				var data = {};
 				data.id = val.divId;
-				data.text = val.divisionName;
+				data.text = val.divisionName+" "+val.stream;
 				classDataArray.push(data);
 			});
-			
+			console.log(classDataArray);
+			if(classDataArray.length > 0){
+			 var preselectedclass=that.closest("tr").find(".editDivID").val();
+				that.closest("tr").find(".selectDivision").select2({
+					data:classDataArray
+				}).val(preselectedclass);/*.change();  */
+				//that.closest("tr").find(".selectDivision").trigger("change");
+			}else{
+				that.closest("tr").find(".selectDivision").select2({data:"",placeholder:"No Class found"});
+			}
 			return classDataArray;
+		};   
+		handlers.error=function(){
+			//$.notify({message: "Student successfuly deleted"},{type: 'success'});
+		};   
+		
+		rest.get("rest/classownerservice/getAllClasses",handlers);
+			
+			
 	}
 </script>
 

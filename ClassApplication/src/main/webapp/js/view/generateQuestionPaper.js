@@ -120,6 +120,7 @@ function loadSubjectAndTopicSelect(){
 function loadTopicSelect(selectSub,topics){
 	var topicSelect = selectSub.closest('.row').find(SELECT_TOPIC);
 	var topic = "";
+	topic = topic + "<option value='-1'>Select</option>";
 	$.each(topics,function(key,val){
 		topic = topic + "<option value='"+val.topicId+"'>"+val.topicName+"</option>";
 	});
@@ -159,8 +160,10 @@ $(document).ready(function(){
 				questionPaperServicebeanList = e.questionPaperServicebeanList;
 				if(e.questionPaperDataList && e.questionPaperDataList.length){
 					$.each(e.questionPaperDataList,function(key,val){
+						if(val.dataStatus != "N"){
 						$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
 						$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
+						}
 					});					
 				}
 			}
@@ -192,8 +195,10 @@ $(document).ready(function(){
 			questionPaperServicebeanList = e.questionPaperServicebeanList;
 			if(e.questionPaperDataList.length){
 				$.each(e.questionPaperDataList,function(key,val){
+					if(val.dataStatus != "N"){
 					$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
 					$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
+					}
 				});
 			$(".noRegenerate").removeClass("noRegenerate");
 			}

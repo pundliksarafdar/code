@@ -62,6 +62,60 @@ public class AttendanceDB {
 
 	}
 	
+	public boolean deleteAttendance(int inst_id,int div_id) {
+		Transaction transaction=null;
+		Session session=null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("DELETE FROM Attendance WHERE inst_id=:inst_id and div_id=:div_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.executeUpdate();
+		transaction.commit();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  true;
+
+	}
+	
+	public boolean deleteAttendance(int inst_id,int div_id,int batch_id) {
+		Transaction transaction=null;
+		Session session=null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("DELETE FROM Attendance WHERE inst_id=:inst_id and div_id=:div_id"
+										+ " and batch_id = :batch_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("batch_id", batch_id);
+		query.executeUpdate();
+		transaction.commit();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  true;
+
+	}
+	
 	public List getStudentsDailyAttendance(String batchname,
 			int inst_id, int div_id, Date date) {
 		Session session = null;
@@ -306,4 +360,83 @@ public class AttendanceDB {
 		return null;
 }
 	
+	public boolean deleteAttendanceRelatedToSubject(int inst_id,int sub_id) {
+		Transaction transaction=null;
+		Session session=null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("DELETE FROM Attendance WHERE inst_id=:inst_id and sub_id=:sub_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("sub_id", sub_id);
+		query.executeUpdate();
+		transaction.commit();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  true;
+
+	}
+	
+	public boolean deleteAttendanceRelatedToStudent(int inst_id,int student_id) {
+		Transaction transaction=null;
+		Session session=null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("DELETE FROM Attendance WHERE inst_id=:inst_id and student_id=:student_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("student_id", student_id);
+		query.executeUpdate();
+		transaction.commit();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  true;
+
+	}
+	
+	public boolean deleteAttendanceRelatedToBatch(int inst_id,int div_id,int batch_id) {
+		Transaction transaction=null;
+		Session session=null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("DELETE FROM Attendance WHERE inst_id=:inst_id and div_id=:div_id"
+				+ " and batch_id = :batch_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("batch_id", batch_id);
+		query.executeUpdate();
+		transaction.commit();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  true;
+
+	}
 }

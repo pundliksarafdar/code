@@ -349,6 +349,17 @@ public class FeesTransaction {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			if("per".equals(student_Fees.getDiscount_type())){
+				double finalAmt =  student_Fees.getBatch_fees() - (student_Fees.getBatch_fees()*(student_Fees.getDiscount()/100));
+				double due = finalAmt - student_Fees.getFees_paid();
+				student_Fees.setFinal_fees_amt(finalAmt);
+				student_Fees.setFees_due(due);
+			}else{
+				double finalAmt =  student_Fees.getBatch_fees() - student_Fees.getDiscount();
+				double due = finalAmt - student_Fees.getFees_paid();
+				student_Fees.setFinal_fees_amt(finalAmt);
+				student_Fees.setFees_due(due);
+			}
 			feesDB.saveStudentFees(student_Fees);
 			Student_Fees_Transaction fees_Transaction = new Student_Fees_Transaction();
 			fees_Transaction.setAdded_by(inst_id);
@@ -479,5 +490,19 @@ public class FeesTransaction {
 		batchStudentFees.setFname((String)list[Constants.LAST_FEE_PARAM.FIRST_NAME.getOrdinalvalue()]);
 		batchStudentFees.setLname((String)list[Constants.LAST_FEE_PARAM.LAST_NAME.getOrdinalvalue()]);
 		return batchStudentFees;		
+	}
+	
+	public boolean updateStudentFeesRelatedToClass(int inst_id,int div_id){
+		FeesDB feesDB = new FeesDB();
+		feesDB.updateStudentFeesRelatedToClass(inst_id, div_id);
+		feesDB.updateStudentFeesTransactionRelatedToClass(inst_id, div_id);
+		return true;
+	}
+	
+	public boolean updateStudentFeesRelatedToBatch(int inst_id,int div_id,int batch_id){
+		FeesDB feesDB = new FeesDB();
+		feesDB.updateStudentFeesRelatedToBatch(inst_id, div_id, batch_id);
+		feesDB.updateStudentFeesTransactionRelatedToBatch(inst_id, div_id, batch_id);
+		return true;
 	}
 }

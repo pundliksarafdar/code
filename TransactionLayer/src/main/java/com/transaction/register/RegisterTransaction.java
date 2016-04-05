@@ -203,6 +203,7 @@ public class RegisterTransaction {
 		registerBean.setDob(registerBean.getDob().replace("-", ""));
 		registerBean.setClassName("");
 		registerBean.setCountry("INDIA");
+		registerBean.setRole(3);
 		String username="";
 		String phone="";
 		if(!"".equals(registerBean.getPhone1()) && null != registerBean.getPhone1()){

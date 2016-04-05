@@ -336,30 +336,48 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 		
 	}
 	
-	public Boolean deleteNotesRelatedToSubject(int sub_id) {
+	public Boolean deleteNotesRelatedToSubject(int inst_id,int sub_id) {
 		Transaction transaction=null;
 		Session session=null;
-		Notes notes=new Notes();
-		notes.setSubid(sub_id);
-		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
-			session.delete(notes);
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("delete from Notes where classid=:classid and subid=:subid" );
+			query.setParameter("classid", inst_id);
+			query.setParameter("subid", sub_id);
+			query.executeUpdate();
 			transaction.commit();
-			session.close();
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
+			}
 		return  true;
 	
 	}
 	
-	public Boolean deleteNotesRelatedToDivision(int div_d) {
+	public Boolean deleteNotesRelatedToDivision(int inst_id,int div_id) {
 		Transaction transaction=null;
 		Session session=null;
-		Notes notes=new Notes();
-		notes.setDivid(div_d);
-		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
-			session.delete(notes);
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("delete from Notes where classid=:classid and divid=:divid" );
+			query.setParameter("classid", inst_id);
+			query.setParameter("divid", div_id);
+			query.executeUpdate();
 			transaction.commit();
-			session.close();
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
+			}
 		return  true;
 	
 	}

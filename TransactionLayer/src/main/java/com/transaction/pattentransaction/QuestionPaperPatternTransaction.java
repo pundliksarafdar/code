@@ -130,6 +130,18 @@ public class QuestionPaperPatternTransaction {
 		return true;
 	}
 	
+	public boolean deleteQuestionPaperPatternRelatedToClass(int inst_id,int div_id) {
+		QuestionPaperPatternDB paperPatternDB = new QuestionPaperPatternDB();
+		paperPatternDB.deleteQuestionPaperPatternRelatedToClass(inst_id, div_id);
+		File file = new File(patternStorageURL+File.separator+div_id);
+		try {
+			delete(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
 	public GenerateQuestionPaperResponse generateQuestionPaper(int div_id,List<QuestionPaperStructure> questionPaperPattern) {
 		List<GenerateQuestionPaperServicebean> generateQuestionPaperServicebeans = new ArrayList<GenerateQuestionPaperServicebean>();
 		for (int i = 0; i < questionPaperPattern.size(); i++) {
@@ -140,13 +152,17 @@ public class QuestionPaperPatternTransaction {
 			questionPaperServicebean.setMarks(paperStructure.getItem_marks());
 			questionPaperServicebean.setQuestion_type(paperStructure.getQuestion_type());
 			questionPaperServicebean.setSubject_id(paperStructure.getSubject_id());
+			if(paperStructure.getQuestion_topic() != null && !"".equals(paperStructure.getQuestion_topic())){
 			questionPaperServicebean.setTopic_id(Integer.parseInt(paperStructure.getQuestion_topic()));
+			}
 			for (Iterator iterator = generateQuestionPaperServicebeans
 					.iterator(); iterator.hasNext();) {
 				GenerateQuestionPaperServicebean generateQuestionPaperServicebean = (GenerateQuestionPaperServicebean) iterator
 						.next();
-				if(generateQuestionPaperServicebean.getSubject_id() == paperStructure.getSubject_id() && generateQuestionPaperServicebean.getTopic_id() == Integer.parseInt(paperStructure.getQuestion_topic())
-						&& generateQuestionPaperServicebean.getQuestion_type().equals(paperStructure.getQuestion_type()) && generateQuestionPaperServicebean.getMarks() == paperStructure.getItem_marks()){
+				if(generateQuestionPaperServicebean.getSubject_id() == paperStructure.getSubject_id() 
+						&& generateQuestionPaperServicebean.getTopic_id() == Integer.parseInt(paperStructure.getQuestion_topic())
+						&& generateQuestionPaperServicebean.getQuestion_type().equals(paperStructure.getQuestion_type()) 
+						&& generateQuestionPaperServicebean.getMarks() == paperStructure.getItem_marks()){
 					generateQuestionPaperServicebean.setCount(generateQuestionPaperServicebean.getCount()+1);
 					flag = true;
 					break;
@@ -166,8 +182,9 @@ public class QuestionPaperPatternTransaction {
 				.hasNext();) {
 			GenerateQuestionPaperServicebean generateQuestionPaperServicebean = (GenerateQuestionPaperServicebean) iterator
 					.next();
+			if(generateQuestionPaperServicebean.getQuestion_ids().size()>0){
 			generateQuestionPaperServicebean.setQuestion_ids(generateRandomQuestionId(generateQuestionPaperServicebean.getQuestion_ids(),generateQuestionPaperServicebean.getCount()));
-			
+			}
 		}
 		List<QuestionPaperData> questionPaperDataList = new ArrayList<QuestionPaperData>();
 		for (int i = 0; i < questionPaperPattern.size(); i++) {
@@ -291,6 +308,17 @@ public class QuestionPaperPatternTransaction {
 			e.printStackTrace();
 		}
 		return questionPaperDB.deleteQuestion(paper_id, inst_id, div_id);
+	}
+	
+	public boolean deleteQuestionPaperRelatedToClass(int inst_id,int div_id) {
+		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
+		File file = new File(patternStorageURL+File.separator+div_id);
+		try {
+			delete(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return questionPaperDB.deleteQuestionPaperRelatedToClass(inst_id, div_id);
 	}
 	
 	public boolean saveQuestionPaper(QuestionPaperFileObject fileObject,int userID) {

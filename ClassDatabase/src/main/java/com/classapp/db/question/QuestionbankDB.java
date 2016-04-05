@@ -756,7 +756,7 @@ public boolean deleteQuestionrelatedtoClass(int inst_id,int div_id) {
 		query.setParameter("inst_id", inst_id);
 		query.setParameter("div_id", div_id);
 		query.executeUpdate();
-		
+		transaction.commit();
 	}catch(Exception e){
 		e.printStackTrace();
 		if(null!=transaction){
@@ -784,6 +784,37 @@ public boolean deleteQuestionrelatedtosubject(int inst_id,int sub_id) {
 		Query query = session.createQuery(queryString);
 		query.setParameter("inst_id", inst_id);
 		query.setParameter("sub_id", sub_id);
+		query.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return true;	
+}
+
+public boolean updateQuestionrelatedtotopic(int inst_id,int sub_id,int div_id,int topic_id) {
+	Transaction transaction=null;
+	Session session=null;
+	List<Integer> list = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		String queryString="update Questionbank set topic_id = 0 "
+				+ "where inst_id = :inst_id and sub_id=:sub_id and div_id=:div_id and topic_id=:topic_id";
+		
+		Query query = session.createQuery(queryString);
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("sub_id", sub_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("topic_id", topic_id);
 		query.executeUpdate();
 		transaction.commit();
 	}catch(Exception e){

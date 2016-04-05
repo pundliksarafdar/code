@@ -334,4 +334,32 @@ public class AttendanceTransaction {
 		}
 		return monthlyAttendanceList;
 	}
+	
+	public boolean deleteAttendance(int inst_id,int div_id) {
+		AttendanceDB attendanceDB = new AttendanceDB();
+		attendanceDB.deleteAttendance(inst_id, div_id);
+		return true;
+		
+	}
+	
+	public boolean deleteAttendance(int inst_id,int div_id,int batch_id) {
+		AttendanceDB attendanceDB = new AttendanceDB();
+		attendanceDB.deleteAttendance(inst_id, div_id,batch_id );
+		return true;
+		
+	}
+	
+	public boolean deleteAttendanceRelatedToSubject(int inst_id,int sub_id) {
+		AttendanceDB attendanceDB = new AttendanceDB();
+		attendanceDB.deleteAttendanceRelatedToSubject(inst_id, sub_id);
+		return true;
+		
+	}
+	
+	public boolean deleteAttendanceRelatedToStudent(int inst_id,int student_id) {
+		AttendanceDB attendanceDB = new AttendanceDB();
+		attendanceDB.deleteAttendanceRelatedToStudent(inst_id, student_id);
+		return true;
+		
+	}
 }

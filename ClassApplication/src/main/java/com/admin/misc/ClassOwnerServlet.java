@@ -377,9 +377,11 @@ public class ClassOwnerServlet extends HttpServlet{
 				}
 			}
 			int studentId=Integer.parseInt(req.getParameter("studentId"));
+			int div=Integer.parseInt(req.getParameter("div"));
 			Student student=studentData.getStudentDetailsFromClass(studentId, regId);			
 			String batchIds=req.getParameter("batchIds");			
 			student.setBatch_id(batchIds);
+			student.setDiv_id(div);
 //			boolean validStudent=validateStudentBatch(student,batchIds,regId, printWriter);
 			
 				student.setBatch_id(batchIds);
@@ -410,7 +412,8 @@ public class ClassOwnerServlet extends HttpServlet{
 			
 			int deletStudentId=Integer.parseInt(req.getParameter("studentId"));										
 			
-				if(studentTransaction.deleteStudent(deletStudentId, regId)){
+				
+			/*if(studentTransaction.deleteStudent(deletStudentId, regId)){
 					StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
 					marksTransaction.deleteStudentMarksrelatedtostudentID(regId, deletStudentId);
 					InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
@@ -428,8 +431,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				}else{
 					respObject.addProperty(STATUS, "error");
 					respObject.addProperty(MESSAGE, "Student does not exists in class!");
-				}
-				
+				}*/
 				//printWriter.write(respObject.toString());
 			}else if(Constants.UPDATE_TEACHER.equalsIgnoreCase(methodToCall)){
 				Integer regId = null;
@@ -480,13 +482,13 @@ public class ClassOwnerServlet extends HttpServlet{
 				
 				int deletTeacherId=Integer.parseInt(req.getParameter("teacherId"));										
 				
-					if(teacherTransaction.deleteTeacher(deletTeacherId, regId)){
+					/*if(teacherTransaction.deleteTeacher(deletTeacherId, regId)){
 						respObject.addProperty(STATUS, "success");
 						respObject.addProperty(MESSAGE, "Teacher Successfully deleted .");
 					}else{
 						respObject.addProperty(STATUS, "error");
 						respObject.addProperty(MESSAGE, "Teacher does not exists in class!");
-					}
+					}*/
 					
 					//printWriter.write(respObject.toString());
 				}else if(Constants.SEARCH_TEACHER.equals(methodToCall)){
@@ -1494,13 +1496,13 @@ public class ClassOwnerServlet extends HttpServlet{
 			int batchdivisionid=Integer.parseInt(req.getParameter("batchdivisionid"));
 			Batch batch=batchTransactions.getBatch(deleteBatchId,userBean.getRegId(),batchdivisionid);
 			ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
-			scheduleTransaction.deleteSchedulerelatedoBatch(batch);
+			//scheduleTransaction.deleteSchedulerelatedoBatch(batch);
 			StudentTransaction studentTransaction=new StudentTransaction();
 			studentTransaction.removeBatchFromstudentslist(deleteBatchId+"",userBean.getRegId(),batchdivisionid);
 			NotesTransaction notesTransaction=new NotesTransaction();
 			notesTransaction.removebatchfromnotes(userBean.getRegId(), batchdivisionid, deleteBatchId+"");
 			ExamTransaction examTransaction=new ExamTransaction();
-				if(batchTransactions.deleteBatch(batch)){
+				/*if(batchTransactions.deleteBatch(batch)){
 					BatchHelperBean batchHelperBean= new BatchHelperBean(regId);
 					batchHelperBean.setBatchDetailsList();
 					List<BatchDetails> batchList = new ArrayList<BatchDetails>();
@@ -1513,7 +1515,7 @@ public class ClassOwnerServlet extends HttpServlet{
 				}else{
 					respObject.addProperty(STATUS, "error");
 					respObject.addProperty(MESSAGE, "Batch does not exists in class!");
-				}
+				}*/
 		}else if("getstudentbatch".equals(methodToCall)){
 			Integer regId = null;
 			
@@ -1792,15 +1794,15 @@ public class ClassOwnerServlet extends HttpServlet{
 	Subject subject=new Subject();
 	subject.setSubjectId(Integer.parseInt(subjectid));
 	BatchTransactions transactions=new BatchTransactions();
-	boolean batchstatus= transactions.deletesubjectfrombatch(subjectid);
+//	boolean batchstatus= transactions.deletesubjectfrombatch(subjectid);
 	TeacherTransaction teacherTransaction=new TeacherTransaction();
-	teacherTransaction.deletesubjectfromteacherlist(subjectid);
+//	teacherTransaction.deletesubjectfromteacherlist(subjectid);
 	ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
-	scheduleTransaction.deleteschedulerelatedsubject(Integer.parseInt(subjectid));
+	//scheduleTransaction.deleteschedulerelatedsubject(Integer.parseInt(subjectid));
 	NotesTransaction notesTransaction=new NotesTransaction();
-	notesTransaction.deleteNotesRelatedToSubject(Integer.parseInt(subjectid));
+//	notesTransaction.deleteNotesRelatedToSubject(Integer.parseInt(subjectid));
 	StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
-	marksTransaction.deleteStudentMarksrelatedtosubject(Integer.parseInt(subjectid));
+//	marksTransaction.deleteStudentMarksrelatedtosubject(Integer.parseInt(subjectid));
 	ExamTransaction examTransaction=new ExamTransaction();
 	//examTransaction.deleteExamrelatedtosubject(Integer.parseInt(subjectid));
 	SubjectTransaction subjectTransaction=new SubjectTransaction();
@@ -1811,7 +1813,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	FileUtils.deleteDirectory(new File(userStatic.getExamPath()+File.separator+subjectid));
 	FileUtils.deleteDirectory(new File(userStatic.getNotesPath()+File.separator+subjectid));
 	bankTransaction.deleteQuestionrelatedtoSubject(userBean.getRegId(), Integer.parseInt(subjectid));
-	subjectTransaction.deleteSubject(Integer.parseInt(subjectid));
+//	subjectTransaction.deleteSubject(Integer.parseInt(subjectid));
 	List<Subjects> subjects=subjectTransaction.getAllClassSubjects(userBean.getRegId());
 	Gson gson=new Gson();
 	String json=gson.toJson(subjects);
@@ -1848,13 +1850,13 @@ public class ClassOwnerServlet extends HttpServlet{
 	StudentTransaction studentTransaction=new StudentTransaction();
 	studentTransaction.removebatchfromstudentlist(Integer.parseInt(classid));
 	NotesTransaction notesTransaction=new NotesTransaction();
-	notesTransaction.deleteNotesRelatedToDivision(Integer.parseInt(classid));
+	//notesTransaction.deleteNotesRelatedToDivision(Integer.parseInt(classid));
 	StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
-	marksTransaction.deleteStudentMarksrelatedtodivision(Integer.parseInt(classid));
+	//marksTransaction.deleteStudentMarksrelatedtodivision(Integer.parseInt(classid));
 	ExamTransaction examTransaction=new ExamTransaction();
 	//examTransaction.deleteExamrelatedtodivision(Integer.parseInt(classid));
 	BatchTransactions batchTransactions=new BatchTransactions();
-	batchTransactions.deletebatchrelatdtoclass(Integer.parseInt(classid));
+	//batchTransactions.deletebatchrelatdtoclass(Integer.parseInt(classid));
 	SubjectTransaction subjectTransaction=new SubjectTransaction();
 	subjectTransaction.deleteTopicsrelatedToDivision(userBean.getRegId(), Integer.parseInt(classid));
 	QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
@@ -1869,7 +1871,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	}
 	bankTransaction.deleteQuestionrelatedtoClass(userBean.getRegId(), Integer.parseInt(classid));
 	DivisionTransactions divisionTransactions=new DivisionTransactions();
-	divisionTransactions.deletedivision(Integer.parseInt(classid));
+	//divisionTransactions.deletedivision(Integer.parseInt(classid));
 	List<Division>	classlist=divisionTransactions.getAllDivisions(userBean.getRegId());
 	Gson gson=new Gson();
 	String allclasses=gson.toJson(classlist);
@@ -3323,31 +3325,41 @@ public class ClassOwnerServlet extends HttpServlet{
 				StudentDetails studentDetails=new StudentDetails();
 				namesList.get(i).setLoginPass("");
 				studentDetails.setStudentUserBean(namesList.get(i));
+				boolean flag = false;
 				for (int j = 0; j < division.size(); j++) {
 					if(studentsList.get(i).getDiv_id() == division.get(j).getDivId())
 					{
 						studentDetails.setDivision(division.get(j));
+						flag = true;
 						break;
 					}
 				}
+				
+				/*if(flag = false){
+					
+				}*/
 				
 				String batchIDArray[] = studentsList.get(i).getBatch_id().split(",");
 				List<Batch> studentBatchList = new ArrayList<Batch>();
 				if(batchIDArray.length > 1){
 					for (int j = 0; j < batchIDArray.length; j++) {
 							for (int k = 0; k < batchList.size(); k++) {
-								if(Integer.parseInt(batchIDArray[j]) ==  batchList.get(k).getBatch_id()){
+								if(Integer.parseInt(batchIDArray[j]) ==  batchList.get(k).getBatch_id() 
+										&& studentsList.get(i).getDiv_id() == batchList.get(k).getDiv_id()){
 									studentBatchList.add(batchList.get(k));
 									break;
 								}
 							}	
 					}
 				}else{
+					if(!"".equals(batchIDArray[0]) ){
 					for (int k = 0; k < batchList.size(); k++) {
-						if(Integer.parseInt(batchIDArray[0]) ==  batchList.get(k).getBatch_id()){
+						if(Integer.parseInt(batchIDArray[0]) ==  batchList.get(k).getBatch_id() 
+								&& studentsList.get(i).getDiv_id() == batchList.get(k).getDiv_id()){
 							studentBatchList.add(batchList.get(k));
 							break;
 						}
+					}
 					}
 				}
 				studentDetails.setBatches(studentBatchList);

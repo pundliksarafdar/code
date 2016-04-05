@@ -21,8 +21,8 @@ $(document).ready(function(){
 	$("#saveTopic").on("click",saveedittopic);
 	
 	$("#topictable").on("click",".deletetopic",function(e){
-		topicid =$(this).prop("id");
-		var divisionID=$("#topics_division").val();
+		 topicid =$(this).prop("id");
+		 /*	var divisionID=$("#topics_division").val();
 		var subID=$("#subjectID").val();
 		var institute=$("form#actionform #institute").val();
 	//	var questionNumber=$("form#actionform #questionNumber").val();
@@ -51,11 +51,11 @@ $(document).ready(function(){
 						   		$("#DeleteConfirmBody").append("Do you want to continue?");
 							   $("#quesstatus").val("Y");
 							   $("#DeleteConfirmModal").modal("toggle");
-						   }else{
+						   }else{ */
 							   $("#DeleteConfirmBody").empty();
 							   $("#DeleteConfirmBody").append("Are you sure?");
-							   $("#quesstatus").val("");
 							   $("#DeleteConfirmModal").modal("toggle");
+							   /*   $("#quesstatus").val("");
 						   }
 			   		},
 			   		error:function(error){
@@ -65,7 +65,7 @@ $(document).ready(function(){
 		/* $("#actionform").attr("action","deletequestion");
 		$("#actionname").val("deletequestion");
 		$("#actionform").submit(); */
-	});
+	}); 
 });
 
 function addTopic(){
@@ -174,7 +174,7 @@ function saveedittopic(){
 function deletetopic(){
 	var divisionID=$("#topics_division").val();
 	var subID=$("#subjectID").val();
-	 $.ajax({
+	/*  $.ajax({
 		 
 		   url: "classOwnerServlet",
 		   data: {
@@ -190,7 +190,16 @@ function deletetopic(){
 		   },
 		   error:function(){
 			   }
-		   });
+		   }); */
+	var handlers = {};
+	handlers.success=function(){
+		$.notify({message: "Topic successfuly deleted"},{type: 'success'});
+	};   
+	handlers.error=function(){
+		$.notify({message: "Topic successfuly deleted"},{type: 'success'});
+	};   
+	
+	rest.deleteItem("rest/commonDelete/deleteSubjectTopic/"+divisionID+"/"+subID+"/"+topicid,handlers);
 	 
 }
 function fetchTopic(){

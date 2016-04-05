@@ -11,6 +11,9 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.BatchDB;
+import com.classapp.db.exam.ExamDB;
+import com.classapp.db.exam.ExamPaperDB;
+import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.subject.AddSubject;
 import com.classapp.db.subject.GetSubject;
@@ -19,6 +22,14 @@ import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
 import com.classapp.db.subject.Topics;
 import com.classapp.logger.AppLogger;
+import com.transaction.attendance.AttendanceTransaction;
+import com.transaction.batch.BatchTransactions;
+import com.transaction.exams.ExamTransaction;
+import com.transaction.notes.NotesTransaction;
+import com.transaction.questionbank.QuestionBankTransaction;
+import com.transaction.schedule.ScheduleTransaction;
+import com.transaction.studentmarks.StudentMarksTransaction;
+import com.transaction.teacher.TeacherTransaction;
 
 
 public class SubjectTransaction {
@@ -85,10 +96,27 @@ public class SubjectTransaction {
 		return db.modifySubject(subject);
 		
 	}
-	public boolean deleteSubject(int subid) {
-		
+	public boolean deleteSubject(int inst_id,int sub_id) {
+		TeacherTransaction teacherTransaction = new TeacherTransaction();
+		teacherTransaction.deletesubjectfromteacherlist(inst_id,sub_id+"");
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		attendanceTransaction.deleteAttendanceRelatedToSubject(inst_id, sub_id);
+		BatchTransactions batchTransactions = new BatchTransactions();
+		batchTransactions.deletesubjectfrombatch(inst_id,sub_id+"");
+		ExamPaperDB examPaperDB = new ExamPaperDB();
+		examPaperDB.deleteExamPaperRelatedToSubject(inst_id, sub_id);
+		NotesTransaction notesTransaction = new NotesTransaction();
+		notesTransaction.deleteNotesRelatedToSubject(inst_id,sub_id);
+		QuestionBankTransaction bankTransaction = new QuestionBankTransaction();
+		bankTransaction.deleteQuestionrelatedtoSubject(inst_id, sub_id);
+		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
+		scheduleTransaction.deleteschedulerelatedsubject(inst_id,sub_id);
+		StudentMarksTransaction marksTransaction = new StudentMarksTransaction();
+		marksTransaction.deleteStudentMarksrelatedtosubject(inst_id,sub_id);
+		SubjectTransaction subjectTransaction = new SubjectTransaction();
+		subjectTransaction.deleteTopicsrelatedToSubject(inst_id, sub_id);
 		SubjectDb subjectDb=new SubjectDb();
-		subjectDb.deleteSubject(subid);
+		subjectDb.deleteSubject(sub_id);
 		return true;
 	}
 	
@@ -141,6 +169,8 @@ public class SubjectTransaction {
 	}
 	
 	public boolean deleteTopics(int inst_id,int sub_id,int div_id,int topicid) {
+		QuestionBankTransaction bankTransaction = new  QuestionBankTransaction();
+		bankTransaction.updateQuestionrelatedtoTopic(inst_id, sub_id, div_id, topicid);
 		SubjectDb subjectDb=new SubjectDb();
 		return subjectDb.deleteTopics(inst_id, sub_id, div_id,topicid);
 			

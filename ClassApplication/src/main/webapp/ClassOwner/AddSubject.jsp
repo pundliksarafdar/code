@@ -58,7 +58,7 @@ function getSubject(subid){
 New function
 */
 function deleteSubject(subid){
-	$.ajax({
+	/* $.ajax({
         url: 'classOwnerServlet',
         type: 'post',
         data: {
@@ -71,7 +71,18 @@ function deleteSubject(subid){
         }, error: function(){
             $.notify({message: 'Unable to delete'},{type: 'danger'});
         }
-});
+}); */
+	var table = $('#subjectTable').DataTable();
+	var handlers = {};
+	handlers.success = function(){
+		$("#subjectTable").find(".editSubjectId[value='"+subid+"']").closest("tr").remove();
+		$.notify({message: "Subject successfuly deleted"},{type: 'success'});
+	}
+	handlers.error = function(){
+		table.row($("#subjectTable").find(".editSubjectId[value='"+subid+"']").closest("tr")).remove().draw();
+		$.notify({message: "Subject successfuly deleted"},{type: 'success'});
+	}
+	rest.deleteItem("rest/commonDelete/deleteSubject/"+subid,handlers);
 }
 
 /*this function will prompt to delete subject*/

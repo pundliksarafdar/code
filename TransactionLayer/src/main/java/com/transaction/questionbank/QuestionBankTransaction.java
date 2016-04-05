@@ -116,4 +116,9 @@ public class QuestionBankTransaction {
 			return db.deleteQuestionrelatedtosubject(sub_id, inst_id);
 	}
 		
+		public boolean updateQuestionrelatedtoTopic(int inst_id,int sub_id,int div_id,int topic_id) {
+			QuestionbankDB db=new QuestionbankDB();
+			return db.updateQuestionrelatedtotopic(inst_id, sub_id, div_id, topic_id);
+	}
+		
 }

@@ -256,27 +256,19 @@ public class TeacherDB {
 		return status;
 	}
 	
-	public boolean deleteTeacher(int user_id, int class_id) {
+	public boolean deleteTeacher(int teacher_id, int inst_id) {
 		
 		Session session = null;
 		boolean status=false;
 		Transaction transaction = null;
-		String queryString="from Teacher where user_id = :user_id and class_id = :class_id";
+		String queryString="delete from Teacher where user_id = :user_id and class_id = :class_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
-			query.setInteger("user_id", user_id);
-			query.setInteger("class_id", class_id);  
-					
-				Teacher teacher=(Teacher)query.uniqueResult();
-				if(teacher!=null){
-					ScheduleDB db=new ScheduleDB();
-					db.deleteSchedulerelatedtoteacher(user_id, class_id);
-					session.delete(teacher);
-					status=true;					
-				}
-			
+			query.setInteger("user_id", teacher_id);
+			query.setInteger("class_id", inst_id);
+			query.executeUpdate();
 			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
@@ -348,7 +340,7 @@ public Teacher getTeacher(int user_id, int class_id) {
 		return classids;
 	}
 	
-	public List<Teacher> getteacherrelatedtosubject(String subid) {
+	public List<Teacher> getteacherrelatedtosubject(int inst_id,String subid) {
 		
 		Transaction transaction=null;
 		Session session=null;
@@ -356,12 +348,15 @@ public Teacher getTeacher(int user_id, int class_id) {
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
-		Query query=session.createQuery(" from Teacher where (sub_ids like :sub_id1 or sub_ids like :sub_id2 or sub_ids like :sub_id3 or sub_ids = :sub_id4)");
+		Query query=session.createQuery(" from Teacher where (sub_ids like :sub_id1 or "
+										+ "sub_ids like :sub_id2 or sub_ids like :sub_id3 "
+										+ "or sub_ids = :sub_id4) and class_id = :class_id");
 		query.setParameter("sub_id1", "%,"+subid+",%");
 		query.setParameter("sub_id2", subid+",%");
 		query.setParameter("sub_id3", "%,"+subid);
 		query.setParameter("sub_id4", subid);
-	//	query.setParameter("regId", regId);
+		query.setParameter("class_id", inst_id);
+	
 		list=query.list();
 			}catch(Exception e){
 				e.printStackTrace();

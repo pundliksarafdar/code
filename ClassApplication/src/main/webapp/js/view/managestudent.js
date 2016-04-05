@@ -124,11 +124,12 @@ var addStudent = function(){
 			if(tData && tData.length){
 				for(var index=0;index<tData.length;index++){
 					var student_Fees = new Student_Fees();
+					student_Fees.student_id = studentID;
 					student_Fees.div_id = (tData[index]).div_id
 					student_Fees.batch_id = (tData[index]).batch_id;
 					student_Fees.batch_fees = (tData[index]).batch_fees;
 					student_Fees.discount = tRow.eq(index).find(".discount").val();
-					student_Fees.discount_type  = tRow.eq(index).find(".percentage").is(':checked')?'amt':'per';
+					student_Fees.discount_type  = tRow.eq(index).find(".percentage").is(':checked')?'per':'amt';
 					student_Fees.fees_paid  = tRow.eq(index).find(".paidFees").val();
 					feesArray.push(student_Fees);
 				}	
@@ -284,11 +285,12 @@ var addStudent = function(){
 		if(tData && tData.length){
 			for(var index=0;index<tData.length;index++){
 				var student_Fees = new Student_Fees();
+				student_Fees.student_id = studentID;
 				student_Fees.div_id = (tData[index]).div_id
 				student_Fees.batch_id = (tData[index]).batch_id;
 				student_Fees.batch_fees = (tData[index]).batch_fees;
 				student_Fees.discount = tRow.eq(index).find(".discount").val();
-				student_Fees.discount_type  = tRow.eq(index).find(".percentage").is(':checked')?'amt':'per';
+				student_Fees.discount_type  = tRow.eq(index).find(".percentage").is(':checked')?'per':'amt';
 				student_Fees.fees_paid  = tRow.eq(index).find(".paidFees").val();
 				feesArray.push(student_Fees);
 			}	

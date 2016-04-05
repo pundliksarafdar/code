@@ -11,6 +11,7 @@ import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.subject.Subject;
 import com.transaction.register.RegisterTransaction;
+import com.transaction.schedule.ScheduleTransaction;
 
 public class TeacherTransaction {
 	TeacherDB teacherDB;
@@ -73,8 +74,10 @@ public class TeacherTransaction {
 		return teacherDB.getTeacher(user_id, class_id);
 	}
 
-	public boolean deleteTeacher(int user_id, int class_id) {
-		return teacherDB.deleteTeacher(user_id, class_id);
+	public boolean deleteTeacher(int teacher_id, int inst_id) {
+		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
+		scheduleTransaction.updateScheduleOfTeacher(teacher_id, inst_id);
+		return teacherDB.deleteTeacher(teacher_id, inst_id);
 	}
 
 	public List<TeacherDetails> getAllTeachersFromClass(int regId) {
@@ -157,9 +160,9 @@ public class TeacherTransaction {
 		return registerBeans;
 	}
 
-	public boolean deletesubjectfromteacherlist(String subjectid) {
+	public boolean deletesubjectfromteacherlist(int inst_id,String subjectid) {
 		TeacherDB teacherDB = new TeacherDB();
-		List<Teacher> list = teacherDB.getteacherrelatedtosubject(subjectid);
+		List<Teacher> list = teacherDB.getteacherrelatedtosubject(inst_id,subjectid);
 		if (list.size() > 0) {
 			int counter = 0;
 			while (list.size() > counter) {

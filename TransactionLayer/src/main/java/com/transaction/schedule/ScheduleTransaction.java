@@ -191,11 +191,11 @@ public class ScheduleTransaction {
 		return db.deleteSchedule(scheduleid, inst_id, div_id, batch_id,date);
 	}
 	
-	public int deleteScheduleOfTeacher(int teacherId,int classId)
+	public int updateScheduleOfTeacher(int teacherId,int classId)
 	{
 		
 		ScheduleDB db=new ScheduleDB();
-		return db.deleteSchedulerelatedtoteacher(teacherId,classId);
+		return db.updateSchedulerelatedtoteacher(teacherId, classId);
 	}
 	
 	public int deleteScheduleOfBatchForSubject(int batchId,int subjectId, int divId, int classId)
@@ -300,16 +300,16 @@ public class ScheduleTransaction {
 		return db.deleteAllSchedulesOfBatch(batchId, divId, classId);	
 	}
 	
-	public int deleteschedulerelatedsubject(int subid) {
+	public int deleteschedulerelatedsubject(int inst_id,int subid) {
 		ScheduleDB scheduleDB=new ScheduleDB();
-		return scheduleDB.deleteschedulerelatedsubject(subid);		
+		return scheduleDB.deleteschedulerelatedsubject(inst_id,subid);		
 		
 		
 	}
 	
-	public boolean deleteSchedulerelatedoBatch(Batch batch) {
+	public boolean deleteSchedulerelatedoBatch(int  inst_id,int div_id,int batch_id) {
 		ScheduleDB scheduleDB=new ScheduleDB();
-		scheduleDB.deleteschedulerelatedtoBatch(batch);
+		scheduleDB.deleteschedulerelatedtoBatch(inst_id, div_id, batch_id);
 		return true;
 	}
 	

@@ -260,5 +260,90 @@ public class ExamPaperDB {
 		return  list;
 
 	}
+	
+	public boolean deleteExamPaperRelatedToClass(int inst_id,int div_id) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("delete from Exam_Paper where inst_id = :inst_id "
+											+ "and div_id = :div_id");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  true;
 
+	}
+	
+	public boolean deleteExamPaperRelatedToSubject(int inst_id,int sub_id) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("delete from Exam_Paper where inst_id = :inst_id "
+											+ "and sub_id = :sub_id");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("sub_id", sub_id);
+			query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  true;
+
+	}
+	
+	public boolean deleteExamPaperRelatedToExam(int inst_id,int exam_id) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("delete from Exam_Paper where inst_id = :inst_id and exam_id = :exam_id");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("exam_id", exam_id);
+			query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  true;
+
+	}
 }

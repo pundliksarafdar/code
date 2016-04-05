@@ -147,10 +147,13 @@ $(document).ready(function(){
 		});
 		var examID = examIDs.join();
 		var handler ={};
-		handler.success = function(e){console.log("Success",e)
-		 createAllCard(e); 
+		handler.success = function(e){
+		console.log("Success",e);
+		$.notify({message: "Progress card Sent Successfully"},{type: 'success'});
 		};
-		handler.error = function(e){console.log("Error",e)};
+		handler.error = function(e){
+			console.log("Error",e);
+		};
 		that = $(this);
 		if(examIDs.length>0){
 		rest.get("rest/studentmarks/sendStudentProgressCard/"+divisionID+"/"+batchID+"/"+examID,handler);

@@ -478,19 +478,29 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 	}
 	
 	public boolean deleteTopics(int inst_id,int sub_id,int div_id,int topicid) {
-		Topics topic=new Topics();
-		topic.setTopic_id(topicid);
-		topic.setInst_id(inst_id);
-		topic.setDiv_id(div_id);
-		topic.setSub_id(sub_id);
-		Transaction transaction=null;
-		Session session=null;
-		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
-		topic=(Topics) session.get(Topics.class, topic);
-		session.delete(topic);
-		transaction.commit();
-		session.close();
+		Session session = null;
+		Transaction transaction = null;
+		List<Subject> queryResult=null;
+		String queryString="delete Topics where inst_id = :inst_id and sub_id=:sub_id and div_id=:div_id"
+				+ " and topic_id = :topic_id";	
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+		Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("sub_id", sub_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("topic_id", topicid);
+			 query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		
 		return  true;
 	}
 	

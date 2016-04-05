@@ -11,8 +11,17 @@ import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.BatchDB;
 import com.classapp.db.batch.BatchData;
 import com.classapp.db.batch.DeleteBatch;
+import com.classapp.db.fees.FeesDB;
 import com.classapp.db.Schedule.Schedule;
+import com.classapp.db.Schedule.ScheduleDB;
+import com.classapp.db.attendance.AttendanceDB;
 import com.classapp.db.subject.SubjectDb;
+import com.transaction.attendance.AttendanceTransaction;
+import com.transaction.fee.FeesTransaction;
+import com.transaction.notes.NotesTransaction;
+import com.transaction.schedule.ScheduleTransaction;
+import com.transaction.student.StudentTransaction;
+import com.transaction.studentmarks.StudentMarksTransaction;
 import com.util.ClassAppUtil;
 
 
@@ -94,20 +103,25 @@ public int getNextBatchID(int inst_id,int div_id){
 		return batchData.isUpdatedBatchExist(batch.getBatch_id(),batch.getClass_id(), batch.getBatch_name(),batch.getDiv_id());
 	}
 	
-	public boolean deleteBatch(Batch batch){
+	public boolean deleteBatch(int inst_id,int div_id,int batch_id){
 		boolean status = false;
-		DeleteBatch deleteBatch = new DeleteBatch();
-		com.classapp.db.batch.Batch batchDbLayer =new com.classapp.db.batch.Batch();
-		try {
-			BeanUtils.copyProperties(batchDbLayer, batch);
-			status = deleteBatch.deletebatch(batchDbLayer);
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			status = false;
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-			status = false;
-		}
+		AttendanceDB attendanceDB = new AttendanceDB();
+		attendanceDB.deleteAttendanceRelatedToBatch(inst_id, div_id, batch_id);
+		FeesDB feesDB = new FeesDB();
+		feesDB.deleteBatchFeesRelatedToBatch(inst_id, div_id, batch_id);
+		ScheduleDB scheduleDB = new ScheduleDB();
+		scheduleDB.deleteGroupsRelatedToBatch(inst_id, div_id, batch_id);
+		NotesTransaction notesTransaction = new NotesTransaction();
+		notesTransaction.removebatchfromnotes(inst_id, div_id, batch_id+"");
+		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
+		scheduleTransaction.deleteSchedulerelatedoBatch(inst_id, div_id, batch_id);
+		StudentTransaction  studentTransaction = new StudentTransaction();
+		studentTransaction.removeBatchFromstudentslist(batch_id+"", inst_id, div_id);
+		StudentMarksTransaction marksTransaction = new StudentMarksTransaction();
+		marksTransaction.deleteStudentMarksrelatedtobatch(inst_id, div_id, batch_id);
+		FeesTransaction feesTransaction = new FeesTransaction();
+		feesTransaction.updateStudentFeesRelatedToBatch(inst_id, div_id, batch_id);
+		batchDB.deleteBatch(inst_id, div_id, batch_id);
 		
 		return status;
 	}
@@ -191,9 +205,9 @@ public int getNextBatchID(int inst_id,int div_id){
 		return batchDB.retriveAllBatchesOfDivision(divisionId, class_id);
 	}
 	
-	public boolean deletesubjectfrombatch(String subjectid) {
+	public boolean deletesubjectfrombatch(int inst_id,String subjectid) {
 		BatchDB batchDB=new BatchDB();
-		List<Batch> batchs=batchDB.getbachesrelatedtosubject(subjectid);
+		List<Batch> batchs=batchDB.getbachesrelatedtosubject(inst_id,subjectid);
 		if(batchs.size()>0){
 			int counter=0;
 			while(batchs.size()>counter){
@@ -225,7 +239,7 @@ public int getNextBatchID(int inst_id,int div_id){
 		
 	}
 	
-	public boolean deletebatchrelatdtoclass(int classid) {
+	public boolean deletebatchrelatdtoclass(int inst_id,int classid) {
 		BatchDB batchDB=new BatchDB();
 		batchDB.deletebatchrelatedtoclass(classid);
 		return true;

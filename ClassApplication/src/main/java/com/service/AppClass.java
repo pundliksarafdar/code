@@ -17,7 +17,7 @@ public class AppClass extends Application{
 		singletons.add(new TimeTableServiceImpl());
 		singletons.add(new ClassownerSettingsServiceImpl());
 		singletons.add(new StudentMarksImpl());
-        
+		singletons.add(new DeleteServiceImpl());
     }
     @Override
     public Set<Object> getSingletons() {

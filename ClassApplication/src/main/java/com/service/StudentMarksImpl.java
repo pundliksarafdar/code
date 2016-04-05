@@ -87,6 +87,7 @@ public class StudentMarksImpl extends ServiceBase{
 		}
 		Notification notification = new Notification();
 		notification.send(NotificationEnum.MessageCategery.PROGRESS_CARD_MANUAL, (HashMap<Integer, MessageDafaultInterface>) map, getRegId());
-		return Response.status(200).entity(progressCardList).build();
+		StudentProgressCard progressCard = new StudentProgressCard();
+		return Response.status(200).entity(progressCard).build();
 	}
 }

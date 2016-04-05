@@ -602,17 +602,18 @@ public class StudentDB {
 		return null;
 	}
 	
-	public boolean deletestudentrelatedtoclass(int classid) {
+	public boolean updatestudentrelatedtoclass(int div_id,int inst_id) {
 		Session session = null;
 		boolean status=false;
 		Transaction transaction = null;
 		List list=null;
-		String queryString="DELETE from Student where div_id=:div_id";
+		String queryString="Update Student set div_id = 0 , batch_id = '' where div_id=:div_id and class_id=:class_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
-			query.setParameter("div_id", classid);
+			query.setParameter("div_id", div_id);
+			query.setParameter("class_id", inst_id);
 			query.executeUpdate();
 			transaction.commit();
 		}catch(Exception e){

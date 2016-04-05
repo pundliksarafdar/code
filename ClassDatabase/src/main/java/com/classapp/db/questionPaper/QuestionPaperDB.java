@@ -117,4 +117,30 @@ public class QuestionPaperDB {
 		}
 		return false;
 	}
+	
+	public boolean deleteQuestionPaperRelatedToClass(int inst_id,int div_id) {
+		Transaction transaction=null;
+		Session session=null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("delete from QuestionPaper where  inst_id = :inst_id and div_id=:div_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		transaction.commit();
+		query.executeUpdate();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  true;
+
+	}
 }

@@ -66,31 +66,27 @@ function getclass(subid){
 /*
 New function
 */
-function deleteclass(subid){
-	$.ajax({
-        url: 'classOwnerServlet',
-        type: 'post',
-        data: {
-	    	 methodToCall: "deleteclass",
-	    	 classid:subid
-        },
-        success: function(){
-			$.notify({message: 'Deleted'},{type: 'success'});
-			$('input[type="hidden"].editclassId[value="'+subid+'"]').closest("tr").remove();
-        }, error: function(){
-            $.notify({message: 'Unable to delete'},{type: 'danger'});
-        }
-});
+function deleteclass(classIdToDelete){
+	var handlers = {};
+	handlers.success = function(){
+		/* $("#subjectTable").find(".editSubjectId[value='"+subid+"']").closest("tr").remove(); */
+		$.notify({message: "Class successfuly deleted"},{type: 'success'});
+	}
+	handlers.error = function(){
+	/* 	table.row($("#subjectTable").find(".editSubjectId[value='"+subid+"']").closest("tr")).remove().draw(); */
+		$.notify({message: "Class successfuly deleted"},{type: 'success'});
+	}
+	rest.deleteItem("rest/commonDelete/deleteDivision/"+classIdToDelete,handlers);
 }
 
 /*this function will prompt to delete class*/
 function deleteclassPrompt(){
-	var classIdToEdit = $(this).closest("tr").find(".editclassId").val();
-	deleteConfirm(classIdToEdit);
+	var classIdToDelete = $(this).closest("tr").find(".editclassId").val();
+	deleteConfirm(classIdToDelete);
 }
 
-function deleteConfirm(subId){
-	modal.modalConfirm("Delete","Do you want to delete","Cancel","Delete",deleteclass,[subId]);
+function deleteConfirm(classIdToDelete){
+	modal.modalConfirm("Delete","Do you want to delete","Cancel","Delete",deleteclass,[classIdToDelete]);
 }
 
 function enableEdit(){
@@ -266,11 +262,11 @@ function saveNewclassName(){
 			]
 		});
 		
-		/* dataTable.on( 'order.dt search.dt', function () {
+	 dataTable.on( 'order.dt search.dt', function () {
         dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             cell.innerHTML = i+1;
 			});
-		}).draw(); */
+		}).draw(); 
 		}else{
 			that.closest('.addclassContainer').find(".addclassnameerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Class already exists!!');
 		}

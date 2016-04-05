@@ -714,7 +714,7 @@ public class ScheduleDB {
 
 	}
 
-	public int deleteSchedulerelatedtoteacher(int teacherid, int classid) {
+	public int updateSchedulerelatedtoteacher(int teacherid, int classid) {
 
 		Session session = null;
 		Transaction transaction = null;
@@ -723,12 +723,9 @@ public class ScheduleDB {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session
-					.createQuery("delete FROM Schedule where teacher_id = :teacher_id and class_id =:class_id");
-			// Query query = session.createQuery("FROM Schedule where date =
-			// '2014-10-04' and class_id = 34");
+					.createQuery("update Schedule set teacher_id = 0  where teacher_id = :teacher_id and class_id =:class_id");
 			query.setParameter("teacher_id", teacherid);
 			query.setParameter("class_id", classid);
-
 			count = query.executeUpdate();
 			transaction.commit();
 		} catch (Exception e) {
@@ -768,16 +765,16 @@ public class ScheduleDB {
 		return count;
 	}
 
-	public int deleteschedulerelatedsubject(int subid) {
+	public int deleteschedulerelatedsubject(int inst_id,int subid) {
 		Session session = null;
 		Transaction transaction = null;
 		int count=0;
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("delete FROM Schedule where sub_id =:sub_id");
+			Query query = session.createQuery("delete FROM Schedule where sub_id =:sub_id and inst_id=:inst_id");
 			query.setParameter("sub_id", subid);
-
+			query.setParameter("inst_id", inst_id);
 			count=query.executeUpdate();
 			transaction.commit();
 		} catch (Exception e) {
@@ -866,7 +863,7 @@ public class ScheduleDB {
 
 	}
 
-	public int deleteschedulerelatedtoBatch(Batch batch) {
+	public int deleteschedulerelatedtoBatch(int inst_id,int div_id,int batch_id) {
 
 		Session session = null;
 		Transaction transaction = null;
@@ -875,11 +872,11 @@ public class ScheduleDB {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(
-					"delete FROM Schedule where batch_id = :batch_id and class_id=:class_id and div_id=:div_id");
+					"delete FROM Schedule where batch_id = :batch_id and inst_id=:inst_id and div_id=:div_id");
 			
-			query.setParameter("batch_id", batch.getBatch_id());
-			query.setParameter("class_id", batch.getClass_id());
-			query.setParameter("div_id", batch.getDiv_id());
+			query.setParameter("batch_id", batch_id);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
 			count=query.executeUpdate();
 			transaction.commit();
 		} catch (Exception e) {
@@ -1048,12 +1045,12 @@ public class ScheduleDB {
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("from Groups where inst_id=:class_id and div_id=:div_id and batch_id = :batch_id");
+			Query query = session.createQuery("from Groups where inst_id=:inst_id and div_id=:div_id and batch_id = :batch_id");
 			query.setParameter("batch_id", batchid);
-			query.setParameter("class_id", inst_id);
+			query.setParameter("inst_id", inst_id);
 			query.setParameter("div_id", div_id);
 			scheduleList = query.list();
-
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -1116,6 +1113,58 @@ public class ScheduleDB {
 			}
 		}
 		return groups.getGrp_id();
+	}
+	
+	public boolean deleteGroupsRelatedToClass(int inst_id,int div_id) {
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("Delete from Groups where inst_id=:inst_id and div_id=:div_id ");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.executeUpdate();
+			transaction.commit();
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			if (null != transaction) {
+				transaction.rollback();
+			}
+		} finally {
+			if (null != session) {
+				session.close();
+			}
+		}
+		return true;
+	}
+	
+	public boolean deleteGroupsRelatedToBatch(int inst_id,int div_id,int batch_id) {
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("Delete from Groups where inst_id=:inst_id "
+											+ "and div_id=:div_id and batch_id = :batch_id");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", batch_id);
+			query.executeUpdate();
+			transaction.commit();
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			if (null != transaction) {
+				transaction.rollback();
+			}
+		} finally {
+			if (null != session) {
+				session.close();
+			}
+		}
+		return true;
 	}
 	
 	public static void main(String[] args) {
