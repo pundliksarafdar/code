@@ -68,7 +68,7 @@ Modal.prototype.modalYesAndNo = function(heading, question, noButtonTxt,noBtnCal
     	});
     	
     	confirmModal.find('#noButton').click(function(event) {
-    		noBtnCallback();
+    		if(noBtnCallback ){noBtnCallback();}
     		confirmModal.modal('hide');
     	});
     	confirmModal.find('#cancelButton').click(function(event) {

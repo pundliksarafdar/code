@@ -602,4 +602,16 @@
       <put-attribute name="title"  value="Progress Card"/>
       <put-attribute name="body"   value="/ClassOwner/ProgressCard.jsp"/>      
    </definition>
+   <definition name="classowner.editSubjectiveQuestion" extends="baseLayout">
+      <put-attribute name="title"  value="Edit question"/>
+      <put-attribute name="body"   value="/ClassOwner/EditSubjectiveQuestion.jsp"/>      
+   </definition>
+   <definition name="classowner.editObjectiveQuestion" extends="baseLayout">
+      <put-attribute name="title"  value="Edit question"/>
+      <put-attribute name="body"   value="/ClassOwner/EditObjectiveQuestion.jsp"/>      
+   </definition>
+   <definition name="classowner.editParaQuestion" extends="baseLayout">
+      <put-attribute name="title"  value="Edit question"/>
+      <put-attribute name="body"   value="/ClassOwner/EditParaQuestion.jsp"/>      
+   </definition>
 </tiles-definitions>

@@ -69,6 +69,22 @@ public class CorexServiceApi extends ServiceBase{
 		return null;
 	}
 	
+	@GET
+	@Path("/image/{folderPath}")
+	@Produces("image/jpeg")
+	public byte[] showImage(@PathParam("folderPath")String folderPath){
+		String folderActualPath = folderPath.replaceAll("_", "\\"+File.separatorChar); 
+		String imagefileName = Constants.STORAGE_PATH + File.separatorChar+ getRegId() + File.separatorChar + folderActualPath;
+		try {
+			FileInputStream stream = new FileInputStream(imagefileName);
+			InputStream resourceStream = new BufferedInputStream(stream);
+			return IOUtils.toByteArray(resourceStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	@POST
 	@Path("/uploadImage")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)

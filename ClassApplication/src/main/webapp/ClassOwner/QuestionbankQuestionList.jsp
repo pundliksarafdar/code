@@ -159,6 +159,7 @@ $("#searchQuestionDivision").on("change",function(e){
 	});
 	
 	$("body").on("click",".editQuestion",function(e){
+		/*
 		$("#editQuestionForm").find("#division").val(division);
 		$("#editQuestionForm").find("#subject").val(subject);
 		$("#editQuestionForm").find("#currentPage").val(currentPage);
@@ -168,6 +169,15 @@ $("#searchQuestionDivision").on("change",function(e){
 		$("#editQuestionForm").find("#questiontype").val(questionType);
 		$("#editQuestionForm").find("#preSelectedMarks").val(selectedMarks);
 		$("#editQuestionForm").submit();
+		*/
+		
+		$("#editQuestionNewForm").find("#division").val(division);
+		$("#editQuestionNewForm").find("#subject").val(subject);
+		$("#editQuestionNewForm").find("#questionNumber").val($(this).prop("id"));
+		$("#editQuestionNewForm").find("#topicID").val(topic);
+		$("#editQuestionNewForm").find("#questiontype").val(questionType);
+		$("#editQuestionForm").find("#questionNumber").val($(this).prop("id"));
+		$("#editQuestionNewForm").submit();
 	});
 	
 	$("body").on("click",".deleteQuestion",function(e){
@@ -548,6 +558,13 @@ function UploadExam(){
  		<input type="hidden" id="questiontype" name="questiontype" value='<c:out value="${questiontype}"></c:out>'>
  		<input type="hidden" id="actionname" name="actionname" value='<c:out value="${actionname}"></c:out>'>
  		<input type="hidden" id="preSelectedMarks" name="preSelectedMarks" value='<c:out value="${preSelectedMarks}"></c:out>'>
+</form>
+<form action="editquestionnew" id="editQuestionNewForm" method="post">
+		<input type="hidden" id="questionNumber" name="questionNumber" value='<c:out value="${questionNumber}"></c:out>'>
+		<input type="hidden" id="division" name="division" value='<c:out value="${division}"></c:out>'>
+ 		<input type="hidden" id="subject" name="subject" value='<c:out value="${subject}"></c:out>'>
+ 		<input type="hidden" id="topicID" name="topicID" value='<c:out value="${topicID}"></c:out>'>
+ 		<input type="hidden" id="questiontype" name="questiontype" value='<c:out value="${questiontype}"></c:out>'>
 </form>
 </body>
 </html>

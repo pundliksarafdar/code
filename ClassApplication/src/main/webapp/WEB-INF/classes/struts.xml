@@ -303,7 +303,6 @@
 		<action name="searchQuestion" class="com.corex.exam.SearchQuestionAction" method="execute">
 			<result name="success" type="tiles">classowner.listquestionbankquestion</result>
 			<result name="teacherquestionsearch" type="tiles">teacher.teacherquestionsearch</result>
-			<param name="ignoresession">true</param>
 		</action>
 		<action name="paginateQuestion" class="com.corex.exam.SearchQuestionAction" method="execute">
 			<result name="success" type="tiles">classowner.listquestionbankquestion</result>
@@ -343,6 +342,14 @@
 			<result name="editSuccess" type="tiles">classowner.listquestionbankquestion</result>
 			<result name="questioneditsuccess" type="tiles">classowner.questioneditsuccess</result>
 			<result name="teacheraddquestion" type="tiles">teacher.teacheraddquestion</result>
+		</action>
+		
+		<action name="editquestionnew" class="com.classowner.EditQuestionNewAction"
+			method="execute">
+			<result name="subjective" type="tiles">classowner.editSubjectiveQuestion</result>
+			<result name="objective" type="tiles">classowner.editObjectiveQuestion</result>
+			<result name="paragraph" type="tiles">classowner.editParaQuestion</result>
+			<!-- <result name="starteditingquestion" type="tiles">classowner.starteditingquestion</result> -->
 		</action>
 		
 		<action name="deletequestion" class="com.classowner.AddQuestionAction"

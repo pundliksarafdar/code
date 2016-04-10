@@ -1,9 +1,17 @@
 package com.transaction.questionbank;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.question.QuestionbankDB;
+import com.classapp.logger.AppLogger;
+import com.service.beans.ParaQuestionBean;
+import com.transaction.image.ImageTransactions;
 
 public class QuestionBankTransaction {
 
@@ -13,7 +21,7 @@ public class QuestionBankTransaction {
 	}
 	
 	public int saveQuestion(Questionbank questionbank) {
-		QuestionbankDB db=new QuestionbankDB();
+		QuestionbankDB db = new QuestionbankDB();
 		return db.saveQuestion(questionbank);
 		
 	}
@@ -120,5 +128,87 @@ public class QuestionBankTransaction {
 			QuestionbankDB db=new QuestionbankDB();
 			return db.updateQuestionrelatedtotopic(inst_id, sub_id, div_id, topic_id);
 	}
+		
+		public boolean saveParaObject(String storagePath,ParaQuestionBean paraQuestionBean,int questionId){
+			String questionpath = storagePath + File.separatorChar + paraQuestionBean.getInstId() + File.separatorChar
+					+ "exam" + File.separatorChar + "paragraph" + File.separatorChar + questionId ;
+			File file = new File(questionpath);
+			if(!file.getParentFile().exists()){
+				file.getParentFile().mkdirs();
+				try {file.createNewFile();} catch (IOException e) {	e.printStackTrace();}
+			}
+			writeObject(questionpath, paraQuestionBean);
+			
+			ImageTransactions imageTransactions = new ImageTransactions(storagePath);
+			imageTransactions.saveParagraphImage(paraQuestionBean, questionId, paraQuestionBean.getInstId());
+			return true;
+		}
+		
+		private void writeObject(String filePath,Object questionData){
+			FileOutputStream fout = null;
+			ObjectOutputStream oos = null;
+			try {
+				File file = new File(filePath);
+				if(!file.exists() || file.isDirectory()){
+					if(file.isDirectory()){
+						delete(file);
+					}
+					file.getParentFile().mkdirs();
+					file.createNewFile();
+				}
+				fout = new FileOutputStream(filePath);
+				oos = new ObjectOutputStream(fout);
+				oos.writeObject(questionData);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}finally{
+				if(null!=oos)try {oos.close();} catch (IOException e) {e.printStackTrace();}
+				if(null!=fout)try {fout.close();} catch (IOException e) {e.printStackTrace();}
+			}
+			
+		}
+		
+		public static void delete(File file)
+		    	throws IOException{
+		 
+		    	if(file.isDirectory()){
+		 
+		    		//directory is empty, then delete it
+		    		if(file.list().length==0){
+		 
+		    		   file.delete();
+		    		   AppLogger.logger("Directory is deleted : " 
+		                                                 + file.getAbsolutePath());
+		 
+		    		}else{
+		 
+		    		   //list all the directory contents
+		        	   String files[] = file.list();
+		 
+		        	   for (String temp : files) {
+		        	      //construct the file structure
+		        	      File fileDelete = new File(file, temp);
+		 
+		        	      //recursive delete
+		        	     delete(fileDelete);
+		        	   }
+		 
+		        	   //check the directory again, if empty then delete it
+		        	   if(file.list().length==0){
+		           	     file.delete();
+		        	     AppLogger.logger("Directory is deleted : " 
+		                                                  + file.getAbsolutePath());
+		        	   }
+		    		}
+		 
+		    	}else{
+		    		//if file, then delete it
+		    		file.delete();
+		    		AppLogger.logger("File is deleted : " + file.getAbsolutePath());
+		    	}
+		    }
+
 		
 }

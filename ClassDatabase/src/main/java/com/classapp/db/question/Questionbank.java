@@ -2,6 +2,8 @@ package com.classapp.db.question;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.HashMap;
+import java.util.List;
 
 public class Questionbank implements Serializable {
 
@@ -31,6 +33,27 @@ public class Questionbank implements Serializable {
 	String opt_9;
 	String opt_10;
 	String que_type;
+	
+	/*
+	 * Primary image are images of question in subjective question objective question or paragraph image
+	 * Secondary image are images of options in objective and question in paragraph image  
+	 */
+	List<String> primaryImage;
+HashMap<Integer, List<String>>secondaryImage;
+	
+	
+	public List<String> getPrimaryImage() {
+		return primaryImage;
+	}
+	public void setPrimaryImage(List<String> primaryImage) {
+		this.primaryImage = primaryImage;
+	}
+	public HashMap<Integer, List<String>> getSecondaryImage() {
+		return secondaryImage;
+	}
+	public void setSecondaryImage(HashMap<Integer, List<String>> secondaryImage) {
+		this.secondaryImage = secondaryImage;
+	}
 	public int getInst_id() {
 		return inst_id;
 	}
