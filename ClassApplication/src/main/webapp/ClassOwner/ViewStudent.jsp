@@ -201,8 +201,8 @@ var globalDivisionID = "";
 	
 	function generateRoll(){
 		var handler = {};
-		handler.success = function(e){console.log(e)};
-		handler.error = function(e){console.log(e)};
+		handler.success = function(e){$.notify({message: "Roll number generated"},{type: 'success'});};
+		handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.post(generateRollNoUrl+$("#division").val()+"/"+$("#batch").val(),handler);
 	}
 	function onBatchChange(){
@@ -505,7 +505,7 @@ var globalDivisionID = "";
 				return batchDataArray;
 			};   
 			handlers.error=function(){
-				//$.notify({message: "Student successfuly deleted"},{type: 'success'});
+				$.notify({message: "Error"},{type: 'danger'});
 			};   
 			if(divisionId != "-1"){
 			rest.get("rest/classownerservice/getBatches/"+divisionId,handlers);
@@ -625,7 +625,7 @@ var globalDivisionID = "";
 			return classDataArray;
 		};   
 		handlers.error=function(){
-			//$.notify({message: "Student successfuly deleted"},{type: 'success'});
+			$.notify({message: "Error"},{type: 'danger'});
 		};   
 		
 		rest.get("rest/classownerservice/getAllClasses",handlers);

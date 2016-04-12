@@ -14,7 +14,7 @@
 	var getQuestionUrl = "/rest/classownerservice/examservice/paraquestion/"+queId+"/"+subId+"/"+divId;
 	var handler = {};
 	handler.success = loadSubjectiveQuestion;
-	handler.error = function(e){};
+	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 	rest.get(getQuestionUrl,handler,true);
 </script>
 </head>

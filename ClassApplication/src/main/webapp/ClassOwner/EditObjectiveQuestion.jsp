@@ -21,7 +21,7 @@
 	var getQuestionUrl = "/rest/classownerservice/examservice/paraquestion/"+queId+"/"+subId+"/"+divId;
 	var handler = {};
 	handler.success = loadObjectiveQuestion;
-	handler.error = function(e){};
+	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 	rest.get(getQuestionUrl,handler,true);
 </script>
 

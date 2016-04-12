@@ -21,7 +21,7 @@ $(document).ready(function(){
 			createStudentExamSubjectMarksTable(e);
 		}
 		}
-		handlers.error = function(e){console.log("Error",e)};
+		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		if($("#viewType").val() == "1"){
 		rest.get("rest/studentmarks/getStudentExamMarks/"+division+"/"+batch+"/"+exam,handlers);
 		}else if($("#viewType").val() == "2"){
@@ -45,7 +45,7 @@ $(document).ready(function(){
 			$("#subjects").hide();
 			$("#exam").show();
 			};
-			handlers.error = function(e){console.log("Error",e)};
+			handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 			rest.post("rest/classownerservice/getExamList/"+division+"/"+batch,handlers);
 		}else{
 		$.ajax({
@@ -130,7 +130,7 @@ $(document).ready(function(){
 		$("#subjectTableDiv").hide();
 		$("#studentTableDiv").show();
 		}
-		handlers.error = function(e){console.log("Error",e)};
+		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		
 		rest.post("rest/classownerservice/getStudentForMarksFill/"+division+"/"+batch+"/"+exam,handlers);
 	});
@@ -151,11 +151,11 @@ $(document).ready(function(){
 		console.log(data);
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
-		 modal.launchAlert("Success","Marks Added");
+		$.notify({message: "Marks updated"},{type: 'success'});
 		 $("#subjectTableDiv").show();
 			$("#studentTableDiv").hide();
 		}
-		handlers.error = function(e){console.log("Error",e)};
+		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.post("rest/classownerservice/saveStudentMarks/",handlers,JSON.stringify(dataArray));
 	});
 	

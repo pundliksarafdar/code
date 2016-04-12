@@ -68,14 +68,18 @@ $(document).ready(function(){
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
 		createExamListTable(e);};
-		handlers.error = function(e){console.log("Error",e)};
+		handlers.error = function(e){
+			$.notify({message: "Error while fetching exam list"},{type: 'danger'});
+		};
 		rest.post("rest/classownerservice/getExamList/"+division+"/"+batch,handlers);
 		var handler = {};
 		handler.success = function(e){console.log("Success",e);
 		queationPaperList = e;
 		createQuestionPaperListTable(e);
 		}
-		handler.error = function(e){console.log("Error",e)}
+		handler.error = function(e){
+			$.notify({message: "Error"},{type: 'danger'});
+		}
 		rest.get("rest/classownerservice/getQuestionPaperList/"+division,handler);
 	$.ajax({
 		   url: "classOwnerServlet",
@@ -120,7 +124,7 @@ $(document).ready(function(){
 		$(".editExamName").html($(this).closest("tr").find(".defaultExamName").html());
 		editExamID = $(this).prop("id");
 		var handlers = {};
-		handlers.success = function(e){console.log("Success",e);
+		handlers.success = function(e){
 		for(i=0;i<$(".examSubjectPapers").length;i++){
 			for(j=0;j<e.length;j++){
 				$('#headerDesc').val(e[j].header_id);
@@ -139,7 +143,7 @@ $(document).ready(function(){
 				} 
 			}
 			}}
-		handlers.error = function(e){console.log("Error",e)};
+		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.post("rest/classownerservice/getExam/"+division+"/"+$(this).prop("id")+"/"+batch,handlers);
 	});
 	
@@ -183,9 +187,10 @@ $(document).ready(function(){
 		}
 		console.log(exam_paperList);
 		var handlers = {};
-		handlers.success = function(e){console.log("Success",e);
+		handlers.success = function(e){
+			$.notify({message: "Exam updated successfuly"},{type: 'success'});
 		}
-		handlers.error = function(e){console.log("Error",e)}
+		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});}
 		exam_paperList = JSON.stringify(exam_paperList);
 		rest.post("rest/classownerservice/updateExamPaper/"+editExamID+"/"+division+"/"+batch,handlers,exam_paperList);
 		});

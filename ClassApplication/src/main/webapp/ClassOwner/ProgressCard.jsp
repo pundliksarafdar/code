@@ -48,7 +48,7 @@ $(document).ready(function(){
 			rest.get("rest/classownerservice/getStudentForProgressCard/"+divisionID+"/"+batchID,handlers);
 			
 			var handler = {};
-			handler.success = function(e){console.log("Success",e);
+			handler.success = function(e){
 			$("#examDiv").empty();
 			for(i=0;i<e.length;i++){
 				$("#examDiv").append("<div class='col-md-3'><div class='input-group'>"+
@@ -59,7 +59,7 @@ $(document).ready(function(){
 						"</div></div>");
 			}
 			};
-			handler.error = function(e){console.log("Error",e)};
+			handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 			rest.post("rest/classownerservice/getExamList/"+divisionID+"/"+batchID,handler);
 		}
 		});
@@ -120,7 +120,7 @@ $(document).ready(function(){
 		handler.success = function(e){console.log("Success",e)
 		createProgressCard(e);
 		};
-		handler.error = function(e){console.log("Error",e)};
+		handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		that = $(this);
 		if(examIDs.length>0){
 		rest.get("rest/studentmarks/getStudentProgressCard/"+divisionID+"/"+batchID+"/"+examID+"/"+studentID,handler);
@@ -152,7 +152,7 @@ $(document).ready(function(){
 		$.notify({message: "Progress card Sent Successfully"},{type: 'success'});
 		};
 		handler.error = function(e){
-			console.log("Error",e);
+			$.notify({message: "Error"},{type: 'danger'});
 		};
 		that = $(this);
 		if(examIDs.length>0){

@@ -134,7 +134,7 @@ $(document).ready(function(){
 			subjectArray.push(e[i].subject);
 		} 
 		}
-		handlers.error = function(e){console.log("Error",e)};
+		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		division = $("#division").val();
 		rest.post("rest/classownerservice/getSubjectsAndTopics/"+division,handlers);
 	});
@@ -158,7 +158,7 @@ $(document).ready(function(){
 			$("#patternListTable").find("tbody").append("<tr><td colspan='5' align='center'>Paterns not available for selected criteria</td></tr>");
 		} */	
 		};
-		handlers.error = function(e){console.log("Error",e)};
+		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.post("rest/classownerservice/searchQuestionPaperPattern/"+division+"/"+patternType,handlers,obj,false);
 	});
 	
@@ -178,7 +178,7 @@ $(document).ready(function(){
 		recursiveView(e.questionPaperStructure,0,e.questionPaperStructure);
 		};
 		handlers.error = function(e){
-		console.log("Error",e)}
+			$.notify({message: "Error"},{type: 'danger'});}
 		editString = "";
 		rest.post("rest/classownerservice/getQuestionPaperPattern/"+division+"/"+patternid,handlers);
 	});
@@ -282,10 +282,10 @@ $(document).ready(function(){
 			$("#patternListTable").find("tbody").empty();
 			createPatternTable(e);
 			};
-			handlers.error = function(e){console.log("Error",e)};
+			handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 			rest.post("rest/classownerservice/searchQuestionPaperPattern/"+division+"/"+patternType,handlers,obj,false);
 		};
-		handlers.error = function(){console.log("Error",e)};
+		handlers.error = function(){$.notify({message: "Error"},{type: 'danger'});};
 		rest.post("rest/classownerservice/deleteQuestionPaperPattern/"+division+"/"+patternid,handlers);
 	});
 	

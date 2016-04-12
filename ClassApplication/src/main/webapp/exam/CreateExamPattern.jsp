@@ -355,11 +355,11 @@ var generatePattern = function(){
 	});
 	var handlers = {};
 	handlers.success = function(e){if(e==false){
-		$("#examPatternNameError").html("Pattern with same name already available");
+		$.notify({message: "Pattern with same name already available"},{type: 'danger'});
 	}else {
 		$("#patternSavedNotification").modal("toggle");}
 	}
-	handlers.error = function(e){console.log("Error",e)}
+	handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});}
 	var QuestionPaperPattern = {};
 	QuestionPaperPattern.pattern_name = $("#examPatternName").val();
 	QuestionPaperPattern.class_id = $("#division").val();

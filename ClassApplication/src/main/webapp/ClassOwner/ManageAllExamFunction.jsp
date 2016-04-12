@@ -101,8 +101,8 @@ $(document).ready(function(){
 		if(headerName.trim().length != 0){
 			var handlers = {};
 			var uri = "rest/classownerservice/saveHeader/"+headerName;
-			handlers.success = function(e){console.log(e);}
-			handlers.error = function(e){console.log("Error",e);}
+			handlers.success = function(e){$.notify({message: "Header saved"},{type: 'success'});}
+			handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});}
 			rest.postString(uri,handlers,data);		
 		}
 	});
@@ -129,15 +129,15 @@ function ManageImage(){
 var successImageUpload = function(e){
 	var uri = "rest/classownerservice/addLogoImages/"+e.fileid+"/image";
 	var handlers = {};
-	handlers.success = function(e){console.log("Success",e)}
-	handlers.error = function(e){console.log("Error",e)}
+	handlers.success = function(e){$.notify({message: "Logo image saved"},{type: 'success'});}
+	handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});}
 	rest.post(uri,handlers);
 }
 
 this.uploadFile = function(){
 	var handler = {}
 	handler.success = successImageUpload;
-	handler.error = function(){};
+	handler.error = function(){$.notify({message: "Error"},{type: 'danger'});};
 	
 	var submitDataFile = $("#imageUpload")[0]
 	rest.uploadImageFile(submitDataFile ,handler,false);
@@ -165,7 +165,7 @@ var loadImageSuccess = function(images){
 }
 
 var loadImageError = function(){
-	
+	$.notify({message: "Error"},{type: 'danger'});
 }
 }
 
@@ -192,7 +192,7 @@ loadImageSuccess = function(images){
 }
 
 loadImageError = function(){
-	
+	$.notify({message: "Error"},{type: 'danger'});
 }	
 }
 
