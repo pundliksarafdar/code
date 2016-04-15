@@ -6,429 +6,295 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+<link href="css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<script src="js/jquery.dataTables.js"></script>
+<script src="js/REST.js"></script>
+<style type="text/css">
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+border-top : 0px solid #ddd
+}
+</style>
 <script>
-
- window.onbeforeunload = confirmExit;
-function confirmExit() {
-	if(showPageCloseWarning)
-		return "You have attempted to leave this page. Are you sure?";
-	else
-		return null;
-} 
-/*
-function showTimeLeft(timeLeft){
-	var hoursLeft = timeLeft/3600;
-	var minLeft = timeLeft/60;
-	var secondsLeft = timeLeft%3600;
-	$("#timeLeft").text(hoursLeft+":"+minLeft+":"+secondsLeft);
-}
-*/
-function showTimeLeft(sec){
-	sec = sec*-1;
-	console.log(sec);
-    
-	var minits = Math.floor(sec/60);
-	var seconds = Math.floor(sec%60);
-	var hours = Math.floor(minits/60);
-	var minits = Math.floor(minits%60);
-	
-	seconds = seconds.toString().length>1?seconds:"0"+seconds;
-	hours = hours.toString().length>1?hours:"0"+hours;
-	minits = minits.toString().length>1?minits:"0"+minits;
-	
-        $('#timeLeft').html(hours+':'+minits+':'+seconds);  
-}
-
 $(document).ready(function(){
-	var examID;
-	var subject;
-	var division;
-	var that;
-	var startTime = <c:out value="${sessionScope.starttime }"></c:out>; 
-	var endTime = <c:out value="${sessionScope.endtime }"></c:out>;
-	showPageCloseWarning = true;
+	/* $('#questionTable').DataTable(); */
 	
-	setInterval(function(){
-		var timeLeft = (new Date().getTime()-new Date(endTime).getTime())/(1000);
-		showTimeLeft(timeLeft);
-		endTime = endTime-1;
-		if(timeLeft > 0){
-			$(".examSubmit").trigger('click');	
-		}
-	},1000);
-	
-	
-	$('.hasDatepicker').datetimepicker({
-		inline: true,
-        sideBySide: true
-	});
-	
-	$('.hasTimepicker').datetimepicker({
-		pickDate:false
-	});
-	
-	$(".disableExam").on("click",function(){
-		examID=$(this).prop("id");
-		subject=$("#subject").val();
-		division=$("#division").val();
-		that=$(this);	
-		$.ajax({
-			 
-			   url: "classOwnerServlet",
-			   data: {
-			    	 methodToCall: "disableExam",
-			    	 examID:examID,
-			    	 subject:subject,
-			    	 division:division
-			   		},
-			   		success:function(data){
-			   			 $(that).find("button").text("Enable");
-			   			$(that).find("button").prop("class","btn btn-success");
-			   			 $(that).prop("class","enableExam"); 
-			   		},
-			   		error:function(error){
-			   		
-			   		}
-		});
+	$("#examSubmit").click(function(){
+		modal.modalConfirm("Submit","Do you want to Submit?","Cancel","Submit",SubmitExam,[]);
 		
 	});
-	
-	$("#enableOK").on("click",function(){
-		$(that).find("button").text("Enabling...");
-		var starttime=$("#starttime").val();
-		var endtime=$("#endtime").val();
-		$.ajax({
-			 
-			   url: "classOwnerServlet",
-			   data: {
-			    	 methodToCall: "publishExam",
-			    	 examID:examID,
-			    	 subject:subject,
-			    	 division:division,
-			    	 starttime:starttime,
-			    	 endtime:endtime
-			   		},
-			   		success:function(data){
-			   			$(that).find("button").text("Disable");
-			   			$(that).find("button").prop("class","btn btn-warning");
-			   			$(that).prop("class","disableExam");
-			   		},
-			   		error:function(error){
-			   		
-			   		}
-		});
-	});
-	
-$(".enableExam").on("click",function(){
-	$("#enableexammodal").modal({
-	    backdrop: 'static',
-	    keyboard: false
-	});
-	//$("#enableexammodal").modal('toggle');
-	examID=$(this).prop("id");
-	subject=$("#subject").val();
-	division=$("#division").val();
-	that=$(this);
-	//$(this).find("button").text("Enabling...");
 });
-
-$(".attemptExam").on("click",function(){
-	$("#examID").val($(this).prop("id"));
-	$("#actionform").submit();/* var formData = $("#actionform").serialize();
-	console.log(formData);
-	window.open("attemptExam?"+formData,"","width=500, height=500"); */
-});
-
-$(".page").on("click",function(){
-	$("form#paginateform #currentPage").val($(this).text());
+function SubmitExam(){
 	var answers="";
-	var count=1;
-	while(count<11){
+	var count=0;
+	while(count<$("#questionPaperSize").val()){
+		if($("input[name='"+count+"']").val() != undefined){
 		var checkedanswers = [];
-		var name="answers"+count;
-			$.each($("input[name='"+name+"']:checked"), function(){            
+		//var name="answers"+count;
+			$.each($("input[name='"+count+"']:checked"), function(){            
 				checkedanswers.push($(this).val());
     });
 		if(count==1){
 			
 			answers=checkedanswers;
 		}else{
-			answers=answers+" /"+checkedanswers;
+			answers=answers+" / "+checkedanswers;
+		}
 		}
 		count++;
 	}
-	$("#answers").val(answers);
-	$("#paginateform").submit();
-});
-
-$(".start").on("click",function(){
-	$("form#paginateform #currentPage").val("1");
-	var answers="";
-	var count=1;
-	while(count<11){
-		var checkedanswers = [];
-		var name="answers"+count;
-			$.each($("input[name='"+name+"']:checked"), function(){            
-				checkedanswers.push($(this).val());
-    });
-		if(count==1){
-			
-			answers=checkedanswers;
-		}else{
-			answers=answers+" /"+checkedanswers;
-		}
-		count++;
+	console.log(answers);
+	var handlers = {};
+	handlers.success = function(e){console.log("Success",e);
+	$("#examDiv").empty();
+	$("#examMarksDiv").append("Marks	:	"+e.marks);
 	}
-	showPageCloseWarning = false;
-	$("#answers").val(answers);
-	$("#paginateform").submit();
-});
-
-$(".end").on("click",function(){
-	$("form#paginateform #currentPage").val($("#totalPages").val());
-	var answers="";
-	var count=1;
-	while(count<11){
-		var checkedanswers = [];
-		var name="answers"+count;
-			$.each($("input[name='"+name+"']:checked"), function(){            
-				checkedanswers.push($(this).val());
-    });
-		if(count==1){
-			
-			answers=checkedanswers;
-		}else{
-			answers=answers+" /"+checkedanswers;
-		}
-		count++;
-	}
-	showPageCloseWarning = false;
-	$("#answers").val(answers);
-	$("#paginateform").submit();
-});
-
-$(".examSubmit").on("click",function(){
-	$("form#paginateform #currentPage").val($("#totalPages").val());
-	var answers="";
-	var count=1;
-	while(count<11){
-		var checkedanswers = [];
-		var name="answers"+count;
-			$.each($("input[name='"+name+"']:checked"), function(){            
-				checkedanswers.push($(this).val());
-    });
-		if(count==1){
-			
-			answers=checkedanswers;
-		}else{
-			answers=answers+" /"+checkedanswers;
-		}
-		count++;
-	}
-	$("#answers").val(answers);
-	$("form#paginateform #actionname").val("examSubmit");
-	showPageCloseWarning = false;
-	$("#paginateform").submit();
-});
-
-});
+	handlers.error = function(e){console.log("Error",e)}
+	var onlineexam = {};
+	onlineexam.div_id = $("#division").val();
+	onlineexam.batch_id = $("#batch").val()
+	onlineexam.sub_id = $("#subject").val()
+	onlineexam.exam_id = $("#exam").val()
+	onlineexam.inst_id = $("#inst_id").val()
+	onlineexam.answers = answers ; 
+	onlineexam.paper_id = $("#question_paper_id").val()
+	console.log(onlineexam);
+	onlineexam = JSON.stringify(onlineexam);
+	rest.post("rest/classownerservice/getOnlineExamPaperMarks",handlers,onlineexam);
+}
 </script>
 </head>
 <body>
-<c:if test="${actionname eq 'initiateexam' }">
-<div class="container">
-<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
-	<div class="row">
-		<div class="alert alert-danger" style="padding-bottom: 10px;display:none">
-			 
-		</div>
-	</div>
-<h3><font face="cursive">Welcome To Exam Corner </font></h3>
-<div class="row">
-<div class="col-md-12" align="center">Exam Details</div>
-</div>
-<div class="row">
-		<div class="col-md-6">Exam Name </div> 
-		<div class="col-md-3"><c:out value="${initiateExam.exam_name }"></c:out></div>
-</div>
-<div class="row">
-		<div class="col-md-6">Total Marks</div> <div class="col-md-3"><c:out value="${initiateExam.total_marks }"></c:out></div>
-</div>
-<div class="row">
-		<div class="col-md-6">Time</div> <div class="col-md-3"><c:out value="${initiateExam.exam_time }"></c:out> Hr</div>
-</div>
-<div class="row">
-		<div class="col-md-12" align="center">
-  <form action="attemptExam" id="paginateform">
-  <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
-  <input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
-  <input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
-  <input type="hidden" name="examID" id="examID" value='<c:out value="${examID}"></c:out>'>
-  <input type="hidden" name="institute" id="institute" value='<c:out value="${institute}"></c:out>'>
-  <input type="hidden" name="actionname" value="examattempted">
-  <input type="submit" value="Attempt Exam">
-  </form>
-  </div>
-  </div>
-  </div>
-  
-</div>
-</c:if>
- <c:if test="${(questionDataList != null)}">
-	<div class="container">
-	
-  <h2><font face="cursive">Exam</font> </h2>            
-  <div class="pull-right"><strong id="timeLeft"></strong></div>
-  <table class="table table-striped">
-    <thead>
-    
-      <tr>
-        <th>Sr No.</th>
-        <th>Question</th>
-      </tr>
-    </thead>
-    <tbody>
-    <c:forEach items="${questionDataList}" var="item" varStatus="counter">
-    <tr>
-    	<c:if test="${currentPage eq 1}">
-        <td class="col-md-1"><c:out value="${counter.count}"></c:out></td>
-        </c:if>
-        <c:if test="${currentPage gt 1 }">
-        <td class="col-md-1"><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
-        </c:if>
-        <td class="col-md-10">
-			<c:out value="${item.question}"></c:out>
-			<br/>
-			<c:forEach items="${item.questionImage}" var="image">
-				<img src='<c:out value="${image }"></c:out>' width="200px" height="200px" tyle="padding:5px;"/>
+<div id="examBodyDiv">
+	<c:if test="${onlineExamPaper ne null }">
+	<input type="hidden" id="questionPaperSize" value="<c:out value="${questionPaperSize}"></c:out>">
+	<input type="hidden" id="division" value="<c:out value="${division}"></c:out>">
+	<input type="hidden" id="question_paper_id" value="<c:out value="${question_paper_id}"></c:out>">
+	<input type="hidden" id="subject" value="<c:out value="${subject}"></c:out>">
+	<input type="hidden" id="exam" value="<c:out value="${exam}"></c:out>">
+	<input type="hidden" id="batch" value="<c:out value="${batch}"></c:out>">
+	<input type="hidden" id="inst_id" value="<c:out value="${inst_id}"></c:out>">
+		<div class="container" id="examDiv">
+			<div class="row">
+				<div class="col-md-offset-4 col-md-3">
+					<c:out value="${onlineExamPaper.paper_description }"></c:out>
+				</div>
+			</div>
+			<table id="questionTable" width="100%" class="table">
+			<!-- <thead>
+				<tr>
+					<th>Q No</th>
+					<th>Question</th>
+				</tr>
+			</thead> -->
+			<tbody>
+			<c:forEach items="${onlineExamPaper.onlineExamPaperElementList }"
+				var="element" varStatus="varStat">
+				<tr style="background: #eee;padding-top: 1%">
+					<c:if test="${element.item_type eq 'Section' }">
+						<td colspan="3" align="center">
+							<c:out value="${element.item_description }"></c:out>
+						</td>
+					</c:if>
+					<c:if test="${element.item_type eq 'Question' }">
+						<td>
+							<c:out value="${element.item_no}"></c:out>
+						</td>
+						<td>
+							<c:out value="${element.questionbank.que_text }"></c:out>
+						</td>
+					</c:if>
+				</tr>
+				<c:if test="${element.questionbank.opt_1 ne null }">
+					<tr>
+						<c:if test="${element.ans_type eq 'multiple' }">
+							<td>
+								<input type="checkbox"
+									name='<c:out value="${varStat.index }"></c:out>' value="0">
+							</td>
+						</c:if>
+						<c:if test="${element.ans_type eq 'single' }">
+							<td>
+								<input type="radio"
+									name='<c:out value="${varStat.index }"></c:out>' value ="0">
+							</td>
+						</c:if>
+						<td>
+							<c:out value="${element.questionbank.opt_1 }"></c:out>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${element.questionbank.opt_2 ne null }">
+					<tr>
+						<c:if test="${element.ans_type eq 'multiple' }">
+							<td>
+								<input type="checkbox"  name='<c:out value="${varStat.index }"></c:out>' value="1">
+							</td>
+						</c:if>
+						<c:if test="${element.ans_type eq 'single' }">
+							<td>
+								<input type="radio"
+									name='<c:out value="${varStat.index }"></c:out>' value="1">
+							</td>
+						</c:if>
+						<td>
+							<c:out value="${element.questionbank.opt_2 }"></c:out>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${element.questionbank.opt_3 ne null }">
+					<tr>
+						<c:if test="${element.ans_type eq 'multiple' }">
+							<td>
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="2">
+							</td>
+						</c:if>
+						<c:if test="${element.ans_type eq 'single' }">
+							<td>
+								<input type="radio"
+									name='<c:out value="${varStat.index }"></c:out>' value="2">
+							</td>
+						</c:if>
+						<td>
+							<c:out value="${element.questionbank.opt_3 }"></c:out>
+						</td>
+						</tr>
+				</c:if>
+				<c:if test="${element.questionbank.opt_4 ne null }">
+					<tr>
+						<c:if test="${element.ans_type eq 'multiple' }">
+							<td>							
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="3">
+							</td>
+						</c:if>
+						<c:if test="${element.ans_type eq 'single' }">
+							<td>
+								<input type="radio"
+									name='<c:out value="${varStat.index }"></c:out>' value="3">
+							</td>
+						</c:if>
+						<td>
+							<c:out value="${element.questionbank.opt_4 }"></c:out>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${element.questionbank.opt_5 ne null }">
+					<tr>
+						<c:if test="${element.ans_type eq 'multiple' }">
+							<td>
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="4">
+							</td>
+						</c:if>
+						<c:if test="${element.ans_type eq 'single' }">
+							<td>
+								<input type="radio"
+									name='<c:out value="${varStat.index }"></c:out>' value="4">
+							</td>
+						</c:if>
+						<td>
+							<c:out value="${element.questionbank.opt_5 }"></c:out>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${element.questionbank.opt_6 ne null }">
+					<tr>
+						<c:if test="${element.ans_type eq 'multiple' }">
+							<td>
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="5">
+							</td>
+						</c:if>
+						<c:if test="${element.ans_type eq 'single' }">
+							<td>
+								<input type="radio"
+									name='<c:out value="${varStat.index }"></c:out>' value="5">
+							</td>
+						</c:if>
+						<td>
+							<c:out value="${element.questionbank.opt_6 }"></c:out>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${element.questionbank.opt_7 ne null }">
+					<tr>
+						<c:if test="${element.ans_type eq 'multiple' }">
+							<td>
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="6">
+							</td>
+						</c:if>
+						<c:if test="${element.ans_type eq 'single' }">
+							<td>
+								<input type="radio"
+									name='<c:out value="${varStat.index }"></c:out>' value="6">
+							</td>
+						</c:if>
+						<td>						
+							<c:out value="${element.questionbank.opt_7 }"></c:out>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${element.questionbank.opt_8 ne null }">
+					<tr>
+						<c:if test="${element.ans_type eq 'multiple' }">
+							<td>
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="7">
+							</td>
+						</c:if>
+						<c:if test="${element.ans_type eq 'single' }">
+							<td>
+								<input type="radio"
+									name='<c:out value="${varStat.index }"></c:out>' value="7">
+							</td>
+						</c:if>
+						<td>
+							<c:out value="${element.questionbank.opt_8 }"></c:out>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${element.questionbank.opt_9 ne null }">
+					<tr>
+						<c:if test="${element.ans_type eq 'multiple' }">
+							<td>
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="8">
+							</td>
+						</c:if>
+						<c:if test="${element.ans_type eq 'single' }">
+							<td>
+								<input type="radio"
+									name='<c:out value="${varStat.index }"></c:out>' value="8">
+							</td>
+						</c:if>
+						<td>
+							<c:out value="${element.questionbank.opt_9 }"></c:out>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${element.questionbank.opt_10 ne null }">
+					<tr>
+						<c:if test="${element.ans_type eq 'multiple' }">
+							<td>
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="9">
+							</td>
+						</c:if>
+						<c:if test="${element.ans_type eq 'single' }">
+							<td>
+								<input type="radio"
+									name='<c:out value="${varStat.index }"></c:out>' value="9">
+							</td>
+						</c:if>
+						<td>
+							<c:out value="${element.questionbank.opt_10 }"></c:out>
+						</td>
+					</tr>
+				</c:if>
 			</c:forEach>
-		</td>
-      </tr>
-      <tr>
-      <td class="col-md-1"></td>
-      <td class="col-md-10">
-     <c:if test="${item.options != null}"> 
-    	<table>
-    	<c:forEach items="${item.answers}" var="ans" varStatus="anscounter">
-    	<c:set var="optionlistsize" value='${anscounter.count}' scope="page"></c:set>
-		</c:forEach>
-    		<c:forEach items="${item.options}" var="option" varStatus="innercounter">
-    		<tr>
-    		<c:set var="optionstatus" value="N" scope="page"></c:set>
-    		<c:if test="${currentpageanswers !=null }">
-    			<c:forEach items="${currentpageanswers[(counter.count-1)]}" var="anslist">
-    				<c:if test="${anslist eq (innercounter.count-1)}">
-    				<c:set var="optionstatus" value="Y" scope="page"></c:set>
-    				</c:if>
-    			</c:forEach>
-    		</c:if>
-    		<c:choose>
-    		<c:when test="${optionlistsize eq '1' }">
-    		
-    		<c:choose>
-    		<c:when test="${optionstatus eq 'Y' }">
-    		<td>
-    			<input type="radio" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>'' checked="checked"><c:out value="${option}"></c:out>
-    			<br/>
-						<c:choose>
-							<c:when test="${innercounter.index eq 0}">
-								<c:set var="startCountIndex" value="0"></c:set>
-							</c:when>
-							<c:otherwise>
-								<c:set var="startCountIndex" value="${requestScope.optionImageEndCount[innercounter.index-1]}"></c:set>
-							</c:otherwise>
-						</c:choose>	
-								<c:set var="endCountIndex" value="${requestScope.optionImageEndCount[innercounter.index-1]}"></c:set>
-						
-						<c:forEach items="${item.answerImage}" var="optionImage" begin="${startCountIndex}" end="${endCountIndex}">
-							<img src='<c:out value="${optionImage}"></c:out>' width="200px" height="200px" tyle="padding:5px;"/>
-						</c:forEach>			
-    		</td>
-    		</c:when>
-    			<c:otherwise>
-    			<td>
-    				<input type="radio" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>''><c:out value="${option}"></c:out>
-						<br/>
-						<c:choose>
-							<c:when test="${innercounter.index eq 0}">
-								<c:set var="startCountIndex" value="0"></c:set>
-							</c:when>
-							<c:otherwise>
-								<c:set var="startCountIndex" value="${requestScope.optionImageEndCount[innercounter.index-1]}"></c:set>
-							</c:otherwise>
-						</c:choose>	
-								<c:set var="endCountIndex" value="${requestScope.optionImageEndCount[innercounter.index-1]}"></c:set>
-						
-						<c:forEach items="${item.answerImage}" var="optionImage" begin="${startCountIndex}" end="${endCountIndex}">
-							<img src='<c:out value="${optionImage}"></c:out>' width="200px" height="200px" tyle="padding:5px;"/>
-						</c:forEach>	
-						
-    			</td>
-    			</c:otherwise>
-    		</c:choose>
-    		</c:when>
-    		<c:otherwise>
-    		<c:choose>
-    		<c:when test="${optionstatus eq 'Y' }">
-    		<td><input type="checkbox" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>'' checked="checked"><c:out value="${option}"></c:out></td>
-    		</c:when>
-    			<c:otherwise>
-    			<td><input type="checkbox" value='<c:out value="${innercounter.count-1}"></c:out>' id='answers<c:out value="${counter.count}"></c:out>' name='answers<c:out value="${counter.count}"></c:out>''><c:out value="${option}"></c:out></td>
-    			</c:otherwise>
-    		</c:choose>
-    		</c:otherwise>
-    		</c:choose>
-    		</tr>
-    	</c:forEach>
-    	</table>
-      </c:if>
-      </td>
-      </tr>
-      </c:forEach>
-      <tr>
-      <td><button class="examSubmit" value="Exam Submit">Exam Submit</button></td> 
-      </tr>
-    </tbody>
-  </table>
-  
-  <form action="" id="actionform" method="post" target="blank">
-  <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
-  <input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
-  <input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
-  <input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
-  <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
-  <input type="hidden" name="examID" id="examID" value='<c:out value="${examID}"></c:out>'>
-  <input type="hidden" name="actionname" id="actionname">
-  <input type="hidden" name="institute" id="institute" value='<c:out value="${institute}"></c:out>'>
-  </form>
-  <form action="attemptExam" id="paginateform">
-  <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
-  <input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
-  <input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
-  <input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
-  <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
-  <input type="hidden" name="searchedMarks" value='<c:out value="${searchedMarks}"></c:out>'>
-  <input type="hidden" name="searchedExam" value='<c:out value="${searchedExam}"></c:out>'>
-  <input type="hidden" name="searchedRep" value='<c:out value="${searchedRep}"></c:out>'>
-  <input type="hidden" name="examID" id="examID" value='<c:out value="${examID}"></c:out>'>
-  <input type="hidden" name="answers" id="answers">
-  <input type="hidden" name="lastPage" id="lastPage" value='<c:out value="${currentPage}"></c:out>'>
-  <input type="hidden" name="actionname" id="actionname">
-  <input type="hidden" name="institute" id="institute" value='<c:out value="${institute}"></c:out>'>
-  <ul class="pagination">
-  <li><a class="start" >&laquo;</a></li>
-  <c:forEach var="item" begin="1" end="${totalPages}">
-  <c:if test="${item eq currentPage}">
-  <li class="active"><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
-  </c:if>
-  <c:if test="${item ne currentPage}">
-  <li><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
-  </c:if>
-  </c:forEach>
-  <li><a href="#" class="end">&raquo;</a></li>
-</ul>
-</form>
-</div>
-	</c:if>	
+			</tbody>
+			</table>
+			<div class="row"> <div id="examSubmit""col-md-offset-10 col-md-2"><button class="btn btn-primary btn-sm" id="examSubmit">Submit</button></div>
+			</div>
+		</div>
+	</c:if>
+	<div class="container" align="center" id="examMarksDiv">
+	
+	</div>
+	</div>
 </body>
 </html>

@@ -2,6 +2,7 @@
 package com.service;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,12 +24,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
 
+import org.apache.commons.beanutils.BeanUtils;
+
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.exam.Exam;
 import com.classapp.db.exam.Exam_Paper;
+import com.classapp.db.question.Questionbank;
 import com.classapp.db.questionPaper.QuestionPaper;
 import com.classapp.db.student.StudentDetails;
+import com.classapp.db.student.StudentMarks;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Topics;
 import com.config.Constants;
@@ -37,9 +42,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.service.beans.AddBatchBean;
 import com.service.beans.ExamSubject;
+import com.service.beans.ExamWiseStudentDetails;
 import com.service.beans.GenerateQuestionPaperResponse;
 import com.service.beans.ImageListBean;
 import com.service.beans.NewQuestionRequest;
+import com.service.beans.OnlineExam;
+import com.service.beans.OnlineExamPaper;
+import com.service.beans.OnlineExamPaperSubjects;
+import com.service.beans.ProgressCardServiceBean;
 import com.service.beans.QuestionPaperData;
 import com.service.beans.QuestionPaperEditFileObject;
 import com.service.beans.QuestionPaperFileElement;
@@ -49,12 +59,15 @@ import com.service.beans.QuestionPaperStructure;
 import com.service.beans.RegisterBean;
 import com.service.beans.Student;
 import com.service.beans.StudentData;
+import com.service.beans.StudentDetailAttendanceData;
+import com.service.beans.StudentFeesServiceBean;
 import com.service.beans.StudentRegisterServiceBean;
 import com.service.beans.Student_Fees;
 import com.service.beans.SubjectsWithTopics;
 import com.serviceinterface.ClassownerServiceApi;
 import com.tranaction.header.HeaderTransaction;
 import com.tranaction.subject.SubjectTransaction;
+import com.transaction.attendance.AttendanceTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.exams.ExamTransaction;
@@ -63,6 +76,7 @@ import com.transaction.image.ImageTransactions;
 import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.student.StudentTransaction;
+import com.transaction.studentmarks.StudentMarksTransaction;
 import com.user.UserBean;
 
 @Path("/classownerservice") 
@@ -308,6 +322,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId());
+		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
 		QuestionPaperPattern questionPaperPattern = patternTransaction.getQuestionPaperPattern(Integer.parseInt(divisionId), Integer.parseInt(patternId));
 		List questionPaperPatternList = questionPaperPattern.getQuestionPaperStructure();
 		
@@ -409,6 +424,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	public Response getQuestionPaper(@PathParam("division") String division,@PathParam("paper_id") String paper_id){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
 		QuestionPaperEditFileObject fileObject = patternTransaction.getQuestionPaper(Integer.parseInt(division), Integer.parseInt(paper_id));
 		return Response.status(Status.OK).entity(fileObject).build();
 	}
@@ -582,5 +598,108 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		StudentTransaction studentTransaction = new StudentTransaction();
 		List<StudentData> studentDatas = studentTransaction.getStudentForProgress(batch_id, getRegId(), div_id);
 		return Response.status(Status.OK).entity(studentDatas).build();
+	}
+	
+	@GET
+	@Path("/getOnlineExamList/{divId}/{batchId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getOnlineExamList(
+			@PathParam("divId")int div_id,@PathParam("batchId")int batch_id){
+		ExamTransaction examTransaction = new ExamTransaction();
+		List<Exam> examsList = examTransaction.getOnlineExamList(getRegId(), div_id, batch_id);
+		return Response.status(Status.OK).entity(examsList).build();
+	}
+	
+	@GET
+	@Path("/getOnlineExamSubjectList/{divId}/{batchId}/{exam}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getOnlineExamSubjectList(
+			@PathParam("divId")int div_id,@PathParam("batchId")int batch_id,@PathParam("exam")int exam_id){
+		ExamTransaction examTransaction = new ExamTransaction();
+		List<OnlineExamPaperSubjects> paperSubjectList = examTransaction.getOnlineExamSubjectList(getRegId(), div_id, batch_id, exam_id);
+		return Response.status(Status.OK).entity(paperSubjectList).build();
+	}
+	
+	@GET
+	@Path("/getOnlineExamPaper/{divId}/{paper}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getOnlineExamPaper(
+			@PathParam("divId")int div_id,@PathParam("paper")int paper_id){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
+		OnlineExamPaper onlineExamPaper = patternTransaction.getOnlineQuestionPaper(div_id,paper_id);
+	/*	for (Questionbank questionbank : fileObject.getQuestionPaperFileElementList()) {
+			
+		}*/
+		return Response.status(Status.OK).entity(onlineExamPaper).build();
+	}
+	
+	@POST
+	@Path("/getOnlineExamPaperMarks")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getOnlineExamPaperMarks(OnlineExam onlineExam){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
+		onlineExam = patternTransaction.getOnlineQuestionPaperMarks(onlineExam.getDiv_id(), onlineExam.getPaper_id(), onlineExam.getAnswers(),onlineExam);
+		if(userBean.getRole() == 3){
+			StudentMarks studentMarks = new StudentMarks();
+			try {
+				BeanUtils.copyProperties(studentMarks, onlineExam);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			StudentMarksTransaction marksTransaction = new StudentMarksTransaction();
+			marksTransaction.saveStudentMarks(studentMarks);
+		}
+		return Response.status(Status.OK).entity(onlineExam).build();
+	}
+	
+	@GET
+	@Path("/getStudentDetails/{student_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentDetails(@PathParam("student_id")int student_id){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		RegisterTransaction registerTransaction=new RegisterTransaction();
+		com.classapp.db.register.RegisterBean studentBean=registerTransaction.getregistereduser(student_id);
+		studentBean.setLoginPass("");
+		StudentTransaction studentTransaction=new StudentTransaction();
+		com.classapp.db.student.Student student = studentTransaction.getStudentByStudentID(student_id, userBean.getRegId());
+		BatchTransactions batchTransactions = new BatchTransactions();
+		List<Batch> batchList = batchTransactions.getBatchRelatedtoDivision(student.getDiv_id());
+		DivisionTransactions divisionTransactions = new DivisionTransactions();
+		Division division=divisionTransactions.getDidvisionByID(student.getDiv_id());
+		String batcharray[] = student.getBatch_id().split(",");
+		List<Batch> studentBatchList = new ArrayList<Batch>();
+			for (int i = 0; i < batcharray.length; i++) {
+			for (int j = 0; j < batchList.size(); j++) {
+				if(Integer.parseInt(batcharray[i]) == batchList.get(j).getBatch_id()){
+					studentBatchList.add(batchList.get(j));
+					break;
+				}
+			}
+			
+		}
+		StudentDetails studentDetails=new StudentDetails();
+		studentDetails.setStudentUserBean(studentBean);
+		studentDetails.setStudent(student);
+		studentDetails.setBatches(studentBatchList);
+		studentDetails.setDivision(division);
+		StudentMarksTransaction marksTransaction = new  StudentMarksTransaction();
+		ExamWiseStudentDetails examWiseStudentDetails = marksTransaction.getStudentDetailedMarks(getRegId(), student_id);
+		studentDetails.setExamWiseStudentDetails(examWiseStudentDetails);
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		StudentDetailAttendanceData attendanceData  = attendanceTransaction.getStudentYearlyAttendance(getRegId(), student_id);
+		studentDetails.setAttendanceData(attendanceData);
+		FeesTransaction feesTransaction = new FeesTransaction();
+		StudentFeesServiceBean feesServiceBean = feesTransaction.getStudentFees(getRegId(), student_id);
+		studentDetails.setFeesServiceBean(feesServiceBean);
+		return Response.status(Status.OK).entity(studentDetails).build();
 	}
 }

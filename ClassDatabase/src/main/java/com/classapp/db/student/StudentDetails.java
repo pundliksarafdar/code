@@ -7,6 +7,10 @@ import java.util.Map;
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.register.RegisterBean;
+import com.service.beans.ExamWiseStudentDetails;
+import com.service.beans.ProgressCardServiceBean;
+import com.service.beans.StudentDetailAttendanceData;
+import com.service.beans.StudentFeesServiceBean;
 
 public class StudentDetails {
 	private RegisterBean studentUserBean;
@@ -18,6 +22,9 @@ public class StudentDetails {
 	private Student student;
 	private int rollNo;
 	private Map<Integer, Integer>batchIdNRoll;
+	ExamWiseStudentDetails examWiseStudentDetails;
+	StudentFeesServiceBean feesServiceBean;
+	StudentDetailAttendanceData attendanceData;  
 	
 	public int getRollNo() {
 		return rollNo;
@@ -74,6 +81,25 @@ public class StudentDetails {
 	public void setBatchIdNRoll(Map<Integer, Integer> batchIdNRoll) {
 		this.batchIdNRoll = batchIdNRoll;
 	}
+	public ExamWiseStudentDetails getExamWiseStudentDetails() {
+		return examWiseStudentDetails;
+	}
+	public void setExamWiseStudentDetails(ExamWiseStudentDetails examWiseStudentDetails) {
+		this.examWiseStudentDetails = examWiseStudentDetails;
+	}
+	public StudentDetailAttendanceData getAttendanceData() {
+		return attendanceData;
+	}
+	public void setAttendanceData(StudentDetailAttendanceData attendanceData) {
+		this.attendanceData = attendanceData;
+	}
+	public StudentFeesServiceBean getFeesServiceBean() {
+		return feesServiceBean;
+	}
+	public void setFeesServiceBean(StudentFeesServiceBean feesServiceBean) {
+		this.feesServiceBean = feesServiceBean;
+	}
+	
 	
 	
 }

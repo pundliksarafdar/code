@@ -16,6 +16,7 @@ import com.classapp.db.fees.FeesDB;
 import com.classapp.db.fees.FeesStructure;
 import com.classapp.db.fees.Student_Fees;
 import com.classapp.db.fees.Student_Fees_Transaction;
+import com.classapp.db.student.Student;
 import com.classapp.utils.Constants;
 import com.service.beans.BatchFees;
 import com.service.beans.BatchFeesDistributionServiceBean;
@@ -23,6 +24,7 @@ import com.service.beans.BatchServiceBean;
 import com.service.beans.BatchStudentFees;
 import com.service.beans.FeeStructure;
 import com.service.beans.StudentFeesServiceBean;
+import com.transaction.student.StudentTransaction;
 
 public class FeesTransaction {
 	
@@ -376,6 +378,11 @@ public class FeesTransaction {
 	
 	public boolean saveStudentBatchFeesTransaction(int inst_id,com.service.beans.Student_Fees_Transaction serviceFees_Transaction ){
 		FeesDB feesDB = new FeesDB();
+		if(serviceFees_Transaction.getDiv_id() == 0){
+			StudentTransaction studentTransaction = new StudentTransaction();
+			Student student = studentTransaction.getStudentByStudentID(serviceFees_Transaction.getStudent_id(), inst_id);
+			serviceFees_Transaction.setDiv_id(student.getDiv_id());		
+		}
 		serviceFees_Transaction.setAdded_by(inst_id);
 		serviceFees_Transaction.setInst_id(inst_id);
 		serviceFees_Transaction.setTransaction_dt(new Date(new java.util.Date().getTime()));

@@ -17,11 +17,13 @@ import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.exams.MCQData;
 import com.classapp.db.exams.MCQDataDB;
 import com.classapp.db.question.QuestionbankDB;
+import com.classapp.db.subject.StudentMarksDB;
 import com.classapp.db.subject.Subject;
 import com.classapp.logger.AppLogger;
 import com.datalayer.exam.QuestionSearchRequest;
 import com.datalayer.exambean.ExamData;
 import com.service.beans.ExamSubject;
+import com.service.beans.OnlineExamPaperSubjects;
 import com.service.beans.QuestionPaperEditFileElement;
 import com.service.beans.QuestionPaperFileElement;
 import com.transaction.studentmarks.StudentMarksTransaction;
@@ -135,6 +137,8 @@ public class ExamTransaction {
 	
 	public List<ExamSubject> getExamSubjects(int inst_id,int div_id,int batch_id,int exam_id) {
 		ExamPaperDB examPaperDB = new ExamPaperDB();
+		StudentMarksDB marksDB = new StudentMarksDB();
+		List<Integer> marksSubject = marksDB.getDistinctMarksSubject(inst_id, div_id, batch_id, exam_id);
 		List<ExamSubject> subjectlist = new ArrayList<ExamSubject>(); 
 		List list =  examPaperDB.getExamSubjects(inst_id, div_id, batch_id, exam_id);
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
@@ -143,6 +147,13 @@ public class ExamTransaction {
 			subject.setSubjectName((String)object[0]);
 			subject.setSubjectId(((Number)object[1]).intValue());
 			subject.setMarks(((Number)object[2]).intValue());
+			subject.setMarksFlag(false);
+			for (Iterator iterator2 = marksSubject.iterator(); iterator2.hasNext();) {
+				Integer integer = (Integer) iterator2.next();
+				if(integer == ((Number)object[1]).intValue()){
+					subject.setMarksFlag(true);
+				}
+			}
 			subjectlist.add(subject);
 		}
 		return subjectlist;
@@ -155,6 +166,26 @@ public class ExamTransaction {
 		marksTransaction.deleteStudentMarksrelatedtoexam(inst_id, exam_id);
 		ExamDB examDB = new ExamDB();
 		return examDB.deleteExam(inst_id, exam_id);
+	}
+	
+	public List<Exam> getOnlineExamList(int inst_id,int div_id,int batch_id) {
+		ExamPaperDB examPaperDB = new ExamPaperDB();
+		return examPaperDB.getOnlineExamList(inst_id, div_id, batch_id);
+	}
+	
+	public List<OnlineExamPaperSubjects> getOnlineExamSubjectList(int inst_id,int div_id,int batch_id,int exam_id) {
+		ExamPaperDB examPaperDB = new ExamPaperDB();
+		List<OnlineExamPaperSubjects> examPaperSubjectList = new ArrayList<OnlineExamPaperSubjects>();
+		List list =  examPaperDB.getOnlineExamSubjectList(inst_id, div_id, batch_id,exam_id);
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			Object[] object = (Object[]) iterator.next();
+			OnlineExamPaperSubjects paperSubjects = new OnlineExamPaperSubjects();
+			paperSubjects.setQuestion_paper_id(((Number)object[0]).intValue());
+			paperSubjects.setSub_id(((Number)object[1]).intValue());
+			paperSubjects.setSub_name((String) object[2]);
+			examPaperSubjectList.add(paperSubjects);
+		}
+		return examPaperSubjectList;
 	}
 	
 	class ArrayListOverride<E> extends ArrayList<E>{

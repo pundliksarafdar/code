@@ -6,192 +6,220 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
-<script>
+<script type="text/javascript">
+var division = "";
+var batch = "";
+var subject = "";
+var exam = "";
 $(document).ready(function(){
-	var examID;
-	var subject;
-	var division;
-	var that;
-	$('.hasDatepicker').datetimepicker({
-		inline: true,
-        sideBySide: true
+	$("#batches").select2({data:'',placeholder:"type batch name"});
+	$("#division").change(function(){
+		getBatchesOfDivision();
 	});
 	
-	$('.hasTimepicker').datetimepicker({
-		pickDate:false
-	});
-	
-	$(".disableExam").on("click",function(){
-		examID=$(this).prop("id");
-		subject=$("#subject").val();
-		division=$("#division").val();
-		that=$(this);	
-		$.ajax({
-			 
-			   url: "classOwnerServlet",
-			   data: {
-			    	 methodToCall: "disableExam",
-			    	 examID:examID,
-			    	 subject:subject,
-			    	 division:division
-			   		},
-			   		success:function(data){
-			   			 $(that).find("button").text("Enable");
-			   			$(that).find("button").prop("class","btn btn-success");
-			   			 $(that).prop("class","enableExam"); 
-			   		},
-			   		error:function(error){
-			   		
-			   		}
-		});
+	$(".searchExams").click(function(){
+		 division = $('#division').val();
+		 batch =  $("#batches").val();
+		var handlers = {};
+		handlers.success = function(e){console.log("Success",e);
 		
+		createExamTable(e);
+		}
+		handlers.error = function(e){console.log("Error",e)}
+		rest.get("rest/classownerservice/getOnlineExamList/"+division+"/"+batch,handlers);
 	});
 	
-	$("#enableOK").on("click",function(){
-		$(that).find("button").text("Enabling...");
-		var starttime=$("#starttime").val();
-		var endtime=$("#endtime").val();
-		$.ajax({
-			 
-			   url: "classOwnerServlet",
-			   data: {
-			    	 methodToCall: "publishExam",
-			    	 examID:examID,
-			    	 subject:subject,
-			    	 division:division,
-			    	 starttime:starttime,
-			    	 endtime:endtime
-			   		},
-			   		success:function(data){
-			   			$(that).find("button").text("Disable");
-			   			$(that).find("button").prop("class","btn btn-warning");
-			   			$(that).prop("class","disableExam");
-			   		},
-			   		error:function(error){
-			   		
-			   		}
-		});
+	$("#examTable").on("click",".attemptExamList",function(){
+		exam = $(this).prop("id");
+		var handlers = {};
+		handlers.success = function(e){console.log("Success",e);
+		$("#examDiv").hide();
+		$("#examSubjectDiv").show();
+		examSubjectTable(e);
+		}
+		handlers.error = function(e){console.log("Error",e)}
+		rest.get("rest/classownerservice/getOnlineExamSubjectList/"+division+"/"+batch+"/"+$(this).prop("id"),handlers);
 	});
 	
-$(".enableExam").on("click",function(){
-	$("#enableexammodal").modal({
-	    backdrop: 'static',
-	    keyboard: false
+	$(".back").click(function(){
+		$("#examDiv").show();
+		$("#examSubjectDiv").hide();
 	});
-	//$("#enableexammodal").modal('toggle');
-	examID=$(this).prop("id");
-	subject=$("#subject").val();
-	division=$("#division").val();
-	that=$(this);
-	//$(this).find("button").text("Enabling...");
+	
+	/* $("#examSubjectTable").on("click",".attemptExamStart",function(){
+		var division = $('#division').val();
+		var batch =  $("#batches").val();
+		var handlers = {};
+		handlers.success = function(e){console.log("Success",e);
+		/* $("#examDiv").hide();
+		$("#examSubjectDiv").show();
+		examSubjectTable(e); 
+		}
+		handlers.error = function(e){console.log("Error",e)}
+		rest.get("rest/classownerservice/getOnlineExamPaper/"+division+"/"+$(this).prop("id"),handlers);
+	}); */
+	
+	$("#examSubjectTable").on("click",".attemptExamStart",function(){
+		$("#question_paper_id").val($(this).prop("id"));
+		$("#actionform").find("#division").val(division);
+		$("#actionform").find("#batch").val(batch);
+		$("#actionform").find("#exam").val(exam);
+		$("#actionform").find("#subject").val($(this).closest("div").find(".subject").val());
+		/* $("#actionform").submit(); */
+		var formData = $("#actionform").serialize();
+		console.log(formData);
+		window.open("attemptExam?"+formData,"","width=500, height=500"); 
+		e.preventDefault();
+	});
 });
 
-$(".attemptExam").on("click",function(e){
-	$("#examID").val($(this).prop("id"));
-	/* $("#actionform").submit(); */
-	var formData = $("#actionform").serialize();
-	console.log(formData);
-	window.open("attemptExam?"+formData,"","width=500, height=500"); 
-	e.preventDefault();
-});
+function examSubjectTable(data){
+	//data = JSON.parse(data);
+	var i=0;
+	var dataTable = $('#examSubjectTable').DataTable({
+		bDestroy:true,
+		data: data,
+		lengthChange: false,
+		columns: [
+			{title:"#",data:null},
+			{ title: "Subject",data:null,render:function(data,event,row){
+				var div = '<div class="default defaultBatchName">'+row.sub_name+'</div>';
+				return div;
+			},sWidth:"40%"},
+			{ title: "Choose",data:null,render:function(data,event,row){
+				var buttons = '<div class="default">'+
+					'<input type="button" class="btn btn-sm btn-primary attemptExamStart" value="Attempt" id="'+row.question_paper_id+'">'+
+					'<input type="hidden" class="subject" value="'+row.sub_id+'">'+
+				'</div>'
+				return buttons;
+			},sWidth:"10%"}
+		]
+	});
+	 dataTable.on( 'order.dt search.dt', function () {
+	        dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+	            cell.innerHTML = i+1;
+				});
+			}).draw(); 
+}
 
-$(".page").on("click",function(e){
-	$("form#paginateform #currentPage").val($(this).text());
-	$("#paginateform").submit();
-	e.preventDefault();
-});
 
-$(".start").on("click",function(e){
-	$("form#paginateform #currentPage").val("1");
-	$("#paginateform").submit();
-	e.preventDefault();
-});
+function createExamTable(data){
+	//data = JSON.parse(data);
+	var i=0;
+	var dataTable = $('#examTable').DataTable({
+		bDestroy:true,
+		data: data,
+		lengthChange: false,
+		columns: [
+			{title:"#",data:null},
+			{ title: "Exam",data:null,render:function(data,event,row){
+				var div = '<div class="default defaultBatchName">'+row.exam_name+'</div>';
+				return div;
+			},sWidth:"40%"},
+			{ title: "Choose",data:null,render:function(data,event,row){
+				var buttons = '<div class="default">'+
+					'<input type="button" class="btn btn-sm btn-primary attemptExamList" value="Attempt" id="'+row.exam_id+'">'+
+				'</div>'
+				return buttons;
+			},sWidth:"10%"}
+		]
+	});
+	 dataTable.on( 'order.dt search.dt', function () {
+	        dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+	            cell.innerHTML = i+1;
+				});
+			}).draw(); 
+}
 
-$(".end").on("click",function(e){
-	$("form#paginateform #currentPage").val($("#totalPages").val());
-	$("#paginateform").submit();
-	e.preventDefault();
-});
+function getBatchesOfDivision(){
+	$(".chkBatch:checked").removeAttr('checked');
+	$('#checkboxes').children().remove();
+	$('div#addStudentModal .error').hide();
+	var divisionId = $('#division').val();
 
+	if(!divisionId || divisionId.trim()=="" || divisionId == -1){
+		$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please select a division');
+		$('div#addStudentModal .error').show();
+	}else{		
+	  $.ajax({
+	   url: "classOwnerServlet",
+	   data: {
+	    	 methodToCall: "fetchBatchesForDivision",
+			 regId:'',
+			 divisionId:divisionId					 
+	   		},
+	   type:"POST",
+	   success:function(e){
+		   $('#batches').empty();
+		   var batchDataArray = [];
+		    var data = JSON.parse(e);
+		    if(data.status != "error"){
+		    $.each(data.batches,function(key,val){
+				var data = {};
+				data.id = val.batch_id;
+				data.text = val.batch_name;
+				batchDataArray.push(data);
+			});
+		    $("#batches").select2({data:batchDataArray,placeholder:"type batch name"});
+		    }else{
+		    	 $("#batches").select2({data:null,placeholder:"Batch not found"});
+		    }
+	   	},
+	   error:function(e){
+		   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Error while fetching batches for division');
+			$('div#addStudentModal .error').show();
+	   }
+	   
 });
+	
+}
+}
 </script>
 </head>
 <body>
-<div class="container" style="margin-bottom: 5px">
-			<a type="button" class="btn btn-primary" href="choosesubject?forwardAction=attemptexamlist" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
-	</div>
-<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
-			<div align="center" style="font-size: larger;"><u>Attempt Exam List</u></div>
-			</div>
-	 <c:if test="${(examlist != null) && (totalPages gt 0)}">
-	<div class="container">
-  <h2><font face="cursive">Search Result</font> </h2>            
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Sr No.</th>
-        <th>Exam</th>
-        <th>Attempt</th>
-      </tr>
-    </thead>
-    <tbody>
-    <c:forEach items="${examlist}" var="item" varStatus="counter">
-    <tr>
-    	<c:if test="${currentPage eq 1}">
-        <td><c:out value="${counter.count}"></c:out></td>
-        </c:if>
-        <c:if test="${currentPage gt 1 }">
-        <td><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
-        </c:if>
-        <td><c:out value="${item.exam_name}"></c:out></td>
-        <c:choose>
-        <c:when test="${(role eq 0) || (role eq 1) || (role eq 2)}">
-        <td><a href="#" class="attemptExam" id="<c:out value="${item.exam_id}" ></c:out>"><button class="btn btn-warning">Attempt</button></a></td>
-        </c:when>
-       <%--  <c:when test="${role eq 3 }">
-        <td><a class="attemptExam" href="#" id="<c:out value="${item.exam_id}"></c:out>"><button class="btn btn-success">Enable</button></a></td>
-        </c:when> --%>
-        </c:choose>
-      </tr>
-      </c:forEach>
-    </tbody>
-  </table>
-  
-  <form action="attemptExam" id="actionform" method="post" target="blank">
-  <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
-  <input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
-  <input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
-  <%-- <input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
-  <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'> --%>
-  <input type="hidden" name="examID" id="examID" value='<c:out value="${examID}"></c:out>'>
+<jsp:include page="../ExamHeader.jsp" >
+		<jsp:param value="active" name="onlineExamList"/>
+	</jsp:include>
+<div class="container" style="padding: 2%; background: #eee">
+<div class="row">
+<div class="col-md-3">
+	<select id="division" class="form-control">
+		<option value="-1">Select Class</option>
+		<c:forEach items="${divisions}" var="division">
+			<option value=<c:out value='${division.divId }'></c:out>><c:out value="${division.divisionName }"></c:out> <c:out value="${division.stream }"></c:out></option>
+		</c:forEach>
+	</select>
+	<span class="error" id="divisionError"></span>
+</div>
+<div class="col-md-3">
+<select id="batches" style="width:100%">
+	<option>Select Batch</option>
+</select>
+<span class="error" id="batchError"></span>
+</div>
+<div class="col-md-1">
+	<button class="btn btn-primary btn-sm searchExams">Search</button>
+</div>
+</div>
+</div>
+<div class="container" id="examDiv">
+<table id="examTable" class="table" style="width: 100%"></table>
+</div>
+<div class="container" id="examSubjectDiv" style="display: none;">
+<div class="row">
+<button class="btn btn-primary btn-sm back">Back</button>
+</div>
+<div class="row">
+<table id="examSubjectTable" class="table" style="width: 100%"></table>
+</div>
+</div>
+ <form action="attemptExam" id="actionform" method="post" target="blank">
+  <input type="hidden" id="subject" name="subject" >
+  <input type="hidden" id="exam"  name="exam" >
+  <input type="hidden" id="batch"  name="batch">
+  <input type="hidden" id="division" name="division" >
+  <input type="hidden" name="question_paper_id" id="question_paper_id" >
   <input type="hidden" name="actionname" id="actionname">
   </form>
-  <form action="attemptexamlist" id="paginateform">
-  <input type="hidden" name="subject" value="<c:out value="${subject}" ></c:out>">
-  <input type="hidden" name="batch" value="<c:out value="${batch}" ></c:out>">
-  <input type="hidden" name="division" value="<c:out value="${division}" ></c:out>">
-  <input type="hidden" name="currentPage" id="currentPage" value='<c:out value="${currentPage}"></c:out>'>
-  <input type="hidden" name="totalPages" id="totalPages" value='<c:out value="${totalPages}"></c:out>'>
-  <input type="hidden" name="searchedMarks" value='<c:out value="${searchedMarks}"></c:out>'>
-  <input type="hidden" name="searchedExam" value='<c:out value="${searchedExam}"></c:out>'>
-  <input type="hidden" name="searchedRep" value='<c:out value="${searchedRep}"></c:out>'>
-  <ul class="pagination">
-  <li><a class="start" >&laquo;</a></li>
-  <c:forEach var="item" begin="1" end="${totalPages}">
-  <c:if test="${item eq currentPage}">
-  <li class="active"><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
-  </c:if>
-  <c:if test="${item ne currentPage}">
-  <li><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
-  </c:if>
-  </c:forEach>
-  <li><a href="#" class="end">&raquo;</a></li>
-</ul>
-</form>
-</div>
-	</c:if>	
-	<c:if test="${totalPages eq 0}">
-	<div class="alert alert-info">Exams not available..</div>
-	</c:if>
 </body>
 </html>

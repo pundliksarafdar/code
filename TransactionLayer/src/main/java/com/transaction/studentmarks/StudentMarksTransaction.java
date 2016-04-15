@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -24,10 +25,15 @@ import com.classapp.db.student.StudentDB;
 import com.classapp.db.student.StudentMarks;
 import com.classapp.db.subject.StudentMarksDB;
 import com.classapp.db.subject.Subject;
+import com.service.beans.BatchExamDistinctSubjects;
+import com.service.beans.BatchExamSubjects;
+import com.service.beans.BatchExams;
 import com.service.beans.BatchStudentExamMarks;
 import com.service.beans.ExamSubject;
+import com.service.beans.ExamWiseStudentDetails;
 import com.service.beans.ProgressCardServiceBean;
 import com.service.beans.StudentData;
+import com.service.beans.StudentDetailMarks;
 import com.service.beans.StudentProgressCard;
 import com.service.beans.StudentSubjectMarks;
 import com.service.beans.SubjectsExam;
@@ -464,6 +470,120 @@ public class StudentMarksTransaction {
 			studentProgressCardList.add(studentProgressCard);
 		}
 		return studentProgressCardList;
+		
+	}
+	
+	public ExamWiseStudentDetails getStudentDetailedMarks(int inst_id,int student_id) {
+		StudentTransaction studentTransaction= new StudentTransaction();
+		Student student =studentTransaction.getStudentByStudentID(student_id,inst_id);
+		int div_id = student.getDiv_id();
+		ExamPaperDB examPaperDB = new ExamPaperDB();
+		List<Integer> batchList = Stream.of(student.getBatch_id().split(","))
+		        .map(Integer::parseInt)
+		        .collect(Collectors.toList());
+		List batchExams =examPaperDB.getDistinctBatchExam(inst_id, student.getDiv_id(), batchList);
+		List<BatchExams> batchExamList = new ArrayList<BatchExams>();
+		for (Iterator iterator = batchExams.iterator(); iterator.hasNext();) {
+			Object[] object = (Object[]) iterator.next();
+			BatchExams batchExam = new BatchExams();
+			batchExam.setExam_id(((Number)object[0]).intValue());
+			batchExam.setBatch_id(((Number)object[1]).intValue());
+			batchExam.setExam_name((String) object[2]);
+			batchExamList.add(batchExam);
+		}
+		List<Integer> examIds = batchExamList.stream().map(BatchExams::getExam_id).distinct().collect(Collectors.toList());
+		ExamWiseStudentDetails examWiseStudentDetails = new ExamWiseStudentDetails();
+		if(examIds.size()>0){
+		List distinctSubjects = examPaperDB.getDistinctBatchExamSubjects(inst_id, div_id, batchList, examIds);
+		List<BatchExamDistinctSubjects> batchExamDistinctSubjectList = new ArrayList<BatchExamDistinctSubjects>();
+		for (Iterator iterator = distinctSubjects.iterator(); iterator.hasNext();) {
+			Object[] object = (Object[]) iterator.next();
+			BatchExamDistinctSubjects batchExamDistinctSubjects = new BatchExamDistinctSubjects();
+			batchExamDistinctSubjects.setSubject_id(((Number)object[0]).intValue());
+			batchExamDistinctSubjects.setSubject_name((String) object[1]);
+			batchExamDistinctSubjects.setBatch_id(((Number)object[2]).intValue());
+			batchExamDistinctSubjectList.add(batchExamDistinctSubjects);
+		}
+		List batchSubjects = examPaperDB.getBatchExamSubjects(inst_id, div_id, batchList, examIds);
+		List<BatchExamSubjects> batchExamSubjectList = new ArrayList<BatchExamSubjects>();
+		for (Iterator iterator = batchSubjects.iterator(); iterator.hasNext();) {
+			Object[] object = (Object[]) iterator.next();
+			BatchExamSubjects batchExamSubjects = new BatchExamSubjects();
+			batchExamSubjects.setExam_id(((Number)object[0]).intValue());
+			batchExamSubjects.setSubject_id(((Number)object[1]).intValue());
+			batchExamSubjects.setMarks(((Number)object[2]).intValue());
+			batchExamSubjects.setBatch_id(((Number)object[3]).intValue());
+			batchExamSubjectList.add(batchExamSubjects);
+		}
+		StudentMarksDB marksDB = new StudentMarksDB();
+		List marksList = marksDB.getStudentBatchExamMarks(inst_id, div_id, batchList, examIds, student_id);
+		List list = marksDB.getBatchAvgExamMarks(inst_id, div_id, batchList, examIds);
+		List<StudentDetailMarks> detailMarkList = new ArrayList<StudentDetailMarks>();
+		for (BatchExams exams : batchExamList) {
+			for (BatchExamSubjects batchExamSubjects : batchExamSubjectList) {
+				if(batchExamSubjects.getBatch_id() == exams.getBatch_id() && batchExamSubjects.getExam_id() == exams.getExam_id()){
+					boolean flag= false;
+					for (Iterator iterator = marksList.iterator(); iterator.hasNext();) {
+						Object[] object = (Object[]) iterator.next();
+						if(((Number)object[1]).intValue()==batchExamSubjects.getSubject_id() 
+								&& ((Number)object[2]).intValue()==batchExamSubjects.getExam_id() 
+								&& ((Number)object[3]).intValue()== exams.getBatch_id()){
+							StudentDetailMarks detailMarks = new StudentDetailMarks();
+							detailMarks.setBatch_id(exams.getBatch_id());
+							detailMarks.setSub_id(batchExamSubjects.getSubject_id());
+							detailMarks.setExam_id(batchExamSubjects.getExam_id());
+							detailMarks.setMarks(((Number)object[0]).intValue());
+							detailMarks.setExamPresentee("P");
+							detailMarks.setExamSubjectTotalMarks(batchExamSubjects.getMarks());
+							detailMarkList.add(detailMarks);
+							flag= true;
+							break;
+						}
+						
+					}
+					if(flag == false){
+						StudentDetailMarks detailMarks = new StudentDetailMarks();
+						detailMarks.setBatch_id(exams.getBatch_id());
+						detailMarks.setSub_id(batchExamSubjects.getSubject_id());
+						detailMarks.setExam_id(batchExamSubjects.getExam_id());
+						detailMarks.setMarks(0);
+						detailMarks.setExamPresentee("A");
+						detailMarkList.add(detailMarks);
+					}
+				}
+			}
+		}
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			Object[] object = (Object[]) iterator.next();
+			for (StudentDetailMarks studentDetailMarks : detailMarkList) {
+				if(studentDetailMarks.getSub_id() == ((Number)object[0]).intValue() && 
+					studentDetailMarks.getExam_id() == ((Number)object[1]).intValue() && 
+					studentDetailMarks.getBatch_id() == ((Number)object[2]).intValue()){
+					studentDetailMarks.setAvgMarks(((Number)object[3]).intValue());
+					studentDetailMarks.setTopperMarks(((Number)object[4]).intValue());
+				}
+			}
+			
+		}
+		for (BatchExams exams : batchExamList) {
+			int total_marks = 0;
+			for (BatchExamSubjects batchExamSubjects : batchExamSubjectList) {
+				if(exams.getBatch_id() == batchExamSubjects.getBatch_id() && 
+					exams.getExam_id() == batchExamSubjects.getExam_id()){
+					total_marks = total_marks + batchExamSubjects.getMarks();
+				}
+			}
+			exams.setMarks(total_marks);
+		}
+		
+		
+		examWiseStudentDetails.setBatchExamDistinctSubjectList(batchExamDistinctSubjectList);
+		examWiseStudentDetails.setBatchExamList(batchExamList);
+		examWiseStudentDetails.setBatchExamSubjectList(batchExamSubjectList);
+		examWiseStudentDetails.setDetailMarklist(detailMarkList);
+		examWiseStudentDetails.setBatchIds(batchList);
+		}
+		return examWiseStudentDetails;
 		
 	}
 	

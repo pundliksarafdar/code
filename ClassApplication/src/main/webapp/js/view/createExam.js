@@ -82,12 +82,12 @@ $(document).ready(function(){
 					subjectList = [];
 					$(".subjectDiv").empty();
 					while(i < subjectnameArray.length){
-				   		$(".subjectDiv").append("<div class='row well examSubjectPapers'><div class='col-md-3'><input type='checkbox' value='"+subjectidArray[i]+"' name='subjectCheckbox' id='subjectCheckbox'>"+
+				   		$(".subjectDiv").append("<div class='row well examSubjectPapers'><div class='col-md-2'><input type='checkbox' value='"+subjectidArray[i]+"' name='subjectCheckbox' id='subjectCheckbox'>"+
 				   				subjectnameArray[i]+"</div><div class='col-md-4'>"+
 				   				"<button class='btn btn-primary btn-xs chooseQuestionPaper'>Choose Question Paper</button>"+
 				   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></div><div class='col-md-1'><input type='text' class='form-control marks'></div>"+
 				   				"<div class='col-md-3'><div class='col-md-6'>Duration  : </div><div class='col-md-3'><input type='number' class='form-control examHour' placeholder='HH'></div><div class='col-md-3'><input type='number' class='form-control examMinute' placeholder='MM'></div></div>"+
-				   				"<div class='col-md-1'><button class='btn btn-primary btn-xs preview'>Preview</button></div></div>");
+				   				"<div class='col-md-1'><select class='form-control paper-type'><option value='-1'>Paper Type</option><option value='1'>Offline</option><option value='2'>Online</option></select></div><div class='col-md-1'><button class='btn btn-primary btn-xs preview'>Preview</button></div></div>");
 				   		i++;
 				   }
 			   }
@@ -133,6 +133,7 @@ $(document).ready(function(){
 			exam_paper.duration = $($(".examSubjectPapers")[i]).find(".examHour").val()+":"+$($(".examSubjectPapers")[i]).find(".examMinute").val();
 			exam_paper.question_paper_id = $($(".examSubjectPapers")[i]).find(".selectedQuestionPaperID").val();
 			exam_paper.header_id = $("#headerDesc").val();
+			exam_paper.paper_type = $($(".examSubjectPapers")[i]).find(".paper-type").val();
 			exam_paperList.push(exam_paper);
 			}
 		}

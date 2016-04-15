@@ -684,7 +684,7 @@ public boolean updateStudentFees(int inst_id,int div_id,int batch_id, int studen
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
 		transaction = session.beginTransaction();
-		Query query = session.createQuery("update Student_Fees set fees_paid = fees_paid + :fees_paid, fees_due = final_fees_amt - (fees_due + :fees_paid)" +
+		Query query = session.createQuery("update Student_Fees set fees_paid = fees_paid + :fees_paid, fees_due = fees_due - :fees_paid" +
 				" where inst_id = :inst_id and div_id=:div_id and batch_id = :batch_id and student_id = :student_id");
 		query.setParameter("inst_id", inst_id);
 		query.setParameter("div_id", div_id);

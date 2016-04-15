@@ -8,6 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.classapp.db.question.Questionbank;
 import com.classapp.persistence.HibernateUtil;
 
 public class AttendanceDB {
@@ -439,4 +440,99 @@ public class AttendanceDB {
 		return  true;
 
 	}
+	
+	public List getMonthWiseTotalLecture(List<List<Integer>> list,int inst_id,int div_id,Date start_date,Date end_date){
+		Transaction transaction=null;
+		Session session=null;
+		List resultList = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			String queryString="select count( distinct schedule_id,att_date),batch_id,sub_id,MONTH(att_date),YEAR(att_date) from Attendance "
+					+ "where inst_id = :inst_id and (batch_id,sub_id) in :list and div_id = :div_id and att_date>= :start_date "
+					+ "and att_date <= :end_date group by YEAR(att_date), MONTH(att_date), sub_id  order by YEAR(att_date), MONTH(att_date),sub_id";
+			queryString = queryString.replace(":list", list.toString());
+			Query query = session.createSQLQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("start_date", start_date);
+			query.setParameter("end_date", end_date);
+			
+			resultList =query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return resultList;
+	}
+	
+	public List getStartEndOfYearlyAttendance(int inst_id,int div_id,List<Integer> batchIDs){
+		Transaction transaction=null;
+		Session session=null;
+		List resultList = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			String queryString="select min(att_date),max(att_date),batch_id, YEAR(min(att_date)),YEAR(max(att_date)) from Attendance "
+					+ "where inst_id = :inst_id and div_id = :div_id and batch_id in :batch_id group by batch_id";
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameterList("batch_id", batchIDs);
+			resultList = query.list();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return resultList;
+	}
+	
+	public List getStudentsMonthWiseAttendance(List<List<Integer>> list,int inst_id,int div_id,Date start_date,Date end_date,int student_id){
+		Transaction transaction=null;
+		Session session=null;
+		List resultList = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			String queryString="select count(distinct schedule_id,att_date),batch_id,sub_id,MONTH(att_date),YEAR(att_date) from Attendance "
+					+ "where inst_id = :inst_id and (batch_id,sub_id) in :list and div_id = :div_id and att_date>= :start_date "
+					+ "and att_date <= :end_date and student_id = :student_id and presentee = 'P'   group by YEAR(att_date), MONTH(att_date), sub_id  "
+					+ "order by YEAR(att_date), MONTH(att_date),sub_id";
+			queryString = queryString.replace(":list", list.toString());
+			Query query = session.createSQLQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("start_date", start_date);
+			query.setParameter("end_date", end_date);
+			query.setParameter("student_id", student_id);
+			resultList =query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return resultList;
+	}
+
 }

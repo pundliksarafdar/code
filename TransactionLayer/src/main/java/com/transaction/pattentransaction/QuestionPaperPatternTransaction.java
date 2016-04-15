@@ -27,11 +27,15 @@ import com.classapp.db.question.Questionbank;
 import com.classapp.db.question.QuestionbankDB;
 import com.classapp.db.questionPaper.QuestionPaper;
 import com.classapp.db.questionPaper.QuestionPaperDB;
+import com.classapp.db.student.StudentMarks;
 import com.classapp.logger.AppLogger;
 import com.classapp.persistence.Constants;
 import com.datalayer.exam.ParagraphQuestion;
 import com.service.beans.GenerateQuestionPaperResponse;
 import com.service.beans.NewQuestionRequest;
+import com.service.beans.OnlineExam;
+import com.service.beans.OnlineExamPaper;
+import com.service.beans.OnlineExamPaperElement;
 import com.service.beans.QuestionPaperData;
 import com.service.beans.GenerateQuestionPaperServicebean;
 import com.service.beans.QuestionPaperEditFileElement;
@@ -39,11 +43,13 @@ import com.service.beans.QuestionPaperEditFileObject;
 import com.service.beans.QuestionPaperFileElement;
 import com.service.beans.QuestionPaperFileObject;
 import com.service.beans.QuestionPaperStructure;
+import com.transaction.studentmarks.StudentMarksTransaction;
 
 public class QuestionPaperPatternTransaction {
 	String patternStorageURL;
 	int inst_id;
 	String questionStorageURL;
+	String questionPaperStorageURL;
 	public QuestionPaperPatternTransaction(String storageURL,int inst_id) {
 		this.patternStorageURL = storageURL;
 		this.inst_id = inst_id;
@@ -335,7 +341,7 @@ public class QuestionPaperPatternTransaction {
 		questionPaper.setCreated_dt(new Date(new java.util.Date().getTime()));
 		int paper_id =questionPaperDB.save(questionPaper);
 		fileObject.setPaper_id(paper_id);
-		String filePath = patternStorageURL+File.separator+fileObject.getClass_id()+File.separator+paper_id;
+		String filePath = questionPaperStorageURL+File.separator+fileObject.getClass_id()+File.separator+paper_id;
 		writeObject(filePath, fileObject);
 		}
 		return true;
@@ -355,7 +361,7 @@ public class QuestionPaperPatternTransaction {
 		questionPaper.setModified_dt(new Date(new java.util.Date().getTime()));
 		questionPaper.setPaper_id(fileObject.getPaper_id());
 		questionPaperDB.save(questionPaper);
-		String filePath = patternStorageURL+File.separator+fileObject.getClass_id()+File.separator+fileObject.getPaper_id();
+		String filePath = questionPaperStorageURL+File.separator+fileObject.getClass_id()+File.separator+fileObject.getPaper_id();
 		writeObject(filePath, fileObject);
 		}
 		return true;
@@ -363,7 +369,7 @@ public class QuestionPaperPatternTransaction {
 	
 	public QuestionPaperEditFileObject getQuestionPaper(int div_id,int paper_id) {
 		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
-		File file = new File(patternStorageURL+File.separator+div_id+File.separator+paper_id);
+		File file = new File(questionPaperStorageURL+File.separator+div_id+File.separator+paper_id);
 		QuestionPaperFileObject fileObject = (QuestionPaperFileObject) readObject(file);
 		List<QuestionPaperFileElement> fileElements=fileObject.getQuestionPaperFileElementList();
 		List<List<Integer>> list = new ArrayListOverride<List<Integer>>();
@@ -422,6 +428,144 @@ public class QuestionPaperPatternTransaction {
 		}
 		editFileObject.setQuestionPaperFileElementList(editFileElementList);
 		return editFileObject;
+	}
+	
+	public OnlineExamPaper getOnlineQuestionPaper(int div_id,int paper_id) {
+		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
+		File file = new File(questionPaperStorageURL+File.separator+div_id+File.separator+paper_id);
+		QuestionPaperFileObject fileObject = (QuestionPaperFileObject) readObject(file);
+		List<QuestionPaperFileElement> fileElements=fileObject.getQuestionPaperFileElementList();
+		List<List<Integer>> list = new ArrayListOverride<List<Integer>>();
+		for (Iterator iterator = fileElements.iterator(); iterator.hasNext();) {
+			QuestionPaperFileElement questionPaperFileElement = (QuestionPaperFileElement) iterator.next();
+			List<Integer> IdList = new ArrayListOverride<Integer>();
+			IdList.add(div_id);
+			IdList.add(questionPaperFileElement.getSubject_id());
+			IdList.add(questionPaperFileElement.getQues_no());
+			list.add(IdList);
+		}
+		QuestionbankDB questionbankDB = new QuestionbankDB();
+		List<Questionbank> questionbankList = questionbankDB.getQuestionBankList(list,inst_id);
+		OnlineExamPaper onlineExamPaper = new OnlineExamPaper();
+		onlineExamPaper.setClass_id(fileObject.getClass_id());
+		onlineExamPaper.setInst_id(fileObject.getInst_id());
+		onlineExamPaper.setMarks(fileObject.getMarks());
+		onlineExamPaper.setPaper_description(fileObject.getPaper_description());
+		onlineExamPaper.setPaper_id(fileObject.getPaper_id());
+		onlineExamPaper.setPattern_id(fileObject.getPattern_id());
+		List<OnlineExamPaperElement> onlineExamPaperElementList = new ArrayList<OnlineExamPaperElement>();
+		for (Iterator iterator = fileElements.iterator(); iterator
+				.hasNext();) {
+			QuestionPaperFileElement fileElement = (QuestionPaperFileElement) iterator.next();
+			OnlineExamPaperElement onlineExamPaperElement = new OnlineExamPaperElement();
+			//editFileElement.setAlternate_value(alternate_value)
+			try {
+				BeanUtils.copyProperties(onlineExamPaperElement, fileElement);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			onlineExamPaperElementList.add(onlineExamPaperElement);
+		}
+		
+		for (Iterator iterator = onlineExamPaperElementList.iterator(); iterator
+				.hasNext();) {
+			OnlineExamPaperElement onlineExamPaperElement = (OnlineExamPaperElement) iterator.next();
+			for (Iterator iterator2 = questionbankList.iterator(); iterator2
+					.hasNext();) {
+				Questionbank questionbank = (Questionbank) iterator2
+						.next();
+				if(onlineExamPaperElement.getSubject_id() == questionbank.getSub_id() && onlineExamPaperElement.getQues_no() == questionbank.getQue_id()){
+					if(questionbank.getAns_id() != null && !"".equals(questionbank.getAns_id())){
+						if(questionbank.getAns_id().split(",").length>1){
+							onlineExamPaperElement.setAns_type("multiple");
+						}else{
+							onlineExamPaperElement.setAns_type("single");
+						}
+					
+					questionbank.setAns_id("");
+					onlineExamPaperElement.setQuestionbank(questionbank);
+					if("3".equals(questionbank.getQue_type())){
+						 ParagraphQuestion paragraphQuestion = (ParagraphQuestion) readObject(new File(questionStorageURL+File.separator+questionbank.getSub_id()+File.separator+div_id+File.separator+questionbank.getQue_id()));
+						 onlineExamPaperElement.setParagraphQuestion(paragraphQuestion);
+					}
+					}
+				}
+				
+			}
+			
+		}
+		onlineExamPaper.setOnlineExamPaperElementList(onlineExamPaperElementList);
+		return onlineExamPaper;
+	}
+	
+	public OnlineExam getOnlineQuestionPaperMarks(int div_id,int paper_id,String answers,OnlineExam onlineExam) {
+		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
+		File file = new File(questionPaperStorageURL+File.separator+div_id+File.separator+paper_id);
+		QuestionPaperFileObject fileObject = (QuestionPaperFileObject) readObject(file);
+		List<QuestionPaperFileElement> fileElements=fileObject.getQuestionPaperFileElementList();
+		List<List<Integer>> list = new ArrayListOverride<List<Integer>>();
+		for (Iterator iterator = fileElements.iterator(); iterator.hasNext();) {
+			QuestionPaperFileElement questionPaperFileElement = (QuestionPaperFileElement) iterator.next();
+			List<Integer> IdList = new ArrayListOverride<Integer>();
+			IdList.add(div_id);
+			IdList.add(questionPaperFileElement.getSubject_id());
+			IdList.add(questionPaperFileElement.getQues_no());
+			list.add(IdList);
+		}
+		QuestionbankDB questionbankDB = new QuestionbankDB();
+		List<Questionbank> questionbankList = questionbankDB.getQuestionBankList(list,inst_id);
+		OnlineExamPaper onlineExamPaper = new OnlineExamPaper();
+		onlineExamPaper.setClass_id(fileObject.getClass_id());
+		onlineExamPaper.setInst_id(fileObject.getInst_id());
+		onlineExamPaper.setMarks(fileObject.getMarks());
+		onlineExamPaper.setPaper_description(fileObject.getPaper_description());
+		onlineExamPaper.setPaper_id(fileObject.getPaper_id());
+		onlineExamPaper.setPattern_id(fileObject.getPattern_id());
+		List<OnlineExamPaperElement> onlineExamPaperElementList = new ArrayList<OnlineExamPaperElement>();
+		for (Iterator iterator = fileElements.iterator(); iterator
+				.hasNext();) {
+			QuestionPaperFileElement fileElement = (QuestionPaperFileElement) iterator.next();
+			OnlineExamPaperElement onlineExamPaperElement = new OnlineExamPaperElement();
+			//editFileElement.setAlternate_value(alternate_value)
+			try {
+				BeanUtils.copyProperties(onlineExamPaperElement, fileElement);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			onlineExamPaperElementList.add(onlineExamPaperElement);
+		}
+		String[] ansArray = answers.split("/");
+		int counter = 0;
+		int totalMarks = 0;
+		for (Iterator iterator = onlineExamPaperElementList.iterator(); iterator
+				.hasNext();) {
+			OnlineExamPaperElement onlineExamPaperElement = (OnlineExamPaperElement) iterator.next();
+			for (Iterator iterator2 = questionbankList.iterator(); iterator2
+					.hasNext();) {
+				Questionbank questionbank = (Questionbank) iterator2
+						.next();
+				if(onlineExamPaperElement.getSubject_id() == questionbank.getSub_id() && onlineExamPaperElement.getQues_no() == questionbank.getQue_id()){
+					if(questionbank.getAns_id() != null && !"".equals(questionbank.getAns_id())){
+						if(questionbank.getAns_id().replace(" ", "").equals(ansArray[counter].replace(" ", ""))){
+						totalMarks = totalMarks + questionbank.getMarks();
+					}
+						counter++;
+					}
+				}
+				
+			}
+			
+		}
+		onlineExam.setMarks(totalMarks);
+		return onlineExam;
 	}
 	
 	class ArrayListOverride<E> extends ArrayList<E>{
@@ -542,4 +686,38 @@ public class QuestionPaperPatternTransaction {
 		questionId.addAll(questionIdSet);
 		return questionId;
 	}
+
+	public String getPatternStorageURL() {
+		return patternStorageURL;
+	}
+
+	public void setPatternStorageURL(String patternStorageURL) {
+		this.patternStorageURL = patternStorageURL;
+	}
+
+	public int getInst_id() {
+		return inst_id;
+	}
+
+	public void setInst_id(int inst_id) {
+		this.inst_id = inst_id;
+	}
+
+	public String getQuestionStorageURL() {
+		return questionStorageURL;
+	}
+
+	public void setQuestionStorageURL(String questionStorageURL) {
+		this.questionStorageURL = questionStorageURL;
+	}
+
+	public String getQuestionPaperStorageURL() {
+		return questionPaperStorageURL;
+	}
+
+	public void setQuestionPaperStorageURL(String questionPaperStorageURL) {
+		this.questionPaperStorageURL = questionPaperStorageURL;
+	}
+	
+	
 }

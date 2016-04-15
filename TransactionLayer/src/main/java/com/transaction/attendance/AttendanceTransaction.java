@@ -1,21 +1,38 @@
 package com.transaction.attendance;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.apache.commons.beanutils.BeanUtils;
 
 import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.attendance.Attendance;
 import com.classapp.db.attendance.AttendanceDB;
+import com.classapp.db.batch.Batch;
+import com.classapp.db.exam.ExamPaperDB;
+import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentDB;
+import com.classapp.db.subject.Subject;
+import com.classapp.db.subject.SubjectDb;
 import com.service.beans.AttendanceScheduleServiceBean;
 import com.service.beans.DailyAttendance;
 import com.service.beans.DailyTimeTable;
 import com.service.beans.MonthlyAttendance;
 import com.service.beans.MonthlyCount;
+import com.service.beans.StudentDetailAttendanceData;
+import com.service.beans.StudentDetailBatchData;
+import com.service.beans.StudentDetailMonthWiseAttendance;
+import com.service.beans.StudentDetailMonthWiseTotalLectures;
 import com.service.beans.StudentListForAttendance;
+import com.tranaction.subject.SubjectTransaction;
+import com.transaction.batch.BatchTransactions;
+import com.transaction.student.StudentTransaction;
 
 public class AttendanceTransaction {
 	public List<AttendanceScheduleServiceBean> getScheduleForAttendance(int batchid, Date date, int inst_id, int div_id) {
@@ -362,4 +379,175 @@ public class AttendanceTransaction {
 		return true;
 		
 	}
+	
+	public StudentDetailAttendanceData getStudentYearlyAttendance(int inst_id,int student_id) {
+		StudentTransaction studentTransaction= new StudentTransaction();
+		Student student =studentTransaction.getStudentByStudentID(student_id,inst_id);
+		int div_id = student.getDiv_id();
+		List<Integer> batchList = Stream.of(student.getBatch_id().split(","))
+		        .map(Integer::parseInt)
+		        .collect(Collectors.toList());
+		AttendanceDB attendanceDB = new AttendanceDB();
+		List duration = attendanceDB.getStartEndOfYearlyAttendance(inst_id, div_id, batchList);
+		SubjectDb subjectDb = new SubjectDb();
+		BatchTransactions batchTransactions = new BatchTransactions();
+		StudentDetailAttendanceData attendanceData = new StudentDetailAttendanceData();
+		List<StudentDetailBatchData> batchDataList = new ArrayList<StudentDetailBatchData>();
+		List<StudentDetailMonthWiseTotalLectures> detailMonthWiseTotalLectureList = new ArrayList<StudentDetailMonthWiseTotalLectures>();
+		List<StudentDetailMonthWiseAttendance> detailMonthWiseAttendances = new ArrayList<StudentDetailMonthWiseAttendance>(); 
+
+ 		for (Integer integer : batchList) {
+			StudentDetailBatchData batchData = new StudentDetailBatchData();
+			List<List<Integer>> subjectIds = new ArrayListOverride<List<Integer>>();
+			Batch  batch = batchTransactions.getBatch(integer, inst_id, div_id);
+			
+			List<Integer> list = Stream.of(batch.getSub_id().split(","))
+			        .map(Integer::parseInt)
+			        .collect(Collectors.toList());
+			for (Integer sub_id : list) {
+				List<Integer> innerList = new ArrayListOverride<Integer>();
+				innerList.add(integer);
+				innerList.add(sub_id);
+				subjectIds.add(innerList);
+			}
+			List<Subject> subjectList= subjectDb.getSubjectList(list);
+			List<com.datalayer.subject.Subject> subjects = new  ArrayList<com.datalayer.subject.Subject>();
+			for (Iterator iterator = subjectList.iterator(); iterator.hasNext();) {
+				Subject subject = (Subject) iterator.next();
+				com.datalayer.subject.Subject serviceSubject = new com.datalayer.subject.Subject();
+				
+				try {
+					BeanUtils.copyProperties(serviceSubject, subject);
+					subjects.add(serviceSubject);
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			batchData.setBatch_id(batch.getBatch_id());
+			batchData.setBatch_name(batch.getBatch_name());
+			batchData.setSubjectList(subjects);
+			
+			for (Iterator iterator = duration.iterator(); iterator.hasNext();) {
+				Object[] object = (Object[]) iterator.next();
+				if(integer == ((Number)object[2]).intValue()){
+				List list2 = 	attendanceDB.getMonthWiseTotalLecture(subjectIds, inst_id,student.getDiv_id(),(Date)object[0],(Date)object[1]);
+				List list3 = attendanceDB.getStudentsMonthWiseAttendance(subjectIds, inst_id, div_id, (Date)object[0],(Date)object[1], student_id);
+				for (Iterator iterator2 = list2.iterator(); iterator2.hasNext();) {
+					Object[] obj = (Object[]) iterator2.next();
+					StudentDetailMonthWiseTotalLectures detailMonthWiseTotalLectures = new StudentDetailMonthWiseTotalLectures();
+					detailMonthWiseTotalLectures.setBatch_id(((Number)obj[1]).intValue());
+					detailMonthWiseTotalLectures.setCount(((Number)obj[0]).intValue());
+					detailMonthWiseTotalLectures.setMonth(((Number)obj[3]).intValue());
+					detailMonthWiseTotalLectures.setSub_id(((Number)obj[2]).intValue());
+					detailMonthWiseTotalLectures.setYear(((Number)obj[4]).intValue());
+					detailMonthWiseTotalLectureList.add(detailMonthWiseTotalLectures);
+				}
+				
+				for (Iterator iterator2 = list3.iterator(); iterator2.hasNext();) {
+					Object[] obj = (Object[]) iterator2.next();
+					StudentDetailMonthWiseAttendance detailMonthWiseAttendance = new StudentDetailMonthWiseAttendance();
+					detailMonthWiseAttendance.setBatch_id(((Number)obj[1]).intValue());
+					detailMonthWiseAttendance.setCount(((Number)obj[0]).intValue());
+					detailMonthWiseAttendance.setMonth(((Number)obj[3]).intValue());
+					detailMonthWiseAttendance.setSub_id(((Number)obj[2]).intValue());
+					detailMonthWiseAttendance.setYear(((Number)obj[4]).intValue());
+					detailMonthWiseAttendances.add(detailMonthWiseAttendance);
+				}
+				int startYear = ((Number)object[3]).intValue();
+				int endYear = ((Number)object[4]).intValue();
+				int totalYears = endYear - startYear;
+				List<Integer> years = new ArrayList<Integer>();
+				if(totalYears == 0){
+					years.add(startYear);
+				}else{
+					for(int tempYear = startYear ; tempYear <= endYear ;tempYear++){
+						years.add(tempYear);
+					}
+				}
+				batchData.setYears(years);
+				}
+				
+			}
+			batchDataList.add(batchData);
+			
+		}
+ 		attendanceData.setBatchDataList(batchDataList);
+ 		attendanceData.setMonthWiseAttendanceList(detailMonthWiseAttendances);
+ 		attendanceData.setMonthWiseTotalLectureList(detailMonthWiseTotalLectureList);
+ 		for (StudentDetailBatchData batchData : attendanceData.getBatchDataList()) {
+ 			if(batchData.getYears() != null){
+ 			for (Integer year : batchData.getYears()) {
+ 				for(int month =1 ;month<=12;month++){
+ 				for (com.datalayer.subject.Subject subject : batchData.getSubjectList()) {
+ 					boolean totalFlag = false;
+ 					boolean attendanceFlag = false;
+					for (StudentDetailMonthWiseTotalLectures detailMonthWiseTotalLectures : detailMonthWiseTotalLectureList) {
+						if(detailMonthWiseTotalLectures.getBatch_id() == batchData.getBatch_id() &&
+						   detailMonthWiseTotalLectures.getSub_id() == subject.getSubjectId() &&
+						   detailMonthWiseTotalLectures.getMonth() == month &&
+						   detailMonthWiseTotalLectures.getYear() == year){
+							totalFlag = true;
+							break;
+						}
+					}
+					for (StudentDetailMonthWiseAttendance studentDetailMonthWiseAttendance : detailMonthWiseAttendances) {
+						if(studentDetailMonthWiseAttendance.getBatch_id() == batchData.getBatch_id() &&
+						   studentDetailMonthWiseAttendance.getSub_id() == subject.getSubjectId() &&
+						   studentDetailMonthWiseAttendance.getMonth() == month &&
+						   studentDetailMonthWiseAttendance.getYear() == year){
+							attendanceFlag = true;
+									break;
+								}
+					}
+					if(totalFlag == false){
+						StudentDetailMonthWiseTotalLectures detailMonthWiseTotalLectures = new StudentDetailMonthWiseTotalLectures();
+						detailMonthWiseTotalLectures.setBatch_id(batchData.getBatch_id());
+						detailMonthWiseTotalLectures.setCount(0);
+						detailMonthWiseTotalLectures.setMonth(month);
+						detailMonthWiseTotalLectures.setSub_id(subject.getSubjectId());
+						detailMonthWiseTotalLectures.setYear(year);
+						detailMonthWiseTotalLectureList.add(detailMonthWiseTotalLectures);
+					}
+					if(attendanceFlag == false){
+						StudentDetailMonthWiseAttendance detailMonthWiseAttendance = new StudentDetailMonthWiseAttendance();
+						detailMonthWiseAttendance.setBatch_id(batchData.getBatch_id());
+						detailMonthWiseAttendance.setCount(0);
+						detailMonthWiseAttendance.setMonth(month);
+						detailMonthWiseAttendance.setSub_id(subject.getSubjectId());
+						detailMonthWiseAttendance.setYear(year);
+						detailMonthWiseAttendances.add(detailMonthWiseAttendance);
+					}
+				}
+ 				}
+			}
+ 			}
+		}
+		return attendanceData;
+		
+	}
+	
+	class ArrayListOverride<E> extends ArrayList<E>{
+		@Override
+		public String toString() {
+			Iterator<E> it = iterator();
+	        if (! it.hasNext())
+	            return "()";
+
+	        StringBuilder sb = new StringBuilder();
+	        sb.append('(');
+	        for (;;) {
+	            E e = it.next();
+	            sb.append(e == this ? "(this Collection)" : e);
+	            if (! it.hasNext())
+	                return sb.append(')').toString();
+	            sb.append(',').append(' ');
+	        }
+	    }
+
+		}
 }

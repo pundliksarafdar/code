@@ -371,10 +371,10 @@
 			<result name="success" type="tiles">classowner.questioneditsuccess</result>
 		</action>
 		
-		<action name="attemptexamlist" class="com.exam.AttemptExamList"
+		<action name="onlineExamList" class="com.exam.AttemptExamList"
 			method="execute">
-			<result name="success" type="tiles">classowner.attemptexamlist</result>
-			<result name="studentexamlist" type="tiles">student.studentexamlist</result>
+			<result name="success" type="tiles">classowner.onlineExamList</result>
+			<!-- <result name="studentexamlist" type="tiles">student.studentexamlist</result> -->
 		</action>
 		
 		<action name="attemptExam" class="com.exam.AttemptExamAction"

@@ -380,7 +380,7 @@
 		<put-attribute name="body" value="/ClassOwner/ExamList.jsp" />
 	</definition>
 	
-	<definition name="classowner.attemptexamlist" extends="baseLayout">
+	<definition name="classowner.onlineExamList" extends="baseLayout">
 		<put-attribute name="title" value="Choose Subject" />
 		<put-attribute name="body" value="/ClassOwner/AttemptExamList.jsp" />
 	</definition>

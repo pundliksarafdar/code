@@ -22,411 +22,96 @@ import com.classapp.login.UserStatic;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.datalayer.exam.QuestionData;
+import com.service.beans.OnlineExamPaper;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.exams.ExamTransaction;
+import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
 import com.transaction.questionbank.QuestionBankTransaction;
 import com.transaction.studentmarks.StudentMarksTransaction;
 import com.user.UserBean;
 
 public class AttemptExamAction extends BaseAction {
 
-	String batch,subject,division;
-	List<Exam> examlist;
-	int currentPage;
-	int totalPages;
-	int role;
-	int examID;
-	String subjectname,divisionName;
-	List<QuestionData> questionDataList;
-	String answers;
-	int lastPage;
-	List<List<Integer>> currentpageanswers;
-	String actionname;
-	int Total_Marks;
-	int TotalExam_Marks;
-	String flag;
-	int institute;
-	Exam initiateExam;
-	int[] optionImageEndCount;
-	int examTimeDuration;
+	int batch,subject,division,question_paper_id,exam,inst_id;
+	OnlineExamPaper onlineExamPaper;
+	int questionPaperSize;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
-			Map<String, Object> session) {/*
-		int inst_id=userBean.getRegId();
-		if(institute!=0){
-			UserStatic userStatic = userBean.getUserStatic();
-			String storagePath = Constants.STORAGE_PATH+File.separator+institute;
-			userStatic.setStorageSpace(storagePath);
-			inst_id=institute;
-		}
-		if("initiateexam".equals(actionname)){
-			ExamTransaction examTransaction=new ExamTransaction();
-			initiateExam=examTransaction.getExamToAttempt(inst_id, Integer.parseInt(subject), Integer.parseInt(division), examID);
-			}else{
-				if("examattempted".equals(actionname) && userBean.getRole()==3){
-					StudentMarks studentMarks=new StudentMarks();
-					studentMarks.setDiv_id(Integer.parseInt(division));
-					studentMarks.setExam_id(examID);
-					studentMarks.setInst_id(inst_id);
-					studentMarks.setStudent_id(userBean.getRegId());
-					studentMarks.setSub_id(Integer.parseInt(subject));
-					StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
-					marksTransaction.saveStudentMarks(studentMarks);
-				}
-		Map<Integer,String>SelectedAnswerIds= (Map<Integer, String>) session.get("SelectedAnswerIds");
-		if(SelectedAnswerIds==null){
-			SelectedAnswerIds=new HashMap();
-		}
-		ExamTransaction examTransaction=new ExamTransaction();
-		Exam exam =examTransaction.getExamToAttempt(inst_id, Integer.parseInt(subject), Integer.parseInt(division), examID);
-		if("examSubmit".equals(actionname)){
-			request.getSession().removeAttribute("starttime");
-			request.getSession().removeAttribute("endtime");
-			if(lastPage==0){
-				lastPage++;
-			}
-			SelectedAnswerIds.put(lastPage, answers);
-			String queid_arr[]=	exam.getQue_ids().split(",");
-		QuestionBankTransaction bankTransaction=new QuestionBankTransaction();
-		List<Integer> ques_ids=new ArrayList<Integer>();
-		for (int i = 0; i < queid_arr.length; i++) {
-			ques_ids.add(Integer.parseInt(queid_arr[i]));
-		}
-		List<Integer> ques_marks=bankTransaction.getQuestionMarks(inst_id, Integer.parseInt(subject), Integer.parseInt(division), ques_ids);
-		String finalAnsString="";
-		for (int i = 1; i <= SelectedAnswerIds.size(); i++) {
-			if(i==1){
-			finalAnsString=SelectedAnswerIds.get(i);	
-			}else{
-			finalAnsString=finalAnsString+"/"+SelectedAnswerIds.get(i);
-			}
-		}
-		String solvedans_arr[]=finalAnsString.split("/");
-		String examans_arr[]=exam.getAns_ids().split("/");
-		for (int i = 0; i < examans_arr.length; i++) {
-			if(examans_arr[i].replace(" ", "").equals(solvedans_arr[i].trim())){
-				Total_Marks=Total_Marks+ques_marks.get(i);
-			}
-		}
-		TotalExam_Marks=exam.getTotal_marks();
-		if(Total_Marks>=exam.getPass_marks()){
-			flag="Y";
-		}else{
-			flag="N";
-		}
-		if(userBean.getRole()==3){
-		StudentMarks studentMarks=new StudentMarks();
-		studentMarks.setAns_ids(finalAnsString);
-		studentMarks.setDiv_id(Integer.parseInt(division));
-		studentMarks.setExam_id(examID);
-		studentMarks.setInst_id(institute);
-		studentMarks.setMarks(Total_Marks);
-		studentMarks.setStudent_id(userBean.getRegId());
-		studentMarks.setSub_id(Integer.parseInt(subject));
-		StudentMarksTransaction marksTransaction=new StudentMarksTransaction();
-		marksTransaction.saveStudentMarks(studentMarks);
-		}
-		SelectedAnswerIds=null;
-		session.put("SelectedAnswerIds", SelectedAnswerIds);
-		return "examresult";
-		}else{
-		if(exam!=null){
-		String queid_arr[]=	exam.getQue_ids().split(",");
-		int totalCount=queid_arr.length;
-		if(totalCount>0){
-			int remainder=totalCount%10;
-			totalPages=totalCount/10;
-			if(remainder>0){
-				totalPages++;
-			}
-		}else{
-			totalPages=0;
-		}
-		UserStatic userStatic = userBean.getUserStatic();
-		SubjectTransaction subjectTransaction=new SubjectTransaction();
-		Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
-		if(subbean!=null){
-			subjectname=subbean.getSubjectName();
-		}
-		DivisionTransactions divisionTransactions=new DivisionTransactions();
-		Division divbean= divisionTransactions.getDidvisionByID(Integer.parseInt(division));
-		if(divbean!=null){
-			divisionName=divbean.getDivisionName();
-		}
-		int questionStartIndex=0;
-		if(currentPage!=0){
-			questionStartIndex=(currentPage-1)*10;
-		}
-		int questionEndIndex=questionStartIndex+10;
-		if (questionEndIndex>totalCount) {
-			questionEndIndex=totalCount;
-		}
-		questionDataList=new ArrayList<QuestionData>();
-		while(questionStartIndex<questionEndIndex){
-		String questionNumber=queid_arr[questionStartIndex];
-		String examPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
-		//uploadedMarks = (Integer) request.getSession().getAttribute("uploadedMarks");
-		File file = new File(examPath);
-		QuestionData questionData = null;
-		if(file.exists()){
-			questionData = (QuestionData) readObject(file);
-		}
-		
-		if(null == request.getSession().getAttribute("starttime")){
-			setStartAndEndTime(request,exam.getExam_time());
-		}
-		int endCount = 0;
-		int index = 0;
-		int[] optionImageCount = questionData.getOptionImageCount();
-		optionImageEndCount = new int[optionImageCount.length];
-		if(null!=optionImageEndCount){
-		for(int count:optionImageCount){
-			endCount = endCount+count;
-			optionImageEndCount[index]=endCount;
-			index++;
-		}
-		}
-		questionDataList.add(questionData);
-		questionStartIndex++;
-		}
-		}
-		if(currentPage==0){
-			for (int i = 1; i <= totalPages; i++) {
-				SelectedAnswerIds.put(i, "-1/-1/-1/-1/-1/-1/-1/-1/-1/-1");
-				
-			}
-			session.put("SelectedAnswerIds", SelectedAnswerIds);
-		}
-		if(currentPage!=0){
-			if(lastPage==0){
-				lastPage++;
-			}
-			SelectedAnswerIds.put(lastPage, answers);
-			session.put("SelectedAnswerIds", SelectedAnswerIds);
-			currentpageanswers=new ArrayList<List<Integer>>();
-			String string=SelectedAnswerIds.get(currentPage);
-			if(!"".equals(string) && string !=null){
-			String [] strArr=string.split("/");
-			for (int i = 0; i < strArr.length; i++) {
-				String[] str=strArr[i].split(",");
-				List<Integer> list=new ArrayList<Integer>();
- 						for (int j = 0; j < str.length; j++) {
-							if(!"".equals(str[j])){
- 							list.add(Integer.parseInt(str[j]));
-							}else{
-								list.add(-1);
-							}
-						}
- 						currentpageanswers.add(list);
-			}
-		}
-		}
-		if (currentPage==0) {
-			currentPage=1;
-		}
-		}
-		}
-	*/	return SUCCESS;
+			Map<String, Object> session) {
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
+		onlineExamPaper = patternTransaction.getOnlineQuestionPaper(division,question_paper_id);
+		questionPaperSize = onlineExamPaper.getOnlineExamPaperElementList().size();
+	return SUCCESS;
 	}
-	
-	private void setStartAndEndTime(HttpServletRequest request,String examTime){
-		Date startTime = new Date();
-		StringTokenizer stringTokenizer = new StringTokenizer(examTime,":");
-		
-		while (stringTokenizer.hasMoreTokens()) {
-			String hour = stringTokenizer.nextToken();
-			String min = stringTokenizer.nextToken();
-			int hourInt = Integer.parseInt(hour);
-			int minInt = Integer.parseInt(min);
-			setExamTimeDuration((hourInt*60+minInt));
-	     }
-		
-		long endTimeInMilli = startTime.getTime()+examTimeDuration*60*1000;
-		Date endTime = new Date(endTimeInMilli);
-		request.getSession().setAttribute("starttime", startTime.getTime());
-		request.getSession().setAttribute("endtime", endTime.getTime());
-		
-	}
-	
-	private Object readObject(File file) {
-		Object object = null;
-		FileInputStream fin = null;
-		ObjectInputStream objectInputStream = null;
-		try{
-			fin = new FileInputStream(file);
-			objectInputStream = new ObjectInputStream(fin);
-			object =  objectInputStream.readObject();
-		}catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			if(null!=objectInputStream)try {objectInputStream.close();} catch (IOException e) {e.printStackTrace();}
-			if(null!=fin)try {fin.close();} catch (IOException e) {e.printStackTrace();}
-		}
-		return object;
-	}
-	
-	public String getBatch() {
+
+	public int getBatch() {
 		return batch;
 	}
-	public void setBatch(String batch) {
+
+	public void setBatch(int batch) {
 		this.batch = batch;
 	}
-	public String getSubject() {
+
+	public int getSubject() {
 		return subject;
 	}
-	public void setSubject(String subject) {
+
+	public void setSubject(int subject) {
 		this.subject = subject;
 	}
-	public String getDivision() {
+
+	public int getDivision() {
 		return division;
 	}
-	public void setDivision(String division) {
+
+	public void setDivision(int division) {
 		this.division = division;
 	}
-	public List<Exam> getExamlist() {
-		return examlist;
-	}
-	public void setExamlist(List<Exam> examlist) {
-		this.examlist = examlist;
-	}
-	public int getCurrentPage() {
-		return currentPage;
-	}
-	public void setCurrentPage(int currentPage) {
-		this.currentPage = currentPage;
-	}
-	public int getTotalPages() {
-		return totalPages;
-	}
-	public void setTotalPages(int totalPages) {
-		this.totalPages = totalPages;
-	}
-	public int getRole() {
-		return role;
-	}
-	public void setRole(int role) {
-		this.role = role;
-	}
-	public int getExamID() {
-		return examID;
-	}
-	public void setExamID(int examID) {
-		this.examID = examID;
+
+	public int getQuestion_paper_id() {
+		return question_paper_id;
 	}
 
-	public List<QuestionData> getQuestionDataList() {
-		return questionDataList;
+	public void setQuestion_paper_id(int question_paper_id) {
+		this.question_paper_id = question_paper_id;
 	}
 
-	public void setQuestionDataList(List<QuestionData> questionDataList) {
-		this.questionDataList = questionDataList;
+	public OnlineExamPaper getOnlineExamPaper() {
+		return onlineExamPaper;
 	}
 
-	public String getAnswers() {
-		return answers;
+	public void setOnlineExamPaper(OnlineExamPaper onlineExamPaper) {
+		this.onlineExamPaper = onlineExamPaper;
 	}
 
-	public void setAnswers(String answers) {
-		this.answers = answers;
+	public int getQuestionPaperSize() {
+		return questionPaperSize;
 	}
 
-	public List<List<Integer>> getCurrentpageanswers() {
-		return currentpageanswers;
+	public void setQuestionPaperSize(int questionPaperSize) {
+		this.questionPaperSize = questionPaperSize;
 	}
 
-	public void setCurrentpageanswers(List<List<Integer>> currentpageanswers) {
-		this.currentpageanswers = currentpageanswers;
+	public int getInst_id() {
+		return inst_id;
 	}
 
-	public int getLastPage() {
-		return lastPage;
+	public void setInst_id(int inst_id) {
+		this.inst_id = inst_id;
 	}
 
-	public void setLastPage(int lastPage) {
-		this.lastPage = lastPage;
+	public int getExam() {
+		return exam;
 	}
 
-	public String getActionname() {
-		return actionname;
+	public void setExam(int exam) {
+		this.exam = exam;
 	}
-
-	public void setActionname(String actionname) {
-		this.actionname = actionname;
-	}
-
-	public int getTotal_Marks() {
-		return Total_Marks;
-	}
-
-	public void setTotal_Marks(int total_Marks) {
-		Total_Marks = total_Marks;
-	}
-
-	public int getTotalExam_Marks() {
-		return TotalExam_Marks;
-	}
-
-	public void setTotalExam_Marks(int totalExam_Marks) {
-		TotalExam_Marks = totalExam_Marks;
-	}
-
-	public String getFlag() {
-		return flag;
-	}
-
-	public void setFlag(String flag) {
-		this.flag = flag;
-	}
-
-	public int getInstitute() {
-		return institute;
-	}
-
-	public void setInstitute(int institute) {
-		this.institute = institute;
-	}
-
-	public Exam getInitiateExam() {
-		return initiateExam;
-	}
-
-	public void setInitiateExam(Exam initiateExam) {
-		this.initiateExam = initiateExam;
-	}
-
-	public int[] getOptionImageEndCount() {
-		return optionImageEndCount;
-	}
-
-	public void setOptionImageEndCount(int[] optionImageEndCount) {
-		this.optionImageEndCount = optionImageEndCount;
-	}
-
-	public String getSubjectname() {
-		return subjectname;
-	}
-
-	public void setSubjectname(String subjectname) {
-		this.subjectname = subjectname;
-	}
-
-	public String getDivisionName() {
-		return divisionName;
-	}
-
-	public void setDivisionName(String divisionName) {
-		this.divisionName = divisionName;
-	}
-
-	public int getExamTimeDuration() {
-		return examTimeDuration;
-	}
-
-	public void setExamTimeDuration(int examTimeDuration) {
-		this.examTimeDuration = examTimeDuration;
-	}
+	
+	
 	
 	
 }

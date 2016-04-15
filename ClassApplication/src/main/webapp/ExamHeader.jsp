@@ -7,4 +7,5 @@
 		<li class="<c:out value="${param.editQuestionPaper}"></c:out>"><a href="editQuestionPaper">View/Edit Question paper</a></li>
 		<li class="<c:out value="${param.createExam}"></c:out>"><a href="createExam">Create Exam</a></li>
 		<li class="<c:out value="${param.editExam}"></c:out>"><a href="editExam">View/Edit Exam</a></li>
+		<li class="<c:out value="${param.onlineExamList}"></c:out>"><a href="onlineExamList">Online Exam</a></li>
 	</ul>

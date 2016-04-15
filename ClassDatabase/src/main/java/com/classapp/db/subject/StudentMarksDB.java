@@ -409,6 +409,65 @@ public class StudentMarksDB {
 
 		return list;
 }
+	
+	public List getStudentBatchExamMarks(int inst_id, int div_id,List<Integer> batch_id, List<Integer> exam_id,int student_id) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List list = null;
+		String queryString = "select std.marks,sub.subjectId,std.exam_id,std.batch_id from StudentMarks std,Subject sub"
+							+ " where  sub.subjectId = std.sub_id and sub.institute_id = std.inst_id and "
+							+ "std.inst_id = :inst_id and std.div_id = :div_id and std.batch_id in :batch_id and std.exam_id in :exam_id"
+							+ " and std.student_id = :student_id order by std.exam_id,sub.subjectId";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameterList("batch_id", batch_id);
+			query.setParameterList("exam_id", exam_id);
+			query.setParameter("student_id", student_id);
+			list = query.list();
+		
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return list;
+}
+	
+	public List getBatchAvgExamMarks(int inst_id, int div_id,List<Integer> batch_id, List<Integer> exam_id) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List list = null;
+		String queryString = "select sub_id,exam_id,batch_id,avg(marks),max(marks) from StudentMarks"
+							+ " where inst_id = :inst_id and div_id = :div_id and batch_id in :batch_id and exam_id in :exam_id"
+							+ "  group by sub_id,exam_id";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameterList("batch_id", batch_id);
+			query.setParameterList("exam_id", exam_id);
+			list = query.list();
+		
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return list;
+}
+	
 	public List<StudentMarks> getStudentsExamMarks(int inst_id, int div_id,int batch_id, List<Integer> exam_id) {
 		Session session = null;
 		boolean status = false;
@@ -426,6 +485,33 @@ public class StudentMarksDB {
 			query.setParameter("div_id", div_id);
 			query.setParameter("batch_id", batch_id);
 			query.setParameterList("exam_id", exam_id);
+			list = query.list();
+		
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return list;
+}
+	
+	public List getDistinctMarksSubject(int inst_id, int div_id,int batch_id, int exam_id) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List list = null;
+		String queryString = "select distinct sub_id from StudentMarks where inst_id = :inst_id and div_id = :div_id and batch_id = :batch_id and "
+				+ "exam_id = :exam_id";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", batch_id);
+			query.setParameter("exam_id", exam_id);
 			list = query.list();
 		
 			transaction.commit();

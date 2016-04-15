@@ -229,6 +229,38 @@ public class ExamPaperDB {
 
 	}
 	
+	public List getDistinctBatchExamSubjects(int inst_id,int div_id,List<Integer> batch_id,List<Integer> exam_id) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		List list = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("Select distinct sub.subjectId,sub.subjectName,examPaper.batch_id from Exam_Paper examPaper , Subject sub where sub.institute_id = examPaper.inst_id and" +
+					" sub.subjectId = examPaper.sub_id and examPaper.inst_id =:inst_id and examPaper.div_id = :div_id and examPaper.batch_id in :batch_id" +
+					" and examPaper.exam_id in :exam_id  order by examPaper.batch_id,sub.subjectId ");
+			query.setParameter("inst_id",inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameterList("exam_id", exam_id);
+			query.setParameterList("batch_id", batch_id);
+			list = query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  list;
+
+	}
+	
 	public List getExamSubjects(int inst_id,int div_id,int batch_id,List<Integer> exam_id) {
 		Transaction transaction=null;
 		Session session=null;
@@ -245,6 +277,39 @@ public class ExamPaperDB {
 			query.setParameter("div_id", div_id);
 			query.setParameterList("exam_id", exam_id);
 			query.setParameter("batch_id", batch_id);
+			list = query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  list;
+
+	}
+	
+	public List getBatchExamSubjects(int inst_id,int div_id,List<Integer> batch_id,List<Integer> exam_id) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		List<Subject> list = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("Select examPaper.exam_id,sub.subjectId,examPaper.marks,examPaper.batch_id from Exam_Paper examPaper , Subject sub where sub.institute_id = examPaper.inst_id and" +
+					" sub.subjectId = examPaper.sub_id and examPaper.inst_id =:inst_id and examPaper.div_id = :div_id and examPaper.batch_id in :batch_id" +
+					" and examPaper.exam_id in :exam_id "
+					+ " order by examPaper.exam_id, sub.subjectId ");
+			query.setParameter("inst_id",inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameterList("exam_id", exam_id);
+			query.setParameterList("batch_id", batch_id);
 			list = query.list();
 		}catch(Exception e){
 			e.printStackTrace();
@@ -344,6 +409,104 @@ public class ExamPaperDB {
 			}
 		}
 		return  true;
+
+	}
+	
+	public List<Exam> getOnlineExamList(int inst_id,int div_id,int batch_id) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		List<Exam> examList =null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("select ex from Exam ex,Exam_Paper ep "
+					+ "where ex.inst_id = :inst_id and ex.exam_id = ep.exam_id and "
+					+ "ex.inst_id = ep.inst_id and ep.paper_type = 2 and ep.div_id = :div_id and ep.batch_id = :batch_id");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", batch_id);
+			examList = query.list();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  examList;
+
+	}
+	
+	public List getOnlineExamSubjectList(int inst_id,int div_id,int batch_id,int exam_id) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		List examList =null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("select ep.question_paper_id,ep.sub_id,sub.subjectName from Exam ex,Exam_Paper ep,Subject sub "
+					+ "where ex.inst_id = :inst_id and ex.exam_id = ep.exam_id and "
+					+ "ex.inst_id = ep.inst_id and ep.paper_type = 2 and ep.div_id = :div_id "
+					+ "and ep.batch_id = :batch_id and ep.exam_id = :exam_id and sub.subjectId = ep.sub_id and "
+					+ " sub.institute_id = ep.inst_id");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", batch_id);
+			query.setParameter("exam_id", exam_id);
+			examList = query.list();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  examList;
+
+	}
+	
+	public List<Integer> getDistinctBatchExam(int inst_id,int div_id,List batch_id) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		List examList =null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("select distinct ep.exam_id,ep.batch_id,ex.exam_name from Exam_Paper ep,Exam ex "
+					+ " where ep.inst_id = :inst_id and ep.div_id = :div_id and ep.batch_id in :batch_id and ex.inst_id = ep.inst_id and ex.exam_id = ep.exam_id");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameterList("batch_id", batch_id);
+			examList = query.list();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  examList;
 
 	}
 }

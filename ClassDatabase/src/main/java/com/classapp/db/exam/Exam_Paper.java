@@ -17,6 +17,7 @@ public class Exam_Paper {
 	private String duration;
 	private int question_paper_id;
 	private String header_id;
+	private int paper_type;
 	public int getExam_paper_id() {
 		return exam_paper_id;
 	}
@@ -100,6 +101,12 @@ public class Exam_Paper {
 	}
 	public void setBatch_id(int batch_id) {
 		this.batch_id = batch_id;
+	}
+	public int getPaper_type() {
+		return paper_type;
+	}
+	public void setPaper_type(int paper_type) {
+		this.paper_type = paper_type;
 	}
 	
 	
