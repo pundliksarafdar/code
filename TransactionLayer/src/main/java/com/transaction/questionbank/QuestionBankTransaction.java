@@ -9,6 +9,12 @@ import java.util.List;
 
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.question.QuestionbankDB;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
+import com.datalayer.exam.MCQuestion;
+import com.datalayer.exam.Question;
+import com.datalayer.exam.SubjectiveQuestion;
 import com.classapp.logger.AppLogger;
 import com.service.beans.ParaQuestionBean;
 import com.transaction.image.ImageTransactions;
@@ -18,6 +24,58 @@ public class QuestionBankTransaction {
 	public int getNextQuestionID(int inst_id,int sub_id,int div_id) {
 		QuestionbankDB questionbankDB=new QuestionbankDB();
 		return questionbankDB.getNextQuestionID(inst_id, div_id, sub_id);
+	}
+	
+	public List<Integer> saveQuestionsInBulk(List<Question> questionBeanList, String questionType, int divId, int subId, int regID){
+		
+		List<Integer> invalidQuestionList=new ArrayList<Integer>();
+		for (Question question : questionBeanList) {
+			Questionbank questionbank= new Questionbank();
+			int questionNumber=0;
+			//Subjective question
+			if(questionType.equals("1")){
+				SubjectiveQuestion subjectiveQuestion=(SubjectiveQuestion) question;
+				
+				questionbank.setAdded_by(regID);
+				questionbank.setCreated_dt(new Date(new java.util.Date().getTime()));
+				questionbank.setDiv_id(divId);
+				questionbank.setSub_id(subId);
+				questionbank.setInst_id(regID);
+				questionbank.setMarks((int)subjectiveQuestion.getMarks());
+				questionbank.setQue_type(questionType);
+				questionbank.setQue_text(subjectiveQuestion.getQuestion());
+				questionNumber=subjectiveQuestion.getQuestionNumber();				
+			}else //Objective question
+				if(questionType.equals("2")){
+					MCQuestion mcQuestion=(MCQuestion) question;					
+					questionbank.setAdded_by(regID);
+					questionbank.setAns_id(mcQuestion.getCorrectAnswer());
+					questionbank.setCreated_dt(new Date(new java.util.Date().getTime()));
+					questionbank.setDiv_id(divId);
+					questionbank.setSub_id(subId);
+					questionbank.setInst_id(regID);
+					questionbank.setMarks((int)mcQuestion.getMarks());
+					questionbank.setQue_type(questionType);
+					questionbank.setQue_text(mcQuestion.getQuestion());
+					HashMap<String, String> optionMap=mcQuestion.getOptions();
+					questionbank.setOpt_1(optionMap.get("1"));
+					questionbank.setOpt_2(optionMap.get("2"));
+					questionbank.setOpt_3(optionMap.get("3"));
+					questionbank.setOpt_4(optionMap.get("4"));
+					questionbank.setOpt_5(optionMap.get("5"));
+					questionbank.setOpt_6(optionMap.get("6"));
+					questionbank.setOpt_7(optionMap.get("7"));
+					questionbank.setOpt_8(optionMap.get("8"));
+					questionbank.setOpt_9(optionMap.get("9"));
+					questionbank.setOpt_10(optionMap.get("10"));	
+					questionNumber=mcQuestion.getQuestionNumber();
+			}
+			int questionId=saveQuestion(questionbank);
+			if(questionId==0){
+				invalidQuestionList.add(questionNumber);
+			}
+		}
+		return invalidQuestionList;
 	}
 	
 	public int saveQuestion(Questionbank questionbank) {

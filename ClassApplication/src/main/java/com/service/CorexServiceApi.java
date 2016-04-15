@@ -209,4 +209,54 @@ public class CorexServiceApi extends ServiceBase{
 		fop.close();
 
 	}
+	
+	
+	@POST
+	@Path("/uploadExcelFile")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.MULTIPART_FORM_DATA)
+	public Response uploadExcelFile(MultipartFormDataInput input){
+		String fileName="";
+		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+		List<InputPart> inputParts = uploadForm.get("uploadedExcelFile");
+		
+		for (InputPart inputPart : inputParts) {
+
+			 try {
+				 	
+				MultivaluedMap<String, String> header = inputPart.getHeaders();
+				fileName = getFileName(header);
+				
+				//Extract file extention and replace filename with fileid
+				//int extentionStart = fileName.lastIndexOf(".");
+				//String fileId = UUID.randomUUID().toString()+getRegId();
+				//fileName = fileId+fileName.substring(extentionStart);
+				//convert the uploaded file to inputstream
+				InputStream inputStream = inputPart.getBody(InputStream.class,null);
+
+				byte [] bytes = IOUtils.toByteArray(inputStream);
+					
+				//constructs upload file path
+				
+				//create excel file tempfolder if not exist
+				String excelFileTempFolder = Constants.STORAGE_PATH + File.separatorChar+ "excelTemp";
+				File file = new File(excelFileTempFolder);
+				if(!file.exists()){
+					file.mkdirs();
+				}
+				
+				//Above generated folder will be used to save the image temparirily on successfull call files will be moved to main folder and old files will be deleted
+				String filePath = Constants.STORAGE_PATH + File.separatorChar+ "excelTemp" + File.separatorChar + getRegId() + fileName ;
+					
+				writeFile(bytes,filePath);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			}
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("fileid", fileName);
+		//jsonObject.
+		return Response.status(200).entity(jsonObject.toString()).type(MediaType.APPLICATION_JSON).build();
+	}
 }

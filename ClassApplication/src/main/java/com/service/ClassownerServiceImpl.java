@@ -78,6 +78,7 @@ import com.transaction.register.RegisterTransaction;
 import com.transaction.student.StudentTransaction;
 import com.transaction.studentmarks.StudentMarksTransaction;
 import com.user.UserBean;
+import com.transaction.questionbank.ExcelFileTransaction;
 
 @Path("/classownerservice") 
 public class ClassownerServiceImpl extends ServiceBase implements ClassownerServiceApi{
@@ -598,6 +599,17 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		StudentTransaction studentTransaction = new StudentTransaction();
 		List<StudentData> studentDatas = studentTransaction.getStudentForProgress(batch_id, getRegId(), div_id);
 		return Response.status(Status.OK).entity(studentDatas).build();
+	}
+	
+	@POST
+	@Path("/addExcelFile/{fileId}")
+	@Produces("application/json")
+	public Response addExcelFile(@PathParam("fileId") String fileId) {
+		ExcelFileTransaction excelTransactions = new ExcelFileTransaction(Constants.STORAGE_PATH);
+		String path=excelTransactions.copyExcelFile(getRegId()+fileId,getRegId());
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("fileid", path);
+		return Response.status(200).entity(jsonObject.toString()).build();
 	}
 	
 	@GET
