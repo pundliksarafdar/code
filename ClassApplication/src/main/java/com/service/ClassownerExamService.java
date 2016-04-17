@@ -216,8 +216,8 @@ public class ClassownerExamService extends ServiceBase{
 				if(index != list.get(index).getPreviousId()){
 					currentImageLocation.add(index);
 					prevImageLocation.add(list.get(index).getPreviousId());
-					optionImages.put(index, list.get(index).getOptionImage());
 				}
+				optionImages.put(index, list.get(index).getOptionImage());
 			}
 			imageTransactions.renameFolders(prevImageLocation, currentImageLocation, questionId, getRegId());
 			imageTransactions.saveOptionImage(optionImages, questionId, getRegId());
