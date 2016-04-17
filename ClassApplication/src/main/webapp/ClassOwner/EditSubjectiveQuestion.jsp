@@ -10,6 +10,7 @@
 	var subId = <c:out value="${subject}"></c:out>;
 	var queId = <c:out value="${questionNumber}"></c:out>;
 	var divId = <c:out value="${division}"></c:out>;
+	var topicId = <c:out value="${topicId}"></c:out>;
 	
 	var getQuestionUrl = "/rest/classownerservice/examservice/paraquestion/"+queId+"/"+subId+"/"+divId;
 	var handler = {};

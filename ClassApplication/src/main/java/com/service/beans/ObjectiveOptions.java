@@ -6,8 +6,17 @@ public class ObjectiveOptions {
 	String optionText;
 	boolean optionCorrect;
 	int optionId;
+	//this previous id is used to identify where previous image is   
+	int previousId;
 	List<String> optionImage;
 	
+	
+	public int getPreviousId() {
+		return previousId;
+	}
+	public void setPreviousId(int previousId) {
+		this.previousId = previousId;
+	}
 	public String getOptionText() {
 		return optionText;
 	}

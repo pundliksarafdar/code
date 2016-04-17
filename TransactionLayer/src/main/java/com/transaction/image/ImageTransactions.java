@@ -59,31 +59,71 @@ public class ImageTransactions {
 	}
 	
 	public void saveQuestionImage(List<String> tempImageList,int questionId,int regId){
-		String subjectiveImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + SUBJECTIVE + File.separatorChar + questionId + File.separatorChar;
+		String subjectiveImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + SUBJECTIVE + File.separatorChar + questionId;
+		List<String>savedImages = new ArrayList<String>();
 		for(String tempImageName:tempImageList){
-			saveImage(tempImageName, subjectiveImageDest+tempImageName,regId);
+			boolean isExist = saveImage(tempImageName, subjectiveImageDest+ File.separatorChar+tempImageName,regId);
+			if(isExist){
+				savedImages.add(tempImageName);
+			}
 		}
+		/*Removing images from list*/
+		List<String> imageNameList = getImageListInImageFolder(subjectiveImageDest);
+		imageNameList.removeAll(tempImageList);
+		
+		/*If image is not exist in the request then remove from the folder*/
+		deleteImageListInImageFolder(subjectiveImageDest, imageNameList);
 	}
 	
 	public void saveObjectiveQuestionImage(List<String> tempImageList,int questionId,int regId){
-		String subjectiveImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + questionId + File.separatorChar + QUESTION +File.separatorChar;
+		String subjectiveImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + questionId + File.separatorChar + QUESTION ;
+		List<String>savedImages = new ArrayList<String>();
 		for(String tempImageName:tempImageList){
-			saveImage(tempImageName, subjectiveImageDest+tempImageName,regId);
+			boolean isExist = saveImage(tempImageName, subjectiveImageDest+ File.separatorChar+tempImageName,regId);
+			if(isExist){
+				savedImages.add(tempImageName);
+			}
 		}
+		/*Removing images from list*/
+		List<String> imageNameList = getImageListInImageFolder(subjectiveImageDest);
+		imageNameList.removeAll(tempImageList);
+		
+		/*If image is not exist in the request then remove from the folder*/
+		deleteImageListInImageFolder(subjectiveImageDest, imageNameList);
 	}
 	
 	public void saveOptionImage(HashMap<Integer, List<String>> optionImages,int questionId,int regId){
 		String objectiveImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + questionId + File.separatorChar + OPTION +File.separatorChar;
 		
 		for (Entry<Integer, List<String>> entry : optionImages.entrySet()) {
-			String optionIdPath = objectiveImageDest + entry.getKey() + File.separatorChar;
+			String optionIdPath = objectiveImageDest + entry.getKey() ;
 			
 			List<String> tempImageList = entry.getValue(); 
 			for(String tempImageName:tempImageList){
-				String imageDest = optionIdPath + tempImageName;
+				String imageDest = optionIdPath + File.separatorChar + tempImageName;
 				saveImage(tempImageName, imageDest,regId);
-			}	
+			}
+			/*Removing images from list*/
+			List<String> imageNameList = getImageListInImageFolder(optionIdPath);
+			imageNameList.removeAll(tempImageList);
+			
+			/*If image is not exist in the request then remove from the folder*/
+			deleteImageListInImageFolder(optionIdPath, imageNameList);
 		}		
+	}
+	
+	public void renameFolders(List<Integer>prevImage,List<Integer>currentImage,int questionId,int regId){
+		String objectiveImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + questionId + File.separatorChar + OPTION +File.separatorChar;
+		System.out.println("Renaming image.....");
+		System.out.println(prevImage);
+		System.out.println(currentImage);
+		
+		int imageFolderLength = prevImage.size();
+		for(int index=0;index<imageFolderLength;index++){
+			File prevOptionImageFolder = new File(objectiveImageDest+prevImage.get(index));
+			File currentOptionImageFolder = new File(objectiveImageDest+currentImage.get(index));
+			prevOptionImageFolder.renameTo(currentOptionImageFolder);
+		}
 	}
 	
 	public void saveParagraphImage(ParaQuestionBean paraQuestionBean,int questionId,int regId){
@@ -122,6 +162,9 @@ public class ImageTransactions {
 		return imageListBeans;
 	}
 	
+	/*
+	 if image is present in tempdirectory then it will return true else false
+	 */
 	private boolean saveImage(String imageFileId,String imagePath,int regId){
 		String tempImagePath = this.storageURL + File.separatorChar+ "imageTemp" + File.separatorChar + regId + imageFileId;
 		
@@ -131,12 +174,42 @@ public class ImageTransactions {
 		if(!dest.getParentFile().exists()){
 	    	dest.getParentFile().mkdirs();
 	    }
+		
+		if(source.exists()){
 		try {
 			Files.copy(source.toPath(), dest.toPath());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return true;
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	private void deleteImageListInImageFolder(String destPath,List<String>imageNames){
+		List<String> imageList = new ArrayList<String>();
+		File file = new File(destPath);
+		if(file.exists()){
+			File[] files = file.listFiles();
+			for (File imageFile:files) {
+				if(imageNames.contains(imageFile.getName())){
+					imageFile.delete();
+				}
+			}
+		}
+	}
+	
+	private List<String> getImageListInImageFolder(String destPath){
+		List<String> imageList = new ArrayList<String>();
+		File file = new File(destPath);
+		if(file.exists()){
+			File[] files = file.listFiles();
+			for (File imageFile:files) {
+				imageList.add(imageFile.getName());
+			}
+		}
+		return imageList;
 	}
 }

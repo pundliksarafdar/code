@@ -6,11 +6,18 @@ public class SubjectiveExamBean {
 	private String classId;
 	private int subjectId;
 	private int topicId;
+	private int questionId;
 	private String questionType;
 	private String question;
 	private int marks;
 	private List<String> images;
 	
+	public int getQuestionId() {
+		return questionId;
+	}
+	public void setQuestionId(int questionId) {
+		this.questionId = questionId;
+	}
 	public String getClassId() {
 		return classId;
 	}

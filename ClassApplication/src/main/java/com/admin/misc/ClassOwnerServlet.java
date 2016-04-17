@@ -67,6 +67,7 @@ import com.google.gson.JsonParser;
 import com.helper.BatchHelperBean;
 import com.helper.TeacherHelperBean;
 import com.mails.AllMail;
+import com.service.beans.ParaQuestionBean;
 import com.threadrunner.ReEvaluateThreadRunner;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.advertisetransaction.AdvertiseTransaction;
@@ -3409,13 +3410,14 @@ public class ClassOwnerServlet extends HttpServlet{
 		}
 		List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(marks, Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage,topic,questionType);
 		List<Integer> marksList=bankTransaction.getDistinctQuestionMarks(Integer.parseInt(subject), Integer.parseInt(division), inst_id,questionType);
-		List<ParagraphQuestion> paragraphQuestionList=new ArrayList<ParagraphQuestion>();
+		List<ParaQuestionBean> paragraphQuestionList=new ArrayList<ParaQuestionBean>();
 		if("3".equals(questionType)){
 			UserStatic userStatic = userBean.getUserStatic();
 			for (int i = 0; i < questionbanks.size(); i++) {
-				String questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionbanks.get(i).getQue_id();
-				ParagraphQuestion questionData=(ParagraphQuestion) readObject(new File(questionPath));
-				paragraphQuestionList.add(questionData);
+				//String questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionbanks.get(i).getQue_id();
+				String questionPath=com.config.Constants.STORAGE_PATH+File.separatorChar+userBean.getRegId()+File.separatorChar+"exam"+File.separatorChar+"paragraph"+File.separatorChar+questionbanks.get(i).getQue_id();
+				ParaQuestionBean paraQuestionBean=(ParaQuestionBean) readObject(new File(questionPath));
+				paragraphQuestionList.add(paraQuestionBean);
 			}
 		}
 		

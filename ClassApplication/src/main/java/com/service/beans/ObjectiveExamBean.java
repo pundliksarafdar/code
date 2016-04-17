@@ -9,9 +9,16 @@ public class ObjectiveExamBean {
 	String questionType;
 	String question;
 	int marks;
+	int questionId;
 	List<String> images;
 	List<ObjectiveOptions> options;
 	
+	public int getQuestionId() {
+		return questionId;
+	}
+	public void setQuestionId(int questionId) {
+		this.questionId = questionId;
+	}
 	public String getClassId() {
 		return classId;
 	}

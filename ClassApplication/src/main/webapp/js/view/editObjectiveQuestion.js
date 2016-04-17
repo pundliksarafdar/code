@@ -55,10 +55,15 @@ var SAVE_OBJECTIVE_EXAM = "#saveObjectiveExam";
 	function saveExam(){
 		if($(ADD_OBJECT_FORM).valid()){
 			var objectiveExamBean = new ObjectiveExamBean();
-			objectiveExamBean.classId = $("#classownerUploadexamDivisionName").val();
-			objectiveExamBean.subjectId = $("#classownerUploadexamSubjectNameSelect").val();
-			objectiveExamBean.topicId = $("#classownerUploadQuestionTopicSelect").val();
-			objectiveExamBean.questionType = $("#classownerQuestionTypeSelect").val();
+			
+			//divId,subId,topicId,questionId is for from jsp page request variable
+			objectiveExamBean.classId = divId;//$("#classownerUploadexamDivisionName").val();
+			objectiveExamBean.subjectId = subId;//$("#classownerUploadexamSubjectNameSelect").val();
+			objectiveExamBean.topicId = topicId;//$("#classownerUploadQuestionTopicSelect").val();
+			objectiveExamBean.questionId = queId;//$("#questionId").val();
+
+			//2 is for objective question
+			objectiveExamBean.questionType = "2";
 			objectiveExamBean.question = $("#objectiveQuestion").val();
 			objectiveExamBean.marks = $("#objectiveQuestionmarks").val();
 			objectiveExamBean.images = [];
@@ -75,7 +80,7 @@ var SAVE_OBJECTIVE_EXAM = "#saveObjectiveExam";
 				var opt = new Options();
 				opt.optionCorrect = $(option).find("input[type='checkbox']").is(":checked");
 				opt.optionText = $(option).find("input[type='text']").val();
-				
+				opt.previousId = $(option).find("input#previousId").val();
 				//Collecting option images
 				var optionImagesArr = [];
 				var images = $(option).find("#objectiveImageRow .objectiveOptionImage");
@@ -91,7 +96,7 @@ var SAVE_OBJECTIVE_EXAM = "#saveObjectiveExam";
 			handler.error = function(e){console.log(e)}
 			
 			objectiveExamBean.options = optionsArr;
-			rest.post(saveObjectiveExamUrl,handler,JSON.stringify(objectiveExamBean),true);
+			rest.put(saveObjectiveExamUrl,handler,JSON.stringify(objectiveExamBean),true);
 			console.log(objectiveExamBean);
 		}else{
 			console.log("not valid");
@@ -106,10 +111,17 @@ var SAVE_OBJECTIVE_EXAM = "#saveObjectiveExam";
 	function deleteOption(){
 		$(this).closest(".options").remove();
 	}
+	
+	function addOption(){
+		var optionComponent = $(OPTION_COMPONENT).clone();
+		$(OPTION_ROW).append(optionComponent);
+	}
+	
 	function ObjectiveExamBean(){
 		this.classId;
 		this.subjectId;
 		this.topicId;
+		this.questionId;
 		this.questionType;
 		this.question;
 		this.marks;
@@ -122,6 +134,7 @@ var SAVE_OBJECTIVE_EXAM = "#saveObjectiveExam";
 		this.optionCorrect;
 		this.optionId;
 		this.optionImage;
+		this.previousId;
 	}
 })();
 
@@ -131,12 +144,19 @@ function loadObjectiveQuestion(data){
 	
 	var images = "";
 	for(var index=0;index<data.primaryImage.length;index++){
-		images = images + "<img src=/rest/commonservices/image/"+data.primaryImage[index]+" width='200px' height='200px'>";
+		//images = images + "<img src=/rest/commonservices/image/"+data.primaryImage[index]+" width='200px' height='200px'>";
+		var imgTag = "<img src='/rest/commonservices/image/"+data.primaryImage[index]+"' width='200px' height='200px' />";
+		var hiddenTag = "<input type='hidden' name='objectiveQuestionImage' class='objectiveQuestionImage' value='{{questionImage}}' />";
+		var closeButton = '<button type="button" class="answer_image_with_btn_remove close" aria-hidden="true">&times;</button>';
+		var imageColElement = "<div class='col-sm-3 image_with_btn'>"+closeButton+hiddenTag+imgTag+"</div>"
+		var imageId = getImageId(data.primaryImage[index]);
+		imageColElement = imageColElement.replace('{{questionImage}}',imageId);
+		images += imageColElement;
 	}
 	
-	for(var index=1;index<=10;index++){
-		if(data["opt_"+index]){
-			addOptionValue(data["opt_"+index],true,data.secondaryImage[index-1]?data.secondaryImage[index-1]:[]);
+	for(var index=0;index<10;index++){
+		if(data["opt_"+(index+1)]){
+			addOptionValue(data["opt_"+(index+1)],true,data.secondaryImage[index]?data.secondaryImage[index]:[],index);
 		}else{
 			break;
 		}
@@ -144,15 +164,28 @@ function loadObjectiveQuestion(data){
 	$("#objectiveImageRow").append(images);
 }
 
-function addOptionValue(text,selected,images){
+function addOptionValue(text,selected,images,currentIndex){
 	var optionComponent = $(OPTION_COMPONENT).clone();
 	$(optionComponent).find("input[type='text']").val(text);
+	$(optionComponent).find("input#previousId").val(currentIndex);
 	var optionImages = "";
 	for(var index=0;index<images.length;index++){
-		optionImages = optionImages + "<img src=/rest/commonservices/image/"+images[index]+" width='200px' height='200px'>";
+		var imgTag = "<img src='/rest/commonservices/image/"+images[index]+"' width='200px' height='200px' />";
+		var hiddenTag = "<input type='hidden' name='objectiveQuestionImage' class='objectiveOptionImage' value='{{questionImage}}' />";
+		var closeButton = '<button type="button" class="answer_image_with_btn_remove close" aria-hidden="true">&times;</button>';
+		var imageColElement = "<div class='col-sm-3 image_with_btn'>"+closeButton+hiddenTag+imgTag+"</div>"
+		
+		var imageId = getImageId(images[index]);
+		imageColElement = imageColElement.replace('{{questionImage}}',imageId);
+		optionImages +=  imageColElement;
 	}
 	
 	$(optionComponent).find("#objectiveImageRow").append(optionImages);
 	$(OPTION_ROW).append(optionComponent);
 	
+}
+
+function getImageId(url){
+	var lastIndex = url.lastIndexOf("_");
+	return url.slice(lastIndex+1);
 }
