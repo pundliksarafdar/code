@@ -541,6 +541,29 @@
 			method="execute">
 			<result name="success" type="tiles">classowner.examProgressCard</result>
 		</action>
-
+		<action name="addteacherquestion" class="com.teacher.AddTeacherQuestionAction"
+			method="execute">
+			<result name="success" type="tiles">teacher.addquestion</result>
+		</action>
+		<action name="createTeacherExamPatten" class="com.teacher.CreateTeacherExamPatternAction"
+			method="execute">
+			<result name="success" type="tiles">teacher.createexampattern</result>
+		</action>
+		<action name="viewneditteacherpattern" class="com.teacher.CreateTeacherExamPatternAction"
+			method="execute">
+			<result name="success" type="tiles">teacher.editexampattern</result>
+		</action>
+		<action name="generateteacherQuestionPaper" class="com.teacher.CreateTeacherExamPatternAction"
+			method="execute">
+			<result name="success" type="tiles">teacher.createquestionpaper</result>
+		</action>
+		<action name="editteacherQuestionPaper" class="com.teacher.CreateTeacherExamPatternAction"
+			method="execute">
+			<result name="success" type="tiles">teacher.editquestionpaper</result>
+		</action>
+		<action name="teacherExamMarks" class="com.teacher.TeacherExamMarks"
+			method="execute">
+			<result name="success" type="tiles">teacher.examMarks</result>
+		</action>
 	</package>
 </struts>

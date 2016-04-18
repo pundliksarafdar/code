@@ -26,5 +26,11 @@
         <property name="pattern_type" type="string">
             <column name="pattern_type"/>
         </property> 
+        <property name="addedby" type="int">
+            <column name="addedby"/>
+        </property> 
+        <property name="modifiedby" type="int">
+            <column name="modifiedby"/>
+        </property> 
         </class>
 </hibernate-mapping>

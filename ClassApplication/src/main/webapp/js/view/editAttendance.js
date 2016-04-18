@@ -56,10 +56,13 @@ $(document).ready(function(){
 			}
 			console.log(attendanceArr);
 			var handler = {};
-			handler.success = function(e){console.log("Success",e);
+			handler.success = function(e){
+				$("#attendanceStudentListDiv").hide();
+				$("#attendanceScheduleDiv").show();	
+				$.notify({message: "Attendanced updated successfully"},{type: 'success'});
 			
 			}
-			handler.error = function(e){console.log("Error",e)}
+			handler.error = function(e){$.notify({message: "Attendanced not updated successfully"},{type: 'danger'});}
 			rest.post("rest/attendance/updateStudentAttendance",handler,JSON.stringify(attendanceArr));
 	 });
 	 
@@ -148,7 +151,7 @@ function getSchedule(){
 	
 	}
 	handler.error = function(e){console.log("Error",e)}
-	rest.get("rest/attendance/getScheduleForAttendance/"+division+"/"+batch+"/"+new Date(date[2],parseInt(date[1])-1,date[0]).getTime(),handler);
+	rest.get("rest/attendance/getScheduleForUpdateAttendance/"+division+"/"+batch+"/"+new Date(date[2],parseInt(date[1])-1,date[0]).getTime(),handler);
 }
 function createAttendanceScheduleTable(data){
 	//data = JSON.parse(data);
@@ -169,7 +172,7 @@ function createAttendanceScheduleTable(data){
 				return row.start_time+" - "+row.end_time;
 			},sWidth:"20%"},
 			{ title: "Attendance",data:null,render:function(data,event,row){
-				return "<div><input type='button' class='btn btn-primary btn-sm markAttendance' value='Mark Attendance'><input type='hidden' id='sub_id' value='"+row.sub_id+"'><input type='hidden' id='schedule_id' value='"+row.schedule_id+"'></div>";
+				return "<div><input type='button' class='btn btn-primary btn-sm markAttendance' value='Update Attendance'><input type='hidden' id='sub_id' value='"+row.sub_id+"'><input type='hidden' id='schedule_id' value='"+row.schedule_id+"'></div>";
 			},sWidth:"20%"}
 		]
 	});

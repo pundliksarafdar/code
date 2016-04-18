@@ -1,15 +1,21 @@
 package com.transaction.teacher;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.beanutils.BeanUtils;
 
 import com.classapp.db.Teacher.Teacher;
 import com.classapp.db.Teacher.TeacherDB;
 import com.classapp.db.Teacher.TeacherDetails;
+import com.classapp.db.batch.division.Division;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.subject.Subject;
+import com.service.beans.TeacherDivisionsAndSubjects;
+import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.schedule.ScheduleTransaction;
 
@@ -212,6 +218,46 @@ public class TeacherTransaction {
 	public List<Subject> getTeacherSubject(int teacherid,int classid) {
 		TeacherDB db=new TeacherDB();
 		return db.getTeacherSubjects(teacherid, classid);
+	}
+	
+	public TeacherDivisionsAndSubjects getDivisionsAndSubjects(int inst_id,int teacher_id) {
+		TeacherTransaction teacherTransaction=new TeacherTransaction();
+		List<Subject> subjectlist=teacherTransaction.getTeacherSubject(teacher_id, inst_id);
+		DivisionTransactions divisionTransactions=new DivisionTransactions();
+		List<Division> divisions=divisionTransactions.getAllDivisions(inst_id);
+		List<com.datalayer.subject.Subject> subjectList = new ArrayList<com.datalayer.subject.Subject>();
+		for (Subject subject : subjectlist) {
+			com.datalayer.subject.Subject serviceSubject = new com.datalayer.subject.Subject();
+			try {
+				BeanUtils.copyProperties(serviceSubject, subject);
+				subjectList.add(serviceSubject);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		List<com.service.beans.Division> divisionsList = new ArrayList<com.service.beans.Division>();
+		
+		for (Division division : divisions) {
+			com.service.beans.Division serviceDivision = new com.service.beans.Division();
+			try {
+				BeanUtils.copyProperties(serviceDivision, division);
+				divisionsList.add(serviceDivision);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		TeacherDivisionsAndSubjects teacherDivisionsAndSubjects = new TeacherDivisionsAndSubjects();
+		teacherDivisionsAndSubjects.setDivisionList(divisionsList);
+		teacherDivisionsAndSubjects.setSubjectList(subjectList);
+		return teacherDivisionsAndSubjects;
 	}
 	
 }

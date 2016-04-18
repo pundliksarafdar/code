@@ -3,6 +3,7 @@ var getBatchListUrl = "rest/feesservice/getInstituteBatch/";
 var getAllBatchStudentsFeesUrl = "rest/feesservice/getAllBatchStudentsFees/";
 var subject_id = "";
 var schedule_id = "";
+var subjectThat = "";
 /*************/
 var DIVISION_SELECT = "#divisionSelect";
 var BATCH_SELECT = "#batchSelect";
@@ -27,6 +28,7 @@ $(document).ready(function(){
 	 $('#attendanceScheduleTable').on("click",".markAttendance",function(){
 		 subject_id = $(this).closest("div").find("#sub_id").val();
 		 schedule_id= $(this).closest("div").find("#schedule_id").val();
+		 subjectThat = $(this);
 		 getStudents();
 	 });
 	 
@@ -58,10 +60,17 @@ $(document).ready(function(){
 			}
 			console.log(attendanceArr);
 			var handler = {};
-			handler.success = function(e){console.log("Success",e);
+			handler.success = function(e){
+				subjectThat.prop("disabled",true);
+				subjectThat.closest("tr").find(".attendanceStatus").html("Yes");
+				$("#attendanceStudentListDiv").hide();
+				$("#attendanceScheduleDiv").show();
+				$.notify({message: "Attendanced saved successfully"},{type: 'success'});
 			
 			}
-			handler.error = function(e){console.log("Error",e)}
+			handler.error = function(e){
+				$.notify({message: "Attendanced not saved successfully"},{type: 'danger'});
+				}
 			rest.post("rest/attendance/saveStudentAttendance",handler,JSON.stringify(attendanceArr));
 	 });
 	 
@@ -171,7 +180,18 @@ function createAttendanceScheduleTable(data){
 				return row.start_time+" - "+row.end_time;
 			},sWidth:"20%"},
 			{ title: "Attendance",data:null,render:function(data,event,row){
-				return "<div><input type='button' class='btn btn-primary btn-sm markAttendance' value='Mark Attendance'><input type='hidden' id='sub_id' value='"+row.sub_id+"'><input type='hidden' id='schedule_id' value='"+row.schedule_id+"'></div>";
+				if(row.attendanceStatus == true){
+				return "<div><input type='button' class='btn btn-primary btn-sm markAttendance' value='Mark Attendance' disabled></div>";
+				}else{
+					return "<div><input type='button' class='btn btn-primary btn-sm markAttendance' value='Mark Attendance'><input type='hidden' id='sub_id' value='"+row.sub_id+"'><input type='hidden' id='schedule_id' value='"+row.schedule_id+"'></div>";	
+				}	
+			},sWidth:"20%"},
+			{ title: "Attendance Filled",data:null,render:function(data,event,row){
+				if(row.attendanceStatus == true){
+				return "<div class='attendanceStatus'>Yes</div>";
+				}else{
+					return "<div class='attendanceStatus'>No</div>";
+				}
 			},sWidth:"20%"}
 		]
 	});

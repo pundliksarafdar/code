@@ -29,7 +29,7 @@ public class AddTeacherNotesOptionAction extends BaseAction{
 		TeacherTransaction teacherTransaction=new TeacherTransaction();
 		List classids=teacherTransaction.getTeachersClass(userBean.getRegId());
 		RegisterTransaction registerTransaction=new RegisterTransaction();
-		List classes=registerTransaction.getTeachersclassNames(classids);
+		List classes=registerTransaction.getTeachersInstitutes(classids);
 		request.setAttribute("classes", classes);
 		
 		request.setAttribute("notes", notes);

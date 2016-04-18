@@ -816,7 +816,11 @@ public class ScheduleTransaction {
 		 
 		 Date date = new Date(calendar.getTime().getTime());
 		 System.out.println(date.toString());
-		 dateList.add(date);
+		 if(date.after(end_date)){
+				continue;
+			}else{
+				dateList.add(date);
+			}
 		 boolean flag = true;
 		 while (flag) {
 			    calendar.add(Calendar.DAY_OF_YEAR, 7);

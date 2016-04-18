@@ -61,7 +61,7 @@ public class QuestionPaperPatternTransaction {
 		this.questionStorageURL = questionStorageURL;
 	}
 
-	public boolean saveQuestionPaperPattern(com.service.beans.QuestionPaperPattern paperPattern) {
+	public boolean saveQuestionPaperPattern(com.service.beans.QuestionPaperPattern paperPattern,int addedby) {
 		QuestionPaperPatternDB questionPaperPatternDB = new QuestionPaperPatternDB();
 		if(!questionPaperPatternDB.verifyPatterName(inst_id, paperPattern.getClass_id(), paperPattern.getPattern_name())){
 		QuestionPaperPattern questionPaperPattern = new QuestionPaperPattern();
@@ -71,6 +71,7 @@ public class QuestionPaperPatternTransaction {
 		questionPaperPattern.setPattern_name(paperPattern.getPattern_name());
 		questionPaperPattern.setSub_id(paperPattern.getSub_id());
 		questionPaperPattern.setPattern_type(paperPattern.getPattern_type());
+		questionPaperPattern.setAddedby(addedby);
 		int pattern_id=questionPaperPatternDB.saveQuestionPaperPattern(questionPaperPattern);
 		paperPattern.setPattern_id(pattern_id);
 		String filePath = patternStorageURL+File.separator+questionPaperPattern.getDiv_id()+File.separator+pattern_id;
@@ -81,7 +82,7 @@ public class QuestionPaperPatternTransaction {
 		return true;
 	}
 	
-	public boolean updateQuestionPaperPattern(com.service.beans.QuestionPaperPattern paperPattern) {
+	public boolean updateQuestionPaperPattern(com.service.beans.QuestionPaperPattern paperPattern,int modifiedby) {
 		QuestionPaperPatternDB questionPaperPatternDB = new QuestionPaperPatternDB();
 		if(!questionPaperPatternDB.verifyUpdatePatterName(inst_id, paperPattern.getClass_id(), paperPattern.getPattern_name(),paperPattern.getPattern_id())){
 		QuestionPaperPattern questionPaperPattern = new QuestionPaperPattern();
@@ -91,7 +92,8 @@ public class QuestionPaperPatternTransaction {
 		questionPaperPattern.setPattern_name(paperPattern.getPattern_name());
 		questionPaperPattern.setSub_id(paperPattern.getSub_id());
 		questionPaperPattern.setPattern_id(paperPattern.getPattern_id());
-		int pattern_id=questionPaperPatternDB.saveQuestionPaperPattern(questionPaperPattern);
+		questionPaperPattern.setModifiedby(modifiedby);
+		int pattern_id=questionPaperPatternDB.updateQuestionPaperPattern(questionPaperPattern);
 		String filePath = patternStorageURL+File.separator+questionPaperPattern.getDiv_id()+File.separator+pattern_id;
 		writeObject(filePath, paperPattern);
 		}else{

@@ -3,6 +3,7 @@ package com.transaction.register;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -68,11 +69,17 @@ public class RegisterTransaction {
 		return list;
 	}
 	
-	public List<RegisterBean> getTeachersclassNames(List classids) {
+	public List<RegisterBean> getTeachersInstitutes(List instIds) {
 		RegisterDB registerDB=new RegisterDB();
-		int counter=0;
 		List<RegisterBean> registerBeans=new ArrayList<RegisterBean>();
-		registerBeans=registerDB.getTeachersClassName(classids);
+		List list=registerDB.getTeachersInstitutes(instIds);
+		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+			Object[] object = (Object[]) iterator.next();
+			RegisterBean bean = new RegisterBean();
+			bean.setRegId(((Number)object[0]).intValue());
+			bean.setClassName((String) object[1]);
+			registerBeans.add(bean);
+		}
 		return registerBeans;
 	}
 	

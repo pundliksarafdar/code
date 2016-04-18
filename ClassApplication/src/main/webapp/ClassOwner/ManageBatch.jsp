@@ -97,7 +97,7 @@
 	function validateElement(batchName,selectSubject){
 		$(batchName).closest("div").find(".error").remove();
 		$(selectSubject).closest("div").find(".error").remove();
-		var CHAR_AND_NUM_VALIDATION = /^[a-zA-Z0-9 -]{1,}$/;
+		var CHAR_AND_NUM_VALIDATION = /^[a-zA-Z0-9 -_]{1,}$/;
 		isValid = true;
 		if(batchName.val().trim()==""){
 			batchName.after("<div class='error'>Field cannot be blank</div>");
@@ -297,7 +297,7 @@
 	$(document).ready(function(){
 		getAllBatches();
 		subjectData = getAllSubjects();
-		$("#addBatchSelectSubject").select2({data:subjectData,placeholder:"type subject name"});
+		$("#addBatchSelectSubject").select2({data:subjectData,placeholder:"Select subjects for batch"});
 		$(this).on("click",".btn-batch-delete",deleteBatchPrompt)
 			.on("click",".btn-batch-edit",enableEdit)
 			.on("click",".btn-cancel",cancelEdit)

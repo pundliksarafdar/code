@@ -625,7 +625,9 @@ public List getAllBatchStudentsFees(int inst_id,int div_id,int batch_id) {
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
 		transaction = session.beginTransaction();
-		Query query = session.createQuery("Select fees.student_id ,reg.fname,reg.lname,fees.batch_fees,fees.discount,fees.discount_type,fees.final_fees_amt,fees.fees_paid,fees.fees_due  From Student_Fees fees ,RegisterBean reg where fees.inst_id = :inst_id and fees.div_id = :div_id and fees.batch_id=:batch_id " +
+		Query query = session.createQuery("Select fees.student_id ,reg.fname,reg.lname,fees.batch_fees,fees.discount,fees.discount_type,"
+				+ "fees.final_fees_amt,fees.fees_paid,fees.fees_due  From Student_Fees fees ,RegisterBean reg where "
+				+ "fees.inst_id = :inst_id and fees.div_id = :div_id and fees.batch_id=:batch_id " +
 				"and fees.student_id = reg.regId");
 		query.setParameter("inst_id", inst_id);
 		query.setParameter("div_id", div_id);

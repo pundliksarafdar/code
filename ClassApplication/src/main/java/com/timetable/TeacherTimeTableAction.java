@@ -27,7 +27,7 @@ public class TeacherTimeTableAction extends BaseAction {
 		TeacherTransaction teacherTransaction=new TeacherTransaction();
 		List classids=teacherTransaction.getTeachersClass(regID);
 		RegisterTransaction registerTransaction=new RegisterTransaction();
-		List<RegisterBean> classbeanes=registerTransaction.getTeachersclassNames(classids);
+		List<RegisterBean> classbeanes=registerTransaction.getTeachersInstitutes(classids);
 		request.setAttribute("Classes", classbeanes);
 		// TODO Auto-generated method stub
 		return SUCCESS;

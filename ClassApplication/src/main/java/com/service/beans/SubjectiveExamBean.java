@@ -11,6 +11,7 @@ public class SubjectiveExamBean {
 	private String question;
 	private int marks;
 	private List<String> images;
+	private int inst_id;
 	
 	public int getQuestionId() {
 		return questionId;
@@ -59,6 +60,12 @@ public class SubjectiveExamBean {
 	}
 	public void setMarks(int marks) {
 		this.marks = marks;
+	}
+	public int getInst_id() {
+		return inst_id;
+	}
+	public void setInst_id(int inst_id) {
+		this.inst_id = inst_id;
 	}
 	
 }

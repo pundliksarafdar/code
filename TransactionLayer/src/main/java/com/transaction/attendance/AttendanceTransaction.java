@@ -39,6 +39,8 @@ public class AttendanceTransaction {
 		ScheduleDB db = new ScheduleDB();
 		List<AttendanceScheduleServiceBean> attendanceScheduleServiceBeanList = new ArrayList<AttendanceScheduleServiceBean>(); 
 		List list =  db.getScheduleForAttendance(batchid, date, inst_id, div_id);
+		AttendanceDB attendanceDB = new AttendanceDB();
+		List<Integer> scheduleIds = attendanceDB.getDailyDistinctAttendance(inst_id, div_id, batchid, date);
 		if(list != null){
 			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 				Object[] object = (Object[]) iterator.next();
@@ -48,8 +50,44 @@ public class AttendanceTransaction {
 				bean.setSub_id(((Number) object[3]).intValue());
 				bean.setSchedule_id(((Number) object[4]).intValue());
 				bean.setStart_time( (Time) object[5]);
-				bean.setEnd_time((Time) object[6]);			
+				bean.setEnd_time((Time) object[6]);
+				bean.setAttendanceStatus(false);
+				for (Integer schedule_id : scheduleIds) {
+					if(((Number) object[4]).intValue() == schedule_id){
+						bean.setAttendanceStatus(true);
+						break;
+					}
+				}
 				attendanceScheduleServiceBeanList.add(bean);
+
+			}
+		}
+		return attendanceScheduleServiceBeanList;
+	}
+	
+	public List<AttendanceScheduleServiceBean> getScheduleForUpdateAttendance(int batchid, Date date, int inst_id, int div_id) {
+		ScheduleDB db = new ScheduleDB();
+		List<AttendanceScheduleServiceBean> attendanceScheduleServiceBeanList = new ArrayList<AttendanceScheduleServiceBean>(); 
+		List list =  db.getScheduleForAttendance(batchid, date, inst_id, div_id);
+		AttendanceDB attendanceDB = new AttendanceDB();
+		List<Integer> scheduleIds = attendanceDB.getDailyDistinctAttendance(inst_id, div_id, batchid, date);
+		if(list != null){
+			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+				Object[] object = (Object[]) iterator.next();
+				for (Integer schedule_id : scheduleIds) {
+					if(((Number) object[4]).intValue() == schedule_id){
+				AttendanceScheduleServiceBean bean = new AttendanceScheduleServiceBean();
+				bean.setTeacher(object[0]+" "+object[1]);
+				bean.setSub_name((String) object[2]);
+				bean.setSub_id(((Number) object[3]).intValue());
+				bean.setSchedule_id(((Number) object[4]).intValue());
+				bean.setStart_time( (Time) object[5]);
+				bean.setEnd_time((Time) object[6]);
+				bean.setAttendanceStatus(true);	
+				attendanceScheduleServiceBeanList.add(bean);
+				break;
+					}
+				}
 
 			}
 		}
@@ -183,6 +221,7 @@ public class AttendanceTransaction {
 		List totalList =  db.getStudentsMonthlyTotalCount(batchid, inst_id, div_id,date);
 		List<MonthlyAttendance> monthlyAttendanceList = new ArrayList<MonthlyAttendance>();
 		List<MonthlyCount> monthlyCountList = new ArrayList<MonthlyCount>();
+		List allStudents = db.getAllStudents(batchid, inst_id, div_id);
 		int total_lecture_count = 0;
 		for (Iterator iterator = totalList.iterator(); iterator
 				.hasNext();) {
@@ -193,10 +232,15 @@ public class AttendanceTransaction {
 			total_lecture_count = total_lecture_count + ((Number) object[0]).intValue();
 			monthlyCountList.add(monthlyCount);
 		}
+		for (Iterator itr = allStudents.iterator(); itr.hasNext();) {
+			Object[] obj = (Object[]) itr.next();
+			boolean stdFlag = false;
 		for (Iterator iterator = presentList.iterator(); iterator
 				.hasNext();) {
 			int total_presentee = 0;
 			Object[] object = (Object[]) iterator.next();
+			if(((Number) object[4]).intValue() == ((Number) obj[2]).intValue()){
+				stdFlag = true;
 			MonthlyAttendance monthlyAttendance = new MonthlyAttendance();
 			monthlyAttendance.setStudent_name((String) object[0]+" "+(String) object[1]);
 			monthlyAttendance.setDate((Date) object[3]);
@@ -260,7 +304,31 @@ public class AttendanceTransaction {
 			monthlyAttendance.setTotal_monthly_presentee(total_presentee);
 			monthlyAttendance.setMonthlyCountList(monthlyCountList);
 			monthlyAttendanceList.add(monthlyAttendance);
+			}
 		}
+			if(stdFlag == false){
+				MonthlyAttendance monthlyAttendance = new MonthlyAttendance();
+				monthlyAttendance.setStudent_name((String) obj[0]+" "+(String) obj[1]);
+				monthlyAttendance.setStudent_id(((Number) obj[2]).intValue());
+				monthlyAttendance.setTotal_monthly_lectures(total_lecture_count);
+				String[] daily_attendance = new String[monthlyCountList.size()];
+				String[] daily_attendance_percentage = new String[monthlyCountList.size()];
+				int i = 0;
+				while (i<monthlyCountList.size()) {
+		
+							daily_attendance[i] = "0";
+							daily_attendance_percentage[i] = "0";
+							i++;
+						
+					}
+				monthlyAttendance.setDaily_presentee(daily_attendance);
+				monthlyAttendance.setDaily_presentee_percentange(daily_attendance_percentage);
+				monthlyAttendance.setTotal_prsentee_percentage(0);
+				monthlyAttendance.setTotal_monthly_presentee(0);
+				monthlyAttendance.setMonthlyCountList(monthlyCountList);
+				monthlyAttendanceList.add(monthlyAttendance);
+			}
+			}
 		return monthlyAttendanceList;
 	}
 	
@@ -271,6 +339,7 @@ public class AttendanceTransaction {
 		List totalList =  db.getStudentsWeeklyTotalCount(batchid, inst_id, div_id,date);
 		List<MonthlyAttendance> monthlyAttendanceList = new ArrayList<MonthlyAttendance>();
 		List<MonthlyCount> monthlyCountList = new ArrayList<MonthlyCount>();
+		List allStudents = db.getAllStudents(batchid, inst_id, div_id);
 		int total_lecture_count = 0;
 		for (Iterator iterator = totalList.iterator(); iterator
 				.hasNext();) {
@@ -281,10 +350,15 @@ public class AttendanceTransaction {
 			total_lecture_count = total_lecture_count + ((Number) object[0]).intValue();
 			monthlyCountList.add(monthlyCount);
 		}
+		for (Iterator itr = allStudents.iterator(); itr.hasNext();) {
+			Object[] obj = (Object[]) itr.next();
+			boolean stdFlag = false;
 		for (Iterator iterator = presentList.iterator(); iterator
 				.hasNext();) {
 			int total_presentee = 0;
 			Object[] object = (Object[]) iterator.next();
+			if(((Number) object[4]).intValue() == ((Number) obj[2]).intValue()){
+				stdFlag = true;
 			MonthlyAttendance monthlyAttendance = new MonthlyAttendance();
 			monthlyAttendance.setStudent_name((String) object[0]+" "+(String) object[1]);
 			monthlyAttendance.setDate((Date) object[3]);
@@ -348,6 +422,30 @@ public class AttendanceTransaction {
 			monthlyAttendance.setTotal_monthly_presentee(total_presentee);
 			monthlyAttendance.setMonthlyCountList(monthlyCountList);
 			monthlyAttendanceList.add(monthlyAttendance);
+			}
+		}
+		if(stdFlag == false){
+			MonthlyAttendance monthlyAttendance = new MonthlyAttendance();
+			monthlyAttendance.setStudent_name((String) obj[0]+" "+(String) obj[1]);
+			monthlyAttendance.setStudent_id(((Number) obj[2]).intValue());
+			monthlyAttendance.setTotal_monthly_lectures(total_lecture_count);
+			String[] daily_attendance = new String[monthlyCountList.size()];
+			String[] daily_attendance_percentage = new String[monthlyCountList.size()];
+			int i = 0;
+			while (i<monthlyCountList.size()) {
+	
+						daily_attendance[i] = "0";
+						daily_attendance_percentage[i] = "0";
+						i++;
+					
+				}
+			monthlyAttendance.setDaily_presentee(daily_attendance);
+			monthlyAttendance.setDaily_presentee_percentange(daily_attendance_percentage);
+			monthlyAttendance.setTotal_prsentee_percentage(0);
+			monthlyAttendance.setTotal_monthly_presentee(0);
+			monthlyAttendance.setMonthlyCountList(monthlyCountList);
+			monthlyAttendanceList.add(monthlyAttendance);
+		}
 		}
 		return monthlyAttendanceList;
 	}

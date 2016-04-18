@@ -10,6 +10,8 @@ public class QuestionPaperPattern implements Serializable{
 	String pattern_name;
 	int marks;
 	String pattern_type;
+	int addedby;
+	int modifiedby;
 	public int getInst_id() {
 		return inst_id;
 	}
@@ -51,6 +53,18 @@ public class QuestionPaperPattern implements Serializable{
 	}
 	public void setPattern_type(String pattern_type) {
 		this.pattern_type = pattern_type;
+	}
+	public int getAddedby() {
+		return addedby;
+	}
+	public void setAddedby(int addedby) {
+		this.addedby = addedby;
+	}
+	public int getModifiedby() {
+		return modifiedby;
+	}
+	public void setModifiedby(int modifiedby) {
+		this.modifiedby = modifiedby;
 	}
 	
 	

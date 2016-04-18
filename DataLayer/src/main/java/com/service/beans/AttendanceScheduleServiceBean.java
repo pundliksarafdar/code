@@ -9,6 +9,7 @@ public class AttendanceScheduleServiceBean {
 	int schedule_id;
 	Time start_time;
 	Time end_time;
+	boolean attendanceStatus;
 	public String getTeacher() {
 		return teacher;
 	}
@@ -44,6 +45,12 @@ public class AttendanceScheduleServiceBean {
 	}
 	public void setEnd_time(Time end_time) {
 		this.end_time = end_time;
+	}
+	public boolean isAttendanceStatus() {
+		return attendanceStatus;
+	}
+	public void setAttendanceStatus(boolean attendanceStatus) {
+		this.attendanceStatus = attendanceStatus;
 	}
 	
 	

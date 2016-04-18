@@ -534,5 +534,70 @@ public class AttendanceDB {
 		}
 		return resultList;
 	}
+	
+	public List<Integer> getDailyDistinctAttendance(int inst_id,int div_id,int batch_id,Date date){
+		Transaction transaction=null;
+		Session session=null;
+		List<Integer> resultList = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			String queryString="select distinct schedule_id from Attendance "
+					+ "where inst_id = :inst_id and batch_id = :batch_id and div_id = :div_id and att_date= :date ";
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", batch_id);
+			query.setParameter("date", date);
+			resultList =query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return resultList;
+	}
+	
+	public List getAllStudents(String batchID,
+			int inst_id, int div_id) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List list = null;
+		String queryString = "Select reg.fname,reg.lname, reg.regId " +
+				" from Student std,RegisterBean reg "
+				+ "where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) "
+				+ "and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id order by std.student_id ";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("batch_id1", batchID + ",%");
+			query.setParameter("batch_id2", "%," + batchID + ",%");
+			query.setParameter("batch_id3", "%," + batchID);
+			query.setParameter("batch_id4", batchID);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
+
+			list = query.list();
+			if (list != null) {
+				return list;
+			}
+
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return null;
+}
 
 }

@@ -12,6 +12,7 @@ public class ObjectiveExamBean {
 	int questionId;
 	List<String> images;
 	List<ObjectiveOptions> options;
+	private int inst_id;
 	
 	public int getQuestionId() {
 		return questionId;
@@ -66,6 +67,12 @@ public class ObjectiveExamBean {
 	}
 	public void setOptions(List<ObjectiveOptions> options) {
 		this.options = options;
+	}
+	public int getInst_id() {
+		return inst_id;
+	}
+	public void setInst_id(int inst_id) {
+		this.inst_id = inst_id;
 	}
 	
 	

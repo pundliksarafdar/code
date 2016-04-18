@@ -28,6 +28,38 @@ public class QuestionPaperPatternDB {
 
 	}
 	
+	public int updateQuestionPaperPattern(QuestionPaperPattern questionPaperPattern) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update QuestionPaperPattern set marks = :marks,pattern_name =:pattern_name,modifiedby=:modifiedby where inst_id = :inst_id and div_id = :div_id and pattern_id = :pattern_id");
+			query.setParameter("inst_id", questionPaperPattern.getInst_id());
+			query.setParameter("div_id", questionPaperPattern.getDiv_id());
+			query.setParameter("pattern_id", questionPaperPattern.getPattern_id());
+			query.setParameter("marks", questionPaperPattern.getMarks());
+			query.setParameter("pattern_name", questionPaperPattern.getPattern_name());
+			query.setParameter("modifiedby", questionPaperPattern.getModifiedby());
+			query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  questionPaperPattern.getPattern_id();
+
+	}
+	
 	public boolean verifyPatterName(int inst_id,int div_id,String pattern_name) {
 		Transaction transaction=null;
 		Session session=null;

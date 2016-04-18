@@ -42,22 +42,18 @@ public class RegisterDB {
 		return subidList;
 	}
 	
-public List getTeachersClassName(List classIDs) {
+public List getTeachersInstitutes(List inst_IDs) {
 		
 		Session session = null;
 		Transaction transaction = null;
-		List subidList = null;
+		List list = null;
 		
 		try{
-			if(null!=classIDs && classIDs.size()!=0){
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("from RegisterBean where  regId in :teacherids");
-			query.setParameterList("teacherids", classIDs);
-			subidList = query.list();
-			}else{
-				subidList = new ArrayList();
-			}
+			Query query = session.createQuery("select regId,className from RegisterBean where  regId in :inst_ids");
+			query.setParameterList("inst_ids", inst_IDs);
+			list = query.list();
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -71,7 +67,7 @@ public List getTeachersClassName(List classIDs) {
 			}
 		}
 			
-		return subidList;
+		return list;
 	}
 	
 	public RegisterBean getscheduleTeacher(int TeacherId) {

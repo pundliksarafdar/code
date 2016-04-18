@@ -119,7 +119,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		System.out.println(gson.toJson(examPattern));
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId());
-		boolean patternStatus= patternTransaction.saveQuestionPaperPattern(examPattern);
+		boolean patternStatus= patternTransaction.saveQuestionPaperPattern(examPattern,getRegId());
 		if(patternStatus == false){
 			return Response.status(Status.OK).entity(patternStatus).build();
 		}
@@ -133,7 +133,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	public Response updateQuestionPaperPattern(QuestionPaperPattern examPattern){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId());
-		boolean patternStatus= patternTransaction.updateQuestionPaperPattern(examPattern);
+		boolean patternStatus= patternTransaction.updateQuestionPaperPattern(examPattern,getRegId());
 		if(patternStatus == false){
 			return Response.status(Status.OK).entity(patternStatus).build();
 		}

@@ -43,6 +43,17 @@ public class AttendanceImlp extends ServiceBase{
 	}
 	
 	@GET
+	@Path("/getScheduleForUpdateAttendance/{division}/{batch}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getScheduleForUpdateAttendance(@PathParam("batch") Integer batch,
+			@PathParam("division") Integer division,@PathParam("date")long date) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		List<AttendanceScheduleServiceBean> scheduleList = attendanceTransaction.getScheduleForUpdateAttendance(batch, new Date(date), getRegId(), division);
+		return Response.status(Response.Status.OK).entity(scheduleList).build();
+	}
+	
+	@GET
 	@Path("/getStudentsForAttendance/{division}/{batch}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getStudentsForAttendance(@PathParam("batch") String batch,

@@ -78,7 +78,7 @@
       <put-attribute name="title"  value="Class Teacher"/>
       <put-attribute name="header"  value="/header.jsp"/>
       <put-attribute name="topnav"  value="/teacher/menu.jsp"/>
-      <put-attribute name="body"   value="/loginSuccess.jsp"/>      
+      <put-attribute name="body"   value="/teacher/loginSuccess.jsp"/>      
    </definition>
 
    <definition name="student.loginsuccess" extends="baseLayout">
@@ -349,10 +349,10 @@
 		<put-attribute name="title" value="Edit Question" />
 		<put-attribute name="body" value="/question/editQuestion.jsp" />
 	</definition>
-	<definition name="teacher.teacheraddquestion" extends="baseLayout">
+	<definition name="teacher.addquestion" extends="baseLayout">
 		<put-attribute name="title" value="Start Uploading Exam" />
 		<put-attribute name="topnav" value="/teacher/menu.jsp" />
-		<put-attribute name="body" value="/question/addQuestion.jsp" />
+		<put-attribute name="body" value="/teacher/addQuestion.jsp" />
 	</definition>
 	<definition name="classowner.questioneditsuccess" extends="baseLayout">
 		<put-attribute name="title" value="Start Uploading Exam" />
@@ -613,5 +613,30 @@
    <definition name="classowner.editParaQuestion" extends="baseLayout">
       <put-attribute name="title"  value="Edit question"/>
       <put-attribute name="body"   value="/ClassOwner/EditParaQuestion.jsp"/>      
+   </definition>
+    <definition name="teacher.createexampattern" extends="baseLayout">
+      <put-attribute name="title"  value="Create Exam Pattern"/>
+        <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/teacher/CreateExamPattern.jsp"/>      
+   </definition>
+   <definition name="teacher.editexampattern" extends="baseLayout">
+      <put-attribute name="title"  value="Create Exam Pattern"/>
+        <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/teacher/ViewNEditPattern.jsp"/>      
+   </definition>
+   <definition name="teacher.createquestionpaper" extends="baseLayout">
+      <put-attribute name="title"  value="Create Exam Pattern"/>
+        <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/teacher/generateQuestionPaper.jsp"/>      
+   </definition>
+   <definition name="teacher.editquestionpaper" extends="baseLayout">
+      <put-attribute name="title"  value="Create Exam Pattern"/>
+        <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/teacher/editQuestionPaper.jsp"/>      
+   </definition>
+   <definition name="teacher.examMarks" extends="baseLayout">
+      <put-attribute name="title"  value="Create Exam Pattern"/>
+        <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/teacher/ExamMarks.jsp"/>      
    </definition>
 </tiles-definitions>

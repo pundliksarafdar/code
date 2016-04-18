@@ -192,7 +192,7 @@ public class LoginUser extends BaseAction{
 						TeacherTransaction teacherTransaction=new TeacherTransaction();
 						List<Integer> classids=teacherTransaction.getTeachersClass(userBean.getRegId());
 						RegisterTransaction registerTransaction=new RegisterTransaction();
-						List<RegisterBean> classbeanes=registerTransaction.getTeachersclassNames(classids);
+						List<RegisterBean> classbeanes=registerTransaction.getTeachersInstitutes(classids);
 						List<Notification> notifications=new ArrayList<Notification>();
 						ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 						List<Scheduledata> scheduledatas=scheduleTransaction.getteacherstodaysSchedule(classids, userBean.getRegId());
@@ -348,7 +348,7 @@ public class LoginUser extends BaseAction{
 						TeacherTransaction teacherTransaction=new TeacherTransaction();
 						List<Integer> classids=teacherTransaction.getTeachersClass(userBean.getRegId());
 						RegisterTransaction registerTransaction=new RegisterTransaction();
-						List<RegisterBean> classbeanes=registerTransaction.getTeachersclassNames(classids);
+						List<RegisterBean> classbeanes=registerTransaction.getTeachersInstitutes(classids);
 						List<Notification> notifications=new ArrayList<Notification>();
 						ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 						List<Scheduledata> scheduledatas=scheduleTransaction.getteacherstodaysSchedule(classids, userBean.getRegId());

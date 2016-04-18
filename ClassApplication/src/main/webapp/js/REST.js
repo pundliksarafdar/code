@@ -1,9 +1,10 @@
 function REST(){
-	this.get =function(uri,handlers,global){
+	this.get =function(uri,handlers,global,async){
 		$.ajax({
 			   url: uri,
 			   type:"GET",
 			   global:global,
+			   async:async,
 			   success:handlers.success,
 			   error:handlers.error
 			   }); 

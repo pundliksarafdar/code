@@ -544,8 +544,8 @@ public class ScheduleDB {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(
-					"from Schedule where class_id=:class_id and teacher_id=:teacher_id and date=:date order by start_time");
-			query.setParameter("class_id", classid);
+					"from Schedule where inst_id=:inst_id and teacher_id=:teacher_id and date=:date order by start_time");
+			query.setParameter("inst_id", classid);
 			query.setParameter("teacher_id", teacherid);
 			query.setParameter("date", scheduledate);
 			scheduleList = query.list();

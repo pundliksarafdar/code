@@ -657,6 +657,9 @@ var graphData = [];
 		var status = data.status;
 		if(status != "error"){
 		dataTable = $('#classTable').DataTable({
+			language: {
+			        "emptyTable":     "Students not availavle"
+			    },
 			bDestroy:true,
 			data: data.studentList,
 			lengthChange: true,
