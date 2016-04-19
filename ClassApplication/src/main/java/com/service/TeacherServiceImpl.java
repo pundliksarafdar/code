@@ -24,12 +24,19 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.classapp.db.attendance.Attendance;
+import com.classapp.db.batch.Batch;
+import com.classapp.db.exam.Exam;
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.questionPaper.QuestionPaper;
 import com.classapp.db.subject.Subject;
+import com.classapp.db.subject.Subjects;
 import com.classapp.db.subject.Topics;
 import com.config.Constants;
 import com.google.gson.Gson;
+import com.service.beans.AttendanceScheduleServiceBean;
+import com.service.beans.BatchStudentExamMarks;
+import com.service.beans.ExamSubject;
 import com.service.beans.GenerateQuestionPaperResponse;
 import com.service.beans.NewQuestionRequest;
 import com.service.beans.ObjectiveExamBean;
@@ -41,13 +48,20 @@ import com.service.beans.QuestionPaperFileElement;
 import com.service.beans.QuestionPaperFileObject;
 import com.service.beans.QuestionPaperPattern;
 import com.service.beans.QuestionPaperStructure;
+import com.service.beans.StudentData;
+import com.service.beans.StudentSubjectMarks;
 import com.service.beans.SubjectiveExamBean;
 import com.service.beans.SubjectsWithTopics;
 import com.service.beans.TeacherDivisionsAndSubjects;
 import com.tranaction.subject.SubjectTransaction;
+import com.transaction.attendance.AttendanceTransaction;
+import com.transaction.batch.BatchTransactions;
+import com.transaction.exams.ExamTransaction;
 import com.transaction.image.ImageTransactions;
 import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
 import com.transaction.questionbank.QuestionBankTransaction;
+import com.transaction.student.StudentTransaction;
+import com.transaction.studentmarks.StudentMarksTransaction;
 import com.transaction.teacher.TeacherTransaction;
 import com.user.UserBean;
 
@@ -433,6 +447,202 @@ public class TeacherServiceImpl extends ServiceBase {
 		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
 		QuestionPaperEditFileObject fileObject = patternTransaction.getQuestionPaper(Integer.parseInt(division), Integer.parseInt(paper_id));
 		return Response.status(Status.OK).entity(fileObject).build();
+	}
+	
+	@POST
+	@Path("/getExamSubjects/{inst_id}/{divId}/{batchId}/{exam_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getExamSubjects(@PathParam("inst_id") int inst_id,
+			@PathParam("divId")int div_id,
+			@PathParam("batchId")int batch_id,@PathParam("exam_id")int exam_id){
+		ExamTransaction examTransaction = new ExamTransaction();
+		List<ExamSubject> subjectList = new ArrayList<ExamSubject>();
+		subjectList = examTransaction.getExamSubjects(inst_id , div_id, batch_id, exam_id);
+		return Response.status(Status.OK).entity(subjectList).build();
+	}
+	
+	@GET
+	@Path("/getExamList/{inst_id}/{division}/{batch_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getExamList(@PathParam("inst_id") int inst_id,@PathParam("division") String division,@PathParam("batch_id") int batch_id){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		ExamTransaction examTransaction = new ExamTransaction();
+		List<Exam> examList = examTransaction.getExamList(Integer.parseInt(division), inst_id,batch_id);
+		Gson gson = new Gson();
+		String jsonElement = gson.toJson(examList);
+		return Response.status(Status.OK).entity(jsonElement).build();
+	}
+	
+	@GET
+	@Path("/getBatchesofDivision/{inst_id}/{div_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getBatchesofDivision(@PathParam("inst_id") int inst_id,@PathParam("div_id") int div_id) {
+		BatchTransactions batchTransactions = new BatchTransactions();
+		List<Batch> batches= batchTransactions.getAllBatchesOfDivision(div_id, inst_id);
+		return Response.status(200).entity(batches).build();
+	}
+	
+	@GET
+	@Path("/getStudentForMarksFill/{inst_id}/{divId}/{batchId}/{exam}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentForMarksFill(@PathParam("inst_id") int inst_id,
+			@PathParam("divId")int div_id,@PathParam("exam")int exam_id,
+			@PathParam("batchId")String batch_id){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		List<StudentData> studentDatas = studentTransaction.getStudentForExamMarks(batch_id, inst_id, div_id,exam_id);
+		return Response.status(Status.OK).entity(studentDatas).build();
+	}
+	
+	@POST
+	@Path("/saveStudentMarks")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveStudentMarks(List<StudentData> studentDataList){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		boolean status = studentTransaction.saveStudentMarks(studentDataList);
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@GET
+	@Path("/getStudentMarksForUpdate/{inst_id}/{divId}/{batchId}/{exam_id}/{sub_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentMarksForUpdate(@PathParam("inst_id") int inst_id,
+			@PathParam("divId")int div_id,@PathParam("exam_id")int exam_id,@PathParam("sub_id")int sub_id,
+			@PathParam("batchId")String batch_id){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		List<StudentData> studentDatas = studentTransaction.getStudentForExamMarksUpdate(batch_id, inst_id, div_id, exam_id, sub_id);
+		return Response.status(Status.OK).entity(studentDatas).build();
+	}
+	
+	@GET
+	@Path("/getBatchSubjects/{inst_id}/{divId}/{batchId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getBatchSubjects(@PathParam("inst_id") int inst_id,
+			@PathParam("divId")int div_id,@PathParam("batchId")String batch_id){
+		BatchTransactions batchTransactions=new BatchTransactions();
+		List<Subjects> Batchsubjects = (List<Subjects>)batchTransactions.getBatcheSubject(batch_id,inst_id,div_id);
+		return Response.status(Status.OK).entity(Batchsubjects).build();
+	}
+	
+	@GET
+	@Path("/getStudentExamMarks/{inst_id}/{div_id}/{batch_id}/{exam_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentExamMarks(@PathParam("inst_id") int inst_id,@PathParam("div_id") int div_id,@PathParam("batch_id") int batch_id,
+										@PathParam("exam_id") int exam_id) {
+		StudentMarksTransaction marksTransaction = new StudentMarksTransaction();
+		BatchStudentExamMarks batchStudentExamMarks  = marksTransaction.getStudentExamMarks(inst_id, div_id, batch_id, exam_id);
+		return Response.status(200).entity(batchStudentExamMarks).build();
+	}
+	
+	@GET
+	@Path("/getStudentExamSubjectMarks/{inst_id}/{div_id}/{batch_id}/{sub_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentExamSubjectMarks(@PathParam("inst_id") int inst_id,@PathParam("div_id") int div_id,@PathParam("batch_id") int batch_id,
+										@PathParam("sub_id") int sub_id) {
+		StudentMarksTransaction marksTransaction = new StudentMarksTransaction();
+		StudentSubjectMarks studentSubjectMarks = marksTransaction.getStudentExamSubjectMarks(inst_id, div_id, batch_id, sub_id);
+		return Response.status(200).entity(studentSubjectMarks).build();
+	}
+	
+	@GET
+	@Path("/getScheduleForAttendance/{inst_id}/{division}/{batch}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSchedule(@PathParam("inst_id") int inst_id,@PathParam("batch") Integer batch,
+			@PathParam("division") Integer division,@PathParam("date")long date) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		List<AttendanceScheduleServiceBean> scheduleList = attendanceTransaction.getScheduleForAttendance(batch, new Date(date), inst_id, division);
+		return Response.status(Response.Status.OK).entity(scheduleList).build();
+	}
+	
+	@GET
+	@Path("/getStudentsForAttendance/{inst_id}/{division}/{batch}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentsForAttendance(@PathParam("inst_id") int inst_id,@PathParam("batch") String batch,
+			@PathParam("division") Integer division) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		List studentList = attendanceTransaction.getStudentForAttendance(batch, inst_id, division);
+		return Response.status(Response.Status.OK).entity(studentList).build();
+	}
+	
+	@POST
+	@Path("/saveStudentAttendance/{inst_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveStudentAttendance(@PathParam("inst_id") int inst_id,List<Attendance> attendanceList) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		boolean status = attendanceTransaction.save(attendanceList,inst_id);
+		return Response.status(Response.Status.OK).entity(status).build();
+	}
+	
+	@GET
+	@Path("/getScheduleForUpdateAttendance/{inst_id}/{division}/{batch}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getScheduleForUpdateAttendance(@PathParam("inst_id") int inst_id,@PathParam("batch") Integer batch,
+			@PathParam("division") Integer division,@PathParam("date")long date) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		List<AttendanceScheduleServiceBean> scheduleList = attendanceTransaction.getScheduleForUpdateAttendance(batch, new Date(date), inst_id, division);
+		return Response.status(Response.Status.OK).entity(scheduleList).build();
+	}
+	
+	@GET
+	@Path("/getStudentsForAttendanceUpdate/{inst_id}/{division}/{batch}/{sub_id}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentsForAttendanceUpdate(@PathParam("inst_id") int inst_id,@PathParam("batch") String batch,
+			@PathParam("division") Integer division,@PathParam("sub_id") Integer sub_id,
+			@PathParam("date") long date) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		List studentList = attendanceTransaction.getStudentForAttendanceUpdate(batch, inst_id, division, sub_id, new Date(date));
+		return Response.status(Response.Status.OK).entity(studentList).build();
+	}
+	
+	@POST
+	@Path("/updateStudentAttendance/{inst_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateStudentAttendance(@PathParam("inst_id") int inst_id,List<Attendance> attendanceList) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		boolean status = attendanceTransaction.updateAttendance(attendanceList,inst_id);
+		return Response.status(Response.Status.OK).entity(status).build();
+	}
+	
+	@GET
+	@Path("/getStudentsDailyAttendance/{inst_id}/{division}/{batch}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentsDailyAttendance(@PathParam("inst_id") int inst_id,@PathParam("batch") String batch,
+			@PathParam("division") Integer division,@PathParam("date") long date) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		List studentList = attendanceTransaction.getStudentsDailyAttendance(batch, inst_id, division, new Date(date));
+		return Response.status(Response.Status.OK).entity(studentList).build();
+	}
+	
+	@GET
+	@Path("/getStudentsWeeklyAttendance/{inst_id}/{division}/{batch}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentsWeeklyAttendance(@PathParam("inst_id") int inst_id,@PathParam("batch") String batch,
+			@PathParam("division") Integer division,@PathParam("date") long date) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		List studentList = attendanceTransaction.getStudentsWeeklyAttendance(batch, inst_id, division, new Date(date));
+		return Response.status(Response.Status.OK).entity(studentList).build();
+	}
+	
+	@GET
+	@Path("/getStudentsMonthlyAttendance/{inst_id}/{division}/{batch}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentsMonthlyAttendance(@PathParam("inst_id") int inst_id,@PathParam("batch") String batch,
+			@PathParam("division") Integer division,@PathParam("date") long date) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		List studentList = attendanceTransaction.getStudentsMonthlyAttendance(batch, inst_id, division, new Date(date));
+		return Response.status(Response.Status.OK).entity(studentList).build();
 	}
 
 }

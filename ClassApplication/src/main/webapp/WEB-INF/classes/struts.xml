@@ -565,5 +565,25 @@
 			method="execute">
 			<result name="success" type="tiles">teacher.examMarks</result>
 		</action>
+		<action name="teacherEditExamMarks" class="com.teacher.TeacherExamMarks"
+			method="execute">
+			<result name="success" type="tiles">teacher.editExamMarks</result>
+		</action>
+		<action name="teacherViewExamMarks" class="com.teacher.TeacherExamMarks"
+			method="execute">
+			<result name="success" type="tiles">teacher.viewExamMarks</result>
+		</action>
+		<action name="teacherAttendance" class="com.teacher.TeacherAttendance"
+			method="execute">
+			<result name="success" type="tiles">teacher.attendance</result>
+		</action>
+		<action name="teacherEditAttendance" class="com.teacher.TeacherAttendance"
+			method="execute">
+			<result name="success" type="tiles">teacher.editattendance</result>
+		</action>
+		<action name="teacherViewAttendance" class="com.teacher.TeacherAttendance"
+			method="execute">
+			<result name="success" type="tiles">teacher.viewattendance</result>
+		</action>
 	</package>
 </struts>

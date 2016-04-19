@@ -371,63 +371,6 @@ function RenderTimer(completedTime,totalTime){
 		</div>
 	</div>
 	<div class="row">
-        <div class="col-sm-4 col-xs-8">
-            <a href="manageclass">
-			<div id="tile8" class="tile">
-			      <div class="carousel slide" data-ride="carousel">
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner">
-                        <div class="item active text-center">
-                            <div>
-                                <span class="fa fa-spinner bigicon"></span>
-                            </div>
-                            <div class="icontext">
-                                Classes, subject & batch
-                            </div>
-                            
-                        </div>
-						
-                    </div>
-					</div>
-            </div>
-			</a>
-        </div>
-        <div class="col-sm-2 col-xs-4">
-        	<a href="managestudent">
-            <div id="tile8" class="tile">
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner">
-                        <div class="item active text-center">
-                            <div>
-                                <span class="fa fa-spinner bigicon"></span>
-                            </div>
-                            <div class="icontext">
-                                Student
-                            </div>
-                            
-                        </div>
-                    </div>
-            </div>
-            </a>
-        </div>
-		<div class="col-sm-2 col-xs-4">
-			<a href="manageteacher">
-            <div id="tile8" class="tile">
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner">
-                        <div class="item active text-center">
-                            <div>
-                                <span class="fa fa-spinner bigicon"></span>
-                            </div>
-                            <div class="icontext">
-                                Teacher
-                            </div>
-                            
-                        </div>
-                    </div>
-            </div>
-            </a>
-        </div>
 		<div class="col-sm-2 col-xs-4">
             <a href="manageExam">
             <div id="tile8" class="tile">
@@ -447,7 +390,7 @@ function RenderTimer(completedTime,totalTime){
             </a>
         </div>
 		<div class="col-sm-2 col-xs-4">
-		 <a href="attendances">
+		 <a href="teacherAttendance">
             <div id="tile8" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
@@ -457,24 +400,6 @@ function RenderTimer(completedTime,totalTime){
                             </div>
                             <div class="icontext">
                                 Attendance
-                            </div>
-                            
-                        </div>
-                    </div>
-            </div>
-            </a>
-        </div>
-		<div class="col-sm-2 col-xs-4">
-            <a href="fees">
-            <div id="tile8" class="tile">
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner">
-                        <div class="item active text-center">
-                            <div>
-                                <span class="fa fa-spinner bigicon"></span>
-                            </div>
-                            <div class="icontext">
-                                Fees
                             </div>
                             
                         </div>

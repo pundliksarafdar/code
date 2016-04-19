@@ -7,7 +7,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
 <script>
-var flagCounter = 0 ;
 $(document).ready(function(){
 	$("#instituteSelect").change(function(){
 		var inst_id = $(this).val();
@@ -64,38 +63,36 @@ $(document).ready(function(){
 		rest.get("rest/teacher/getExamList/"+inst_id+"/"+division+"/"+batch,handlers);
 	});
 	 $("#division").change(function(){
-		var division = $("#division").val();
-		var inst_id = $("#instituteSelect").val();
-		var handlers = {};
-		handlers.success = function(e){console.log("Success",e);
-		 $('#batchSelect').empty();
-		   var batchDataArray = [];
-		 /* 
-		    $.each(e,function(key,val){
-				var data = {};
-				data.id = val.batch_id;
-				data.text = val.batch_name;
-				batchDataArray.push(data);
-			});
-		    $("#batchSelect").select({data:batchDataArray,placeholder:"type batch name"}); */
-		    $("#batchSelect").append("<option value='-1'>Select Batch</option>");
-		    if(e != null){
-		    	$.each(e,function(key,val){
-		    		 $("#batchSelect").append("<option value='"+val.batch_id+"'>"+val.batch_name+"</option>");
+			var division = $("#division").val();
+			var inst_id = $("#instituteSelect").val();
+			var handlers = {};
+			handlers.success = function(e){console.log("Success",e);
+			 $('#batchSelect').empty();
+			   var batchDataArray = [];
+			 /* 
+			    $.each(e,function(key,val){
+					var data = {};
+					data.id = val.batch_id;
+					data.text = val.batch_name;
+					batchDataArray.push(data);
 				});
-		    }
-		};
-		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
-		rest.get("rest/teacher/getBatchesofDivision/"+inst_id+"/"+division,handlers);
-	}); 
-	
-	
+			    $("#batchSelect").select({data:batchDataArray,placeholder:"type batch name"}); */
+			    $("#batchSelect").append("<option value='-1'>Select Batch</option>");
+			    if(e != null){
+			    	$.each(e,function(key,val){
+			    		 $("#batchSelect").append("<option value='"+val.batch_id+"'>"+val.batch_name+"</option>");
+					});
+			    }
+			};
+			handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
+			rest.get("rest/teacher/getBatchesofDivision/"+inst_id+"/"+division,handlers);
+		}); 
 	$('#subjectTable').on("click",".fillMarks",function(){
 		var inst_id = $("#instituteSelect").val();
 		var division = $("#division").val();
 		var batch = $("#batchSelect").val();
-		var exam = $("#exam").val();
 		exam_marks = $(this).closest("div").find(".subject_marks").val();
+		var exam = $("#exam").val();
 		subject = $(this).attr("id");
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
@@ -105,7 +102,7 @@ $(document).ready(function(){
 		}
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		
-		rest.get("rest/teacher/getStudentForMarksFill/"+inst_id+"/"+division+"/"+batch+"/"+exam,handlers);
+		rest.get("rest/teacher/getStudentMarksForUpdate/"+inst_id+"/"+division+"/"+batch+"/"+exam+"/"+subject,handlers);
 	});
 	
 	$(".backToSubjectList").click(function(){
@@ -114,7 +111,6 @@ $(document).ready(function(){
 	});
 	
 	$(".saveMarks").click(function(){
-		if(flagCounter == 0){
 		var table = $('#studentTable').DataTable();
 		 var dataArray = [];
 		var data = table.data();
@@ -124,33 +120,22 @@ $(document).ready(function(){
 		 }
 		console.log(data);
 		var handlers = {};
-		handlers.success = function(e){console.log("Success",e);
-		 $.notify({message: "Marks Added"},{type: 'success'});
+		handlers.success = function(e){
+			$.notify({message: "Marks updated"},{type: 'success'});
 		 $("#subjectTableDiv").show();
 			$("#studentTableDiv").hide();
 		}
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
-		rest.post("rest/teacher/saveStudentMarks/",handlers,JSON.stringify(dataArray));
-		}else{
-			 $.notify({message: "Enter Valid Marks"},{type: 'danger'});
-		}
+		rest.post("rest/classownerservice/saveStudentMarks/",handlers,JSON.stringify(dataArray));
 	});
 	
 	$('#studentTable').on( 'blur', '.Marks', function () {
 		var table = $('#studentTable').DataTable();
     var cell = table.cell( $(this).closest("td"));
-    if(parseInt($(this).val())> exam_marks || parseInt($(this).val())< 0){
-    	if($(this).closest("td").find(".error").html() == ""){
-    		flagCounter ++;
-    	}
-    	$(this).closest("td").find(".error").html("Marks cannot be greater than Subject total marks")
+    if(parseInt($(this).val())> exam_marks){
     	$(this).css("border-color","red");
     }else{
-    	if($(this).closest("td").find(".error").html() != ""){
-    		flagCounter --;
-    	}
-    	$(this).closest("td").find(".error").empty();
-    	$(this).css("border-color","#ccc");
+    	$(this).css("border-color","#fff");
     }
     cell.data().marks=$(this).val()
 } );
@@ -174,18 +159,7 @@ function createExamSubjectTable(data){
 				return row.marks;
 			},sWidth:"20%"},
 			{ title: "",data:null,render:function(data,event,row){
-				if(row.marksFlag == false){
 				return "<div><button class='btn btn-primary btn-sm fillMarks' id='"+row.subjectId+"'>Fill Marks</button><input type='hidden' class='subject_marks' value='"+row.marks+"'></div>";
-				}else{
-					return	"<div><button class='btn btn-primary btn-sm fillMarks' disabled>Fill Marks</button><input type='hidden' class='subject_marks'></div>";
-				}			
-			},sWidth:"20%"},
-			{ title: "Marks Filled",data:null,render:function(data,event,row){
-				if(row.marksFlag == true){
-				return "Yes";
-				}else{
-				return "No";	
-				}
 			},sWidth:"20%"}
 		]
 	});
@@ -208,7 +182,7 @@ function createStudentMarksTable(data){
 				return div;
 			},sWidth:"50%"},
 			{ title: "Marks",data:null,render:function(data,event,row){
-				return "<div class='presenteeDiv'><input type='number' min='0' max='"+exam_marks+"' value='0' class='form-control Marks'><input type='hidden' value='"+row.student_id+"' id='student_id'><span class='error'></span></div>"}
+				return "<div class='presenteeDiv'><input type='text' class='form-control Marks'  value='"+row.marks+"'><input type='hidden' value='"+row.student_id+"' id='student_id'></div>"}
 			,swidth:'30%'
 			}
 		]
@@ -219,11 +193,11 @@ function createStudentMarksTable(data){
 </head>
 <body>
 <jsp:include page="ExamMarksHeader.jsp" >
-		<jsp:param value="active" name="examMarks"/>
+		<jsp:param value="active" name="editExamMarks"/>
 	</jsp:include>
 <div class="container" style="padding: 2%; background: #eee">
 		<div class="row">
-			<div class="col-md-3">
+		<div class="col-md-3">
 				<select name="instituteSelect" id="instituteSelect" class="form-control" width="100px">
 					<option value="-1">Select Institute</option>
 					<c:forEach items="${requestScope.registerBeanList}" var="institute">

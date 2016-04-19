@@ -639,4 +639,29 @@
         <put-attribute name="topnav" value="/teacher/menu.jsp" />
       <put-attribute name="body"   value="/teacher/ExamMarks.jsp"/>      
    </definition>
+    <definition name="teacher.editExamMarks" extends="baseLayout">
+      <put-attribute name="title"  value="Create Exam Pattern"/>
+        <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/teacher/EditExamMarks.jsp"/>      
+   </definition>
+   <definition name="teacher.viewExamMarks" extends="baseLayout">
+      <put-attribute name="title"  value="Create Exam Pattern"/>
+        <put-attribute name="topnav" value="/teacher/menu.jsp" />
+        <put-attribute name="body"   value="/teacher/ViewMarks.jsp"/>      
+   </definition>
+   <definition name="teacher.attendance" extends="baseLayout">
+      <put-attribute name="title"  value="Create Exam Pattern"/>
+        <put-attribute name="topnav" value="/teacher/menu.jsp" />
+        <put-attribute name="body"   value="/teacher/studentAttendance.jsp"/>      
+   </definition>
+   <definition name="teacher.editattendance" extends="baseLayout">
+      <put-attribute name="title"  value="Create Exam Pattern"/>
+        <put-attribute name="topnav" value="/teacher/menu.jsp" />
+        <put-attribute name="body"   value="/teacher/EditAttendance.jsp"/>      
+   </definition>
+   <definition name="teacher.viewattendance" extends="baseLayout">
+      <put-attribute name="title"  value="Create Exam Pattern"/>
+        <put-attribute name="topnav" value="/teacher/menu.jsp" />
+        <put-attribute name="body"   value="/teacher/ViewAttendance.jsp"/>      
+   </definition>
 </tiles-definitions>
