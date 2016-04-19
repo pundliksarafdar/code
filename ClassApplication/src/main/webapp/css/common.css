@@ -187,3 +187,15 @@ div[class^="col-"]{
 	display: inline-block; 
 }
 
+.options{
+	margin: 5px;
+}
+
+.banner_gray_background{
+	background: #eee;
+	padding: 10px;
+}
+
+.banner_gray_background + .container{
+	padding-top: 4px;
+}

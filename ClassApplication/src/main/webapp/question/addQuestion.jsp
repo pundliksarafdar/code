@@ -265,7 +265,9 @@ padding-top: 2px;
 	}
 	
 	</script>
-	
+	<jsp:include page="../ClassOwner/QuestionBankHeader.jsp" >
+		<jsp:param value="active" name="addquestion"/>
+	</jsp:include>
 	<form method="post" action="<c:out value="${forwardAction}" ></c:out>" id="commonSelectForm">
 	<div class="container bs-callout" style="margin-bottom: 5px;background-color: #eee">
 		
@@ -316,24 +318,24 @@ padding-top: 2px;
 			</div>
 		</div>
 		<div class="row">	
-+			<div class="col-md-3">
-+				<a href="./question/SampleFiles/SubjectiveType_Sample.xls" class="btn" role="button">Sample Subjective Questions Excel</a>
-+			</div>
-+			<div class="col-md-3">
-+				<a href="./question/SampleFiles/MCQType_Sample.xls" class="btn" role="button">Sample Objective Questions Excel</a>
-+			</div>		
-+			<div class="col-md-3" id="browseExcelDiv">
-+			<span class="btn fileinput-button">
-+							<i class="glyphicon glyphicon-folder-open"></i> 
-+							<span>Browse Your Question Paper Excel</span>
-+							<input type="file" id="excelUploadBrowseID" class="excelUpload">							
-+						</span>
-+						<span class="error" id="browseExcelErrorSpan">
-+						</span>
-+			</div>	
-+			<div class="col-md-3">
-+				<input type="button" id="uploadQuestionPaperBtn" value="Upload" disabled/>
-+			</div>	
+			<div class="col-md-3">
+				<a href="./question/SampleFiles/SubjectiveType_Sample.xls" class="btn" role="button">Sample Subjective Questions Excel</a>
+			</div>
+			<div class="col-md-3">
+				<a href="./question/SampleFiles/MCQType_Sample.xls" class="btn" role="button">Sample Objective Questions Excel</a>
+			</div>		
+			<div class="col-md-3" id="browseExcelDiv">
+			<span class="btn fileinput-button">
+							<i class="glyphicon glyphicon-folder-open"></i> 
+							<span>Browse Your Question Paper Excel</span>
+							<input type="file" id="excelUploadBrowseID" class="excelUpload">							
+						</span>
+						<span class="error" id="browseExcelErrorSpan">
+						</span>
+			</div>	
+			<div class="col-md-3">
+				<input type="button" id="uploadQuestionPaperBtn" value="Upload" disabled/>
+			</div>	
  		</div>
 	</div>
 	</form>

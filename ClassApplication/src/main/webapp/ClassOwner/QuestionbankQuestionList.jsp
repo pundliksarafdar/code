@@ -425,6 +425,9 @@ function UploadExam(){
 </script>
 </head>
 <body>
+	<jsp:include page="QuestionBankHeader.jsp" >
+		<jsp:param value="active" name="searchQuestion"/>
+	</jsp:include>
 <form method="post" action="<c:out value="${forwardAction}" ></c:out>" id="commonSelectForm">
 	<div class="container bs-callout" style="margin-bottom: 5px;background-color: #eee">
 		

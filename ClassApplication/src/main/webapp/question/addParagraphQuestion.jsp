@@ -41,15 +41,22 @@
 			
 		</div>
 		<div class="form-group">
-			<input type="button" id="addQuestions" class="btn btn-default" value="Add question"/>
+			<label class="col-md-2 control-label"></label>
+			<div id="paraQuestion" class="col-md-10">
+				<input type="button" id="addQuestions" class="btn btn-default" value="Add question"/>
+			</div>	
 		</div>
 		<div class="form-group">
-			<div id="paraQuestion">
+		<label class="col-md-2 control-label"></label>
+			<div id="paraQuestion" class="col-md-10">
 			
 			</div>
 		</div>
 		<div class="form-group">
+		<label class="col-md-2 control-label"></label>
+			<div class="col-sm-10">
 			<input type="button" id="saveParagraphQuestion" class="btn btn-default" value="Save"/>
+			</div>
 		</div>
 	</form>
 </div>

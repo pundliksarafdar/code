@@ -463,7 +463,7 @@
 		
 		<!-- New exam functions -->
 		
-		<action name="manageExam" class="com.classowner.ManageAllExamFunctionAction"
+		<action name="manageSettings" class="com.classowner.ManageAllExamFunctionAction"
 			method="execute">
 			<result name="success" type="tiles">classowner.ManageAllExamFunctionAction</result>
 		</action>

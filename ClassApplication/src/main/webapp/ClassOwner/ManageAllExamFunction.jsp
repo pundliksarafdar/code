@@ -49,10 +49,12 @@
 $(document).ready(function(){
 	var manageImage = new ManageImage();
 	var manageHeader = new ManageHeader();
+	/*
 	$('#myTab a').click(function (e) {
 	  e.preventDefault()
 	  $(this).tab('show');
 	});
+	*/
 	manageImage.loadLogoImage();
 	$("#imageUploadBtn").on("click",manageImage.uploadFile);	
 	$("#addLogo").on("click",manageHeader.loadLogoImage)
@@ -201,7 +203,10 @@ loadImageError = function(){
 
 </head>
 <body>
-	<ul class="nav nav-tabs">
+	<jsp:include page="ClassownerSettingHeader.jsp" >
+		<jsp:param value="active" name="notificationSetting"/>
+	</jsp:include>
+	<ul class="nav nav-tabs innermenu">
 	  <li class="active"><a href="#ManageExam" data-toggle="tab">Manage exam</a></li>
 	  <li><a href="#ManageHeader" data-toggle="tab">Manage header</a></li>
 	  <li><a href="#ManageImage" data-toggle="tab">Manage image</a></li>

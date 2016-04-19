@@ -11,11 +11,11 @@
 </style>
 </head>
 <body>
-	<!-- 
+	 
 	<jsp:include page="ClassownerSettingHeader.jsp" >
-		<jsp:param value="active" name="notificationSetting"/>
+		<jsp:param value="active" name="classownerSettings"/>
 	</jsp:include>
-	 -->
+	
 	 <h4>Edit notification settings</h4>
 	 <form role="form" id="editNotificationSettingForm">
 	 <div class="alert alert-danger">You dont have sms, email</div>

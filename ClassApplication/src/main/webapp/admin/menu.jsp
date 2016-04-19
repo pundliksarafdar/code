@@ -290,57 +290,6 @@ function RenderTimer(completedTime,totalTime){
 	            <li><a class="menuoptions" href="javascript:void(0)" data-toggle="modal" data-target="#ajax-modal">Class List</a></li>
           	</ul>
       </li>
-    <%}if(userBean.getRole() < 2 || userBean.getRole() == 10){ %>  
-      <!-- <li>
-      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Class Owner <b class="caret"></b></a>
-      		<ul class="dropdown-menu">
-	            <li><a href="addsubject">Add Subject</a></li>
-	         </ul>
-      </li> -->
-      
-      <!-- <li>
-      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Manage <b class="caret"></b></a>
-      		<ul class="dropdown-menu">
-      			<li><a class="menuoptions" href="addsubject">Manage Subject</a></li>
-      			<li><a class="menuoptions" href="manageclass">Manage Class</a></li>
-	            <li><a class="menuoptions" href="managestudent">Manage Student</a></li>
-	            <li><a class="menuoptions" href="manageteacher">Manage Teacher</a></li>
-	            <li><a class="menuoptions" href="managebatch">Manage Batch</a></li>
-	         </ul>
-      </li> -->
-      
-      <cx:versionswitch switchId="3">
-      <li>
-      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Questions <b class="caret"></b></a>
-      		<ul class="dropdown-menu">
-	            <li><a class="menuoptions" href="addquestion">Add Questions</a></li>
-	            <li><a class="menuoptions" href="searchQuestion">Search/Edit Questions</a></li>
-	         </ul>
-      </li>
-      </cx:versionswitch>
-      <cx:versionswitch switchId="3">
-      <li>
-      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Exam <b class="caret"></b></a>
-      		<ul class="dropdown-menu">
-	            <li><a class="menuoptions" href="choosesubject?forwardAction=generateexampreaction">Auto Generate Exam</a></li>
-	            <li><a class="menuoptions" href="choosesubject?forwardAction=manualexam">Add Manual Exam</a></li>
-	            <li><a class="menuoptions" href="/choosesubject?forwardAction=listExam&batchDefault=true">Search Exam</a></li>
-	            <li><a class="menuoptions" href="choosesubject?forwardAction=attemptexamlist">Attempt Exam</a></li>
-	            <li><a class="menuoptions" href="examMarks">Exam marks</a></li>
-	            <li><a class="menuoptions" href="createExamPatten">Exam</a></li>
-	         </ul>
-      </li>
-      </cx:versionswitch>
-      
-      <!-- <li>
-      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Time Table <b class="caret"></b></a>
-      		<ul class="dropdown-menu">
-	            <li><a class="menuoptions" href="createtimetable">Create Time Table</a></li>
-	            <li><a class="menuoptions" href="updatetimetable">View & Update Time Table</a></li>
-	             <li><a class="menuoptions" href="weeklytimetable">Weekly Time Table</a></li>
-	            <li><a href="showtimetable">See Time Table</a></li> 
-	         </ul>
-      </li> -->
     <%}%>
 <%--     <cx:versionswitch switchId="3"> --%>
     	<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
@@ -477,7 +426,7 @@ function RenderTimer(completedTime,totalTime){
             </a>
         </div>
 		<div class="col-sm-2 col-xs-4">
-            <a href="manageExam">
+            <a href="createExamPatten">
             <div id="tile8" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
@@ -598,6 +547,8 @@ function RenderTimer(completedTime,totalTime){
         </div>
         <div class="col-sm-2 col-xs-4">
         	<a href="classownerSettings">
+        	<!-- This two settings need to merge -->
+        	<!-- <a href="classownerSettings"> -->
             <div id="tile8" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
@@ -607,6 +558,26 @@ function RenderTimer(completedTime,totalTime){
                             </div>
                             <div class="icontext">
                                 Settings
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+            </a>
+        </div>
+        <div class="col-sm-2 col-xs-4">
+        	<a href="addquestion">
+        	<!-- This two settings need to merge -->
+        	<!-- <a href="classownerSettings"> -->
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Question
                             </div>
                             
                         </div>

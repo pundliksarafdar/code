@@ -55,8 +55,14 @@
 					<span class="validation-message" id="questionMarksError"></span>
 				</div>
 			</div>
-			<div id="objectiveImageRow" class="form-group">
+			
+			<div class="form-group">
+			<label class="col-sm-2 control-label"></label>
+			<div class="col-sm-10">
+			<div id="objectiveImageRow">
  			
+ 			</div>
+ 			</div>
  			</div>
  			
  			<div class="form-group">
@@ -65,8 +71,14 @@
 					<input type="button" id="addOption" class="btn btn-success" value="Add option"/>
 				</div>
 			</div>
- 			<div id="objectiveOptionRow">
  			
+ 			<div class="form-group">
+			<label class="col-sm-2 control-label"></label>
+			<div class="col-sm-10">
+				<div id="objectiveOptionRow">
+	 			
+	 			</div>
+ 			</div>
  			</div>
  			
  			<div class="form-group">
