@@ -155,18 +155,23 @@ function loadObjectiveQuestion(data){
 	}
 	
 	for(var index=0;index<10;index++){
+		var ansArr = data.ans_id?data.ans_id.split(","):[];
 		if(data["opt_"+(index+1)]){
-			addOptionValue(data["opt_"+(index+1)],true,data.secondaryImage[index]?data.secondaryImage[index]:[],index);
+			addOptionValue(data["opt_"+(index+1)],true,data.secondaryImage[index]?data.secondaryImage[index]:[],index,ansArr.indexOf(index+"")>-1);
 		}else{
 			break;
 		}
 	}
+	
 	$("#objectiveImageRow").append(images);
+	
+	
 }
 
-function addOptionValue(text,selected,images,currentIndex){
+function addOptionValue(text,selected,images,currentIndex,checked){
 	var optionComponent = $(OPTION_COMPONENT).clone();
 	$(optionComponent).find("input[type='text']").val(text);
+	$(optionComponent).find("input[type='checkbox']").prop("checked",checked);
 	$(optionComponent).find("input#previousId").val(currentIndex);
 	var optionImages = "";
 	for(var index=0;index<images.length;index++){

@@ -74,10 +74,24 @@ $(document).ready(function(){
 <%List<Batch> batch=(List<Batch>)request.getAttribute("batch"); 
 List<Division> division=(List<Division>)request.getAttribute("division"); 
 		int i=0;%>
-		<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
-			<div align="center" style="font-size: larger;"><u>Send Notice/Message</u></div>
-			</div>
+		<ul class="nav nav-tabs">
+		  <c:choose>
+		  <c:when test="${to eq 'student' }">
+			  <li class="active"><a href="sendmessage?to=student">Student</a></li>
+			  <li><a href="sendmessage?to=teacher">Teacher</a></li>
+		  </c:when>
+		  <c:otherwise>
+		  	  <li><a href="sendmessage?to=student">Student</a></li>
+			  <li class="active"><a href="sendmessage?to=teacher">Teacher</a></li>
+		  </c:otherwise>
+		  </c:choose>
+		</ul>
 <div class="form-group">
+	
+	<div class="container bs-callout" style="margin-bottom: 5px;background-color: #eee">
+		Send message
+	</div>
+	
 	<label for="message"  class="col-sm-4 control-label" align="right">Message :</label>
 	<div class="col-sm-5" align="left">
 	<textarea rows="2" cols="70" name="message" class="form-control" id="message" maxlength="140"></textarea>

@@ -300,12 +300,6 @@ function RenderTimer(completedTime,totalTime){
     	
     	</li>
     <%-- </cx:versionswitch> --%>
-    <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Send Notice/Message<b class="caret"></b></a>
-    		<ul class="dropdown-menu">
-	            <li><a class="menuoptions" href="sendmessage?to=student">Student</a></li>
-	            <li><a class="menuoptions" href="sendmessage?to=teacher">Teacher</a></li>  
-	         </ul>
-    </li>
     </ul>
 	<ul class="nav navbar-nav navbar-right">
       <li>
@@ -319,7 +313,7 @@ function RenderTimer(completedTime,totalTime){
 	  <li>
 	  <form class="navbar-form navbar-left">
 			<div class="form-group">
-	  			<a href="#" id="notificationBtn" data-toggle="popover" data-placement="bottom" class="btn btn-default className notificationBlinker" style="background: transparent;"><%=userBean.getClassName()%></a>
+	  			<a href="#" id="notificationBtn" data-toggle="popover" data-placement="bottom" class="btn btn-default className /*notificationBlinker*/" style="background: transparent;"><%=userBean.getClassName()%></a>
 	  		</div>
 	  	</form>
 	  	</li>	
@@ -578,6 +572,26 @@ function RenderTimer(completedTime,totalTime){
                             </div>
                             <div class="icontext">
                                 Question
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+            </a>
+        </div>
+        <div class="col-sm-2 col-xs-4">
+        	<a href="sendmessage?to=student">
+        	<!-- This two settings need to merge -->
+        	<!-- <a href="classownerSettings"> -->
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="glyphicon glyphicon-envelope bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Send message
                             </div>
                             
                         </div>
