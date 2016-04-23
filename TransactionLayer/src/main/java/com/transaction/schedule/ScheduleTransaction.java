@@ -177,6 +177,14 @@ public class ScheduleTransaction {
 		
 	}
 	
+	public List<Schedule> getMonthlySchedule(int batchid,Date date,int inst_id,int div_id) {
+		List<Schedule> schedulelist=null;
+		ScheduleDB db=new ScheduleDB();
+		schedulelist=db.getWeeklySchedule(batchid,date,inst_id,div_id);
+		return schedulelist;
+		
+	}
+	
 	public int deleteSchedule(int scheduleid,int inst_id,int div_id,int batch_id,Date date,int grp_id)
 	{
 		Schedule schedule = new Schedule();
@@ -329,6 +337,7 @@ public class ScheduleTransaction {
 				BatchTransactions batchTransactions=new BatchTransactions();
 				SubjectTransaction subjectTransaction=new SubjectTransaction();
 				for (int i = 0; i < list.size(); i++) {
+					if(null!=list.get(i)){
 					for (int j = 0; j < list.get(i).size(); j++) {
 						Batch batch=batchTransactions.getBatch(list.get(i).get(j).getBatch_id(), list.get(i).get(j).getInst_id(), list.get(i).get(j).getDiv_id());
 						Subject subject=subjectTransaction.getSubject(list.get(i).get(j).getSub_id());
@@ -340,6 +349,7 @@ public class ScheduleTransaction {
 						scheduledata.setSubject_name(subject.getSubjectName());
 						scheduledatas.add(scheduledata);
 					}
+				}
 				}
 				}
 		}

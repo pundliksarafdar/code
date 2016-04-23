@@ -20,6 +20,7 @@ public class AppClass extends Application{
 		singletons.add(new ClassownerExamService());
 		singletons.add(new DeleteServiceImpl());
 		singletons.add(new TeacherServiceImpl());
+		singletons.add(new StudentService());
     }
     @Override
     public Set<Object> getSingletons() {
