@@ -63,18 +63,12 @@ function createPatternTable(data){
 			{ title: "Marks",data:null,render:function(data,event,row){
 				return row.marks;
 			},sWidth:"20%"},
-			{ title: "Edit",data:null,render:function(data,event,row){
+			{ title: "",data:null,render:function(data,event,row){
 				var buttons = '<div class="default">'+
-					'<input type="button" class="btn btn-sm btn-primary viewPattern" value="Edit" id="'+row.pattern_id+'">'+
+					'<input type="button" class="btn btn-sm btn-primary viewPattern" value="Create" id="'+row.pattern_id+'">'+
 				'</div>'
 				return buttons;
-			},sWidth:"10%"},
-			{ title: "Delete",data:null,render:function(data,event,row){
-				var buttons = '<div class="default">'+
-					'<input type="button" class="btn btn-sm btn-danger deletePattern" value="Delete" id="'+row.pattern_id+'">'+
-				'</div>'
-				return buttons;
-			},sWidth:"10%"}
+			},sWidth:"10%",bSortable:false}
 		]
 	});
 }
@@ -104,7 +98,7 @@ function loadSubjectAndTopic(topicNSubjectAttr){
 }
 
 function loadSubjectAndTopicSelect(){
-	var optionString = "<option value='-1'>Select</option>";
+	var optionString = "<option value='-1'>Select subject</option>";
 	$.each(topicNSubject,function(key,val){
 		optionString = optionString + "<option value='"+key+"'>"+val.subjectName+"</option>";
 	});
@@ -120,7 +114,7 @@ function loadSubjectAndTopicSelect(){
 function loadTopicSelect(selectSub,topics){
 	var topicSelect = selectSub.closest('.row').find(SELECT_TOPIC);
 	var topic = "";
-	topic = topic + "<option value='-1'>Select</option>";
+	topic = topic + "<option value='-1'>Select topic</option>";
 	$.each(topics,function(key,val){
 		topic = topic + "<option value='"+val.topicId+"'>"+val.topicName+"</option>";
 	});
@@ -202,6 +196,7 @@ $(document).ready(function(){
 				});
 			$(".noRegenerate").removeClass("noRegenerate");
 			}
+			$.notify({message: "Exam generated successfully"},{type: 'success'});
 		}
 		handler.error = function(e){console.log(e);}
 		rest.post(url,handler,JSON.stringify(generateExamObjectList));
@@ -360,9 +355,9 @@ function recursiveView(data,recursionLevel,dataArray){
 				var itemNo = data[i].item_no;
 				var itemMarks = data[i].item_marks;
 				if(recursionLevel == 1 || recursionLevel==2){
-				$("#viewPatternData").append("<div class='row' style='font-weight:bold'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-1'>"+itemMarks+"</div></div>")
+				$("#viewPatternData").append("<div class='row' style='font-weight:bold'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-2 pull-right' title='Marks'>"+itemMarks+"</div></div>")
 				}else{
-					$("#viewPatternData").append("<div class='row'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-1'>"+itemMarks+"</div></div>")
+					$("#viewPatternData").append("<div class='row'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-2 pull-right' title='Marks'>"+itemMarks+"</div></div>")
 				}
 				data[i].status = "viewed";
 			}else{
