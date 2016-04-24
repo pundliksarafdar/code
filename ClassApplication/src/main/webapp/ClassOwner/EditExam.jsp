@@ -25,7 +25,10 @@ padding-left: 2px;
 var division = "";
 var batch = "";
 var queationPaperList = [];
+var examUrl = "rest/classownerservice/exam/";
 $(document).ready(function(){
+	$("body").on("click",".deleteExam",deleteExam);
+	
 	$("#division").change(function(){
 		var divisionId = $("#division").val();
 		$.ajax({
@@ -62,59 +65,7 @@ $(document).ready(function(){
 		});
 	});
 	
-	$("#searchExam").click(function(){
-		division = $("#division").val();
-		batch =  $("#batchSelect").val();
-		var handlers = {};
-		handlers.success = function(e){console.log("Success",e);
-		createExamListTable(e);};
-		handlers.error = function(e){
-			$.notify({message: "Error while fetching exam list"},{type: 'danger'});
-		};
-		rest.post("rest/classownerservice/getExamList/"+division+"/"+batch,handlers);
-		var handler = {};
-		handler.success = function(e){console.log("Success",e);
-		queationPaperList = e;
-		createQuestionPaperListTable(e);
-		}
-		handler.error = function(e){
-			$.notify({message: "Error"},{type: 'danger'});
-		}
-		rest.get("rest/classownerservice/getQuestionPaperList/"+division,handler);
-	$.ajax({
-		   url: "classOwnerServlet",
-		   data: {
-		    	 methodToCall: "fetchBatchSubject",
-		    	 batchName:batch,
-	    		 batchdivision:division
-		   		},
-		   type:"POST",
-		   success:function(data){
-			   data = JSON.parse(data);
-			   if(data.subjectstatus == ""){
-				   var subjectnames = data.Batchsubjects;
-				   var subjectIds = data.BatchsubjectsIds;
-				   var i = 0;
-				   var subjectnameArray = subjectnames.split(",");
-					var subjectidArray =  subjectIds.split(",");  
-					subjectList = [];
-					$(".subjectDiv").empty();
-					while(i < subjectnameArray.length){
-				   		$(".subjectDiv").append("<div class='row well examSubjectPapers'><div class='col-md-3'><input type='checkbox' value='"+subjectidArray[i]+"' name='subjectCheckbox' id='subjectCheckbox'>"+
-				   				subjectnameArray[i]+"<input type='hidden' class='examPaperID'></div><div class='col-md-4'>"+
-				   				"<button class='btn btn-primary btn-xs chooseQuestionPaper'>Choose Question Paper</button>"+
-				   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></div><div class='col-md-1'><input type='text' class='form-control marks'></div>"+
-				   				"<div class='col-md-3'><div class='col-md-6'>Duration  : </div><div class='col-md-3'><input type='number' class='form-control examHour' placeholder='HH'></div><div class='col-md-3'><input type='number' class='form-control examMinute' placeholder='MM'></div></div>"+
-				   				"<div class='col-md-1'><button class='btn btn-primary btn-xs preview'>Preview</button></div></div>");
-				   		i++;
-				   }
-			   }
-		   },
-			error:function(){
-		   		modal.launchAlert("Error","Error");
-		   	}
-		   });
-	});
+	$("#searchExam").click(searchExams);
 	var editExamID = "";
 	$("#examList").on("click",".editExam",function(){
 		$("input[name=subjectCheckbox]").prop("checked",false);
@@ -161,6 +112,7 @@ $(document).ready(function(){
 	$("#questionPaperListModal").on("click",".confirmQuestionPaper",function(){
 		that.closest("div").find(".questionPaperName").html($(this).closest("div").find(".paperDesc").val());
 		that.closest("div").find(".selectedQuestionPaperID").val($(this).attr("id"));
+		that.closest("div.examSubjectPapers").find(".marks").val($(this).attr("marks"));
 		$("#questionPaperListModal").modal("toggle");
 	});
 	
@@ -189,6 +141,7 @@ $(document).ready(function(){
 		var handlers = {};
 		handlers.success = function(e){
 			$.notify({message: "Exam updated successfuly"},{type: 'success'});
+			$(".cancelEdit").trigger("click");
 		}
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});}
 		exam_paperList = JSON.stringify(exam_paperList);
@@ -213,7 +166,7 @@ function createQuestionPaperListTable(data){
 			},sWidth:"20%"},
 			{ title: "Choose",data:null,render:function(data,event,row){
 				var buttons = '<div class="default">'+
-					'<input type="button" class="btn btn-sm btn-primary confirmQuestionPaper" value="Choose" id="'+row.paper_id+'">'+
+					'<input type="button" class="btn btn-sm btn-primary confirmQuestionPaper" value="Choose" id="'+row.paper_id+'" marks="'+row.marks+'">'+
 					'<input type="hidden" value="'+row.paper_description+'" class="paperDesc">'+
 				'</div>'
 				return buttons;
@@ -250,6 +203,75 @@ function createExamListTable(data){
 		]
 	});
 	
+}
+
+function searchExams(){
+	division = $("#division").val();
+	batch =  $("#batchSelect").val();
+	var handlers = {};
+	handlers.success = function(e){console.log("Success",e);
+	createExamListTable(e);};
+	handlers.error = function(e){
+		$.notify({message: "Error while fetching exam list"},{type: 'danger'});
+	};
+	rest.post("rest/classownerservice/getExamList/"+division+"/"+batch,handlers);
+	var handler = {};
+	handler.success = function(e){console.log("Success",e);
+	queationPaperList = e;
+	createQuestionPaperListTable(e);
+	}
+	handler.error = function(e){
+		$.notify({message: "Error"},{type: 'danger'});
+	}
+	rest.get("rest/classownerservice/getQuestionPaperList/"+division,handler);
+$.ajax({
+	   url: "classOwnerServlet",
+	   data: {
+	    	 methodToCall: "fetchBatchSubject",
+	    	 batchName:batch,
+    		 batchdivision:division
+	   		},
+	   type:"POST",
+	   success:function(data){
+		   data = JSON.parse(data);
+		   if(data.subjectstatus == ""){
+			   var subjectnames = data.Batchsubjects;
+			   var subjectIds = data.BatchsubjectsIds;
+			   var i = 0;
+			   var subjectnameArray = subjectnames.split(",");
+				var subjectidArray =  subjectIds.split(",");  
+				subjectList = [];
+				$(".subjectDiv").empty();
+				var tableRow = "<table class='table table-striped'>";
+				while(i < subjectnameArray.length){
+					tableRow +="<tr><td><div class='examSubjectPapers'><div class='col-md-3'><input type='checkbox' value='"+subjectidArray[i]+"' name='subjectCheckbox' id='subjectCheckbox'>"+
+			   				subjectnameArray[i]+"<input type='hidden' class='examPaperID'></div><div class='col-md-4'>"+
+			   				"<button class='btn btn-primary btn-xs chooseQuestionPaper'>Choose Question Paper</button>"+
+			   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></div><div class='col-md-1'><input type='text' class='form-control marks' readOnly></div>"+
+			   				"<div class='col-md-3'><div class='col-md-6'>Duration  : </div><div class='col-md-3'><input type='number' class='form-control examHour' placeholder='HH'></div><div class='col-md-3'><input type='number' class='form-control examMinute' placeholder='MM'></div></div>"+
+			   				"<div class='col-md-1'><button class='btn btn-primary btn-xs preview'>Preview</button></div></div>"
+			   				+"</td></tr>";
+			   		i++;
+			   }
+				tableRow +="</table>";
+				$(".subjectDiv").append(tableRow);
+		   }
+	   },
+		error:function(){
+	   		modal.launchAlert("Error","Error");
+	   	}
+	   });
+}
+
+function deleteExam(){
+	var examId = $(this).attr("id");
+	var handler = {};
+	handler.success = function(e){
+		searchExams();
+		$.notify({message: "Exam successfuly deleted"},{type: 'success'});
+	};
+	handler.error = function(e){};
+	rest.deleteItem(examUrl+examId,handler,true);
 }
 
 </script>

@@ -714,4 +714,13 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		studentDetails.setFeesServiceBean(feesServiceBean);
 		return Response.status(Status.OK).entity(studentDetails).build();
 	}
+	
+	@DELETE
+	@Path("/exam/{exam_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response removeExam(@PathParam("exam_id")int examId){
+		ExamTransaction examTransaction = new ExamTransaction();
+		examTransaction.deleteExam(getRegId(), examId);
+		return Response.ok().build();
+	}
 }

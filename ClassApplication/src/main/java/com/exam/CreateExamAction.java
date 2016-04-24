@@ -19,7 +19,7 @@ public class CreateExamAction extends BaseAction{
 
 	List<Division> divisionList;
 	List<Header> headerList;
-	List<Exam> examList;
+	//List<Exam> examList;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -30,8 +30,8 @@ public class CreateExamAction extends BaseAction{
 		String storage = userBean.getUserStatic().getHeaderPath();
 		HeaderTransaction headerTransaction = new HeaderTransaction(storage);
 		headerList = headerTransaction.getHeaderList(inst_id);
-		ExamTransaction examTransaction = new ExamTransaction();
-		examList = examTransaction.getExamList(inst_id);
+		//ExamTransaction examTransaction = new ExamTransaction();
+		//examList = examTransaction.getExamList(inst_id);
 		return SUCCESS;
 	}
 	public List<Division> getDivisionList() {
@@ -46,11 +46,11 @@ public class CreateExamAction extends BaseAction{
 	public void setHeaderList(List<Header> headerList) {
 		this.headerList = headerList;
 	}
-	public List<Exam> getExamList() {
+	/*public List<Exam> getExamList() {
 		return examList;
 	}
 	public void setExamList(List<Exam> examList) {
 		examList = examList;
-	}
+	}*/
 	
 }

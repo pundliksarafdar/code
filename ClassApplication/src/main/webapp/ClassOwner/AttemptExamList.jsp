@@ -59,7 +59,7 @@ $(document).ready(function(){
 		rest.get("rest/classownerservice/getOnlineExamPaper/"+division+"/"+$(this).prop("id"),handlers);
 	}); */
 	
-	$("#examSubjectTable").on("click",".attemptExamStart",function(){
+	$("#examSubjectTable").on("click",".attemptExamStart",function(e){
 		$("#question_paper_id").val($(this).prop("id"));
 		$("#actionform").find("#division").val(division);
 		$("#actionform").find("#batch").val(batch);

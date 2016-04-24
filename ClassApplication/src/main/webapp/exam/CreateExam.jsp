@@ -27,28 +27,11 @@ padding-left: 2px;
 		<jsp:param value="active" name="createExam"/>
 	</jsp:include>
 <div class="container">
-		<div class="row">
+<form id="examDataForm">
+		<div class="row well">
 			<div class="col-md-3">
-			<label>Select Exam</label>
-			<select class="form-control" id="examSelect">
-				<option value="-1">Select Exam</option>
-				<c:forEach items="${examList}" var="exam">
-						<option value="<c:out value="${exam.exam_id }"></c:out>">
-							<c:out value="${exam.exam_name }"></c:out>
-						</option>
-					</c:forEach>
-			</select>
+				<input type="text" class="form-control" id="newExamName" placeholder="Exam name" required>
 			</div>
-			<div class="col-md-1">
-				<span class="badge" style="padding: 18%;border-radius:20px">OR</span>
-			</div>
-			<div class="col-md-3">
-				<label>Create New Exam</label>
-				<input type="text" class="form-control" id="newExamName">
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-2">Select Class</div>
 			<div class="col-md-3">
 				<select id="division" name="division" class="form-control">
 					<option value="-1">Select Class</option>
@@ -60,20 +43,15 @@ padding-left: 2px;
 					</c:forEach>
 				</select>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-2">Select Batch</div>
+			
 			<div class="col-md-3">
 				<select class="form-control" id="batchSelect" >
 					<option value="-1">Select Batch</option>
 				</select>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-2">Select Header</div>
-			<div class="col-md-3">
-				<select id="headerDesc" name="headerDesc" class="form-control">
-					<option value="-1">Select Header</option>
+			<div class="col-md-3" >
+				<select id="headerDesc" name="headerDesc" class="form-control" required>
+					<option value="">Select Header</option>
 					<c:forEach items="${headerList}" var="headerX">
 						<option value="<c:out value="${headerX.header_id}"></c:out>">
 							<c:out value="${headerX.header_name}"></c:out>
@@ -82,6 +60,7 @@ padding-left: 2px;
 				</select>
 			</div>
 		</div>
+		</form>
 		<div class="row subjectDiv">
 		
 		</div>

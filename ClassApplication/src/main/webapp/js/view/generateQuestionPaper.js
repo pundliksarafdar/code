@@ -237,11 +237,10 @@ $(document).ready(function(){
 		var division = $("#division").val();
 		var questionPaperName = $("#saveQuestionPaperName").val();
 		var desc = $(QUESTION_PAPER_DESC).val();
-		if(questionPaperName && questionPaperName.trim().length!==0){
+		if(desc && desc.trim().length!==0){
 			questionPaperData.desc = desc;
 			rest.post("rest/classownerservice/saveQuestionPaper/"+patternId+"/"+questionPaperName+"/"+division,handlers,JSON.stringify(questionPaperData),true);	
 		}else{
-			modal.launchAlert("Error","Please enter exam name");
 			$("#saveQuestionPaperName").focus();
 		}
 		
