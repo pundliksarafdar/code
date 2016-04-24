@@ -223,7 +223,37 @@ public class SubjectTransaction {
 		SubjectDb subjectDb=new SubjectDb();
 		return subjectDb.isEditTopicExists(inst_id, div_id, sub_id, topic_name,topicid);
 	}
-	
+
+	public List<com.datalayer.subject.Subject> getSubjectsOfBatch(int batchId,int inst_id,int div_id){
+		BatchDB batchDB = new BatchDB();
+		Batch batch = batchDB.getBatchFromID(batchId,inst_id,div_id);
+		List<com.datalayer.batch.Batch> batchesDataLayer = new ArrayList<com.datalayer.batch.Batch>();
+		StringBuilder subjectIds = new StringBuilder();
+		
+		subjectIds.append(batch.getSub_id());
+		AppLogger.logger(subjectIds);
+		List<String> subjectIdList = Arrays.asList(subjectIds.toString().split("\\s*,\\s*"));
+		Set<Integer> set = new HashSet<Integer>();
+		for(String subjectId:subjectIdList){
+			set.add(Integer.parseInt(subjectId));
+		}
+		
+		
+		SubjectDb subjectDb = new SubjectDb();
+		List<Integer> subjectIdListUnique = new ArrayList<Integer>();
+		subjectIdListUnique.addAll(set);
+		
+		List<Subjects> subjectsForDivision = subjectDb.getSubjects(subjectIdListUnique);
+		List<com.datalayer.subject.Subject> subjectsofDivision = new ArrayList<com.datalayer.subject.Subject>();
+		for (Subjects subject:subjectsForDivision) {
+			com.datalayer.subject.Subject subjectDataLayer = new com.datalayer.subject.Subject();
+			try {BeanUtils.copyProperties(subjectDataLayer, subject);} catch (IllegalAccessException e) {e.printStackTrace();} catch (InvocationTargetException e) {e.printStackTrace();	}
+			subjectsofDivision.add(subjectDataLayer);
+		}
+		return subjectsofDivision;
+		
+	}
+
 	public static void main(String[] args) {
 		SubjectTransaction subjectTransaction = new SubjectTransaction();
 		//subjectTransaction.getSubjectsOfDivision(13,12);

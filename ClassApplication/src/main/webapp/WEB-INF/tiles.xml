@@ -664,4 +664,9 @@
         <put-attribute name="topnav" value="/teacher/menu.jsp" />
         <put-attribute name="body"   value="/teacher/ViewAttendance.jsp"/>      
    </definition>
+   <definition name="student.viewnoteslist" extends="baseLayout">
+      <put-attribute name="title"  value="Create Exam Pattern"/>
+        <put-attribute name="topnav" value="/student/menu.jsp" />
+        <put-attribute name="body"   value="/student/ViewNotesList.jsp"/>      
+   </definition>
 </tiles-definitions>

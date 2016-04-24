@@ -115,6 +115,57 @@ public int getNotesNextID(int subid,int classid,int div_id) {
 		return notesList;
 	}
 	
+/*
+ * Remove above function if not required
+ * */	
+public List<Notes> getNotesPath(int divid,int subid,int classid,String batchids) {
+		
+		Session session = null;
+		Transaction transaction = null;
+		List<Notes> notesList = null;
+		String queryString="from Notes where classid=:classid and divid=:divid and subid=:subid";
+		if(!"-1".equals(batchids) && !"".equals(batchids)){
+			String batchidsarr[]=batchids.split(",");
+			for (int i = 0; i < batchidsarr.length; i++) {
+				if(i==0){
+					queryString=queryString+" and ((batch like :batch_id"+i+"a or batch like :batch_id"+i+"b or batch like :batch_id"+i+"c or batch = :batch_id"+i+"d)";
+				}else{
+					queryString=queryString+"or (batch like :batch_id"+i+"a or batch like :batch_id"+i+"b or batch like :batch_id"+i+"c or batch = :batch_id"+i+"d)";
+				}
+			}
+			queryString=queryString+")";
+		}
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("classid", classid);
+			query.setParameter("divid", divid);
+			query.setParameter("subid", subid);
+			if(!"-1".equals(batchids) && !"".equals(batchids)){
+				String batchidsarr[]=batchids.split(",");
+				for (int i = 0; i < batchidsarr.length; i++) {
+					query.setParameter("batch_id"+i+"a", batchidsarr[i].trim()+",%");
+					query.setParameter("batch_id"+i+"b","%,"+batchidsarr[i].trim()+",%");	
+					query.setParameter("batch_id"+i+"c", "%,"+batchidsarr[i].trim());
+					query.setParameter("batch_id"+i+"d", batchidsarr[i].trim());
+			}
+			}
+			
+			notesList = query.list();
+			
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
+			}
+				
+		return notesList;
+	}
+	
 public int getNotescount(int divid,int subid,int classid,String batchids) {
 		
 		Session session = null;

@@ -2,6 +2,7 @@ var VIEW_BTN = "#view";
 var CLASS = "#classSelect";
 var DIVISION = "#divisionSelect";
 var BATCH = "#batchSelect";
+var SUBJECT = "#subjectSelect";
 var CALENDAR_DATE = "#calendarDate";
 var CALENDAR_CONTAINER = "#calendarContainer";
 var CALENDAR_MESSAGE_CONTAINER = "#calendarShowMessageContainer";
@@ -9,6 +10,7 @@ var CALENDAR_MESSAGE_CONTAINER = "#calendarShowMessageContainer";
 var getClassUrl = "rest/student/getClasses";
 var getDivisionUrl = "rest/student/getDivision/";
 var getBatchUrl = "rest/student/getBatch/";
+var getSubjectUrl = "rest/student/getSubject/";
 var getTimetable = "rest/student/monthlySchedule/";
 
 $(document).ready(function(){
@@ -17,6 +19,7 @@ $(document).ready(function(){
 	$("body").on("click",VIEW_BTN,viewTimetable)
 		.on("change",CLASS,loadDivision)
 		.on("change",DIVISION,loadBatch)
+		.on("change",BATCH,loadSubject)
 		.on("dp.change",CALENDAR_DATE,onCalendarDateChange)
 		.on("click",VIEW_BTN,getTimeTableData)
 		.on("change",'select',function(){
@@ -118,6 +121,17 @@ function getTimeTableData(){
 	};
 	rest.get(getTimetable+classId+"/"+batchId+"/"+divId+"/"+dateNow+"/0",handler);
 	//filldropdown();
+}
+
+function loadSubject(){
+	var classId = $(CLASS).val();
+	var divId = $(DIVISION).val();
+	var batchId = $(BATCH).val();
+	
+	var handler = {};
+	handler.success = function(data){loadSelect(SUBJECT,data)};
+	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
+	rest.get(getSubjectUrl+divId+"/"+batchId+"/"+classId,handler);
 }
 
 function setTimetable(data){

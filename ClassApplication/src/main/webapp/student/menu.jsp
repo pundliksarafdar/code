@@ -196,6 +196,28 @@
             </div>
 			</a>
         </div>
+        
+        <div class="col-sm-2 col-xs-2">
+            <a href="viewStudentsNotes">
+			<div id="tile8" class="tile">
+			      <div class="carousel slide" data-ride="carousel">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Notes
+                            </div>
+                            
+                        </div>
+						
+                    </div>
+					</div>
+            </div>
+			</a>
+        </div>
 		</div>
 	</div>
 </div>

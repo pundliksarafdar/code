@@ -585,5 +585,9 @@
 			method="execute">
 			<result name="success" type="tiles">teacher.viewattendance</result>
 		</action>
+		<action name="viewStudentsNotes" class="com.student.action.ViewNotesAction"
+			method="execute">
+			<result name="success" type="tiles">student.viewnoteslist</result>
+		</action>
 	</package>
 </struts>

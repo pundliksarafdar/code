@@ -23,9 +23,17 @@ public Boolean deleteNotes(int notesid,int inst_id,int div_id,int sub_id) {
 	
 }
 
+/*Remove this function if not require*/
 public List<Notes> getNotesPath(int divid,int subid,int classid,int currentPage,String batchids) {
 	NotesDB notesDB=new NotesDB();
 	List<Notes> list=notesDB.getNotesPath(divid, subid, classid,currentPage,batchids);
+	return list;
+	
+}
+
+public List<Notes> getNotesPath(int divid,int subid,int classid,String batchids) {
+	NotesDB notesDB=new NotesDB();
+	List<Notes> list=notesDB.getNotesPath(divid, subid, classid,batchids);
 	return list;
 	
 }
