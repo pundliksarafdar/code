@@ -222,7 +222,7 @@ var searchQuestionPaperSuccess = function(data){
 		title: "Marks",data:'marks'
 	},
 	{
-		title: "",data:null,sWidth:"10%",render:function(){return "<a class='btn btn-link editQuestionPaper'>Edit</a>"}
+		title: "",data:null,sWidth:"10%",render:function(){return "<a class='btn btn-link editQuestionPaper'>Edit</a>"},bSortable:false
 	}]});
 }
 
@@ -231,7 +231,7 @@ var searchQuestionPaperError = function(){
 }
 
 function loadSubjectAndTopicSelect(){
-	var optionString = "<option value='-1'>Select</option>";
+	var optionString = "<option value='-1'>Select subject</option>";
 	$.each(topicNSubject,function(key,val){
 		optionString = optionString + "<option value='"+key+"'>"+val.subjectName+"</option>";
 	});
@@ -240,9 +240,7 @@ function loadSubjectAndTopicSelect(){
 		var that= $(this);
 		var val = $(this).attr("value");
 		$(this).val(val);
-		if(topicNSubject[val]){
-			loadTopicSelect(that,topicNSubject[val].topic);
-		}
+		loadTopicSelect(that,topicNSubject[val] && topicNSubject[val].topic?topicNSubject[val].topic:[]);
 	});
 }
 
@@ -272,7 +270,7 @@ function loadSubjectAndTopic(topicNSubjectAttr){
 
 function loadTopicSelect(selectSub,topics){
 	var topicSelect = selectSub.closest('.row').find(SELECT_TOPIC);
-	var topic = "";
+	var topic = "<option value='-1'>Select topic</option>";
 	$.each(topics,function(key,val){
 		topic = topic + "<option value='"+val.topicId+"'>"+val.topicName+"</option>";
 	});
@@ -306,9 +304,9 @@ function recursiveView(data,recursionLevel,dataArray){
 				var itemNo = data[i].item_no;
 				var itemMarks = data[i].item_marks;
 				if(recursionLevel == 1 || recursionLevel==2){
-				$("#viewPatternData").append("<div class='row' style='font-weight:bold'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-1'>"+itemMarks+"</div></div>")
+				$("#viewPatternData").append("<div class='row' style='font-weight:bold'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-2 pull-right'>"+itemMarks+"</div></div>")
 				}else{
-					$("#viewPatternData").append("<div class='row'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-1'>"+itemMarks+"</div></div>")
+					$("#viewPatternData").append("<div class='row'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-2 pull-right'>"+itemMarks+"</div></div>")
 				}
 				data[i].status = "viewed";
 			}else{

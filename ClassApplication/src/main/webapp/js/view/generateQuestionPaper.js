@@ -228,9 +228,9 @@ $(document).ready(function(){
 		$.each($(QUESTION),function(key,val){
 			questionPaperData[$(val).closest('[item_id]').attr('item_id')] = $(val).data(QUESTION_ID);
 		});
-		console.log(questionPaperData);
 		var handlers = {};
 		handlers.success = function(resp){
+			$.notify({message: "Exam saved successfully"},{type: 'success'});
 			loadSubjectAndTopic(resp);
 		};
 		handlers.error = function(e){};
