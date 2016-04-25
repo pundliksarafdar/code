@@ -203,12 +203,14 @@ function saveFeeStructureInDb(struct){
 	var handler = {};
 	handler.success = saveFeeStructureInDbSuccess;
 	handler.error = saveFeeStructureInDbError;
-	console.log("Saving....",JSON.stringify(struct));
 	rest.post(updateUrl,handler,JSON.stringify(struct));
 }
 
 function saveFeeStructureInDbSuccess(e){
-	console.log(e);
+	$.notify({message: 'Fee structure saved'},{type: 'success'});
+	$(FEE_TABLE_CONTAINER).show();
+	$(EDIT_DISTRIBUTION_WRAPPER).hide();
+	loadFeeStructureTable();
 }
 
 function saveFeeStructureInDbError(e){

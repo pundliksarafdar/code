@@ -146,9 +146,9 @@ function addDistribution(data){
 		style:"color:white"
 	}).appendTo(buttonRemove);
 	
-	var itemEdit = $("<input/>",{
-		value:distributionName,
-		class:'form-control distributionItems'
+	var itemEdit = $("<label/>",{
+		text:distributionName,
+		class:'distributionItems'
 	}).data("fees_structure_id",data.fees_structure_id)
 	.data("batch_fees_id",data.batch_fees_id)
 	.appendTo(fieldTd);
@@ -252,8 +252,12 @@ function saveFee(){
 	//saveBean.batchFees = batchFees;
 	saveBean.batchFeesDistribution = batchFeesDistributions;
 	var handler = {};
-	handler.success = function(e){console.log(e)};
-	handler.error = function(e){console.log(e)};
+	handler.success = function(e){
+		$.notify({message: 'Fee linked'},{type: 'success'});
+	};
+	handler.error = function(e){
+		$.notify({message: 'Error occured'},{type: 'warning'});
+	};
 	if(updateOrSave == "Update"){
 		console.log(saveBean);
 		rest.post(updateBatch,handler,JSON.stringify(saveBean));
