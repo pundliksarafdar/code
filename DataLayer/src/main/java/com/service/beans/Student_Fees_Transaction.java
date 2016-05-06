@@ -12,6 +12,23 @@ public class Student_Fees_Transaction {
 	int added_by;
 	String note;
 	Date transaction_dt;
+	String disType;
+	float discount;
+	
+	
+	public float getDiscount() {
+		return discount;
+	}
+	public void setDiscount(float discount) {
+		this.discount = discount;
+	}
+	public String getDisType() {
+		return disType;
+	}
+	public void setDisType(String disType) {
+		this.disType = disType;
+	}
+	
 	public int getInst_id() {
 		return inst_id;
 	}

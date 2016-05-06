@@ -235,7 +235,7 @@ var graphData = [];
 			var that = $(this);
 			var handlers = {};
 			handlers.success=function(){
-				$.notify({message: "Student successfuly deleted"},{type: 'success'});
+				$.notify({message: "Fee paid successfuly"},{type: 'success'});
 				var amt = that.closest(".amtData").find("#amt").val()
 				var updatedfeesPaid =  parseFloat(that.closest(".feesData").find(".feesPaid").html()) + parseFloat(amt) ;
 				var updatedfeesDue = that.closest(".feesData").find(".feesDue").html() - amt;
@@ -243,7 +243,7 @@ var graphData = [];
 				that.closest(".feesData").find(".feesDue").html(updatedfeesDue); 
 			};   
 			handlers.error=function(){
-				$.notify({message: "Student successfuly deleted"},{type: 'danger'});
+				$.notify({message: "Error"},{type: 'danger'});
 			};   
 			
 			rest.post("rest/feesservice/saveStudentBatchFeesTransaction/",handlers,JSON.stringify(serviceFees_Transaction));

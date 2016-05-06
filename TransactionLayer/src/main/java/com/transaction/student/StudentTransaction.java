@@ -147,7 +147,7 @@ public class StudentTransaction {
 	return true;
 	}
 	
-	public List getStudentsrelatedtobatch(String batchname,int inst_id,int div_id) {
+	public List<Student> getStudentsrelatedtobatch(String batchname,int inst_id,int div_id) {
 	StudentDB studentDB=new StudentDB();
 	List students =studentDB.getStudentIDSrelatedtoBatch(batchname,inst_id,div_id);
 	return students;

@@ -2,6 +2,7 @@
 var getBatchListUrl = "rest/feesservice/getInstituteBatch/";
 var getAllBatchStudentsFeesUrl = "rest/feesservice/getAllBatchStudentsFees/";
 var saveStudentBatchFee = "rest/feesservice/saveStudentBatchFeesTransaction/";
+var updateStudentFeesAmt = "rest/feesservice/updateStudentFeesAmt/";
 var printReceiptUrl = "rest/feesservice/getPrintDetail/";
 
 /*************/
@@ -64,7 +65,8 @@ function payfee(){
 	payFeeBean.batch_id = $(BATCH_SELECT).val();
 	payFeeBean.amt_paid = tableRow.find(PAY_FEE_INPUT).val();
 	payFeeBean.note = tableRow.next().find(NOTE_TEXT).val();
-	
+	payFeeBean.disType = tableRow.find('[type="checkbox"]').is(':checked')?"per":"amt";
+	payFeeBean.discount = tableRow.find(".discount").val();
 	console.log(JSON.stringify(payFeeBean));
 	var handler = {};
 	handler.success = function(e){console.log("success",e);$.notify({message: "Fee saved successfully"},{type: 'success'});}
@@ -147,7 +149,7 @@ function loadStudentTableSuccess(data){
 			lengthChange: false,
 			columns:[
 			{
-				title: "Name",data:"fname",sDefault:'&mdash;'
+				title: "Name",data:null,sDefault:'&mdash;',render:function(data){return data.fname+" "+data.lname}
 			},
 			{
 				title: "Total fee",data:"batch_fees"
@@ -156,25 +158,25 @@ function loadStudentTableSuccess(data){
 				title: "Final fee",data:"final_fees_amt"
 			},
 			{
-				title: "Discount",data:"discount",render:function(data){return "<input type='text' class='form-control discount' value='"+data+"'/>"}
+				title: "Discount",bSortable:false,data:"discount",render:function(data){return "<input type='text' class='form-control discount' value='"+data+"'/>"}
 			},
 			{
-				title: "%/&#x20b9;",data:"discount_type",render:function(disTyp){return "<input type='checkbox' data-size=\"mini\"/ class='percentage' "+((disTyp=='per')?'checked':'')+">"},width:'auto',bSortable: false
+				title: "%/&#x20b9;",bSortable:false,data:"discount_type",render:function(disTyp){return "<input type='checkbox' data-size=\"mini\"/ class='percentage' "+((disTyp=='per')?'checked':'')+">"},width:'auto',bSortable: false
 			},
 			{
 				title: "Paid fee",data:"fees_paid",render:function(feePaid){return "<div>"+feePaid+"</div>"}
 			},
 			{
-				title: "Pay",data:null,render:function(){return "<input type='text' class='form-control payFeesInput'/>"}
+				title: "Pay",bSortable:false,data:null,render:function(){return "<input type='text' class='form-control payFeesInput'/>"}
 			},
 			{
 				title: "Remaining fee",data:"fees_due",render:function(feeDue){return "<div class='remaingFee' style='text-align:center;'>"+feeDue+" &#x20b9;</div>"}
 			},
 			{
-				title: "Remaining fee",data:null,render:function(){return "<input type='button' class='btn btn-default payFees' value='Pay'/>"}
+				title: "",bSortable:false,data:null,render:function(){return "<input type='button' class='btn btn-default payFees' value='Pay'/>"}
 			},
 			{
-				title: "",data:null,render:function(){return "<input type='button' class='btn btn-default printReceipt' value='Print'/>"}
+				title: "",bSortable:false,data:null,render:function(){return "<input type='button' class='btn btn-default printReceipt' value='Print'/>"}
 			}
 			
 			]

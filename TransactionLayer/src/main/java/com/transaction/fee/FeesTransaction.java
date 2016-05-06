@@ -16,6 +16,7 @@ import com.classapp.db.fees.FeesDB;
 import com.classapp.db.fees.FeesStructure;
 import com.classapp.db.fees.Student_Fees;
 import com.classapp.db.fees.Student_Fees_Transaction;
+import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
 import com.classapp.utils.Constants;
 import com.service.beans.BatchFees;
@@ -24,6 +25,7 @@ import com.service.beans.BatchServiceBean;
 import com.service.beans.BatchStudentFees;
 import com.service.beans.FeeStructure;
 import com.service.beans.StudentFeesServiceBean;
+import com.transaction.register.RegisterTransaction;
 import com.transaction.student.StudentTransaction;
 
 public class FeesTransaction {
@@ -377,6 +379,14 @@ public class FeesTransaction {
 	}
 	
 	public boolean saveStudentBatchFeesTransaction(int inst_id,com.service.beans.Student_Fees_Transaction serviceFees_Transaction ){
+		FeesTransaction feesTransaction = new FeesTransaction();
+		BatchFeesDistributionServiceBean batchFeesDistributionServiceBean = feesTransaction.getBatchFeesDistribution(inst_id, serviceFees_Transaction.getDiv_id(), serviceFees_Transaction.getBatch_id());
+		
+		if(null == batchFeesDistributionServiceBean){
+			return false;
+		}
+		
+		int bathcFee = batchFeesDistributionServiceBean.getBatchFees().getBatch_fees();
 		FeesDB feesDB = new FeesDB();
 		if(serviceFees_Transaction.getDiv_id() == 0){
 			StudentTransaction studentTransaction = new StudentTransaction();
@@ -397,7 +407,10 @@ public class FeesTransaction {
 			e.printStackTrace();
 		}
 		feesDB.saveStudentFeesTransaction(fees_Transaction);
-		feesDB.updateStudentFees(inst_id, fees_Transaction.getDiv_id(), fees_Transaction.getBatch_id(), fees_Transaction.getStudent_id(), fees_Transaction.getAmt_paid());
+		feesDB.updateStudentFees(inst_id, fees_Transaction.getDiv_id(), 
+				fees_Transaction.getBatch_id(), fees_Transaction.getStudent_id(), 
+				fees_Transaction.getAmt_paid(),bathcFee,
+				serviceFees_Transaction.getDisType(),serviceFees_Transaction.getDiscount());
 		return true;
 	}
 	
@@ -451,7 +464,17 @@ public class FeesTransaction {
 	
 	public List<BatchStudentFees> getAllBatchStudentsFees(int inst_id,int div_id,int batch_id) {
 		FeesDB feesDB = new FeesDB();
+		FeesTransaction feesTransaction = new FeesTransaction();
+		BatchFeesDistributionServiceBean batchFeesDistributionServiceBean = feesTransaction.getBatchFeesDistribution(inst_id, div_id, batch_id);
+		
+		if(null == batchFeesDistributionServiceBean){
+			return new ArrayList<BatchStudentFees>();
+		}
+		int batchFee = batchFeesDistributionServiceBean.getBatchFees().getBatch_fees();
+		
+		StudentTransaction studentTransaction = new StudentTransaction();
 		List list = feesDB.getAllBatchStudentsFees(inst_id, div_id, batch_id);
+		List<Student> students = studentTransaction.getStudentsrelatedtobatch(batch_id+"", inst_id, div_id);
 		List<BatchStudentFees> batchStudentFeesList = new ArrayList<BatchStudentFees>();
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			Object[] object = (Object[]) iterator.next();
@@ -459,13 +482,34 @@ public class FeesTransaction {
 			batchStudentFees.setStudent_id(((Number) object[0]).intValue());
 			batchStudentFees.setFname((String) object[1]);
 			batchStudentFees.setLname((String) object[2]);
-			batchStudentFees.setBatch_fees(((Number) object[3]).doubleValue());
+			batchStudentFees.setBatch_fees(batchFee);
 			batchStudentFees.setDiscount(((Number) object[4]).doubleValue());
 			batchStudentFees.setDiscount_type((String) object[5]);
 			batchStudentFees.setFinal_fees_amt(((Number) object[6]).doubleValue());
 			batchStudentFees.setFees_paid(((Number) object[7]).doubleValue());
 			batchStudentFees.setFees_due(((Number) object[8]).doubleValue());
 			batchStudentFeesList.add(batchStudentFees);
+		}
+		
+		List studentIds = new ArrayList();
+		for(Student student:students){
+			studentIds.add(student.getStudent_id());
+		}
+		
+		RegisterTransaction registerTransaction = new RegisterTransaction();
+		List<RegisterBean> registerBeans = registerTransaction.getStudentsInfo(studentIds, 0);
+		
+		for(Student student:students){
+			for(RegisterBean registerBean:registerBeans){
+				BatchStudentFees batchStudentFees = new BatchStudentFees();
+				batchStudentFees.setStudent_id(student.getStudent_id());
+				if(registerBean.getRegId() == student.getStudent_id()){
+					batchStudentFees.setFname(registerBean.getFname());
+					batchStudentFees.setLname(registerBean.getLname());
+					batchStudentFees.setBatch_fees(batchFee);
+					batchStudentFeesList.add(batchStudentFees);
+				}
+			}
 		}
 		return batchStudentFeesList;
 		

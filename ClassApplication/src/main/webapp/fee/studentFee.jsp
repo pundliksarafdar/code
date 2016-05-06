@@ -31,12 +31,8 @@
 		</div>
 		
 		<div class="container">
-		<div class="row">
-			<div class="col-lg-12">
 				<table id="studentFeesTable" class="table table-striped"></table>
-			</div>
 		</div>
-	</div>
 	<div id="printableReceipt" class="hide">
 	
 	</div>

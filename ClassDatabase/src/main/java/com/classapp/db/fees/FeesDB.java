@@ -678,14 +678,35 @@ public List getBatchStudentsFees(int inst_id,int div_id,int batch_id) {
 	return  BatchFessList;
 }
 
-public boolean updateStudentFees(int inst_id,int div_id,int batch_id, int student_id,double fees_paid) {
+public boolean updateStudentFees(int inst_id,int div_id,int batch_id, int student_id,double fees_paid,int batchFee,String amtType,float discount) {
 	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
 	transaction=session.beginTransaction();
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
+		Student_Fees student_Fees_key = new Student_Fees();
+		student_Fees_key.setBatch_id(batch_id);
+		student_Fees_key.setInst_id(inst_id);
+		student_Fees_key.setDiv_id(div_id);
+		student_Fees_key.setStudent_id(student_id);
+		
 		transaction = session.beginTransaction();
+		Student_Fees student_Fees = new Student_Fees();
+		student_Fees = (Student_Fees) session.get(Student_Fees.class, student_Fees_key);
+		
+		student_Fees.setBatch_fees(batchFee);
+		student_Fees.setBatch_id(batch_id);
+		student_Fees.setDiscount(discount);
+		student_Fees.setDiscount_type(amtType);
+		student_Fees.setDiv_id(div_id);
+		student_Fees.setFees_paid(student_Fees.getFees_paid()+fees_paid);
+		student_Fees.setFees_due(student_Fees.getBatch_fees()-student_Fees.getFees_paid());
+		student_Fees.setFinal_fees_amt(0);
+		student_Fees.setInst_id(inst_id);
+		student_Fees.setStudent_id(student_id);
+		
+		/*
 		Query query = session.createQuery("update Student_Fees set fees_paid = fees_paid + :fees_paid, fees_due = fees_due - :fees_paid" +
 				" where inst_id = :inst_id and div_id=:div_id and batch_id = :batch_id and student_id = :student_id");
 		query.setParameter("inst_id", inst_id);
@@ -694,6 +715,8 @@ public boolean updateStudentFees(int inst_id,int div_id,int batch_id, int studen
 		query.setParameter("student_id", student_id);
 		query.setParameter("fees_paid", fees_paid);
 		query.executeUpdate();
+		*/
+		session.saveOrUpdate(student_Fees);
 		transaction.commit();
 	}catch(Exception e){
 		e.printStackTrace();

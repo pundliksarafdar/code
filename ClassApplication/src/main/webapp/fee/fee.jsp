@@ -13,7 +13,7 @@ table.distributionTable {border:1px solid #000}
 	<jsp:include page="FeeHeader.jsp" >
 		<jsp:param value="active" name="createFeeStruct"/>
 	</jsp:include>
-
+	<div>&nbsp;</div>
 	<div class="container">
 	<div class="row">
 	  <div class="col-lg-12">
