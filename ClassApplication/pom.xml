@@ -41,12 +41,11 @@
 		</dependency>
 		<!-- <dependency> <groupId>org.apache.tiles</groupId> <artifactId>tiles-core</artifactId> 
 			<version>LATEST</version> </dependency> -->
-		<!-- For tomcat 8 add following dependency -->
-		<!-- <dependency>
+		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
 			<version>2.0</version>
-		</dependency> -->
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.struts</groupId>

@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jboss.resteasy.annotations.cache.Cache;
 
 import com.classapp.db.question.Questionbank;
 import com.config.Constants;
@@ -278,6 +279,7 @@ public class ClassownerExamService extends ServiceBase{
 	@GET
 	@Path("/test")
 	@Produces(MediaType.TEXT_PLAIN)
+	@Cache(maxAge=2300, mustRevalidate = true, noStore = true, proxyRevalidate = true, sMaxAge = 2300)
 	public Response test(){
 		return Response.ok("test").build();
 	}
