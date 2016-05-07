@@ -146,9 +146,9 @@
 				<version>2.4</version>
 				<configuration>
 					<warName>ROOT</warName>
-					<!-- For tomcat directory is webapps -->
+					<!-- For openshift tomcat directory is webapps -->
 					<outputDirectory>webapps</outputDirectory>
-					<!-- <outputDirectory>deployments</outputDirectory> -->
+					<outputDirectory>deployments</outputDirectory>
 				</configuration>
 			</plugin>
 		</plugins>
