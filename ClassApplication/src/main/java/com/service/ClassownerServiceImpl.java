@@ -438,7 +438,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		ExamTransaction examTransaction = new ExamTransaction();
 		examTransaction.saveExamPaper(userBean.getRegId(), exam, exam_PaperList, userBean.getRegId());
-		return Response.status(Status.OK).entity("test").build();
+		return Response.status(Status.OK).build();
 	}
 	
 	@POST

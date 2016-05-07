@@ -79,10 +79,10 @@ function saveFeeStructureInDb(struct){
 function saveFeeStructureInDbSuccess(e){
 	console.log(e);
 	if(e==false){
-		if($("#feeStructName").closest("div").find(".error").length == 0){
-			$("#feeStructName").closest("div").append("<div class='error'>Fee Structure with same name already exists.</div>");
+		if($("#feeStructName").closest("form").find(".error").length == 0){
+			$("#feeStructName").closest("form").append("<div class='error'>Fee Structure with same name already exists.</div>");
 		}else{
-			$("#feeStructName").closest("div").find(".error").html("Fee Structure with same name already exists.");
+			$("#feeStructName").closest("form").find(".error").html("Fee Structure with same name already exists.");
 		}
 	}else{
 		$("#feeStructName").closest("div").find(".error").remove();

@@ -101,6 +101,20 @@
 			var handler={};
 			handler.success = function(e){}
 			handler.error = function(e){}
+			
+			var question = $("#paraQuestion").find(".paraQuestionTmpl");
+			var allQuestionMarks = 0;
+			
+			$.each(question,function(){
+				allQuestionMarks = allQuestionMarks + parseInt($(this).find("#questionMarks").val());
+			});
+			var totalMarks = parseInt($("#totalMarks").val());
+			if(allQuestionMarks != totalMarks){
+				//var validator = $( PARA_QUESTION_FORM ).validate();
+				$(PARA_QUESTION_FORM).validate().showErrors({
+					  "totalMarks": "Paragraph marks is less than total marks of questions"
+				});
+			}
 			rest.post(saveParaQuestionUrl,handler,JSON.stringify(paraQuestionBean),true);
 		}
 	}

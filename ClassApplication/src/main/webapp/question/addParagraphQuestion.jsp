@@ -23,8 +23,8 @@
 		</div>
 		<div class="form-group">
 			<label for="totalMarks" class="col-sm-2 control-label">Total marks</label>
-			<div class="col-sm-2">
-			<input type="number" id="totalMarks" required class="form-control"  maxlength="5" size="5" style="width: 50%;" min="1"/>
+			<div class="col-sm-6">
+			<input type="number" id="totalMarks" name="totalMarks" required class="form-control"  maxlength="5" size="5" style="width: 20%;" min="1"/>
 			</div>
 		</div>
 		<div class="form-group">
@@ -44,6 +44,7 @@
 			<label class="col-md-2 control-label"></label>
 			<div id="paraQuestion" class="col-md-10">
 				<input type="button" id="addQuestions" class="btn btn-default" value="Add question"/>
+				<br/>
 			</div>	
 		</div>
 		<div class="form-group">

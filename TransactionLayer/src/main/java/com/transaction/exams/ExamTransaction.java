@@ -60,13 +60,13 @@ public class ExamTransaction {
 	public boolean saveExamPaper(int inst_id,String examName,List<Exam_Paper> exam_PaperList,int created_by) {
 		ExamDB examDB = new ExamDB();
 		int exam_id =0;
-	if(!"-1".equals(examName)){
-		Exam exam = new Exam();
-		exam.setExam_name(examName);
-		exam.setInst_id(inst_id);
-		exam_id = examDB.saveExam(exam);
-		}
-	ExamPaperDB examPaperDB = new ExamPaperDB();
+		if(!"-1".equals(examName)){
+			Exam exam = new Exam();
+			exam.setExam_name(examName);
+			exam.setInst_id(inst_id);
+			exam_id = examDB.saveExam(exam);
+			}
+		ExamPaperDB examPaperDB = new ExamPaperDB();
 		for (Iterator iterator = exam_PaperList.iterator(); iterator.hasNext();) {
 			Exam_Paper exam_Paper = (Exam_Paper) iterator.next();
 			if(exam_id != 0){

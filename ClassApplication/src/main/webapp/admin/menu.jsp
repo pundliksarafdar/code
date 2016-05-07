@@ -207,7 +207,7 @@ siteMapApp.controller("SiteMapController",function($scope){
 <div class="container dynamicTile">
     <div class="row">
 		<div class="col-xs-12">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>	
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="glyphicon glyphicon-remove-circle" style="color: red"></i></button>	
 		</div>
 	</div>
 	<% if(userBean.getRole() == 1 ){ %>
@@ -584,6 +584,10 @@ $(document).ready(function () {
 		//$modal.css({top: e.clientY, left: e.clientX, transform: 'scale(0.2, 0.2)'});
 		$modal.modal();
 		//$modal.css({top: '', left: '', transform: ''});
+	});
+	
+	$modal.on("keyDown",function(){
+		$modal.modal("hide");
 	});
 
 });

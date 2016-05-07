@@ -86,7 +86,7 @@ $(document).ready(function(){
 						tableRow += "<tr><td><div class='examSubjectPapers'><div class='col-md-3'><input type='checkbox' value='"+subjectidArray[i]+"' name='subjectCheckbox' id='subjectCheckbox'>"+
 		   				subjectnameArray[i]+"</div><div class='col-md-4'>"+
 		   				"<button class='btn btn-primary btn-xs chooseQuestionPaper'>Choose Question Paper</button>"+
-		   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></div><div class='col-md-1'><input type='text' class='form-control marks' readOnly></div>"+
+		   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></div><div class='col-md-1'><input type='text' class='form-control marks' readOnly placeholder='Marks' title='Marks of selected question paper'></div>"+
 		   				"<div class='col-md-3'><div class='col-md-6'>Duration  : </div><div class='col-md-3'><input type='number' class='form-control examHour' placeholder='HH'></div><div class='col-md-3'><input type='number' class='form-control examMinute' placeholder='MM'></div></div>"+
 		   				"<div class='col-md-1'><button class='btn btn-primary btn-xs preview'>Preview</button></div></div></td></tr>"
 				   		i++;
@@ -141,9 +141,13 @@ $(document).ready(function(){
 		}
 		console.log(exam_paperList);
 		var handlers = {};
-		handlers.success = function(e){console.log("Success",e);
+		handlers.success = function(e){
+			console.log("Success",e);
+			$.notify({message: "Exam created successfuly"},{type: 'success'});
 		}
-		handlers.error = function(e){console.log("Error",e)}
+		handlers.error = function(e){
+			$.notify({message: "Exam creation cause error"},{type: 'danger'});
+		}
 		exam_paperList = JSON.stringify(exam_paperList);
 		rest.post("rest/classownerservice/saveExamPaper/"+examName,handlers,exam_paperList);
 		});
