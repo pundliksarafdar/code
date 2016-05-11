@@ -26,7 +26,7 @@ public class ImageTransactions {
 	String SUBJECTIVE = "subjective";
 	String OBJECTIVE = "objective";
 	String PARAGRAPH = "paragraph";
-	String PARAGRAPH_QUESTION = "paragraph_questions";
+	String PARAGRAPH_QUESTION = "paragraphQuestions";
 	String QUESTION = "question";
 	String OPTION = "option";
 	

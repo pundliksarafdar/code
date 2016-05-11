@@ -323,7 +323,7 @@ function searchQuestion(pageNo){
 			 	}else{
 			 		for(var i=0;i<data.paragraphQuestion.length;i++){
 				 		$("#questionListTable tbody").append("<tr><td>"+(i+1)+"</td><td>"+data.paragraphQuestion[i].paragraph+"</td><td>"+data.paragraphQuestion[i].marks+"</td><td><a class='btn btn-primary editQuestion'"+
-				 				"id='"+data.paragraphQuestion[i].questionnumber+"'>Edit</a></td><td><a class='btn btn-danger deleteQuestion' id='"+data.paragraphQuestion[i].questionnumber+"'>Delete</a></td>");
+				 				"id='"+data.questionList[i].que_id+"'>Edit</a></td><td><a class='btn btn-danger deleteQuestion' id='"+data.paragraphQuestion[i].questionnumber+"'>Delete</a></td>");
 				 	
 				 	}
 			 	}

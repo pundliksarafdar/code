@@ -589,7 +589,16 @@ $(document).ready(function () {
 	$modal.on("keyDown",function(){
 		$modal.modal("hide");
 	});
-
+	
+	$("#tileMenuModal").hover(function() {
+	    this.focus();
+	    console.log("here");
+	}, function() {
+	    this.blur();
+	    console.log("asdsadasd");
+	}).keydown(function(e) {
+	    console.log(e.keyCode);
+	});
 });
 </script>
 

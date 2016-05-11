@@ -20,10 +20,10 @@
 	$(document).ready(function(){
 		$("body").on("click",ADD_QUESTION,addParaQuestion)
 		.on("change",PARA_QUESTION_IMAGE,function(){
-			showAndUploadImageForObjective("form#paraQuestionForm","paraImage",this,"paraOptionImage");
+			showAndUploadImageForParagraph("form#paraQuestionForm","paraImage",this,"paraOptionImage");
 		})
 		.on("change",PARA_QUE_IMAGE,function(){
-			showAndUploadImageForObjective(".paraQuestionTmpl","paraImage",this,"paraQuestionImage");
+			showAndUploadImageForParagraph(".paraQuestionTmpl","paraImage",this,"paraQuestionImage");
 		})
 		.on("click",DELETE_PARA_OPTION,function(){
 			$(this).closest(".paraQuestionTmpl").remove();
@@ -40,7 +40,7 @@
 		$(PARA_QUESTION).append(paraTmpl);
 	}
 	
-	function showAndUploadImageForObjective(parent,imagename,that,imageType){
+	function showAndUploadImageForParagraph(parent,imagename,that,imageType){
 		var imageFile = $(that)[0];
 		var handler = {};
 		handler.success = function(e){console.log(e)}
@@ -114,8 +114,10 @@
 				$(PARA_QUESTION_FORM).validate().showErrors({
 					  "totalMarks": "Paragraph marks is less than total marks of questions"
 				});
+			}else{
+				rest.post(saveParaQuestionUrl,handler,JSON.stringify(paraQuestionBean),true);	
 			}
-			rest.post(saveParaQuestionUrl,handler,JSON.stringify(paraQuestionBean),true);
+			
 		}
 	}
 	

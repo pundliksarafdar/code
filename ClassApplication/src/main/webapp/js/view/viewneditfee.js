@@ -25,8 +25,7 @@ var FEE_STRUCT_SELECT = "#feeStructSelect";
 /**/
 var editIcon = "<i class='glyphicon glyphicon-edit tableIcon tableIconEdit' title='Edit'></i>";
 var deleteIcon = "<i class='glyphicon glyphicon-trash tableIcon tableIconDelete' title='Delete'></i>";
-var linkIcon = "<i class='glyphicon glyphicon-hand-right tableIcon tableIconLink' title='Link'></i>";
-var buttons = editIcon+deleteIcon+linkIcon;
+var buttons = editIcon+deleteIcon;
 
 /**/
 var getListUrl = "rest/feesservice/getAllFeeStructre";
@@ -66,7 +65,7 @@ function onGetAllFeeStructureSuccess(data){
 		title: "Fee structure",data:'fees_desc',sWidth:"70%"
 	},
 	{
-		title: "",data:null,sWidth:"10%",render:function(){return buttons}
+		title: "",data:null,bSortable:false,sWidth:"10%",render:function(){return buttons}
 	}]});
 }
 function editFeeStructure(){	
@@ -207,10 +206,18 @@ function saveFeeStructureInDb(struct){
 }
 
 function saveFeeStructureInDbSuccess(e){
-	$.notify({message: 'Fee structure saved'},{type: 'success'});
-	$(FEE_TABLE_CONTAINER).show();
-	$(EDIT_DISTRIBUTION_WRAPPER).hide();
-	loadFeeStructureTable();
+	if(!e){
+		$.notify({message: 'Error fee with same name already exist'},{type: 'danger'});
+		$(FEE_STRUCT_NAME).closest('form').validate().showErrors({
+			"feeStructName":"Fee strutcture with same name already exist"
+		});
+	}else{
+		$.notify({message: 'Fee structure saved'},{type: 'success'});
+		$(FEE_TABLE_CONTAINER).show();
+		$(EDIT_DISTRIBUTION_WRAPPER).hide();
+		loadFeeStructureTable();	
+	}
+	
 }
 
 function saveFeeStructureInDbError(e){

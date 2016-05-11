@@ -248,6 +248,10 @@ public class QuestionPaperPatternTransaction {
 	
 	public GenerateQuestionPaperResponse generateQuestionPaperSpecific(int div_id,NewQuestionRequest newQuestionRequest) {
 		GenerateQuestionPaperResponse generateQuestionPaperResponse = new GenerateQuestionPaperResponse();
+		
+		if(null == newQuestionRequest.getGenerateQuestionPaperServicebeanList()){
+			return generateQuestionPaperResponse;
+		}
 		for (Iterator iterator = newQuestionRequest.getGenerateQuestionPaperServicebeanList().iterator(); iterator.hasNext();) {
 			GenerateQuestionPaperServicebean generateQuestionPaperServicebean = (GenerateQuestionPaperServicebean) iterator.next();
 			if(generateQuestionPaperServicebean.getSubject_id() == newQuestionRequest.getQuestionPaperStructure().getSubject_id() &&

@@ -174,29 +174,13 @@ function saveedittopic(){
 function deletetopic(){
 	var divisionID=$("#topics_division").val();
 	var subID=$("#subjectID").val();
-	/*  $.ajax({
-		 
-		   url: "classOwnerServlet",
-		   data: {
-		    	 methodToCall: "deleteTopics",
-		    	 divisionID:divisionID,
-		    	 subID:subID,
-		    	 topicid:topicid
-		   		},
-		   type:"POST",
-		   success:function(data){
-			   var resultJson=JSON.parse(data);
-			   fetchTopic();
-		   },
-		   error:function(){
-			   }
-		   }); */
 	var handlers = {};
 	handlers.success=function(){
 		$.notify({message: "Topic successfuly deleted"},{type: 'success'});
+		fetchTopic();
 	};   
 	handlers.error=function(){
-		$.notify({message: "Topic successfuly deleted"},{type: 'success'});
+		$.notify({message: "Error"},{type: 'danger'});
 	};   
 	
 	rest.deleteItem("rest/commonDelete/deleteSubjectTopic/"+divisionID+"/"+subID+"/"+topicid,handlers);

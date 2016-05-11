@@ -222,6 +222,7 @@ function saveFee(){
 	if(data){
 		updateOrSave = "Update";
 		saveBean = $.extend(saveBean,data);
+		saveBean.batchFees.batch_fees = $(".total").data('total');
 	}else{
 		var feeId = $(FEE_STRUCT_SELECT).val();
 		saveBean.batchFees.fees_id = feeId;

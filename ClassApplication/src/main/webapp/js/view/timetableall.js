@@ -56,6 +56,7 @@ $(document).ready(function(){
 		
 		$(START_DATE).datetimepicker({
 			pickTime: false,
+			now:new Date(),
 			format:"YYYY-MM-DD"
 		});
 		$(END_DATE).datetimepicker({

@@ -47,7 +47,7 @@
 	  <div class="col-lg-12 editDistributionWrapper" id="">
 		<form>
 		<div class="input-group">
-			<input type="text" class="form-control" placeholder="Fee name" id="feeStructName" required="required">
+			<input type="text" class="form-control" placeholder="Fee name" id="feeStructName" name="feeStructName" required="required">
 		  <span class="input-group-btn">
 			<button id="saveFeeStructure" class="btn btn-default" type="button"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;Save</button>
 		  </span>

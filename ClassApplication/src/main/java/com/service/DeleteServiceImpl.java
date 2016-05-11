@@ -40,7 +40,7 @@ public class DeleteServiceImpl extends ServiceBase {
 		// TODO Auto-generated method stub
 		DivisionTransactions divisionTransactions = new DivisionTransactions();
 		divisionTransactions.deletedivision(getRegId(),division);
-		return Response.status(Response.Status.OK).entity("s").build();
+		return Response.status(Response.Status.OK).build();
 	}
 	
 	@DELETE
@@ -50,7 +50,7 @@ public class DeleteServiceImpl extends ServiceBase {
 		// TODO Auto-generated method stub
 		SubjectTransaction subjectTransaction = new SubjectTransaction();
 		subjectTransaction.deleteSubject(getRegId(),sub_id);
-		return Response.status(Response.Status.OK).entity("s").build();
+		return Response.status(Response.Status.OK).build();
 	}
 	
 	@DELETE
@@ -60,7 +60,7 @@ public class DeleteServiceImpl extends ServiceBase {
 		// TODO Auto-generated method stub
 		TeacherTransaction teacherTransaction = new TeacherTransaction();
 		teacherTransaction.deleteTeacher(teacher_id, getRegId());
-		return Response.status(Response.Status.OK).entity("s").build();
+		return Response.status(Response.Status.OK).build();
 	}
 	
 	@DELETE
@@ -69,7 +69,7 @@ public class DeleteServiceImpl extends ServiceBase {
 	public Response deleteBatch(@PathParam("division") Integer div_id,@PathParam("batch") Integer batch_id) {
 		BatchTransactions batchTransactions = new BatchTransactions();
 		batchTransactions.deleteBatch(getRegId(), div_id, batch_id);
-		return Response.status(Response.Status.OK).entity("s").build();
+		return Response.status(Response.Status.OK).build();
 	}
 	
 	@DELETE
@@ -78,7 +78,7 @@ public class DeleteServiceImpl extends ServiceBase {
 	public Response deleteExam(@PathParam("exam") Integer exam_id) {
 		ExamTransaction examTransaction =  new ExamTransaction();
 		examTransaction.deleteExam(getRegId(), exam_id);
-		return Response.status(Response.Status.OK).entity("s").build();
+		return Response.status(Response.Status.OK).build();
 	}
 	
 	@DELETE
@@ -87,7 +87,7 @@ public class DeleteServiceImpl extends ServiceBase {
 	public Response deleteStudent(@PathParam("student") Integer student_id) {
 		StudentTransaction studentTransaction = new StudentTransaction();
 		studentTransaction.deleteStudent(student_id, getRegId());
-		return Response.status(Response.Status.OK).entity("s").build();
+		return Response.status(Response.Status.OK).build();
 	}
 	
 	@DELETE
@@ -97,6 +97,6 @@ public class DeleteServiceImpl extends ServiceBase {
 			@PathParam("subject") Integer sub_id,@PathParam("topic") Integer topic_id) {
 		SubjectTransaction subjectTransaction = new SubjectTransaction();
 		subjectTransaction.deleteTopics(getRegId(), sub_id, div_id, topic_id);
-		return Response.status(Response.Status.OK).entity("s").build();
+		return Response.status(Response.Status.OK).build();
 	}
 }

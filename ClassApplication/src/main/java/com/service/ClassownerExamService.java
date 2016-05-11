@@ -1,5 +1,9 @@
 package com.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Date;
@@ -22,12 +26,15 @@ import org.jboss.resteasy.annotations.cache.Cache;
 
 import com.classapp.db.question.Questionbank;
 import com.config.Constants;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.google.gson.JsonObject;
 import com.service.beans.ObjectiveExamBean;
 import com.service.beans.ObjectiveOptions;
 import com.service.beans.ParaQuestionBean;
 import com.service.beans.SubjectiveExamBean;
 import com.transaction.image.ImageTransactions;
 import com.transaction.questionbank.QuestionBankTransaction;
+import com.user.UserBean;
 
 @Path("/classownerservice/examservice")
 public class ClassownerExamService extends ServiceBase{
@@ -273,6 +280,15 @@ public class ClassownerExamService extends ServiceBase{
 		int inst_id = getRegId();
 		ClassownerExamServiceFunction classownerExamServiceFunction = new ClassownerExamServiceFunction();
 		Questionbank questionbank = classownerExamServiceFunction.getQuestion(getRegId(),que_id, inst_id, sub_id, div_id);
+		
+		if(questionbank.getQue_type().equals("3")){
+			UserBean userBean = getUserBean();
+			String questionPath=com.config.Constants.STORAGE_PATH+File.separatorChar+userBean.getRegId()+File.separatorChar+"exam"+File.separatorChar+"paragraph"+File.separatorChar+questionbank.getQue_id();
+			ParaQuestionBean paraQuestionBean = (ParaQuestionBean) readObject(new File(questionPath));
+			
+			return Response.ok(paraQuestionBean).build();
+		}
+		
 		return Response.ok(questionbank).build();
 	}
 	
@@ -282,6 +298,23 @@ public class ClassownerExamService extends ServiceBase{
 	@Cache(maxAge=2300, mustRevalidate = true, noStore = true, proxyRevalidate = true, sMaxAge = 2300)
 	public Response test(){
 		return Response.ok("test").build();
+	}
+	
+	private Object readObject(File file) {
+		Object object = null;
+		FileInputStream fin = null;
+		ObjectInputStream objectInputStream = null;
+		try{
+			fin = new FileInputStream(file);
+			objectInputStream = new ObjectInputStream(fin);
+			object =  objectInputStream.readObject();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=objectInputStream)try {objectInputStream.close();} catch (IOException e) {e.printStackTrace();}
+			if(null!=fin)try {fin.close();} catch (IOException e) {e.printStackTrace();}
+		}
+		return object;
 	}
 		
 }
