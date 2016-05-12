@@ -658,16 +658,13 @@ var graphData = [];
 		if(status != "error"){
 		dataTable = $('#classTable').DataTable({
 			language: {
-			        "emptyTable":     "Students not availavle"
+			        "emptyTable":     "Students not available"
 			    },
 			bDestroy:true,
 			data: data.studentList,
 			lengthChange: true,
 			columns: [
 				{title:"Roll no",data:"rollNo",render:function(data,event,row){
-					if(!data){
-						data = '&mdash;'
-					}
 					return data;
 				}},
 				{ title: "Student Name",data:"studentUserBean",render:function(data,event,row){

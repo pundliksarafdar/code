@@ -1059,4 +1059,42 @@ public boolean deleteStudentFeesTransactionRelatedToStudent(int inst_id,int stud
 
 }
 
+public boolean updateStudentFeesRelatedToBatch(int inst_id,int div_id,int batch_id,double fees_amount) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("update Student_Fees set batch_fees = :fees_amount,final_fees_amt = (case"
+				+ " when discount_type = 'amt' then (:fees_amount - discount) "
+				+ " when discount_type = 'Amt' then (:fees_amount - discount) "
+				+ " when discount_type = 'per' then (:fees_amount  - (:fees_amount * discount/100)) end) ,"
+				+ " fees_due = (case " 
+				+ " when discount_type = 'amt' then ((:fees_amount - discount) - fees_paid) "
+				+ " when discount_type = 'Amt' then ((:fees_amount - discount) - fees_paid) "
+				+ " when discount_type = 'per' then ((:fees_amount  - (:fees_amount * discount/100)) - fees_paid) end) "
+				+ " where inst_id = :inst_id and div_id=:div_id and batch_id= :batch_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("batch_id", batch_id);
+		query.setParameter("fees_amount", fees_amount);
+		query.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  true;
+
+}
+
 }

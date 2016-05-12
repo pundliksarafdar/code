@@ -20,6 +20,8 @@ import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentDB;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.SubjectDb;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.service.beans.AttendanceScheduleServiceBean;
 import com.service.beans.DailyAttendance;
 import com.service.beans.DailyTimeTable;
@@ -107,7 +109,15 @@ public class AttendanceTransaction {
 				bean.setFname((String) object[0]);
 				bean.setLname((String) object[1]);
 				bean.setStudent_id(((Number) object[2]).intValue());	
-				bean.setRoll_no(i++);
+				try{
+				JsonParser parser = new JsonParser();
+				JsonObject json = (JsonObject) parser.parse((String) object[3]);
+				int roll_no = json.get(batchid).getAsInt();
+				bean.setRoll_no(roll_no);
+				}catch(Exception exception){
+					bean.setRoll_no(0);
+				}
+				
 				listForAttendanceList.add(bean);
 			}
 		}
@@ -128,9 +138,16 @@ public class AttendanceTransaction {
 				bean.setFname((String) object[0]);
 				bean.setLname((String) object[1]);
 				bean.setStudent_id(((Number) object[2]).intValue());	
-				bean.setRoll_no(i++);
 				bean.setPresentee((String) object[3]);
 				bean.setAtt_id(((Number) object[4]).intValue());
+				try{
+				JsonParser parser = new JsonParser();
+				JsonObject json = (JsonObject) parser.parse((String) object[5]);
+				int roll_no = json.get(batchid).getAsInt();
+				bean.setRoll_no(roll_no);
+				}catch(Exception e){
+					bean.setRoll_no(0);
+				}
 				listForAttendanceList.add(bean);
 			}
 		}
@@ -208,6 +225,14 @@ public class AttendanceTransaction {
 				bean.setTotal_lectures(total_count);
 				bean.setAvg((present_count*100)/total_count);
 				bean.setPresentee(presentee);
+				try{
+				JsonParser parser = new JsonParser();
+				JsonObject json = (JsonObject) parser.parse((String) object[9]);
+				int roll_no = json.get(batchid).getAsInt();
+				bean.setRoll_no(roll_no);
+				}catch(Exception e){
+				bean.setRoll_no(0);
+				}
 				dailyAttendanceList.add(bean);
 			}
 		}
@@ -245,6 +270,14 @@ public class AttendanceTransaction {
 			monthlyAttendance.setStudent_name((String) object[0]+" "+(String) object[1]);
 			monthlyAttendance.setDate((Date) object[3]);
 			monthlyAttendance.setStudent_id(((Number) object[4]).intValue());
+			try{
+			JsonParser parser = new JsonParser();
+			JsonObject json = (JsonObject) parser.parse((String) obj[3]);
+			int roll_no = json.get(batchid).getAsInt();
+			monthlyAttendance.setRoll_no(roll_no);
+			}catch(Exception e){
+			monthlyAttendance.setRoll_no(0);	
+			}
 			String[] daily_attendance = new String[monthlyCountList.size()];
 			String[] daily_attendance_percentage = new String[monthlyCountList.size()];
 			int i = 0;
@@ -310,6 +343,14 @@ public class AttendanceTransaction {
 				MonthlyAttendance monthlyAttendance = new MonthlyAttendance();
 				monthlyAttendance.setStudent_name((String) obj[0]+" "+(String) obj[1]);
 				monthlyAttendance.setStudent_id(((Number) obj[2]).intValue());
+				try{
+				JsonParser parser = new JsonParser();
+				JsonObject json = (JsonObject) parser.parse((String) obj[3]);
+				int roll_no = json.get(batchid).getAsInt();
+				monthlyAttendance.setRoll_no(roll_no);
+				}catch(Exception e){
+					monthlyAttendance.setRoll_no(0);	
+				}
 				monthlyAttendance.setTotal_monthly_lectures(total_lecture_count);
 				String[] daily_attendance = new String[monthlyCountList.size()];
 				String[] daily_attendance_percentage = new String[monthlyCountList.size()];
@@ -363,6 +404,14 @@ public class AttendanceTransaction {
 			monthlyAttendance.setStudent_name((String) object[0]+" "+(String) object[1]);
 			monthlyAttendance.setDate((Date) object[3]);
 			monthlyAttendance.setStudent_id(((Number) object[4]).intValue());
+			try{
+			JsonParser parser = new JsonParser();
+			JsonObject json = (JsonObject) parser.parse((String) obj[3]);
+			int roll_no = json.get(batchid).getAsInt();
+			monthlyAttendance.setRoll_no(roll_no);
+			}catch(Exception e){
+				monthlyAttendance.setRoll_no(0);
+			}
 			String[] daily_attendance = new String[monthlyCountList.size()];
 			String[] daily_attendance_percentage = new String[monthlyCountList.size()];
 			int i = 0;
@@ -428,6 +477,14 @@ public class AttendanceTransaction {
 			MonthlyAttendance monthlyAttendance = new MonthlyAttendance();
 			monthlyAttendance.setStudent_name((String) obj[0]+" "+(String) obj[1]);
 			monthlyAttendance.setStudent_id(((Number) obj[2]).intValue());
+			try{
+			JsonParser parser = new JsonParser();
+			JsonObject json = (JsonObject) parser.parse((String) obj[3]);
+			int roll_no = json.get(batchid).getAsInt();
+			monthlyAttendance.setRoll_no(roll_no);
+			}catch(Exception e){
+				monthlyAttendance.setRoll_no(0);
+			}
 			monthlyAttendance.setTotal_monthly_lectures(total_lecture_count);
 			String[] daily_attendance = new String[monthlyCountList.size()];
 			String[] daily_attendance_percentage = new String[monthlyCountList.size()];

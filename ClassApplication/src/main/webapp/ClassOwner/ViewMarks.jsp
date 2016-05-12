@@ -176,7 +176,7 @@ function createStudentExamMarksTable(data){
 	$("#studentTableDiv").empty();
 	var examTotalMarks = 0;
 	var htmlString = "";
-	htmlString = htmlString +"<table class='table' style='width:100%'><thead><tr><th>Student Name</th>";
+	htmlString = htmlString +"<table class='table' style='width:100%'><thead><tr><th>Roll No</th><th>Student Name</th>";
 	for(i=0;i<data.examSubjectList.length;i++){
 		htmlString = htmlString + "<th>"+data.examSubjectList[i].subjectName+"<font style='color:red'>/"+data.examSubjectList[i].marks+"</font></th>"
 		examTotalMarks = examTotalMarks + data.examSubjectList[i].marks;
@@ -185,7 +185,7 @@ function createStudentExamMarksTable(data){
 	htmlString = htmlString + "</tr></thead>";
 	htmlString = htmlString + "<tbody>";
 	for(i=0;i<data.studentDataList.length;i++){
-		htmlString = htmlString + "<tr><td>"+data.studentDataList[i].fname+" "+data.studentDataList[i].lname+"</td>";
+		htmlString = htmlString + "<tr><td>"+data.studentDataList[i].roll_no+"</td><td>"+data.studentDataList[i].fname+" "+data.studentDataList[i].lname+"</td>";
 		var studentTotalMarks = 0 ;
 		for(j=0;j<data.examSubjectList.length;j++){
 			if(i<data.studentDataList.length){
@@ -214,14 +214,14 @@ function createStudentExamSubjectMarksTable(data){
 	//$("#studentMarksTable").clear();
 	$("#studentTableDiv").empty();
 	var htmlString = "";
-	htmlString = htmlString +"<table class='table' style='width:100%'><thead><tr><th>Student Name</th>";
+	htmlString = htmlString +"<table class='table' style='width:100%'><thead><tr><th>Roll No</th><th>Student Name</th>";
 	for(i=0;i<data.examList.length;i++){
 		htmlString = htmlString + "<th>"+data.examList[i].exam_name+"</th>"
 	}
 	htmlString = htmlString + "</tr></thead>";
 	htmlString = htmlString + "<tbody>";
 	for(i=0;i<data.studentDataList.length;i++){
-		htmlString = htmlString + "<tr><td>"+data.studentDataList[i].fname+" "+data.studentDataList[i].lname+"</td>";
+		htmlString = htmlString + "<tr><td>"+data.studentDataList[i].roll_no+"</td><td>"+data.studentDataList[i].fname+" "+data.studentDataList[i].lname+"</td>";
 		for(j=0;j<data.examList.length;j++){
 			if(i<data.studentDataList.length){
 			htmlString = htmlString + "<td>"+data.studentDataList[i].marks+"</td>";

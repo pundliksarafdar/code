@@ -106,7 +106,7 @@ public class FeeServiceImpl  extends ServiceBase {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateBatchFeesDistribution(BatchFeesDistributionServiceBean serviceBean){
 		FeesTransaction feesTransaction = new FeesTransaction();
-		boolean status = feesTransaction.saveBatchFeesDistribution(serviceBean,getRegId());
+		boolean status = feesTransaction.updateBatchFeesDistribution(serviceBean,getRegId());
 		return Response.status(Status.OK).entity(status).build();
 	}
 	
@@ -135,7 +135,7 @@ public class FeeServiceImpl  extends ServiceBase {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response reLinkBatchFeesDistribution(BatchFeesDistributionServiceBean serviceBean){
 		FeesTransaction feesTransaction = new FeesTransaction();
-		boolean status = feesTransaction.saveBatchFeesDistribution(serviceBean,getRegId());
+		boolean status = feesTransaction.updateBatchFeesDistribution(serviceBean,getRegId());
 		return Response.status(Status.OK).entity(status).build();
 	}
 	

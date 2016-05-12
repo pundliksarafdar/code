@@ -287,6 +287,24 @@ siteMapApp.controller("SiteMapController",function($scope){
             </div>
             </a>
         </div>
+        <div class="col-sm-2 col-xs-4">
+            <a href="examMarks">
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Marks
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+            </a>
+        </div>
 		<div class="col-sm-2 col-xs-4">
 		 <a href="attendances">
             <div id="tile8" class="tile">

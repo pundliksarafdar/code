@@ -8,8 +8,18 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="../css/bootstrap-datetimepicker.min.css" type="text/css" />
   <script src="../js/bootstrap-datetimepicker.min.js"></script>
+ 
+
   <style type="text/css">
  #attendanceStudentListDiv .dataTables_filter { visibility: hidden;}
+table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after{
+ position: relative;
+ display: inline;
+ float: right;
+ bottom: 0px;
+ right: 0px;
+ }
+ 
   </style>
 </head>
 <body>
@@ -56,7 +66,7 @@
 	
 	</div>
 	<div class="container" id="monthlyAttendance" style="width: 100%;display: none;overflow-x: auto">
-	<table id="attendanceStudentListTable" class="table-bordered" style="width: 100%"></table>
+	<!-- <table id="attendanceStudentListTable" class="table-bordered" style="width: 100%"></table> -->
 	</div>
 </body>
 </html>

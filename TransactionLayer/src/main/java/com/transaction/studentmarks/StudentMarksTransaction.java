@@ -25,6 +25,8 @@ import com.classapp.db.student.StudentDB;
 import com.classapp.db.student.StudentMarks;
 import com.classapp.db.subject.StudentMarksDB;
 import com.classapp.db.subject.Subject;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.service.beans.BatchExamDistinctSubjects;
 import com.service.beans.BatchExamSubjects;
 import com.service.beans.BatchExams;
@@ -127,6 +129,10 @@ public class StudentMarksTransaction {
 						data.setFname((String) object[0]);
 						data.setLname((String) object[1]);
 						data.setMarks(((Number)object[2]).intValue());
+						JsonParser parser = new JsonParser();
+						JsonObject json = (JsonObject) parser.parse((String) obj[3]);
+						int roll_no = json.get(batch_id+"").getAsInt();
+						data.setRoll_no(roll_no);
 						dataList.add(data);
 						flag = true;
 						break;
@@ -137,6 +143,10 @@ public class StudentMarksTransaction {
 					data.setFname((String) obj[0]);
 					data.setLname((String) obj[1]);
 					data.setMarks(0);
+					JsonParser parser = new JsonParser();
+					JsonObject json = (JsonObject) parser.parse((String) obj[3]);
+					int roll_no = json.get(batch_id+"").getAsInt();
+					data.setRoll_no(roll_no);
 					dataList.add(data);
 				}
 			}
@@ -197,6 +207,10 @@ public class StudentMarksTransaction {
 						data.setFname((String) object[0]);
 						data.setLname((String) object[1]);
 						data.setMarks(((Number)object[2]).intValue());
+						JsonParser parser = new JsonParser();
+						JsonObject json = (JsonObject) parser.parse((String) obj[3]);
+						int roll_no = json.get(batch_id+"").getAsInt();
+						data.setRoll_no(roll_no);
 						dataList.add(data);
 						flag = true;
 						break;
@@ -207,6 +221,10 @@ public class StudentMarksTransaction {
 					data.setFname((String) obj[0]);
 					data.setLname((String) obj[1]);
 					data.setMarks(0);
+					JsonParser parser = new JsonParser();
+					JsonObject json = (JsonObject) parser.parse((String) obj[3]);
+					int roll_no = json.get(batch_id+"").getAsInt();
+					data.setRoll_no(roll_no);
 					dataList.add(data);
 				}
 			}

@@ -348,7 +348,10 @@ public class StudentTransaction {
 				bean.setFname((String) object[0]);
 				bean.setLname((String) object[1]);
 				bean.setStudent_id(((Number) object[2]).intValue());	
-				bean.setRoll_no(i++);
+				JsonParser parser = new JsonParser();
+				JsonObject json = (JsonObject) parser.parse((String) object[3]);
+				int roll_no = json.get(batchid).getAsInt();
+				bean.setRoll_no(roll_no);
 				bean.setDiv_id(div_id);
 				bean.setInst_id(inst_id);
 				bean.setBatch_id(Integer.parseInt(batchid));
@@ -377,7 +380,10 @@ public class StudentTransaction {
 				bean.setFname((String) object[0]);
 				bean.setLname((String) object[1]);
 				bean.setStudent_id(((Number) object[2]).intValue());	
-				bean.setRoll_no(i++);
+				JsonParser parser = new JsonParser();
+				JsonObject json = (JsonObject) parser.parse((String) obj[3]);
+				int roll_no = json.get(batchid).getAsInt();
+				bean.setRoll_no(roll_no);
 				bean.setDiv_id(div_id);
 				bean.setInst_id(inst_id);
 				bean.setBatch_id(Integer.parseInt(batchid));
@@ -393,7 +399,10 @@ public class StudentTransaction {
 				bean.setFname((String) obj[0]);
 				bean.setLname((String) obj[1]);
 				bean.setStudent_id(((Number) obj[2]).intValue());	
-				bean.setRoll_no(i++);
+				JsonParser parser = new JsonParser();
+				JsonObject json = (JsonObject) parser.parse((String) obj[3]);
+				int roll_no = json.get(batchid).getAsInt();
+				bean.setRoll_no(roll_no);
 				bean.setDiv_id(div_id);
 				bean.setInst_id(inst_id);
 				bean.setBatch_id(Integer.parseInt(batchid));

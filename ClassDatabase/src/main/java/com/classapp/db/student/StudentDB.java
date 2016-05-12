@@ -773,7 +773,7 @@ public class StudentDB {
 		boolean status=false;
 		Transaction transaction = null;
 		List list=null;
-		String queryString="Select reg.fname,reg.lname, reg.regId from Student std,RegisterBean reg " +
+		String queryString="Select reg.fname,reg.lname, reg.regId,std.batchIdNRoll from Student std,RegisterBean reg " +
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
 				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id";
 		try{
@@ -808,7 +808,7 @@ public class StudentDB {
 		boolean status=false;
 		Transaction transaction = null;
 		List list=null;
-		String queryString="Select reg.fname,reg.lname, reg.regId,att.presentee,att.att_id from Student std,RegisterBean reg, Attendance att " +
+		String queryString="Select reg.fname,reg.lname, reg.regId,att.presentee,att.att_id,std.batchIdNRoll from Student std,RegisterBean reg, Attendance att " +
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
 				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id and att.student_id = reg.regId and " +
 				"att.div_id = std.div_id and att.batch_id = :attbatch_id and att.att_date = :date and att.sub_id = :sub_id";
@@ -847,7 +847,7 @@ public class StudentDB {
 		boolean status=false;
 		Transaction transaction = null;
 		List list=null;
-		String queryString="Select reg.fname,reg.lname, reg.regId from Student std,RegisterBean reg " +
+		String queryString="Select reg.fname,reg.lname, reg.regId,std.batchIdNRoll from Student std,RegisterBean reg " +
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
 				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id order by std.student_id";
 		try{

@@ -13,6 +13,7 @@ public class MonthlyAttendance {
 	int total_monthly_lectures;
 	double total_prsentee_percentage;
 	List<MonthlyCount> monthlyCountList;
+	int roll_no;
 	public String getStudent_name() {
 		return student_name;
 	}
@@ -67,6 +68,12 @@ public class MonthlyAttendance {
 	}
 	public void setTotal_prsentee_percentage(double total_prsentee_percentage) {
 		this.total_prsentee_percentage = total_prsentee_percentage;
+	}
+	public int getRoll_no() {
+		return roll_no;
+	}
+	public void setRoll_no(int roll_no) {
+		this.roll_no = roll_no;
 	}
 	
 }

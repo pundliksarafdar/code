@@ -35,6 +35,8 @@ $(document).ready(function(){
 	 $(".saveAttendance").click(function(){
 		 //$("#attendanceStudentListDiv").hide();
 		//	$("#attendanceScheduleDiv").show();
+		 var table = $('#attendanceStudentListTable').DataTable();
+		 table.search( '' ).columns().search( '' ).draw();
 			var division = $("#divisionSelect").val();
 			var batch = $("#batchSelect").val();
 			var date = $("#date").val().split("/");
@@ -202,7 +204,11 @@ function createStudentAttendanceTable(data){
 		lengthChange: false,
 		columns: [
 		          { title: "Roll No",data:null,render:function(data,event,row){
+		        	  if(row.roll_no == 0){
+		        	  return "-"; 
+		        	  }else{
 		        	  return row.roll_no;
+		        	  }
 		          },sWidth:"10%"},
 			{ title: "Student",data:null,render:function(data,event,row){
 				var div = '<div class="default defaultBatchName">'+row.fname+" "+row.lname+'</div>';

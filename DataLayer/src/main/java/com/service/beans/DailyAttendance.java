@@ -10,6 +10,7 @@ public class DailyAttendance {
 	int total_lectures;
 	int present_lectures;
 	double avg;
+	int roll_no;
 	public List<DailyTimeTable> getDailyTimeTableList() {
 		return dailyTimeTableList;
 	}
@@ -51,6 +52,12 @@ public class DailyAttendance {
 	}
 	public void setAvg(double avg) {
 		this.avg = avg;
+	}
+	public int getRoll_no() {
+		return roll_no;
+	}
+	public void setRoll_no(int roll_no) {
+		this.roll_no = roll_no;
 	}
 	
 	

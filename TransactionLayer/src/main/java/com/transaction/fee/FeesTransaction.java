@@ -176,6 +176,24 @@ public class FeesTransaction {
 			BatchFeesDistribution feesDistribution = new BatchFeesDistribution();
 			BeanUtils.copyProperties(feesDistribution,batchFeesDistribution);
 			feesDB.saveBatchFeesDistribution(feesDistribution);
+			
+		}
+	//	feesDB.updateStudentFeesRelatedToBatch(inst_id, serviceBean.getBatchFees().getDiv_id(), serviceBean.getBatchFees().getBatch_id(), serviceBean.getBatchFees().getBatch_fees());
+		StudentTransaction studentTransaction = new StudentTransaction();
+		List<Student> studentList = studentTransaction.getStudentsrelatedtobatch(serviceBean.getBatchFees().getBatch_id()+"", inst_id, serviceBean.getBatchFees().getDiv_id());
+		for (Student student : studentList) {
+			Student_Fees student_Fees = new Student_Fees();
+			student_Fees.setInst_id(inst_id);
+			student_Fees.setBatch_fees(batchFees.getBatch_fees());
+			student_Fees.setBatch_id(batchFees.getBatch_id());
+			student_Fees.setDiscount(0);
+			student_Fees.setDiscount_type("amt");
+			student_Fees.setDiv_id(batchFees.getDiv_id());
+			student_Fees.setFees_due(batchFees.getBatch_fees());
+			student_Fees.setFees_paid(0);
+			student_Fees.setFinal_fees_amt(batchFees.getBatch_fees());
+			student_Fees.setStudent_id(student.getStudent_id());
+			feesDB.saveStudentFees(student_Fees);
 		}
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
@@ -194,16 +212,20 @@ public class FeesTransaction {
 		try {
 			BeanUtils.copyProperties(batchFees, serviceBean.getBatchFees());
 			batchFees.setInst_id(inst_id);
-		    feesDB.updateBatchFees(batchFees);
-		    for (Iterator iterator = serviceBean.getBatchFeesDistribution().iterator(); iterator
-					.hasNext();) {
-				com.service.beans.BatchFeesDistribution batchFeesDistribution = (com.service.beans.BatchFeesDistribution) iterator
-						.next();
-				batchFeesDistribution.setInst_id(inst_id);
-				BatchFeesDistribution feesDistribution = new BatchFeesDistribution();
-				BeanUtils.copyProperties(feesDistribution,batchFeesDistribution);
-				feesDB.updateBatchFeesDistribution(feesDistribution);
-			}
+			batch_fees_id = feesDB.saveBatchFees(batchFees);
+		
+		for (Iterator iterator = serviceBean.getBatchFeesDistribution().iterator(); iterator
+				.hasNext();) {
+			com.service.beans.BatchFeesDistribution batchFeesDistribution = (com.service.beans.BatchFeesDistribution) iterator
+					.next();
+			batchFeesDistribution.setInst_id(inst_id);
+			batchFeesDistribution.setBatch_fees_id(batch_fees_id);
+			BatchFeesDistribution feesDistribution = new BatchFeesDistribution();
+			BeanUtils.copyProperties(feesDistribution,batchFeesDistribution);
+			feesDB.saveBatchFeesDistribution(feesDistribution);
+			
+		}
+		feesDB.updateStudentFeesRelatedToBatch(inst_id, serviceBean.getBatchFees().getDiv_id(), serviceBean.getBatchFees().getBatch_id(), serviceBean.getBatchFees().getBatch_fees());
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -500,6 +522,14 @@ public class FeesTransaction {
 		List<RegisterBean> registerBeans = registerTransaction.getStudentsInfo(studentIds, 0);
 		
 		for(Student student:students){
+			boolean flag = false;
+			for (BatchStudentFees batchStudentFees : batchStudentFeesList) {
+				if(batchStudentFees.getStudent_id() == student.getStudent_id()){
+					flag = true;
+					break;
+				}
+			}
+			if(flag == false){
 			for(RegisterBean registerBean:registerBeans){
 				BatchStudentFees batchStudentFees = new BatchStudentFees();
 				batchStudentFees.setStudent_id(student.getStudent_id());
@@ -508,7 +538,9 @@ public class FeesTransaction {
 					batchStudentFees.setLname(registerBean.getLname());
 					batchStudentFees.setBatch_fees(batchFee);
 					batchStudentFeesList.add(batchStudentFees);
+					break;
 				}
+			}
 			}
 		}
 		return batchStudentFeesList;
