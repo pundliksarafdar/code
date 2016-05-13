@@ -27,7 +27,8 @@ response.setHeader("Expires", "0");
 <link href="css/common.css" rel="stylesheet">	
 <link href="assets/css/style.css" rel="stylesheet" /> 
 <link href="assets/css/font-awesome.min.css" rel="stylesheet" />
-<link href="css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/fixedcolumns/3.2.1/css/fixedColumns.dataTables.min.css" rel="stylesheet">
 <link href="css/select2.min.css" rel="stylesheet" />
 
 <link rel="icon" 
@@ -165,8 +166,9 @@ a.floatButton>div{
 <script src="js/jquery.validate.min.js"></script>
 <script src="js/raphael.min.js"></script>
 <script src="js/morris.min.js"></script>
-<script src="js/jquery.dataTables.js"></script>
-<script src="js/dataTables.bootstrap.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/3.2.1/js/dataTables.fixedColumns.min.js"></script>
 <script src="js/bootstrap-notify.min.js"></script>
 <script src="js/select2.min.js"></script>
 <script src="js/REST.js"></script>

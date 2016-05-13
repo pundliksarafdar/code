@@ -185,7 +185,12 @@ function createStudentExamMarksTable(data){
 	htmlString = htmlString + "</tr></thead>";
 	htmlString = htmlString + "<tbody>";
 	for(i=0;i<data.studentDataList.length;i++){
-		htmlString = htmlString + "<tr><td>"+data.studentDataList[i].roll_no+"</td><td>"+data.studentDataList[i].fname+" "+data.studentDataList[i].lname+"</td>";
+		if(data.studentDataList[i].roll_no == 0){
+			htmlString = htmlString + "<tr><td>-</td>";	
+		}else{
+			htmlString = htmlString + "<tr><td>"+data.studentDataList[i].roll_no+"</td>";	
+		}
+		htmlString = htmlString + "<td>"+data.studentDataList[i].fname+" "+data.studentDataList[i].lname+"</td>";
 		var studentTotalMarks = 0 ;
 		for(j=0;j<data.examSubjectList.length;j++){
 			if(i<data.studentDataList.length){
@@ -221,7 +226,12 @@ function createStudentExamSubjectMarksTable(data){
 	htmlString = htmlString + "</tr></thead>";
 	htmlString = htmlString + "<tbody>";
 	for(i=0;i<data.studentDataList.length;i++){
-		htmlString = htmlString + "<tr><td>"+data.studentDataList[i].roll_no+"</td><td>"+data.studentDataList[i].fname+" "+data.studentDataList[i].lname+"</td>";
+		if(data.studentDataList[i].roll_no == 0){
+			htmlString = htmlString + "<tr><td>-</td>";	
+		}else{
+			htmlString = htmlString + "<tr><td>"+data.studentDataList[i].roll_no+"</td>";	
+		}
+		htmlString = htmlString + "<td>"+data.studentDataList[i].fname+" "+data.studentDataList[i].lname+"</td>";
 		for(j=0;j<data.examList.length;j++){
 			if(i<data.studentDataList.length){
 			htmlString = htmlString + "<td>"+data.studentDataList[i].marks+"</td>";

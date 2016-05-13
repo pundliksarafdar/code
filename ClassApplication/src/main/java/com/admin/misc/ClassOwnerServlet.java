@@ -1722,11 +1722,15 @@ public class ClassOwnerServlet extends HttpServlet{
 				
 				String rollnBatch = students.get(i).getBatchIdNRoll();
 				if(null!=rollnBatch){
+					try{
 					JsonParser jsonParser = new JsonParser();
 					JsonObject jsonObject = jsonParser.parse(rollnBatch).getAsJsonObject();
 					if(jsonObject.has(batchID)){
 						int rollNo = jsonObject.get(batchID).getAsInt();
 						studentDetails.setRollNo(rollNo);
+					}
+					}catch(Exception e){
+						studentDetails.setRollNo(0);	
 					}
 				}
 				String batchIDArray[] = students.get(i).getBatch_id().split(",");
@@ -3339,7 +3343,6 @@ public class ClassOwnerServlet extends HttpServlet{
 				/*if(flag = false){
 					
 				}*/
-				
 				String batchIDArray[] = studentsList.get(i).getBatch_id().split(",");
 				List<Batch> studentBatchList = new ArrayList<Batch>();
 				if(batchIDArray.length > 1){

@@ -208,7 +208,7 @@ function createMonthlyAttendanceScheduleTable(data,start,end){
 	$('#monthlyAttendance').empty();
 	var presenteeDates = [];
 	
-	var hString = "<table class='table-bordered'><thead><tr><th>Roll No</th><th>Student Name</th>";
+	var hString = "<table class='table-bordered' cellspacing='0' style='width:100%'><thead><tr><th>Roll No</th><th>Student Name</th>";
 	for(i=start;i<=end;i++){
 		hString = hString + "<th>"+i+"</th>";
 	}
@@ -250,7 +250,16 @@ function createMonthlyAttendanceScheduleTable(data,start,end){
 	}
 	hString = hString + "</tbody></table>";
 	$('#monthlyAttendance').append(hString);
-	$('#monthlyAttendance').find("table").DataTable();
+	$('#monthlyAttendance').find("table").DataTable({
+        scrollY:        "300px",
+        scrollX:        true,
+        scrollCollapse: true,
+        paging:         false,
+        fixedColumns:   {
+            leftColumns: 2,
+            rightColumns: 3
+        }
+    } );
 	
 }
 

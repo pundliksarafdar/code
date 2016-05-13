@@ -129,10 +129,14 @@ public class StudentMarksTransaction {
 						data.setFname((String) object[0]);
 						data.setLname((String) object[1]);
 						data.setMarks(((Number)object[2]).intValue());
+						try{
 						JsonParser parser = new JsonParser();
 						JsonObject json = (JsonObject) parser.parse((String) obj[3]);
 						int roll_no = json.get(batch_id+"").getAsInt();
 						data.setRoll_no(roll_no);
+						}catch(Exception e){
+							data.setRoll_no(0);
+						}
 						dataList.add(data);
 						flag = true;
 						break;
@@ -143,10 +147,14 @@ public class StudentMarksTransaction {
 					data.setFname((String) obj[0]);
 					data.setLname((String) obj[1]);
 					data.setMarks(0);
+					try{
 					JsonParser parser = new JsonParser();
 					JsonObject json = (JsonObject) parser.parse((String) obj[3]);
 					int roll_no = json.get(batch_id+"").getAsInt();
 					data.setRoll_no(roll_no);
+					}catch(Exception e){
+						data.setRoll_no(0);	
+					}
 					dataList.add(data);
 				}
 			}
@@ -207,10 +215,14 @@ public class StudentMarksTransaction {
 						data.setFname((String) object[0]);
 						data.setLname((String) object[1]);
 						data.setMarks(((Number)object[2]).intValue());
+						try{
 						JsonParser parser = new JsonParser();
 						JsonObject json = (JsonObject) parser.parse((String) obj[3]);
 						int roll_no = json.get(batch_id+"").getAsInt();
 						data.setRoll_no(roll_no);
+						}catch(Exception e){
+							data.setRoll_no(0);	
+						}
 						dataList.add(data);
 						flag = true;
 						break;
@@ -221,10 +233,14 @@ public class StudentMarksTransaction {
 					data.setFname((String) obj[0]);
 					data.setLname((String) obj[1]);
 					data.setMarks(0);
+					try{
 					JsonParser parser = new JsonParser();
 					JsonObject json = (JsonObject) parser.parse((String) obj[3]);
 					int roll_no = json.get(batch_id+"").getAsInt();
 					data.setRoll_no(roll_no);
+					}catch(Exception e){
+						data.setRoll_no(0);	
+					}
 					dataList.add(data);
 				}
 			}

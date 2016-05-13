@@ -156,7 +156,11 @@ function createStudentMarksTable(data){
 		lengthChange: false,
 		columns: [
 		          { title: "Roll No",data:null,render:function(data,event,row){
+		        	  if(row.roll_no == 0){
+		        	 return	"-";
+		        	  }else{
 		        	  return row.roll_no;
+		        	  }
 		          },sWidth:"10%"},
 			{ title: "Student",data:null,render:function(data,event,row){
 				var div = '<div class="default defaultBatchName">'+row.fname+" "+row.lname+'</div>';

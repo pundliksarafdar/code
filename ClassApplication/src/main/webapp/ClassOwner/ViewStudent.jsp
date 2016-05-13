@@ -117,7 +117,7 @@ var graphData = [];
 				},
 				type:"post",
 				success:function(data){
-					successCallbackclass(data);
+					successCallbackclass(data,"name");
 				},error:function(){
 					}
 			});	
@@ -152,7 +152,7 @@ var graphData = [];
 			},
 			type:"post",
 			success:function(data){
-				successCallbackclass(data);
+				successCallbackclass(data,"batch");
 			},error:function(){
 				}
 		});
@@ -652,10 +652,80 @@ var graphData = [];
 		rest.deleteItem("rest/commonDelete/deleteStudent/"+studentId,handlers);
 	}
 	
-	function successCallbackclass(data){
+	function successCallbackclass(data,type){
 		data = JSON.parse(data);
 		var status = data.status;
 		if(status != "error"){
+		if(type == "name"){
+			dataTable = $('#classTable').DataTable({
+				language: {
+				        "emptyTable":     "Students not available"
+				    },
+				bDestroy:true,
+				data: data.studentList,
+				lengthChange: true,
+				columns: [
+					{title:"#",data:null},
+					{ title: "Student Name",data:"studentUserBean",render:function(data,event,row){
+						var input = "<input type='hidden' id='studentId' value='"+data.regId +"'>";
+						var modifiedObj = data.fname+" "+data.lname;
+						return modifiedObj+input;
+					}},
+					{ title: "Division",data:"division",render:function(data,event,row){
+						/* console.log(row);
+						var modifiedObj = data.divisionName;
+						return modifiedObj; */
+						var divisionNames = "";
+						var selectTag = '<div class="editable"><select class="selectDivision" style="width:100%">';
+						selectTag = selectTag+"</select></div>";
+						var subjects;
+						if(data != null){
+						selectTag = selectTag + '<input type="hidden" class="editDivID" value="'+data.divId+'">';
+						divisionNames = '<div class="default defaultDiv">'+data.divisionName+" "+data.stream+'</div>';
+					}else{
+						divisionNames = '<div class="default defaultDiv"></div>';
+						selectTag = selectTag + '<input type="hidden" class="editDivID" value="-1">';
+					}
+						
+						var span = '<span class="editable subjectError"></span>'
+						return divisionNames + selectTag + span;
+					}},
+					{ title: "Batch",data:"batches",render:function(data,event,row){
+						var batchNames = "";
+						var selectTag = '<div class="editable"><select class="selectBatch" multiple="" style="width:100%">';
+						var subjects;
+						$.each(data,function(key,val){
+							selectTag = selectTag + '<option selected="selected" value="'+val.batch_id+'">'+val.batch_name+'</option>';
+							batchNames =  batchNames + ","+ val.batch_name;
+						});
+						batchNames = batchNames.replace(",","");
+						batchNames = '<div class="default defaultBatchname">'+batchNames+'</div>';
+						selectTag = selectTag+"</select></div>";
+						var span = '<span class="editable batchError error"></span>'
+						return batchNames + selectTag + span;
+						}},
+					{ title: "Action",data:null,render:function(data){
+						var buttons = '<div class="default">'+
+						'<input type="button" class="btn btn-xs btn-warning btn-batch-edit" value="Edit">'+
+						'<input type="button" class="btn btn-xs btn-danger btn-batch-delete" value="Delete">'+
+						'<input type="button" class="btn btn-xs btn-primary btn-student-details" value="Details">'+
+					'</div>'+
+					'<div class="editable">'+
+						'<button class="btn btn-success btn-xs btn-save">Save</button>'+
+						'<button class="btn btn-danger btn-xs btn-cancel">Cancel</button>'+
+					'</div>'
+					
+					return buttons;
+						}}
+				]
+			});
+			
+			dataTable.on( 'order.dt search.dt', function () {
+	        dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+	            cell.innerHTML = i+1;
+				});
+			}).draw();	
+		}else{
 		dataTable = $('#classTable').DataTable({
 			language: {
 			        "emptyTable":     "Students not available"
@@ -665,7 +735,11 @@ var graphData = [];
 			lengthChange: true,
 			columns: [
 				{title:"Roll no",data:"rollNo",render:function(data,event,row){
+					if(data == 0){
+						return  "-";	
+					}else{
 					return data;
+					}
 				}},
 				{ title: "Student Name",data:"studentUserBean",render:function(data,event,row){
 					var input = "<input type='hidden' id='studentId' value='"+data.regId +"'>";
@@ -721,12 +795,12 @@ var graphData = [];
 			]
 		});
 		
-		dataTable.on( 'order.dt search.dt', function () {
+		/* dataTable.on( 'order.dt search.dt', function () {
         dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             cell.innerHTML = i+1;
 			});
-		}).draw();
-		}else{
+		}).draw(); */
+		}}else{
 			that.closest('.addclassContainer').find(".addclassnameerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Class already exists!!');
 		}
 	}
