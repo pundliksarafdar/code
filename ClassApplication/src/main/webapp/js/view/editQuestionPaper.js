@@ -73,7 +73,7 @@ $(document).ready(function(){
 		};
 		handlers.error = function(e){};
 		var division = $("#division").val();
-		var questionPaperName = $("#saveQuestionPaperName").val();
+		var questionPaperName = $(QUESTION_PAPER_DESC).val();
 		var desc = $(QUESTION_PAPER_DESC).val();
 		if(desc && desc.trim().length!==0){
 			questionPaperData.desc = desc;
@@ -179,6 +179,7 @@ var loadQuestionPaperSuccess = function(e){
 		questionPaperPattern = e;
 		recursiveView(e.questionPaperFileElementList,0,e.questionPaperFileElementList);
 		loadSubjectAndTopicSelect();
+	$(QUESTION_PAPER_DESC).val(e.paper_description);	
 	$(SAVE_SECTION).show();	
 }
 
