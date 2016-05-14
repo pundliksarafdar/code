@@ -25,6 +25,7 @@ var QUESTION_LIST_TABLE = "#questionListTable";
 var CHOOSE_QUESTION = ".chooseQuestionFromTable";
 var SAVE_QUESTION_PAPER = "#saveQuestionPaper"
 var QUESTION_PAPER_DESC = "#saveQuestionPaperDesc";
+var BACK_TO_LIST = "#backToList";
 /*URL*/
 var baseURL = "/rest/classownerservice/";
 var getList = baseURL + "getQuestionPaperList/";
@@ -40,6 +41,7 @@ var patternId;
 var paperId;
 $(document).ready(function(){
 	$(SAVE_SECTION).hide();
+	$("body").on("click",BACK_TO_LIST,backToQuestionPaperList);
 	$("body").on("click",CHOOSE_QUE_BTN,function(){
 			var RegenerateObj = {};
 			var selectSub = $(this).closest('.row').find(SELECT_SUBJECT);
@@ -169,8 +171,13 @@ var loadQuestionPaper = function(){
 	
 }
 
+var backToQuestionPaperList = function(){
+	$(EDIT_QUESTION_PAPER_CONTAINER).show();
+	$(SAVE_SECTION).hide();
+	$(BACK_TO_LIST).hide();
+}
 var loadQuestionPaperSuccess = function(e){
-	console.log(e);
+	$(BACK_TO_LIST).show();
 	$(EDIT_QUESTION_PAPER_CONTAINER).hide();
 	patternId = e.pattern_id;
 	paperId = e.paper_id;
@@ -276,6 +283,9 @@ function loadTopicSelect(selectSub,topics){
 	});
 	topicSelect.append(topic);
 	var val = topicSelect.attr("value");
+	if(val==0){
+		val = -1;
+	}
 	topicSelect.val(val);
 }
 

@@ -106,9 +106,11 @@ font-size: 12px;
 				<table id="editQuestionPaperList" class="table"></table>
 			</div>
 		</div>
+		
 		<div id="viewPatternData"></div>
 		<div class="" id="saveSection" style="padding:1%;margin:1%;">
 		<input type="button" value="Generate" class="btn btn-default" id="generateQuestionPaper"/>
+		<input type="button" class="btn btn-link" id="backToList" value="Back to list"/>
 		<div class="row container well" >
 			<div>&nbsp;</div>
 			<!-- <div class="col-xs-5"><input type="text" class="form-control" id="saveQuestionPaperName" placeholder="Question paper name"></div> -->
