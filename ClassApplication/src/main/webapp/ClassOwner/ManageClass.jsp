@@ -69,11 +69,12 @@ New function
 function deleteclass(classIdToDelete){
 	var handlers = {};
 	handlers.success = function(){
-		/* $("#subjectTable").find(".editSubjectId[value='"+subid+"']").closest("tr").remove(); */
+		var table = $("#classTable").DataTable();
+		$("#classTable").find(".editclassId[value='"+classIdToDelete+"']").closest("tr").addClass('selected');;
+		table.row('.selected').remove().draw( false );
 		$.notify({message: "Class successfuly deleted"},{type: 'success'});
 	}
 	handlers.error = function(){
-	/* 	table.row($("#subjectTable").find(".editSubjectId[value='"+subid+"']").closest("tr")).remove().draw(); */
 		$.notify({message: "Class successfuly deleted"},{type: 'success'});
 	}
 	rest.deleteItem("rest/commonDelete/deleteDivision/"+classIdToDelete,handlers);

@@ -19,8 +19,10 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
  bottom: 0px;
  right: 0px;
  }
- th, td { white-space: nowrap; }
-    
+/*  th, td { white-space: nowrap; } */
+    .DTFC_RightWrapper{
+    right: 0% !important;
+    }
   </style>
 </head>
 <body>
@@ -66,7 +68,7 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
 	<table id="attendanceScheduleTable" class="table-bordered" style="width: 100%"></table>
 	
 	</div>
-	<div class="container" id="monthlyAttendance" style="width: 100%;display: none;overflow-x: auto">
+	<div class="container" id="monthlyAttendance" style="width: 100%;display: none;">
 	<!-- <table id="attendanceStudentListTable" class="table-bordered" style="width: 100%"></table> -->
 	</div>
 </body>

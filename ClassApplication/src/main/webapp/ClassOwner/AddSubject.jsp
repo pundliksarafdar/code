@@ -75,12 +75,14 @@ function deleteSubject(subid){
 	var table = $('#subjectTable').DataTable();
 	var handlers = {};
 	handlers.success = function(){
-		$("#subjectTable").find(".editSubjectId[value='"+subid+"']").closest("tr").remove();
+		var table = $("#subjectTable").DataTable();
+		$("#subjectTable").find(".editSubjectId[value='"+subid+"']").closest("tr").addClass('selected');
+		table.row('.selected').remove().draw( false );
 		$.notify({message: "Subject successfuly deleted"},{type: 'success'});
 	}
 	handlers.error = function(){
-		table.row($("#subjectTable").find(".editSubjectId[value='"+subid+"']").closest("tr")).remove().draw();
-		$.notify({message: "Subject successfuly deleted"},{type: 'success'});
+		/* table.row($("#subjectTable").find(".editSubjectId[value='"+subid+"']").closest("tr")).remove().draw(); */
+		$.notify({message: "Subject not deleted"},{type: 'danger'});
 	}
 	rest.deleteItem("rest/commonDelete/deleteSubject/"+subid,handlers);
 }

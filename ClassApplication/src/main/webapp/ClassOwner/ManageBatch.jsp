@@ -68,12 +68,13 @@
 			}); */
 				var handlers = {};
 				handlers.success = function(){
-					that.closest("tr").remove();
+					var table = $("#batchTable").DataTable();
+					that.closest("tr").addClass('selected');
+					table.row('.selected').remove().draw( false );
 					$.notify({message: "Batch successfuly deleted"},{type: 'success'});
 				}
 				handlers.error = function(){
-					that.closest("tr").remove();
-					$.notify({message: "Batch successfuly deleted"},{type: 'success'});
+					$.notify({message: "Batch not deleted"},{type: 'danger'});
 				}
 				rest.deleteItem("rest/commonDelete/deleteBatch/"+divisionId+"/"+batchIdToDelete,handlers);
 	}

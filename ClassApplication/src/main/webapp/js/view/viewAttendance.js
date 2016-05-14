@@ -251,10 +251,11 @@ function createMonthlyAttendanceScheduleTable(data,start,end){
 	hString = hString + "</tbody></table>";
 	$('#monthlyAttendance').append(hString);
 	$('#monthlyAttendance').find("table").DataTable({
-        scrollY:        "300px",
+       
         scrollX:        true,
         scrollCollapse: true,
-        paging:         false,
+        paging:         true,
+        "pageLength": 50,
         fixedColumns:   {
             leftColumns: 2,
             rightColumns: 3
