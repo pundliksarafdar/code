@@ -319,7 +319,7 @@ public class QuestionPaperPatternTransaction {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return questionPaperDB.deleteQuestion(paper_id, inst_id, div_id);
+		return questionPaperDB.deleteQuestionPaper(paper_id, inst_id, div_id);
 	}
 	
 	public boolean deleteQuestionPaperRelatedToClass(int inst_id,int div_id) {
@@ -366,7 +366,8 @@ public class QuestionPaperPatternTransaction {
 		questionPaper.setModified_by(userID);
 		questionPaper.setModified_dt(new Date(new java.util.Date().getTime()));
 		questionPaper.setPaper_id(fileObject.getPaper_id());
-		questionPaperDB.save(questionPaper);
+		questionPaperDB.updateQuestionPaper(questionPaper);
+		fileObject.setInst_id(inst_id);
 		String filePath = questionPaperStorageURL+File.separator+fileObject.getClass_id()+File.separator+fileObject.getPaper_id();
 		writeObject(filePath, fileObject);
 		}

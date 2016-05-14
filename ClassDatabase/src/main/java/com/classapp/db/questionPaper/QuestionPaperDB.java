@@ -28,6 +28,39 @@ public class QuestionPaperDB {
 		return  questionPaper.getPaper_id();
 	}
 	
+	public boolean updateQuestionPaper(QuestionPaper questionPaper) {
+		Transaction transaction=null;
+		Session session=null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("update QuestionPaper set "
+				+ " marks = :marks,paper_description = :paper_description,modified_by = :modified_by,modified_dt = :modified_dt"
+				+ "  where  inst_id = :inst_id and div_id=:div_id  and paper_id = :paper_id");
+		query.setParameter("inst_id", questionPaper.getInst_id());
+		query.setParameter("div_id", questionPaper.getDiv_id());
+		query.setParameter("paper_id", questionPaper.getPaper_id());
+		query.setParameter("marks", questionPaper.getMarks());
+		query.setParameter("paper_description", questionPaper.getPaper_description());
+		query.setParameter("modified_by", questionPaper.getModified_by());
+		query.setParameter("modified_dt", questionPaper.getModified_dt());
+		query.executeUpdate();
+		transaction.commit();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  true;
+
+	}
+	
 	public List<QuestionPaper> getQuestionPaperList(int div_id,int inst_id) {
 		Transaction transaction=null;
 		Session session=null;
@@ -45,13 +78,13 @@ public class QuestionPaperDB {
 		return questionPaperList;
 	}
 	
-	public boolean deleteQuestion(int paper_id,int inst_id,int div_id) {
+	public boolean deleteQuestionPaper(int paper_id,int inst_id,int div_id) {
 		Transaction transaction=null;
 		Session session=null;
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
-		Query query = session.createQuery("delete from QuestionPaper where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and paper_id = :paper_id");
+		Query query = session.createQuery("delete from QuestionPaper where  inst_id = :inst_id and div_id=:div_id  and paper_id = :paper_id");
 		query.setParameter("inst_id", inst_id);
 		query.setParameter("div_id", div_id);
 		query.setParameter("paper_id", paper_id);
@@ -106,7 +139,7 @@ public class QuestionPaperDB {
 		criteria.add(criterion);
 		criterion = Restrictions.eq("paper_description", paper_description);
 		criteria.add(criterion);
-		criterion = Restrictions.eq("paper_id", paper_id);
+		criterion = Restrictions.ne("paper_id", paper_id);
 		criteria.add(criterion);
 		List<QuestionPaper> questionPaperList = criteria.list();
 		if(session!=null){
