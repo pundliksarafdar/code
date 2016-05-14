@@ -141,13 +141,21 @@ $(document).ready(function(){
 		var url = "rest/classownerservice/generateQuestionPaper/"+$("#division").val();
 		var handler = {};
 		handler.success = function(e){
+			var availibilityFlag = true;
 			questionPaperServicebeanList = e.questionPaperServicebeanList;
 			if(e.questionPaperDataList.length){
 				$.each(e.questionPaperDataList,function(key,val){
-					$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
-					$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
+					if(val.dataStatus != "N"){
+						$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
+						$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
+					}else{
+						availibilityFlag = false;
+						$.notify({message: "Questions are not available for criteria"},{type: 'danger'});
+						$("[item_id='"+val.item_id+"']").find(QUESTION).html("<div class='error'>Questions are not available for criteria</div>");
+					}
 				});
 			$(".noRegenerate").removeClass("noRegenerate");
+			if(availibilityFlag){$.notify({message: "Exam generated successfully"},{type: 'success'});}
 			}
 		}
 		handler.error = function(e){console.log(e);}
