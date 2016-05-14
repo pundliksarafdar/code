@@ -22,7 +22,7 @@
 <body>
 <div class="container">
 	<div class="row">
-	<div class="col-md-3" id="addModifyTimetableForm">
+	<div class="col-md-3" id="addModifyTimetableForm" data-toggle="tooltip" title="You can edit timetable here" data-trigger="manual" >
 		<form id="scheduleForm" onsubmit="return false;">
 		<div>
 		<label for="divisionSelect">Division select</label><br>
@@ -66,17 +66,6 @@
             </div>
 		</div>
 		<div>
-		<label for="endDate">End Date</label>
-			<div class="form-group">
-                <div class='input-group date' id='endDate'>
-                    <input type='text' class="form-control" name="endDate"/>
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
-            </div>
-		</div>
-		<div>
 		<label for="startTime">Start time</label>
 			<div class="form-group">
                 <div class='input-group date' id='startTime'>
@@ -98,7 +87,26 @@
                 </div>
             </div>
 		</div>
+		<div>
+		<label for="repeat">Repeat</label>
+			<div class="form-group">
+                <input type="checkbox" id="repeat" data-size="mini">
+            </div>
+		</div>
 		
+		<div class="repeatDependant">
+		<label for="endDate">End Date</label>
+			<div class="form-group">
+                <div class='input-group date' id='endDate'>
+                    <input type='text' class="form-control" name="endDate"/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+		</div>
+		
+		<div  class="repeatDependant">
 		<label for="repetitionSelect">Select repetition</label>
 		<div id="repetitionSelect">
 			<label for="sun">S</label>
@@ -122,11 +130,12 @@
 			<label for="sat">S</label>
 			<input type="checkbox" value="7" id="sat" title="Saturday"/>
 		</div>
-		
+		</div>
 		<div id="buttons">
 			<div class="form-group">
                 <button class="btn btn-success" id="save">Save</button>
 				<button class="btn btn-success hide" id="edit">Update</button>
+				<button class="btn btn-success hide" id="reset">Reset</button>
             </div>
 		</div>
 		</form>

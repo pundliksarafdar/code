@@ -10,6 +10,7 @@ var TEACHER_SELECT = "#teacherSelect";
 var REPETITION_SELECT = "#repetitionSelect";
 var SAVE_SCHEDULE = "#buttons #save";
 var EDIT_SCHEDULE = "#buttons #edit";
+var RESET_SCHEDULE = "#buttons #reset";
 var SCHEDULE_FORM = "#scheduleForm";
 var REP_SEL = "#repetitionSelect";
 var CALENDAR_CONTAINER = "#calendarContainer";
@@ -19,7 +20,9 @@ var getTimetable = "rest/schedule/getScheduleForMonth/";
 var saveScheduleUrl = "rest/schedule/schedule";
 
 var timtableData,
-	calendar;
+	calendar,
+	validatorForm;
+
 $(document).ready(function(){
 	$(CALENDAR_CONTAINER).hide();
 	$("body").on("change",DIVISION_SELECT,getBatches)
@@ -28,7 +31,18 @@ $(document).ready(function(){
 		.on("change",SUBJECT_SELECT,subjectSelectChange)
 		.on("click",SAVE_SCHEDULE,saveSchedule)
 		.on("click",EDIT_SCHEDULE,editSchedule)
-		.on("dp.change",CALENDAR_DATE,onCalendarDateChange);
+		.on("click",RESET_SCHEDULE,resetSchedule)
+		.on("dp.change",CALENDAR_DATE,onCalendarDateChange)
+		.on("mouseleave","#addModifyTimetableForm",function(){
+			$("#addModifyTimetableForm").tooltip("hide");
+		})
+		.on("mouseenter","#addModifyTimetableForm",function(){
+			var isEdit = $(SAVE_SCHEDULE).hasClass("hide");
+			if(isEdit){
+				$("#addModifyTimetableForm").tooltip("show");
+			}
+			
+		});
 		
 		$('.btn-group button[data-calendar-view]').click(function() {
 			var viewCalendar = $(this).data('calendar-view');
@@ -56,27 +70,32 @@ $(document).ready(function(){
 		
 		$(START_DATE).datetimepicker({
 			pickTime: false,
-			now:new Date(),
 			format:"YYYY-MM-DD"
-		});
+		}).data("DateTimePicker").setDate(getNextDate());
+		
 		$(END_DATE).datetimepicker({
 			pickTime: false,
+			useCurrent:true,
 			format:"YYYY-MM-DD"
-		});
+		}).data("DateTimePicker").setDate(getNextDate($(START_DATE).data("DateTimePicker").getDate().toDate()));
+		
 		$(START_TIME).datetimepicker({
 			pickDate: false,
-			format:"HH:mm:ss"
-		});
+			format:"HH:mm"
+		}).data("DateTimePicker").setDate(getNextDate());
+		
 		$(END_TIME).datetimepicker({
 			pickDate: false,
-			format:"HH:mm:ss"
-		});
+			format:"HH:mm"
+		}).data("DateTimePicker").setDate(getNextDate($(START_TIME).data("DateTimePicker").getDate().toDate()));;
 		
 		$(CALENDAR_DATE).datetimepicker({
 			pickTime: false,
 			minViewMode:'months',
 			format:"YYYY-MM"
 		});
+		
+		markTodaysDayOfWeek();
 		
 		 $.validator.addMethod("valueNotEquals", function(value, element, arg){
 		  return arg != value;
@@ -86,7 +105,7 @@ $(document).ready(function(){
 		  return ($(REP_SEL).find('[type="checkbox"]:checked').length == 0 || value.length > 0);
 		 }, "Recurrence is set plz select end date");
 		 
-		 $(SCHEDULE_FORM).validate({
+		 validatorForm = $(SCHEDULE_FORM).validate({
 		  rules: {
 		   divisionSelect: { valueNotEquals: "-1" },
 		   batchSelect:{ valueNotEquals: "-1" },
@@ -101,6 +120,23 @@ $(document).ready(function(){
 		   teacherSelect: { valueNotEquals: "Please select an teacher!" }
 		  }  
 		 });
+		 
+		 $(START_DATE).on("dp.change",function(){
+			 $(END_DATE).data("DateTimePicker").setDate(getNextDate($(START_DATE).data("DateTimePicker").getDate().toDate()));
+			 markTodaysDayOfWeek($(START_DATE).data("DateTimePicker").getDate().toDate());
+		 });
+		 
+		 $(START_TIME).on("dp.change",function(){
+			 $(END_TIME).data("DateTimePicker").setDate(getNextDate($(START_TIME).data("DateTimePicker").getDate().toDate())); 
+		 });
+		 
+		 $("#repeat").on("init.bootstrapSwitch switchChange.bootstrapSwitch ",function(event, state){
+			 if(state){
+				 $(".repeatDependant").show();
+			 }else{
+				 $(".repeatDependant").hide();
+			 }
+		 }).bootstrapSwitch();
 });
 
 Date.prototype.format = function(){
@@ -125,8 +161,8 @@ function editSchedule(){
 		scheduleBean.batch_id = event.batchId;
 		scheduleBean.sub_id = $(SUBJECT_SELECT).val();
 		scheduleBean.teacher_id = $(TEACHER_SELECT).val();
-		scheduleBean.start_time = $(START_TIME).find('input').val();
-		scheduleBean.end_time = $(END_TIME).find('input').val();
+		scheduleBean.start_time = $(START_TIME).find('input').val()+":00";
+		scheduleBean.end_time = $(END_TIME).find('input').val()+":00";
 		scheduleBean.date = $(START_DATE).find('input').val();
 		var repeatation = $(REPETITION_SELECT).find('input[type="checkbox"]:checked');
 		var repetations = [];
@@ -151,6 +187,21 @@ function editSchedule(){
 		}
 }
 
+function resetSchedule(){
+	$(SUBJECT_SELECT).val(-1);
+	$(TEACHER_SELECT).val(-1);
+	$(SAVE_SCHEDULE).removeClass('hide');
+	$(EDIT_SCHEDULE).addClass('hide');
+	$(RESET_SCHEDULE).addClass('hide');
+	setTimeout(function(){
+		$(SCHEDULE_FORM).find('label.error').remove();
+		$(SCHEDULE_FORM).find('.error').removeClass('error');	
+		validatorForm.resetForm();
+	},1000);
+	
+	
+	
+}
 
 function getBatches(){
 	var handler = {}
@@ -257,8 +308,10 @@ function setTimetable(data){
 	}
 
 function onEdit(event){
+		$("#repeat").bootstrapSwitch('state',false,false);
 		$(SAVE_SCHEDULE).addClass('hide');
 		$(EDIT_SCHEDULE).removeClass('hide');
+		$(RESET_SCHEDULE).removeClass('hide');
 		$(EDIT_SCHEDULE).data("eventData",event);
 		var startTime = moment(event.start).format("HH:mm:ss");
 		var endTime = moment(event.end).format("HH:mm:ss");
@@ -269,16 +322,18 @@ function onEdit(event){
 		$(SUBJECT_SELECT).val(event.subId).trigger("change");
 		$(START_TIME).find('input').val(startTime);
 		$(END_TIME).find('input').val(endTime);
+		$("#addModifyTimetableForm").tooltip("show");
 }	
 
 function loadAllUpcommingEvent(event){
+		$("#repeat").bootstrapSwitch('state',true,false);
 		$(EDIT_SCHEDULE).attr("data-edit-roll","all");
 		if(event.grp_id){
 			if(event.rep_days){
 				$("#repetitionSelect").find("input").removeAttr("checked");
 				var repArr = event.rep_days.split(",");
 				for(index=0;index<repArr.length;index++){
-					$("#repetitionSelect").find("input[value='"+repArr[index]+"']").attr("checked","checked");	
+					$("#repetitionSelect").find("input[value='"+repArr[index]+"']").prop("checked",true);	
 				}
 			}
 		}
@@ -289,6 +344,7 @@ function loadAllUpcommingEvent(event){
 		$(START_DATE).find('input').val(startDate);
 		$(START_TIME).find('input').val(startTime);
 		$(END_TIME).find('input').val(endTime);
+		
 }
 
 function editTimeTableFunction(){
@@ -384,10 +440,20 @@ function subjectSelectChange()
 		scheduleBean.batch_id = $(BATCH_SELECT).val();
 		scheduleBean.sub_id = $(SUBJECT_SELECT).val();
 		scheduleBean.teacher_id = $(TEACHER_SELECT).val();
-		scheduleBean.start_time = $(START_TIME).find('input').val();
-		scheduleBean.end_time = $(END_TIME).find('input').val();
+		scheduleBean.start_time = $(START_TIME).find('input').val()+":00";
+		scheduleBean.end_time = $(END_TIME).find('input').val()+":00";
 		scheduleBean.date = $(START_DATE).find('input').val();
 		var repeatation = $(REPETITION_SELECT).find('input[type="checkbox"]:checked');
+		
+		/*
+		 * As set repetation or not is depend  on the repetation so checkboxes ie rep_days parameter
+		 * So if repetation is desabled clear the checkboxes if checked
+		 */
+		
+		var state = $("#repeat").bootstrapSwitch('state');
+		if(!state){
+			repeatation = [];
+		}
 		var repetations = [];
 		for(var index=0;index<repeatation.length;index++){
 			repetations.push($(repeatation[index]).val());
@@ -411,6 +477,34 @@ function subjectSelectChange()
   
   function validate(){
 	  
+  }
+  
+  function getNextDate(date){
+	  var min = 30;
+	  
+	  if(date){
+		  if(date.getMinutes()>=30)	  min = 60;
+	  }else if((new Date()).getMinutes()>30){
+		  min = 60;
+	  }
+	  if(date){
+		  return new Date(date.setMinutes(min)); 
+	  }else{
+		  return new Date((new Date).setMinutes(min));
+	  }
+	  
+  }
+  
+  function markTodaysDayOfWeek(date){
+	  var dayOfWeek;
+	  if(date){
+		  dayOfWeek = date.getDay()+1;
+	  }else{
+		  dayOfWeek = new Date().getDay()+1;
+		  
+	  }
+	  $('[type="checkbox"]').prop("checked",false);
+	  $('[type="checkbox"][value='+dayOfWeek+']').prop("checked",true);
   }
   
   function ScheduleBean(){

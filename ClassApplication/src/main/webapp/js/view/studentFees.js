@@ -179,9 +179,12 @@ function loadStudentTableSuccess(data){
 				title: "",bSortable:false,data:null,render:function(){return "<input type='button' class='btn btn-default printReceipt' value='Print'/>"}
 			}
 			
-			]
+			],
+			rowCallback:function(row, data, displayIndex, displayIndexFull){
+				$(row).find("input[type=\"checkbox\"]").bootstrapSwitch(optionSelect);
+			}
 		});
-		$(STUDENT_FEES_TABLE).find("input[type=\"checkbox\"]").bootstrapSwitch(optionSelect);
+		
 }
 
 function loadStudentTableError(){
