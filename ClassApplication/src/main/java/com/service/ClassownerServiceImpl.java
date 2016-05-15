@@ -291,7 +291,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		return Response.status(Status.OK).entity(questionPaperList).build();
 	}
 	
-	@POST
+	@DELETE
 	@Path("/deleteQuestionPaper/{division}/{paper_id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

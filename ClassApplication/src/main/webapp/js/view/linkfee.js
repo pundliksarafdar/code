@@ -161,7 +161,7 @@ function getBatches(){
 	$(FEE_STRUCT_SELECT).attr("disabled","disabled");
 	$(FEE_STRUCT_SELECT).val(-1);
 	var handler = {}
-	var division = $(this).val();
+	var division = $(DIVISION_SELECT).val();
 	handler.success = getBatchSuccess;
 	handler.error = getBatchError;
 	rest.get(getBatchListUrl+division,handler);
@@ -255,12 +255,13 @@ function saveFee(){
 	var handler = {};
 	handler.success = function(e){
 		$.notify({message: 'Fee linked'},{type: 'success'});
+		//Reload batches to avoid reentry so that batches will be shown as linked 
+		getBatches();
 	};
 	handler.error = function(e){
 		$.notify({message: 'Error occured'},{type: 'warning'});
 	};
 	if(updateOrSave == "Update"){
-		console.log(saveBean);
 		rest.post(updateBatch,handler,JSON.stringify(saveBean));
 	}else{
 		rest.post(saveFeeStructUrl,handler,JSON.stringify(saveBean));

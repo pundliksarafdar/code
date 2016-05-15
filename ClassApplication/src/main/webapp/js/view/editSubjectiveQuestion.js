@@ -4,7 +4,7 @@
 	var SUBJECTIVE_IMAGE_ROW = "#subjectiveImageRow";
 	var ADD_SUBJECT_FORM = "form#addSubjectiveQuestion";
 	var REMOVE_OPTION_IMAGE = ".answer_image_with_btn_remove";
-	
+	var CANCEL = "#cancelEdit";
 	var saveSubjectiveExamUrl = "/rest/classownerservice/examservice/saveSubjective";
 	
 	
@@ -12,8 +12,13 @@
 		
 		$("body").on("change",ADD_SUBJECTIVE_QUESTION_IMAGE,showAndUploadImageForSubjective).
 			on("click",SAVE_SUBJECTIVE_EXAM,saveExam).
-			on("click",REMOVE_OPTION_IMAGE,remoteThisImage);
+			on("click",REMOVE_OPTION_IMAGE,remoteThisImage).
+			on("click",CANCEL,cancelEdit);
 	});
+	
+	function cancelEdit(){
+		$("form#searchQuestion").submit();
+	}
 	
 	function showAndUploadImageForSubjective(){
 		var imageFile = $(ADD_SUBJECTIVE_QUESTION_IMAGE)[0];
@@ -63,7 +68,9 @@
 			});
 			console.log(subjectiveExamBean);
 			var handler = {};
-			handler.success = function(e){console.log(e)}
+			handler.success = function(e){
+				$.notify({message: "Question updated successfuly"},{type: 'success'});
+			}
 			handler.error = function(e){console.log(e)}
 			rest.put(saveSubjectiveExamUrl,handler,JSON.stringify(subjectiveExamBean),true);
 		}else{

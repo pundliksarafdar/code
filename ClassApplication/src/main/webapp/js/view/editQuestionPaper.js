@@ -26,10 +26,12 @@ var CHOOSE_QUESTION = ".chooseQuestionFromTable";
 var SAVE_QUESTION_PAPER = "#saveQuestionPaper"
 var QUESTION_PAPER_DESC = "#saveQuestionPaperDesc";
 var BACK_TO_LIST = "#backToList";
+var DELETE_QUESTION = ".deleteQuestionPaper";
 /*URL*/
 var baseURL = "/rest/classownerservice/";
 var getList = baseURL + "getQuestionPaperList/";
 var getQuestionPaperUrl = baseURL + "getQuestionPaper/";
+var deleteQuestionPaperUrl = baseURL + "deleteQuestionPaper/";
 
 /**/
 var qustionPaperListTable;
@@ -89,7 +91,10 @@ $(document).ready(function(){
 	});
 	
 	$("body").on("click",SEARCH_QUESTION_PAPER,searchQuestionPaper).
-		on("click",EDIT_QUESTION_PAPER,loadQuestionPaper);
+		on("click",EDIT_QUESTION_PAPER,loadQuestionPaper).
+		on("click",DELETE_QUESTION,deleteQuestionPaper);
+		;
+	
 		$("body").on("click",REGENERATE_QUE_BTN,function(e){
 			var RegenerateObj = {};
 			var selectSub = $(this).closest('.row').find(SELECT_SUBJECT);
@@ -166,6 +171,21 @@ $(document).ready(function(){
 });
 
 /*Function*/
+var deleteQuestionPaper = function(){
+	var trow = $(this).closest('tr');
+	var data = qustionPaperListTable.row(trow).data();
+	var handler = {};
+	handler.success = function(){
+		
+	};
+	handler.error = function(){};
+	var paperId = data.paper_id;
+	var divisionId = $(DIVISION_DROPDOWN).val();		
+	if(paperId){
+		rest.deleteItem(deleteQuestionPaperUrl+divisionId+"/"+paperId,handler);
+	}
+}
+
 var loadQuestionPaper = function(){
 	var trow = $(this).closest('tr');
 	var data = qustionPaperListTable.row(trow).data();
@@ -240,7 +260,7 @@ var searchQuestionPaperSuccess = function(data){
 		title: "Marks",data:'marks'
 	},
 	{
-		title: "",data:null,sWidth:"10%",render:function(){return "<a class='btn btn-link editQuestionPaper'>Edit</a>"},bSortable:false
+		title: "",data:null,sWidth:"10%",render:function(){return "<a class='btn btn-link editQuestionPaper'>Edit</a><a class='btn btn-link deleteQuestionPaper'>Delete</a>"},bSortable:false
 	}]});
 }
 

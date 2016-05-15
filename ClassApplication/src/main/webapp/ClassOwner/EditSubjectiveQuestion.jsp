@@ -60,10 +60,17 @@
 			<label class="col-sm-2 control-label">&nbsp;</label>
 				<div class="col-sm-10">
 					<input type="button" class="btn btn-default" id="saveSubjectiveExam" value="Save"/>
-					
+					<input type="button" value="Cancel" class="btn btn-link" id="cancelEdit"/>					
 				</div>
 		</div>
  	</form>
+ 	
+ 	<form action="searchQuestion" method="post" id="searchQuestion">
+		<input type="hidden" value="<c:out value="${division}"></c:out>" name="classId"/>
+		<input type="hidden" value="<c:out value="${subject}"></c:out>" name="subId"/>
+		<input type="hidden" value="1" name="questionType"/>
+		
+	</form>
  	</div>
 </body>
 </html>

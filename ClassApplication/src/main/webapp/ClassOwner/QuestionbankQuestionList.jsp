@@ -31,15 +31,22 @@ var filterSearch = false;
 var quesstatus;
 var questionNumber;
 var deleteStatus;
-var preSubject="";
+var subId="";
+
+var subId = <c:out value="${subId}" default="-1"></c:out>;
+var divId = <c:out value="${classId}" default="-1"></c:out>;
+var questionType = <c:out value="${questionType}" default="-1"></c:out>;
+
 $(document).ready(function(){
+	/*Load value if return from cancel button inside list*/
+	
 	if($("#editQuestionForm").find("#actionname").val() == "editSuccess" || $("#editQuestionForm").find("#actionname").val() == "cancleEdit"){
 		$("#searchQuestionDivision").select2().val($("#editQuestionForm").find("#division").val()).change();
 		division = $("#editQuestionForm").find("#division").val();
 		var uploadExam = new UploadExam();
 		uploadExam.getSubjectsInDivision(division);
-		preSubject = $("#editQuestionForm").find("#subject").val();
-		subject = preSubject;
+		subId = $("#editQuestionForm").find("#subject").val();
+		subject = subId;
 		questionType = $("#editQuestionForm").find("#questiontype").val();
 		$("#searchQuestionType").select2().val(questionType).change();
 		topic = $("#editQuestionForm").find("#topicID").val();
@@ -67,18 +74,7 @@ $("#searchQuestionDivision").on("change",function(e){
 	}
 });
 
-	$("#searchQuestion").click(function(){
-		topic="-1";
-		selectedMarks="-1";
-		currentPage = 0;
-		filterSearch = false;
-		$("#filterDiv").hide();
-		$(".appliedFilter").hide();
-		division = $("#searchQuestionDivision").val();
-		subject = $("#searchQuestionSubject").val();
-		questionType = $("#searchQuestionType").val();
-		searchQuestion(currentPage);
-	});
+	$("#searchQuestion").click(searchQuestionBtnClick);
 	
 	$("#paginationDiv").on("click",".paginationPage",function(){
 		searchQuestion($(this).text());
@@ -227,6 +223,16 @@ $("#searchQuestionDivision").on("change",function(e){
 		$("#actionform").submit(); */
 	});
 	
+	/*
+	This code is usefull to load the value in list and dropdown
+	when we are canceling question edit 
+	*/
+	if(subId!=-1){
+		$("#searchQuestionDivision").val(divId).trigger("change");
+		$("#searchQuestionType").val(questionType);
+	}
+	
+	
 });
 
 function getTopics(){
@@ -328,7 +334,7 @@ function searchQuestion(pageNo){
 			 			}
 				 	}
 			 	}
-			 	if((currentPage == 0 && filterSearch == false) || preSubject != ""){
+			 	if((currentPage == 0 && filterSearch == false) || subId != "-1"){
 			 	getTopics();
 			 	$("#searchQuestionMarks").empty();
 			 	var marksarray = [];
@@ -350,7 +356,7 @@ function searchQuestion(pageNo){
 				    	$(".appliedFilter").find("#marksFilter").html($("#searchQuestionMarks").select2('data')[0].text+"&nbsp;<i class='glyphicon glyphicon-remove' style='color:red;top:2px'></i>");
 						$(".appliedFilter").find("#marksFilter").show();
 				    }
-				    preSubject = "";
+				    subId = "";
 			 	}   
 			 	
 				 currentPage = data.currentPage;
@@ -407,8 +413,9 @@ function UploadExam(){
 					});
 			 	 
 				    $("#searchQuestionSubject").select2({data:subjectArray,placeholder:"Type Subject Name"});
-				    if(preSubject != ""){
-				    $("#searchQuestionSubject").select2().val(preSubject).change();
+				    if(subId != "-1"){
+				    	$("#searchQuestionSubject").select2().val(subId).change();
+				    	searchQuestionBtnClick();
 				    }
 			 	 }else{
 			 		 $("#searchQuestionSubject").select2({data:"",placeholder:"Subject Not Found"});
@@ -423,6 +430,18 @@ function UploadExam(){
 	this.getSubjectsInDivision = getSubjectsInDivision;
 	}
 
+var searchQuestionBtnClick  = function(){
+	topic="-1";
+	selectedMarks="-1";
+	currentPage = 0;
+	filterSearch = false;
+	$("#filterDiv").hide();
+	$(".appliedFilter").hide();
+	division = $("#searchQuestionDivision").val();
+	subject = $("#searchQuestionSubject").val();
+	questionType = $("#searchQuestionType").val();
+	searchQuestion(currentPage);
+}
 </script>
 </head>
 <body>

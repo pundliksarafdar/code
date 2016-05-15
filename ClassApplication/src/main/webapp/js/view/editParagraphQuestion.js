@@ -15,7 +15,7 @@ var MARKS = PARA_QUESTION_FORM+" #totalMarks";
 var PARA_IMAGE = PARA_QUESTION_FORM+" #paraQuestionImage .paraOptionImage";
 
 var PARA_QUESTIONS = PARA_QUESTION_FORM + " #paraQuestion .paraQuestionTmpl";
-
+var CANCEL = "#cancelEdit";
 /*URL*/
 var saveParaQuestionUrl = "/rest/classownerservice/examservice/paraquestion";
 $(document).ready(function(){
@@ -32,8 +32,13 @@ $(document).ready(function(){
 		.on("click",DELETE_IMAGE,function(){
 			$(this).closest(".image_with_btn").remove();
 		})
+		.on("click",CANCEL,cancelEdit)
 		.on("click",SAVE_PARA,updateParagraphQuestion);
 });
+
+function cancelEdit(){
+	$("form#searchQuestion").submit();
+}
 
 function addMoreParaQuestion(){
 	var paraTmpl = $(PARA_QUESTION_TMPL).clone();

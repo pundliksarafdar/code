@@ -9,7 +9,7 @@ var SAVE_OBJECTIVE_EXAM = "#saveObjectiveExam";
 	var REMOVE_OPTION_IMAGE = ".answer_image_with_btn_remove";
 	var DELETE_OPTION = ".deleteOption";
 	var saveObjectiveExamUrl = "/rest/classownerservice/examservice/saveObjective";
-	
+	var CANCEL = "#cancelEdit";
 
 (function(){
 	$(document).ready(function(){
@@ -22,7 +22,8 @@ var SAVE_OBJECTIVE_EXAM = "#saveObjectiveExam";
 				showAndUploadImageForObjective(".options","objectiveAnswersImage",this,"objectiveOptionImage");
 			}).
 			on("click",REMOVE_OPTION_IMAGE,remoteThisImage).
-			on("click",DELETE_OPTION,deleteOption);
+			on("click",DELETE_OPTION,deleteOption).
+			on("click",CANCEL,cancelEdit);
 	});
 	
 	function showAndUploadImageForObjective(parent,imagename,that,imageType){
@@ -92,7 +93,9 @@ var SAVE_OBJECTIVE_EXAM = "#saveObjectiveExam";
 			});
 			
 			var handler = {};
-			handler.success = function(e){console.log(e)}
+			handler.success = function(e){
+				$.notify({message: "Question updated successfuly"},{type: 'success'});
+			}
 			handler.error = function(e){console.log(e)}
 			
 			objectiveExamBean.options = optionsArr;
@@ -166,6 +169,10 @@ function loadObjectiveQuestion(data){
 	$("#objectiveImageRow").append(images);
 	
 	
+}
+
+function cancelEdit(){
+	$("form#searchQuestion").submit();
 }
 
 function addOptionValue(text,selected,images,currentIndex,checked){
