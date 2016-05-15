@@ -292,8 +292,12 @@ public class ClassownerExamService extends ServiceBase{
 		questionbank.setQue_id(queId);
 		//This is reuired to create folder with inst id in storage folder; 
 		paraQuestionBean.setInstId(getRegId());
-		int questionNumber=  bankTransaction.saveQuestion(questionbank);
-		//bankTransaction.saveParaObject(Constants.STORAGE_PATH,paraQuestionBean, questionNumber);
+		bankTransaction.updateParagraphQuestion(queId,
+				getRegId(),
+				paraQuestionBean.getSubjectId(),
+				paraQuestionBean.getClassId(),
+				paraQuestionBean.getMarks());
+		bankTransaction.saveParaObject(Constants.STORAGE_PATH,paraQuestionBean, queId);
 		
 		/*
 		UserStatic userStatic = getUserBean().getUserStatic();

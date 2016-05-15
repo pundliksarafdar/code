@@ -26,7 +26,12 @@ $(document).ready(function(){
 		.on("change",PARA_QUE_IMAGE,function(){
 			showAndUploadImageForParagraph(".paraQuestionTmpl","paraImage",this,"paraQuestionImage");
 		})
-		
+		.on("click",DELETE_PARA_OPTION,function(){
+			$(this).closest(".paraQuestionTmpl").remove();
+		})
+		.on("click",DELETE_IMAGE,function(){
+			$(this).closest(".image_with_btn").remove();
+		})
 		.on("click",SAVE_PARA,updateParagraphQuestion);
 });
 
@@ -70,8 +75,8 @@ function addParaQuestion(paraQuestion,queId){
 		var images = "";
 		for(var indexInner=0;indexInner < paraQuestion[index].queImage.length;indexInner++){
 			//images = images + "<img src=/rest/commonservices/image/"+data.primaryImage[index]+" width='200px' height='200px'>";
-			var imgTag = "<img src='/rest/commonservices/image/examImage_paragraph_"+queId+"_paragraph_questions_"+index+"_"+paraQuestion[index].queImage[indexInner]+"' width='200px' height='200px' />";
-			var hiddenTag = "<input type='hidden' name='objectQuestionImage' class='paraOptionImage' value='{{questionImage}}' />";
+			var imgTag = "<img src='/rest/commonservices/image/examImage_paragraph_"+queId+"_paragraphQuestions_"+index+"_"+paraQuestion[index].queImage[indexInner]+"' width='200px' height='200px' />";
+			var hiddenTag = "<input type='hidden' name='objectQuestionImage' class='paraQuestionImage' value='{{questionImage}}' />";
 			var closeButton = '<button type="button" class="answer_image_with_btn_remove close" aria-hidden="true">&times;</button>';
 			var imageColElement = "<div class='col-sm-3 image_with_btn'>"+closeButton+hiddenTag+imgTag+"</div>"
 			var imageId = getImageId(paraQuestion[index].queImage[indexInner]);
@@ -115,7 +120,9 @@ function updateParagraphQuestion(){
 		});
 		
 		var handler={};
-		handler.success = function(e){}
+		handler.success = function(e){
+			$.notify({message: "Question updated successfuly"},{type: 'success'});
+		}
 		handler.error = function(e){}
 		
 		var question = $("#paraQuestion").find(".paraQuestionTmpl");

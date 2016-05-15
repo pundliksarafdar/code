@@ -84,6 +84,12 @@ public class QuestionBankTransaction {
 		
 	}
 	
+	public boolean editQuestion(Questionbank questionbank) {
+		QuestionbankDB db = new QuestionbankDB();
+		return db.editQuestion(questionbank);
+		
+	}
+	
 	public List<Integer> getDistinctQuestionMarks(int sub_id,int div_id,int inst_id,String ques_type) {
 		QuestionbankDB questionbankDB=new QuestionbankDB();
 		return questionbankDB.getdistinctQuestionMarks(sub_id, inst_id, div_id,ques_type);
