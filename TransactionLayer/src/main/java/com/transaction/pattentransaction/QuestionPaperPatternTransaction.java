@@ -313,7 +313,7 @@ public class QuestionPaperPatternTransaction {
 	
 	public boolean deleteQuestionPaper(int div_id,int paper_id) {
 		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
-		File file = new File(patternStorageURL+File.separator+div_id+File.separator+paper_id);
+		File file = new File(questionPaperStorageURL+File.separator+div_id+File.separator+paper_id);
 		try {
 			delete(file);
 		} catch (IOException e) {

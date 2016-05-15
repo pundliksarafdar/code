@@ -298,6 +298,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	public Response deleteQuestionPaper(@PathParam("division") String division,@PathParam("paper_id") String paper_id){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
 		boolean status = patternTransaction.deleteQuestionPaper(Integer.parseInt(division), Integer.parseInt(paper_id));
 		return Response.status(Status.OK).entity(status).build();
 	}
