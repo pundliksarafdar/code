@@ -1,7 +1,7 @@
 var BATCH_SELECT = "#batches"; 
 var DIV_SELECT = "#division";
 var ADD_STUDENT = "#addStudent";
-
+var selectedBatchData = "";
 var getBatchFeesUrl = "rest/feesservice/getBatchFees/";
 var addStudentManuallyUrl = 'rest/classownerservice/addStudentByManually';
 var addStudentByID = 'rest/classownerservice/addStudentByID';
@@ -13,6 +13,7 @@ $(document).ready(function(){
 function selectBacth(){
 	var batch = $(this).val();
 	var divisionId = $(DIV_SELECT).val();
+	selectedBatchData = $(this).select2('data')
 	var handler = {};
 	handler.success = getBatchFeesSuccess;
 	handler.error = getBatchFeesError;
@@ -33,7 +34,13 @@ var showTable = function(data){
 			lengthChange: false,
 			columns:[
 			{
-				title: "Batch",data:null,sDefault:'Batch name'
+				title: "Batch",data:null,render:function(data,event,row){
+					for(var i=0 ; i<selectedBatchData.length;i++){
+						if(selectedBatchData[i].id == row.batch_id){
+					return selectedBatchData[i].text;
+						}
+					}
+				}
 			},
 			{
 				title: "Total fee",data:"batch_fees"
