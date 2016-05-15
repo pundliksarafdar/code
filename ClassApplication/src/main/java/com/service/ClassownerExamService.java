@@ -80,17 +80,19 @@ public class ClassownerExamService extends ServiceBase{
 		questionbank.setQue_id(subjectiveExamBean.getQuestionId());
 		questionbank.setInst_id(getRegId());
 		questionbank.setMarks(subjectiveExamBean.getMarks());
-		//questionbank.setQue_id(0);
 		questionbank.setRep(0);
 		questionbank.setSub_id(subjectiveExamBean.getSubjectId());
 		questionbank.setTopic_id(subjectiveExamBean.getTopicId());
 		questionbank.setQues_status("");
 		questionbank.setQue_text(subjectiveExamBean.getQuestion());
 		questionbank.setQue_type(subjectiveExamBean.getQuestionType());
-		int questionId = bankTransaction.saveQuestion(questionbank);
-		if(questionId >= 0){
+		
+		boolean success = bankTransaction.updateSubjectiveQuestion(subjectiveExamBean.getQuestionId(), getRegId(), subjectiveExamBean.getSubjectId(),
+				Integer.parseInt(subjectiveExamBean.getClassId()), subjectiveExamBean.getQuestion(),
+				subjectiveExamBean.getMarks());
+		if(success){
 			ImageTransactions imageTransactions = new ImageTransactions(Constants.STORAGE_PATH);
-			imageTransactions.saveQuestionImage(subjectiveExamBean.getImages(), questionId, getRegId());
+			imageTransactions.saveQuestionImage(subjectiveExamBean.getImages(), subjectiveExamBean.getQuestionId(), getRegId());
 		}
 		return Response.ok().build();
 	}
@@ -204,7 +206,8 @@ public class ClassownerExamService extends ServiceBase{
 		}
 		String correctOption = StringUtils.join(correctOptionId,",");
 		questionbank.setAns_id(correctOption);
-		int questionId = bankTransaction.saveQuestion(questionbank);
+		
+		boolean status = bankTransaction.updateObjectiveQuestion(questionbank);
 		
 		//This contains previous id of options
 		List<Integer>prevImageLocation = new ArrayList<Integer>();
@@ -212,9 +215,9 @@ public class ClassownerExamService extends ServiceBase{
 		//This contains current id of options
 		List<Integer>currentImageLocation = new ArrayList<Integer>();
 				
-		if(questionId >= 0){
+		if(status){
 			ImageTransactions imageTransactions = new ImageTransactions(Constants.STORAGE_PATH);
-			imageTransactions.saveObjectiveQuestionImage(objectiveExamBean.getImages(), questionId, getRegId());
+			imageTransactions.saveObjectiveQuestionImage(objectiveExamBean.getImages(), questionbank.getQue_id(), getRegId());
 			
 			HashMap<Integer, List<String>> optionImages = new HashMap<Integer, List<String>>();
 			List<ObjectiveOptions> list =  objectiveExamBean.getOptions();
@@ -227,8 +230,8 @@ public class ClassownerExamService extends ServiceBase{
 				}
 				optionImages.put(index, list.get(index).getOptionImage());
 			}
-			imageTransactions.renameFolders(prevImageLocation, currentImageLocation, questionId, getRegId());
-			imageTransactions.saveOptionImage(optionImages, questionId, getRegId());
+			imageTransactions.renameFolders(prevImageLocation, currentImageLocation, questionbank.getQue_id(), getRegId());
+			imageTransactions.saveOptionImage(optionImages, questionbank.getQue_id(), getRegId());
 		}
 		
 		return Response.ok().build();
