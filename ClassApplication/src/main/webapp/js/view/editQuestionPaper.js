@@ -68,10 +68,12 @@ $(document).ready(function(){
 		$.each($(QUESTION),function(key,val){
 			questionPaperData[$(val).closest('[item_id]').attr('item_id')] = $(val).data(QUESTION_ID);
 		});
-		console.log(questionPaperData);
 		var handlers = {};
 		handlers.success = function(resp){
+			$.notify({message: "Exam updated successfully"},{type: 'success'});
 			loadSubjectAndTopic(resp);
+			backToQuestionPaperList();
+			$(SEARCH_QUESTION_PAPER).trigger("click");
 		};
 		handlers.error = function(e){};
 		var division = $("#division").val();
@@ -183,6 +185,7 @@ var backToQuestionPaperList = function(){
 	$(EDIT_QUESTION_PAPER_CONTAINER).show();
 	$(SAVE_SECTION).hide();
 	$(BACK_TO_LIST).hide();
+	$("#viewPatternData").empty();
 }
 var loadQuestionPaperSuccess = function(e){
 	$(BACK_TO_LIST).show();
@@ -350,8 +353,8 @@ function recursiveView(data,recursionLevel,dataArray){
 				
 				var question = $("<div/>",{
 					class:"col-md-5 question",
-					html:data[i].questionbank?data[i].questionbank.que_text:"<span class='alert'>Question is not available</span>"
-				});
+					html:data[i].questionbank?data[i].questionbank.que_text:"<span class='error'>Question is not available</span>"
+				}).data(QUESTION_ID,(data[i].questionbank?data[i].questionbank.que_id:undefined));
 				
 				var selectSubject = $("<select/>",{
 					class:"btn btn-default selectSubject btn-xs",

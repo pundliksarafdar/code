@@ -271,6 +271,44 @@ public class ClassownerExamService extends ServiceBase{
 		return Response.ok().build();
 	}
 	
+	@PUT
+	@Path("/paraquestion/{queId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateParaExam(@PathParam("queId")int queId,
+			ParaQuestionBean paraQuestionBean){
+		Questionbank questionbank = new Questionbank();
+		QuestionBankTransaction bankTransaction = new QuestionBankTransaction();
+		questionbank.setCreated_dt(new Date(new java.util.Date().getTime()));
+		questionbank.setDiv_id(paraQuestionBean.getClassId());
+		questionbank.setExam_rep("1");
+		questionbank.setInst_id(getRegId());
+		questionbank.setMarks(paraQuestionBean.getMarks());
+		questionbank.setSub_id(paraQuestionBean.getSubjectId());
+		questionbank.setTopic_id(paraQuestionBean.getTopicId());
+		questionbank.setQues_status("");
+		questionbank.setQue_type(paraQuestionBean.getQuestionType());
+		questionbank.setAdded_by(getRegId());
+		questionbank.setQue_id(queId);
+		//This is reuired to create folder with inst id in storage folder; 
+		paraQuestionBean.setInstId(getRegId());
+		int questionNumber=  bankTransaction.saveQuestion(questionbank);
+		//bankTransaction.saveParaObject(Constants.STORAGE_PATH,paraQuestionBean, questionNumber);
+		
+		/*
+		UserStatic userStatic = getUserBean().getUserStatic();
+		String examPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
+		File file = new File(examPath);
+		
+		if(!file.getParentFile().exists()){
+			file.getParentFile().mkdirs();
+			try {file.createNewFile();} catch (IOException e) {	e.printStackTrace();}
+		}
+		writeObject(examPath, paraQuestionBean);
+		*/
+		return Response.ok().build();
+	}
+	
 	@GET
 	@Path("/paraquestion/{que_id}/{sub_id}/{div_id}")
 	@Produces(MediaType.APPLICATION_JSON)
