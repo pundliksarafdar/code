@@ -26,6 +26,7 @@ import javax.ws.rs.core.Response.StatusType;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import com.classapp.db.Teacher.TeacherDetails;
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.exam.Exam;
@@ -77,6 +78,7 @@ import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.student.StudentTransaction;
 import com.transaction.studentmarks.StudentMarksTransaction;
+import com.transaction.teacher.TeacherTransaction;
 import com.user.UserBean;
 import com.transaction.questionbank.ExcelFileTransaction;
 
@@ -725,5 +727,14 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		ExamTransaction examTransaction = new ExamTransaction();
 		examTransaction.deleteExam(getRegId(), examId);
 		return Response.ok().build();
+	}
+	
+	@GET
+	@Path("/teacher")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllTeachers(){
+		TeacherTransaction teacherTransaction = new TeacherTransaction();
+		List<TeacherDetails> teachers = teacherTransaction.getAllTeachersFromClass(getRegId());
+		return Response.ok(teachers).build();
 	}
 }

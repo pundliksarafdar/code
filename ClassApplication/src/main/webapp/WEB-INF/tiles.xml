@@ -669,4 +669,9 @@
         <put-attribute name="topnav" value="/student/menu.jsp" />
         <put-attribute name="body"   value="/student/ViewNotesList.jsp"/>      
    </definition>
+   <definition name="classowner.alert" extends="baseLayout">
+      <put-attribute name="title"  value="Alert"/>
+        <put-attribute name="topnav" value="/admin/menu.jsp" />
+        <put-attribute name="body"   value="/ClassOwner/alert.jsp"/>      
+   </definition>
 </tiles-definitions>

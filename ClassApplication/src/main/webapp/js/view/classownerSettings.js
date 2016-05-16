@@ -64,7 +64,7 @@ function onDataLoad(data){
 			var weeklyRecurrence = JSON.parse(data.classOwnerNotificationBean.weeklyRecurrence);
 			$.each(recurrenceSelection,function(key,val){
 				var key = $(val).attr("id");
-				if(weeklyRecurrence[key]){
+				if(weeklyRecurrence && weeklyRecurrence[key]){
 					$(val).prop("checked",true);
 				}
 			});

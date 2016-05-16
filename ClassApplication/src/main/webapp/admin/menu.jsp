@@ -342,6 +342,7 @@ siteMapApp.controller("SiteMapController",function($scope){
             </a>
         </div>
 		<div class="col-sm-2 col-xs-4">
+		<a href="alertAction">
             <div id="tile8" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
@@ -356,6 +357,7 @@ siteMapApp.controller("SiteMapController",function($scope){
                         </div>
                     </div>
             </div>
+        </a>
         </div>
 		<div class="col-sm-2 col-xs-4">
 		<a href="timetableall">
