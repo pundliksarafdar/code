@@ -13,6 +13,7 @@ import org.hibernate.criterion.Restrictions;
 import com.classapp.db.exam.Exam;
 import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.pattern.QuestionPaperPattern;
+import com.classapp.db.student.Student;
 import com.classapp.persistence.HibernateUtil;
 
 public class FeesDB {
@@ -1096,5 +1097,93 @@ public boolean updateStudentFeesRelatedToBatch(int inst_id,int div_id,int batch_
 	return  true;
 
 }
+
+public boolean deleteBatchFees(int inst_id,int fees_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("delete BatchFees where inst_id = :inst_id and fees_id = :fees_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("fees_id", fees_id);
+		query.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  true;
+
+}
+
+public boolean deleteBatchFeesStructure(int inst_id,int fees_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("delete BatchFeesDistribution where inst_id = :inst_id and fees_id = :fees_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("fees_id", fees_id);
+		query.executeUpdate();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  true;
+
+}
+
+public List<Integer> getStudentIdsFromStudentFees(int inst_id,int div_id,int batch_id) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	List<Integer> studentIDList = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("select student_id from Student_Fees" +
+				" where inst_id = :inst_id and div_id = :div_id and batch_id = :batch_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("batch_id", batch_id);
+		studentIDList = query.list();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  studentIDList;
+
+}
+
 
 }

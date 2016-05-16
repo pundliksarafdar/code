@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -153,8 +154,10 @@ public class FeesTransaction {
 	
 	public boolean deleteFees(int inst_id,int fees_id){
 		FeesDB feesDB = new FeesDB();
-		feesDB.deleteFees(inst_id, fees_id);
+		feesDB.deleteBatchFees(inst_id, fees_id);
+		feesDB.deleteBatchFeesStructure(inst_id, fees_id);
 		feesDB.deleteFeesStructure(inst_id, fees_id);
+		feesDB.deleteFees(inst_id, fees_id);
 		return true;
 	}
 	
@@ -181,6 +184,11 @@ public class FeesTransaction {
 	//	feesDB.updateStudentFeesRelatedToBatch(inst_id, serviceBean.getBatchFees().getDiv_id(), serviceBean.getBatchFees().getBatch_id(), serviceBean.getBatchFees().getBatch_fees());
 		StudentTransaction studentTransaction = new StudentTransaction();
 		List<Student> studentList = studentTransaction.getStudentsrelatedtobatch(serviceBean.getBatchFees().getBatch_id()+"", inst_id, serviceBean.getBatchFees().getDiv_id());
+		feesDB.updateStudentFeesRelatedToBatch(inst_id, serviceBean.getBatchFees().getDiv_id(), serviceBean.getBatchFees().getBatch_id(), serviceBean.getBatchFees().getBatch_fees());
+		List<Integer> studentIDList = feesDB.getStudentIdsFromStudentFees(inst_id, serviceBean.getBatchFees().getDiv_id(), serviceBean.getBatchFees().getBatch_id());
+		studentList = studentList.stream().filter(x -> !studentIDList.contains(x.getStudent_id())).collect(Collectors.toList());
+		System.out.println(studentList);
+		if(studentList != null){
 		for (Student student : studentList) {
 			Student_Fees student_Fees = new Student_Fees();
 			student_Fees.setInst_id(inst_id);
@@ -194,6 +202,7 @@ public class FeesTransaction {
 			student_Fees.setFinal_fees_amt(batchFees.getBatch_fees());
 			student_Fees.setStudent_id(student.getStudent_id());
 			feesDB.saveStudentFees(student_Fees);
+		}
 		}
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
