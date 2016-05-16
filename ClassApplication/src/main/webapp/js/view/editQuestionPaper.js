@@ -122,6 +122,9 @@ $(document).ready(function(){
 						$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
 						$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
 					});					
+				}else{
+					$("[item_id='"+generateExamObject.item_id+"']").find(QUESTION).html('<div class="error">Questions are not available for criteria</div>');	
+					$("[item_id='"+generateExamObject.item_id+"']").find(QUESTION).removeData(QUESTION_ID);
 				}
 			}
 			handler.error = function(e){console.log(e);}
@@ -282,6 +285,27 @@ function loadSubjectAndTopicSelect(){
 	});
 }
 
+function loadSubjectRelatedToTopicSelect(){
+	var subjectId = $(this).val();
+	
+	var topicSelect = $(this).closest('.row').find(SELECT_TOPIC);
+	var topic = "<option value='-1'>Select topic</option>";
+	var topics = topicNSubject[subjectId]?topicNSubject[subjectId].topic:[];
+	$.each(topics,function(key,val){
+		topic = topic + "<option value='"+val.topicId+"'>"+val.topicName+"</option>";
+	});
+	topicSelect.empty();
+	topicSelect.append(topic);
+	
+	/*
+	$.each($(SELECT_SUBJECT),function(){
+		var that= $(this);
+		loadTopicSelect(that,topicNSubject[val] && topicNSubject[val].topic?topicNSubject[val].topic:[]);
+	});
+	loadTopicSelect(that,topicNSubject[val] && topicNSubject[val].topic?topicNSubject[val].topic:[]);
+	*/
+}
+
 function loadSubjectAndTopic(topicNSubjectAttr){
 	var subNTopic = {};
 	$.each(topicNSubjectAttr,function(key,val){
@@ -312,6 +336,7 @@ function loadTopicSelect(selectSub,topics){
 	$.each(topics,function(key,val){
 		topic = topic + "<option value='"+val.topicId+"'>"+val.topicName+"</option>";
 	});
+	topicSelect.empty();
 	topicSelect.append(topic);
 	var val = topicSelect.attr("value");
 	if(val==0){
@@ -380,7 +405,7 @@ function recursiveView(data,recursionLevel,dataArray){
 					class:"btn btn-default selectSubject btn-xs",
 					style:"width:100%;",
 					value:data[i].questionbank?data[i].questionbank.sub_id:-1
-				});
+				}).on('change',loadSubjectRelatedToTopicSelect);
 				
 				var subjectDiv = $("<div/>",{
 					class:"col-md-2"
