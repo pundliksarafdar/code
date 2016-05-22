@@ -282,9 +282,9 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("from Notes where notesid=:notesid and classid=:classid and divid=:divid and subid=:subid");
+			Query query = session.createQuery("from Notes where notesid=:notesid and inst_id=:inst_id and divid=:divid and subid=:subid");
 			query.setParameter("notesid", id);
-			query.setParameter("classid", inst_id);
+			query.setParameter("inst_id", inst_id);
 			query.setParameter("divid", div_id);
 			query.setParameter("subid", sub_id);
 			notesList = query.list();

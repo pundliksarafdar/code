@@ -17,6 +17,8 @@
 
  </style>
 <script type="text/javascript">
+var subject="";
+var division="";
 var batchDataArray = [];
 		/* Formatting function for row details - modify as you need */
 		function format ( d ) {
@@ -216,8 +218,8 @@ $(document).ready(function(){
 	});
 	
 	$("#notestable").on("click",".shownotes",function(){
-		var division=$("#division").val();
-		var subject=$("#subject").val();
+		/* var division=$("#division").val();
+		var subject=$("#subject").val(); */
 		$("form#actionform #division").val(division);
 		$("form#actionform #subject").val(subject);
 		$("form#actionform #notesid").val($(this).prop("id"));
@@ -230,8 +232,8 @@ $(document).ready(function(){
 	$("#submit").click(function(){
 		$("#subjecterror").html("");
 		$("#divisionerror").html("");
-		var subject=$("#subject").val();
-		var division=$("#division").val();
+		 subject=$("#subject").val();
+		 division=$("#division").val();
 		var flag=true;
 		if(subject=="-1"){
 			$("#subjecterror").html("Please select Subject");
@@ -259,9 +261,9 @@ $(document).ready(function(){
 						{ title: "Action",data:null,render:function(data,event,row){
 							return "<input type='hidden' class='notesname' value='"+row.name+"'>"+
 									"<input type='hidden' class='batch' value='"+row.batch+"'>"+
-									"<button class='btn btn-primary shownotes' id='"+row.notesid+"'>Open</button>"+
-									"<button class='btn btn-info edit' id='"+row.notesid+"'>Edit</button>"+
-									"<button class='btn btn-info deletenotes' id="+row.notesid+">Delete</button>";
+									"<button class='btn btn-primary btn-xs shownotes' id='"+row.notesid+"'>Open</button>&nbsp;"+
+									"<button class='btn btn-info btn-xs edit' id='"+row.notesid+"'>Edit</button>&nbsp;"+
+									"<button class='btn btn-danger btn-xs deletenotes' id="+row.notesid+">Delete</button>";
 							},sWidth:"20%"}
 					]
 					
@@ -283,8 +285,8 @@ $(document).ready(function(){
 	
 	$("#notestable").on("click",".save",function(){
 		var notesid = $(this).prop("id");
-		var subject=$("#subject").val();
-		var division=$("#division").val();
+		/* var subject=$("#subject").val();
+		var division=$("#division").val(); */
 		var notesname=$(this.closest("table")).find("#newnotesname").val();
 		var notesnameerror=$(this.closest("table")).find("#notesnameerror");
 		var batcherror=$(this.closest("table")).find("#batcherror");
@@ -332,8 +334,8 @@ $(document).ready(function(){
 	});
 	
 	$("#notestable").on("click",".deletenotes",function(){
-		var subject=$("#subject").val();
-		var division=$("#division").val();
+		/* var subject=$("#subject").val();
+		var division=$("#division").val(); */
 		var notes = {};
 		notes.notesid = $(this).prop("id");
 		notes.divid = division;
@@ -481,11 +483,11 @@ function UploadExam(){
 					<option value="-1">Select Subject</option>
 				</select>
 			</div>
-			<div class="col-md-3 batchDropDown">
+			<!-- <div class="col-md-3 batchDropDown">
 				<select name="batch" id="classownerUploadexamSelectBatchName" class="form-control" width="100px" disabled="disabled">
 					<option value="-1">Select Batch</option>
 				</select>
-			</div>
+			</div> -->
 			<div class="col-md-3 ">
 			<button class="btn btn-primary" id="submit">Submit</button>
 			</div>
