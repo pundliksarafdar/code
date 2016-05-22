@@ -35,6 +35,9 @@ var allbatches="";
 var globalnotesrowcounter=0;
 var noofrows=0;
 var deletedrows=[];
+var SUBJECT_DROPDOWN = ".subjectDropDown";	
+var BATCH_DROPDOWN = ".batchDropDown";
+var ADD_BUTTON = "#classownerUploadexamAddExam";
 function validate()
 {
 var file=document.getElementByID("myFile");
@@ -43,63 +46,77 @@ var file=document.getElementByID("myFile");
 }
 
 $(document).ready(function(){
-	$('input[type=radio][name=validforbatch]').change(function() {
-        if (this.value == 'all') {
-        	$( "#batch" ).prop( "disabled", true );
-        	$("#batchdiv").fadeOut();
-        }
-        else if (this.value == 'specific') {
-        	$( "#batch" ).prop( "disabled", false );
-        	$("#batchdiv").fadeIn();
-        }
-    });
-	
-	
-	$('#division').change(function(){
-		var division = $('#division').val();
-		$.ajax({
-			 
-			   url: "classOwnerServlet",
-			   data: {
-			    	 methodToCall: "getbatches",
-			    	 division: division
-			   		},
-			   type:"POST",
-			   success:function(data){
-				   var resultJson = JSON.parse(data);
-				   var batchids=resultJson.batchids.split(",");
-				   var batchnames=resultJson.batchnames.split(",");
-				   $("#batcherror").html("");
-				   var batchselect=$('#batch');
-				   var fieldset=$('#fieldset');
-				   fieldset.empty();
-				   batchselect.empty();
-				   $("#allbatches").val(batchids);
-				   if(batchids[0]!=""){
-					   var i=0;
-					   while(i<batchids.length){
-						//   batchselect.append("<option value="+batchids[i]+">"+batchnames[i]+"</option>");
-						   fieldset.append("<input type='checkbox' name='batch' id='batch' value='"+batchids[i]+"' >"+batchnames[i]+"<br>");
-						   i++;
-					   }
-					   
-				   }else{
-					   $("#batcherror").html("No Batch Present");
-				   }
-			   },
-				error:function(){
-			   		modal.launchAlert("Error","Error");
-			   	}
-			   });
+	$("select").on("change",function(e){
+		$(".alert-danger").hide();
 	});
+	
+	$("#classownerUploadexamDivisionName").on("change",function(e){
+		//$(SUBJECT_DROPDOWN).hide();
+		//$(BATCH_DROPDOWN).hide();
+		//$(ADD_BUTTON).hide();
+		if($(this).val()!=-1){
+			var uploadExam = new UploadExam();
+			uploadExam.getSubjectsInDivision($(this).val());
+			$("#divisionError").html("");
+			
+		}else{
+			$("#classownerUploadexamSubjectNameSelect").prop("disabled",true);
+			$("#classownerUploadexamSelectBatchName").prop("disabled",true);
+			$("#classownerUploadexamAddExam").prop("disabled",true);
+		}
+	});
+	
+	$("#classownerUploadexamSubjectNameSelect").on("change",function(e){
+		var uploadExam = new UploadExam();
+		var subjectId = $(this).val();
+		var divisionId = $("#classownerUploadexamDivisionName").val();
+		if(subjectId!="-1"){
+			$("#subjectError").html("");
+			uploadExam.getBatchFromDivisonNSubject(subjectId,divisionId);	
+		}else{
+			$("#batchError").html("");
+			$("#classownerUploadexamSelectBatchName").select2({data:batchDataArray,placeholder:"type batch name"});
+			$("#classownerUploadexamSelectBatchName").select2("val", "");
+			$("#classownerUploadexamSelectBatchName").prop("disabled",true);
+			
+		}
+	});
+	
+	$("#classownerUploadexamSubjectName").on("change",function(e){
+		var uploadExam = new UploadExam();
+		$(ADD_BUTTON).hide();
+		if($(this).val()!=-1){
+			$(ADD_BUTTON).show();
+		}
+	});
+	
+	
 	
 	$("#submit").click(function(event){
 	//	event.preventDefault();
-		var flag=true;
+	$("#divisionError").html("");
+	$("#subjectError").html("");
+	$("#batchError").html("");
+	var division = $("#classownerUploadexamDivisionName").val();
+	var subject = $("#classownerUploadexamSubjectNameSelect").val();
+	var batch = $("#classownerUploadexamSelectBatchName").val();
+	var flag=true;
 	var allnotesnames="";
 	var allnotesrowid="";
 	var i=0;
 	var filesize=0;
+	if(division == "-1"){
+		$("#divisionError").html("Select Class");
+		flag= false;
+	}
+	if(subject == "-1"){
+		$("#subjectError").html("Select Subject");
+		flag= false;
+	}
+	if(batch == "" || batch == null){
+		$("#batchError").html("Select Batch");
+		flag= false;
+	}
 	for(i=0;i<=globalnotesrowcounter;i++){
 		var internalflag=false;
 		for(var j=0;j<deletedrows.length;j++){
@@ -117,15 +134,12 @@ $(document).ready(function(){
 			allnotesnames=allnotesnames+','+notesname;
 			allnotesrowid=allnotesrowid+','+i;
 		}
-		var division=$("#division").val();
-		var subject=$("#subject").val();
 		var validforbatch=$("#validforbatch:checked").val();
 		//var batch=$("#batch").val();
 		var noteserror=$("#noteserror"+i);
 		var regex = /^[a-zA-Z0-9 ]*$/;
 		noteserror.html("");
 		var batchidmap;
-		var batch="";
 		
 		if(file==""){
 			noteserror.html("Please select file");
@@ -156,7 +170,9 @@ $(document).ready(function(){
 				    	 methodToCall: "validatenotesname",
 				    	 notes: allnotesnames,
 				    	 notesrowid:allnotesrowid,
-				    	 filesize:filesize
+				    	 filesize:filesize,
+				    	 division:division,
+				    	 subject:subject
 				   		},
 				   		async: false,
 				   type:"POST",
@@ -185,6 +201,26 @@ $(document).ready(function(){
 						   }
 						   flag=false;
 					   }
+					   
+					   if(flag==true){
+						   
+							
+							var formData = new FormData();
+							for(i=0;i<=globalnotesrowcounter;i++){
+							var file=$("#myfile"+i).prop('files')[0];
+							var notesname = $("#notesname"+i).val();
+								formData.append("uploadedFile"+i,file);
+								formData.append("notesname"+i,notesname);
+							}
+							var uri = "rest/commonservices/uploadNotes/"+globalnotesrowcounter+"/"+division+"/"+subject+"/"+batch;
+							var handlers = {};
+							handlers.success = function(e){
+								$.notify({message: 'Notes saved'},{type: 'success'});
+							};
+							handlers.error = function(e){};
+							rest.uploadNotes(uri,formData,handlers);
+							console.log(form);
+					   }
 					  
 				   },
 					error:function(){
@@ -202,6 +238,9 @@ $(document).ready(function(){
 			$("#noteslimitalert").modal("toggle");
 			}
 			event.preventDefault();
+		}else{
+			
+			
 		}
 			
 	
@@ -241,9 +280,121 @@ function showalert(){
 	
 	$("#notesaddedalert").modal('toggle');
 }
+function UploadExam(){
+	
+	var getSubjectsInDivision = function(division){
+	
+	$.ajax({
+		   url: "classOwnerServlet",
+		   data: {
+		    	 methodToCall: "getSubjectOfDivision",
+		    	 divisionId: division
+		   		},
+		   type:"POST",
+		   success:function(data){
+			   $("#classownerUploadexamSubjectNameSelect").removeAttr('disabled');
+			   displaySubjectDropDown(data);
+		   },
+			error:function(){
+		   		modal.launchAlert("Error","Error");
+		   	}
+		   });
+	}
+	
+	
+	var getBatchFromDivisonNSubject = function(subjectId,divisionId){
+	
+	$.ajax({
+		   url: "classOwnerServlet",
+		   data: {
+		    	 methodToCall: "getBatchesByDivisionNSubject",
+		    	 divisionId: divisionId,
+				 subjectId:subjectId
+		   		},
+		   type:"POST",
+		   success:function(data){
+			   console.log(data);
+			   displayBatchFromSubjectNDivision(data);
+		   },
+			error:function(){
+		   		modal.launchAlert("Error","Error");
+		   	}
+		   });
+	}
+	
+	var displaySubjectDropDown = function (data){
+		var selectOptionDropdown = "#classownerUploadexamSubjectNameSelect";
+		$(selectOptionDropdown).find("option:not(:first)").remove();
+		data = JSON.parse(data);
+		if(data.subjectnames.trim()!=="" || data.subjectids.trim()!==""){
+		var subjectnames = data.subjectnames.split(",");
+		var subjectids = data.subjectids.split(",");
+			for(subjectNameIndex in subjectnames){
+				console.log(subjectnames[subjectNameIndex]);
+				console.log(subjectids[subjectNameIndex]);
+				$("<option/>",{
+					value:subjectids[subjectNameIndex],
+					text:subjectnames[subjectNameIndex]
+				}).appendTo(selectOptionDropdown);
+			}
+			batchDataArray = [];
+			$("#batchError").html("");
+			$("#classownerUploadexamSelectBatchName").select2({data:batchDataArray,placeholder:"type batch name"});
+			$("#classownerUploadexamSelectBatchName").select2("val", "");
+			$("#classownerUploadexamSelectBatchName").prop("disabled",true);
+			
+		}else{
+			$("#classownerUploadexamSubjectNameSelect").prop("disabled",true);
+			batchDataArray = [];
+			$("#batchError").html("");
+			$("#classownerUploadexamSelectBatchName").select2({data:batchDataArray,placeholder:"type batch name"});
+			$("#classownerUploadexamSelectBatchName").select2("val", "");
+			$("#classownerUploadexamSelectBatchName").prop("disabled",true);
+		}
+		
+	}
+	
+	var displayBatchFromSubjectNDivision = function (data){
+		var selectOptionDropdown = "#classownerUploadexamSelectBatchName";
+		var classownerUploadexamSelectBatchNameMenu = "#classownerUploadexamSelectBatchNameMenu";
+		data = JSON.parse(data);
+		data = data.batchlist;
+		data = JSON.parse(data);
+		$(classownerUploadexamSelectBatchNameMenu).children().not(".staticMenu").remove();
+		$(classownerUploadexamSelectBatchNameMenu).find(".selectAllCheckbox").prop("checked",false);
+		if(data.length !== 0){
+		var batchDataArray = [];
+		
+		var index=0;
+		$.each(data,function(index,subjectData){
+			/* var batchName = subjectData.batch_name;
+			var batchId = subjectData.batch_id;
+			var optionMenu = '<li><a href="#"> <input id="checkButton'+index+'" type="checkbox" name="batch" value="'+batchId+'"><label for="checkButton'+index+'">'+batchName+'</label></a></li>'
+			$(classownerUploadexamSelectBatchNameMenu).append(optionMenu);
+			index++; */
+			var batchDataObject = {};
+			batchDataObject.id = subjectData.batch_id;
+			batchDataObject.text = subjectData.batch_name;
+			batchDataArray.push(batchDataObject);
+		});
+		$("#classownerUploadexamSelectBatchName").empty();
+		$("#classownerUploadexamSelectBatchName").select2({data:batchDataArray,placeholder:"type batch name",multiple: true});
+		$("#classownerUploadexamSelectBatchName").prop("disabled",false);
+		}else{
+			$("#classownerUploadexamSelectBatchName").prop("disabled",true);
+			$(".alert-danger").text("Subjects for selected batch are not added.").show();
+		}
+	}
+	
+	
+	this.getSubjectsInDivision = getSubjectsInDivision;
+	this.displaySubjectDropDown = displaySubjectDropDown;
+	this.getBatchFromDivisonNSubject = getBatchFromDivisonNSubject;
+	this.displayBatchFromSubjectNDivision = displayBatchFromSubjectNDivision;
+	}
 </script>
 </head>
-<body onload="showalert()">
+<body>
 <div>
 <%
 String notes=(String)request.getAttribute("notes");
@@ -271,21 +422,41 @@ if(notes!=null){
 
 </div>
 <%} %>
-<div class="container" style="margin-bottom: 5px">
-	<a type="button" class="btn btn-primary" href="choosesubject?forwardAction=addnotesoption" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
-</div>
-<form action="upload" method="post" enctype="multipart/form-data" role="form" id="form">
+<ul class="nav nav-tabs" style="border-radius:10px">
+  <li class="active"><a href="#addnotestab" data-toggle = "tab">Add Notes</a></li>
+  <li><a href="seenotes">View Notes</a></li>
+</ul>
+
+<div id="addnotestab">
+<div class="container" style="padding: 2%;background: #eee">
+<div class="row">
+			<div class="col-md-3">
+				<select name="division" id="classownerUploadexamDivisionName" class="form-control" width="100px">
+					<option value="-1">Select Class</option>
+					<c:forEach items="${requestScope.divisions}" var="division">
+						<option value="<c:out value="${division.divId}"></c:out>"><c:out value="${division.divisionName}"></c:out>&nbsp;<c:out value="${division.stream}"></c:out></option>
+					</c:forEach>							
+				</select>
+				<span id="divisionError" class="error"></span>
+			</div>
+			<div class="col-md-3 subjectDropDown">
+				<select name="subject" id="classownerUploadexamSubjectNameSelect" class="form-control" width="100px" disabled="disabled">
+					<option value="-1">Select Subject</option>
+				</select>
+				<span id="subjectError" class="error"></span>
+			</div>
+			<div class="col-md-3 batchDropDown">
+				<select name="batch" id="classownerUploadexamSelectBatchName" class="form-control" width="100px" disabled="disabled">
+					<option value="-1">Select Batch</option>
+				</select>
+				<span id="batchError" class="error"></span>
+			</div>
+		</div>
+		</div>
+<form action="javascript:void(0)" method="post" enctype="multipart/form-data" role="form" id="form">
 <input type="hidden" id="batch" name="batch" value="<c:out value="${batch}" ></c:out>">
 <input type="hidden" id="division" name="division" value="<c:out value="${division}" ></c:out>">
-<input type="hidden" id="subject" name="subject" value="<c:out value="${subject}" ></c:out>">
-<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
-		<div align="center" style="font-size: larger;"><u>Add Notes</u></div>
-	<div class="row">
-		<div class="alert alert-danger" style="padding-bottom: 10px;display:none">
-			 
-		</div>
-	</div>
-</div>		
+<input type="hidden" id="subject" name="subject" value="<c:out value="${subject}" ></c:out>">		
 <div class="container" id="basenotesdiv">
 	<table id="basenotestable" class="table table-striped">
 	<thead>
@@ -318,6 +489,7 @@ if(notes!=null){
   </div>
   </div>
 </form>
+</div>
 <div class="modal fade" id="noteslimitalert" tabindex="-1" role="dialog" 
    aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog">

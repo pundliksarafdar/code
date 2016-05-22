@@ -101,6 +101,20 @@ function REST(){
 			   error:handlers.error
 			   });
 	}
+	
+	this.uploadNotes = function(uri,formData,handlers,global){
+		
+		$.ajax({
+			   url: uri,
+			   type:"POST",
+			   data:formData,
+			   global:global,
+			   processData: false,
+			   contentType: false,
+			   success:handlers.success,
+			   error:handlers.error
+			   });
+	}
 }
 
 var rest = new REST(); 

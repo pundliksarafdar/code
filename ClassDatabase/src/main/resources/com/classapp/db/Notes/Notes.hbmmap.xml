@@ -4,28 +4,22 @@
 <!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.classapp.db.Notes.Notes" table="notes" catalog="classdb">
-        <!-- <id name="notesid" type="java.lang.Integer">
+        <id name="notesid" type="java.lang.Integer">
             <column name="notesid" />
-            <generator class="increment" />
-        </id> -->
-        <composite-id>
-    	<key-property name="notesid" column="notesid"></key-property>
-		<key-property name="divid" column="div_id"></key-property>
-		<key-property name="subid" column="sub_id"></key-property>
-		<key-property name="classid" column="class_id"></key-property>
-    	</composite-id>
+            <generator class="identity" />
+        </id>
         <property name="notespath" type="java.lang.String">
             <column name="notespath" length="100" not-null="true" unique="true"/>
         </property>
-       <!--  <property name="classid" type="java.lang.Integer">
-            <column name="class_id" length="100" not-null="false" unique="true"/>
+        <property name="inst_id" type="java.lang.Integer">
+            <column name="inst_id" length="100" not-null="false" unique="true"/>
         </property>
         <property name="divid" type="java.lang.Integer">
             <column name="div_id" length="100" not-null="false" unique="true"/>
         </property>
         <property name="subid" type="java.lang.Integer">
             <column name="sub_id" length="100" not-null="false" unique="true"/>
-        </property> -->
+        </property>
         <property name="name" type="java.lang.String">
             <column name="name" length="100" not-null="true" unique="true"/>
         </property>

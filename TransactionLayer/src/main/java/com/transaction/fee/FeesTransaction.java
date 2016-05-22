@@ -221,14 +221,14 @@ public class FeesTransaction {
 		try {
 			BeanUtils.copyProperties(batchFees, serviceBean.getBatchFees());
 			batchFees.setInst_id(inst_id);
-			batch_fees_id = feesDB.saveBatchFees(batchFees);
-		
+			 feesDB.updateBatchFees(batchFees);
+			 feesDB.deleteBatchFeesDistribution(inst_id, batchFees.getBatch_fees_id());
 		for (Iterator iterator = serviceBean.getBatchFeesDistribution().iterator(); iterator
 				.hasNext();) {
 			com.service.beans.BatchFeesDistribution batchFeesDistribution = (com.service.beans.BatchFeesDistribution) iterator
 					.next();
 			batchFeesDistribution.setInst_id(inst_id);
-			batchFeesDistribution.setBatch_fees_id(batch_fees_id);
+			batchFeesDistribution.setFees_id(batchFees.getFees_id());
 			BatchFeesDistribution feesDistribution = new BatchFeesDistribution();
 			BeanUtils.copyProperties(feesDistribution,batchFeesDistribution);
 			feesDB.saveBatchFeesDistribution(feesDistribution);

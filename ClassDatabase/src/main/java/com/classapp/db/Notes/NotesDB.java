@@ -21,7 +21,7 @@ public class NotesDB {
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
-		int notesID=getNotesNextID(notes.getSubid(), notes.getClassid(), notes.getDivid());
+		int notesID=getNotesNextID(notes.getSubid(), notes.getInst_id(), notes.getDivid());
 		notes.setNotesid(notesID);
 			session.save(notes);
 			transaction.commit();
@@ -165,6 +165,34 @@ public List<Notes> getNotesPath(int divid,int subid,int classid,String batchids)
 				
 		return notesList;
 	}
+
+public List<Notes> getNotesPath(int divid,int subid,int classid) {
+	
+	Session session = null;
+	Transaction transaction = null;
+	List<Notes> notesList = null;
+	String queryString="from Notes where inst_id=:inst_id and divid=:divid and subid=:subid";
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery(queryString);
+		query.setParameter("inst_id", classid);
+		query.setParameter("divid", divid);
+		query.setParameter("subid", subid);
+		
+		notesList = query.list();
+		
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+			
+	return notesList;
+}
 	
 public int getNotescount(int divid,int subid,int classid,String batchids) {
 		
@@ -274,7 +302,7 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 		
 	}
 	
-	public  boolean validatenotesname(String notesname,int regID) {
+	public  boolean validatenotesname(String notesname,int inst_id,int division,int subject) {
 		Session session = null;
 		Transaction transaction = null;
 		List<Notes> notesList = null;
@@ -282,9 +310,11 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("from Notes where name=:notesname and classid=:classid" );
+			Query query = session.createQuery("from Notes where name=:notesname and inst_id=:inst_id and divid = :divid and subid = :subid" );
 			query.setParameter("notesname", notesname);
-			query.setParameter("classid", regID);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("divid", division);
+			query.setParameter("subid", subject);
 			notesList = query.list();
 			if (notesList.size()>0) {
 				return true;
@@ -302,7 +332,7 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 		
 	}
 	
-	public  boolean validatenotesnamebyID(String notesname,int regID,int notesID) {
+	public  boolean validateUpdateNotesName(String notesname,int inst_id,int notesID,int div_id,int sub_id) {
 		Session session = null;
 		Transaction transaction = null;
 		List<Notes> notesList = null;
@@ -310,9 +340,12 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("from Notes where name=:notesname and notesid!=:notesid" );
+			Query query = session.createQuery("from Notes where name=:notesname and notesid!=:notesid and inst_id=:inst_id and divid = :divid and subid =:subid" );
 			query.setParameter("notesname", notesname);
 			query.setParameter("notesid", notesID);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("divid", div_id);
+			query.setParameter("subid", sub_id);
 			notesList = query.list();
 			if (notesList.size()>0) {
 				return true;
@@ -339,11 +372,11 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("update Notes set name=:notesname , batch=:batch where notesid=:notesid and classid=:classid and divid=:divid and subid=:subid" );
+			Query query = session.createQuery("update Notes set name=:notesname , batch=:batch where notesid=:notesid and inst_id=:inst_id and divid=:divid and subid=:subid" );
 			query.setParameter("notesname", notesname);
 			query.setParameter("batch", batchids);
 			query.setParameter("notesid", notesid);
-			query.setParameter("classid", inst_id);
+			query.setParameter("inst_id", inst_id);
 			query.setParameter("divid", div_id);
 			query.setParameter("subid", sub_id);
 			query.executeUpdate();
@@ -368,9 +401,9 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("delete from Notes where notesid=:notesid and classid=:classid and divid=:divid and subid=:subid" );
+			Query query = session.createQuery("delete from Notes where notesid=:notesid and inst_id=:inst_id and divid=:divid and subid=:subid" );
 			query.setParameter("notesid", notesid);
-			query.setParameter("classid", inst_id);
+			query.setParameter("inst_id", inst_id);
 			query.setParameter("divid", div_id);
 			query.setParameter("subid", sub_id);
 			query.executeUpdate();

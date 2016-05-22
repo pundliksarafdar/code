@@ -2053,19 +2053,21 @@ public class ClassOwnerServlet extends HttpServlet{
 	String notesnamestatus="";
 	if("".equals(overlappedIds)){
 	String classes=req.getParameter("classes");
+	int division=Integer.parseInt(req.getParameter("division"));
+	int subject=Integer.parseInt(req.getParameter("subject"));
 	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 	NotesTransaction notesTransaction=new NotesTransaction();
-	int classid=userBean.getRegId();
+	int inst_id=userBean.getRegId();
 	if(classes!="" && classes !=null){
-		classid=Integer.parseInt(classes);
+		inst_id=Integer.parseInt(classes);
 	}
-	InstituteStats instituteStats=instituteStatTransaction.getStats(classid);
+	InstituteStats instituteStats=instituteStatTransaction.getStats(inst_id);
 	if(instituteStats.getAvail_memory()>0 && (instituteStats.getUsed_memory()+Double.parseDouble(filesize))<=instituteStats.getAlloc_memory())
 	{
 		for (int i = 0; i < notes.length; i++) {
 		
 	
-	boolean flag=notesTransaction.validatenotesname(notes[i].trim(), classid);
+	boolean flag=notesTransaction.validatenotesname(notes[i].trim(), inst_id,division,subject);
 	if(flag){
 		if("".equals(notesnamestatus)){
 		notesnamestatus=notesrowid[i];
@@ -2130,7 +2132,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	respObject.addProperty(STATUS, "success");
 	
 }else if("fetchnotes".equals(methodToCall)){
-	/*String subject=(String) req.getParameter("subject");
+	String subject=(String) req.getParameter("subject");
 	String division=(String) req.getParameter("division");
 	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 	NotesTransaction notesTransaction=new NotesTransaction();
@@ -2158,7 +2160,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	respObject.addProperty("notesnames", notesname.toString());
 	respObject.addProperty("notesids", notesids.toString());
 	respObject.addProperty("notespaths", notespaths.toString());
-	respObject.addProperty(STATUS, "success");*/
+	respObject.addProperty(STATUS, "success");
 	
 }else if("getstudentnotes".equals(methodToCall)){
 	String subject=(String) req.getParameter("subject");
@@ -2280,7 +2282,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	respObject.addProperty(STATUS, "success");
 	
 }else if("updatenotes".equals(methodToCall)){
-	String notesid=(String) req.getParameter("notesid");
+	/*String notesid=(String) req.getParameter("notesid");
 	String batchids=(String) req.getParameter("batchids");
 	String notesname=(String) req.getParameter("notesname");
 	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
@@ -2291,7 +2293,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	}else{
 		respObject.addProperty("duplicate", "true");
 	}
-	respObject.addProperty(STATUS, "success");
+	respObject.addProperty(STATUS, "success");*/
 	
 }else if("deletenotes".equals(methodToCall)){
 	String notesid=(String) req.getParameter("notesid");
@@ -3102,9 +3104,9 @@ public class ClassOwnerServlet extends HttpServlet{
 		int pageno = Integer.parseInt(req.getParameter("pageno"));
 		Notes notes=(Notes) req.getSession().getAttribute("notes");
 		NotesTransaction notesTransaction=new NotesTransaction();
-		String filename=notesTransaction.getNotepathById(notes.getNotesid(),notes.getClassid(),notes.getSubid(),notes.getDivid());
+		String filename=notesTransaction.getNotepathById(notes.getNotesid(),notes.getInst_id(),notes.getSubid(),notes.getDivid());
 		UserStatic userStatic = userBean.getUserStatic();
-		String storagePath = com.config.Constants.STORAGE_PATH+File.separator+notes.getClassid();
+		String storagePath = com.config.Constants.STORAGE_PATH+File.separator+notes.getInst_id();
 		userStatic.setStorageSpace(storagePath);
 		String path=userStatic.getNotesPath()+File.separator+notes.getSubid()+File.separator+notes.getDivid()+File.separator+filename;
 		File file = new File(path);

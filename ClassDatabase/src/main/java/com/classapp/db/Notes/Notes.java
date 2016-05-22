@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 public class Notes implements Serializable{
 int notesid;
 String notespath;
-int classid;
+int inst_id;
 int divid;
 int subid;
 String name;
@@ -50,11 +50,11 @@ public String getNotespath() {
 public void setNotespath(String notespath) {
 	this.notespath = notespath;
 }
-public int getClassid() {
-	return classid;
+public int getInst_id() {
+	return inst_id;
 }
-public void setClassid(int classid) {
-	this.classid = classid;
+public void setInst_id(int inst_id) {
+	this.inst_id = inst_id;
 }
 public int getDivid() {
 	return divid;

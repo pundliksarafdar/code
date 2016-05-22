@@ -142,13 +142,13 @@ siteMapApp.controller("SiteMapController",function($scope){
       </li>
     <%}%>
 <%--     <cx:versionswitch switchId="3"> --%>
-    	<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
+    	<!-- <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
     	<ul class="dropdown-menu">
-	            <li><a class="menuoptions" href="choosesubject?forwardAction=addnotesoption">Add Notes</a></li>
+	            <li><a class="menuoptions" href="addnotesoption">Add Notes</a></li>
 	            <li><a class="menuoptions" href="/choosesubject?forwardAction=seenotes&batchDefault=true">See/Update All Notes</a></li>  
 	         </ul>
     	
-    	</li>
+    	</li> -->
     <%-- </cx:versionswitch> --%>
     </ul>
 	<ul class="nav navbar-nav navbar-right">
@@ -262,6 +262,24 @@ siteMapApp.controller("SiteMapController",function($scope){
                             </div>
                             <div class="icontext">
                                 Teacher
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+            </a>
+        </div>
+        <div class="col-sm-2 col-xs-4">
+            <a href="addnotesoption">
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Notes
                             </div>
                             
                         </div>

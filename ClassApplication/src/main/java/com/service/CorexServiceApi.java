@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -28,9 +30,14 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.spi.HttpRequest;
 
+import com.classapp.db.Notes.Notes;
+import com.classapp.login.UserStatic;
 import com.config.Constants;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.transaction.institutestats.InstituteStatTransaction;
+import com.transaction.notes.NotesTransaction;
+import com.user.UserBean;
 
 @Path("/commonservices")
 public class CorexServiceApi extends ServiceBase{
@@ -194,7 +201,7 @@ public class CorexServiceApi extends ServiceBase{
 	}
 
 	//save to somewhere
-	private void writeFile(byte[] content, String filename) throws IOException {
+	private double writeFile(byte[] content, String filename) throws IOException {
 
 		File file = new File(filename);
 
@@ -207,7 +214,7 @@ public class CorexServiceApi extends ServiceBase{
 		fop.write(content);
 		fop.flush();
 		fop.close();
-
+		return ((double)(file.length())/(double)(1024 * 1024));
 	}
 	
 	
@@ -257,6 +264,85 @@ public class CorexServiceApi extends ServiceBase{
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.addProperty("fileid", fileName);
 		//jsonObject.
+		return Response.status(200).entity(jsonObject.toString()).type(MediaType.APPLICATION_JSON).build();
+	}
+	
+	@POST
+	@Path("/uploadNotes/{notescount}/{division}/{subject}/{batch}")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.MULTIPART_FORM_DATA)
+	public Response uploadNotes(MultipartFormDataInput input,@PathParam("notescount") int notescount,@PathParam("division") int division,
+			@PathParam("subject") int subject,@PathParam("batch") String batch){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+	      UserStatic userStatic = userBean.getUserStatic();
+	    String destPath=  userStatic.getNotesPath()+File.separator+subject+File.separator+division;
+		for(int i=0;i<=notescount;i++){
+		String fileName="";
+		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+		List<InputPart> inputParts = uploadForm.get("uploadedFile"+i);
+		List<InputPart> notesDesc = uploadForm.get("notesname"+i);
+				String fileDesc = "";
+		for (InputPart inputPart : notesDesc) {
+			try {
+		 fileDesc = inputPart.getBody(String.class,null);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		for (InputPart inputPart : inputParts) {
+
+			 try {
+				 	
+				MultivaluedMap<String, String> header = inputPart.getHeaders();
+				fileName = getFileName(header);
+				
+				//Extract file extention and replace filename with fileid
+				int extentionStart = fileName.lastIndexOf(".");
+				String fileId = UUID.randomUUID().toString()+getRegId();
+				fileName = fileDesc+fileName.substring(extentionStart);
+				//convert the uploaded file to inputstream
+				InputStream inputStream = inputPart.getBody(InputStream.class,null);
+
+				byte [] bytes = IOUtils.toByteArray(inputStream);
+					
+				//constructs upload file path
+				
+				//create image tempfolder if not exist
+				String imgTempFolder = destPath+ File.separatorChar+ "imageTemp";
+				File file = new File(destPath);
+				if(!file.exists()){
+					file.mkdirs();
+				}
+				
+				//Above generated folder will be used to save the image temparirily on successfull call files will be moved to main folder and old files will be deleted
+				String filePath = destPath + File.separatorChar + fileName ;
+					
+				double fileSize = writeFile(bytes,filePath);
+				System.out.println(fileSize);
+				 Notes notes=new Notes();
+				 notes.setInst_id(userBean.getRegId());
+				 notes.setDivid(division);
+		    	 notes.setNotespath(fileName);
+		    	 notes.setSubid(subject);
+		    	 notes.setName(fileDesc);
+		    	 notes.setAddedby(userBean.getRegId());
+		    	 notes.setBatch(batch);
+		    	 notes.setTime(new Timestamp(new Date().getTime()));
+		    	 NotesTransaction notesTransaction=new NotesTransaction();
+		    	 notesTransaction.addNotes(notes);
+		    	 InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
+		    	 instituteStatTransaction.increaseUsedMemory(userBean.getRegId(), fileSize);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			}
+		}
+		JsonObject jsonObject = new JsonObject();
+		/*jsonObject.addProperty("fileid", fileName);*/
+		//jsonObject.
+		
 		return Response.status(200).entity(jsonObject.toString()).type(MediaType.APPLICATION_JSON).build();
 	}
 }

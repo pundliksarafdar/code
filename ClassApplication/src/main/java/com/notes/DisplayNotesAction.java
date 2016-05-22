@@ -97,7 +97,7 @@ public class DisplayNotesAction extends BaseAction{
 		}
 		
 		Notes notes=new Notes();
-		notes.setClassid(inst_id);
+		notes.setInst_id(inst_id);
 		notes.setSubid(Integer.parseInt(subject));
 		notes.setDivid(Integer.parseInt(division));
 		notes.setNotesid(notesid);

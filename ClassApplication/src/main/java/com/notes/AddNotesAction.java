@@ -97,11 +97,11 @@ public class AddNotesAction extends BaseAction{
 	    	 FileUtils.copyFile(myFile[j], destFile);
 	    	 double filesize=(myFile[j].length()/1024)/1024;
 	    	 if(userBean.getRole()==2){
-	    		 notes.setClassid(Integer.parseInt(institute));
+	    		 notes.setInst_id(Integer.parseInt(institute));
 	    		 instituteStatTransaction.increaseUsedMemory(Integer.parseInt(institute), filesize);
 	    	 }else{
 	    		 instituteStatTransaction.increaseUsedMemory(userBean.getRegId(), filesize);
-	    	 notes.setClassid(userBean.getRegId());
+	    	 notes.setInst_id(userBean.getRegId());
 	    	 }
 	    	 notes.setDivid(Integer.parseInt(division));
 	    	 notes.setNotespath(DBPAth+notesname[j]+".pdf");
@@ -120,7 +120,7 @@ public class AddNotesAction extends BaseAction{
 	    	 NotificationGlobalTransation notificationGlobalTransation=new NotificationGlobalTransation();
 	    	 while(i<batchids.length)
 	    	 {
-	    		 notificationGlobalTransation.sendAddNotesNotification(subject, batchids[i],Integer.parseInt(division),notes.getClassid());
+	    		 notificationGlobalTransation.sendAddNotesNotification(subject, batchids[i],Integer.parseInt(division),notes.getInst_id());
 	    		 i++;
 	    	 }
 	    	 request.setAttribute("division", division);

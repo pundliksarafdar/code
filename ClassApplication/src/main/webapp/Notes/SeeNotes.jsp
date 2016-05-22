@@ -17,6 +17,25 @@
 
  </style>
 <script type="text/javascript">
+var batchDataArray = [];
+		/* Formatting function for row details - modify as you need */
+		function format ( d ) {
+		    // `d` is the original data object for the row
+		    console.log("Row Data"+d);
+		    var selectedBatches = d.batch.split(",");
+		    var htmlString = '<table class="table editTable" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+		        '<tr>'+
+		            '<td>Notes name:</td>'+
+		            '<td><input type="text" value='+d.name+' id="newnotesname" class="form-control"><span id="notesnameerror" class="error"></span></td>';
+		        htmlString = htmlString + '<td><select multiple class="form-control" id="batches"></select><br><span id="batcherror" class="error"></span></td>';
+		        htmlString = htmlString + ''+
+		            '<td><input type="button" class="btn btn-success save" value="save" id='+d.notesid+'></td>'+
+		        '</tr>'+
+		    '</table>';
+		    return htmlString;
+		}
+
+		
 function validate()
 {
 var file=document.getElementByID("myFile");
@@ -26,7 +45,9 @@ alert(file);
 var globalnotesid="";
 var globaldivision="";
 var globalsubject="";
-
+var SUBJECT_DROPDOWN = ".subjectDropDown";	
+var BATCH_DROPDOWN = ".batchDropDown";
+var ADD_BUTTON = "#classownerUploadexamAddExam";
 function fetchnotes(){
 
 	$.ajax({
@@ -53,7 +74,7 @@ function fetchnotes(){
 				  var notestable=$("#notestable");
 				  if(notesids[0]!=""){
 					  while(notesids.length>i){
-						  notestable.append("<tr><td>"+(i+1)+"</td><td>"+notesname[i]+"</td><td><a href='shownotes.action?notesid="+notesids[i]+"'>Click me</a></td><td><button class='btn btn-info' id='edit' onclick='editnotes("+notesids[i]+")'>Edit</button></td><td><button class='btn btn-info' id='edit' onclick='deletenotes("+notesids[i]+")'>Delete</button></td></tr>");
+						  notestable.append("<tr><td>"+(i+1)+"</td><td>"+notesname[i]+"</td><td><a href='shownotes.action?notesid="+notesids[i]+"'>Click me</a></td><td><button class='btn btn-info' id='edit' onclick='editnotes("+notesids[i]+")'>Edit</button></td><td><button class='btn btn-info deletenotes' id='"+notesids[i]+"'>Delete</button></td></tr>");
 						  i++;
 					  }
 					  $("#notestable").show();
@@ -122,38 +143,83 @@ function editnotes(notesid){
 }
 
 function deletenotes(notesid){
-	$("form#actionform #notesid").val(notesid);
-	$("form#actionform #actionname").val("deletenotes");
-	$("#actionform").prop("action","seenotes");
-	$("#notesdeleteconfirmmodal").modal("toggle");
-	//$("#actionform").submit();
-	/* $.ajax({
-		 
-		   url: "classOwnerServlet",
-		   data: {
-		    	 methodToCall: "deletenotes",
-		    	 notesid: notesid
-		    	 
-		   		},
-		   type:"POST",
-		   success:function(data){
-			   var resultJson = JSON.parse(data);
-			   fetchnotes();
-			   $("#deletenotesalert").modal('toggle');
-		   },
-			error:function(){
-		   		modal.launchAlert("Error","Error");
-		   	}
-		   }); */
+	var subject=$("#subject").val();
+	var division=$("#division").val();
+	var notes = {};
+	notes.notesid = notesid;
+	notes.divid = division;
+	notes.subid = subject;
+	var handlers = {};
+	handlers.success = function(data){
+		
+	};
+	handlers.error = function(){};
+	rest.post("rest/classownerservice/deleteNotes",handlers,JSON.stringify(notes));
 }
 
 
 $(document).ready(function(){
+	
+	     
+	    // Add event listener for opening and closing details
+	    $('#notestable').on('click', '.edit', function () {
+	        var tr = $(this).closest('tr');
+	        var table = $('#notestable').DataTable();
+	        var row = table.row( tr );
+	 
+	        if ( row.child.isShown() ) {
+	            // This row is already open - close it
+	            row.child.hide();
+	            tr.removeClass('shown');
+	        }
+	        else {
+	            // Open this row
+	            row.child( format(row.data()) ).show();
+	            tr.addClass('shown');
+	            var selectedbatch = row.data().batch.split(",");
+	            $(tr.next("tr")).find("select").select2({data:batchDataArray,placeholder:"Select Batches"}).val(selectedbatch).change();
+	        }
+	    } );
+	$("#division").on("change",function(e){
+		//$(SUBJECT_DROPDOWN).hide();
+		//$(BATCH_DROPDOWN).hide();
+		//$(ADD_BUTTON).hide();
+		if($(this).val()!=-1){
+			var uploadExam = new UploadExam();
+			uploadExam.getSubjectsInDivision($(this).val());
+		}else{
+			$("#subject").prop("disabled",true);
+			$("#classownerUploadexamBatchName").prop("disabled",true);
+			$("#classownerUploadexamAddExam").prop("disabled",true);
+		}
+	});
+	
+	$("#subject").on("change",function(e){
+		var uploadExam = new UploadExam();
+		var subjectId = $(this).val();
+		var divisionId = $("#division").val();
+		if(subjectId!="-1"){
+			uploadExam.getBatchFromDivisonNSubject(subjectId,divisionId);	
+		}
+	});
+	
+	$("#classownerUploadexamSubjectName").on("change",function(e){
+		var uploadExam = new UploadExam();
+		$(ADD_BUTTON).hide();
+		if($(this).val()!=-1){
+			$(ADD_BUTTON).show();
+		}
+	});
+	
 	$("#notesdeleteconfirm").click(function(){
 		$("#actionform").submit();
 	});
 	
-	$(".shownotes").on("click",function(){
+	$("#notestable").on("click",".shownotes",function(){
+		var division=$("#division").val();
+		var subject=$("#subject").val();
+		$("form#actionform #division").val(division);
+		$("form#actionform #subject").val(subject);
 		$("form#actionform #notesid").val($(this).prop("id"));
 		$("#actionform").prop("action","shownotes");
 		var formData = $("#actionform").serialize();
@@ -179,82 +245,56 @@ $(document).ready(function(){
 			globaldivision=division;
 			globalsubject=subject;
 			
-		$.ajax({
-			 
-			   url: "classOwnerServlet",
-			   data: {
-			    	 methodToCall: "fetchnotes",
-			    	 division: division,
-			    	 subject:subject
-			   		},
-			   type:"POST",
-			   success:function(data){
-				   var resultJson = JSON.parse(data);
-				   var notesname=resultJson.notesnames.split(",");
-				   var notesids=resultJson.notesids.split(",");
-				   var notespaths=resultJson.notespaths.split(",");
-				   var table=document.getElementById("notestable");
-					  var rowCount=table.rows.length;
-					  for (var x=rowCount-1; x>0; x--) {
-						  table.deleteRow(x);
-					   }
-					  var i=0;
-					 
-					  var notestable=$("#notestable");
-					  if(notesids[0]!=""){
-						  while(notesids.length>i){
-							  notestable.append("<tr><td>"+(i+1)+"</td><td>"+notesname[i]+"</td><td><a href='shownotes.action?notesid="+notesids[i]+"'>Click me</a></td><td><button class='btn btn-info' id='edit' onclick='editnotes("+notesids[i]+")'>Edit</button></td><td><button class='btn btn-info' id='edit' onclick='deletenotes("+notesids[i]+")'>Delete</button></td></tr>");
-							  i++;
-						  }
-						  $("#notestable").show();
-						  
-					  }else{
-						  $("#notesnotavailable").modal('toggle');
-						  $("#notestable").hide();
-					  }
-			   },
-				error:function(){
-			   		modal.launchAlert("Error","Error");
-			   	}
-			   });
+			var handlers = {};
+			handlers.success = function(data){
+				var dataTable = $('#notestable').DataTable({
+					bDestroy:true,
+					data: data,
+					lengthChange: false,
+					columns: [
+						{title:"#",data:null},
+						{ title: "Name",data:null,render:function(data,event,row){
+							return "<div class='defaultName'>"+row.name+"</div>";
+						},sWidth:"70%"},
+						{ title: "Action",data:null,render:function(data,event,row){
+							return "<input type='hidden' class='notesname' value='"+row.name+"'>"+
+									"<input type='hidden' class='batch' value='"+row.batch+"'>"+
+									"<button class='btn btn-primary shownotes' id='"+row.notesid+"'>Open</button>"+
+									"<button class='btn btn-info edit' id='"+row.notesid+"'>Edit</button>"+
+									"<button class='btn btn-info deletenotes' id="+row.notesid+">Delete</button>";
+							},sWidth:"20%"}
+					]
+					
+				});
+				
+				 dataTable.on( 'order.dt search.dt', function () {
+		        dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+		            cell.innerHTML = i+1;
+					});
+				}).draw();
+				
+			}
+			handlers.error = function(){
+				
+			}
+			rest.deleteItem("rest/classownerservice/getNotes/"+division+"/"+subject,handlers);
 		}
 	});
 	
-	$(".page").on("click",function(e){
-		$("form#paginateform #currentPage").val($(this).text());
-	//	$("#totalmarks").val($("#temptotalmarks").html());
-	//	$("#addedIds").val(addedIds);
-	//	$("#removedIds").val(removedIds);
-		$("#paginateform").submit();
-		e.preventDefault();
-	});
-	
-	$(".start").on("click",function(e){
-		$("form#paginateform #currentPage").val("1");
-	//	$("#totalmarks").val($("#temptotalmarks").html());
-	//	$("#addedIds").val(addedIds);
-	//	$("#removedIds").val(removedIds);
-		$("#paginateform").submit();
-		e.preventDefault();
-	});
-	
-	$(".end").on("click",function(e){
-		$("form#paginateform #currentPage").val($("#totalPage").val());
-	//	$("#totalmarks").val($("#temptotalmarks").html());
-	//	$("#addedIds").val(addedIds);
-	//	$("#removedIds").val(removedIds);
-		$("#paginateform").submit();
-		e.preventDefault();
-	});
-	
-	$("#savenotes").click(function(){
-		var notesname=$("#newnotesname").val();
-		var notesnameerror=$("#notesnameerror");
+	$("#notestable").on("click",".save",function(){
+		var notesid = $(this).prop("id");
+		var subject=$("#subject").val();
+		var division=$("#division").val();
+		var notesname=$(this.closest("table")).find("#newnotesname").val();
+		var notesnameerror=$(this.closest("table")).find("#notesnameerror");
+		var batcherror=$(this.closest("table")).find("#batcherror");
 		var batchidmap;
-		var batchids="";
+		var batchids=$(this.closest("table")).find("#batches").val();
 		var regex = /^[a-zA-Z0-9 ]*$/;
 		var flag=true;
+		var that = this;
 		notesnameerror.html("");
+		batcherror.html("");
 		if(notesname==""){
 			notesnameerror.html("Please enter notes name");
 			flag=false;
@@ -262,156 +302,202 @@ $(document).ready(function(){
 			notesnameerror.html("Please enter valid notes name (No special characher allowed) ");
 			flag=false;
 		}
-		batchidmap=$("input[name='batches']:checked").map(function() {
-			return this.value;
-		});
 		
-		var i=0;
-		while(i<batchidmap.size())
-			{
-			if(i==0)
-				{
-				batchids=batchids+batchidmap[0]+"";
-				}else{
-					batchids=batchids+","+batchidmap[i];
-				}
-			i++;
-			}
+		if(batchids == null){
+			batcherror.html("Please select batch");
+			flag=false;
+		}
+		
 		if(flag==true){
-			$("form#actionform #newbatch").val(batchids);
-			$("form#actionform #actionname").val("editnames");
-			 $("form#actionform #notesname").val( $("#newnotesname").val());
-			$("form#actionform #notesid").val(globalnotesid);
-			$("#actionform").prop("action","seenotes");
-			$("#actionform").submit();
-		/* $.ajax({
-			 
-			   url: "classOwnerServlet",
-			   data: {
-			    	 methodToCall: "updatenotes",
-			    	 batchids: batchids,
-			    	 notesid:globalnotesid,
-			    	 notesname:notesname
-			   		},
-			   type:"POST",
-			   success:function(data){
-				   var resultJson = JSON.parse(data);
-				   var duplicate=resultJson.duplicate;
-				   if(duplicate==null){
-				   $("#editnotes").modal('hide');
-				   fetchnotes();
-				  $("#notesupdated").modal('toggle');
-				   }else{
-					   notesnameerror.html("Please enter different notes name");
-				   }
-			   },
-			   error:function(){
-			   		modal.launchAlert("Error","Error");
-			   	}
-			   }); */
+			var notes = {};
+			notes.notesid = notesid;
+			notes.name = notesname;
+			notes.divid = division;
+			notes.subid = subject;
+			notes.batch = batchids.join(",");
+			var handlers = {};
+			handlers.success = function(data){
+				if(data == true){
+					notesnameerror.html("Notes name already exists,Please enter different names");
+				}else{
+					$.notify({message: 'Notes updated successfully'},{type: 'success'});
+					$($($(that.closest("table")).closest("tr")).prev("tr")).find(".defaultName").html(notesname);
+				}
+			};
+			handlers.error = function(){};
+			rest.post("rest/classownerservice/updateNotes",handlers,JSON.stringify(notes));
+			
 			   
 		}
 	});
 	
+	$("#notestable").on("click",".deletenotes",function(){
+		var subject=$("#subject").val();
+		var division=$("#division").val();
+		var notes = {};
+		notes.notesid = $(this).prop("id");
+		notes.divid = division;
+		notes.subid = subject;
+		var that = this;
+		var handlers = {};
+		handlers.success = function(data){
+			var table = $("#notestable").DataTable();
+			var editTable = $($(that.closest("tr")).next("tr")).find(".editTable")
+			if(editTable.length > 0){
+				$($(that.closest("tr")).next("tr")).addClass('removeRow');
+			}
+			$(that.closest("tr")).addClass('removeRow');
+			table.row('.removeRow').remove().draw( false );
+		};
+		handlers.error = function(){
+			console.log("error");
+		};
+		rest.post("rest/classownerservice/deleteNotes",handlers,JSON.stringify(notes));
+	});
+	
+	
 });
+
+function UploadExam(){
+	
+	var getSubjectsInDivision = function(division){
+	
+	$.ajax({
+		   url: "classOwnerServlet",
+		   data: {
+		    	 methodToCall: "getSubjectOfDivision",
+		    	 divisionId: division
+		   		},
+		   type:"POST",
+		   success:function(data){
+			   $("#subject").removeAttr('disabled');
+			   displaySubjectDropDown(data);
+		   },
+			error:function(){
+		   		modal.launchAlert("Error","Error");
+		   	}
+		   });
+	}
+	
+	
+	var getBatchFromDivisonNSubject = function(subjectId,divisionId){
+	
+	$.ajax({
+		   url: "classOwnerServlet",
+		   data: {
+		    	 methodToCall: "getBatchesByDivisionNSubject",
+		    	 divisionId: divisionId,
+				 subjectId:subjectId
+		   		},
+		   type:"POST",
+		   success:function(data){
+			   console.log(data);
+			   displayBatchFromSubjectNDivision(data);
+		   },
+			error:function(){
+		   		modal.launchAlert("Error","Error");
+		   	}
+		   });
+	}
+	
+	var displaySubjectDropDown = function (data){
+		var selectOptionDropdown = "#subject";
+		$(selectOptionDropdown).find("option:not(:first)").remove();
+		data = JSON.parse(data);
+		if(data.subjectnames.trim()!=="" || data.subjectids.trim()!==""){
+		var subjectnames = data.subjectnames.split(",");
+		var subjectids = data.subjectids.split(",");
+			for(subjectNameIndex in subjectnames){
+				console.log(subjectnames[subjectNameIndex]);
+				console.log(subjectids[subjectNameIndex]);
+				$("<option/>",{
+					value:subjectids[subjectNameIndex],
+					text:subjectnames[subjectNameIndex]
+				}).appendTo(selectOptionDropdown);
+			}
+		}else{
+			$("#subject").prop("disabled",true);
+			$("#classownerUploadexamBatchName").prop("disabled",true);
+		}
+		
+	}
+	
+	var displayBatchFromSubjectNDivision = function (data){
+		var selectOptionDropdown = "#classownerUploadexamBatchName";
+		var classownerUploadexamBatchNameMenu = "#classownerUploadexamBatchNameMenu";
+		data = JSON.parse(data);
+		data = data.batchlist;
+		data = JSON.parse(data);
+		$(classownerUploadexamBatchNameMenu).children().not(".staticMenu").remove();
+		$(classownerUploadexamBatchNameMenu).find(".selectAllCheckbox").prop("checked",false);
+		if(data.length !== 0){
+		 batchDataArray = [];
+		
+		var index=0;
+		$.each(data,function(index,subjectData){
+			/* var batchName = subjectData.batch_name;
+			var batchId = subjectData.batch_id;
+			var optionMenu = '<li><a href="#"> <input id="checkButton'+index+'" type="checkbox" name="batch" value="'+batchId+'"><label for="checkButton'+index+'">'+batchName+'</label></a></li>'
+			$(classownerUploadexamBatchNameMenu).append(optionMenu);
+			index++; */
+			var batchDataObject = {};
+			batchDataObject.id = subjectData.batch_id;
+			batchDataObject.text = subjectData.batch_name;
+			batchDataArray.push(batchDataObject);
+		});
+		$("#classownerUploadexamSelectBatchName").select2({data:batchDataArray,placeholder:"type batch name"});
+		$("#classownerUploadexamSelectBatchName").prop("disabled",false);
+		}else{
+			$("#classownerUploadexamSelectBatchName").prop("disabled",true);
+			$(".alert-danger").text("Subjects for selected batch are not added.").show();
+		}
+	}
+	
+	
+	this.getSubjectsInDivision = getSubjectsInDivision;
+	this.displaySubjectDropDown = displaySubjectDropDown;
+	this.getBatchFromDivisonNSubject = getBatchFromDivisonNSubject;
+	this.displayBatchFromSubjectNDivision = displayBatchFromSubjectNDivision;
+	}
 </script>
 </head>
 <body>
-<div class="container" style="margin-bottom: 5px">
-			<c:choose>
-			<c:when test="${(institute ne null) && (institute ne '') }">
-			<a type="button" class="btn btn-primary" href="teachercommoncomponent?forwardAction=seenotes" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a>
-			</c:when>
-			<c:otherwise><a type="button" class="btn btn-primary" href="choosesubject?forwardAction=seenotes" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Modify criteria</a></c:otherwise>
-			</c:choose>
+<ul class="nav nav-tabs" style="border-radius:10px">
+  <li><a href="addnotesoption">Add Notes</a></li>
+  <li class="active"><a data-toggle = "tab">View Notes</a></li>
+</ul>
+<div class="container" style="padding: 2%;background: #eee">
+<div class="row">
+			<div class="col-md-3">
+				<select name="division" id="division" class="form-control" width="100px">
+					<option value="-1">Select Class</option>
+					<c:forEach items="${requestScope.divisions}" var="division">
+						<option value="<c:out value="${division.divId}"></c:out>"><c:out value="${division.divisionName}"></c:out>&nbsp;<c:out value="${division.stream}"></c:out></option>
+					</c:forEach>							
+				</select>
 			</div>
-			<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
-			<div align="center" style="font-size: larger;"><u>Search Notes</u></div>
+			<div class="col-md-3 subjectDropDown">
+				<select name="subject" id="subject" class="form-control" width="100px" disabled="disabled">
+					<option value="-1">Select Subject</option>
+				</select>
 			</div>
-<c:if test="${(totalPage!=0)}">
+			<div class="col-md-3 batchDropDown">
+				<select name="batch" id="classownerUploadexamSelectBatchName" class="form-control" width="100px" disabled="disabled">
+					<option value="-1">Select Batch</option>
+				</select>
+			</div>
+			<div class="col-md-3 ">
+			<button class="btn btn-primary" id="submit">Submit</button>
+			</div>
+		</div>
+		</div>
+
    <div id="notesdiv" class="container">
    <table id="notestable" class="table table-bordered table-hover" style="background-color: white;">
-   <thead style="background-color: rgb(0, 148, 255);">
-   	<tr>
-   	<th>Sr No.</th>
-   	<th>Name</th>
-   	<th></th>
-   	<th></th>
-  <th></th> 	
-   	</tr>
-   </thead>
-   <tbody>
-   <c:forEach items="${noteslist}" var="item" varStatus="counter">
-   <tr>
-   
-  <c:if test="${currentPage eq 1}">
-        <td class="col-md-1"><c:out value="${counter.count}"></c:out></td>
-        </c:if>
-        <c:if test="${currentPage gt 1 }">
-        <td class="col-md-1"><c:out value="${counter.count + ((currentPage-1)*10)}"></c:out></td>
-        </c:if>
-   <td><c:out value="${item.name}"></c:out></td>
-    <td><button class="btn btn-primary shownotes" id='<c:out value="${item.notesid}"></c:out>'>Open</button></td>
-    <c:choose>
-    <c:when test="${role eq 2 }">
-    	<c:choose>
-    	<c:when test="${item.addedby eq user.regId }">
-    		<td><button class="btn btn-primary" id="edit" onclick='editnotes("<c:out value="${item.notesid}"></c:out>")'>Edit</button></td>
-   			<td><button class="btn btn-danger" onclick='deletenotes("<c:out value="${item.notesid}"></c:out>")'>Delete</button></td>
-    	</c:when>
-    	<c:otherwise>
-    	 <td><button class="btn btn-primary" disabled="disabled">Edit</button></td>
-   		 <td><button class="btn btn-danger" disabled="disabled">Delete</button></td> 
-    	</c:otherwise>
-    	</c:choose>
-    </c:when>
-    <c:otherwise>
-   <td><button class="btn btn-primary" id="edit" onclick='editnotes("<c:out value="${item.notesid}"></c:out>")'>Edit</button></td>
-   <td><button class="btn btn-danger" onclick='deletenotes("<c:out value="${item.notesid}"></c:out>")'>Delete</button></td> 
-    </c:otherwise>
-    </c:choose>
-   
-   </tr>
-   </c:forEach>
-   </tbody>
+  
    </table>
-   <form action="seenotes" id="paginateform">
-  <input type="hidden" name="division" id="division" value='<c:out value="${division}"></c:out>'>
-   <input type="hidden" name="batch" id="batch" value='<c:out value="${batch}"></c:out>'>
-   <input type="hidden" name="subject" id="subject" value='<c:out value="${subject}"></c:out>'>
-   <input type="hidden" name="institute" id="institute" value='<c:out value="${institute}"></c:out>'>
-   <input type="hidden" name="newbatch" id="newbatch">
-   <input type="hidden" name="actionname" id="actionname" >
-   <input type="hidden" name="notesname" id="notesname" >
-   <input type="hidden" name="notesid" id="notesid" >
-   <input type="hidden" name="totalPage" id="totalPage" value='<c:out value="${totalPage}"></c:out>'>
-   <input type="hidden" name="currentPage" id="currentPage"  value='<c:out value="${currentPage}"></c:out>'>
-  <ul class="pagination">
-  <li><a class="start" >&laquo;</a></li>
-  <c:forEach var="item" begin="1" end="${totalPage}">
-  <c:if test="${item eq currentPage}">
-  <li class="active"><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
-  </c:if>
-  <c:if test="${item ne currentPage}">
-  <li><a href="#" class="page"><c:out value="${item}"></c:out></a></li>
-  </c:if>
-  </c:forEach>
-  <li><a href="#" class="end">&raquo;</a></li>
-</ul>
-</form>
+ 
    </div>
-   <form action="" id="actionform">
-   <input type="hidden" name="division" id="division" value='<c:out value="${division}"></c:out>'>
-   <input type="hidden" name="batch" id="batch" value='<c:out value="${batch}"></c:out>'>
-   <input type="hidden" name="subject" id="subject" value='<c:out value="${subject}"></c:out>'>
-   <input type="hidden" name="institute" id="institute" value='<c:out value="${institute}"></c:out>'>
-   <input type="hidden" name="newbatch" id="newbatch">
-   <input type="hidden" name="actionname" id="actionname" >
-   <input type="hidden" name="notesname" id="notesname" >
-   <input type="hidden" name="notesid" id="notesid" >
-   <input type="hidden" name="totalPage" id="totalPage" value='<c:out value="${totalPage}"></c:out>'>
-   <input type="hidden" name="currentPage" id="currentPage"  value='<c:out value="${currentPage}"></c:out>'>
-   </form>
    
    <div class="modal fade" id="notesnotavailable" tabindex="-1" role="dialog" 
    aria-labelledby="myModalLabel" aria-hidden="true">
@@ -498,10 +584,7 @@ $(document).ready(function(){
    </div>
     
 </div>
-</c:if>
-<c:if test="${(totalPage==0)}">
-<div class="alert alert-info" align="center">Notes not available for selected criteria.</div>
-</c:if>
+
 <div class="modal fade" id="notesdeleteconfirmmodal">
     <div class="modal-dialog">
     <div class="modal-content">
@@ -519,5 +602,12 @@ $(document).ready(function(){
     </div>
 </div>
 </div>
+
+<form action="" id="actionform">
+   <input type="hidden" name="division" id="division" value='<c:out value="${division}"></c:out>'>
+   <input type="hidden" name="batch" id="batch" value='<c:out value="${batch}"></c:out>'>
+   <input type="hidden" name="subject" id="subject" value='<c:out value="${subject}"></c:out>'>
+   <input type="hidden" name="notesid" id="notesid" >
+   </form>
 </body>
 </html>

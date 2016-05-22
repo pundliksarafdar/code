@@ -26,6 +26,7 @@ import javax.ws.rs.core.Response.StatusType;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import com.classapp.db.Notes.Notes;
 import com.classapp.db.Teacher.TeacherDetails;
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.division.Division;
@@ -74,6 +75,7 @@ import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.fee.FeesTransaction;
 import com.transaction.image.ImageTransactions;
+import com.transaction.notes.NotesTransaction;
 import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.student.StudentTransaction;
@@ -736,5 +738,35 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		TeacherTransaction teacherTransaction = new TeacherTransaction();
 		List<TeacherDetails> teachers = teacherTransaction.getAllTeachersFromClass(getRegId());
 		return Response.ok(teachers).build();
+	}
+	
+	@DELETE
+	@Path("/getNotes/{division}/{subject}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getNotes(@PathParam("division")int division,@PathParam("subject")int subject){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		NotesTransaction notesTransaction=new NotesTransaction();
+		List<Notes> noteslist =notesTransaction.getNotesPath(division,subject, userBean.getRegId());
+		return Response.status(Status.OK).entity(noteslist).build();
+	}
+	
+	@POST
+	@Path("/updateNotes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateNotes(Notes notes){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		NotesTransaction notesTransaction=new NotesTransaction();
+		boolean status = notesTransaction.updatenotes(notes.getName(), notes.getNotesid(), notes.getBatch(), userBean.getRegId(), notes.getDivid(), notes.getSubid());
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Path("/deleteNotes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteNotes(Notes notes){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		NotesTransaction notesTransaction=new NotesTransaction();
+		notesTransaction.deleteNotes( notes.getNotesid(), userBean.getRegId(), notes.getDivid(), notes.getSubid());
+		return Response.status(Status.OK).entity(true).build();
 	}
 }
