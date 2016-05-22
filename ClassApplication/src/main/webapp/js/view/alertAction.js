@@ -86,8 +86,20 @@
 			notificationObject.messageTypeTOST = [];//Array
 			*/
 			var handler = {};
-			handler.success = function(){}
-			handler.error = function(){}
+			handler.success = function(e){
+				var message = "Notification send successfully";
+				var type = "success";
+				if(e.constructor == Array){
+					message = e.join("<Br/>");
+					type = "warning";
+				}
+				$.notify({message: message},{type: type});
+			}
+			handler.error = function(e){
+				var message = e.responseJSON.join("<Br/>");
+				
+				$.notify({message: message},{type: 'danger'});
+			}
 			rest.post(postnotificationUrl,handler,JSON.stringify(notificationObject),true);
 		}
 	}

@@ -28,7 +28,8 @@ public class EmailNotification implements iNotify{
 		return null;
 	}
 	
-	private boolean sendEmail(String email, String htmlMessage,String subject,String fromAlice) {
+	
+	public boolean sendEmail(String email, String htmlMessage,String subject,String fromAlice) {
 		// Common variables
 		String to = email;
 

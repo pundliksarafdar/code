@@ -471,4 +471,5 @@ public class StudentTransaction {
 		StudentDB studentDB = new StudentDB();
 		return studentDB.updatestudentrelatedtoclass(div_id, inst_id);
 	}
+	
 }

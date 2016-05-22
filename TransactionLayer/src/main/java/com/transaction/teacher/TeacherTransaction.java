@@ -260,4 +260,10 @@ public class TeacherTransaction {
 		return teacherDivisionsAndSubjects;
 	}
 	
+	public List<RegisterBean> getTeacherDetail(List<Integer> teachersId){
+		TeacherDB teacherDB = new TeacherDB();
+		List<RegisterBean> teacherdData = teacherDB.getTeacherDetail(teachersId);
+		return teacherdData;
+	}
+	
 }

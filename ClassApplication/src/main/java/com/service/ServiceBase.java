@@ -29,6 +29,9 @@ public class ServiceBase {
 	}
 
 	public UserBean getUserBean() {
+		if(null==userBean){
+			userBean = (UserBean) request.getSession().getAttribute("user");
+		}
 		return userBean;
 	}
 

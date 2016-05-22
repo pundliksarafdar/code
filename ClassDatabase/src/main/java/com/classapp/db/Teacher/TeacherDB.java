@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.Schedule.Schedule;
@@ -450,6 +452,16 @@ public Teacher getTeacher(int user_id, int class_id) {
 				}
 			}
 		return list;
+	}
+	
+	public List<RegisterBean> getTeacherDetail(List<Integer> teachersId){
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		Criteria cr = session.createCriteria(RegisterBean.class);
+		cr.add(Restrictions.in("regId", teachersId));
+		List<RegisterBean> results = cr.list();
+		return results;
 	}
 	
 }

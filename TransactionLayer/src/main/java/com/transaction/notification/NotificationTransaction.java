@@ -2,11 +2,8 @@ package com.transaction.notification;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.classapp.db.notificationpkg.*;
-import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
-import com.transaction.batch.BatchTransactions;
 
 public class NotificationTransaction {
 	public Boolean add(Notification notification) {
@@ -40,6 +37,10 @@ public class NotificationTransaction {
 		return db.getMessageforTeachers(institute_id);
 		  
 	
+	}
+	
+	public void sendMessage(){
+		
 	}
 	
 }

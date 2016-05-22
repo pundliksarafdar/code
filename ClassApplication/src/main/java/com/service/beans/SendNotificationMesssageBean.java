@@ -6,7 +6,7 @@ public class SendNotificationMesssageBean implements Serializable{
 	String message;
 	//Teacher related variable
 	String messageType[];
-	String teacher[];
+	Integer teacher[];
 	
 	//Student and parent variables
 	String sendTo[];
@@ -27,10 +27,10 @@ public class SendNotificationMesssageBean implements Serializable{
 	public void setMessageType(String[] messageType) {
 		this.messageType = messageType;
 	}
-	public String[] getTeacher() {
+	public Integer[] getTeacher() {
 		return teacher;
 	}
-	public void setTeacher(String[] teacher) {
+	public void setTeacher(Integer[] teacher) {
 		this.teacher = teacher;
 	}
 	public String[] getSendTo() {

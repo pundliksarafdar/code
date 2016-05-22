@@ -58,6 +58,12 @@ public class ClassownerSettingstransaction {
 			return classownerSettingsNotification;
 	}
 	
+	public boolean reduceSmsCount(int smsCount,int classId){
+		InstituteStatsDB instituteStatsDB = new InstituteStatsDB();
+		instituteStatsDB.decreaseUsedSms(smsCount, classId);
+		return false;
+	}
+	
 	/*This method will verify whether you have correct access or not*/
 	public String validateClassOwnerAccess(NotificationEnum.MessageCategery messageCategery, int instId){
 		ClassownerSettingsNotification settings = getSettings(instId);
