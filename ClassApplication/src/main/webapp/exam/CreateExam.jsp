@@ -29,9 +29,29 @@ padding-left: 2px;
 <div class="container">
 <form id="examDataForm">
 		<div class="row well">
+		<div class="row">
+		<div class="col-md-4 errorDiv error">
+		</div>
+		</div>
+			<div class="row">
 			<div class="col-md-3">
 				<input type="text" class="form-control" id="newExamName" placeholder="Exam name" required>
 			</div>
+			<div class="col-md-1">
+				<span class="badge" style="padding: 18%;border-radius:20px">OR</span>
+			</div>
+			<div class="col-md-3">
+			<select class="form-control" id="examSelect">
+				<option value="-1">Select Exam</option>
+				<c:forEach items="${examList}" var="exam">
+						<option value="<c:out value="${exam.exam_id }"></c:out>">
+							<c:out value="${exam.exam_name }"></c:out>
+						</option>
+					</c:forEach>
+			</select>
+			</div>
+			</div>
+			<div class="row">
 			<div class="col-md-3">
 				<select id="division" name="division" class="form-control">
 					<option value="-1">Select Class</option>
@@ -60,14 +80,19 @@ padding-left: 2px;
 				</select>
 			</div>
 		</div>
+		</div>
 		</form>
+		<div class="actionOption" style="display: none">
+		<div class="subjectError error">
+		</div>
 		<div class="row subjectDiv">
 		
 		</div>
-		<div class="actionOption">
+		<div >
 			<button class="btn btn-primary btn-sm" value="Save" id="saveExam">Save</button>
 		</div>
 		<div id="preview_page"></div>
+		</div>
 </div>
 
 <div class="modal fade" id="questionPaperListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

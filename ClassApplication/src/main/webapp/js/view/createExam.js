@@ -19,6 +19,8 @@ var getHeaderUrl = baseURL+"getHeader/";
 
 $(document).ready(function(){
 	$("#division").change(function(){
+		$(".subjectDiv").empty();
+		$(".actionOption").hide();
 		var divisionId = $("#division").val();
 		$.ajax({
 			   url: "classOwnerServlet",
@@ -55,6 +57,8 @@ $(document).ready(function(){
 	});
 	
 	$("#batchSelect").change(function(){
+		$(".actionOption").hide();
+		$(".subjectDiv").empty();
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
 		createQuestionPaperListTable(e);
@@ -62,6 +66,7 @@ $(document).ready(function(){
 		handlers.error = function(e){console.log("Error",e)}
 		var division = $("#division").val(); 
 		var batch = $("#batchSelect").val(); 
+		if(batch != "-1"){
 		rest.get("rest/classownerservice/getQuestionPaperList/"+division,handlers);
 	$.ajax({
 		   url: "classOwnerServlet",
@@ -86,19 +91,21 @@ $(document).ready(function(){
 						tableRow += "<tr><td><div class='examSubjectPapers'><div class='col-md-3'><input type='checkbox' value='"+subjectidArray[i]+"' name='subjectCheckbox' id='subjectCheckbox'>"+
 		   				subjectnameArray[i]+"</div><div class='col-md-4'>"+
 		   				"<button class='btn btn-primary btn-xs chooseQuestionPaper'>Choose Question Paper</button>"+
-		   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></div><div class='col-md-1'><input type='text' class='form-control marks' readOnly placeholder='Marks' title='Marks of selected question paper'></div>"+
+		   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></div><div class='col-md-1'><input type='text' class='form-control marks' placeholder='Marks' title='Marks of selected question paper'></div>"+
 		   				"<div class='col-md-3'><div class='col-md-6'>Duration  : </div><div class='col-md-3'><input type='number' class='form-control examHour' placeholder='HH'></div><div class='col-md-3'><input type='number' class='form-control examMinute' placeholder='MM'></div></div>"+
 		   				"<div class='col-md-1'><button class='btn btn-primary btn-xs preview'>Preview</button></div></div></td></tr>"
 				   		i++;
 				   }
 					tableRow +="</table>"
 					$(".subjectDiv").append(tableRow);
+					$(".actionOption").show();
 			   }
 		   },
 			error:function(){
 		   		modal.launchAlert("Error","Error");
 		   	}
 		   });
+		}
 	});
 	var that;
 	$(".subjectDiv").on("click",".chooseQuestionPaper",function(){
@@ -114,12 +121,20 @@ $(document).ready(function(){
 	});
 	
 	$("#saveExam").click(function(){
+		$(".subjectError").html("");
+		$(".errorDiv").html("");
+		var flag = false;
 		var examName = ""
 		var examID = "";
+		if($("#examSelect").val() != "-1"){
+			examID = $("#examSelect").val();
+			examName = "-1";
+		}else{
 			examName = $("#newExamName").val();
-			
-		if(!$("#examDataForm").valid()){
-			return false;
+		}	
+		if(examName.trim() == "" && examID==""){
+			$(".errorDiv").html("Please select or enter exam name");
+			flag = true;
 		}	
 		var division = $("#division").val();
 		var exam_paperList = [];
@@ -140,6 +155,11 @@ $(document).ready(function(){
 			}
 		}
 		console.log(exam_paperList);
+		if(exam_paperList.length == 0){
+			$(".subjectError").html("Please select subjects");
+			flag = true;
+		}
+		if(flag == false){
 		var handlers = {};
 		handlers.success = function(e){
 			console.log("Success",e);
@@ -150,8 +170,9 @@ $(document).ready(function(){
 		}
 		exam_paperList = JSON.stringify(exam_paperList);
 		rest.post("rest/classownerservice/saveExamPaper/"+examName,handlers,exam_paperList);
+		}
 		});
-		
+	
 		$("body").on("click",PREVIEW,preview);
 });
 

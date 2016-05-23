@@ -7,6 +7,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <style type="text/css">
+ .error{
+     color: red;
+    margin-left: 10px;
+}
 .subjectDiv .row{
 padding-right: 0px;
 width: 100%
@@ -117,6 +121,7 @@ $(document).ready(function(){
 	});
 	
 	$("#saveExam").click(function(){
+		$(".subjectError").html("");
 		var examName = ""
 		var examID = "";
 		var exam_paperList = [];
@@ -138,6 +143,7 @@ $(document).ready(function(){
 			}
 		}
 		console.log(exam_paperList);
+		if(exam_paperList.length > 0 ){
 		var handlers = {};
 		handlers.success = function(e){
 			$.notify({message: "Exam updated successfuly"},{type: 'success'});
@@ -146,6 +152,9 @@ $(document).ready(function(){
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});}
 		exam_paperList = JSON.stringify(exam_paperList);
 		rest.post("rest/classownerservice/updateExamPaper/"+editExamID+"/"+division+"/"+batch,handlers,exam_paperList);
+		}else{
+			$(".subjectError").html("Please select subjects");
+		}
 		});
 });
 
@@ -247,7 +256,7 @@ $.ajax({
 					tableRow +="<tr><td><div class='examSubjectPapers'><div class='col-md-3'><input type='checkbox' value='"+subjectidArray[i]+"' name='subjectCheckbox' id='subjectCheckbox'>"+
 			   				subjectnameArray[i]+"<input type='hidden' class='examPaperID'></div><div class='col-md-4'>"+
 			   				"<button class='btn btn-primary btn-xs chooseQuestionPaper'>Choose Question Paper</button>"+
-			   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></div><div class='col-md-1'><input type='text' class='form-control marks' readOnly></div>"+
+			   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></div><div class='col-md-1'><input type='text' class='form-control marks' ></div>"+
 			   				"<div class='col-md-3'><div class='col-md-6'>Duration  : </div><div class='col-md-3'><input type='number' class='form-control examHour' placeholder='HH'></div><div class='col-md-3'><input type='number' class='form-control examMinute' placeholder='MM'></div></div>"+
 			   				"<div class='col-md-1'><button class='btn btn-primary btn-xs preview'>Preview</button></div></div>"
 			   				+"</td></tr>";
@@ -329,12 +338,15 @@ function deleteExam(){
 				</select>
 			</div>
 		</div>
+		<div>
+		<div class="subjectError error"></div>
 		<div class="row subjectDiv">
 			
 		
 		</div>
 		<div class="actionOption">
 			<button class="btn btn-primary btn-sm" value="Save" id="saveExam">Save</button>
+		</div>
 		</div>
 	</div>	
 	<div class="modal fade" id="questionPaperListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
