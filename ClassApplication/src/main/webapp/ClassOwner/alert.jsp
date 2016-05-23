@@ -15,7 +15,7 @@
 	  <div class="tab-pane active" id="teacher">
 	  	Teacher
 	  	<form id="selectTeacherMessage">
-		  	<div><Select id="teachers" multiple="multiple" name="teacher" required="required"></Select></div>
+		  	<Select id="teachers" multiple="multiple" name="teacher" required="required" style="width: 50%;"></Select>
 		  	<br>
 		  	<br>
 		  	<div><textarea placeholder="Message.." class="form-control" id="message" name="teacherMessage" required="required"></textarea></div>

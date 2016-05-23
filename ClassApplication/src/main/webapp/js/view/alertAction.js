@@ -62,7 +62,7 @@
 		$.each(data,function(key,val){
 			var teacherObj = {};
 			teacherObj.id =  val.teacherId;
-			teacherObj.text = val.teacherBean.fname+" "+val.teacherBean.fname+" "+val.suffix;
+			teacherObj.text = val.teacherBean.fname+" "+val.teacherBean.lname+" "+val.suffix;
 			formatDate.push(teacherObj);
 		});
 		return formatDate;
