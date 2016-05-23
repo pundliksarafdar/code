@@ -142,7 +142,7 @@
 	        },
 	        messages: {
 	            'messageType': {
-	                required: "You must check at least 1 box",
+	                required: "You must send sms,email or push message",
 	                maxlength: "Check no more than {0} boxes"
 	            }
 	        },
@@ -167,11 +167,19 @@
 	            'sendTo':{
 	                required: true
 	                //,maxlength: 2
+	            },
+	            'messageTypeTOST':{
+	                required: true
+	                //,maxlength: 2
 	            }
 	        },
 	        messages: {
-	            'messageType': {
-	                required: "You must check at least 1 box",
+	            'sendTo': {
+	                required: "You must send message to either student or parent",
+	                maxlength: "Check no more than {0} boxes"
+	            },
+	            'messageTypeTOST':{
+	            	required: "You must send sms,email or push message",
 	                maxlength: "Check no more than {0} boxes"
 	            }
 	        },

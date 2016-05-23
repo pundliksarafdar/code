@@ -29,14 +29,8 @@ public class NotificationServiceImpl extends ServiceBase{
 		UserBean userBean = getUserBean();
 		List<String> validationMessage = helper.validateAccess(bean, getRegId());
 		if(validationMessage.isEmpty()){
-			String status = helper.sendMessage(bean,"Short notifiction",userBean.getClassName(),getRegId());
-			if(status!=null && !status.isEmpty()){
-				List<String>statusList = new ArrayList<String>();
-				statusList.add(status);
-				return Response.ok(statusList).build();
-			}else{
-				return Response.accepted().build();
-			}
+			List<String> statusList = helper.sendMessage(bean,"Short notifiction",userBean.getClassName(),getRegId());
+			return Response.ok(statusList).build();
 		}else{
 			return Response.status(Status.NOT_ACCEPTABLE).entity(validationMessage).build();
 					

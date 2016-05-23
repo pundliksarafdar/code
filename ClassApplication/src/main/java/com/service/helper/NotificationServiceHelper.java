@@ -11,16 +11,20 @@ import com.service.beans.SendNotificationMesssageBean;
 import com.transaction.classownersettingtransaction.ClassownerSettingstransaction;
 
 public class NotificationServiceHelper {
-	public String sendMessage(SendNotificationMesssageBean bean,String subject,String from,Integer regid){
+	public List<String> sendMessage(SendNotificationMesssageBean bean,String subject,String from,Integer regid){
+		List<String> statusList = new ArrayList<String>();
 		String status = "";
+		String emailStatus = "Email sent successfully";
 		if(bean.getTeacher() != null && bean.getTeacher().length != 0){
 			//this message is for teacher
 			for(String messageType:bean.getMessageType()){
 				if(messageType.equals("email")){
 					sendEmailToTeacher(bean.getTeacher(), bean.getMessage(),subject,from);
+					statusList.add(emailStatus);
 				}
 				if(messageType.equals("sms")){
 					status = sendMessageToTeacher(bean.getTeacher(), bean.getMessage(),regid);
+					statusList.add(status);
 				}
 			}
 		}else{
@@ -33,11 +37,13 @@ public class NotificationServiceHelper {
 									Integer.parseInt(bean.getDivisionSelect()),
 									regid,bean.getMessage(),
 									subject,from);
+							statusList.add(emailStatus);
 						}else if(sendTo.equals("student")){
 							sendEmailToStudent(Integer.parseInt(bean.getBatchSelect()),
 									Integer.parseInt(bean.getDivisionSelect()),
 									regid,bean.getMessage(),
 									subject,from);
+							statusList.add(emailStatus);
 						}
 					}
 				}
@@ -47,17 +53,19 @@ public class NotificationServiceHelper {
 							status = sendMessageToParent(Integer.parseInt(bean.getBatchSelect()),
 									Integer.parseInt(bean.getDivisionSelect()),
 									regid,bean.getMessage());
+							statusList.add(status);
 						}else if(sendTo.equals("student")){
 							status = sendMessageToStudent(Integer.parseInt(bean.getBatchSelect()),
 									Integer.parseInt(bean.getDivisionSelect()),
 									regid,bean.getMessage());
+							statusList.add(status);
 						}
 					}
 				}
 			}
 		}
 		
-		return status;
+		return statusList;
 	}
 	
 	private void sendEmailToParent(Integer batchId,Integer divId,Integer instId,String message,String subject,String from){
