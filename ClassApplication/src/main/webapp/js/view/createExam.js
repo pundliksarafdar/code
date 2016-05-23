@@ -3,6 +3,7 @@ var SELECTED_QUETION_ID = ".selectedQuestionPaperID"
 var HEADER_DESC = "#headerDesc"
 var DIVISION = "#division";
 var PREVIEW_PAGE_HEADER = "#preview_pageHeader";
+var MARKS = "#meta #marks";
 var PREVIEW_PAGE_CONTENT = "#preview_pageContent";
 var ITEM_TYPE = {
 	SECTION:"Section",
@@ -210,6 +211,7 @@ function createQuestionPaperListTable(data){
 
 function preview(){
 	var paperId = $(this).closest('.examSubjectPapers').find(SELECTED_QUETION_ID).val();
+	var marks = $(this).closest('.examSubjectPapers').find(".marks").val();
 	var headerId = $(HEADER_DESC).val();
 	var divisionId = $(DIVISION).val();
 	var handler = {};
@@ -221,10 +223,13 @@ function preview(){
 	handlerHeader.error = getHeaderError;
 	rest.get(getQuestionPaperUrl+divisionId+"/"+paperId,handler);
 	rest.get(getHeaderUrl+headerId,handlerHeader);
+	
+	$(MARKS).html(marks);
 }
 
 function previewSuccess(data){
 	var questionPaperFileElementList = data.questionPaperFileElementList;
+	$(PREVIEW_PAGE_CONTENT).empty();
 	$.each(questionPaperFileElementList,function(){
 			var parentDiv = $("<div/>",{
 					class:"row",
@@ -268,12 +273,13 @@ function previewSuccess(data){
 					class:"col-xs-1"
 				}).appendTo(parentDiv);
 					
-				if(this.parent_id){
+				if(this.parent_id!="undefined"){
 					$(PREVIEW_PAGE_CONTENT).find('[item_id="'+this.parent_id+'"]').append(parentDiv);
 				}else{
 					$(PREVIEW_PAGE_CONTENT).append(parentDiv);
 				}
 	});
+	$("#examPreviewModal").modal("show");
 }
 
 function previewError(error){

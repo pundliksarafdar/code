@@ -363,6 +363,29 @@ function deleteExam(){
 		  </div>
 		</div>
 	  </div>
+	</div>
+	<div class="modal fade" id="examPreviewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h4 class="modal-title" id="myModalLabel">Question Paper list</h4>
+		  </div>
+		  <div class="modal-body">
+		  
+		  	<div id="preview_pageHeader">
+				
+			</div>
+			<div id="meta">
+				Marks:-<span id="marks"></span>
+			</div>
+			<hr/>
+			<div id="preview_pageContent">
+				
+			</div>
+		  </div>
+		</div>
+	  </div>
 	</div>	
 </body>
 </html>
