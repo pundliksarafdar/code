@@ -29,9 +29,28 @@ padding-left: 2px;
 var division = "";
 var batch = "";
 var queationPaperList = [];
+var PREVIEW_PAGE_HEADER = "#preview_pageHeader";
+var MARKS = "#meta #marks";
+var PREVIEW_PAGE_CONTENT = "#preview_pageContent";
+var SELECTED_QUETION_ID = ".selectedQuestionPaperID";
+var HEADER_DESC = "#headerDesc";
+var DIVISION = "#division";
 var examUrl = "rest/classownerservice/exam/";
+
+var baseURL = "/rest/classownerservice/";
+var getQuestionPaperUrl = baseURL + "getQuestionPaper/";
+var getHeaderUrl = baseURL+"getHeader/";
+var ITEM_TYPE = {
+		SECTION:"Section",
+		QUESTION:"Question",
+		INSTRUCTION:"Instruction"
+	}
+	var BATCH_SELECT = "#batchSelect";
+	var PREVIEW_PAGE = "#preview_page";
+
 $(document).ready(function(){
-	$("body").on("click",".deleteExam",deleteExam);
+	$("body").on("click",".deleteExam",deleteExam).
+		on("click",".preview",preview);
 	
 	$("#division").change(function(){
 		var divisionId = $("#division").val();
@@ -283,6 +302,91 @@ function deleteExam(){
 	rest.deleteItem(examUrl+examId,handler,true);
 }
 
+function preview(){
+	var paperId = $(this).closest('.examSubjectPapers').find(SELECTED_QUETION_ID).val();
+	var marks = $(this).closest('.examSubjectPapers').find(".marks").val();
+	var headerId = $(HEADER_DESC).val();
+	var divisionId = $(DIVISION).val();
+	var handler = {};
+	handler.success = previewSuccess;
+	handler.error = previewError;
+	
+	var handlerHeader = {};
+	handlerHeader.success = getHeaderSuccess;
+	handlerHeader.error = getHeaderError;
+	rest.get(getQuestionPaperUrl+divisionId+"/"+paperId,handler);
+	rest.get(getHeaderUrl+headerId,handlerHeader);
+	
+	$(MARKS).html(marks);
+}
+
+function previewSuccess(data){
+	var questionPaperFileElementList = data.questionPaperFileElementList;
+	$(PREVIEW_PAGE_CONTENT).empty();
+	$.each(questionPaperFileElementList,function(){
+			var parentDiv = $("<div/>",{
+					class:"row",
+					item_type:this.item_type,
+					item_id:this.item_id
+				});
+			
+			$("<div/>",{
+				text:this.item_no != -1 ? this.item_no : "",
+				style:'text-align:left;',
+				class:"col-xs-1",
+			}).appendTo(parentDiv);
+			
+			if(this.item_type == ITEM_TYPE.SECTION){
+				var	div = $("<div/>",{
+						text:this.item_description,
+						style:'text-align:center;',
+						class:"col-xs-10"
+					}).appendTo(parentDiv);
+			}
+			
+			if(this.item_type == ITEM_TYPE.INSTRUCTION){
+				var	div = $("<div/>",{
+						text:this.item_description,
+						style:'text-align:left;',
+						class:"col-xs-10"
+					}).appendTo(parentDiv);
+			}
+
+			if(this.item_type == ITEM_TYPE.QUESTION){
+					$("<div/>",{
+						text:this.questionbank.que_text,
+						style:'text-align:left;',
+						class:"col-xs-10",
+					}).appendTo(parentDiv);
+			}
+			
+				$("<div/>",{
+					text:this.item_marks,
+					style:'text-align:left;',
+					class:"col-xs-1"
+				}).appendTo(parentDiv);
+					
+				if(this.parent_id!="undefined"){
+					$(PREVIEW_PAGE_CONTENT).find('[item_id="'+this.parent_id+'"]').append(parentDiv);
+				}else{
+					$(PREVIEW_PAGE_CONTENT).append(parentDiv);
+				}
+	});
+	$("#examPreviewModal").modal("show");
+}
+
+function previewError(error){
+	console.log(error);
+}
+
+function getHeaderSuccess(e){
+	console.log(e);
+	$(PREVIEW_PAGE_HEADER).html(e);
+}
+
+function getHeaderError(e){
+	
+}
 </script>
 </head>
 <body>
