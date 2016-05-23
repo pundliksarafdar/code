@@ -2,7 +2,7 @@ var ClassownerSettingsUrl = "rest/ClassownerSettings";
 var NO_SMS_ACCESS = "You dont have access to sms";
 var NO_EMAIL_ACCESS = "You dont have access to email";
 var NO_SMS_EMAIL_ACCESS = "You dont have access to sms and mail";
-var NO_OF_SMS_LEFT = "You have {{smsleft}} out of {{smsTotal}}";
+var NO_OF_SMS_LEFT = "You have {{smsleft}} sms left out of total {{smsTotal}} sms";
 var WEEKLY_DAY_SELECTION = "#weeklyDaySelection";
 var SAVE = "#save";
 $(document).ready(function(){
