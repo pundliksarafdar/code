@@ -57,16 +57,23 @@ public class ExamTransaction {
 		return examDB.saveExam(exam);
 	}
 	
-	public boolean saveExamPaper(int inst_id,String examName,List<Exam_Paper> exam_PaperList,int created_by) {
+	public String saveExamPaper(int inst_id,String examName,List<Exam_Paper> exam_PaperList,int created_by) {
 		ExamDB examDB = new ExamDB();
 		int exam_id =0;
+		String msg = "";
 		if(!"-1".equals(examName)){
+			if(!examDB.validateExam(inst_id, examName)){
 			Exam exam = new Exam();
 			exam.setExam_name(examName);
 			exam.setInst_id(inst_id);
 			exam_id = examDB.saveExam(exam);
+			}else{
+				msg = "Exam name "+examName+" already exists.Enter different name";
+				return msg;
 			}
+		}
 		ExamPaperDB examPaperDB = new ExamPaperDB();
+		if(!examPaperDB.validateExamPaper(exam_PaperList.get(0),inst_id)){
 		for (Iterator iterator = exam_PaperList.iterator(); iterator.hasNext();) {
 			Exam_Paper exam_Paper = (Exam_Paper) iterator.next();
 			if(exam_id != 0){
@@ -77,7 +84,11 @@ public class ExamTransaction {
 			exam_Paper.setInst_id(inst_id);
 			int exam_paper_id = examPaperDB.saveExamPaper(exam_Paper);
 		}
-		return true;
+		}else{
+			msg = "Exam papers already created for selected exam";
+		}
+		
+		return msg;
 	}
 	
 	public List<Exam> getExamList(int div_id,int inst_id,int batch_id) {

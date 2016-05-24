@@ -90,4 +90,35 @@ public class ExamDB {
 
 	}
 	
+	public boolean validateExam(int inst_id,String exam_name) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("select exam_name from Exam where inst_id = :inst_id and exam_name = :exam_name ");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("exam_name", exam_name);
+			List list = query.list();
+			if(list.size()>0){
+				return true;
+			}
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  false;
+
+	}
+	
 }

@@ -57,6 +57,38 @@ public class ExamPaperDB {
 
 	}
 	
+	public boolean validateExamPaper(Exam_Paper exam_Paper,int inst_id) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("select exam_paper_id from Exam_Paper where inst_id = :inst_id and div_id = :div_id and exam_id = :exam_id and batch_id = :batch_id ");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", exam_Paper.getDiv_id());
+			query.setParameter("exam_id", exam_Paper.getExam_id());
+			query.setParameter("batch_id", exam_Paper.getBatch_id());
+			List list = query.list();
+			if(list.size()>0){
+				return true;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return  false;
+
+	}
+	
 	public boolean updateExamPaper(Exam_Paper exam_Paper) {
 		Transaction transaction=null;
 		Session session=null;

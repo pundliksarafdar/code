@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
 <style type="text/css">
-.subjectDiv .row{
+.actionOption .row{
 padding-right: 0px;
 width: 100%
 }
@@ -30,7 +30,7 @@ padding-left: 2px;
 <form id="examDataForm">
 		<div class="row well">
 		<div class="row">
-		<div class="col-md-4 errorDiv error">
+		<div class="col-md-8 errorDiv error">
 		</div>
 		</div>
 			<div class="row">

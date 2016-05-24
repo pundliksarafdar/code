@@ -91,6 +91,14 @@ $(document).ready(function(){
 	$("#searchExam").click(searchExams);
 	var editExamID = "";
 	$("#examList").on("click",".editExam",function(){
+		$(".examPaperID").val("");
+		$(".marks").val("");
+		$(".examHour").val("");
+		$(".examMinute").val("");
+		$(".examPaperID").val("");
+		$(".selectedQuestionPaperID").val("");
+		$(".examMinute").val("");
+		$(".paper-type").val("-1");
 		$("input[name=subjectCheckbox]").prop("checked",false);
 		$("#examListDiv").hide();
 		$("#editModeDiv").show();
@@ -108,6 +116,7 @@ $(document).ready(function(){
 				 $($(".examSubjectPapers")[i]).find(".examHour").val(e[j].duration.split(":")[0]);
 				 $($(".examSubjectPapers")[i]).find(".examMinute").val(e[j].duration.split(":")[1]);
 				 $($(".examSubjectPapers")[i]).find(".examPaperID").val(e[j].exam_paper_id);
+				 $($(".examSubjectPapers")[i]).find(".paper-type").val(e[j].paper_type);
 				 for(k=0;k<queationPaperList.length;k++){
 					 if(queationPaperList[k].paper_id == e[j].question_paper_id){
 						 $($(".examSubjectPapers")[i]).find(".questionPaperName").html(queationPaperList[k].paper_description);
@@ -133,9 +142,9 @@ $(document).ready(function(){
 	});
 	
 	$("#questionPaperListModal").on("click",".confirmQuestionPaper",function(){
-		that.closest("div").find(".questionPaperName").html($(this).closest("div").find(".paperDesc").val());
-		that.closest("div").find(".selectedQuestionPaperID").val($(this).attr("id"));
-		that.closest("div.examSubjectPapers").find(".marks").val($(this).attr("marks"));
+		that.closest("tr").find(".questionPaperName").html($(this).closest("div").find(".paperDesc").val());
+		that.closest("tr").find(".selectedQuestionPaperID").val($(this).attr("id"));
+		that.closest("tr.examSubjectPapers").find(".marks").val($(this).attr("marks"));
 		$("#questionPaperListModal").modal("toggle");
 	});
 	
@@ -158,6 +167,7 @@ $(document).ready(function(){
 			exam_paper.question_paper_id = $($(".examSubjectPapers")[i]).find(".selectedQuestionPaperID").val();
 			exam_paper.header_id = $("#headerDesc").val();
 			exam_paper.exam_paper_id =  $($(".examSubjectPapers")[i]).find(".examPaperID").val();
+			exam_paper.paper_type = $($(".examSubjectPapers")[i]).find(".paper-type").val();
 			exam_paperList.push(exam_paper);
 			}
 		}
@@ -271,14 +281,18 @@ $.ajax({
 				subjectList = [];
 				$(".subjectDiv").empty();
 				var tableRow = "<table class='table table-striped'>";
+				tableRow += "<tr><th width='5%'></th><th width='10%'>Subjects</th>" +
+				"<th width='40%'>Question Paper</th>"+
+   				"<th width='10%'>Marks</th>"+
+   				"<th width='20%'>Duration</th>"+
+   				"<th width='10%'>Paper Type</th><th width='5%'>Preview</th></tr>"
 				while(i < subjectnameArray.length){
-					tableRow +="<tr><td><div class='examSubjectPapers'><div class='col-md-3'><input type='checkbox' value='"+subjectidArray[i]+"' name='subjectCheckbox' id='subjectCheckbox'>"+
-			   				subjectnameArray[i]+"<input type='hidden' class='examPaperID'></div><div class='col-md-4'>"+
-			   				"<button class='btn btn-primary btn-xs chooseQuestionPaper'>Choose Question Paper</button>"+
-			   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></div><div class='col-md-1'><input type='text' class='form-control marks' ></div>"+
-			   				"<div class='col-md-3'><div class='col-md-6'>Duration  : </div><div class='col-md-3'><input type='number' class='form-control examHour' placeholder='HH'></div><div class='col-md-3'><input type='number' class='form-control examMinute' placeholder='MM'></div></div>"+
-			   				"<div class='col-md-1'><button class='btn btn-primary btn-xs preview'>Preview</button></div></div>"
-			   				+"</td></tr>";
+					tableRow += "<tr class='examSubjectPapers'><td><input type='checkbox' value='"+subjectidArray[i]+"' name='subjectCheckbox' id='subjectCheckbox'></td><td>"+
+	   				subjectnameArray[i]+"</td><td>"+
+	   				"<button class='btn btn-primary btn-xs chooseQuestionPaper'>Choose Question Paper</button>"+
+	   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></td><td><input type='text' class='form-control marks' placeholder='Marks' title='Marks of selected question paper'></td>"+
+	   				"<td><div class='col-md-3'><input type='number' class='form-control examHour' placeholder='HH'></div><div class='col-md-3'><input type='number' class='form-control examMinute' placeholder='MM'></div></td>"+
+	   				"<td><select class='form-control paper-type'><option value='-1'>Paper Type</option><option value='1'>Offline</option><option value='2'>Online</option></select></td><td><button class='btn btn-primary btn-xs preview'>Preview</button></td></tr>"
 			   		i++;
 			   }
 				tableRow +="</table>";

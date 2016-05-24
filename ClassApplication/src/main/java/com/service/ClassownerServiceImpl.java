@@ -440,12 +440,12 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	@POST
 	@Path("/saveExamPaper/{examName}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response saveExamPaper(@PathParam("examName") String exam,List<Exam_Paper> exam_PaperList){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		ExamTransaction examTransaction = new ExamTransaction();
-		examTransaction.saveExamPaper(userBean.getRegId(), exam, exam_PaperList, userBean.getRegId());
-		return Response.status(Status.OK).build();
+		String msg = examTransaction.saveExamPaper(userBean.getRegId(), exam, exam_PaperList, userBean.getRegId());
+		return Response.status(Status.OK).entity(msg).build();
 	}
 	
 	@POST
