@@ -23,6 +23,8 @@ public class ClassOwnerNotificationBean {
 	int emailAttendanceWeeklyThreshold;
 	int emailAttendanceMonthlyThreshold;
 	int regId;
+	
+	//This variable is used to identify on which day we need to send the notification
 	String weeklyRecurrence;
 	
 	public String getWeeklyRecurrence() {

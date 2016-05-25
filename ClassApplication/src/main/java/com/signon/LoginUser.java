@@ -159,7 +159,7 @@ public class LoginUser extends BaseAction{
 			
 			if (null != userBean.getRole() && 0 != userBean.getRole()
 					&& 10 != userBean.getRole()) {
-				if(!userBean.getActivationcode().equals("")){
+				if(!"".equals(userBean.getActivationcode())){
 					return Constants.ACTIVATION;
 				}else if(userBean.getStatus()!=null){
 					if(userBean.getStatus().equals("F"))

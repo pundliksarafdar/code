@@ -10,7 +10,6 @@
 <div ng-app = "siteMapApp" ng-cloak>
 <script>
 var siteMapData = <%=session.getAttribute("sitemapdata")%>
-console.log(siteMapData);
 
 /******************Static data********************/
 var MENU_NOTIFICATION_DATA = "#menuNotificationDetailsData";
@@ -366,7 +365,7 @@ siteMapApp.controller("SiteMapController",function($scope){
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                            	<span class="fa fa-spinner bigicon"></span>
                             </div>
                             <div class="icontext">
                                 Alert

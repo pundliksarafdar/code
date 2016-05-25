@@ -46,14 +46,6 @@
 		  	<input type="checkbox" data-size="mini" id="smsAttendanceDaily">
 		  	<label for="">Email</label>
 		  	<input type="checkbox" data-size="mini" id="emailAttendanceDaily">
-		  </div>
-		  <label class="form-label" for="">Weekly</label>
-		  <div>
-		  	<label for="">Sms</label>
-		  	<input type="checkbox" data-size="mini" id="smsAttendanceWeekly">
-		  	<label for="">Email</label>
-		  	<input type="checkbox" data-size="mini" id="emailAttendanceWeekly">
-		  	
 		  	<div id="weeklyDaySelection">
 		  		<label for="">Send on &nbsp;</label>
 		  		<input type="checkbox" id="Sun"><label for="Sun">Sun</label>&nbsp;
@@ -64,6 +56,14 @@
 		  		<input type="checkbox" id="Fri"><label for="Fri">Fri</label>&nbsp;
 		  		<input type="checkbox" id="Sat"><label for="Sat">Sat</label>&nbsp;
 		  	</div>
+		  	
+		  </div>
+		  <label class="form-label" for="">Weekly</label>
+		  <div>
+		  	<label for="">Sms</label>
+		  	<input type="checkbox" data-size="mini" id="smsAttendanceWeekly">
+		  	<label for="">Email</label>
+		  	<input type="checkbox" data-size="mini" id="emailAttendanceWeekly">
 		  	<div>
 			  	<label for="">Below %</label>
 			  	<input id="emailAttendanceWeeklyThreshold" type="number" class="form-control" min="0" max="100" style='width:10%;'/>

@@ -19,6 +19,7 @@ import com.classapp.db.fees.BatchFees;
 import com.classapp.db.fees.BatchFeesDistribution;
 import com.classapp.db.fees.Fees;
 import com.classapp.db.fees.Student_Fees;
+import com.notification.access.NotifcationAccess;
 import com.service.beans.BatchFeesDistributionServiceBean;
 import com.service.beans.BatchServiceBean;
 import com.service.beans.BatchStudentFees;
@@ -156,6 +157,10 @@ public class FeeServiceImpl  extends ServiceBase {
 	public Response saveStudentBatchFeesTransaction(Student_Fees_Transaction serviceFees_Transaction){
 		FeesTransaction feesTransaction = new FeesTransaction();
 		boolean status = feesTransaction.saveStudentBatchFeesTransaction(getRegId(), serviceFees_Transaction);
+		if(status){
+			NotifcationAccess access = new NotifcationAccess();
+			
+		}
 		return Response.status(Status.OK).entity(status).build();
 	}
 	

@@ -438,11 +438,11 @@ public class FeesTransaction {
 			e.printStackTrace();
 		}
 		feesDB.saveStudentFeesTransaction(fees_Transaction);
-		feesDB.updateStudentFees(inst_id, fees_Transaction.getDiv_id(), 
+		boolean success = feesDB.updateStudentFees(inst_id, fees_Transaction.getDiv_id(), 
 				fees_Transaction.getBatch_id(), fees_Transaction.getStudent_id(), 
 				fees_Transaction.getAmt_paid(),bathcFee,
 				serviceFees_Transaction.getDisType(),serviceFees_Transaction.getDiscount());
-		return true;
+		return success;
 	}
 	
 	public StudentFeesServiceBean getStudentFees(int inst_id,int student_id){
