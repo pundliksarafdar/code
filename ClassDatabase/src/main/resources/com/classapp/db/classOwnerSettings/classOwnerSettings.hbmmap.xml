@@ -13,18 +13,39 @@
         <property name="emailPayment" type="boolean">
             <column name="emailPayment"/>
         </property>
-        <property name="smsPaymentDue" type="boolean">
+        <property name="parentPayment" type="boolean">
+            <column name="parentPayment"/>
+        </property>
+        <property name="studentPayment" type="boolean">
+            <column name="studentPayment"/>
+        </property>
+        
+		<property name="smsPaymentDue" type="boolean">
             <column name="smsPaymentDue"/>
         </property>
         <property name="emailPaymentDue" type="boolean">
             <column name="emailPaymentDue"/>
         </property>
-        <property name="smsAttendanceDaily" type="boolean">
+        <property name="parentPaymentDue" type="boolean">
+            <column name="parentPaymentDue"/>
+        </property>
+        <property name="studentPaymentDue" type="boolean">
+            <column name="studentPaymentDue"/>
+        </property>
+		
+		<property name="smsAttendanceDaily" type="boolean">
             <column name="smsAttendanceDaily"/>
         </property>
         <property name="emailAttendanceDaily" type="boolean">
             <column name="emailAttendanceDaily"/>
         </property>
+		<property name="parentAttendanceDaily" type="boolean">
+            <column name="parentAttendanceDaily"/>
+        </property>
+        <property name="studentAttendanceDaily" type="boolean">
+            <column name="studentAttendanceDaily"/>
+        </property>
+		
         <property name="smsAttendanceWeekly" type="boolean">
             <column name="smsAttendanceWeekly"/>
         </property>
@@ -32,7 +53,13 @@
         <property name="emailAttendanceWeekly" type="boolean">
             <column name="emailAttendanceWeekly"/>
         </property>
-        
+        <property name="parentAttendanceWeekly" type="boolean">
+            <column name="parentAttendanceWeekly"/>
+        </property>
+        <property name="studentAttendanceWeekly" type="boolean">
+            <column name="studentAttendanceWeekly"/>
+        </property>
+		
         <property name="smsAttendanceMonthly" type="boolean">
             <column name="smsAttendanceMonthly"/>
         </property>
@@ -40,7 +67,13 @@
         <property name="emailAttendanceMonthly" type="boolean">
             <column name="emailAttendanceMonthly"/>
         </property>
-        
+        <property name="parentAttendanceMonthly" type="boolean">
+            <column name="parentAttendanceMonthly"/>
+        </property>
+        <property name="studentAttendanceMonthly" type="boolean">
+            <column name="studentAttendanceMonthly"/>
+        </property>
+		
         <property name="smsTimetableNewEntry" type="boolean">
             <column name="smsTimetableNewEntry"/>
         </property>
@@ -48,7 +81,13 @@
         <property name="emailTimetableNewEntry" type="boolean">
             <column name="emailTimetableNewEntry"/>
         </property>
-        
+        <property name="parentTimetableNewEntry" type="boolean">
+            <column name="parentTimetableNewEntry"/>
+        </property>
+        <property name="studentTimetableNewEntry" type="boolean">
+            <column name="studentTimetableNewEntry"/>
+        </property>
+		
         <property name="smsTimetableEditEntry" type="boolean">
             <column name="smsTimetableEditEntry"/>
         </property>
@@ -56,7 +95,13 @@
         <property name="emailTimetableEditEntry" type="boolean">
             <column name="emailTimetableEditEntry"/>
         </property>
-        
+        <property name="parentTimetableEditEntry" type="boolean">
+            <column name="parentTimetableEditEntry"/>
+        </property>
+        <property name="studentTimetableEditEntry" type="boolean">
+            <column name="studentTimetableEditEntry"/>
+        </property>
+		
         <property name="smsProgressCardManual" type="boolean">
             <column name="smsProgressCardManual"/>
         </property>
@@ -64,7 +109,13 @@
         <property name="emailProgressCardManual" type="boolean">
             <column name="emailProgressCardManual"/>
         </property>
-        
+        <property name="parentProgressCardManual" type="boolean">
+            <column name="parentProgressCardManual"/>
+        </property>
+        <property name="studentProgressCardManual" type="boolean">
+            <column name="studentProgressCardManual"/>
+        </property>
+		
         <property name="smsProgressCardAfterEveryExam" type="boolean">
             <column name="smsProgressCardAfterEveryExam"/>
         </property>
@@ -72,7 +123,13 @@
         <property name="emailProgressCardAfterEveryExam" type="boolean">
             <column name="emailProgressCardAfterEveryExam"/>
         </property>
-        
+        <property name="parentProgressCardAfterEveryExam" type="boolean">
+            <column name="parentProgressCardAfterEveryExam"/>
+        </property>
+        <property name="studentProgressCardAfterEveryExam" type="boolean">
+            <column name="studentProgressCardAfterEveryExam"/>
+        </property>
+
         <property name="emailAttendanceWeeklyThreshold" type="int">
             <column name="emailAttendanceWeeklyThreshold"/>
         </property>

@@ -27,8 +27,8 @@ $(document).ready(function(){
 		//console.log(weeklyRecurrence);
 		objectToSave.weeklyRecurrence = JSON.stringify(weeklyRecurrence);
 		var  handler = {};
-		handler.success = function(e){console.log(e)}
-		handler.error = function(e){console.log(e)}
+		handler.success = function(e){$.notify({message: "Settings saved successfully successfully"},{type: 'success'});}
+		handler.error = function(e){$.notify({message: "Error occured"},{type: 'danger'});}
 		rest.post(ClassownerSettingsUrl,handler,JSON.stringify(objectToSave));
 	});
 });

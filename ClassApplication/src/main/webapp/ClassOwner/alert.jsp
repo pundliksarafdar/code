@@ -9,6 +9,7 @@
 	<ul class="nav nav-tabs">
 	  <li class="active"><a href=#teacher data-toggle="tab">Teacher</a></li>
 	  <li><a href="#studentNParent" data-toggle="tab">Student and Parent</a></li>
+	  <li><a href="#sendAlert" data-toggle="tab">Academic Alert</a></li>
 	</ul>
 	
 	<div class="tab-content">
@@ -79,7 +80,8 @@
 		  	<input type="button" value="Send" class="btn btn-success" id="sendMessageToStuNPar">
 		</form>  	
 	  </div>
-	  <div class="tab-pane" id="messages">
+	  <div class="tab-pane" id="sendAlert">
+	  	<jsp:include page="sendAlert.jsp"></jsp:include>
 	  </div>
 	</div>
 </body>

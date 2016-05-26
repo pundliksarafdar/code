@@ -28,6 +28,13 @@
 		  	<label for="">Email</label>
 		  	<input type="checkbox" data-size="mini" id="emailPayment">
 		  </div>
+		  <div>
+		  	<label for="">Parent</label>
+		  	<input type="checkbox" data-size="mini" data-size="mini" id="parentPayment">
+		  	<label for="">Student</label>
+		  	<input type="checkbox" data-size="mini" id="studentPayment">
+		  </div>
+		  <br/>
 		  <label class="form-label" for="">On fee due</label>
 		  <div>
 		  	<label for="">Sms</label>
@@ -35,7 +42,12 @@
 		  	<label for="">Email</label>
 		  	<input type="checkbox" data-size="mini" id="emailPaymentDue">
 		  </div>
-	    	
+	    <div>
+		  	<label for="">Parent</label>
+		  	<input type="checkbox" data-size="mini" data-size="mini" id="parentPaymentDue">
+		  	<label for="">Student</label>
+		  	<input type="checkbox" data-size="mini" id="studentPaymentDue">
+		  </div>
 	  </div>
 	  
 	  <label>Attendance</label>
@@ -56,8 +68,14 @@
 		  		<input type="checkbox" id="Fri"><label for="Fri">Fri</label>&nbsp;
 		  		<input type="checkbox" id="Sat"><label for="Sat">Sat</label>&nbsp;
 		  	</div>
-		  	
+		  	<div>
+			  	<label for="">Parent</label>
+			  	<input type="checkbox" data-size="mini" data-size="mini" id="parentAttendanceDaily">
+			  	<label for="">Student</label>
+			  	<input type="checkbox" data-size="mini" id="studentAttendanceDaily">
+			  </div>
 		  </div>
+		  <br/>
 		  <label class="form-label" for="">Weekly</label>
 		  <div>
 		  	<label for="">Sms</label>
@@ -68,7 +86,14 @@
 			  	<label for="">Below %</label>
 			  	<input id="emailAttendanceWeeklyThreshold" type="number" class="form-control" min="0" max="100" style='width:10%;'/>
 		  	</div>
+		  	<div>
+			  	<label for="">Parent</label>
+			  	<input type="checkbox" data-size="mini" data-size="mini" id="parentAttendanceWeekly">
+			  	<label for="">Student</label>
+			  	<input type="checkbox" data-size="mini" id="studentAttendanceWeekly">
+			  </div>
 		  </div>
+		  <br/>
 		  <label class="form-label" for="">Monthly</label>
 		  <div>
 		  	<label for="">Sms</label>
@@ -79,6 +104,12 @@
 			  	<label for="">Below %</label>
 			  	<input id="emailAttendanceMonthlyThreshold" type="number" class="form-control" min="0" max="100" style='width:10%;'/>
 		  	</div>
+		  	<div>
+			  	<label for="">Parent</label>
+			  	<input type="checkbox" data-size="mini" data-size="mini" id="parentAttendanceMonthly">
+			  	<label for="">Student</label>
+			  	<input type="checkbox" data-size="mini" id="studentAttendanceMonthly">
+			  </div>
 		  </div>
 	    	
 	  </div>
@@ -90,7 +121,15 @@
 		  	<input type="checkbox" data-size="mini" id="smsTimetableNewEntry">
 		  	<label for="">Email</label>
 		  	<input type="checkbox" data-size="mini" id="emailTimetableNewEntry">
+		  	
+		  	<div>
+			  	<label for="">Parent</label>
+			  	<input type="checkbox" data-size="mini" data-size="mini" id="parentTimetableNewEntry">
+			  	<label for="">Student</label>
+			  	<input type="checkbox" data-size="mini" id="studentTimetableNewEntry">
+			  </div>
 		  </div>
+		  <br/>
 		  <label class="form-label" for="">Change in timetable</label>
 		  <div>
 		  	<label for="">Sms</label>
@@ -98,6 +137,12 @@
 		  	<label for="">Email</label>
 		  	<input type="checkbox" data-size="mini" id="emailTimetableEditEntry">
 		  </div>
+		  	<div>
+			  	<label for="">Parent</label>
+			  	<input type="checkbox" data-size="mini" data-size="mini" id="parentTimetableEditEntry">
+			  	<label for="">Student</label>
+			  	<input type="checkbox" data-size="mini" id="studentTimetableEditEntry">
+			  </div>
 	  </div>
 	  <label>Progress card</label>
 	  <div class="form-group well">
@@ -108,6 +153,13 @@
 		  	<label for="">Email</label>
 		  	<input type="checkbox" data-size="mini" id="emailProgressCardManual">
 		  </div>
+		  <div>
+			  	<label for="">Parent</label>
+			  	<input type="checkbox" data-size="mini" data-size="mini" id="parentProgressCardManual">
+			  	<label for="">Student</label>
+			  	<input type="checkbox" data-size="mini" id="studentProgressCardManual">
+			</div>
+			<br/>
 		  <label class="form-label" for="">After every exam</label>
 		  <div>
 		  	<label for="">Sms</label>
@@ -115,6 +167,12 @@
 		  	<label for="">Email</label>
 		  	<input type="checkbox" data-size="mini" id="emailProgressCardAfterEveryExam">
 		  </div>
+		  <div>
+			  	<label for="">Parent</label>
+			  	<input type="checkbox" data-size="mini" data-size="mini" id="parentProgressCardAfterEveryExam">
+			  	<label for="">Student</label>
+			  	<input type="checkbox" data-size="mini" id="studentProgressCardAfterEveryExam">
+			  </div>
 	  </div>
 	  <input type="button" class="btn btn-default" value="Save" id="save"/>
 	  
