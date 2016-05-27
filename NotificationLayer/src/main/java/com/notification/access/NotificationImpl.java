@@ -424,7 +424,7 @@ public class NotificationImpl {
 			RegisterDB db = new RegisterDB();
 			RegisterBean institute = db.getRegistereduser(inst_id);
 			List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
-			List studentList = attendanceDB.getStudentsWeeklyPresentCountForManulNotification(inst_id, div_id, batch_id, startDate, endDate, studentIds);
+			List studentList = attendanceDB.getStudentsMonthlyPresentCountForManulNotification(inst_id, div_id, batch_id, startDate, endDate, studentIds);
 			for (Iterator iterator = studentList.iterator(); iterator.hasNext();) {
 				Object[] object = (Object[]) iterator.next();
 				if (((double) (((Number) object[5]).intValue() * 100)

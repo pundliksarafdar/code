@@ -798,7 +798,7 @@ public class AttendanceDB {
 							+ "count(distinct att.schedule_id),std.parentFname,std.parentLname,"
 							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id FROM Attendance att, RegisterBean reg,Student std "
 							+"where  reg.regId = att.student_id and std.student_id = att.student_id and std.class_id = att.inst_id"
-							+ " and std.div_id = att.div_id and att.inst_id=:inst_id and att.div_id =:div_id and att.batch_id=:batch_id and att.student_id in :list" +
+							+ " and std.div_id = att.div_id and att.inst_id=:inst_id and att.div_id =:div_id and att.batch_id=:batch_id and att.student_id in :list " +
 							"and att.att_date=:att_date group by att.student_id,att.batch_id,att.div_id order by att.student_id,att.batch_id,att.div_id";
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
@@ -839,7 +839,7 @@ public class AttendanceDB {
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery(queryString);
+			Query query = session.createSQLQuery(queryString);
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("start_date", startDate);
 			query.setParameter("end_date", endDate);
@@ -876,7 +876,7 @@ public class AttendanceDB {
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery(queryString);
+			Query query = session.createSQLQuery(queryString);
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("start_date", startDate);
 			query.setParameter("end_date", endDate);
