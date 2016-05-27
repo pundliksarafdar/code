@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.classapp.db.attendance.AttendanceDB;
 import com.classapp.db.classOwnerSettings.ClassOwnerNotificationBean;
@@ -17,6 +18,8 @@ import com.classapp.db.classOwnerSettings.ClassOwnerNotificationDb;
 import com.classapp.db.fees.FeesDB;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.register.RegisterDB;
+import com.classapp.db.student.Student;
+import com.classapp.db.student.StudentDB;
 import com.notification.bean.MessageDafaultInterface;
 import com.notification.bean.MessageDetailBean;
 import com.notification.bean.ProgressCardMessage;
@@ -269,4 +272,209 @@ public class NotificationImpl {
 		StudentProgressCard progressCard = new StudentProgressCard();
 		return true;
 	}
+	
+	public String sendDailyAttendanceManulNotification(Date date,int inst_id,int div_id,int batch_id,boolean sendEmail,
+												boolean sendSMS,boolean sendToParent,boolean sendToStudent,int threshold){
+		StudentDB studentDB = new StudentDB();
+		List<Student> students=studentDB.getStudentrelatedtoBatch(batch_id+"", inst_id, div_id);
+		List<Integer> studentIds=students.stream().map(Student::getStudent_id).collect(Collectors.toList());
+		if(studentIds.size()>0){
+		AttendanceDB attendanceDB = new AttendanceDB();
+		RegisterDB db = new RegisterDB();
+		RegisterBean institute = db.getRegistereduser(inst_id);
+		List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
+		List studentList = attendanceDB.getStudentsDailyPresentCountForManulNotification(inst_id, div_id, batch_id, date, studentIds);
+		for (Iterator iterator = studentList.iterator(); iterator.hasNext();) {
+			Object[] object = (Object[]) iterator.next();
+			if (((double) (((Number) object[5]).intValue() * 100)
+					/ (double) ((Number) object[6]).intValue()) < threshold) {
+				MessageDetailBean messageDetailBean = new MessageDetailBean();
+				messageDetailBean.setFrom(institute.getClassName());
+				messageDetailBean.setEmailSubject("Daily Attendance Report");
+				messageDetailBean.setStudentId(((Number) object[0]).intValue());
+				messageDetailBean.setStudentEmail((String) object[4]);
+				if (!"".equals((String) object[3])) {
+					messageDetailBean.setStudentPhone(Long.parseLong((String) object[3]));
+				}
+				messageDetailBean.setParentEmail((String) object[10]);
+				if (!"".equals((String) object[9])) {
+					messageDetailBean.setParentPhone(Long.parseLong((String) object[9]));
+				}
+				messageDetailBean.setMessageTypeEmail(sendEmail);
+				messageDetailBean.setMessageTypeSms(sendSMS);
+				messageDetailBean.setSendToParent(sendToParent);
+				messageDetailBean.setSendToStudent(sendToStudent);
+
+				StudentAttendanceNotificationData data = new StudentAttendanceNotificationData();
+				data.setAtt_date(date);
+				data.setStudent_id(((Number) object[0]).intValue());
+				data.setStudent_name((String) object[1] + " " + (String) object[2]);
+				data.setParent_name((String) object[7] + " " + (String) object[8]);
+				data.setPresent_lectures(((Number) object[5]).intValue());
+				data.setTotal_lectures(((Number) object[6]).intValue());
+				data.setAverage(
+						(double) (((Number) object[5]).intValue() * 100) / (double) ((Number) object[6]).intValue());
+				messageDetailBean.setEmailMessage(null);
+				messageDetailBean.setEmailObject(data);
+				messageDetailBean.setEmailTemplate("attendance.tmpl");
+				messageDetailBean.setParentEmailMessage(null);
+				messageDetailBean.setParentEmailObject(data);
+				messageDetailBean.setParentEmailTemplate("attendanceAlertParent.tmpl");
+				detailBeans.add(messageDetailBean);
+			}
+		}
+		NotifcationAccess notifcationAccess = new NotifcationAccess();
+		if(detailBeans.size()>0){
+		notifcationAccess.send(detailBeans);
+		}else{
+			return "All student have paid more fees than given threshold";
+		}
+		}else{
+			return "Students Not Available in batch";
+		}
+		return "";
+	}
+
+	public String sendWeeklyAttendanceManulNotification(Date date, int inst_id, int div_id, int batch_id,
+			boolean sendEmail, boolean sendSMS, boolean sendToParent, boolean sendToStudent, int threshold) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.DAY_OF_WEEK, 1);
+		Date startDate = new Date(calendar.getTime().getTime());
+		calendar.setTime(startDate);
+		 calendar.add(calendar.DATE, 6);
+		//calendar.set(Calendar.DAY_OF_MONTH, lastdate);
+		Date endDate =  new Date(calendar.getTime().getTime());
+		StudentDB studentDB = new StudentDB();
+		List<Student> students = studentDB.getStudentrelatedtoBatch(batch_id + "", inst_id, div_id);
+		List<Integer> studentIds = students.stream().map(Student::getStudent_id).collect(Collectors.toList());
+		if (studentIds.size() > 0) {
+			AttendanceDB attendanceDB = new AttendanceDB();
+			RegisterDB db = new RegisterDB();
+			RegisterBean institute = db.getRegistereduser(inst_id);
+			List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
+			List studentList = attendanceDB.getStudentsWeeklyPresentCountForManulNotification(inst_id, div_id, batch_id, startDate, endDate, studentIds);
+			for (Iterator iterator = studentList.iterator(); iterator.hasNext();) {
+				Object[] object = (Object[]) iterator.next();
+				if (((double) (((Number) object[5]).intValue() * 100)
+						/ (double) ((Number) object[6]).intValue()) < threshold) {
+					MessageDetailBean messageDetailBean = new MessageDetailBean();
+					messageDetailBean.setFrom(institute.getClassName());
+					messageDetailBean.setEmailSubject("Daily Attendance Report");
+					messageDetailBean.setStudentId(((Number) object[0]).intValue());
+					messageDetailBean.setStudentEmail((String) object[4]);
+					if (!"".equals((String) object[3])) {
+						messageDetailBean.setStudentPhone(Long.parseLong((String) object[3]));
+					}
+					messageDetailBean.setParentEmail((String) object[10]);
+					if (!"".equals((String) object[9])) {
+						messageDetailBean.setParentPhone(Long.parseLong((String) object[9]));
+					}
+					messageDetailBean.setMessageTypeEmail(sendEmail);
+					messageDetailBean.setMessageTypeSms(sendSMS);
+					messageDetailBean.setSendToParent(sendToParent);
+					messageDetailBean.setSendToStudent(sendToStudent);
+
+					StudentAttendanceNotificationData data = new StudentAttendanceNotificationData();
+					data.setAtt_date(date);
+					data.setStudent_id(((Number) object[0]).intValue());
+					data.setStudent_name((String) object[1] + " " + (String) object[2]);
+					data.setParent_name((String) object[7] + " " + (String) object[8]);
+					data.setPresent_lectures(((Number) object[5]).intValue());
+					data.setTotal_lectures(((Number) object[6]).intValue());
+					data.setAverage((double) (((Number) object[5]).intValue() * 100)
+							/ (double) ((Number) object[6]).intValue());
+					messageDetailBean.setEmailMessage(null);
+					messageDetailBean.setEmailObject(data);
+					messageDetailBean.setEmailTemplate("attendance.tmpl");
+					messageDetailBean.setParentEmailMessage(null);
+					messageDetailBean.setParentEmailObject(data);
+					messageDetailBean.setParentEmailTemplate("attendanceAlertParent.tmpl");
+					detailBeans.add(messageDetailBean);
+				}
+			}
+			NotifcationAccess notifcationAccess = new NotifcationAccess();
+			if (detailBeans.size() > 0) {
+				notifcationAccess.send(detailBeans);
+			} else {
+				return "All student have paid more fees than given threshold";
+			}
+		} else {
+			return "Students Not Available in batch";
+		}
+		return "";
+	}
+	
+	public String sendMonthlyAttendanceManulNotification(Date date, int inst_id, int div_id, int batch_id,
+			boolean sendEmail, boolean sendSMS, boolean sendToParent, boolean sendToStudent, int threshold) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(calendar.DATE, -1);
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		Date startDate = new Date(calendar.getTime().getTime());
+		calendar.setTime(date);
+		int lastdate = calendar.getActualMaximum(Calendar.DATE);
+		calendar.set(Calendar.DAY_OF_MONTH, lastdate);
+		Date endDate =  new Date(calendar.getTime().getTime());
+		StudentDB studentDB = new StudentDB();
+		List<Student> students = studentDB.getStudentrelatedtoBatch(batch_id + "", inst_id, div_id);
+		List<Integer> studentIds = students.stream().map(Student::getStudent_id).collect(Collectors.toList());
+		if (studentIds.size() > 0) {
+			AttendanceDB attendanceDB = new AttendanceDB();
+			RegisterDB db = new RegisterDB();
+			RegisterBean institute = db.getRegistereduser(inst_id);
+			List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
+			List studentList = attendanceDB.getStudentsWeeklyPresentCountForManulNotification(inst_id, div_id, batch_id, startDate, endDate, studentIds);
+			for (Iterator iterator = studentList.iterator(); iterator.hasNext();) {
+				Object[] object = (Object[]) iterator.next();
+				if (((double) (((Number) object[5]).intValue() * 100)
+						/ (double) ((Number) object[6]).intValue()) < threshold) {
+					MessageDetailBean messageDetailBean = new MessageDetailBean();
+					messageDetailBean.setFrom(institute.getClassName());
+					messageDetailBean.setEmailSubject("Daily Attendance Report");
+					messageDetailBean.setStudentId(((Number) object[0]).intValue());
+					messageDetailBean.setStudentEmail((String) object[4]);
+					if (!"".equals((String) object[3])) {
+						messageDetailBean.setStudentPhone(Long.parseLong((String) object[3]));
+					}
+					messageDetailBean.setParentEmail((String) object[10]);
+					if (!"".equals((String) object[9])) {
+						messageDetailBean.setParentPhone(Long.parseLong((String) object[9]));
+					}
+					messageDetailBean.setMessageTypeEmail(sendEmail);
+					messageDetailBean.setMessageTypeSms(sendSMS);
+					messageDetailBean.setSendToParent(sendToParent);
+					messageDetailBean.setSendToStudent(sendToStudent);
+
+					StudentAttendanceNotificationData data = new StudentAttendanceNotificationData();
+					data.setAtt_date(date);
+					data.setStudent_id(((Number) object[0]).intValue());
+					data.setStudent_name((String) object[1] + " " + (String) object[2]);
+					data.setParent_name((String) object[7] + " " + (String) object[8]);
+					data.setPresent_lectures(((Number) object[5]).intValue());
+					data.setTotal_lectures(((Number) object[6]).intValue());
+					data.setAverage((double) (((Number) object[5]).intValue() * 100)
+							/ (double) ((Number) object[6]).intValue());
+					messageDetailBean.setEmailMessage(null);
+					messageDetailBean.setEmailObject(data);
+					messageDetailBean.setEmailTemplate("attendance.tmpl");
+					messageDetailBean.setParentEmailMessage(null);
+					messageDetailBean.setParentEmailObject(data);
+					messageDetailBean.setParentEmailTemplate("attendanceAlertParent.tmpl");
+					detailBeans.add(messageDetailBean);
+				}
+			}
+			NotifcationAccess notifcationAccess = new NotifcationAccess();
+			if (detailBeans.size() > 0) {
+				notifcationAccess.send(detailBeans);
+			} else {
+				return "All student have paid more fees than given threshold";
+			}
+		} else {
+			return "Students Not Available in batch";
+		}
+		return "";
+	}
+	
+	
 }

@@ -788,4 +788,113 @@ public class AttendanceDB {
 
 		return null;
 }
+	
+	public List getStudentsDailyPresentCountForManulNotification(int inst_id,int div_id,int batch_id, Date att_date,List<Integer> studentIds) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List list = null;
+		String queryString = " SELECT std.student_id,reg.fname,reg.lname,reg.phone1,reg.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
+							+ "count(distinct att.schedule_id),std.parentFname,std.parentLname,"
+							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id FROM Attendance att, RegisterBean reg,Student std "
+							+"where  reg.regId = att.student_id and std.student_id = att.student_id and std.class_id = att.inst_id"
+							+ " and std.div_id = att.div_id and att.inst_id=:inst_id and att.div_id =:div_id and att.batch_id=:batch_id and att.student_id in :list" +
+							"and att.att_date=:att_date group by att.student_id,att.batch_id,att.div_id order by att.student_id,att.batch_id,att.div_id";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("att_date", att_date);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", batch_id);
+			query.setParameterList("list", studentIds);
+			list = query.list();
+			if (list != null) {
+				return list;
+			}
+
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return null;
+}
+	
+	public List getStudentsWeeklyPresentCountForManulNotification(int inst_id,int div_id,int batch_id, Date startDate,Date endDate,List<Integer> studentIds) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List list = null;
+		String queryString =" SELECT std.student_id,reg.fname,reg.lname,reg.phone1,reg.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
+							+ "count(distinct att.schedule_id,att_date),std.parentFname,std.parentLname,"
+							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id  FROM Attendance att, regtable reg,Student std "
+							+ "where  reg.REG_ID = att.student_id and std.student_id = att.student_id and std.class_id = att.inst_id"
+							+ " and std.div_id = att.div_id and att.inst_id=:inst_id and att.div_id =:div_id and att.batch_id=:batch_id and att.student_id in :list "
+							+ "and  att_date>=:start_date and att_date<=:end_date group by att.student_id,att.batch_id,att.div_id "
+							+ "order by att.student_id,att.batch_id,att.div_id";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("start_date", startDate);
+			query.setParameter("end_date", endDate);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", batch_id);
+			query.setParameterList("list", studentIds);
+			list = query.list();
+			if (list != null) {
+				return list;
+			}
+
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return null;
+}
+	
+	public List getStudentsMonthlyPresentCountForManulNotification(int inst_id,int div_id,int batch_id, Date startDate,Date endDate,List<Integer> studentIds) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List list = null;
+		String queryString =" SELECT std.student_id,reg.fname,reg.lname,reg.phone1,reg.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
+							+ "count(distinct att.schedule_id,att_date),std.parentFname,std.parentLname,"
+							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id  FROM Attendance att, regtable reg,Student std "
+							+ "where  reg.REG_ID = att.student_id and std.student_id = att.student_id and std.class_id = att.inst_id"
+							+ " and std.div_id = att.div_id and att.inst_id=:inst_id and att.div_id =:div_id and att.batch_id=:batch_id and att.student_id in :list "
+							+ "and  att_date>=:start_date and att_date<=:end_date group by att.student_id,att.batch_id,att.div_id "
+							+ "order by att.student_id,att.batch_id,att.div_id";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("start_date", startDate);
+			query.setParameter("end_date", endDate);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", batch_id);
+			query.setParameterList("list", studentIds);
+			list = query.list();
+			if (list != null) {
+				return list;
+			}
+
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return null;
+}
 }
