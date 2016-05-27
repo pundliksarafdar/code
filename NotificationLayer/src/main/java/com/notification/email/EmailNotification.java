@@ -19,11 +19,11 @@ public class EmailNotification implements iNotify{
 	@Override
 	public String send(MessageDetailBean messageDetailBean,String message) {
 		if(messageDetailBean.isSendToStudent()){
-			this.sendEmail(messageDetailBean.getStudentEmail(), message, "",messageDetailBean.getFrom());
+			this.sendEmail(messageDetailBean.getStudentEmail(), message, messageDetailBean.getEmailSubject(),messageDetailBean.getFrom());
 		}
 		
 		if(messageDetailBean.isSendToParent()){
-			this.sendEmail(messageDetailBean.getParentEmail(), message, "",messageDetailBean.getFrom());
+			this.sendEmail(messageDetailBean.getParentEmail(), message, messageDetailBean.getEmailSubject(),messageDetailBean.getFrom());
 		}
 		return null;
 	}

@@ -2,6 +2,7 @@ package com.notification.bean;
 
 public class MessageDetailBean {
 	String from;
+	String emailSubject;
 	Integer studentId;
 	String studentEmail;
 	Long studentPhone;
@@ -29,6 +30,11 @@ public class MessageDetailBean {
 	String emailMessage;
 	String emailTemplate;
 	Object emailObject;
+	
+	//if message is null parse template and object 
+	String parentEmailMessage;
+	String parentEmailTemplate;
+	Object parentEmailObject;
 		
 	//if message is null parse template and object 
 	String pushMessage;
@@ -41,6 +47,12 @@ public class MessageDetailBean {
 	}
 	public void setFrom(String from) {
 		this.from = from;
+	}
+	public String getEmailSubject() {
+		return emailSubject;
+	}
+	public void setEmailSubject(String emailSubject) {
+		this.emailSubject = emailSubject;
 	}
 	public Integer getStudentId() {
 		return studentId;
@@ -179,6 +191,24 @@ public class MessageDetailBean {
 	}
 	public void setPushObject(Object pushObject) {
 		this.pushObject = pushObject;
+	}
+	public String getParentEmailMessage() {
+		return parentEmailMessage;
+	}
+	public void setParentEmailMessage(String parentEmailMessage) {
+		this.parentEmailMessage = parentEmailMessage;
+	}
+	public String getParentEmailTemplate() {
+		return parentEmailTemplate;
+	}
+	public void setParentEmailTemplate(String parentEmailTemplate) {
+		this.parentEmailTemplate = parentEmailTemplate;
+	}
+	public Object getParentEmailObject() {
+		return parentEmailObject;
+	}
+	public void setParentEmailObject(Object parentEmailObject) {
+		this.parentEmailObject = parentEmailObject;
 	}
 	
 	

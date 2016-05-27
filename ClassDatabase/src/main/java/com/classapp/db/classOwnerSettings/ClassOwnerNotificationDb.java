@@ -1,5 +1,6 @@
 package com.classapp.db.classOwnerSettings;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -80,6 +81,57 @@ public class ClassOwnerNotificationDb {
 		transaction.commit();
 		session.close();
 		return  contacts;
+	}
+	
+	public List<ClassOwnerNotificationBean> getInstitutesForDailyAttendance(String day){
+		Transaction transaction=null;
+		Session session=null;
+		List resultList = null;
+		day = "\""+day.substring(0,3)+"\":true";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			String queryString="from ClassOwnerNotificationBean "
+					+ "where weeklyRecurrence like :day";
+			Query query = session.createQuery(queryString);
+			query.setParameter("day", "%"+day+"%");
+			resultList =query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return resultList;
+	}
+	
+	public List<ClassOwnerNotificationBean> getInstitutesForWeeklyAttendance(){
+		Transaction transaction=null;
+		Session session=null;
+		List resultList = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			String queryString="from ClassOwnerNotificationBean ";
+			Query query = session.createQuery(queryString);
+			resultList =query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return resultList;
 	}
 	
 	public class ListCustomToString<E> extends ArrayList<E>{
