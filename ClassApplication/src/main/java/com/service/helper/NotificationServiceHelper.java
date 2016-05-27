@@ -1,12 +1,17 @@
 package com.service.helper;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.notification.access.NotificationImpl;
 import com.notification.email.EmailNotificationTransaction;
 import com.notification.sms.SmsNotificationTransaction;
 import com.service.beans.ClassownerSettingsNotification;
+import com.service.beans.SendAcademicAlertAttendanceBean;
+import com.service.beans.SendAcademicAlertFeeDueBean;
+import com.service.beans.SendAcademicAlertProgressCardBean;
 import com.service.beans.SendNotificationMesssageBean;
 import com.transaction.classownersettingtransaction.ClassownerSettingstransaction;
 
@@ -114,5 +119,32 @@ public class NotificationServiceHelper {
 			status.add("No sms access");
 		}
 		return status;
+	}
+	
+	public void sendFeesDue(SendAcademicAlertFeeDueBean bean,int inst_id ){
+		NotificationImpl notificationImpl = new NotificationImpl();
+		notificationImpl.sendFeesDueNotification(inst_id, bean.getDivId(), bean.getBatchId(), bean.isEmail(), bean.isSms(), 
+				bean.isParent(), bean.isParent());
+	}
+	
+	public void sendAttendance(SendAcademicAlertAttendanceBean bean,int inst_id ){
+		NotificationImpl notificationImpl = new NotificationImpl();
+		if("day".equals(bean.getType())){
+			notificationImpl.sendDailyAttendanceManulNotification(new Date(bean.getDate().getTime()), inst_id, bean.getDivId(),
+					bean.getBatchId(), bean.isEmail(), bean.isSms(), bean.isParent(), bean.isStudent(), bean.getMinAttendace());
+		}else if("week".equals(bean.getType())){
+			notificationImpl.sendWeeklyAttendanceManulNotification(new Date(bean.getDate().getTime()), inst_id, bean.getDivId(),
+					bean.getBatchId(), bean.isEmail(), bean.isSms(), bean.isParent(), bean.isStudent(), bean.getMinAttendace());
+		}else if("month".equals(bean.getType())){
+			notificationImpl.sendMonthlyAttendanceManulNotification(new Date(bean.getDate().getTime()), inst_id, bean.getDivId(),
+					bean.getBatchId(), bean.isEmail(), bean.isSms(), bean.isParent(), bean.isStudent(), bean.getMinAttendace());
+		}
+	}
+	
+	public void sendProgressCard(SendAcademicAlertProgressCardBean bean,int inst_id){
+		NotificationImpl notificationImpl = new NotificationImpl();
+		String csv = bean.getExamList().toString().replace("[", "").replace("]", "")
+	            .replace(", ", ",");
+		notificationImpl.sendStudentProgressCard(inst_id, bean.getDivId(), bean.getBatchId(), csv);
 	}
 }

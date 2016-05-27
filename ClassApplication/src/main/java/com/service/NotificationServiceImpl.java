@@ -12,6 +12,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.service.beans.SendAcademicAlertAttendanceBean;
+import com.service.beans.SendAcademicAlertFeeDueBean;
+import com.service.beans.SendAcademicAlertProgressCardBean;
 import com.service.beans.SendNotificationMesssageBean;
 import com.service.helper.NotificationServiceHelper;
 import com.user.UserBean;
@@ -35,5 +38,26 @@ public class NotificationServiceImpl extends ServiceBase{
 			return Response.status(Status.NOT_ACCEPTABLE).entity(validationMessage).build();
 					
 		}
+	}
+	
+	@POST @Path("/sendAcademicAlerts/feeDue") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
+	public Response sendAcademicAlerts(SendAcademicAlertFeeDueBean bean){
+		NotificationServiceHelper helper = new NotificationServiceHelper();
+		helper.sendFeesDue(bean, getRegId());
+		return Response.ok().build();
+	}
+	
+	@POST @Path("/sendAcademicAlerts/attendace") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
+	public Response sendAcademicAlertsAttendance(SendAcademicAlertAttendanceBean bean){
+		NotificationServiceHelper helper = new NotificationServiceHelper();
+		helper.sendAttendance(bean, getRegId());
+		return Response.ok().build();
+	}
+	
+	@POST @Path("/sendAcademicAlerts/progressCard") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
+	public Response sendAcademicAlertsProgressCard(SendAcademicAlertProgressCardBean bean){
+		NotificationServiceHelper helper = new NotificationServiceHelper();
+		helper.sendProgressCard(bean, getRegId());
+		return Response.ok().build();
 	}
 }

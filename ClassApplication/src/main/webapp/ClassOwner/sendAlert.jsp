@@ -14,11 +14,12 @@
 </head>
 <body>
 	<div>
-		<div>
-			<div class="container row">
-	  		<div class="col-md-6">
+		<div class="container">
+		<form id="baseform">
+			<div class="row">
+	  		<div class="col-md-3">
 		  		<div>
-		  		<select name="divisionSelect" id="divisionSelect" class="form-control" width="100px">
+		  		<select name="divisionSelect" id="divisionSelect" class="form-control" width="100px" required>
 					<option value="-1">Select Class</option>
 					<c:forEach items="${requestScope.divisions}" var="division">
 						<option value="<c:out value="${division.divId}"></c:out>"><c:out value="${division.divisionName}"></c:out>&nbsp;<c:out value="${division.stream}"></c:out></option>
@@ -26,34 +27,34 @@
 				</select>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-3">
 				<div id="sendAlert">
-	  			<Select name="divisionSelect" id="batchSelect" class="form-control" width="100px"></Select>
+	  			<Select name="batchSelect" id="batchSelect" class="form-control" width="100px"></Select>
 	  			</div>
 	  		</div>
-	  		</div>
+	  		
+			<div class="col-md-3">
+			<label >Choose method</label>	
+				<div>
+					<input type="checkbox" value="sms" id="sms" name="type" required><label for="sms">SMS</label>
+					<input type="checkbox" value="email" id="email" name="type" required><label for="email">Email</label>
+				</div>
+			</div>
+			<div class="col-md-3">
+			<label>Choose whome</label>
+				<div>
+					<input type="checkbox" value="parent" id="parent" name="sendTo" required/><label for="parent">Parent</label>
+					<input type="checkbox" value="student" id="student" name="sendTo" required/><label for="student">Student</label>
+				</div>	
+			</div>
+		</div>
+		</form>
 		</div>
 		
 		<div class="container">
-			<div class="row">
-			<label class="col-md-3">Choose method</label>	
-				<div class="col-md-9">
-					<input type="checkbox" value="sms" id="sms"><label for="sms">SMS</label>
-					<input type="checkbox" value="sms" id="email"><label for="email">Email</label>
-				</div>
-			</div>
-			<div class="row">
-			<label class="col-md-3">Choose whome</label>
-				<div class="col-md-9">
-					<input type="checkbox" value="parent" id="parent"/><label for="parent">Parent</label>
-					<input type="checkbox" value="student" id="student"/><label for="student">Student</label>
-				</div>	
-			</div>
-		
-		
 		<div class="row">
 			<label class="col-md-3">Fee due</label>	
-			<input type="button" value="Send" class="btn btn-success"/>
+			<input type="button" value="Send" class="btn btn-success" id="sendFeeDue"/>
 		</div>
 		
 		<div class="row">
@@ -67,55 +68,64 @@
 			<div class="col-md-9">	
 			<div class="container">
 			<div class="row">
+				<form>
 				<label class="col-md-3">Day</label>
+				<input type='hidden' class="type" value="day"/>
 				<div class="col-md-3">
 					<div class='input-group date' id='datepickerDay'>
-	                    <input type='text' class="form-control" placeholder="Select date"/>
+	                    <input type='text' class="form-control" placeholder="Select date" required name="dayDatePicker"/>
 	                    <span class="input-group-addon">
 	                        <span class="glyphicon glyphicon-calendar"></span>
 	                    </span>
                 	</div>
 				</div>
 				<div class="col-md-3">
-					<input type='text' class="form-control"  placeholder="Minimum attendance"/>
+					<input type='text' class="form-control"   id="minAttendance" placeholder="Minimum attendance" required name="dayAttendance"/>
 				</div>
 				<div class="col-md-3">
-					<input type='button' class="btn btn-success"  value="Send"/>
+					<input type='button' class="btn btn-success sendAttendance"  value="Send"/>
 				</div>
+				</form>
 			</div>
 			<div class="row">
+				<form>
 				<label class="col-md-3">Week</label>
+				<input type='hidden' class="type" value="week"/>
 				<div class="col-md-3">
 					<div class='input-group date' id='datepickerWeek'>
-	                    <input type='text' class="form-control"  placeholder="Select week"/>
+	                    <input type='text' class="form-control"  placeholder="Select week" required name="monthDatePicker"/>
 	                    <span class="input-group-addon">
 	                        <span class="glyphicon glyphicon-calendar"></span>
 	                    </span>
                 	</div>
 				</div>
 				<div class="col-md-3">
-					<input type='text' class="form-control"  placeholder="Minimum attendance"/>
+					<input type='text' class="form-control"   id="minAttendance" placeholder="Minimum attendance" name="weekAttendance" required/>
 				</div>
 				<div class="col-md-3">
-					<input type='button' class="btn btn-success"  value="Send"/>
+					<input type='button' class="btn btn-success sendAttendance"  value="Send"/>
 				</div>
+				</form>
 			</div>
 			<div class="row">
+				<form>
 				<label class="col-md-3">Month</label>
+				<input type='hidden' class="type" value="month"/>
 				<div class="col-md-3">
 					<div class='input-group date' id='datepickerMonth'>
-	                    <input type='text' class="form-control"  placeholder="Select month"/>
+	                    <input type='text' class="form-control"  placeholder="Select month" name="monthDatePicker" required/>
 	                    <span class="input-group-addon">
 	                        <span class="glyphicon glyphicon-calendar"></span>
 	                    </span>
                 	</div>
 				</div>
 				<div class="col-md-3">
-					<input type='text' class="form-control"  placeholder="Minimum attendance"/>
+					<input type='text' class="form-control" id="minAttendance" placeholder="Minimum attendance" name="monthAttendance" required/>
 				</div>
 				<div class="col-md-3">
-					<input type='button' class="btn btn-success"  value="Send"/>
+					<input type='button' class="btn btn-success sendAttendance"  value="Send"/>
 				</div>
+				</form>
 			</div>
 			</div>
 		</div>
@@ -125,12 +135,14 @@
 			<div class="col-md-2">
 			<label>Progress card</label>
 			</div>
+			<form>
 			<div class="col-md-8">
-				<select id="examSelect"  multiple="multiple" style="width:50%;"></select>
+				<div><select id="examSelect" name="examSelect" multiple="multiple" style="width:50%;" required></select></div>
 			</div>
 			<div class="col-md-2">
-				<input type='button' class="btn btn-success"  value="Send"/>
+				<input type='button' class="btn btn-success"  value="Send" id="sendProgressCard"/>
 			</div>
+			</form>
 			</div>
 	</div>
 	</div>
