@@ -74,6 +74,16 @@ var wayOfAddition="";
 		$("#division").change(function(){
 			getBatchesOfDivision();
 		});
+		$("#batches").change(function(){
+									var divId=$("#division").val();
+									var batch = $("#batches").val();
+									if(divId!="-1" && batch!="-1"){
+									 	$("#uploadStudentExcelBtn").removeAttr('disabled');
+									 	$("#uploadStudentExcelBtn").empty();
+									}else{
+										$("#uploadStudentExcelBtn").prop("disabled",true);
+						 			}
+						 		});
 		
 		$("#classfloorIDAddition").click(function(){
 			wayOfAddition="byStudentID";
@@ -142,9 +152,48 @@ var wayOfAddition="";
 			}
 		});
 		*/
-		
-	});
-	
+		$("#uploadStudentExcelBtn").on("click",function(e){
+						var handler = {};
+						handler.success = function(e){				
+							var uri = "rest/classownerservice/addExcelFile/"+e.fileid;
+							var handlers = {};
+							handlers.success = function(e){
+								var divisionId = $('#division').val();
+								var batchIDs = $("#batches").val();
+								var StudentExcelUploadBean= {};
+								StudentExcelUploadBean.divId=divisionId;
+								StudentExcelUploadBean.batchId=divisionID;
+								StudentExcelUploadBean.fileName=e.fileid;
+								var studentExcelUploadBean = JSON.stringify(StudentExcelUploadBean);
+								var handlersSuccess = {};
+								rest.post("rest/files/upload/student/xls/", handlersSuccess,
+										studentExcelUploadBean, false);
+								handlersSuccess.success = function(successResp){
+									console.log("Success",successResp);
+							}
+								console.log("Success",e);
+								}
+							handlers.error = function(e){console.log("Error",e)}
+							rest.post(uri,handlers);
+						}
+						handler.error = function(){};
+						
+						var submitDataFile = $(".excelUpload")[0];
+						var file=document.getElementById("excelUploadBrowseID").value;
+						var flagUpload=true;
+						if(file==""){				
+							$("#browseExcelErrorSpan").html("Please select the file!");
+							flagUpload=false;
+						}else{
+							$("#browseExcelErrorSpan").html("");
+							flagUpload=true;
+						}
+						if(flagUpload==true){
+							rest.uploadExcelFile(submitDataFile ,handler,false);
+						}
+									
+					});
+	});	
 	function calculateFee(){
 		var tableRow = $(this).closest('tr');
 		var data = feesDataTable.row(tableRow).data();
@@ -461,7 +510,23 @@ var wayOfAddition="";
 <span class="error" id="batchError"></span>
 </div>
 </div>
-
+<div class="row">	
+			<div class="col-md-3">
+				<a href="./SampleFiles/SampleStudent.xls" class="btn" role="button">Sample Student Excel</a>
+			</div>
+			<div class="col-md-3" id="browseExcelDiv">
+			<span class="btn fileinput-button">
+							<i class="glyphicon glyphicon-folder-open"></i> 
+							<span>Browse Your Student Excel Sheet</span>
+							<input type="file" id="excelUploadBrowseID" class="excelUpload">							
+						</span>
+						<span class="error" id="browseExcelErrorSpan">
+						</span>
+			</div>	
+			<div class="col-md-3">
+				<input type="button" id="uploadStudentExcelBtn" value="Upload" disabled/>
+			</div>	
+ 		</div>
 <div class="row">
 	<div class="col-md-3">
 		<button id="classfloorIDAddition" class="btn btn-default">Add Student By Class Floor ID</button>

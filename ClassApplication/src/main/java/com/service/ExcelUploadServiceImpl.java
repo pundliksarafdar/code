@@ -3,6 +3,11 @@ package com.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+ 
+
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -18,7 +23,9 @@ import javax.ws.rs.core.Response;
 import com.datalayer.exam.MCQuestionPaper;
 import com.datalayer.exam.Question;
 import com.datalayer.exam.SubjectiveQuestionPaper;
+import com.excel.student.StudentExcelData;
 import com.service.beans.QuestionExcelUploadBean;
+import com.service.beans.StudentExcelUploadBean;
 import com.transaction.questionbank.QuestionBankTransaction;
 
 
@@ -148,4 +155,37 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 		        invalidQuestionResponseMap.put("addedQuestionsResponse",addedQuestionResponseList);
 				return Response.ok(invalidQuestionResponseMap).build();
 	    }    
+		
+		@POST
+			    @Path("/upload/student/xls/")
+				@Produces(MediaType.APPLICATION_JSON)
+				@Consumes(MediaType.APPLICATION_JSON)
+			    public Response uploadStudentExcelFile(StudentExcelUploadBean studentFileBean) 
+			 	{
+		
+					String response="";
+					int regId=getRegId();
+					HashMap<String,ArrayList<String>> invalidStudentResponseMap=null;
+					
+					StudentExcelData studentData= new StudentExcelData(studentFileBean.getFileName());
+					studentData.loadStudents(regId, studentFileBean.getDivId(), studentFileBean.getBatchId());
+					studentData.processData(regId, studentFileBean.getDivId(), studentFileBean.getBatchId());
+					invalidStudentResponseMap=studentData.getInvalidStudentResponseMap();
+					response="Students added successfully";
+					Set<Entry<Integer, Boolean>> entrySet=(Set<Entry<Integer, Boolean>>) studentData.getSuccessStudentMap();
+					
+					ArrayList<String> addedStudentResponseList=new ArrayList<String>();
+			        
+					for(Entry<Integer, Boolean> entry : entrySet){
+						if(entry.getValue()){
+							response="Student with student ID="+entry.getKey()+" is added successfully";
+						}else{
+							response="Unable to add student with student ID="+entry.getKey();
+						}
+						addedStudentResponseList.add(response);
+					}     
+				       
+				        invalidStudentResponseMap.put("addedStudentsResponse",addedStudentResponseList);
+					return Response.ok(invalidStudentResponseMap).build();
+			    }
 }
