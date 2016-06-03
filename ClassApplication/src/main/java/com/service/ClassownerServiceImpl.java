@@ -661,12 +661,13 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	public Response getOnlineExamPaperMarks(OnlineExam onlineExam){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
-		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
+		patternTransaction.setQuestionPaperStorageURL(Constants.STORAGE_PATH+File.separator+(onlineExam.getInst_id()!=0?onlineExam.getInst_id():getRegId())+File.separator+"QuestionPaper");
 		onlineExam = patternTransaction.getOnlineQuestionPaperMarks(onlineExam.getDiv_id(), onlineExam.getPaper_id(), onlineExam.getAnswers(),onlineExam);
 		if(userBean.getRole() == 3){
 			StudentMarks studentMarks = new StudentMarks();
 			try {
 				BeanUtils.copyProperties(studentMarks, onlineExam);
+				studentMarks.setStudent_id(getRegId());
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -40,8 +40,15 @@ public class AttemptExamAction extends BaseAction {
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
-		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
-		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
+		
+		//patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
+		//if inst_id is 0 this means classowner is calling as we are not sending data
+		//if it is non 0 then we are sending data and student is accessing
+		if(inst_id==0){
+			inst_id = userBean.getRegId();
+		}
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),inst_id,userBean.getUserStatic().getExamPath());
+		patternTransaction.setQuestionPaperStorageURL(Constants.STORAGE_PATH+File.separator+inst_id+File.separator+"QuestionPaper");
 		onlineExamPaper = patternTransaction.getOnlineQuestionPaper(division,question_paper_id);
 		questionPaperSize = onlineExamPaper.getOnlineExamPaperElementList().size();
 	return SUCCESS;

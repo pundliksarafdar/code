@@ -22,6 +22,8 @@ import com.classapp.db.exam.ExamDB;
 import com.classapp.db.exam.ExamPaperDB;
 import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentDB;
+import com.classapp.db.student.StudentExamMarksByExamDao;
+import com.classapp.db.student.StudentExamMarksDao;
 import com.classapp.db.student.StudentMarks;
 import com.classapp.db.subject.StudentMarksDB;
 import com.classapp.db.subject.Subject;
@@ -619,6 +621,16 @@ public class StudentMarksTransaction {
 		}
 		return examWiseStudentDetails;
 		
+	}
+	
+	public List<StudentExamMarksDao> getStudentMarksDetail(int classId,int studentId,int divId,int batchId){
+		StudentMarksDB studentMarksDB = new StudentMarksDB();
+		return studentMarksDB.getStudentMarksDetail(classId, studentId, divId, batchId);
+	}
+	
+	public List<StudentExamMarksByExamDao> getStudentMarksDetailByExam(int classId,int studentId,int divId,int batchId,int examId){
+		StudentMarksDB studentMarksDB = new StudentMarksDB();
+		return studentMarksDB.getStudentMarksDetailByExam(classId, studentId, divId, batchId,examId);
 	}
 	
 	public static void main(String[] args) {

@@ -669,6 +669,16 @@
         <put-attribute name="topnav" value="/student/menu.jsp" />
         <put-attribute name="body"   value="/student/ViewNotesList.jsp"/>      
    </definition>
+   <definition name="student.viewexamlist" extends="baseLayout">
+      <put-attribute name="title"  value="Create Exam Pattern"/>
+        <put-attribute name="topnav" value="/student/menu.jsp" />
+        <put-attribute name="body"   value="/student/ViewExamList.jsp"/>      
+   </definition>
+   <definition name="student.viewmarks" extends="baseLayout">
+      <put-attribute name="title"  value="Marks"/>
+      <put-attribute name="topnav" value="/student/menu.jsp" />
+      <put-attribute name="body"   value="/student/ViewMarks.jsp"/>      
+   </definition>
    <definition name="classowner.alert" extends="baseLayout">
       <put-attribute name="title"  value="Alert"/>
         <put-attribute name="topnav" value="/admin/menu.jsp" />

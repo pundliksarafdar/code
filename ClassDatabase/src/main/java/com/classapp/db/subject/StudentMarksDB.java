@@ -12,8 +12,11 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 
 import com.classapp.db.exam.Exam;
+import com.classapp.db.student.StudentExamMarksByExamDao;
+import com.classapp.db.student.StudentExamMarksDao;
 import com.classapp.db.student.StudentMarks;
 import com.classapp.persistence.HibernateUtil;
 
@@ -524,6 +527,60 @@ public class StudentMarksDB {
 		return list;
 }
 	
+	public List<StudentExamMarksDao> getStudentMarksDetail(int inst_id,int student_id,int div_id,int batch_id) {
+		String queryString = "select exam.exam_id as examId,exam.exam_name as examName,sum(student_marks.marks)as examMarks,"
+				+ "student_marks.inst_id as instId,student_marks.div_id as divId,student_marks.batch_id as batchId "
+				+ "from student_marks inner join exam on exam.exam_id=student_marks.exam_id "
+				+ "where student_marks.student_id=:student_id and student_marks.inst_id=:inst_id and student_marks.div_id = :div_id and student_marks.batch_id = :batch_id "
+				+ "group by student_marks.exam_id ";
+		List<StudentExamMarksDao> examMarksDaos = null;		
+		try {
+				Session session = HibernateUtil.getSessionfactory().openSession();
+				Transaction transaction = session.beginTransaction();
+				Query query = session.createSQLQuery(queryString)
+						.setResultTransformer(Transformers.aliasToBean(StudentExamMarksDao.class));
+				
+				query.setParameter("inst_id", inst_id);
+				query.setParameter("student_id", student_id);
+				query.setParameter("div_id", div_id);
+				query.setParameter("batch_id", batch_id);
+				
+				examMarksDaos = query.list();
+						session.close();
+		
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				
+				return  examMarksDaos;
+		}
 	
+	public List<StudentExamMarksByExamDao> getStudentMarksDetailByExam(int inst_id,int student_id,int div_id,int batch_id,int examId) {
+		String queryString = "select sub_name as subjectName,marks "
+				+ "from student_marks inner join subject on student_marks.sub_id=subject.sub_id "
+				+ "where student_marks.student_id=:student_id and student_marks.inst_id=:inst_id and student_marks.div_id = :div_id and student_marks.batch_id = :batch_id and student_marks.exam_id=:exam_id";
+				
+		List<StudentExamMarksByExamDao> examMarksDaos = null;		
+		try {
+				Session session = HibernateUtil.getSessionfactory().openSession();
+				Transaction transaction = session.beginTransaction();
+				Query query = session.createSQLQuery(queryString)
+						.setResultTransformer(Transformers.aliasToBean(StudentExamMarksByExamDao.class));
+								
+				query.setParameter("inst_id", inst_id);
+				query.setParameter("student_id", student_id);
+				query.setParameter("div_id", div_id);
+				query.setParameter("batch_id", batch_id);
+				query.setParameter("exam_id", examId);
+				
+				examMarksDaos = query.list();
+						session.close();
+		
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				
+				return  examMarksDaos;
+	}
 	
 }
