@@ -110,42 +110,8 @@
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
-    <%if(userBean.getRole() == 0 || userBean.getRole() == 10) {%>
-      <li>
-      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
-      		<ul class="dropdown-menu">
-	            <li><a href="login">Admin</a></li>
-	            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#ajax-modal">Class List</a></li>
-          	</ul>
-      </li>
-    <%}if(userBean.getRole() < 2 || userBean.getRole() == 10){ %>  
-      <li>
-      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Class Owner <b class="caret"></b></a>
-      		<ul class="dropdown-menu">
-	            <li><a href="login">Class Owner</a></li>
-	            <li><a href="addsubject">Add Subject</a></li>
-	            <li><a href="timetable">Time Table</a></li>
- 				<li><a href="managestudent">Manage Student</a></li>
-	            <li><a href="manageteacher">Manage Teacher</a></li>
-	            <li><a href="managebatch">Manage Batch</a></li>
-          	</ul>
-      </li>
-    <%}if(userBean.getRole() == 2 || userBean.getRole() == 10){ %>  
-      <li><a href="#">Class Teacher</a></li>  
-    <%}if(userBean.getRole() == 3 || userBean.getRole() == 10){ %>  
-		<li><a href="#">Students</a></li>
-		<li><a href="#" id="menu_dashboard"><i class="glyphicon glyphicon-list"></i> Dashboard</a></li>
-    <%}%>      
-     <%-- <cx:versionswitch switchId="3"> --%>
-    <li><a href="studentcommoncomponent?forwardAction=studentnotes">Notes</a></li>
-    <li>
-      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Exam<b class="caret"></b></a>
-      		<ul class="dropdown-menu">
-	            <li><a href="studentcommoncomponent?forwardAction=attemptexamlist">Attempt Exam</a></li>
-	            <li><a href="studentcommoncomponent?forwardAction=examMarks">Exam Marks</a></li>
-          	</ul>
-      </li>
-    <%-- </cx:versionswitch> --%>
+<li><a href="#">Students</a></li>
+		<li><a href="#" id="menu_dashboard"><i class="glyphicon glyphicon-list"></i> Dashboard</a></li>    
     </ul>
     <ul class="nav navbar-nav navbar-right">
     <li class="dropdown">
@@ -183,7 +149,7 @@
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                                <span class="glyphicon glyphicon-calendar bigicon"></span>
                             </div>
                             <div class="icontext">
                                 Timetable
@@ -205,7 +171,7 @@
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                                <span class="glyphicon glyphicon-book bigicon"></span>
                             </div>
                             <div class="icontext">
                                 Notes
@@ -227,7 +193,7 @@
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                                <span class="glyphicon glyphicon-pencil bigicon"></span>
                             </div>
                             <div class="icontext">
                                 Exam
@@ -248,7 +214,7 @@
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                                <span class="glyphicon glyphicon-signal bigicon"></span>
                             </div>
                             <div class="icontext">
                                 Marks

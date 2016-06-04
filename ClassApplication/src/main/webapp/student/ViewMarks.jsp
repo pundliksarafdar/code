@@ -15,6 +15,12 @@
 .corex-delete{
 	display: none;
 }
+
+/*Style for hovetooltip*/
+.morris-hover{position:absolute;z-index:1000;}
+.morris-hover.morris-default-style{border-radius:10px;padding:6px;color:#666;background:rgba(255, 255, 255, 0.8);border:solid 2px rgba(230, 230, 230, 0.8);font-family:sans-serif;font-size:12px;text-align:center;}
+.morris-hover.morris-default-style .morris-hover-row-label{font-weight:bold;margin:0.25em 0;}
+.morris-hover.morris-default-style .morris-hover-point{white-space:nowrap;margin:0.1em 0;}
 </style>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	
@@ -59,10 +65,12 @@
 	<div id="notesContainer" style="display:none">
 	<div class="page-header">
 		<div id="notes">
+		<div id="marksGraph" style="height: 250px;"></div>
 		<table id="notesTable" class="table"></table>
 		</div>
 		<div id="examMarksByExamTableWrap">
 			<input type="button" id="showExamList" value="Back to list" class="btn btn-default"/>
+			<div id="marksBySubjectGraph" style="height: 250px;"></div>
 			<table id="examMarksByExamTable" class="table"></table>
 			</div>
 		</div>

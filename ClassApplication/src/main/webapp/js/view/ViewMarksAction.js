@@ -74,9 +74,30 @@ function getExamList(){
 	var subjectId = $(SUBJECT).val()
 	var handler = {};
 	handler.success = function(e){
-		$(NOTES_CONTAINER).show();
-		$(NOTES_MESSAGE_CONTAINER).hide();
-		showNotesList(e);
+		if(e.length){
+			$(NOTES_CONTAINER).show();
+			$("#marksGraph").empty();
+			var chart = new Morris.Bar({
+				barGap:1,
+				barSize:30,
+				barSizeRatio:0.5,
+				hideHover:true,
+				  element: 'marksGraph',
+				  data: e,
+				  xkey: 'examName',
+				  ykeys: ['examMarks'],
+				  labels: ['Marks']
+				});
+			$(NOTES_MESSAGE_CONTAINER).hide();
+			showNotesList(e);
+			chart.on("click",function(e,data){
+				$("#notes").hide();
+				showSubjectExamMarks(data.examId);
+			});
+		}else{
+			$(NOTES_MESSAGE_CONTAINER).show().html("No data to display");
+			
+		}
 	};
 	
 	handler.error = function(e){$.notify({message: "Error occured"},{type: 'danger'});
@@ -99,7 +120,7 @@ function showNotesList(data){
 		],
 		rowCallback:function(row,data,index){
 			$(row).find('a').on("click",function(){
-				$(EXAM_MARKS_TABLE+"_wrapper").hide();
+				$("#notes").hide();
 				showSubjectExamMarks($(this).attr("examId"));
 			});
 		}
@@ -119,8 +140,20 @@ function showSubjectExamMarks(examId){
 }
 
 function showExamSubjectList(data){
-	console.log(data);
+	
 	$("#examMarksByExamTableWrap").show();
+	$("#marksBySubjectGraph").empty();
+	var chart = new Morris.Bar({
+		barSize:30,
+		barSizeRatio:0.5,
+		hideHover:true,
+		  element: 'marksBySubjectGraph',
+		  data: data,
+		  xkey: 'subjectName',
+		  ykeys: ['marks'],
+		  labels: ['Subject']
+		});
+	
 	var dataTable = $(EXAM_MARKS_BY_EXAM).DataTable({
 		bDestroy:true,
 		data: data,
@@ -132,6 +165,6 @@ function showExamSubjectList(data){
 }
 
 function showExamList(){
-	$(EXAM_MARKS_TABLE+"_wrapper").show();
+	$("#notes").show();
 	$("#examMarksByExamTableWrap").hide();
 }
