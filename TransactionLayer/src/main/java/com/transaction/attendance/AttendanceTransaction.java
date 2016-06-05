@@ -3,6 +3,8 @@ package com.transaction.attendance;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,7 +17,11 @@ import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.attendance.Attendance;
 import com.classapp.db.attendance.AttendanceDB;
 import com.classapp.db.batch.Batch;
+import com.classapp.db.classOwnerSettings.ClassOwnerNotificationBean;
+import com.classapp.db.classOwnerSettings.ClassOwnerNotificationDb;
 import com.classapp.db.exam.ExamPaperDB;
+import com.classapp.db.register.RegisterBean;
+import com.classapp.db.register.RegisterDB;
 import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentDB;
 import com.classapp.db.subject.Subject;
@@ -27,6 +33,7 @@ import com.service.beans.DailyAttendance;
 import com.service.beans.DailyTimeTable;
 import com.service.beans.MonthlyAttendance;
 import com.service.beans.MonthlyCount;
+import com.service.beans.StudentAttendanceNotificationData;
 import com.service.beans.StudentDetailAttendanceData;
 import com.service.beans.StudentDetailBatchData;
 import com.service.beans.StudentDetailMonthWiseAttendance;
@@ -685,6 +692,8 @@ public class AttendanceTransaction {
 		return attendanceData;
 		
 	}
+	
+	
 	
 	class ArrayListOverride<E> extends ArrayList<E>{
 		@Override

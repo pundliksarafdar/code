@@ -1579,7 +1579,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			String dateString[]=date.split("/");
 			Date scheduledate=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[1])-1,Integer.parseInt( dateString[0]));
 			ScheduleTransaction  scheduleTransaction=new ScheduleTransaction();
-			List<Schedule> schedules= scheduleTransaction.getTeachersSchedule(Integer.parseInt(classid), regId,scheduledate);
+			/*List<Schedule> schedules= scheduleTransaction.getTeachersSchedule(Integer.parseInt(classid), regId,scheduledate);
 			BatchTransactions batchTransactions=new BatchTransactions();
 			List<Batch> batchs =batchTransactions.getTeachersBatch(schedules);
 			SubjectTransaction subjectTransaction=new SubjectTransaction();
@@ -1636,7 +1636,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			respObject.addProperty("starttime", starttime);
 			respObject.addProperty("endtime", endtime);
 			respObject.addProperty("subject", subject);
-			respObject.addProperty("division", division);
+			respObject.addProperty("division", division);*/
 			
 			/*String dateString[]=date.split("/");
 			Date date2=new Date(Integer.parseInt(dateString[2])-1900,Integer.parseInt( dateString[0])-1,Integer.parseInt( dateString[1]));
@@ -2052,14 +2052,14 @@ public class ClassOwnerServlet extends HttpServlet{
 	}
 	String notesnamestatus="";
 	if("".equals(overlappedIds)){
-	String classes=req.getParameter("classes");
+	String institute=req.getParameter("institute");
 	int division=Integer.parseInt(req.getParameter("division"));
 	int subject=Integer.parseInt(req.getParameter("subject"));
 	UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 	NotesTransaction notesTransaction=new NotesTransaction();
 	int inst_id=userBean.getRegId();
-	if(classes!="" && classes !=null){
-		inst_id=Integer.parseInt(classes);
+	if(institute!="" && institute !=null){
+		inst_id=Integer.parseInt(institute);
 	}
 	InstituteStats instituteStats=instituteStatTransaction.getStats(inst_id);
 	if(instituteStats.getAvail_memory()>0 && (instituteStats.getUsed_memory()+Double.parseDouble(filesize))<=instituteStats.getAlloc_memory())
@@ -3393,7 +3393,11 @@ public class ClassOwnerServlet extends HttpServlet{
 		int currentPage = Integer.parseInt(req.getParameter("currentPage"));
 		int marks = Integer.parseInt(req.getParameter("marks"));
 		int topic = Integer.parseInt(req.getParameter("topic"));
+		String institute = req.getParameter("inst_id");
 		String deleteStatus = req.getParameter("deleteStatus");
+		if(!"".equals(institute) && institute!=null){
+			inst_id = Integer.parseInt(institute);
+		}
 		int totalPages=0;
 		QuestionBankTransaction bankTransaction = new QuestionBankTransaction();
 		int totalCount=bankTransaction.getTotalSearchedQuestionCount(marks, Integer.parseInt(subject), inst_id, Integer.parseInt(division),topic,questionType);
@@ -3420,7 +3424,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			UserStatic userStatic = userBean.getUserStatic();
 			for (int i = 0; i < questionbanks.size(); i++) {
 				//String questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionbanks.get(i).getQue_id();
-				String questionPath=com.config.Constants.STORAGE_PATH+File.separatorChar+userBean.getRegId()+File.separatorChar+"exam"+File.separatorChar+"paragraph"+File.separatorChar+questionbanks.get(i).getQue_id();
+				String questionPath=com.config.Constants.STORAGE_PATH+File.separatorChar+inst_id+File.separatorChar+"exam"+File.separatorChar+"paragraph"+File.separatorChar+questionbanks.get(i).getQue_id();
 				ParaQuestionBean paraQuestionBean=(ParaQuestionBean) readObject(new File(questionPath));
 				paragraphQuestionList.add(paraQuestionBean);
 			}

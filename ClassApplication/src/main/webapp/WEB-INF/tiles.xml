@@ -253,10 +253,10 @@
 		<put-attribute name="topnav" value="/teacher/menu.jsp" />
 		<put-attribute name="body" value="/Notes/AddTeacherNotes.jsp" />
 	</definition>
-	<definition name="seenotes.teachernotes" extends="baseLayout">
+	<definition name="notes.seeteachernotes" extends="baseLayout">
 		<put-attribute name="title" value="See Notes " />
 		<put-attribute name="topnav" value="/teacher/menu.jsp" />
-		<put-attribute name="body" value="/Notes/SeeNotes.jsp" />
+		<put-attribute name="body" value="/Notes/SeeTeacherNotes.jsp" />
 	</definition>
 	<definition name="seenotes.success" extends="baseLayout">
 		<put-attribute name="title" value="Notes" />
@@ -683,5 +683,25 @@
       <put-attribute name="title"  value="Alert"/>
         <put-attribute name="topnav" value="/admin/menu.jsp" />
         <put-attribute name="body"   value="/ClassOwner/alert.jsp"/>      
+   </definition>
+   <definition name="teacher.searchQuestion" extends="baseLayout">
+      <put-attribute name="title"  value="Create Exam Pattern"/>
+        <put-attribute name="topnav" value="/teacher/menu.jsp" />
+        <put-attribute name="body"   value="/teacher/SearchQuestion.jsp"/>      
+   </definition>
+   <definition name="teacher.editSubjectiveQuestion" extends="baseLayout">
+      <put-attribute name="title"  value="Edit question"/>
+      <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/teacher/EditSubjectiveQuestion.jsp"/>      
+   </definition>
+   <definition name="teacher.editObjectiveQuestion" extends="baseLayout">
+      <put-attribute name="title"  value="Edit question"/>
+      <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/teacher/EditObjectiveQuestion.jsp"/>      
+   </definition>
+   <definition name="teacher.editParaQuestion" extends="baseLayout">
+      <put-attribute name="title"  value="Edit question"/>
+      <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/teacher/EditParaQuestion.jsp"/>      
    </definition>
 </tiles-definitions>

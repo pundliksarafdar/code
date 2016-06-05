@@ -5,5 +5,5 @@
 		<li class="<c:out value="${param.viewneditpattern}"></c:out>"><a href="viewneditteacherpattern">View/Edit Exam Pattern</a></li>
 		<li class="<c:out value="${param.generateQuestionPaper}"></c:out>"><a href="generateteacherQuestionPaper">Set Question Paper</a></li>
 		<li class="<c:out value="${param.editQuestionPaper}"></c:out>"><a href="editteacherQuestionPaper">View/Edit Question paper</a></li>
-		<li class="<c:out value="${param.onlineExamList}"></c:out>"><a href="onlineExamList">Online Exam</a></li>
+		<%-- <li class="<c:out value="${param.onlineExamList}"></c:out>"><a href="onlineExamList">Online Exam</a></li> --%>
 	</ul>

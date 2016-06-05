@@ -1,13 +1,30 @@
 package com.attendance;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.classapp.db.attendance.AttendanceDB;
 import com.classapp.db.batch.division.Division;
+import com.classapp.db.classOwnerSettings.ClassOwnerNotificationBean;
+import com.classapp.db.classOwnerSettings.ClassOwnerNotificationDb;
+import com.classapp.db.fees.FeesDB;
+import com.classapp.db.register.RegisterBean;
+import com.classapp.db.register.RegisterDB;
 import com.config.BaseAction;
+import com.notification.access.NotifcationAccess;
+import com.notification.bean.MessageDetailBean;
+import com.service.beans.StudentAttendanceNotificationData;
+import com.service.beans.StudentFessNotificationData;
+import com.transaction.attendance.AttendanceTransaction;
 import com.transaction.batch.division.DivisionTransactions;
 import com.user.UserBean;
 
@@ -21,6 +38,7 @@ public class AttendanceAction extends BaseAction{
 			Map<String, Object> session) {
 		DivisionTransactions transactions = new DivisionTransactions();
 		divisions = transactions.getAllDivisions(userBean.getRegId());
+		AttendanceTransaction attendanceTransaction =new AttendanceTransaction();
 		return SUCCESS;
 	}
 

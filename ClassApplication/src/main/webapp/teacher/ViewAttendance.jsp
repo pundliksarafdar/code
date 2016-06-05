@@ -25,19 +25,19 @@
 						<option value="<c:out value="${institute.regId}"></c:out>"><c:out value="${institute.className}"></c:out></option>
 					</c:forEach>							
 				</select>
+				<span id="instituteError" class="validation-message"></span>
 			</div>
 			<div class="col-md-2">
 				<select class="btn btn-default" id="divisionSelect">
-					<option value="-1">Select Division</option>
-					<c:forEach var="division" items="${divisions}">
-						<option value='<c:out value="${division.divId}"></c:out>'><c:out value="${division.divisionName}"></c:out> <c:out value="${division.stream}"></c:out></option>
-					</c:forEach>
+					<option value="-1">Select Class</option>
 				</select>
+				<span id="divisionError" class="validation-message"></span>
 			</div>
 			<div class="col-md-2">
-				<select class="btn btn-default" id="batchSelect">
+				<select class="btn form-control" id="batchSelect">
 					<option value="-1">Select Batch</option>
 				</select>
+				<span id="batchError" class="validation-message"></span>
 			</div>
 			<div class="col-md-2">
 				<select class="btn btn-default" id="attendanceType">
@@ -53,6 +53,7 @@
 						class="glyphicon glyphicon-calendar glyphicon-time"></i>
 					</span>
 				</div>
+				<span id="dateError" class="validation-message"></span>
 			</div>
 			<div class="col-md-1">
 				<button class="btn btn-primary btn-sm" id="searchLectures">Search Lectures</button>

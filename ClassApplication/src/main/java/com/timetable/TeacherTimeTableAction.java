@@ -1,5 +1,6 @@
 package com.timetable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,8 +27,11 @@ public class TeacherTimeTableAction extends BaseAction {
 		int regID=userBean.getRegId();
 		TeacherTransaction teacherTransaction=new TeacherTransaction();
 		List classids=teacherTransaction.getTeachersClass(regID);
+		List<RegisterBean> classbeanes = new ArrayList<RegisterBean>();
+		if(classids.size()>0){
 		RegisterTransaction registerTransaction=new RegisterTransaction();
-		List<RegisterBean> classbeanes=registerTransaction.getTeachersInstitutes(classids);
+		classbeanes=registerTransaction.getTeachersInstitutes(classids);
+		}
 		request.setAttribute("Classes", classbeanes);
 		// TODO Auto-generated method stub
 		return SUCCESS;

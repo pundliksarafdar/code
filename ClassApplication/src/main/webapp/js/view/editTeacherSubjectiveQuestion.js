@@ -4,18 +4,23 @@
 	var SUBJECTIVE_IMAGE_ROW = "#subjectiveImageRow";
 	var ADD_SUBJECT_FORM = "form#addSubjectiveQuestion";
 	var REMOVE_OPTION_IMAGE = ".answer_image_with_btn_remove";
-	
+	var CANCEL = "#cancelEdit";
 	var saveSubjectiveExamUrl = "/rest/teacher/saveSubjective";
 	
 	
 	$(document).ready(function(){
+		
 		$("body").on("change",ADD_SUBJECTIVE_QUESTION_IMAGE,showAndUploadImageForSubjective).
 			on("click",SAVE_SUBJECTIVE_EXAM,saveExam).
-			on("click",REMOVE_OPTION_IMAGE,remoteThisImage);
+			on("click",REMOVE_OPTION_IMAGE,remoteThisImage).
+			on("click",CANCEL,cancelEdit);
 	});
 	
+	function cancelEdit(){
+		$("form#searchQuestion").submit();
+	}
+	
 	function showAndUploadImageForSubjective(){
-		var inst_id = $("#instituteSelect").val()
 		var imageFile = $(ADD_SUBJECTIVE_QUESTION_IMAGE)[0];
 		var handler = {};
 		handler.success = function(e){console.log(e)}
@@ -44,32 +49,18 @@
 	}
 	
 	function saveExam(){
-		$("#instituteSelectError").html("");
-		$("#divisionSelectError").html("");
-		$("#subjectSelectError").html("");
-		var validateFlag = false;
-		if($("#instituteSelect").val() == "-1"){
-			$("#instituteSelectError").html("Select Institute");
-			validateFlag = true;
-		}
-		if($("#divisionSelect").val() == "-1"){
-			$("#divisionSelectError").html("Select Class");
-			validateFlag = true;
-		}
-		if($("#subjectSelect").val() == "-1"){
-			$("#subjectSelectError").html("Select Subject");
-			validateFlag = true;
-		}
-		
-		if($(ADD_SUBJECT_FORM).valid() && !validateFlag){
+		if($(ADD_SUBJECT_FORM).valid()){
 			var subjectiveExamBean = new SubjectiveExamBean();
-			subjectiveExamBean.classId = $("#divisionSelect").val();
-			subjectiveExamBean.subjectId = $("#subjectSelect").val();
-			subjectiveExamBean.topicId = $("#topicSelect").val();
-			subjectiveExamBean.questionType = $("#classownerQuestionTypeSelect").val();
+			//divId,subId,topicId,questionId is for from jsp page request variable
+			subjectiveExamBean.classId = divId;//$("#classownerUploadexamDivisionName").val();
+			subjectiveExamBean.subjectId = subId;//$("#classownerUploadexamSubjectNameSelect").val();
+			subjectiveExamBean.topicId = topicId;//$("#classownerUploadQuestionTopicSelect").val();
+			subjectiveExamBean.questionId = queId;//$("#questionId").val();
+			subjectiveExamBean.inst_id = inst_id;
+			//1 is for subjective
+			subjectiveExamBean.questionType = "1";
 			subjectiveExamBean.question = $("#subjectiveQuestion").val();
 			subjectiveExamBean.marks = $("#questionmarks").val();
-			subjectiveExamBean.inst_id = $("#instituteSelect").val();
 			subjectiveExamBean.images = [];
 			var queImgs = $(ADD_SUBJECT_FORM).find("input#questionImage");
 			$.each(queImgs,function(key,queImg){
@@ -78,10 +69,10 @@
 			console.log(subjectiveExamBean);
 			var handler = {};
 			handler.success = function(e){
-				$.notify({message: 'Question saved'},{type: 'success'});
+				$.notify({message: "Question updated successfuly"},{type: 'success'});
 			}
 			handler.error = function(e){console.log(e)}
-			rest.post(saveSubjectiveExamUrl,handler,JSON.stringify(subjectiveExamBean),true);
+			rest.put(saveSubjectiveExamUrl,handler,JSON.stringify(subjectiveExamBean),true);
 		}else{
 			console.log("not valid");
 		}		
@@ -91,7 +82,9 @@
 		$(this).closest(".image_with_btn").remove();
 	}
 	
+	
 	function SubjectiveExamBean(){
+		this.questionId;
 		this.classId;
 		this.subjectId;
 		this.topicId;
@@ -101,3 +94,26 @@
 		this.images;
 	}
 })();
+
+function loadSubjectiveQuestion(data){
+	$("#subjectiveQuestion").val(data.que_text);
+	$("#questionmarks").val(data.marks);
+	$("#questionId").val(data.que_id);
+	var images = "";
+	for(var index=0;index<data.primaryImage.length;index++){
+		var imgTag = "<img src='/rest/teacher/image/"+data.primaryImage[index]+"/"+data.inst_id+"' width='200px' height='200px' />";
+		var hiddenTag = "<input type='hidden' id='questionImage' name='questionImage' value='{{questionImage}}' />";
+		var closeButton = '<button type="button" class="answer_image_with_btn_remove close" aria-hidden="true">&times;</button>';
+		var imageColElement = "<div class='col-sm-3 image_with_btn'>"+closeButton+hiddenTag+imgTag+"</div>"
+		var imageId = getImageId(data.primaryImage[index]);
+		imageColElement = imageColElement.replace('{{questionImage}}',imageId);
+		images += imageColElement; 
+
+	}
+	$("#subjectiveImageRow").append(images);
+}
+
+function getImageId(url){
+	var lastIndex = url.lastIndexOf("_");
+	return url.slice(lastIndex+1);
+}

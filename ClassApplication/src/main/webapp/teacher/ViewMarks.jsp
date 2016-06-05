@@ -7,40 +7,90 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
 <script>
+var divisionTempData = {};
+divisionTempData.id = "-1";
+divisionTempData.text = "Select Class";
+var batchTempData = {};
+batchTempData.id = "-1";
+batchTempData.text = "Select Batch";
+var examTempData = {};
+examTempData.id = "-1";
+examTempData.text = "Select Exam";
 $(document).ready(function(){
 	$("#instituteSelect").change(function(){
+		var divisionArray = [];
+		var batchArray = [];
+		divisionArray.push(divisionTempData);
+		batchArray.push(batchTempData);
+		$("#division").empty();
+		$("#batchSelect").empty();
+		$("#exam").empty();
+		 $("#division").select2({data:divisionArray});
+		 $("#batchSelect").select2({data:batchArray});
+		 $("#exam").append("<option value='-1'>Select Exam</option>");
+		 $("#subjects").empty();
+			$("#subjects").append("<option value='-1'>Select Subject</option>");
 		var inst_id = $(this).val();
+		if(inst_id != "-1"){
+		$("#instituteError").html("");
 		var handler = {};
 		handler.success = function(e){
 		console.log("Success",e);
-		$("#division").empty();
-		var divisionArray = [];
-		var tempData = {};
- 		tempData.id = "-1";
- 		tempData.text = "Select Class";
- 		divisionArray.push(tempData);
  	 $.each(e.divisionList,function(key,val){
 			var data = {};
 			data.id = val.divId;
 			data.text = val.divisionName+" "+val.stream;
 			divisionArray.push(data);
 		});
- 	 	for(i=0;i<divisionArray.length;i++){
- 	 		$("#division").append("<option value='"+divisionArray[i].id+"'>"+divisionArray[i].text+"</option>")
+ 	 	if(divisionArray.length > 1){
+ 	 	$("#division").select2({data:divisionArray});
+ 	 	}else{
+ 	 		$("#division").select2({data:"",placeholder:"Class not available"});	
  	 	}
-	   // $("#division").select2({data:divisionArray,placeholder:"Type Topic Name"});
 		}
 		handler.error = function(e){console.log("Error",e)};
 		rest.get("rest/teacher/getDivisionAndSubjects/"+inst_id,handler);
-
+		}
 	});
 	
 	$("#searchMarks").click(function(){
+		$(".validation-message").html("");
+		var validationFlag = false;
 		var inst_id = $("#instituteSelect").val();
 		var division = $("#division").val();
 		var batch = $("#batchSelect").val();
 		var exam = $("#exam").val();
 		var subject = $("#subjects").val();
+		var viewType = $("#viewType").val()
+		if(inst_id == "-1"){
+			$("#instituteError").html("Select Institute");
+			validationFlag = true;
+		}
+		if(division == "-1"){
+			$("#divisionError").html("Select Class");
+			validationFlag = true;
+		}
+		if(batch == "-1"){
+			$("#batchError").html("Select Batch");
+			validationFlag = true;
+		}
+		if(viewType == "-1"){
+			$("#viewTypeError").html("Select View");
+			validationFlag = true;
+		}else{
+			if(viewType == "1"){
+		if(exam == "-1"){
+			$("#examError").html("Select Exam");
+			validationFlag = true;
+		}
+		}else{
+			if(subject == "-1"){
+				$("#examError").html("Select Subject");
+				validationFlag = true;
+			}
+		}
+		}
+		if(!validationFlag){
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
 		if($("#viewType").val() == "1"){
@@ -55,102 +105,74 @@ $(document).ready(function(){
 		}else if($("#viewType").val() == "2"){
 			rest.get("rest/teacher/getStudentExamSubjectMarks/"+inst_id+"/"+division+"/"+batch+"/"+subject,handlers);
 		}
+		}
 		});
 	
 	
 	$("#viewType").change(function(){
-		var division = $("#division").val(); 
-		var batch = $("#batchSelect").val(); 
-		var inst_id = $("#instituteSelect").val();
-		if($("#viewType").val() == "1"){
-			var handlers = {};
-			handlers.success = function(e){console.log("Success",e);
-			$("#exam").empty();
-			$("#exam").append("<option>Select Exam</option>");
-			for(var i=0;i<e.length;i++){
-				$("#exam").append("<option value='"+e[i].exam_id+"'>"+e[i].exam_name+"</option>");
-			}
-			$("#subjects").hide();
-			$("#exam").show();
-			};
-			handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
-			rest.get("rest/teacher/getExamList/"+inst_id+"/"+division+"/"+batch,handlers);
-		}else{
-		/* $.ajax({
-		   url: "classOwnerServlet",
-		   data: {
-				 methodToCall: "fetchBatchSubject",
-	    		 batchName:batch,
-	    		 batchdivision:division
-		   		},
-		   type:"POST",
-		   success:function(data){
-			   data = JSON.parse(data);
-			   if(data.subjectstatus == ""){
-				   var subjectnames = data.Batchsubjects;
-				   var subjectIds = data.BatchsubjectsIds;
-				   var i = 0;
-				   var subjectnameArray = subjectnames.split(",");
-					var subjectidArray =  subjectIds.split(",");  
-					subjectList = [];
-					$("#subjects").empty();
-					$("#subjects").append("<option value='-1'>Select Subject</option>");
-					while(i < subjectnameArray.length){
-				   		$("#subjects").append("<option value='"+subjectidArray[i]+"'>"+subjectnameArray[i]+"</option>");
-				   		i++;
-				   }
-					$("#subjects").show();
-					$("#exam").hide();
-			   }
-		   },
-			error:function(){
-		   		modal.launchAlert("Error","Error");
-		   	}
-		   }); */
-		
-		var handlers = {};
-		handlers.success = function(e){console.log("Success",e);
-		$("#subjects").empty();
-		$("#subjects").append("<option value='-1'>Select Subject</option>");
-		var i = 0;
-		while(i < e.length){
-	   		$("#subjects").append("<option value='"+e[i].subjectId+"'>"+e[i].subjectName+"</option>");
-	   		i++;
-	   }
-		$("#subjects").show();
-		$("#exam").hide();
-		};
-		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
-		rest.get("rest/teacher/getBatchSubjects/"+inst_id+"/"+division+"/"+batch,handlers);
+		var examArray = [];
+		examArray.push(examTempData);
+		$("#exam").empty();
+		 $("#exam").append("<option value='-1'>Select Exam</option>");
+		 $("#subjects").empty();
+			$("#subjects").append("<option value='-1'>Select Subject</option>");
+		if($("#viewType").val() != "-1"){
+		$("#viewTypeError").html("");
+		getViewData();
 		}
 	});
 	
+	$(".viewTypes").change(function(e){
+		if($(this).prop("id") != "-1"){
+			$("#examError").html("");	
+		}
+	});
 	
-	 $("#division").change(function(){
-			var division = $("#division").val();
-			var inst_id = $("#instituteSelect").val();
-			var handlers = {};
-			handlers.success = function(e){console.log("Success",e);
-			 $('#batchSelect').empty();
-			   var batchDataArray = [];
-			 /* 
-			    $.each(e,function(key,val){
-					var data = {};
-					data.id = val.batch_id;
-					data.text = val.batch_name;
-					batchDataArray.push(data);
-				});
-			    $("#batchSelect").select({data:batchDataArray,placeholder:"type batch name"}); */
-			    $("#batchSelect").append("<option value='-1'>Select Batch</option>");
-			    if(e != null){
-			    	$.each(e,function(key,val){
-			    		 $("#batchSelect").append("<option value='"+val.batch_id+"'>"+val.batch_name+"</option>");
-					});
-			    }
-			};
-			handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
-			rest.get("rest/teacher/getBatchesofDivision/"+inst_id+"/"+division,handlers);
-		}); 
+	$("#batchSelect").change(function(){
+		
+		$("#exam").empty();
+		$("#exam").append("<option value='-1'>Select Exam</option>");
+		$("#subjects").empty();
+		$("#subjects").append("<option value='-1'>Select Subject</option>");
+		 if($("#batchSelect").val() != "-1"){
+		 $("#batchError").html("");
+		getViewData();
+		 }
+	});
+	
+	
+	$("#division").change(function(){
+		var batchArray = [];
+		batchArray.push(batchTempData);
+		$("#batchSelect").empty();
+		$("#exam").empty();
+		 $("#batchSelect").select2({data:batchArray});
+		 $("#exam").append("<option value='-1'>Select Exam</option>");
+		 
+	var division = $("#division").val();
+	var inst_id = $("#instituteSelect").val();
+	if(division != "-1"){
+	$("#divisionError").html("");
+	var handlers = {};
+	handlers.success = function(e){console.log("Success",e);
+	    $.each(e,function(key,val){
+			var data = {};
+			data.id = val.batch_id;
+			data.text = val.batch_name;
+			batchArray.push(data);
+		});
+	    if(batchArray.length > 1){
+	    $("#batchSelect").select2({data:batchArray,placeholder:"type batch name"}); 
+	    }else{
+	    	$("#batchSelect").empty();
+	    	 $("#batchSelect").select2({data:"",placeholder:"Batch not available"}); 	
+	    }
+	};
+	handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
+	rest.get("rest/teacher/getBatchesofDivision/"+inst_id+"/"+division,handlers);
+	}
+	}); 
+	 
 	$('#subjectTable').on("click",".fillMarks",function(){
 		var division = $("#division").val();
 		var batch = $("#batchSelect").val();
@@ -203,6 +225,47 @@ $(document).ready(function(){
     cell.data().marks=$(this).val()
 } );
 });
+
+function getViewData(){
+	var division = $("#division").val(); 
+	var batch = $("#batchSelect").val(); 
+	var inst_id = $("#instituteSelect").val();
+	if($("#viewType").val() != "-1"){
+	if($("#viewType").val() == "1"){
+		$("#subjects").hide();
+		$("#exam").show();
+		if(batch != "-1"){
+		var handlers = {};
+		handlers.success = function(e){console.log("Success",e);
+		$("#exam").empty();
+		$("#exam").append("<option value='-1'>Select Exam</option>");
+		for(var i=0;i<e.length;i++){
+			$("#exam").append("<option value='"+e[i].exam_id+"'>"+e[i].exam_name+"</option>");
+		}
+		};
+		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
+		rest.get("rest/teacher/getExamList/"+inst_id+"/"+division+"/"+batch,handlers);
+		}
+	}else{		
+	$("#subjects").show();
+	$("#exam").hide();
+	if(batch != "-1"){
+	var handlers = {};
+	handlers.success = function(e){console.log("Success",e);
+	$("#subjects").empty();
+	$("#subjects").append("<option value='-1'>Select Subject</option>");
+	var i = 0;
+	while(i < e.length){
+   		$("#subjects").append("<option value='"+e[i].subjectId+"'>"+e[i].subjectName+"</option>");
+   		i++;
+  	 }
+	};
+	handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
+	rest.get("rest/teacher/getBatchSubjects/"+inst_id+"/"+division+"/"+batch,handlers);
+	}
+	}
+	}
+}
 
 function createStudentExamMarksTable(data){
 	//$("#studentMarksTable").clear();
@@ -289,6 +352,7 @@ function createStudentExamSubjectMarksTable(data){
 						<option value="<c:out value="${institute.regId}"></c:out>"><c:out value="${institute.className}"></c:out></option>
 					</c:forEach>							
 				</select>
+				<span id="instituteError" class="validation-message"></span>
 			</div>
 			<div class="col-md-2">
 				<select id="division" name="division" class="form-control">
@@ -300,12 +364,13 @@ function createStudentExamSubjectMarksTable(data){
 						</option>
 					</c:forEach>
 				</select>
-				<span id="divisionError" class="patternError"></span>
+				<span id="divisionError" class="validation-message"></span>
 			</div>
 			<div class="col-md-2">
 				<select class="form-control" id="batchSelect" >
 					<option value="-1">Select Batch</option>
 				</select>
+				<span id="batchError" class="validation-message"></span>
 			</div>
 			<div class="col-md-2">
 				<select class="form-control" id="viewType" >
@@ -313,15 +378,16 @@ function createStudentExamSubjectMarksTable(data){
 					<option value="1">Exam View</option>
 					<option value="2">Subject View</option>
 				</select>
+				<span id="viewTypeError" class="validation-message"></span>
 			</div>
 			<div class="col-md-2">
-				<select id="exam" name="exam" class="form-control">
+				<select id="exam" name="exam" class="form-control viewTypes">
 					<option value="-1">Select Exam</option>
 				</select>
-				<select id="subjects" name="subjects" class="form-control" style="display: none;">
+				<select id="subjects" name="subjects" class="form-control viewTypes" style="display: none;">
 					<option value="-1">Select Subject</option>
 				</select>
-				<span id="divisionError" class="patternError"></span>
+				<span id="examError" class="validation-message"></span>
 			</div>
 			<div class="col-md-1">
 				<button class="form-control btn btn-primary btn-sm" id="searchMarks">Search</button>

@@ -41,11 +41,12 @@
 	}
 	
 	function showAndUploadImageForObjective(parent,imagename,that,imageType){
+		var inst_id = $("#instituteSelect").val()
 		var imageFile = $(that)[0];
 		var handler = {};
 		handler.success = function(e){console.log(e)}
 		handler.error = function(e){console.log(e)}
-		rest.uploadImageFile(imageFile ,handler,false);
+		/*rest.uploadImageFile(imageFile ,handler,false);*/
 		input = that;
 		if ( input.files && input.files[0] ) {
 	        var FR= new FileReader();
@@ -61,20 +62,33 @@
 					imageRow.append(imageColElement);
 				}
 				handler.error=function(e){console.log("Error",e)}
-				rest.uploadImageFile(input ,handler,false);
+				rest.uploadTeacherImageFile(input,inst_id ,handler,false);
 	        };
 				FR.readAsDataURL( input.files[0] );
 			}
 	}
 	
 	function saveParaQuestion(){
-		if($(PARA_QUESTION_FORM).valid()){
+		var validateFlag = false;
+		if($("#instituteSelect").val() == "-1"){
+			$("#instituteSelectError").html("Select Institute");
+			validateFlag = true;
+		}
+		if($("#divisionSelect").val() == "-1"){
+			$("#divisionSelectError").html("Select Class");
+			validateFlag = true;
+		}
+		if($("#subjectSelect").val() == "-1"){
+			$("#subjectSelectError").html("Select Subject");
+			validateFlag = true;
+		}
+		if($(PARA_QUESTION_FORM).valid() && !validateFlag){
 			var paraQuestionBean = new ParaQuestionBean();
 			paraQuestionBean.classId = $("#divisionSelect").val();
 			paraQuestionBean.subjectId = $("#subjectSelect").val();
 			paraQuestionBean.topicId = $("#topicSelect").val();
 			paraQuestionBean.questionType = $("#classownerQuestionTypeSelect").val();
-			
+			paraQuestionBean.instId = $("#instituteSelect").val();
 			paraQuestionBean.paragraph = $(PARA).val();
 			paraQuestionBean.marks = $(MARKS).val();
 			paraQuestionBean.images = [];

@@ -602,6 +602,17 @@
 			method="execute">
 			<result name="success" type="tiles">classowner.alert</result>
 		</action>
+		<action name="searchTeacherQuestion" class="com.teacher.SearchTeacherQuestionAction"
+			method="execute">
+			<result name="success" type="tiles">teacher.searchQuestion</result>
+		</action>
+		<action name="editteacherquestion" class="com.teacher.EditQuestionTeacherAction"
+			method="execute">
+			<result name="subjective" type="tiles">teacher.editSubjectiveQuestion</result>
+			<result name="objective" type="tiles">teacher.editObjectiveQuestion</result>
+			<result name="paragraph" type="tiles">teacher.editParaQuestion</result>
+			<!-- <result name="starteditingquestion" type="tiles">classowner.starteditingquestion</result> -->
+		</action>
 		
 	</package>
 </struts>

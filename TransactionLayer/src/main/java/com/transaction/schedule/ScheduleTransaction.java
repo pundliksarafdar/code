@@ -161,11 +161,49 @@ public class ScheduleTransaction {
 		
 	}
 	
-	public List<Schedule> getTeachersSchedule(int classid,int teacherid,Date scheduledate) {
+	public List<MonthlyScheduleServiceBean> getTeachersSchedule(int classid,int teacherid, int month , int year) {
 		List<Schedule> schedulelist=null;
 		ScheduleDB db=new ScheduleDB();
-		schedulelist=db.getTeachersSchedule(classid, teacherid,scheduledate);
-		return schedulelist;
+		schedulelist=db.getTeachersSchedule(classid, teacherid,month,year);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+		List<MonthlyScheduleServiceBean> serviceBeanList = new ArrayList<MonthlyScheduleServiceBean>();
+		if(schedulelist!=null){
+			for (Iterator iterator = schedulelist.iterator(); iterator
+					.hasNext();) {
+				Object[] object = (Object[]) iterator
+						.next();
+				MonthlyScheduleServiceBean bean = new MonthlyScheduleServiceBean();
+				bean.setDivId(((Number) object[0]).intValue());
+				bean.setDivname((String) object[1]+" "+object[2]);
+				bean.setSubId(((Number) object[3]).intValue());
+				bean.setSubjectname((String) object[4]);
+				bean.setBatchId(((Number) object[5]).intValue());
+				bean.setBatchName((String) object[6]);
+				bean.setId(((Number) object[7]).intValue());
+				bean.setDate((Date) object[8]);
+				Timestamp timestamp = new Timestamp(((Date) object[8]).getYear(), ((Date) object[8]).getMonth(), ((Date) object[8]).getDate(), ((Time) object[9]).getHours(), ((Time) object[9]).getMinutes(), ((Time) object[9]).getSeconds(), ((Time) object[9]).getSeconds());
+				bean.setStart(timestamp.getTime());
+				timestamp = new Timestamp(((Date) object[8]).getYear(), ((Date) object[8]).getMonth(), ((Date) object[8]).getDate(), ((Time) object[10]).getHours(), ((Time) object[10]).getMinutes(), ((Time) object[10]).getSeconds(), ((Time) object[10]).getSeconds());
+				bean.setEnd(timestamp.getTime());
+				bean.setTeacher(object[11]+" "+object[12]);
+				bean.setTeacher_id(((Number) object[13]).intValue());
+				bean.setGrp_id(((Number) object[14]).intValue());
+				if(bean.getGrp_id() != 0){
+					bean.setDataClass("event-success");
+				}else{
+					bean.setDataClass("event-warning");
+				}
+				bean.setWeekTitle(bean.getSubjectname()+"<br/>"+dateFormat.format(new Date(bean.getStart()))+" - "+dateFormat.format(new Date(bean.getEnd())));
+				bean.setTitle("Subject : "+bean.getSubjectname()+"<br/>"+
+						"Start time : "+dateFormat.format(new Date(bean.getStart()))+"<br/>"+
+						"End time : "+dateFormat.format(new Date(bean.getEnd()))+"<br/>");
+				bean.setRep_days((String) object[15]);
+				serviceBeanList.add(bean);
+			}
+		}
+		
+		return serviceBeanList;
+		//return schedulelist;
 		
 	}
 	

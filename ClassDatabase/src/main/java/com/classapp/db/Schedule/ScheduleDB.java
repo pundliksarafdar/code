@@ -559,6 +559,40 @@ public class ScheduleDB {
 		}
 		return scheduleList;
 	}
+	
+	public List<Schedule> getTeachersSchedule(int inst_id, int teacherid, int month , int year) {
+
+		Session session = null;
+		Transaction transaction = null;
+		List<Schedule> scheduleList = null;
+
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(
+					"Select  div.divId , div.divisionName, div.stream,sub.subjectId,sub.subjectName,batch.batch_id,batch.batch_name,schedule.schedule_id," +
+					"  schedule.date, schedule.start_time,schedule.end_time,reg.fname,reg.lname,schedule.teacher_id,schedule.grp_id,schedule.rep_days" +
+					" from Schedule schedule,Division div,Subject sub,Batch batch,RegisterBean reg " +
+					"where div.divId=schedule.div_id and div.institute_id = schedule.inst_id and sub.subjectId = schedule.sub_id and " +
+					" sub.institute_id = schedule.inst_id and batch.div_id = schedule.div_id and batch.class_id = schedule.inst_id and " +
+					"batch.batch_id = schedule.batch_id  and schedule.inst_id=:inst_id and " +
+					" schedule.teacher_id=reg.regId and schedule.teacher_id = :teacher_id and MONTH(schedule.date) = :month "
+					+ "and YEAR(schedule.date) = :year order by schedule.start_time");
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("teacher_id", teacherid);
+			query.setParameter("month", month);
+			query.setParameter("year", year);
+			scheduleList = query.list();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != session) {
+				session.close();
+			}
+		}
+		return scheduleList;
+	}
 
 	public int deleteSchedule(int scheduleid, int inst_id,int div_id,int batch_id,Date date) {
 

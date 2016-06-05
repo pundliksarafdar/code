@@ -83,10 +83,10 @@ public boolean validatenotesname(String notesname,int inst_id,int division,int s
 	return db.validatenotesname(notesname, inst_id,division,subject);
 }
 
-public boolean updatenotes(String notesname,int notesid,String batchids,int inst_id,int div_id,int sub_id) {
+public boolean updatenotes(String notesname,String notesPath,int notesid,String batchids,int inst_id,int div_id,int sub_id) {
 	NotesDB db=new NotesDB();
 	if(!db.validateUpdateNotesName(notesname, inst_id, notesid, div_id, sub_id)){
-	db.updatenotes(notesname, notesid, batchids,inst_id,div_id,sub_id);
+	db.updatenotes(notesname,notesPath, notesid, batchids,inst_id,div_id,sub_id);
 	}else{
 		return true;
 	}

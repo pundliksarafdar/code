@@ -191,12 +191,14 @@ public class LoginUser extends BaseAction{
 							&& 2 == userBean.getRole()) {
 						TeacherTransaction teacherTransaction=new TeacherTransaction();
 						List<Integer> classids=teacherTransaction.getTeachersClass(userBean.getRegId());
+						List<Notification> notifications = new ArrayList<Notification>();
+						List<RegisterBean> classbeanes = new ArrayList<RegisterBean>();
+						Map<String, List<Scheduledata>> map=new HashMap<String, List<Scheduledata>>();
+						if(classids.size()>0){
 						RegisterTransaction registerTransaction=new RegisterTransaction();
-						List<RegisterBean> classbeanes=registerTransaction.getTeachersInstitutes(classids);
-						List<Notification> notifications=new ArrayList<Notification>();
+						classbeanes =registerTransaction.getTeachersInstitutes(classids);
 						ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 						List<Scheduledata> scheduledatas=scheduleTransaction.getteacherstodaysSchedule(classids, userBean.getRegId());
-						Map<String, List<Scheduledata>> map=new HashMap<String, List<Scheduledata>>();
 						List<String> divisionNames=new ArrayList<String>();
 						DivisionTransactions divisionTransactions=new DivisionTransactions();
 						if(scheduledatas!=null){
@@ -223,6 +225,7 @@ public class LoginUser extends BaseAction{
 									notifications.add(notificationsList.get(j));
 								}
 							}
+						}
 						}
 						session.put("notifications", notifications);
 						session.put("classes", classbeanes);

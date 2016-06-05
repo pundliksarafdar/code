@@ -364,7 +364,7 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 	}
 	
 	
-	public  void updatenotes(String notesname,int notesid,String batchids,int inst_id,int div_id,int sub_id) {
+	public  void updatenotes(String notesname,String notespath,int notesid,String batchids,int inst_id,int div_id,int sub_id) {
 		Session session = null;
 		Transaction transaction = null;
 		List<Notes> notesList = null;
@@ -372,8 +372,9 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("update Notes set name=:notesname , batch=:batch where notesid=:notesid and inst_id=:inst_id and divid=:divid and subid=:subid" );
+			Query query = session.createQuery("update Notes set name=:notesname,notespath=:notespath , batch=:batch where notesid=:notesid and inst_id=:inst_id and divid=:divid and subid=:subid" );
 			query.setParameter("notesname", notesname);
+			query.setParameter("notespath", notespath);
 			query.setParameter("batch", batchids);
 			query.setParameter("notesid", notesid);
 			query.setParameter("inst_id", inst_id);

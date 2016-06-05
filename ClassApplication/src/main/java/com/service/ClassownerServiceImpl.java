@@ -38,6 +38,7 @@ import com.classapp.db.student.StudentDetails;
 import com.classapp.db.student.StudentMarks;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Topics;
+import com.classapp.login.UserStatic;
 import com.config.Constants;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -756,8 +757,18 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateNotes(Notes notes){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+	    UserStatic userStatic = userBean.getUserStatic();
+	    String destPath=  userStatic.getNotesPath()+File.separator+notes.getSubid()+File.separator+notes.getDivid();
 		NotesTransaction notesTransaction=new NotesTransaction();
-		boolean status = notesTransaction.updatenotes(notes.getName(), notes.getNotesid(), notes.getBatch(), userBean.getRegId(), notes.getDivid(), notes.getSubid());
+		Notes oldNotes = notesTransaction.getNotesById(notes.getNotesid(), userBean.getRegId(), notes.getSubid(), notes.getDivid());
+		int extentionStart = oldNotes.getNotespath().lastIndexOf(".");
+		notes.setNotespath(notes.getName()+oldNotes.getNotespath().substring(extentionStart));
+		boolean status = notesTransaction.updatenotes(notes.getName(),notes.getNotespath(), notes.getNotesid(), notes.getBatch(), userBean.getRegId(), notes.getDivid(), notes.getSubid());
+		if(status == false){
+			File oldFile = new File(destPath+ File.separatorChar + oldNotes.getNotespath());
+			File newFile = new File(destPath+ File.separatorChar + notes.getNotespath());	
+			oldFile.renameTo(newFile);
+		}
 		return Response.status(Status.OK).entity(status).build();
 	}
 	

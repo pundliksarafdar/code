@@ -19,21 +19,25 @@ import com.transaction.teacher.TeacherTransaction;
 import com.user.UserBean;
 
 public class SeeTeacherNotesAction extends BaseAction{
-
+	List<RegisterBean> registerBeanList; 
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
 		// TODO Auto-generated method stub
-		BatchTransactions batchTransactions=new BatchTransactions();
-		int regID=userBean.getRegId();
-		TeacherTransaction teacherTransaction=new TeacherTransaction();
-		List classids=teacherTransaction.getTeachersClass(regID);
-		RegisterTransaction registerTransaction=new RegisterTransaction();
-		List<RegisterBean> classbeanes=registerTransaction.getTeachersInstitutes(classids);
-		request.setAttribute("Classes", classbeanes);
-		// TODO Auto-generated method stub
+		TeacherTransaction teacherTransaction = new TeacherTransaction();
+		List list = teacherTransaction.getTeachersClass(userBean.getRegId());
+		if(list.size() > 0){
+		RegisterTransaction registerTransaction = new RegisterTransaction();
+		registerBeanList = registerTransaction.getTeachersInstitutes(list);
+		}
 		return SUCCESS;
+	}
+	public List<RegisterBean> getRegisterBeanList() {
+		return registerBeanList;
+	}
+	public void setRegisterBeanList(List<RegisterBean> registerBeanList) {
+		this.registerBeanList = registerBeanList;
 	}
 
 }

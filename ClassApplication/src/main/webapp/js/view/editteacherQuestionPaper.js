@@ -25,10 +25,13 @@ var QUESTION_LIST_TABLE = "#questionListTable";
 var CHOOSE_QUESTION = ".chooseQuestionFromTable";
 var SAVE_QUESTION_PAPER = "#saveQuestionPaper"
 var QUESTION_PAPER_DESC = "#saveQuestionPaperDesc";
+var BACK_TO_LIST = "#backToList";
+var DELETE_QUESTION = ".deleteQuestionPaper";
 /*URL*/
 var baseURL = "/rest/teacher/";
 var getList = baseURL + "getQuestionPaperList/";
 var getQuestionPaperUrl = baseURL + "getQuestionPaper/";
+var deleteQuestionPaperUrl = baseURL + "deleteQuestionPaper/";
 
 /**/
 var qustionPaperListTable;
@@ -40,6 +43,22 @@ var patternId;
 var paperId;
 var inst_id = "";
 $(document).ready(function(){
+	$(SAVE_SECTION).hide();
+	$("body").on("click",BACK_TO_LIST,backToQuestionPaperList);
+	$("body").on("click",CHOOSE_QUE_BTN,function(){
+			var RegenerateObj = {};
+			var selectSub = $(this).closest('.row').find(SELECT_SUBJECT);
+			var selectTopic = $(this).closest('.row').find(SELECT_TOPIC);
+			var subject_id = selectSub.val();
+			var item_id = $(this).closest(ROW_ITEM).data(ITEM_ID);
+			var question_type = $(this).closest(ROW_ITEM).data(QUETION_TYPE);
+			var item_type = "Question";	
+			var question_topic = selectTopic.val();
+			var item_marks = $(this).closest(ROW_ITEM).data(ITEM_MARKS);
+			
+		loadQuestionList(subject_id,item_id,question_type,item_type,question_topic,item_marks);
+	});
+	
 	$("#instituteSelect").change(function(){
 		 inst_id = $(this).val();
 		var handler = {};
@@ -67,21 +86,6 @@ $(document).ready(function(){
 
 	});
 	
-	$(SAVE_SECTION).hide();
-	$("body").on("click",CHOOSE_QUE_BTN,function(){
-			var RegenerateObj = {};
-			var selectSub = $(this).closest('.row').find(SELECT_SUBJECT);
-			var selectTopic = $(this).closest('.row').find(SELECT_TOPIC);
-			var subject_id = selectSub.val();
-			var item_id = $(this).closest(ROW_ITEM).data(ITEM_ID);
-			var question_type = $(this).closest(ROW_ITEM).data(QUETION_TYPE);
-			var item_type = "Question";	
-			var question_topic = selectTopic.val();
-			var item_marks = $(this).closest(ROW_ITEM).data(ITEM_MARKS);
-			
-		loadQuestionList(subject_id,item_id,question_type,item_type,question_topic,item_marks);
-	});
-	
 	$("body").on("click",CHOOSE_QUESTION,function(){
 		var tRow = $(this).closest('tr');
 		var data = questionListTable.row(tRow).data();
@@ -94,27 +98,31 @@ $(document).ready(function(){
 		$.each($(QUESTION),function(key,val){
 			questionPaperData[$(val).closest('[item_id]').attr('item_id')] = $(val).data(QUESTION_ID);
 		});
-		console.log(questionPaperData);
 		var handlers = {};
 		handlers.success = function(resp){
+			$.notify({message: "Exam updated successfully"},{type: 'success'});
 			loadSubjectAndTopic(resp);
+			backToQuestionPaperList();
+			$(SEARCH_QUESTION_PAPER).trigger("click");
 		};
 		handlers.error = function(e){};
 		var division = $("#division").val();
-		var questionPaperName = $("#saveQuestionPaperName").val();
+		var questionPaperName = $(QUESTION_PAPER_DESC).val();
 		var desc = $(QUESTION_PAPER_DESC).val();
-		if(questionPaperName && questionPaperName.trim().length!==0){
+		if(desc && desc.trim().length!==0){
 			questionPaperData.desc = desc;
-			rest.post("rest/classownerservice/updateQuestionPaper/"+patternId+"/"+questionPaperName+"/"+division+"/"+paperId,handlers,JSON.stringify(questionPaperData),true);	
+			rest.post("rest/teacher/updateQuestionPaper/"+inst_id+"/"+patternId+"/"+questionPaperName+"/"+division+"/"+paperId,handlers,JSON.stringify(questionPaperData),true);	
 		}else{
-			modal.launchAlert("Error","Please enter exam name");
 			$("#saveQuestionPaperName").focus();
 		}
 		
 	});
 	
 	$("body").on("click",SEARCH_QUESTION_PAPER,searchQuestionPaper).
-		on("click",EDIT_QUESTION_PAPER,loadQuestionPaper);
+		on("click",EDIT_QUESTION_PAPER,loadQuestionPaper).
+		on("click",DELETE_QUESTION,deleteQuestionPaper);
+		;
+	
 		$("body").on("click",REGENERATE_QUE_BTN,function(e){
 			var RegenerateObj = {};
 			var selectSub = $(this).closest('.row').find(SELECT_SUBJECT);
@@ -142,6 +150,9 @@ $(document).ready(function(){
 						$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
 						$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
 					});					
+				}else{
+					$("[item_id='"+generateExamObject.item_id+"']").find(QUESTION).html('<div class="error">Questions are not available for criteria</div>');	
+					$("[item_id='"+generateExamObject.item_id+"']").find(QUESTION).removeData(QUESTION_ID);
 				}
 			}
 			handler.error = function(e){console.log(e);}
@@ -168,13 +179,21 @@ $(document).ready(function(){
 		var url = "rest/classownerservice/generateQuestionPaper/"+$("#division").val();
 		var handler = {};
 		handler.success = function(e){
+			var availibilityFlag = true;
 			questionPaperServicebeanList = e.questionPaperServicebeanList;
 			if(e.questionPaperDataList.length){
 				$.each(e.questionPaperDataList,function(key,val){
-					$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
-					$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
+					if(val.dataStatus != "N"){
+						$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
+						$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
+					}else{
+						availibilityFlag = false;
+						$.notify({message: "Questions are not available for criteria"},{type: 'danger'});
+						$("[item_id='"+val.item_id+"']").find(QUESTION).html("<div class='error'>Questions are not available for criteria</div>");
+					}
 				});
 			$(".noRegenerate").removeClass("noRegenerate");
+			if(availibilityFlag){$.notify({message: "Exam generated successfully"},{type: 'success'});}
 			}
 		}
 		handler.error = function(e){console.log(e);}
@@ -183,6 +202,21 @@ $(document).ready(function(){
 });
 
 /*Function*/
+var deleteQuestionPaper = function(){
+	var trow = $(this).closest('tr');
+	var data = qustionPaperListTable.row(trow).data();
+	var handler = {};
+	handler.success = function(){
+		
+	};
+	handler.error = function(){};
+	var paperId = data.paper_id;
+	var divisionId = $(DIVISION_DROPDOWN).val();		
+	if(paperId){
+		rest.deleteItem(deleteQuestionPaperUrl+divisionId+"/"+paperId,handler);
+	}
+}
+
 var loadQuestionPaper = function(){
 	var trow = $(this).closest('tr');
 	var data = qustionPaperListTable.row(trow).data();
@@ -198,8 +232,14 @@ var loadQuestionPaper = function(){
 	
 }
 
+var backToQuestionPaperList = function(){
+	$(EDIT_QUESTION_PAPER_CONTAINER).show();
+	$(SAVE_SECTION).hide();
+	$(BACK_TO_LIST).hide();
+	$("#viewPatternData").empty();
+}
 var loadQuestionPaperSuccess = function(e){
-	console.log(e);
+	$(BACK_TO_LIST).show();
 	$(EDIT_QUESTION_PAPER_CONTAINER).hide();
 	patternId = e.pattern_id;
 	paperId = e.paper_id;
@@ -208,6 +248,7 @@ var loadQuestionPaperSuccess = function(e){
 		questionPaperPattern = e;
 		recursiveView(e.questionPaperFileElementList,0,e.questionPaperFileElementList);
 		loadSubjectAndTopicSelect();
+	$(QUESTION_PAPER_DESC).val(e.paper_description);	
 	$(SAVE_SECTION).show();	
 }
 
@@ -220,7 +261,6 @@ var searchQuestionPaper = function(){
 	handler.success = searchQuestionPaperSuccess;
 	handler.error = searchQuestionPaperError;
 	var divisionId = $(DIVISION_DROPDOWN).val();
-	inst_id = $("#instituteSelect").val();
 	if(divisionId!=-1){
 		rest.get(getList+inst_id+"/"+divisionId,handler);
 	}
@@ -232,6 +272,7 @@ var searchQuestionPaper = function(){
 		handlers.error = function(e){};
 		
 		rest.get("rest/teacher/getSubjectsAndTopics/"+inst_id+"/"+divisionId,handlers);
+
 }
 
 var searchQuestionPaperSuccess = function(data){
@@ -251,7 +292,7 @@ var searchQuestionPaperSuccess = function(data){
 		title: "Marks",data:'marks'
 	},
 	{
-		title: "",data:null,sWidth:"10%",render:function(){return "<a class='btn btn-link editQuestionPaper'>Edit</a>"}
+		title: "",data:null,sWidth:"10%",render:function(){return "<a class='btn btn-link editQuestionPaper'>Edit</a><a class='btn btn-link deleteQuestionPaper'>Delete</a>"},bSortable:false
 	}]});
 }
 
@@ -260,7 +301,7 @@ var searchQuestionPaperError = function(){
 }
 
 function loadSubjectAndTopicSelect(){
-	var optionString = "<option value='-1'>Select</option>";
+	var optionString = "<option value='-1'>Select subject</option>";
 	$.each(topicNSubject,function(key,val){
 		optionString = optionString + "<option value='"+key+"'>"+val.subjectName+"</option>";
 	});
@@ -269,10 +310,29 @@ function loadSubjectAndTopicSelect(){
 		var that= $(this);
 		var val = $(this).attr("value");
 		$(this).val(val);
-		if(topicNSubject[val]){
-			loadTopicSelect(that,topicNSubject[val].topic);
-		}
+		loadTopicSelect(that,topicNSubject[val] && topicNSubject[val].topic?topicNSubject[val].topic:[]);
 	});
+}
+
+function loadSubjectRelatedToTopicSelect(){
+	var subjectId = $(this).val();
+	
+	var topicSelect = $(this).closest('.row').find(SELECT_TOPIC);
+	var topic = "<option value='-1'>Select topic</option>";
+	var topics = topicNSubject[subjectId]?topicNSubject[subjectId].topic:[];
+	$.each(topics,function(key,val){
+		topic = topic + "<option value='"+val.topicId+"'>"+val.topicName+"</option>";
+	});
+	topicSelect.empty();
+	topicSelect.append(topic);
+	
+	/*
+	$.each($(SELECT_SUBJECT),function(){
+		var that= $(this);
+		loadTopicSelect(that,topicNSubject[val] && topicNSubject[val].topic?topicNSubject[val].topic:[]);
+	});
+	loadTopicSelect(that,topicNSubject[val] && topicNSubject[val].topic?topicNSubject[val].topic:[]);
+	*/
 }
 
 function loadSubjectAndTopic(topicNSubjectAttr){
@@ -301,12 +361,16 @@ function loadSubjectAndTopic(topicNSubjectAttr){
 
 function loadTopicSelect(selectSub,topics){
 	var topicSelect = selectSub.closest('.row').find(SELECT_TOPIC);
-	var topic = "";
+	var topic = "<option value='-1'>Select topic</option>";
 	$.each(topics,function(key,val){
 		topic = topic + "<option value='"+val.topicId+"'>"+val.topicName+"</option>";
 	});
+	topicSelect.empty();
 	topicSelect.append(topic);
 	var val = topicSelect.attr("value");
+	if(val==0){
+		val = -1;
+	}
 	topicSelect.val(val);
 }
 
@@ -335,9 +399,9 @@ function recursiveView(data,recursionLevel,dataArray){
 				var itemNo = data[i].item_no;
 				var itemMarks = data[i].item_marks;
 				if(recursionLevel == 1 || recursionLevel==2){
-				$("#viewPatternData").append("<div class='row' style='font-weight:bold'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-1'>"+itemMarks+"</div></div>")
+				$("#viewPatternData").append("<div class='row' style='font-weight:bold'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-2 pull-right'>"+itemMarks+"</div></div>")
 				}else{
-					$("#viewPatternData").append("<div class='row'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-1'>"+itemMarks+"</div></div>")
+					$("#viewPatternData").append("<div class='row'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-2 pull-right'>"+itemMarks+"</div></div>")
 				}
 				data[i].status = "viewed";
 			}else{
@@ -363,14 +427,14 @@ function recursiveView(data,recursionLevel,dataArray){
 				
 				var question = $("<div/>",{
 					class:"col-md-5 question",
-					html:data[i].questionbank?data[i].questionbank.que_text:"<span class='alert'>Question is not available</span>"
-				});
+					html:data[i].questionbank?data[i].questionbank.que_text:"<span class='error'>Question is not available</span>"
+				}).data(QUESTION_ID,(data[i].questionbank?data[i].questionbank.que_id:undefined));
 				
 				var selectSubject = $("<select/>",{
 					class:"btn btn-default selectSubject btn-xs",
 					style:"width:100%;",
 					value:data[i].questionbank?data[i].questionbank.sub_id:-1
-				});
+				}).on('change',loadSubjectRelatedToTopicSelect);
 				
 				var subjectDiv = $("<div/>",{
 					class:"col-md-2"
@@ -447,7 +511,7 @@ var loadQuestionList = function(subject_id,item_id,question_type,item_type,quest
 			RegenerateObj.questionPaperStructure = generateExamObject;
 			RegenerateObj.generateQuestionPaperServicebeanList = questionPaperServicebeanList;
 			
-			var url = "rest/classownerservice/getQuestionList/"+$("#division").val();
+			var url = "rest/teacher/getQuestionList/"+inst_id+"/"+$("#division").val();
 			var handler = {};
 			$(QUESTION_LIST_MODAL).modal('show');
 			$(QUESTION_LIST_LOADING).show();

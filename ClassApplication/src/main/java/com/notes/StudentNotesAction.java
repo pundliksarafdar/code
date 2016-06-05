@@ -43,7 +43,7 @@ public class StudentNotesAction extends BaseAction{
 		// TODO Auto-generated method stub
 		if("editnames".equals(actionname)){
 			NotesTransaction notesTransaction=new NotesTransaction();
-			notesTransaction.updatenotes(notesname, notesid, newbatch,inst_id,Integer.parseInt(division),Integer.parseInt(subject));
+		//	notesTransaction.updatenotes(notesname, notesid, newbatch,inst_id,Integer.parseInt(division),Integer.parseInt(subject));
 		}else if("deletenotes".equals(actionname)){
 			NotesTransaction notesTransaction=new NotesTransaction();
 			notesTransaction.deleteNotes(notesid,inst_id,Integer.parseInt(division),Integer.parseInt(subject));

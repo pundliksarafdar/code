@@ -6,7 +6,8 @@ function REST(){
 			   global:global,
 			   async:async,
 			   success:handlers.success,
-			   error:handlers.error
+			   error:handlers.error,
+			   cache:false
 			   }); 
 	}
 	
@@ -104,6 +105,22 @@ function REST(){
 	
 	this.uploadNotes = function(uri,formData,handlers,global){
 		
+		$.ajax({
+			   url: uri,
+			   type:"POST",
+			   data:formData,
+			   global:global,
+			   processData: false,
+			   contentType: false,
+			   success:handlers.success,
+			   error:handlers.error
+			   });
+	}
+	
+	this.uploadTeacherImageFile = function(file,inst_id,handlers,global){
+		var formData = new FormData();
+		formData.append("uploadedFile",file.files[0]);
+		var uri = "rest/commonservices/uploadTeacherImageTemp/"+inst_id;
 		$.ajax({
 			   url: uri,
 			   type:"POST",

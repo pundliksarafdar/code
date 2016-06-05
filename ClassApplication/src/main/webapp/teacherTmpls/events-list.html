@@ -1,0 +1,36 @@
+<style>
+.cal-event-list tr{
+	color:black;
+}
+</style>
+<span id="cal-slide-tick" style="display: none"></span>
+<div id="cal-slide-content" class="cal-event-list">
+	<ul class="unstyled list-unstyled">
+		<table class="table">
+		<tr>
+			<th>Division</th><th>Batch </th><th> Start </th><th>End</th><th>Subject</th><th>Teacher</th><th></th>
+		</tr>
+		<@ _.each(events, function(event) { @>
+			<!--<li>
+				<span class="pull-left event <@= event['dataClass'] @>"></span>&nbsp;
+				<a href="<@= event.url ? event.url : 'javascript:void(0)' @>" data-event-id="<@= event.id @>"
+					data-event-class="<@= event['dataClass'] @>" class="event-item">
+					<@= event.title @></a>
+					<a class="corex-edit">Edit</a>
+				<div>
+					<@= event.description@>
+				</div>	
+			</li>
+			-->
+			<tr class="<@= event['dataClass'] @>">
+				<td><@= event.divname @></td>
+				<td><@= event.batchName @></td>
+				<td><@= moment(event.start).format("HH:mm") @></td>
+				<td><@= moment(event.end).format("HH:mm") @></td>
+				<td><@= event.subjectname @></td>
+				<td><@= event.teacher @></td>
+			</tr>
+		<@ }) @>
+		</table>
+	</ul>
+</div>

@@ -7,86 +7,163 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
 <script>
+var teacherSubjectArray = [];
+var divisionTempData = {};
+divisionTempData.id = "-1";
+divisionTempData.text = "Select Class";
+var batchTempData = {};
+batchTempData.id = "-1";
+batchTempData.text = "Select Batch";
+var examTempData = {};
+examTempData.id = "-1";
+examTempData.text = "Select Exam";
+
 $(document).ready(function(){
 	$("#instituteSelect").change(function(){
+		var divisionArray = [];
+		var batchArray = [];
+		var examArray = [];
+		divisionArray.push(divisionTempData);
+		batchArray.push(batchTempData);
+		examArray.push(examTempData);
+		$("#division").empty();
+		$("#batchSelect").empty();
+		$("#exam").empty();
+		 $("#division").select2({data:divisionArray});
+		 $("#batchSelect").select2({data:batchArray});
+		 $("#exam").select2({data:examArray});
+		 
 		var inst_id = $(this).val();
+		if(inst_id != "-1"){
+		$("#instituteError").html("");
 		var handler = {};
 		handler.success = function(e){
 		console.log("Success",e);
-		$("#division").empty();
-		var divisionArray = [];
-		var tempData = {};
- 		tempData.id = "-1";
- 		tempData.text = "Select Class";
- 		divisionArray.push(tempData);
  	 $.each(e.divisionList,function(key,val){
 			var data = {};
 			data.id = val.divId;
 			data.text = val.divisionName+" "+val.stream;
 			divisionArray.push(data);
 		});
- 	 	for(i=0;i<divisionArray.length;i++){
- 	 		$("#division").append("<option value='"+divisionArray[i].id+"'>"+divisionArray[i].text+"</option>")
+ 	 	teacherSubjectArray = e.subjectList;
+ 	 	if(divisionArray.length > 1){
+ 	 	$("#division").select2({data:divisionArray});
+ 	 	}else{
+ 	 		$("#division").select2({data:"",placeholder:"Class not available"});	
  	 	}
-	   // $("#division").select2({data:divisionArray,placeholder:"Type Topic Name"});
 		}
 		handler.error = function(e){console.log("Error",e)};
 		rest.get("rest/teacher/getDivisionAndSubjects/"+inst_id,handler);
-
+		}
 	});
+	
+	$("#exam").change(function(){
+		if($("#exam").val() != "-1"){
+			$("#examError").html("");
+		}
+	});
+	
 	$("#searchExam").click(function(){
+		$("#subjectTableDiv").hide();
+		$("#studentTableDiv").hide();
+		$(".validation-message").html("");
+		var validationFlag = false;
 		var inst_id = $("#instituteSelect").val();
 		var division = $("#division").val();
 		var batch = $("#batchSelect").val();
 		var exam = $("#exam").val();
+		if(inst_id == "-1"){
+			$("#instituteError").html("Select Institute");
+			validationFlag = true;
+		}
+		if(division == "-1"){
+			$("#divisionError").html("Select Class");
+			validationFlag = true;
+		}
+		if(batch == "-1"){
+			$("#batchError").html("Select Batch");
+			validationFlag = true;
+		}
+		if(exam == "-1"){
+			$("#examError").html("Select Exam");
+			validationFlag = true;
+		}
+		if(!validationFlag){
 		var handlers = {};
 		handlers.success = function(e){
 		createExamSubjectTable(e)
+		$("#subjectTableDiv").show();
 		}
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.post("rest/teacher/getExamSubjects/"+inst_id+"/"+division+"/"+batch+"/"+exam,handlers);
+		}
 	});
 	
 	$("#batchSelect").change(function(){
+		var examArray = [];
+		examArray.push(examTempData);
+		$("#exam").empty();
+		 $("#exam").select2({data:examArray});
+		 
 		var inst_id = $("#instituteSelect").val();
 		var division = $("#division").val();
 		var batch = $("#batchSelect").val();
+		if(batch != "-1"){
+		$("#batchError").html("");
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
-		$("#exam").empty();
-		$("#exam").append("<option>Select Exam</option>");
-		for(var i=0;i<e.length;i++){
-			$("#exam").append("<option value='"+e[i].exam_id+"'>"+e[i].exam_name+"</option>");
-		}
+		 $.each(e,function(key,val){
+				var data = {};
+				data.id = val.exam_id;
+				data.text = val.exam_name;
+				examArray.push(data);
+			});
+		 if(examArray.length > 1){
+		 $("#exam").select2({data:examArray,placeholder:"Type Exam name"}); 
+		 }else{
+			 $("#exam").empty();
+			 $("#exam").select2({data:"",placeholder:"Exam not available"}); 
+		 }
 		};
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.get("rest/teacher/getExamList/"+inst_id+"/"+division+"/"+batch,handlers);
+		}
 	});
-	 $("#division").change(function(){
-			var division = $("#division").val();
-			var inst_id = $("#instituteSelect").val();
-			var handlers = {};
-			handlers.success = function(e){console.log("Success",e);
-			 $('#batchSelect').empty();
-			   var batchDataArray = [];
-			 /* 
-			    $.each(e,function(key,val){
-					var data = {};
-					data.id = val.batch_id;
-					data.text = val.batch_name;
-					batchDataArray.push(data);
-				});
-			    $("#batchSelect").select({data:batchDataArray,placeholder:"type batch name"}); */
-			    $("#batchSelect").append("<option value='-1'>Select Batch</option>");
-			    if(e != null){
-			    	$.each(e,function(key,val){
-			    		 $("#batchSelect").append("<option value='"+val.batch_id+"'>"+val.batch_name+"</option>");
-					});
-			    }
-			};
-			handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
-			rest.get("rest/teacher/getBatchesofDivision/"+inst_id+"/"+division,handlers);
-		}); 
+	
+	$("#division").change(function(){
+		var batchArray = [];
+		var examArray = [];
+		batchArray.push(batchTempData);
+		examArray.push(examTempData);
+		$("#batchSelect").empty();
+		$("#exam").empty();
+		 $("#batchSelect").select2({data:batchArray});
+		 $("#exam").select2({data:examArray});
+		 
+	var division = $("#division").val();
+	var inst_id = $("#instituteSelect").val();
+	if(division != "-1"){
+	$("#divisionError").html("");
+	var handlers = {};
+	handlers.success = function(e){console.log("Success",e);
+	    $.each(e,function(key,val){
+			var data = {};
+			data.id = val.batch_id;
+			data.text = val.batch_name;
+			batchArray.push(data);
+		});
+	    if(batchArray.length > 1){
+	    $("#batchSelect").select2({data:batchArray,placeholder:"type batch name"}); 
+	    }else{
+	    	$("#batchSelect").empty();
+	    	 $("#batchSelect").select2({data:"",placeholder:"Batch not available"}); 	
+	    }
+	};
+	handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
+	rest.get("rest/teacher/getBatchesofDivision/"+inst_id+"/"+division,handlers);
+	}
+	}); 
+	 
 	$('#subjectTable').on("click",".fillMarks",function(){
 		var inst_id = $("#instituteSelect").val();
 		var division = $("#division").val();
@@ -145,10 +222,19 @@ var subject = "";
 var exam_marks = "";
 function createExamSubjectTable(data){
 	//data = JSON.parse(data);
+	var marksData = [];
+	 $.each(data,function(key,val){
+	 		$.each(teacherSubjectArray,function(innerKey,innerVal){
+	 			if(val.subjectId == innerVal.subjectId){
+	 				marksData.push(val);
+	 			return false;
+	 			}
+	 		});
+			});
 	var i=0;
 	var dataTable = $('#subjectTable').DataTable({
 		bDestroy:true,
-		data: data,
+		data: marksData,
 		lengthChange: false,
 		columns: [
 			{ title: "Subject",data:null,render:function(data,event,row){
@@ -204,6 +290,7 @@ function createStudentMarksTable(data){
 						<option value="<c:out value="${institute.regId}"></c:out>"><c:out value="${institute.className}"></c:out></option>
 					</c:forEach>							
 				</select>
+				<span id="instituteError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3">
 				<select id="division" name="division" class="form-control">
@@ -215,26 +302,27 @@ function createStudentMarksTable(data){
 						</option>
 					</c:forEach>
 				</select>
-				<span id="divisionError" class="patternError"></span>
+				<span id="divisionError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3">
 				<select class="form-control" id="batchSelect" >
 					<option value="-1">Select Batch</option>
 				</select>
+				<span id="batchError" class="validation-message"></span>
 			</div>
 			<div class="col-md-2">
 				<select id="exam" name="exam" class="form-control">
 					<option value="-1">Select Exam</option>
 				</select>
-				<span id="divisionError" class="patternError"></span>
+				<span id="examError" class="validation-message"></span>
 			</div>
 			<div class="col-md-1">
 				<button class="form-control btn btn-primary btn-sm" id="searchExam">Search</button>
 			</div>
 		</div>
 	</div>
-	<div class="container" id="subjectTableDiv">
-	<table class="table" id="subjectTable"></table>
+	<div class="container" id="subjectTableDiv" style="width: 100%">
+	<table class="table" id="subjectTable" style="width: 100%"></table>
 	</div>
 	
 	<div class="container" id="studentTableDiv" style="display: none">

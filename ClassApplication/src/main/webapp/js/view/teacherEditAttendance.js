@@ -11,34 +11,45 @@ var optionSelect = {
 		onColor:"success",
 		offColor:"danger"
 	};
+var teacherSubjectArray = [];
+var divisionTempData = {};
+divisionTempData.id = "-1";
+divisionTempData.text = "Select Class";
+var batchTempData = {};
+batchTempData.id = "-1";
+batchTempData.text = "Select Batch";
 
 $(document).ready(function(){
 	$("#instituteSelect").change(function(){
+		var divisionArray = [];
+		var batchArray = [];
+		divisionArray.push(divisionTempData);
+		batchArray.push(batchTempData);
+		$("#divisionSelect").empty();
+		$("#batchSelect").empty();
+		 $("#divisionSelect").select2({data:divisionArray});
+		 $("#batchSelect").select2({data:batchArray});
+		 
 		var inst_id = $(this).val();
+		if(inst_id != "-1"){
+		$("#instituteError").html("");
 		var handler = {};
 		handler.success = function(e){
-		console.log("Success",e);
-		$("#divisionSelect").empty();
-		var divisionArray = [];
-		var tempData = {};
- 		tempData.id = "-1";
- 		tempData.text = "Select Class";
- 		divisionArray.push(tempData);
  	 $.each(e.divisionList,function(key,val){
 			var data = {};
 			data.id = val.divId;
 			data.text = val.divisionName+" "+val.stream;
 			divisionArray.push(data);
 		});
- 	 	for(i=0;i<divisionArray.length;i++){
- 	 		$("#divisionSelect").append("<option value='"+divisionArray[i].id+"'>"+divisionArray[i].text+"</option>")
- 	 	}
-	   // $("#division").select2({data:divisionArray,placeholder:"Type Topic Name"});
+ 	 $("#divisionSelect").select2({data:divisionArray});
+ 	 	teacherSubjectArray = e.subjectList;
 		}
 		handler.error = function(e){console.log("Error",e)};
 		rest.get("rest/teacher/getDivisionAndSubjects/"+inst_id,handler);
+		}
 
 	});
+	
 	$("body").on("change",DIVISION_SELECT,getBatches)
 		.on("change",BATCH_SELECT,loadStudentTable);
 	 $( "#datetimepicker" ).datetimepicker({
@@ -102,24 +113,35 @@ $(document).ready(function(){
 });
 
 function getBatches(){
-	$(".chkBatch:checked").removeAttr('checked');
-	$('#checkboxes').children().remove();
-	$('div#addStudentModal .error').hide();
+	
+	var batchArray = [];
+	batchArray.push(batchTempData);
+	$("#batchSelect").empty();
+	$("#batchSelect").select2({data:batchArray});
+	 
 	var divisionId = $('#divisionSelect').val();
 	var inst_id = $("#instituteSelect").val();
 	if(!divisionId || divisionId.trim()=="" || divisionId == -1){
-		$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please select a division');
-		$('div#addStudentModal .error').show();
+		
 	}else{		
+		$("#divisionError").html("");
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
-		 $('#batchSelect').empty();
 		   var batchDataArray = [];
-		    $("#batchSelect").append("<option value='-1'>Select Batch</option>");
 		    if(e != null){
+		    	if(e.length > 0){
 		    	$.each(e,function(key,val){
-		    		 $("#batchSelect").append("<option value='"+val.batch_id+"'>"+val.batch_name+"</option>");
+		    		var data = {};
+					data.id = val.batch_id;
+					data.text = val.batch_name;
+					batchArray.push(data);
 				});
+		    	$("#batchSelect").select2({data:batchArray});
+		    	}else{
+		    		batchArray = [];
+		    		$("#batchSelect").empty();
+		    		$("#batchSelect").select2({data:batchArray,placeholder:"Batch not available"});
+		    	}
 		    }
 		};
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
@@ -133,11 +155,14 @@ function getBatchError(error){
 
 function loadStudentTable(data){
 	var batchId = $(BATCH_SELECT).val();
+	if(batchId != "-1"){
+		$("#batchError").html("");
+	}/*
 	var divId = $(DIVISION_SELECT).val();
 	var handler = {};
 	handler.succes = loadStudentTableSuccess;
 	handler.error = loadStudentTableError;
-	rest.get(getAllBatchStudentsFeesUrl+divId+"/"+batchId,handler);
+	rest.get(getAllBatchStudentsFeesUrl+divId+"/"+batchId,handler);*/
 }
 
 function loadStudentTableSuccess(data){
@@ -149,24 +174,55 @@ function loadStudentTableError(){
 }
 
 function getSchedule(){
+	$("#attendanceStudentListDiv").hide();
+	$("#attendanceScheduleDiv").hide();
+	$(".validation-message").html("");
+	var validationFlag = false;
 	var inst_id = $("#instituteSelect").val();
 	var division = $("#divisionSelect").val();
 	var batch = $("#batchSelect").val();
 	var date = $("#date").val().split("/");
+	if(inst_id == "-1"){
+		$("#instituteError").html("Select Institute");
+		validationFlag = true;
+	}
+	if(division == "-1"){
+		$("#divisionError").html("Select Class");
+		validationFlag = true;
+	}
+	if(batch == "-1"){
+		$("#batchError").html("Select Batch");
+		validationFlag = true;
+	}
+	if(date.length < 3){
+		$("#dateError").html("Select Date");
+		validationFlag = true;
+	}
+	if(!validationFlag){
 	var handler = {};
 	handler.success = function(e){console.log("Success",e);
 	createAttendanceScheduleTable(e);
-	
+	$("#attendanceScheduleDiv").show();
 	}
 	handler.error = function(e){console.log("Error",e)}
 	rest.get("rest/teacher/getScheduleForUpdateAttendance/"+inst_id+"/"+division+"/"+batch+"/"+new Date(date[2],parseInt(date[1])-1,date[0]).getTime(),handler);
+	}
 }
 function createAttendanceScheduleTable(data){
 	//data = JSON.parse(data);
+	var attendanceData = [];
+	 $.each(data,function(key,val){
+	 		$.each(teacherSubjectArray,function(innerKey,innerVal){
+	 			if(val.sub_id == innerVal.subjectId){
+	 				attendanceData.push(val);
+	 			return false;
+	 			}
+	 		});
+			});
 	var i=0;
 	var dataTable = $('#attendanceScheduleTable').DataTable({
 		bDestroy:true,
-		data: data,
+		data: attendanceData,
 		lengthChange: false,
 		columns: [
 			{ title: "Teacher",data:null,render:function(data,event,row){

@@ -42,9 +42,10 @@ public class TeacherAttendance extends BaseAction {
 		// TODO Auto-generated method stub
 		TeacherTransaction teacherTransaction = new TeacherTransaction();
 		List list = teacherTransaction.getTeachersClass(userBean.getRegId());
+		if(list.size()>0){
 		RegisterTransaction registerTransaction = new RegisterTransaction();
 		registerBeanList = registerTransaction.getTeachersInstitutes(list);
-		
+		}
 		return SUCCESS;
 	}
 	public List<RegisterBean> getRegisterBeanList() {

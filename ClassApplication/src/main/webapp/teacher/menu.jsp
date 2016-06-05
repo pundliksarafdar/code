@@ -279,37 +279,6 @@ function RenderTimer(completedTime,totalTime){
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
 	<li><a href="#" id="menu_dashboard"><i class="glyphicon glyphicon-list"></i> Dashboard</a></li>
-  
-      <li>
-      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Questions <b class="caret"></b></a>
-      		<ul class="dropdown-menu">
-	            <li><a class="menuoptions" href="addteacherquestion">Add Questions</a></li>
-	            <li><a class="menuoptions" href="searchQuestion">Search/Edit Questions</a></li>
-	         </ul>
-      </li>
-      <li>
-      	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Exam <b class="caret"></b></a>
-      		<ul class="dropdown-menu">
-	            <li><a class="menuoptions" href="teacherExamMarks">Exam marks</a></li>
-	            <li><a class="menuoptions" href="createTeacherExamPatten">Exam</a></li>
-	         </ul>
-      </li>
-    
-<%--     <cx:versionswitch switchId="3"> --%>
-    	<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Notes <b class="caret"></b></a>
-    	<ul class="dropdown-menu">
-	            <li><a class="menuoptions" href="choosesubject?forwardAction=addnotesoption">Add Notes</a></li>
-	            <li><a class="menuoptions" href="/choosesubject?forwardAction=seenotes&batchDefault=true">See/Update All Notes</a></li>  
-	         </ul>
-    	
-    	</li>
-    <%-- </cx:versionswitch> --%>
-    <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Send Notice/Message<b class="caret"></b></a>
-    		<ul class="dropdown-menu">
-	            <li><a class="menuoptions" href="sendmessage?to=student">Student</a></li>
-	            <li><a class="menuoptions" href="sendmessage?to=teacher">Teacher</a></li>  
-	         </ul>
-    </li>
     </ul>
 	<ul class="nav navbar-nav navbar-right">
       <li>
@@ -319,15 +288,7 @@ function RenderTimer(completedTime,totalTime){
 			</div>
       	</form>	
 	  </li>
-	  <% if(userBean.getRole() == 1 ){ %>
-	  <li>
-	  <form class="navbar-form navbar-left">
-			<div class="form-group">
-	  			<a href="#" id="notificationBtn" data-toggle="popover" data-placement="bottom" class="btn btn-default className notificationBlinker" style="background: transparent;"><%=userBean.getClassName()%></a>
-	  		</div>
-	  	</form>
-	  	</li>	
-	  <%} %>
+	 
 	  <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-phone-alt"></i> <b class="caret"></b></a>
         <ul class="dropdown-menu">
@@ -371,8 +332,26 @@ function RenderTimer(completedTime,totalTime){
 		</div>
 	</div>
 	<div class="row">
+	<div class="col-sm-2 col-xs-4">
+            <a href="addteacherquestion">
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Question
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+            </a>
+        </div>
 		<div class="col-sm-2 col-xs-4">
-            <a href="manageExam">
+            <a href="createTeacherExamPatten">
             <div id="tile8" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
@@ -382,6 +361,24 @@ function RenderTimer(completedTime,totalTime){
                             </div>
                             <div class="icontext">
                                 Exam
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+            </a>
+        </div>
+        <div class="col-sm-2 col-xs-4">
+            <a href="teacherExamMarks">
+            <div id="tile8" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <span class="fa fa-spinner bigicon"></span>
+                            </div>
+                            <div class="icontext">
+                                Marks
                             </div>
                             
                         </div>
@@ -408,6 +405,7 @@ function RenderTimer(completedTime,totalTime){
             </a>
         </div>
 		<div class="col-sm-2 col-xs-4">
+		 <a href="addteachernotesoption">
             <div id="tile8" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
@@ -416,15 +414,16 @@ function RenderTimer(completedTime,totalTime){
                                 <span class="fa fa-spinner bigicon"></span>
                             </div>
                             <div class="icontext">
-                                Alert
+                                Notes
                             </div>
                             
                         </div>
                     </div>
             </div>
+            </a>
         </div>
 		<div class="col-sm-2 col-xs-4">
-		<a href="timetableall">
+		<a href="teachertimetable">
             <div id="tile8" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
@@ -441,81 +440,7 @@ function RenderTimer(completedTime,totalTime){
             </div>
         </a>    
         </div>
-		<div class="col-sm-2 col-xs-4">
-            <div id="tile8" class="tile">
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner">
-                        <div class="item active text-center">
-                            <div>
-                                <span class="fa fa-spinner bigicon"></span>
-                            </div>
-                            <div class="icontext">
-                                Parent control
-                            </div>
-                            
-                        </div>
-                    </div>
-            </div>
         </div>
-		<div class="col-sm-2 col-xs-4">
-            <div id="tile8" class="tile">
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner">
-                        <div class="item active text-center">
-                            <div>
-                                <span class="fa fa-spinner bigicon"></span>
-                            </div>
-                            <div class="icontext">
-                                Report
-                            </div>
-                            
-                        </div>
-                    </div>
-            </div>
-        </div>
-        <div class="col-sm-2 col-xs-4">
-        	<a href="classownerSettings">
-            <div id="tile8" class="tile">
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner">
-                        <div class="item active text-center">
-                            <div>
-                                <span class="fa fa-spinner bigicon"></span>
-                            </div>
-                            <div class="icontext">
-                                Settings
-                            </div>
-                            
-                        </div>
-                    </div>
-            </div>
-            </a>
-        </div>
-		<!---->
-        </div>
-    
-    <% if(userBean.getRole() == 0 ){ %>
-	<div class="row">
-        <div class="col-sm-2 col-xs-4">
-            <a href="manageClassFeature">
-            <div id="tile8" class="tile">
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner">
-                        <div class="item active text-center">
-                            <div>
-                                <span class="fa fa-spinner bigicon"></span>
-                            </div>
-                            <div class="icontext">
-                                Class
-                            </div>
-                            
-                        </div>
-                    </div>
-            </div>
-            </a>
-        </div>
-       </div>
-    <%} %>
     </div>
 
 

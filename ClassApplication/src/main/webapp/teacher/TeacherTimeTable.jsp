@@ -7,69 +7,107 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+<script type="text/javascript" src="js/underscore-min.js"></script>
+<script type="text/javascript" src="js/calendar.js"></script>
+	<link rel="stylesheet" href="css/calendar.css">
 <script type="text/javascript">
+_.templateSettings = {
+		interpolate: /\<\@\=(.+?)\@\>/gim,
+		evaluate: /\<\@(.+?)\@\>/gim,
+		escape: /\<\@\-(.+?)\@\>/gim
+	};
+var view = "";
 $(document).ready(function(){
+	$('.btn-group button[data-calendar-view]').click(function() {
+		 view = $(this).data('calendar-view');
+		calendar.view(view);
+		var classid=$("#teacherTimeTableClassnameDropDown").val();
+		var date=$("#date").val();
+		var handler = {};
+		handler.success = function(e){
+			setTimetable(e)
+		}
+		handler.error = function(e){
+			$.notify({message: e.message},{type: 'danger'});
+		}
+			rest.get("rest/teacher/teacherSchedule/"+date+"/"+classid,handler);
+		
+	});
+	var calendar = $('#calendar').calendar({
+		
+		events_source: function() { return [
+		{
+		"url": ""
+		}]}
+		});
 	  $( "#datetimepicker" ).datetimepicker({
 		  pickTime: false,
-		  format: 'DD/MM/YYYY'
+		  minViewMode:'months',
+		  format: 'MM/YYYY'
 	  }).data("DateTimePicker");
 	  
 	  $("#submit").click(function(){
 			var classid=$("#teacherTimeTableClassnameDropDown").val();
 			var date=$("#date").val();
-			if(classid!="-1" && date!="")
-				{
-			$.ajax({
-				 
-				   url: "classOwnerServlet",
-				   data: {
-				    	 methodToCall: "getteacherschedule",
-				    	 classid:classid,
-				    	 date:date
-				    	
-				   		},
-				   type:"POST",
-				   success:function(data){
-					   
-					   var resultJson = JSON.parse(data);
-					   var batch=resultJson.batch.split(",");
-					   var starttime=resultJson.starttime.split(",");
-					   var endtime=resultJson.endtime.split(",");
-					   var subject=resultJson.subject.split(",");
-					   var division=resultJson.division.split(",");
-					   var table=$(document.getElementById("scheduletable"));
-					   var counter=0
-					   var table1=document.getElementById("scheduletable");
-						  var rowCount=table1.rows.length;
-						  for (var x=rowCount-1; x>0; x--) {
-							  table1.deleteRow(x);
-						   }
-						 if(batch[0]!="") {
-					   $(table).border="1";
-					   while(counter<batch.length)
-						   {
-					   $(table).append("<tr><td>"+division[counter]+"</td><td>"+batch[counter]+"</td><td>"+subject[counter]+"</td><td>"+starttime[counter]+
-					"</td><td>"+endtime[counter]+"</td></tr>");
-					   $(table).show();
-					   counter++;
-						   }
-				   }else{
-					   $("#scheduletable").hide();
-					   $('#lectureupdatemodal').modal('toggle');
-				   }
-					    
-					   		   	   },
-				   	error:function(){
-				   		modal.launchAlert("Error","Error");
-				   	}	
-				});
-				}else{
-					alert("Select Valid Class/Date");
-				}
+			 view = $('.btn-group button[data-calendar-view].active').data('calendar-view');
+			var handler = {};
+			handler.success = function(e){
+				setTimetable(e)
+			}
+			handler.error = function(e){
+				$.notify({message: e.message},{type: 'danger'});
+			}
+		
+				rest.get("rest/teacher/teacherSchedule/"+date+"/"+classid,handler);
+				
 		});
 	  
 	
 })
+
+function setTimetable(data){
+	var dateTime =$("#date").val().split("/");
+	/* if(dateTime.trim().length == 0){
+		dateTime = "now";
+	}else if(dateTime.trim().length<=7){ */
+		dateTime = dateTime[1]+"-"+dateTime[0]+"-01";
+	/* } */
+	timtableData = data;
+	var options = {
+		events_source: data,
+		tmpl_path: 'teacherTmpls/',
+		tmpl_cache: false,
+		day: dateTime,
+		view:view,
+		modal:"#events-modal",
+		onAfterEventsLoad: function(events) {
+			if(!events) {
+				return;
+			}
+			var list = $('.events-list');
+			list.html('');
+
+			$.each(events, function(key, val) {
+				$(document.createElement('li'))
+					.html('<a href="' + val.url + '">' + val.title + '</a>')
+					.appendTo(list);
+			});
+		},
+		onAfterViewLoad: function(view) {
+			$('.page-header h3').text(this.getTitle());
+			$('.btn-group button').removeClass('active');
+			$('button[data-calendar-view="' + view + '"]').addClass('active');
+		},
+		classes: {
+			months: {
+				general: 'label'
+			}
+		}
+	};
+
+	calendar = $('#calendar').calendar(options);
+	
+	}
 </script>
 </head>
 <body>
@@ -109,7 +147,14 @@ while(list.size()>counter){ %>
 </div>
 </form>
 </div>
-
+<div id="calendarContainer">
+<div class="btn-group">
+				<button class="btn btn-warning active" data-calendar-view="month">Month</button>
+				<button class="btn btn-warning active" data-calendar-view="week">Week</button>
+				<button class="btn btn-warning" data-calendar-view="day">Day</button>
+</div>
+</div>
+<div id="calendar"></div>
 <div class="container">
 <table id="scheduletable" border="1" style="display:none;background-color: white;" class="table table-bordered">
 <thead>

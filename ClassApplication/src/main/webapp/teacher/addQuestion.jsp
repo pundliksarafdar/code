@@ -16,32 +16,53 @@ padding-top: 2px;
 		</style>
 	<body>
 	<script>
+	var teacherSubjectArray = [];
+	var divisionTempData = {};
+	divisionTempData.id = "-1";
+	divisionTempData.text = "Select Class";
+	var subjectTempData = {};
+	subjectTempData.id = "-1";
+	subjectTempData.text = "Select Subject";
+	var topicTempData = {};
+	topicTempData.id = "-1";
+	topicTempData.text = "Select Topic";
 	$(document).ready(function(){
 		$("#instituteSelect").change(function(){
+			var divisionArray = [];
+			var subjectArray = [];
+			var topicArray = [];
+			divisionArray.push(divisionTempData);
+			subjectArray.push(subjectTempData);
+			topicArray.push(topicTempData);
+			$("#divisionSelect").empty();
+			$("#subjectSelect").empty();
+			$("#topicSelect").empty();
+			 $("#divisionSelect").select2({data:divisionArray});
+			 $("#subjectSelect").select2({data:subjectArray});
+			 $("#topicSelect").select2({data:topicArray});
 			var inst_id = $(this).val();
+			if(inst_id != "-1"){
+			$("#instituteSelectError").html("");
 			var handler = {};
 			handler.success = function(e){
 			console.log("Success",e);
-			$("#divisionSelect").empty();
 			var divisionArray = [];
-			var tempData = {};
-	 		tempData.id = "-1";
-	 		tempData.text = "Select Class";
-	 		divisionArray.push(tempData);
 	 	 $.each(e.divisionList,function(key,val){
 				var data = {};
 				data.id = val.divId;
 				data.text = val.divisionName+" "+val.stream;
 				divisionArray.push(data);
 			});
-	 	 
+	 		teacherSubjectArray = e.subjectList;
 		    $("#divisionSelect").select2({data:divisionArray,placeholder:"Type Topic Name"});
 			}
 			handler.error = function(e){console.log("Error",e)};
 			rest.get("rest/teacher/getDivisionAndSubjects/"+inst_id,handler);
-
+			}
 		});
+		
 		$("#subjectiveQuestion").addExpresssion();
+		
 		if($("#quesstatus").val() == "success"){
 			$.notify({message: "Question successfuly added"},{type: 'success'});
 			$("#subjectSelect").prop("disabled",false);
@@ -57,7 +78,9 @@ padding-top: 2px;
 			$("#subjectSelect").select2().val($("#commonSelectForm").find("#subject").val()).change();;
 			$("#divisionSelect").select2().val($("#commonSelectForm").find("#division").val()).change();
 		}
+		
 		$("#divisionSelect").select2();
+		
 		$("#classownerQuestionTypeSelect").change(function(){
 			var quesType = $("#classownerQuestionTypeSelect").val();
 			$("#MCQDiv").hide();
@@ -71,32 +94,36 @@ padding-top: 2px;
 				$("#paragraphDiv").show();
 			}
 		});
+		
 		$("#divisionSelect").on("change",function(e){
-			//$(SUBJECT_DROPDOWN).hide();
-			//$(BATCH_DROPDOWN).hide();
-			//$(ADD_BUTTON).hide();
+			var subjectArray = [];
+			var topicArray = [];
+			subjectArray.push(subjectTempData);
+			topicArray.push(topicTempData);
+			$("#subjectSelect").empty();
+			$("#topicSelect").empty();
+			 $("#subjectSelect").select2({data:subjectArray});
+			 $("#topicSelect").select2({data:topicArray});
 			if($(this).val()!=-1){
+				$("#divisionSelectError").html("");
 				var uploadExam = new UploadExam();
 				uploadExam.getSubjectsInDivision($(this).val());
-			}else{
-				$("#subjectSelect").prop("disabled",true);
-				$("#topicSelect").prop("disabled",true);
-				$("#classownerUploadexamAddExam").prop("disabled",true);
 			}
 		});
 		
 		$("#subjectSelect").change(function(){
+			var topicArray = [];
+			topicArray.push(topicTempData);
+			$("#topicSelect").empty();
+			$("#topicSelect").select2({data:topicArray});
+			 
 			var divisionID = $("#divisionSelect").val();
 			var subjectID = $("#subjectSelect").val();
 			var inst_id = $("#instituteSelect").val();
+			if(subjectID != "-1"){
+			$("#subjectSelectError").html("");
 			var handler = {};
 			handler.success = function(e){console.log("Success",e);
-			$("#topicSelect").empty();
-			var topicArray = [];
-			var tempData = {};
-	 		tempData.id = "-1";
-	 		tempData.text = "Select Topic";
-	 		topicArray.push(tempData);
 	 	 $.each(e,function(key,val){
 				var data = {};
 				data.id = val.topic_id;
@@ -109,6 +136,7 @@ padding-top: 2px;
 			}
 			handler.error = function(e){console.log("Error",e)}
 			rest.get("rest/teacher/getDivisionsTopics/"+inst_id+"/"+divisionID+"/"+subjectID,handler);
+			}
 		});
 		
 		
@@ -121,20 +149,33 @@ padding-top: 2px;
 		var inst_id = $("#instituteSelect").val();
 		var handler = {};
 		handler.success = function(e){console.log("Success",e);
+		$("#subjectSelect").empty();
 		var subjectArray = [];
 		var tempData = {};
+		if(teacherSubjectArray.length > 0){
  		tempData.id = "-1";
  		tempData.text = "Select Subject";
  		subjectArray.push(tempData);
  	 $.each(e,function(key,val){
+ 		$.each(teacherSubjectArray,function(innerKey,innerVal){
+ 			if(val.subjectId == innerVal.subjectId){
 			var data = {};
 			data.id = val.subjectId;
 			data.text = val.subjectName;
 			subjectArray.push(data);
+ 			return false;
+ 			}
+ 		});
 		});
- 	 
-	    $("#subjectSelect").select2({data:subjectArray,placeholder:"Type Topic Name"});
+ 	 	if(subjectArray.length > 1){
+	    $("#subjectSelect").select2({data:subjectArray,placeholder:"Type Subject Name"});
 	    $("#subjectSelect").prop("disabled",false);
+ 	 	}else{
+ 	 		subjectArray = [];
+ 	 		$("#subjectSelect").select2({data:subjectArray,placeholder:"Subjects not available"});
+ 		    $("#subjectSelect").prop("disabled",false);
+ 	 	}
+		}
 		}
 		handler.error = function(e){console.log("Error",e)}
 		rest.get("rest/teacher/getSubjectOfDivision/"+inst_id+"/"+division,handler);
@@ -185,7 +226,10 @@ padding-top: 2px;
 	}
 	
 	</script>
-	
+	<ul class="nav nav-tabs" style="border-radius: 10px">
+		<li class="active"><a href="#addnotestab" data-toggle = "tab">Add question</a></li>
+		<li><a href="searchTeacherQuestion">Search/Edit question</a></li>
+	</ul>
 	<form method="post" action="<c:out value="${forwardAction}" ></c:out>" id="commonSelectForm">
 	<div class="container bs-callout" style="margin-bottom: 5px;background-color: #eee">
 		
@@ -207,6 +251,7 @@ padding-top: 2px;
 						<option value="<c:out value="${institute.regId}"></c:out>"><c:out value="${institute.className}"></c:out></option>
 					</c:forEach>							
 				</select>
+				<span id="instituteSelectError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3">
 				<select name="division" id="divisionSelect" class="form-control" width="100px">
@@ -215,13 +260,13 @@ padding-top: 2px;
 				<span id="divisionSelectError" class="validation-message"></span>
 			</div>
 			<div class="col-md-2 subjectDropDown">
-				<select name="subject" id="subjectSelect" class="form-control" width="100px" disabled="disabled">
+				<select name="subject" id="subjectSelect" class="form-control" width="100px">
 					<option value="-1">Select Subject</option>
 				</select>
 				<span id="subjectSelectError" class="validation-message"></span>
 			</div>
 			<div class="col-md-2 topicDropDown">
-				<select name="topic" id="topicSelect" class="form-control" width="100px" disabled="disabled">
+				<select name="topic" id="topicSelect" class="form-control" width="100px">
 					<option value="-1">Select Topic</option>
 				</select>
 			</div>

@@ -118,17 +118,6 @@ font-size: 12px;
 	</div>
 	<div class="container" id="patternListTableDiv">
 		<table class="table" id="patternListTable">
-		<thead>
-			<tr>
-				<th>Sr No.</th>
-				<th>Pattern Description</th>
-				<th>Marks</th>
-				<th>View/Edit</th>
-				<th>Delete</th>
-			</tr>
-		</thead>
-		<tbody>
-		</tbody>
 		</table>
 	</div>
 	<div id="viewPatternDiv" style="display: none;" class="container">

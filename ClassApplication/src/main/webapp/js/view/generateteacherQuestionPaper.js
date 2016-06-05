@@ -64,18 +64,12 @@ function createPatternTable(data){
 			{ title: "Marks",data:null,render:function(data,event,row){
 				return row.marks;
 			},sWidth:"20%"},
-			{ title: "Edit",data:null,render:function(data,event,row){
+			{ title: "",data:null,render:function(data,event,row){
 				var buttons = '<div class="default">'+
-					'<input type="button" class="btn btn-sm btn-primary viewPattern" value="Edit" id="'+row.pattern_id+'">'+
+					'<input type="button" class="btn btn-sm btn-primary viewPattern" value="Create" id="'+row.pattern_id+'">'+
 				'</div>'
 				return buttons;
-			},sWidth:"10%"},
-			{ title: "Delete",data:null,render:function(data,event,row){
-				var buttons = '<div class="default">'+
-					'<input type="button" class="btn btn-sm btn-danger deletePattern" value="Delete" id="'+row.pattern_id+'">'+
-				'</div>'
-				return buttons;
-			},sWidth:"10%"}
+			},sWidth:"10%",bSortable:false}
 		]
 	});
 }
@@ -218,15 +212,27 @@ $(document).ready(function(){
 		var url = "rest/teacher/generateQuestionPaper/"+inst_id+"/"+$("#division").val();
 		var handler = {};
 		handler.success = function(e){
+			//This flag is false if no availibility
+			var availibilityFlag = true;
 			questionPaperServicebeanList = e.questionPaperServicebeanList;
 			if(e.questionPaperDataList.length){
 				$.each(e.questionPaperDataList,function(key,val){
 					if(val.dataStatus != "N"){
 					$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
 					$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
+					}else{
+						availibilityFlag = false;
+						$.notify({message: "Questions are not available for criteria"},{type: 'danger'});
+						$("[item_id='"+val.item_id+"']").find(QUESTION).html("<div class='error'>Questions are not available for criteria</div>");
 					}
 				});
 			$(".noRegenerate").removeClass("noRegenerate");
+			}
+			if(availibilityFlag){
+				$.notify({message: "Exam generated successfully"},{type: 'success'});
+				$(SAVE_SECTION).show();
+			}else{
+				$(SAVE_SECTION).hide();
 			}
 		}
 		handler.error = function(e){console.log(e);}
