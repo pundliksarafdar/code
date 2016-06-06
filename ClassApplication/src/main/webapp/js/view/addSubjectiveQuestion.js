@@ -4,7 +4,7 @@
 	var SUBJECTIVE_IMAGE_ROW = "#subjectiveImageRow";
 	var ADD_SUBJECT_FORM = "form#addSubjectiveQuestion";
 	var REMOVE_OPTION_IMAGE = ".answer_image_with_btn_remove";
-	
+	var TEXT_PREVIEW = ".textPreview";
 	var saveSubjectiveExamUrl = "/rest/classownerservice/examservice/saveSubjective";
 	
 	

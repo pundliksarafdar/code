@@ -616,11 +616,14 @@
           <h4 class="modal-title" id="">Add maths expression</h4>
         </div>
         <div class="modal-body" id="">
-          	
+          	<textarea id="mathInput"></textarea>
+         		<div id="textPreview"></div>
+				<div id="MathBuffer"></div>
+ 				
         </div>
       	<div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Canel</button>
-	        <button type="button" class="btn btn-success" data-dismiss="modal">Add</button>
+	        <button type="button" class="btn btn-success addExpression" data-dismiss="modal">Add</button>
       	</div>
     </div>
 </div>

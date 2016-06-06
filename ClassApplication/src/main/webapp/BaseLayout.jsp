@@ -150,6 +150,13 @@ a.floatButton>div{
 }
 </style>
 <script src="js/jquery-1.10.2.min.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_CHTML">
+</script>
 <script src="js/allAjax.js"></script>
 <script src="js/main.js"></script>
 <script src="js/bootstrap.min.js"></script>
@@ -166,6 +173,7 @@ a.floatButton>div{
 <script src="js/jquery.validate.min.js"></script>
 <script src="js/raphael.min.js"></script>
 <script src="js/morris.min.js"></script>
+
 
 <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/fixedcolumns/3.2.1/js/dataTables.fixedColumns.min.js"></script>
