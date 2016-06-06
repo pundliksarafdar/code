@@ -156,23 +156,26 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 				return Response.ok(invalidQuestionResponseMap).build();
 	    }    
 		
-		@POST
+				@POST
 			    @Path("/upload/student/xls/")
 				@Produces(MediaType.APPLICATION_JSON)
 				@Consumes(MediaType.APPLICATION_JSON)
 			    public Response uploadStudentExcelFile(StudentExcelUploadBean studentFileBean) 
 			 	{
-		
+					System.out.println("Start uploadStudentExcelFile:");
 					String response="";
 					int regId=getRegId();
 					HashMap<String,ArrayList<String>> invalidStudentResponseMap=null;
 					
 					StudentExcelData studentData= new StudentExcelData(studentFileBean.getFileName());
-					studentData.loadStudents(regId, studentFileBean.getDivId(), studentFileBean.getBatchId());
-					studentData.processData(regId, studentFileBean.getDivId(), studentFileBean.getBatchId());
+					System.out.println("Loading data..");
+					studentData.loadStudents(regId, studentFileBean.getDivId(), studentFileBean.getBatchId()[0]);
+					System.out.println("Loading completed..\n Processing the data..");
+					studentData.processData(regId, studentFileBean.getDivId(), studentFileBean.getBatchId()[0]);
+					System.out.println("Processing completed..");
 					invalidStudentResponseMap=studentData.getInvalidStudentResponseMap();
 					response="Students added successfully";
-					Set<Entry<Integer, Boolean>> entrySet=(Set<Entry<Integer, Boolean>>) studentData.getSuccessStudentMap();
+					Set<Entry<Integer, Boolean>> entrySet=studentData.getSuccessStudentMap().entrySet();
 					
 					ArrayList<String> addedStudentResponseList=new ArrayList<String>();
 			        

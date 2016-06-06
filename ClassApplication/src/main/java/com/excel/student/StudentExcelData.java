@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +18,7 @@ import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.util.NumberToTextConverter;
 
 import com.service.beans.RegisterBean;
 import com.service.beans.StudentRegisterServiceBean;
@@ -58,7 +60,7 @@ public class StudentExcelData {
 	 * of students as a output.
 	 */
 	public void loadStudents(int instId, int divId, int batchId) {
-
+		System.out.println("Inst id:"+instId+" divId:"+divId);
 		File myFile = new File(this.fileName);
 		POIFSFileSystem pfs = null;
 		FileInputStream fis = null;
@@ -97,48 +99,60 @@ public class StudentExcelData {
 			try{
 				
 				
-				boolean isValidDate=true;
+				boolean isValidDateOfBirth=true;
 				boolean isValidFeesDiscountType=true;
-				boolean isValidData=true;
-								
+				boolean isValidData=true;				
 				String firstName=row.getCell(1).getStringCellValue();
-				String lastName= row.getCell(2).getStringCellValue();
-				Long phoneNumber= Long.parseLong(Double.toString(row.getCell(3).getNumericCellValue()));
-				String emailId=row.getCell(4).getStringCellValue();
+				String middleName=row.getCell(2).getStringCellValue();
+				String lastName= row.getCell(3).getStringCellValue();
+				String str = NumberToTextConverter.toText(row.getCell(4).getNumericCellValue());
+						
+				Long phoneNumber= Long.parseLong(str);
+				String emailId=row.getCell(5).getStringCellValue();
 				Date dob=null;
-				
-				if(HSSFDateUtil.isCellDateFormatted(row.getCell(5))){
-					dob=row.getCell(5).getDateCellValue();
-					isValidDate=true;
+				SimpleDateFormat formatter1= new SimpleDateFormat("MM/dd/yyyy");
+				if(HSSFDateUtil.isCellDateFormatted(row.getCell(6)) && isValidDate(formatter1.format(row.getCell(6).getDateCellValue()))){
+						dob=row.getCell(6).getDateCellValue();
+						isValidDateOfBirth=true;										
 				}else{
 					listOfErrors.add("Invalid Date of Birth!");		
-					isValidDate=false;
+					isValidDateOfBirth=false;
 				}
 				
-				String address=row.getCell(6).getStringCellValue();
-				String city=row.getCell(8).getStringCellValue();
-				String state=row.getCell(7).getStringCellValue();
-				String parentFirstName=row.getCell(9).getStringCellValue();
-				String parentLastName=row.getCell(10).getStringCellValue();
-				Long parentPhoneNo= Long.parseLong(Double.toString(row.getCell(11).getNumericCellValue()));
-				String parentEmailID=row.getCell(12).getStringCellValue();
-				double feePaid=row.getCell(13).getNumericCellValue();
-				isValidData=validateExcelData(firstName, lastName, phoneNumber, emailId, address, city, state, parentFirstName, parentLastName, parentPhoneNo, parentEmailID, feePaid, listOfErrors);
+				String address=row.getCell(7).getStringCellValue();
+				String city=row.getCell(9).getStringCellValue();
+				String state=row.getCell(8).getStringCellValue();
+				String parentFirstName=row.getCell(10).getStringCellValue();
+				String parentLastName=row.getCell(11).getStringCellValue();
+				Long parentPhoneNo= Long.parseLong(NumberToTextConverter.toText(row.getCell(12).getNumericCellValue()));
+				String parentEmailID=row.getCell(13).getStringCellValue();
+				double feePaid=row.getCell(14).getNumericCellValue();
+				isValidData=validateExcelData(firstName, middleName, lastName, phoneNumber, emailId, address, city, state, parentFirstName, parentLastName, parentPhoneNo, parentEmailID, feePaid, listOfErrors);
 				double feesDiscount=0.0;
 				String feesDiscountType="";
-				if(row.getCell(14).getNumericCellValue()!=0.0 && row.getCell(14).getNumericCellValue()<=100.0){
+				if(row.getCell(15).getNumericCellValue()!=0.0 && row.getCell(15).getNumericCellValue()<=100.0){
 					feesDiscountType="per";
-					feesDiscount=row.getCell(14).getNumericCellValue();
-				}else if(row.getCell(15).getNumericCellValue()!=0.0 && row.getCell(14).getNumericCellValue()==0.0){
-					feesDiscountType="amt";
 					feesDiscount=row.getCell(15).getNumericCellValue();
+				}else if(row.getCell(16).getNumericCellValue()!=0.0 && row.getCell(15).getNumericCellValue()==0.0){
+					feesDiscountType="amt";
+					feesDiscount=row.getCell(16).getNumericCellValue();
 				}else{
 					isValidFeesDiscountType=false;
 					listOfErrors.add("Invalid input for column 'Discount in %' or 'Discount in  ₹'");
 				}
+				Date startDate=null;
+				
+						if(isValidDate(row.getCell(17).getStringCellValue())){
+							startDate=row.getCell(17).getDateCellValue();	
+						}else{
+							startDate=new Date();
+							listOfErrors.add("Invalid Date of start! please set it manually.");
+						}
 					
+				
 				RegisterBean registerBean = new RegisterBean();
 				registerBean.setFname(firstName);
+				registerBean.setMname(middleName);
 				registerBean.setLname( lastName);
 				registerBean.setPhone1(Long.toString(phoneNumber));
 				registerBean.setEmail(emailId);
@@ -147,6 +161,7 @@ public class StudentExcelData {
 				registerBean.setAddr1(address);
 				registerBean.setCity(city);
 				registerBean.setState(state);
+				registerBean.setStartDate(formatter.format(startDate));
 				
 				com.service.beans.Student student=new com.service.beans.Student();
 				student.setParentEmail(parentEmailID);
@@ -166,25 +181,28 @@ public class StudentExcelData {
 				List<Integer> batchIds=  new ArrayList<Integer>();
 				batchIds.add(batchId);
 				List<com.classapp.db.fees.BatchFees> batchFees=feesTransaction.getBatchFeesList(instId, divId,batchIds);
-				studentFees.setBatch_fees(batchFees.get(0).getBatch_fees());
-				if(isValidFeesDiscountType && feesDiscountType.equalsIgnoreCase("amt") && batchFees.get(0).getBatch_fees()> feesDiscount){
-					studentFees.setDiscount(feesDiscount);
-				}else{
-					studentFees.setDiscount(0.0);
-					listOfErrors.add("Invalid discount amount! Discount can not be greater than batch fees. Discount set to 0. Please set it manually.");
-				}
 				List<Student_Fees> listOfStudentFeesHistory= new ArrayList<Student_Fees>();
-				listOfStudentFeesHistory.add(studentFees);
-				
+				if(batchFees!=null){
+				studentFees.setBatch_fees(batchFees.get(0).getBatch_fees());
+					if(isValidFeesDiscountType && feesDiscountType.equalsIgnoreCase("amt") && batchFees.get(0).getBatch_fees()> feesDiscount){
+						studentFees.setDiscount(feesDiscount);
+					}else{
+						studentFees.setDiscount(0.0);
+						listOfErrors.add("Invalid discount amount! Discount can not be greater than batch fees. Discount set to 0. Please set it manually.");
+					}					
+					listOfStudentFeesHistory.add(studentFees);
+				}
 				StudentRegisterServiceBean studentBean=new StudentRegisterServiceBean();
 				studentBean.setRegisterBean(registerBean);
 				studentBean.setStudent(student);
 				studentBean.setStudent_FeesList(listOfStudentFeesHistory);
 				
-				System.out.println(student.toString());
-				if(isValidData && isValidDate){
+				System.out.println(studentBean.toString()+" isValidData:"+isValidData+" isValidDateOfBirth:"+isValidDateOfBirth);
+				if(isValidData && isValidDateOfBirth){
 					students.add(studentBean);
-				}				
+					System.out.println("Student added successfully!");
+				}
+				System.out.println(this.invalidStudentResponseMap);
 			} catch(IllegalStateException e){
 				listOfErrors.add(e.getMessage());
 				invalidStudentResponseMap.put(""+row.getRowNum(),listOfErrors);
@@ -199,6 +217,7 @@ public class StudentExcelData {
 	
 	public boolean validateExcelData(
 			String firstName,
+			String middleName,
 			String lastName,
 			Long phoneNumber,
 			String emailId,
@@ -216,8 +235,17 @@ public class StudentExcelData {
 					listOfErrors.add("First name column can not be blank or empty");
 				}else if(firstName.length()>100){
 					listOfErrors.add("First name value is too long.");
-				}else if(!firstName.matches( "[A-Z][a-zA-Z]*" )){
+				}else if(!firstName.matches( "[a-zA-Z]*" )){
 					listOfErrors.add("Invalid characters in column First Name.");
+				}
+				
+				//validate middle name
+				if(null==middleName || middleName.equals("")){
+					listOfErrors.add("Middle name column can not be blank or empty");
+				}else if(middleName.length()>100){
+					listOfErrors.add("Middle name value is too long.");
+				}else if(!middleName.matches( "[a-zA-Z]*" )){
+					listOfErrors.add("Invalid characters in column Middle Name.");
 				}
 				
 				//validate last name
@@ -225,16 +253,14 @@ public class StudentExcelData {
 					listOfErrors.add("Last name column can not be blank or empty");
 				}else if(lastName.length()>100){
 					listOfErrors.add("Last name value is too long.");
-				}else if(!lastName.matches( "[A-Z][a-zA-Z]*" )){
+				}else if(!lastName.matches( "[a-zA-Z]*" )){
 					listOfErrors.add("Invalid characters in column Last Name.");
 				}
 				//validate phone number
 				if (phoneNumber==0l) {
 					 listOfErrors.add("Phone Number can not be blank or empty.");
 				 }				
-				else if (!phoneNumber.toString().matches("\\d{10}") || 
-						 !phoneNumber.toString().matches("\\d{3}[-\\.\\s]\\d{3}[-\\.\\s]\\d{4}") || 
-						 !phoneNumber.toString().matches("\\(\\d{3}\\)-\\d{3}-\\d{4}")) 
+				else if (!phoneNumber.toString().matches("\\d{10}")) 
 				 {
 					 listOfErrors.add("Invalid value in column Phone Number.");
 				 }
@@ -244,9 +270,9 @@ public class StudentExcelData {
 					listOfErrors.add("Address column can not be blank or empty");
 				}else if(address.length()>250){
 					listOfErrors.add("Address value is too long.");
-				}else if(!address.matches("\\d+\\s+([a-zA-Z]+|[a-zA-Z]+\\s[a-zA-Z]+)")){
+				}/*else if(!address.matches("([a-zA-Z]+|[a-zA-Z]+\\s[a-zA-Z]+)")){
 					 listOfErrors.add("Invalid characters in column address.");
-				}
+				}*/
 				//validate email address
 				if(null==emailId || emailId.equals("")){
 					listOfErrors.add("EMail Address column can not be blank or empty");
@@ -279,7 +305,7 @@ public class StudentExcelData {
 					listOfErrors.add("Parent's First name column can not be blank or empty");
 				}else if(parentFirstName.length()>100){
 					listOfErrors.add("Parent's First name value is too long.");
-				}else if(!parentFirstName.matches( "[A-Z][a-zA-Z]*" )){
+				}else if(!parentFirstName.matches( "[a-zA-Z]*" )){
 					listOfErrors.add("Invalid characters in column Parent's First Name.");
 				}
 				
@@ -288,7 +314,7 @@ public class StudentExcelData {
 					listOfErrors.add("Parent's Last name column can not be blank or empty");
 				}else if(parentLastName.length()>100){
 					listOfErrors.add("Parent's Last name value is too long.");
-				}else if(!parentLastName.matches( "[A-Z][a-zA-Z]*" )){
+				}else if(!parentLastName.matches( "[a-zA-Z]*" )){
 					listOfErrors.add("Invalid characters in column Parent's Last Name.");
 					
 				}
@@ -296,9 +322,7 @@ public class StudentExcelData {
 				if (parentPhoneNo==0l) {
 					 listOfErrors.add("Paren's Phone Number can not be blank or empty.");
 				 }				
-				else if (!parentPhoneNo.toString().matches("\\d{10}") || 
-						 !parentPhoneNo.toString().matches("\\d{3}[-\\.\\s]\\d{3}[-\\.\\s]\\d{4}") || 
-						 !parentPhoneNo.toString().matches("\\(\\d{3}\\)-\\d{3}-\\d{4}")) 
+				else if (!parentPhoneNo.toString().matches("\\d{10}")) 
 				 {
 					 listOfErrors.add("Invalid value in column Parent's Phone Number.");
 				 }
@@ -312,8 +336,7 @@ public class StudentExcelData {
 				}
 				
 				this.invalidStudentResponseMap.put(emailId, listOfErrors);
-				if(listOfErrors.size()>0){
-					
+				if(listOfErrors.size()>0){					
 					return false;
 				}
 		return true;
@@ -329,6 +352,22 @@ public class StudentExcelData {
 			return matcher.matches();
 		}
 		return false;
+	}
+	
+	boolean isValidDate(String inputDateStr){
+		SimpleDateFormat sdf= new SimpleDateFormat("MM/dd/yyyy");
+		sdf.setLenient(false);
+		
+		boolean result=false;
+		if(null!=inputDateStr && !inputDateStr.equals("")){
+			try {
+				Date date = sdf.parse(inputDateStr);
+				result= true;
+			} catch (ParseException e) {
+				result= false;			
+			}
+		}
+		return result;	
 	}
 	
 	public void processData(int instId, int divId, int batchId){
@@ -348,6 +387,7 @@ public class StudentExcelData {
 	
 	public static void main(String[] args) {
 		StudentExcelData excelSheetData = new StudentExcelData("E:\\SampleStudent.xls");
-		//excelSheetData.loadStudents(instId, divId, batchId);
+		excelSheetData.loadStudents(4, 28, 1);
+		//System.out.println(excelSheetData.isValidateDate("31/12/1987"));
 	}
 }

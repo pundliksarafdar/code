@@ -3,7 +3,7 @@ package com.service.beans;
 public class StudentExcelUploadBean {
 	String fileName;
 	int divId;
-	int batchId;
+	int[] batchId;
 	
 	public String getFileName() {
 		return fileName;
@@ -19,10 +19,10 @@ public class StudentExcelUploadBean {
 		this.divId = divId;
 	}
 	
-	public int getBatchId() {
+	public int[] getBatchId() {
 		return batchId;
 	}
-	public void setBatchId(int batchId) {
+	public void setBatchId(int[] batchId) {
 		this.batchId = batchId;
 	}
 	
