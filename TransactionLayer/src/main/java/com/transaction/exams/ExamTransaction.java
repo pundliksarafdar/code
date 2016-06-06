@@ -67,6 +67,7 @@ public class ExamTransaction {
 			exam.setExam_name(examName);
 			exam.setInst_id(inst_id);
 			exam_id = examDB.saveExam(exam);
+			exam_PaperList.get(0).setExam_id(exam_id);
 			}else{
 				msg = "Exam name "+examName+" already exists.Enter different name";
 				return msg;

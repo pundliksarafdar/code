@@ -33,7 +33,7 @@ function SubmitExam(){
 			$.each($("input[name='"+count+"']:checked"), function(){            
 				checkedanswers.push($(this).val());
     });
-		if(count==1){
+		if(count==0){
 			
 			answers=checkedanswers;
 		}else{
