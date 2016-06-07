@@ -183,24 +183,26 @@ $(document).ready(function(){
 	        }
 	    } );
 	$("#division").on("change",function(e){
-		//$(SUBJECT_DROPDOWN).hide();
-		//$(BATCH_DROPDOWN).hide();
-		//$(ADD_BUTTON).hide();
+		/* $("#notestable").empty(); */
+		$("#notesdiv").hide();
 		if($(this).val()!=-1){
+			$("#divisionerror").html("");
 			var uploadExam = new UploadExam();
 			uploadExam.getSubjectsInDivision($(this).val());
 		}else{
-			$("#subject").prop("disabled",true);
-			$("#classownerUploadexamBatchName").prop("disabled",true);
-			$("#classownerUploadexamAddExam").prop("disabled",true);
+			$("#subject").val("-1")
+			$("#subject").find('option:gt(0)').remove();
+			
 		}
 	});
 	
 	$("#subject").on("change",function(e){
+		$("#notesdiv").hide();
 		var uploadExam = new UploadExam();
 		var subjectId = $(this).val();
 		var divisionId = $("#division").val();
 		if(subjectId!="-1"){
+			$("#subjecterror").html("");
 			uploadExam.getBatchFromDivisonNSubject(subjectId,divisionId);	
 		}
 	});
@@ -230,6 +232,7 @@ $(document).ready(function(){
 	});
 	
 	$("#submit").click(function(){
+		$("#notesdiv").hide();
 		$("#subjecterror").html("");
 		$("#divisionerror").html("");
 		 subject=$("#subject").val();
@@ -250,21 +253,22 @@ $(document).ready(function(){
 			var handlers = {};
 			handlers.success = function(data){
 				var dataTable = $('#notestable').DataTable({
+					autoWidth: false,
 					bDestroy:true,
 					data: data,
 					lengthChange: false,
 					columns: [
-						{title:"#",data:null},
+						{title:"#",data:null,width:"10%"},
 						{ title: "Name",data:null,render:function(data,event,row){
 							return "<div class='defaultName'>"+row.name+"</div>";
-						},sWidth:"70%"},
+						},width:"70%"},
 						{ title: "Action",data:null,render:function(data,event,row){
 							return "<input type='hidden' class='notesname' value='"+row.name+"'>"+
 									"<input type='hidden' class='batch' value='"+row.batch+"'>"+
 									"<button class='btn btn-primary btn-xs shownotes' id='"+row.notesid+"'>Open</button>&nbsp;"+
 									"<button class='btn btn-info btn-xs edit' id='"+row.notesid+"'>Edit</button>&nbsp;"+
 									"<button class='btn btn-danger btn-xs deletenotes' id="+row.notesid+">Delete</button>";
-							},sWidth:"20%"}
+							},width:"20%"}
 					]
 					
 				});
@@ -274,7 +278,7 @@ $(document).ready(function(){
 		            cell.innerHTML = i+1;
 					});
 				}).draw();
-				
+				 $("#notesdiv").show();
 			}
 			handlers.error = function(){
 				
@@ -477,11 +481,13 @@ function UploadExam(){
 						<option value="<c:out value="${division.divId}"></c:out>"><c:out value="${division.divisionName}"></c:out>&nbsp;<c:out value="${division.stream}"></c:out></option>
 					</c:forEach>							
 				</select>
+				<span id="divisionerror" class="validation-message"></span>
 			</div>
 			<div class="col-md-3 subjectDropDown">
-				<select name="subject" id="subject" class="form-control" width="100px" disabled="disabled">
+				<select name="subject" id="subject" class="form-control" width="100px">
 					<option value="-1">Select Subject</option>
 				</select>
+				<span id="subjecterror" class="validation-message"></span>
 			</div>
 			<!-- <div class="col-md-3 batchDropDown">
 				<select name="batch" id="classownerUploadexamSelectBatchName" class="form-control" width="100px" disabled="disabled">
@@ -494,8 +500,8 @@ function UploadExam(){
 		</div>
 		</div>
 
-   <div id="notesdiv" class="container">
-   <table id="notestable" class="table table-bordered table-hover" style="background-color: white;">
+   <div id="notesdiv" class="" style="width: 100%">
+   <table id="notestable" class="table table-bordered table-hover" style="background-color: white;width: 100%">
   
    </table>
  

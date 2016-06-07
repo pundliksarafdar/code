@@ -58,6 +58,8 @@ $(document).ready(function(){
 						"<input type='text' class='form-control' readonly value='"+e[i].exam_name+"' data-toggle='tooltip' title='"+e[i].exam_name+"'>"+
 						"</div></div>");
 			}
+			$("#examList").show();
+			$("#sendProgressCards").prop("disabled",false)
 			};
 			handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 			rest.post("rest/classownerservice/getExamList/"+divisionID+"/"+batchID,handler);
@@ -67,6 +69,13 @@ $(document).ready(function(){
 	
 	$("#division").change(function(){
 		var divisionId = $("#division").val();
+		$("#batchSelect").val("-1")
+		$("#batchSelect").find('option:gt(0)').remove();
+		$("#examList").hide();
+		$("#progressCard").hide();
+		$("#sendProgressCards").prop("disabled",true)
+		if(divisionId != "-1"){
+		$("#divisionError").html("");
 		$.ajax({
 			   url: "classOwnerServlet",
 			   data: {
@@ -99,6 +108,7 @@ $(document).ready(function(){
 			   }
 			   
 		});
+		}
 	});
 	
 	$(".backToSubjectList").click(function(){
@@ -106,8 +116,17 @@ $(document).ready(function(){
 		$("#progressCard").hide();
 	});
 	
+	$("#batchSelect").change(function(){
+	$("#examList").hide();
+	$("#progressCard").hide();
+	$("#sendProgressCards").prop("disabled",true)
+	if($("#division").val() != "-1"){
+		$("#batchError").html("");
+	}
+	});
+	
 	$('#studentTable').on("click",".btn-student-progressCard",function(){
-		$("#examDiv").find(".error").remove();
+		$("#examDivError").find(".error").remove();
 		var divisionID = globalDivisionID;
 		var  batchID = globalBatchID;
 		var studentID= $(this).prop("id");
@@ -125,7 +144,7 @@ $(document).ready(function(){
 		if(examIDs.length>0){
 		rest.get("rest/studentmarks/getStudentProgressCard/"+divisionID+"/"+batchID+"/"+examID+"/"+studentID,handler);
 		}else{
-			$("#examDiv").append("<div class='error'>Please select atleast one subject!</div>")
+			$("#examDivError").append("<div class='error'>Please select atleast one subject!</div>")
 		}
 	});
 	
@@ -138,7 +157,7 @@ $(document).ready(function(){
 	});
 	
 	$("#sendProgressCards").click(function(){
-		$("#examDiv").find(".error").remove();
+		$("#examDivError").find(".error").remove();
 		var divisionID = globalDivisionID;
 		var  batchID = globalBatchID;
 		var examIDs = [];
@@ -158,7 +177,7 @@ $(document).ready(function(){
 		if(examIDs.length>0){
 		rest.get("rest/studentmarks/sendStudentProgressCard/"+divisionID+"/"+batchID+"/"+examID,handler);
 		}else{
-			$("#examDiv").append("<div class='error'>Please select atleast one subject!</div>")
+			$("#examDivError").append("<div class='error'>Please select atleast one subject!</div>")
 		}
 	});
 });
@@ -323,30 +342,32 @@ function createStudentTable(data){
 						</option>
 					</c:forEach>
 				</select>
-				<span id="divisionError" class="divisionError"></span>
+				<span id="divisionError" class="validation-message"></span>
 			</div>
 			<div class="col-md-2">
 				<select class="form-control" id="batchSelect" >
 					<option value="-1">Select Batch</option>
 				</select>
-				<span id="batchError" class="batchError"></span>
+				<span id="batchError" class="validation-message"></span>
 			</div>
 			<div class="col-md-1">
 				<button class="form-control btn btn-primary btn-sm" id="searchStudent">Search</button>
 			</div>
 			<div class="col-md-3">
-				<button class="form-control btn btn-success btn-sm" id="sendProgressCards">Send Progress Cards To Parents</button>
+				<button class="form-control btn btn-success btn-sm" id="sendProgressCards" disabled="disabled">Send Progress Cards To Parents</button>
 			</div>
 		</div>
 	</div>
-	<div  class="container" style="padding: 2%" id='examList'>
+	<div  class="container" style="padding: 2%;display: none;" id='examList'>
+	<div id="examDivError">
+	</div>
 	<div>
 	Select exams to be included in progress card :
 	</div>
 	<div id="examDiv">
 	</div>
 	<div class="container" id="studentTableDiv">
-	<table class="table" id="studentTable"></table>
+	<table class="table" id="studentTable" style="width: 100%"></table>
 	</div>
 	</div>
 	<div id="progressCard" style="display: none">

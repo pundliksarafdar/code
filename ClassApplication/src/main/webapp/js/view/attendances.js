@@ -85,15 +85,13 @@ $(document).ready(function(){
 });
 
 function getBatches(){
-	$(".chkBatch:checked").removeAttr('checked');
-	$('#checkboxes').children().remove();
-	$('div#addStudentModal .error').hide();
 	var divisionId = $('#divisionSelect').val();
-
-	if(!divisionId || divisionId.trim()=="" || divisionId == -1){
-		$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please select a division');
-		$('div#addStudentModal .error').show();
-	}else{		
+	$("#batchSelect").val("-1")
+	$("#batchSelect").find('option:gt(0)').remove();
+	$("#attendanceScheduleDiv").hide();
+	$("#attendanceStudentListDiv").hide();
+	if(divisionId != "-1"){		
+	$("#divisionError").html("");
 	  $.ajax({
 	   url: "classOwnerServlet",
 	   data: {
@@ -136,11 +134,15 @@ function getBatchError(error){
 
 function loadStudentTable(data){
 	var batchId = $(BATCH_SELECT).val();
-	var divId = $(DIVISION_SELECT).val();
-	var handler = {};
+	$("#attendanceScheduleDiv").hide();
+	$("#attendanceStudentListDiv").hide();
+	if(batchId != "-1"){
+		$("#batchError").html("");
+	}
+	/*var handler = {};
 	handler.succes = loadStudentTableSuccess;
 	handler.error = loadStudentTableError;
-	rest.get(getAllBatchStudentsFeesUrl+divId+"/"+batchId,handler);
+	rest.get(getAllBatchStudentsFeesUrl+divId+"/"+batchId,handler);*/
 }
 
 function loadStudentTableSuccess(data){
@@ -152,9 +154,24 @@ function loadStudentTableError(){
 }
 
 function getSchedule(){
+	$(".validation-message").html("");
+	var validationFlag = false;
 	var division = $("#divisionSelect").val();
 	var batch = $("#batchSelect").val();
 	var date = $("#date").val().split("/");
+	if(division == "-1"){
+		$("#divisionError").html("Select Division!");
+		validationFlag=true;
+	}
+	if(batch == "-1" || batch == null){
+		$("#batchError").html("Select Batch!");
+		validationFlag=true;
+	}
+	if(date == ""){
+		$("#dateError").html("Select Date!");
+		validationFlag=true;
+	}
+	if(validationFlag ==false){
 	var handler = {};
 	handler.success = function(e){console.log("Success",e);
 	createAttendanceScheduleTable(e);
@@ -162,6 +179,7 @@ function getSchedule(){
 	}
 	handler.error = function(e){console.log("Error",e)}
 	rest.get("rest/attendance/getScheduleForAttendance/"+division+"/"+batch+"/"+new Date(date[2],parseInt(date[1])-1,date[0]).getTime(),handler);
+	}
 }
 function createAttendanceScheduleTable(data){
 	//data = JSON.parse(data);
@@ -197,7 +215,7 @@ function createAttendanceScheduleTable(data){
 			},sWidth:"20%"}
 		]
 	});
-	
+	$("#attendanceScheduleDiv").show();
 }
 function getStudents(){
 	var division = $("#divisionSelect").val();

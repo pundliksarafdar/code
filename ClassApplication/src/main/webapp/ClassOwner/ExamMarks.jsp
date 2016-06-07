@@ -10,33 +10,64 @@
 var flagCounter = 0 ;
 $(document).ready(function(){
 	$("#searchExam").click(function(){
+		$(".validation-message").html("");
+		var validationFlag = false;
 		var division = $("#division").val();
 		var batch = $("#batchSelect").val();
 		var exam = $("#exam").val();
+		if(division == "-1"){
+			$("#divisionError").html("Select Class");
+			validationFlag = true;
+		}
+		if(batch == "-1"){
+			$("#batchError").html("Select Batch");
+			validationFlag = true;
+		}
+		if(exam == "-1"){
+			$("#examError").html("Select Exam");
+			validationFlag = true;
+		}
+		if(validationFlag == false){
 		var handlers = {};
 		handlers.success = function(e){
 		createExamSubjectTable(e)
 		}
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.post("rest/classownerservice/getExamSubjects/"+division+"/"+batch+"/"+exam,handlers);
+		}
 	});
 	
 	$("#batchSelect").change(function(){
 		var division = $("#division").val();
 		var batch = $("#batchSelect").val();
+		 $("#subjectTableDiv").hide();
+		 $("#studentTableDiv").hide();
+		$("#exam").val("-1")
+		$("#exam").find('option:gt(0)').remove();
+		if(batch != "-1"){
+			$("#batchError").html("");
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
 		$("#exam").empty();
-		$("#exam").append("<option>Select Exam</option>");
+		$("#exam").append("<option value='-1'>Select Exam</option>");
 		for(var i=0;i<e.length;i++){
 			$("#exam").append("<option value='"+e[i].exam_id+"'>"+e[i].exam_name+"</option>");
 		}
 		};
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.post("rest/classownerservice/getExamList/"+division+"/"+batch,handlers);
+		}
 	});
 	$("#division").change(function(){
 		var divisionId = $("#division").val();
+		$("#batchSelect").val("-1")
+		$("#batchSelect").find('option:gt(0)').remove();
+		$("#exam").val("-1")
+		$("#exam").find('option:gt(0)').remove();
+		$("#subjectTableDiv").hide();
+		$("#studentTableDiv").hide();
+		if(divisionId != "-1"){
+			$("#divisionError").html("");
 		$.ajax({
 			   url: "classOwnerServlet",
 			   data: {
@@ -69,7 +100,15 @@ $(document).ready(function(){
 			   }
 			   
 		});
+		}
 	});
+	$("#exam").change(function(){
+		$("#examError").html("");
+		 $("#subjectTableDiv").hide();
+		 $("#studentTableDiv").hide();
+	});
+	
+	
 	$('#subjectTable').on("click",".fillMarks",function(){
 		var division = $("#division").val();
 		var batch = $("#batchSelect").val();
@@ -106,7 +145,7 @@ $(document).ready(function(){
 		handlers.success = function(e){console.log("Success",e);
 		 $.notify({message: "Marks Added"},{type: 'success'});
 		 $("#subjectTableDiv").show();
-			$("#studentTableDiv").hide();
+		 $("#studentTableDiv").hide();
 		}
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.post("rest/classownerservice/saveStudentMarks/",handlers,JSON.stringify(dataArray));
@@ -138,7 +177,7 @@ $(document).ready(function(){
 var subject = "";
 var exam_marks = "";
 function createExamSubjectTable(data){
-	//data = JSON.parse(data);
+	$("#subjectTableDiv").show();
 	var i=0;
 	var dataTable = $('#subjectTable').DataTable({
 		bDestroy:true,
@@ -216,18 +255,19 @@ function createStudentMarksTable(data){
 						</option>
 					</c:forEach>
 				</select>
-				<span id="divisionError" class="patternError"></span>
+				<span id="divisionError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3">
 				<select class="form-control" id="batchSelect" >
 					<option value="-1">Select Batch</option>
 				</select>
+				<span id="batchError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3">
 				<select id="exam" name="exam" class="form-control">
 					<option value="-1">Select Exam</option>
 				</select>
-				<span id="divisionError" class="patternError"></span>
+				<span id="examError" class="validation-message"></span>
 			</div>
 			<div class="col-md-1">
 				<button class="form-control btn btn-primary btn-sm" id="searchExam">Search</button>

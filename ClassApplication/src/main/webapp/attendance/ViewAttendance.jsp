@@ -32,20 +32,22 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
 	<div class="container" style="padding: 2%;background: #eee">
 		<div class="row">
 			<div class="col-md-3">
-				<select class="btn btn-default" id="divisionSelect">
+				<select class="form-control" id="divisionSelect">
 					<option value="-1">Select Division</option>
 					<c:forEach var="division" items="${divisions}">
 						<option value='<c:out value="${division.divId}"></c:out>'><c:out value="${division.divisionName}"></c:out> <c:out value="${division.stream}"></c:out></option>
 					</c:forEach>
 				</select>
+				<span id="divisionError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3">
-				<select class="btn btn-default" id="batchSelect">
+				<select class="form-control" id="batchSelect">
 					<option value="-1">Select Batch</option>
 				</select>
+				<span id="batchError" class="validation-message"></span>
 			</div>
-			<div class="col-md-3">
-				<select class="btn btn-default" id="attendanceType">
+			<div class="col-md-2">
+				<select class="form-control" id="attendanceType">
 					<option value="1" selected="selected">Daily Attendance</option>
 					<option value="2">Weekly Attendance</option>
 					<option value="3">Monthly Attendance</option>
@@ -58,8 +60,9 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
 						class="glyphicon glyphicon-calendar glyphicon-time"></i>
 					</span>
 				</div>
+				<span id="dateError" class="validation-message"></span>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-1">
 				<button class="btn btn-primary btn-sm" id="searchLectures">Search Lectures</button>
 			</div>
 		</div>

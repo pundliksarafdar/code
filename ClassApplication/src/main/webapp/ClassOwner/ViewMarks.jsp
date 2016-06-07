@@ -9,10 +9,38 @@
 <script>
 $(document).ready(function(){
 	$("#searchMarks").click(function(){
+		$(".validation-message").html("");
+		var validationFlag = false;
 		var division = $("#division").val();
 		var batch = $("#batchSelect").val();
 		var exam = $("#exam").val();
 		var subject = $("#subjects").val();
+		var viewType = $("#viewType").val()
+		if(division == "-1"){
+			$("#divisionError").html("Select Class");
+			validationFlag = true;
+		}
+		if(batch == "-1"){
+			$("#batchError").html("Select Batch");
+			validationFlag = true;
+		}
+		if(viewType == "-1"){
+			$("#viewTypeError").html("Select View");
+			validationFlag = true;
+		}else{
+			if(viewType == "1"){
+		if(exam == "-1"){
+			$("#examError").html("Select Exam");
+			validationFlag = true;
+		}
+		}else{
+			if(subject == "-1"){
+				$("#examError").html("Select Subject");
+				validationFlag = true;
+			}
+		}
+		}
+		if(!validationFlag){
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
 		if($("#viewType").val() == "1"){
@@ -27,64 +55,45 @@ $(document).ready(function(){
 		}else if($("#viewType").val() == "2"){
 			rest.get("rest/studentmarks/getStudentExamSubjectMarks/"+division+"/"+batch+"/"+subject,handlers);
 		}
+		}
 		});
 	
 	
 	$("#viewType").change(function(){
-		var division = $("#division").val(); 
-		var batch = $("#batchSelect").val(); 
-		if($("#viewType").val() == "1"){
-			var handlers = {};
-			handlers.success = function(e){console.log("Success",e);
-			$("#exam").empty();
-			$("#exam").append("<option value='-1'>Select Exam</option>");
-			for(var i=0;i<e.length;i++){
-				$("#exam").append("<option value='"+e[i].exam_id+"'>"+e[i].exam_name+"</option>");
-			}
-		
-			$("#subjects").hide();
-			$("#exam").show();
-			};
-			handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
-			rest.post("rest/classownerservice/getExamList/"+division+"/"+batch,handlers);
-		}else{
-		$.ajax({
-		   url: "classOwnerServlet",
-		   data: {
-				 methodToCall: "fetchBatchSubject",
-	    		 batchName:batch,
-	    		 batchdivision:division
-		   		},
-		   type:"POST",
-		   success:function(data){
-			   data = JSON.parse(data);
-			   if(data.subjectstatus == ""){
-				   var subjectnames = data.Batchsubjects;
-				   var subjectIds = data.BatchsubjectsIds;
-				   var i = 0;
-				   var subjectnameArray = subjectnames.split(",");
-					var subjectidArray =  subjectIds.split(",");  
-					subjectList = [];
-					$("#subjects").empty();
-					$("#subjects").append("<option value='-1'>Select Subject</option>");
-					while(i < subjectnameArray.length){
-				   		$("#subjects").append("<option value='"+subjectidArray[i]+"'>"+subjectnameArray[i]+"</option>");
-				   		i++;
-				   }
-					$("#subjects").show();
-					$("#exam").hide();
-			   }
-		   },
-			error:function(){
-		   		modal.launchAlert("Error","Error");
-		   	}
-		   });
-		}
+		$("#studentTableDiv").hide();
+		getViewData();
 	});
 	
+$("#batchSelect").change(function(){
+	$("#studentTableDiv").hide();	
+	$("#exam").val("-1")
+	$("#exam").find('option:gt(0)').remove();
+	$("#subjects").val("-1")
+	$("#subjects").find('option:gt(0)').remove();
+		 if($("#batchSelect").val() != "-1"){
+		 $("#batchError").html("");
+		getViewData();
+		 }
+	});
+	
+	$(".marksViewType").change(function(e){
+		$("#studentTableDiv").hide();
+		if($(this).val() != "-1"){
+			$("#examError").html("");
+		}
+	})
 	
 	$("#division").change(function(){
 		var divisionId = $("#division").val();
+		$("#studentTableDiv").hide();
+		$("#batchSelect").val("-1")
+		$("#batchSelect").find('option:gt(0)').remove();
+		$("#exam").val("-1")
+		$("#exam").find('option:gt(0)').remove();
+		$("#subjects").val("-1")
+		$("#subjects").find('option:gt(0)').remove();
+		if(divisionId != "-1"){
+			$("#divisionError").html("");
 		$.ajax({
 			   url: "classOwnerServlet",
 			   data: {
@@ -117,6 +126,7 @@ $(document).ready(function(){
 			   }
 			   
 		});
+		}
 	});
 	$('#subjectTable').on("click",".fillMarks",function(){
 		var division = $("#division").val();
@@ -170,6 +180,65 @@ $(document).ready(function(){
     cell.data().marks=$(this).val()
 } );
 });
+
+function getViewData(){
+	var division = $("#division").val(); 
+	var batch = $("#batchSelect").val(); 
+	$("#exam").val("-1")
+	$("#exam").find('option:gt(0)').remove();
+	$("#subjects").val("-1")
+	$("#subjects").find('option:gt(0)').remove();
+	if($("#viewType").val() != "-1" && division != "-1" && batch != "-1"){
+	$("#viewTypeError").html("");
+	if($("#viewType").val() == "1"){
+		var handlers = {};
+		handlers.success = function(e){console.log("Success",e);
+		$("#exam").empty();
+		$("#exam").append("<option value='-1'>Select Exam</option>");
+		for(var i=0;i<e.length;i++){
+			$("#exam").append("<option value='"+e[i].exam_id+"'>"+e[i].exam_name+"</option>");
+		}
+	
+		$("#subjects").hide();
+		$("#exam").show();
+		};
+		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
+		rest.post("rest/classownerservice/getExamList/"+division+"/"+batch,handlers);
+	}else{
+	$.ajax({
+	   url: "classOwnerServlet",
+	   data: {
+			 methodToCall: "fetchBatchSubject",
+    		 batchName:batch,
+    		 batchdivision:division
+	   		},
+	   type:"POST",
+	   success:function(data){
+		   data = JSON.parse(data);
+		   if(data.subjectstatus == ""){
+			   var subjectnames = data.Batchsubjects;
+			   var subjectIds = data.BatchsubjectsIds;
+			   var i = 0;
+			   var subjectnameArray = subjectnames.split(",");
+				var subjectidArray =  subjectIds.split(",");  
+				subjectList = [];
+				$("#subjects").empty();
+				$("#subjects").append("<option value='-1'>Select Subject</option>");
+				while(i < subjectnameArray.length){
+			   		$("#subjects").append("<option value='"+subjectidArray[i]+"'>"+subjectnameArray[i]+"</option>");
+			   		i++;
+			   }
+				$("#subjects").show();
+				$("#exam").hide();
+		   }
+	   },
+		error:function(){
+	   		modal.launchAlert("Error","Error");
+	   	}
+	   });
+	}
+	}
+}
 
 function createStudentExamMarksTable(data){
 	//$("#studentMarksTable").clear();
@@ -269,12 +338,13 @@ function createStudentExamSubjectMarksTable(data){
 						</option>
 					</c:forEach>
 				</select>
-				<span id="divisionError" class="patternError"></span>
+				<span id="divisionError" class="validation-message"></span>
 			</div>
 			<div class="col-md-2">
 				<select class="form-control" id="batchSelect" >
 					<option value="-1">Select Batch</option>
 				</select>
+				<span id="batchError" class="validation-message"></span>
 			</div>
 			<div class="col-md-2">
 				<select class="form-control" id="viewType" >
@@ -282,15 +352,16 @@ function createStudentExamSubjectMarksTable(data){
 					<option value="1">Exam View</option>
 					<option value="2">Subject View</option>
 				</select>
+				<span id="viewTypeError" class="validation-message"></span>
 			</div>
 			<div class="col-md-2">
-				<select id="exam" name="exam" class="form-control">
+				<select id="exam" name="exam" class="form-control marksViewType">
 					<option value="-1">Select Exam</option>
 				</select>
-				<select id="subjects" name="subjects" class="form-control" style="display: none;">
+				<select id="subjects" name="subjects" class="form-control marksViewType" style="display: none;">
 					<option value="-1">Select Subject</option>
 				</select>
-				<span id="divisionError" class="patternError"></span>
+				<span id="examError" class="validation-message"></span>
 			</div>
 			<div class="col-md-1">
 				<button class="form-control btn btn-primary btn-sm" id="searchMarks">Search</button>

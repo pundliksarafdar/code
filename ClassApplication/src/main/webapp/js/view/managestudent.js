@@ -146,7 +146,7 @@ var addStudent = function(){
 			studentRegisterServiceBean.student = student;
 			studentRegisterServiceBean.student_FeesList = feesArray;
 			var handler = {};
-			handler.success = function(e){console.log(e)};
+			handler.success = function(e){$.notify({message: 'Student Added successfully'},{type: 'success'});};
 			handler.error = function(e){console.log(e)};
 			rest.post(addStudentByID,handler,JSON.stringify(studentRegisterServiceBean));
 		}
@@ -309,7 +309,7 @@ var addStudent = function(){
 		studentRegisterServiceBean.student_FeesList = feesArray;
 		console.log(studentRegisterServiceBean);
 		var handler = {};
-		handler.success = function(e){console.log(e)};
+		handler.success = function(e){$.notify({message: 'Student Added successfully'},{type: 'success'});};
 		handler.error = function(e){console.log(e)};
 		rest.post(addStudentManuallyUrl+"/"+divisionId+"/"+batchIDs,handler,JSON.stringify(studentRegisterServiceBean));
 		}

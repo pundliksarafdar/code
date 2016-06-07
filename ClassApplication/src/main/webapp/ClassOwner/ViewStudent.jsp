@@ -164,7 +164,7 @@ var graphData = [];
 			$(".studentDetailsDiv").hide();
 		});
 		
-		$("#classTable").on("change",".selectDivision",function(){
+		/* $("#classTable").on("change",".selectDivision",function(){
 			var divisionId	 = $(this).val();
 			var batchDataArray = [];
 			var that = $(this);
@@ -204,7 +204,7 @@ var graphData = [];
 				   }
 				   
 			});
-		});
+		}); */
 		$('.nav-tabs a[href="#marksTab"]').on('shown.bs.tab', function () {
 			
 			if(graphData.length > 0){
@@ -975,7 +975,7 @@ var graphData = [];
 			 var preselectedclass=that.closest("tr").find(".editDivID").val();
 				that.closest("tr").find(".selectDivision").select2({
 					data:classDataArray
-				}).val(preselectedclass);/*.change();  */
+				}).val(preselectedclass).change(); 
 				//that.closest("tr").find(".selectDivision").trigger("change");
 			}else{
 				that.closest("tr").find(".selectDivision").select2({data:"",placeholder:"No Class found"});
