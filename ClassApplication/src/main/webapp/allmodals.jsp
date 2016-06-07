@@ -616,9 +616,78 @@
           <h4 class="modal-title" id="">Add maths expression</h4>
         </div>
         <div class="modal-body" id="">
-          	<textarea id="mathInput"></textarea>
-         		<div id="textPreview"></div>
-				<div id="MathBuffer"></div>
+          	<textarea id="mathInput" cols="50" rows="5" style="margin-top:5px">
+</textarea>
+
+<div class="btn-group">
+	<div id="rootData" style="display:none;">
+		<input type="text" id="degree" placeholder="Degree(x)"/>
+		<input type="text" id="radicand" placeholder="Radicand(y)"/>
+		<input type="button" id="addRoot" class="closenClearParent" value="Add root"/>
+	</div>
+	<button data-val="int" class="mathControl">`int`</button>
+	<button data-val="oint" class="mathControl">`oint`</button>
+	<button data-val="sum" class="mathControl">`sum`</button>
+	<button data-val="root" class="" id="addRootShow">`root(x)(y)`</button>
+	<button data-val="lim" id="addMathLimit">`lim_(xrarry)`</button>
+	<div id="addMathLimitData" style="display:none;">
+		<input type="text" id="xValue" placeholder="x value"/>
+		<input type="text" id="yValue" placeholder="y value"/>
+		<input type="button" id="mathLimitUpdate" class="closenClearParent" value="Update limit"/>
+	</div>
+	<button data-val="bar" id="addMathLimit">`bar i`</button>
+	<div id="addMathLimitData" style="display:none;">
+		<input type="text" id="xValue" placeholder="x value"/>
+		<input type="button" id="mathLimitUpdate" class="closenClearParent" value="Update limit"/>
+	</div>
+	<br/>
+	Note:* if you have limit like (`int_(x-2)^(x-10)`) then you can click limit and give limit for the expression
+	<br/>
+	<button class="limit">Limit</button>
+	<div id="limitData" style="display:none;">
+		<input type="text" id="lowerLimit" placeholder="Lower limit"/>
+		<input type="text" id="upperLimit" placeholder="Upper limit"/>
+		<input type="button" id="updateLimit" class="closenClearParent" value="Update limit"/>
+	</div>
+	<br>
+	Greek Letters
+	<br>
+	<button data-val="alpha" class="mathControl">`alpha`</button>
+	<button data-val="beta" class="mathControl">`beta`</button>
+	<button data-val="gamma" class="mathControl">`gamma`</button>
+	<button data-val="delta" class="mathControl">`delta`</button>
+	<button data-val="epsilon" class="mathControl">`epsilon`</button>
+	<button data-val="varepsilon" class="mathControl">`varepsilon`</button>
+	<button data-val="zeta" class="mathControl">`zeta`</button>
+	<button data-val="eta" class="mathControl">`eta`</button>
+	<button data-val="lambda" class="mathControl">`lambda`</button>
+	<button data-val="mu" class="mathControl">`mu`</button>
+	<button data-val="nu" class="mathControl">`nu`</button>
+	<button data-val="pi" class="mathControl">`pi`</button>
+	
+	<button data-val="rho" class="mathControl">`rho`</button>
+	<button data-val="sigma" class="mathControl">`sigma`</button>
+	<button data-val="upsilon" class="mathControl">`upsilon`</button>
+	<button data-val="tau" class="mathControl">`tau`</button>
+	<button data-val="phi" class="mathControl">`phi`</button>
+	<button data-val="varphi" class="mathControl">`varphi`</button>
+	
+	<button data-val="psi" class="mathControl">`psi`</button>
+	<button data-val="omega" class="mathControl">`omega`</button>
+	<button data-val="Gamma" class="mathControl">`Gamma`</button>
+	<button data-val="Delta" class="mathControl">`Delta`</button>
+	<button data-val="Theta" class="mathControl">`Theta`</button>
+	<button data-val="Lambda" class="mathControl">`Lambda`</button>
+	<button data-val="Pi" class="mathControl">`Pi`</button>
+	<button data-val="Sigma" class="mathControl">`Sigma`</button>
+	<button data-val="Phi" class="mathControl">`Phi`</button>
+	<button data-val="Psi" class="mathControl">`Psi`</button>
+	<button data-val="Omega" class="mathControl">`Omega`</button>
+</div>
+<p>Preview is shown here:</p>
+<div id="textPreview" style="border:1px solid; padding: 3px; width:50%; margin-top:5px"></div>
+<div id="MathBuffer" style="border:1px solid; padding: 3px; width:50%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0"></div>
+          	
  				
         </div>
       	<div class="modal-footer">

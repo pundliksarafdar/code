@@ -1,4 +1,72 @@
 $(document).ready(function(){
+	//***//
+	$("#mathsExpressionModal").find("#mathInput").on("input",function(){
+		PreviewModal.Update();
+	});
+	
+
+	$(".limit").on("click",function(){
+		if($(this).hasClass('hasLimit')){
+			$("#limitData").hide();
+			$(this).removeClass('hasLimit')
+		}else{
+			$("#limitData").show();
+			$(this).addClass('hasLimit')
+		}
+	});
+	
+	$("#mathsExpressionModal").find(".mathControl").on("click",function(){
+		var mathExp = $(this).attr("data-val");
+		appendMathInput(mathExp);
+	});
+	
+	$("#mathsExpressionModal").find("#updateLimit").on("click",function(){
+		var lowerLimit = '('+$("#limitData").find("#lowerLimit").val()+')';
+		var upperLimit = '('+$("#limitData").find("#upperLimit").val()+')';
+		
+		if(lowerLimit && lowerLimit.trim().length>0){
+			appendMathInput("_"+lowerLimit+"^"+upperLimit);
+		}else{
+			appendMathInput("^"+upperLimit);
+		}
+		
+	});
+	
+	$("#mathsExpressionModal").find("#addRoot").on("click",function(){
+		var degree = $("#rootData").find("#degree").val();
+		var radicand = $("#rootData").find("#radicand").val();
+		var rootTxt;
+		if(!degree || degree.trim().length==0 || degree.trim()==2){
+			rootTxt = "sqrt("+radicand+")";
+		}else{
+			rootTxt = "root("+degree+")("+radicand+")";
+		}
+		appendMathInput(rootTxt);
+	});
+	
+	$("#mathsExpressionModal").find("#addRootShow").on("click",function(){
+		$("#rootData").show();
+	});
+	
+	
+	
+	$("#mathsExpressionModal").find("#mathLimitUpdate").on("click",function(){
+		var xV = $("#addMathLimitData").find("#xValue").val();
+		var yV = $("#addMathLimitData").find("#yValue").val();
+		appendMathInput("lim_("+xV+"rarr"+yV+")");
+	});
+	
+	$("#mathsExpressionModal").find("#addMathLimit").on("click",function(){
+		$("#addMathLimitData").show();
+	});
+	
+	
+	function appendMathInput(data){
+		$("#mathInput").val($("#mathInput").val()+data);
+		PreviewModal.Update();
+	}
+
+	
 	//
 	//  Cache a callback to the CreatePreview action
 	//
@@ -122,17 +190,12 @@ $(document).ready(function(){
 			});
 			
 		});
-		
-		$("#mathsExpressionModal").find("#mathInput").on("input",function(){
-			PreviewModal.Update();
-		});
-		
 		that.on("keyup",function(){
 			PreviewQuestionAndOption1.Update();
 		});
 		
 		
-	}
+			}
 });
 
 var PreviewModal = {
