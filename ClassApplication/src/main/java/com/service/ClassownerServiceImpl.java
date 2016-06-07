@@ -370,7 +370,10 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		fileObject.setQuestionPaperFileElementList(questionPaperFileElements);
 		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
 		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId());
-		return Response.status(Status.OK).entity(status).build();
+		if(status)
+			return Response.status(Status.OK).entity(status).build();
+		else
+			return Response.status(Status.BAD_REQUEST).entity(status).build();
 	}
 	
 	@POST

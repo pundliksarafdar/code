@@ -70,6 +70,7 @@
 			var handler = {};
 			handler.success = function(e){
 				$.notify({message: "Question updated successfuly"},{type: 'success'});
+				setTimeout(function(){location.href="searchQuestion"},1000*2);
 			}
 			handler.error = function(e){console.log(e)}
 			rest.put(saveSubjectiveExamUrl,handler,JSON.stringify(subjectiveExamBean),true);

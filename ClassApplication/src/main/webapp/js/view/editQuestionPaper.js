@@ -179,7 +179,8 @@ var deleteQuestionPaper = function(){
 	var data = qustionPaperListTable.row(trow).data();
 	var handler = {};
 	handler.success = function(){
-		
+		$.notify({message: "Exam updated successfully"},{type: 'success'});
+		searchQuestionPaper();
 	};
 	handler.error = function(){};
 	var paperId = data.paper_id;
@@ -263,7 +264,7 @@ var searchQuestionPaperSuccess = function(data){
 		title: "Marks",data:'marks'
 	},
 	{
-		title: "",data:null,sWidth:"10%",render:function(){return "<a class='btn btn-link editQuestionPaper'>Edit</a><a class='btn btn-link deleteQuestionPaper'>Delete</a>"},bSortable:false
+		title: "",data:null,sWidth:"10%",render:function(){return "<div><a class='btn-link editQuestionPaper'>Edit</a>&nbsp;<a class='btn-link deleteQuestionPaper'>Delete</a></div>"},bSortable:false
 	}]});
 }
 

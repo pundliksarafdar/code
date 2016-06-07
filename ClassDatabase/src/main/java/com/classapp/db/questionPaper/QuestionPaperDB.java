@@ -15,17 +15,23 @@ import com.classapp.persistence.HibernateUtil;
 public class QuestionPaperDB {
 
 	public int save(QuestionPaper questionPaper) {
+		boolean success = true;
 		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
-		session.saveOrUpdate(questionPaper);
+		try{
+			session.saveOrUpdate(questionPaper);
+		}catch(Exception e){
+			success = false;
+		}
 		transaction.commit();
 		System.out.println("Quesbank ID:-"+questionPaper.getPaper_id());
 		if(session!=null){
 			session.close();
 		}
-		return  questionPaper.getPaper_id();
+		if(success){	return  questionPaper.getPaper_id();}
+		else{	return -1;}
 	}
 	
 	public boolean updateQuestionPaper(QuestionPaper questionPaper) {

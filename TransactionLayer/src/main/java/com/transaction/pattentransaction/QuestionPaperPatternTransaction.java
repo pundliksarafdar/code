@@ -334,6 +334,7 @@ public class QuestionPaperPatternTransaction {
 	}
 	
 	public boolean saveQuestionPaper(QuestionPaperFileObject fileObject,int userID) {
+		boolean success = false;
 		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
 		if(questionPaperDB.verifyPaperName(fileObject.getClass_id(), inst_id, fileObject.getPaper_description())){
 			return false;
@@ -347,10 +348,14 @@ public class QuestionPaperPatternTransaction {
 		questionPaper.setCreated_dt(new Date(new java.util.Date().getTime()));
 		int paper_id =questionPaperDB.save(questionPaper);
 		fileObject.setPaper_id(paper_id);
-		String filePath = questionPaperStorageURL+File.separator+fileObject.getClass_id()+File.separator+paper_id;
-		writeObject(filePath, fileObject);
+		if(paper_id !=-1 ){
+			String filePath = questionPaperStorageURL+File.separator+fileObject.getClass_id()+File.separator+paper_id;
+			writeObject(filePath, fileObject);
+			success = true;
 		}
-		return true;
+		}
+		
+		return success;
 	}
 	
 	public boolean updateQuestionPaper(QuestionPaperFileObject fileObject,int userID) {

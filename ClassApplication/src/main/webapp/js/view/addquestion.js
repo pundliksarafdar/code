@@ -1,9 +1,26 @@
 
 
 $(document).ready(function(){
+	var CLASS_SELECT = "#classownerUploadexamDivisionName";
+	var SUB_SELECT = "#classownerUploadexamSubjectNameSelect";
+	var TOPIC_SELECT = "#classownerUploadQuestionTopicSelect";
+	var QUESTION_TYPE= "#classownerQuestionTypeSelect";
+	
+	$(CLASS_SELECT).on("change",disableAndClearForm);
+	$(SUB_SELECT).on("change",disableAndClearForm);
+	$(TOPIC_SELECT).on("change",disableAndClearForm);
+	$(QUESTION_TYPE).on("change",disableAndClearForm);
 	//$("body").on("change",ADD_SUBJECTIVE_QUESTION_IMAGE,showAndUploadImageForSubjective);
 });
 
+function disableAndClearForm(){
+	var forms = $("#paragraphDiv,#MCQDiv,#subjectiveDiv").find("form");
+	for(var formIndex=0;formIndex<forms.length;formIndex++){
+		forms[formIndex].reset();
+	}
+	
+	$("#paragraphDiv,#MCQDiv,#subjectiveDiv").hide();
+}
 function showAndUploadImageForSubjective1(){
 	var imageFile = $(ADD_SUBJECTIVE_QUESTION_IMAGE)[0];
 	var handler = {};
