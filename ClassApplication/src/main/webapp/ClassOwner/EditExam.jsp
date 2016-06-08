@@ -328,6 +328,10 @@ function preview(){
 	var handlerHeader = {};
 	handlerHeader.success = getHeaderSuccess;
 	handlerHeader.error = getHeaderError;
+	if(paperId.trim()==""){
+		$.notify({message: "Please select question paper"},{type: 'danger'});
+		return;
+	}
 	rest.get(getQuestionPaperUrl+divisionId+"/"+paperId,handler);
 	rest.get(getHeaderUrl+headerId,handlerHeader);
 	
@@ -380,7 +384,7 @@ function previewSuccess(data){
 					class:"col-xs-1"
 				}).appendTo(parentDiv);
 					
-				if(this.parent_id!="undefined"){
+				if(this.parent_id!="undefined" && this.parent_id != null){
 					$(PREVIEW_PAGE_CONTENT).find('[item_id="'+this.parent_id+'"]').append(parentDiv);
 				}else{
 					$(PREVIEW_PAGE_CONTENT).append(parentDiv);

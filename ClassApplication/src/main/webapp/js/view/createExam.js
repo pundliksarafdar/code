@@ -231,6 +231,10 @@ function preview(){
 	var handlerHeader = {};
 	handlerHeader.success = getHeaderSuccess;
 	handlerHeader.error = getHeaderError;
+	if(paperId.trim()==""){
+		$.notify({message: "Please select question paper"},{type: 'danger'});
+		return;
+	}
 	rest.get(getQuestionPaperUrl+divisionId+"/"+paperId,handler);
 	rest.get(getHeaderUrl+headerId,handlerHeader);
 	
@@ -242,48 +246,51 @@ function previewSuccess(data){
 	$(PREVIEW_PAGE_CONTENT).empty();
 	$.each(questionPaperFileElementList,function(){
 			var parentDiv = $("<div/>",{
-					class:"row",
 					item_type:this.item_type,
 					item_id:this.item_id
 				});
 			
+			var sparentDiv = $("<div/>",{
+				
+			});
+			
 			$("<div/>",{
 				text:this.item_no != -1 ? this.item_no : "",
-				style:'text-align:left;',
-				class:"col-xs-1",
-			}).appendTo(parentDiv);
+				style:'text-align:left;width:10%;float:left;',
+				
+			}).appendTo(sparentDiv);
 			
 			if(this.item_type == ITEM_TYPE.SECTION){
 				var	div = $("<div/>",{
 						text:this.item_description,
-						style:'text-align:center;',
-						class:"col-xs-10"
-					}).appendTo(parentDiv);
+						style:'text-align:center;font-weight:bold;width:80%;float:left;',
+						
+					}).appendTo(sparentDiv);
 			}
 			
 			if(this.item_type == ITEM_TYPE.INSTRUCTION){
 				var	div = $("<div/>",{
 						text:this.item_description,
-						style:'text-align:left;',
-						class:"col-xs-10"
-					}).appendTo(parentDiv);
+						style:'text-align:left;width:80%;float:left;',
+						
+					}).appendTo(sparentDiv);
 			}
 
 			if(this.item_type == ITEM_TYPE.QUESTION){
 					$("<div/>",{
 						text:this.questionbank.que_text,
-						style:'text-align:left;',
-						class:"col-xs-10",
-					}).appendTo(parentDiv);
+						style:'text-align:left;float:left;width:80%;',
+						
+					}).appendTo(sparentDiv);
 			}
 			
 				$("<div/>",{
 					text:this.item_marks,
-					style:'text-align:left;',
-					class:"col-xs-1"
-				}).appendTo(parentDiv);
+					style:'text-align:left;float:left;width:10%;',
 					
-				if(this.parent_id!="undefined"){
+				}).appendTo(sparentDiv);
+				(sparentDiv).appendTo(parentDiv);	
+				if(this.parent_id!="undefined" &&this.parent_id!=null){
 					$(PREVIEW_PAGE_CONTENT).find('[item_id="'+this.parent_id+'"]').append(parentDiv);
 				}else{
 					$(PREVIEW_PAGE_CONTENT).append(parentDiv);
