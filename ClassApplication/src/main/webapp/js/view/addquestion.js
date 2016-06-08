@@ -18,7 +18,8 @@ function disableAndClearForm(){
 	for(var formIndex=0;formIndex<forms.length;formIndex++){
 		forms[formIndex].reset();
 	}
-	
+	$("#QueAndOpttextPreview").empty();
+	$("#QueAndOptMathBuffer").empty();
 	$("#paragraphDiv,#MCQDiv,#subjectiveDiv").hide();
 }
 function showAndUploadImageForSubjective1(){

@@ -137,6 +137,7 @@ $(document).ready(function(){
 	});
 	
 	$.fn.addExpresssion = function(isObjectiveOption){
+		
 		PreviewModal.callback = MathJax.Callback(["CreatePreview",PreviewModal]);
 		PreviewModal.callback.autoReset = true;  // make sure it can run more than once
 		PreviewModal.Init();
@@ -173,10 +174,6 @@ $(document).ready(function(){
 				$("#mathsExpressionModal").modal('show');
 				PreviewModal.Init();
 				//PreviewQuestionAndOption1.Init();
-				PreviewQuestionAndOption1.preview = preview[0];
-				PreviewQuestionAndOption1.buffer = buffer[0];
-				//PreviewQuestionAndOption1.InputId = that.attr("id"); 
-				PreviewQuestionAndOption1.InputDom = that;
 				
 				$("#mathsExpressionModal").find(".addExpression").off().on("click",function(){
 					var mathExp = "`"+$(this).parents("#mathsExpressionModal").find("#mathInput").val()+"`";
@@ -191,10 +188,17 @@ $(document).ready(function(){
 			
 		});
 		that.on("keyup",function(){
+			PreviewQuestionAndOption1.preview = preview[0];
+			PreviewQuestionAndOption1.buffer = buffer[0];
+			//PreviewQuestionAndOption1.InputId = that.attr("id"); 
+			PreviewQuestionAndOption1.InputDom = that;
 			PreviewQuestionAndOption1.Update();
 		});
 		
-		
+		this.clearPreview = function(){
+			console.log("Clear preview.....");
+		}
+		return this;
 			}
 });
 
@@ -286,8 +290,8 @@ var PreviewQuestionAndOption = {
 		  //  Get the preview and buffer DIV's
 		  //
 		  Init: function () {
-		    if(!this.preview)this.preview = $("#QueAndOpttextPreview")[0];
-			if(!this.buffer)this.buffer = $("#QueAndOptMathBuffer")[0];
+		    if(!this.preview){this.preview = $("#QueAndOpttextPreview")[0];console.log("Preview is undefined");}
+			if(!this.buffer){this.buffer = $("#QueAndOptMathBuffer")[0];console.log("Preview is undefined");}
 		  },
 		  //
 		  //  Switch the buffer and preview, and display the right one.
@@ -325,7 +329,7 @@ var PreviewQuestionAndOption = {
 		  CreatePreview: function () {
 			  PreviewQuestionAndOption.timeout = null;
 		    if (this.mjPending) return;
-		    var text = this.InputDom!=null?this.InputDom.val():$(this.InputId).val;
+		    var text = this.InputDom!=null?this.InputDom.val():$(this.InputId).val();
 		    if (text === this.oldtext) return;
 		    if (this.mjRunning) {
 		      this.mjPending = true;
