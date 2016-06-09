@@ -617,14 +617,14 @@ var graphData = [];
 	function deleteStudentPrompt(){
 		var batchIdToDelete = $(this).closest("tr").find("#batchId").val();
 		var studentId = $(this).closest("tr").find("#studentId").val();
-		deleteBatchConfirm(studentId);	
+		deleteBatchConfirm(studentId,$(this));	
 	}
 	
-	function deleteBatchConfirm(studentId){
-		modal.modalConfirm("Delete","Do you want to delete?","Cancel","Delete",deleteStudent,[studentId]);
+	function deleteBatchConfirm(studentId,that){
+		modal.modalConfirm("Delete","Do you want to delete?","Cancel","Delete",deleteStudent,[studentId,that]);
 	}
 	
-	function deleteStudent(studentId){
+	function deleteStudent(studentId,that){
 				/* $.ajax({
 				 url: "classOwnerServlet",
 				   data: {
@@ -643,10 +643,13 @@ var graphData = [];
 			}); */
 		var handlers = {};
 		handlers.success=function(){
+			var table = $("#classTable").DataTable();
+			that.closest("tr").addClass('selected');
+			table.row('.selected').remove().draw( false );
 			$.notify({message: "Student successfuly deleted"},{type: 'success'});
 		};   
 		handlers.error=function(){
-			$.notify({message: "Student successfuly deleted"},{type: 'success'});
+			$.notify({message: "Student not deleted"},{type: 'danger'});
 		};   
 		
 		rest.deleteItem("rest/commonDelete/deleteStudent/"+studentId,handlers);

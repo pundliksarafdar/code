@@ -61,16 +61,40 @@ $(document).ready(function(){
 	}
 	$("#searchQuestionDivision").select2();
 $("#searchQuestionDivision").on("change",function(e){
-	//$(SUBJECT_DROPDOWN).hide();
-	//$(BATCH_DROPDOWN).hide();
-	//$(ADD_BUTTON).hide();
+	
+	$("#filterDiv").hide();
+	$("#paginationDiv").hide();
+	$("#questionListDiv").hide();
+	if($("#searchQuestionSubject").val() != null){
+	$("#searchQuestionSubject").select2().val("-1").change();
+	$("#searchQuestionSubject").find('option:gt(0)').remove();
+	}
 	if($(this).val()!=-1){
+		$("#searchQuestionDivisionError").html("");
 		var uploadExam = new UploadExam();
 		uploadExam.getSubjectsInDivision($(this).val());
-	}else{
+	}/* else{
 		$("#searchQuestionSubject").prop("disabled",true);
 		$("#searchQuestionTopic").prop("disabled",true);
 		$("#classownerUploadexamAddExam").prop("disabled",true);
+	} */
+});
+
+$("#searchQuestionSubject").change(function(){
+	$("#filterDiv").hide();
+	$("#paginationDiv").hide();
+	$("#questionListDiv").hide();
+	if($("#searchQuestionSubject").val() != "-1"){
+		$("#searchQuestionSubjectError").html("");
+	}
+});
+
+$("#searchQuestionType").change(function(){
+	$("#filterDiv").hide();
+	$("#paginationDiv").hide();
+	$("#questionListDiv").hide();
+	if($("#searchQuestionType").val() != "-1"){
+		$("#searchQuestionTypeError").html("");
 	}
 });
 
@@ -413,7 +437,7 @@ function UploadExam(){
 					});
 			 	 
 				    $("#searchQuestionSubject").select2({data:subjectArray,placeholder:"Type Subject Name"});
-				    if(subId != "-1"){
+				    if(subId != "-1" && subId != ""){
 				    	$("#searchQuestionSubject").select2().val(subId).change();
 				    	searchQuestionBtnClick();
 				    }
@@ -473,7 +497,7 @@ var searchQuestionBtnClick  = function(){
 				<span id="searchQuestionDivisionError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3 subjectDropDown">
-				<select name="subject" id="searchQuestionSubject" class="form-control" width="100px" disabled="disabled">
+				<select name="subject" id="searchQuestionSubject" class="form-control" width="100px">
 					<option value="-1">Select Subject</option>
 					<c:forEach items="${requestScope.subjects}" var="subject">
 						<option value="<c:out value="${subject.subjectId}"></c:out>"><c:out value="${subject.subjectName}"></c:out></option>

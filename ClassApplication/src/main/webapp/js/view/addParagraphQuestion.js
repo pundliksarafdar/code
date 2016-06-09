@@ -68,7 +68,19 @@
 	}
 	
 	function saveParaQuestion(){
-		if($(PARA_QUESTION_FORM).valid()){
+		$(".validation-message").html("");
+		var validationFlag = false;
+		var div_id = $("#classownerUploadexamDivisionName").val();
+		var sub_id = $("#classownerUploadexamSubjectNameSelect").val();
+		if(div_id == "-1" || div_id == null){
+			$("#divisionError").html("Select Class");
+			validationFlag = true;
+		}
+		if(sub_id == "-1" || sub_id == null){
+			$("#subjectError").html("Select Subject");
+			validationFlag = true;
+		}
+		if($(PARA_QUESTION_FORM).valid() && validationFlag == false){
 			var paraQuestionBean = new ParaQuestionBean();
 			paraQuestionBean.classId = $("#classownerUploadexamDivisionName").val();
 			paraQuestionBean.subjectId = $("#classownerUploadexamSubjectNameSelect").val();

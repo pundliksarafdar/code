@@ -20,6 +20,8 @@ $(document).ready(function(){
 	$(".searchExams").click(function(){
 		 division = $('#division').val();
 		 batch =  $("#batches").val();
+		 $("#examDiv").hide();
+		$("#examSubjectDiv").hide();
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
 		
@@ -77,6 +79,7 @@ function examSubjectTable(data){
 	//data = JSON.parse(data);
 	var i=0;
 	var dataTable = $('#examSubjectTable').DataTable({
+		autoWidth: false,
 		bDestroy:true,
 		data: data,
 		lengthChange: false,
@@ -107,6 +110,7 @@ function createExamTable(data){
 	//data = JSON.parse(data);
 	var i=0;
 	var dataTable = $('#examTable').DataTable({
+		autoWidth: false,
 		bDestroy:true,
 		data: data,
 		lengthChange: false,
@@ -129,6 +133,7 @@ function createExamTable(data){
 	            cell.innerHTML = i+1;
 				});
 			}).draw(); 
+	 $("#examDiv").show();
 }
 
 function getBatchesOfDivision(){
@@ -202,6 +207,7 @@ function getBatchesOfDivision(){
 </div>
 </div>
 </div>
+<div style="margin-top: 2%">
 <div class="container" id="examDiv">
 <table id="examTable" class="table" style="width: 100%"></table>
 </div>
@@ -209,8 +215,9 @@ function getBatchesOfDivision(){
 <div class="row">
 <button class="btn btn-primary btn-sm back">Back</button>
 </div>
-<div class="row">
+<div class="row" style="width: 100%">
 <table id="examSubjectTable" class="table" style="width: 100%"></table>
+</div>
 </div>
 </div>
  <form action="attemptExam" id="actionform" method="post" target="blank">

@@ -30,7 +30,7 @@
 		</div>
 		</div>
 		
-		<div class="container">
+		<div class="container" id="studentFeesTableDiv">
 				<table id="studentFeesTable" class="table table-striped"></table>
 		</div>
 	<div id="printableReceipt" class="hide">

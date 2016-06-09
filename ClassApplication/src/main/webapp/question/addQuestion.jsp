@@ -105,14 +105,23 @@ padding-top: 2px;
 			//$(SUBJECT_DROPDOWN).hide();
 			//$(BATCH_DROPDOWN).hide();
 			//$(ADD_BUTTON).hide();
+			if($("#classownerUploadexamSubjectNameSelect").val()!= null ){
+				$("#classownerUploadexamSubjectNameSelect").select2().val("-1").change();
+				$("#classownerUploadexamSubjectNameSelect").find('option:gt(0)').remove();
+				}
+				if($("#classownerUploadQuestionTopicSelect").val()!= null ){
+				$("#classownerUploadQuestionTopicSelect").select2().val("-1").change();
+				$("#classownerUploadQuestionTopicSelect").find('option:gt(0)').remove();
+				}
 			if($(this).val()!=-1){
 				var uploadExam = new UploadExam();
 				uploadExam.getSubjectsInDivision($(this).val());
 			}else{
-				$("#classownerUploadexamSubjectNameSelect").prop("disabled",true);
+				
+				/* $("#classownerUploadexamSubjectNameSelect").prop("disabled",true);
 				$("#classownerUploadQuestionTopicSelect").prop("disabled",true);
-				$("#classownerUploadexamAddExam").prop("disabled",true);
-				$("#uploadQuestionPaperBtn").prop("disabled",true);
+				$("#classownerUploadexamAddExam").prop("disabled",true);*/
+				$("#uploadQuestionPaperBtn").prop("disabled",true); 
 			}
 		});
 		
@@ -131,7 +140,10 @@ padding-top: 2px;
 			var divisionID = $("#classownerUploadexamDivisionName").val();
 			var subjectID = $("#classownerUploadexamSubjectNameSelect").val();
 			var quesType = $("#classownerQuestionTypeSelect").val();
-			
+			if($("#classownerUploadQuestionTopicSelect").val()!= null ){
+				$("#classownerUploadQuestionTopicSelect").select2().val("-1").change();
+				$("#classownerUploadQuestionTopicSelect").find('option:gt(0)').remove();
+				}
 			if(subjectID!="-1" && quesType!="-1"){
 			 	$("#uploadQuestionPaperBtn").removeAttr('disabled');
 			 	$("#uploadQuestionPaperBtn").empty();
@@ -175,7 +187,7 @@ padding-top: 2px;
 			   	}
 			   });
 			}else{
-				$("#classownerUploadQuestionTopicSelect").prop("disabled",true);
+				/* $("#classownerUploadQuestionTopicSelect").prop("disabled",true); */
 			}
 		});
 		
@@ -291,24 +303,25 @@ padding-top: 2px;
 						<option value="<c:out value="${division.divId}"></c:out>"><c:out value="${division.divisionName}"></c:out>&nbsp;<c:out value="${division.stream}"></c:out></option>
 					</c:forEach>							
 				</select>
-				<span id="classownerUploadexamDivisionNameError" class="validation-message"></span>
+				<span id="divisionError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3 subjectDropDown">
-				<select name="subject" id="classownerUploadexamSubjectNameSelect" class="form-control" width="100px" disabled="disabled">
+				<select name="subject" id="classownerUploadexamSubjectNameSelect" class="form-control" width="100px">
 					<option value="-1">Select Subject</option>
 					<c:forEach items="${requestScope.subjects}" var="subject">
 						<option value="<c:out value="${subject.subjectId}"></c:out>"><c:out value="${subject.subjectName}"></c:out></option>
 					</c:forEach>
 				</select>
-				<span id="classownerUploadexamSubjectNameSelectError" class="validation-message"></span>
+				<span id="subjectError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3 topicDropDown">
-				<select name="subject" id="classownerUploadQuestionTopicSelect" class="form-control" width="100px" disabled="disabled">
+				<select name="subject" id="classownerUploadQuestionTopicSelect" class="form-control" width="100px" >
 					<option value="-1">Select Topic</option>
 					<c:forEach items="${requestScope.topics}" var="topic">
 						<option value="<c:out value="${topic.topic_id}"></c:out>"><c:out value="${topic.topic_name}"></c:out></option>
 					</c:forEach>
 				</select>
+				<span id="topicError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3 questionTypeDropDown">
 				<select name="subject" id="classownerQuestionTypeSelect" class="form-control" width="100px">

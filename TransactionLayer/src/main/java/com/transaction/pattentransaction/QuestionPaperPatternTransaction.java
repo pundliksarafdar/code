@@ -560,6 +560,7 @@ public class QuestionPaperPatternTransaction {
 		for (Iterator iterator = onlineExamPaperElementList.iterator(); iterator
 				.hasNext();) {
 			OnlineExamPaperElement onlineExamPaperElement = (OnlineExamPaperElement) iterator.next();
+			if("Question".equals(onlineExamPaperElement.getItem_type()) ){
 			for (Iterator iterator2 = questionbankList.iterator(); iterator2
 					.hasNext();) {
 				Questionbank questionbank = (Questionbank) iterator2
@@ -574,7 +575,9 @@ public class QuestionPaperPatternTransaction {
 				}
 				
 			}
-			
+			}else{
+				counter++;
+			}
 		}
 		onlineExam.setMarks(totalMarks);
 		return onlineExam;

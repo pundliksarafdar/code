@@ -97,11 +97,16 @@ function calculateFee(){
 }
 	
 function getBatches(){
+	$("#studentFeesTableDiv").hide();
+	$(BATCH_SELECT).find('option').not('option[value="-1"]').remove();
+	$(BATCH_SELECT).find('optgroup').remove();
 	var handler = {}
 	var division = $(this).val();
+	if(division != "-1"){
 	handler.success = getBatchSuccess;
 	handler.error = getBatchError;
 	rest.get(getBatchListUrl+division,handler);
+	}
 }
 
 function getBatchSuccess(batches){
@@ -135,15 +140,19 @@ function getBatchError(error){
 function loadStudentTable(data){
 	var batchId = $(BATCH_SELECT).val();
 	var divId = $(DIVISION_SELECT).val();
+	$("#studentFeesTableDiv").hide();
+	if(batchId != "-1"){
 	var handler = {};
 	handler.success = loadStudentTableSuccess;
 	handler.error = loadStudentTableError;
 	rest.get(getAllBatchStudentsFeesUrl+divId+"/"+batchId,handler);
+	}
 }
 
 function loadStudentTableSuccess(data){
 	console.log(data);
 	feesDataTable = $(STUDENT_FEES_TABLE).DataTable({
+			autoWidth:false,
 			bDestroy:true,
 			data: data,
 			lengthChange: false,
@@ -184,7 +193,7 @@ function loadStudentTableSuccess(data){
 				$(row).find("input[type=\"checkbox\"]").bootstrapSwitch(optionSelect);
 			}
 		});
-		
+	$("#studentFeesTableDiv").show();
 }
 
 function loadStudentTableError(){

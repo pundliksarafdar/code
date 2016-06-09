@@ -52,7 +52,20 @@
 	}
 	
 	function saveExam(){
-		if($(ADD_OBJECT_FORM).valid()){
+		$(".validation-message").html("");
+		var validationFlag = false;
+		var div_id = $("#classownerUploadexamDivisionName").val();
+		var sub_id = $("#classownerUploadexamSubjectNameSelect").val();
+		if(div_id == "-1" || div_id == null){
+			$("#divisionError").html("Select Class");
+			validationFlag = true;
+		}
+		if(sub_id == "-1" || sub_id == null){
+			$("#subjectError").html("Select Subject");
+			validationFlag = true;
+		}
+		
+		if($(ADD_OBJECT_FORM).valid() && validationFlag == false){
 			var objectiveExamBean = new ObjectiveExamBean();
 			objectiveExamBean.classId = $("#classownerUploadexamDivisionName").val();
 			objectiveExamBean.subjectId = $("#classownerUploadexamSubjectNameSelect").val();

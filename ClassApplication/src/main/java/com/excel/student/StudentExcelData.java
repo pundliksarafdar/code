@@ -140,14 +140,14 @@ public class StudentExcelData {
 					isValidFeesDiscountType=false;
 					listOfErrors.add("Invalid input for column 'Discount in %' or 'Discount in  ₹'");
 				}
-				Date startDate=null;
+				/*Date startDate=null;
 				
 						if(isValidDate(row.getCell(17).getStringCellValue())){
 							startDate=row.getCell(17).getDateCellValue();	
 						}else{
 							startDate=new Date();
 							listOfErrors.add("Invalid Date of start! please set it manually.");
-						}
+						}*/
 					
 				
 				RegisterBean registerBean = new RegisterBean();
@@ -161,7 +161,7 @@ public class StudentExcelData {
 				registerBean.setAddr1(address);
 				registerBean.setCity(city);
 				registerBean.setState(state);
-				registerBean.setStartDate(formatter.format(startDate));
+				//registerBean.setStartDate(formatter.format(startDate));
 				
 				com.service.beans.Student student=new com.service.beans.Student();
 				student.setParentEmail(parentEmailID);

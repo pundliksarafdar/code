@@ -35,7 +35,7 @@ function SubmitExam(){
     });
 		if(count==0){
 			
-			answers=checkedanswers;
+			answers=checkedanswers+"";
 		}else{
 			answers=answers+" / "+checkedanswers;
 		}
