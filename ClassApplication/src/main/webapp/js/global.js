@@ -60,7 +60,11 @@ $(document).ready(function(){
 		$("#addMathLimitData").show();
 	});
 	
-	
+	/*This method should be at the emd only*/
+	$(".closenClearParent").on("click",function(){
+		$(this).closest('div').hide();
+		$(this).closest('div').find('input').not('[type="button"]').val('');
+	});
 	function appendMathInput(data){
 		$("#mathInput").val($("#mathInput").val()+data);
 		PreviewModal.Update();
