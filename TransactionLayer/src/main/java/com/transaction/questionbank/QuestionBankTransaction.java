@@ -44,6 +44,7 @@ public class QuestionBankTransaction {
 				questionbank.setMarks((int)subjectiveQuestion.getMarks());
 				questionbank.setQue_type(questionType);
 				questionbank.setQue_text(subjectiveQuestion.getQuestion());
+				questionbank.setQues_status("");
 				questionNumber=subjectiveQuestion.getQuestionNumber();				
 			}else //Objective question
 				if(questionType.equals("2")){
@@ -67,7 +68,8 @@ public class QuestionBankTransaction {
 					questionbank.setOpt_7(optionMap.get("7"));
 					questionbank.setOpt_8(optionMap.get("8"));
 					questionbank.setOpt_9(optionMap.get("9"));
-					questionbank.setOpt_10(optionMap.get("10"));	
+					questionbank.setOpt_10(optionMap.get("10"));
+					questionbank.setQues_status("");
 					questionNumber=mcQuestion.getQuestionNumber();
 			}
 			int questionId=saveQuestion(questionbank);
