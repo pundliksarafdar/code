@@ -58,12 +58,16 @@ public class NotificationServiceHelper {
 							status = sendMessageToParent(Integer.parseInt(bean.getBatchSelect()),
 									Integer.parseInt(bean.getDivisionSelect()),
 									regid,bean.getMessage());
-							statusList.add(status);
+							if(status!=null){
+								statusList.add(status + " to parents");
+							}
 						}else if(sendTo.equals("student")){
 							status = sendMessageToStudent(Integer.parseInt(bean.getBatchSelect()),
 									Integer.parseInt(bean.getDivisionSelect()),
 									regid,bean.getMessage());
-							statusList.add(status);
+							if(status!=null){
+								statusList.add(status+" to students");
+							}
 						}
 					}
 				}

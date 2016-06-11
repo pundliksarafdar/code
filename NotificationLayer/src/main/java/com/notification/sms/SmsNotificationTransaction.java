@@ -62,19 +62,22 @@ public class SmsNotificationTransaction {
 		if(statusMap.containsKey("access") && (boolean)statusMap.get("access")){
 			final SmsNotification inotify = new SmsNotification();
 			//This property shows how much message left
+			/*
 			if(statusMap.containsKey("leftsms")){
 				int leftSms = (int) statusMap.get("leftsms");
 				smss = smss.subList(0, leftSms);
-			}
-			ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
-			settingstransaction.reduceSmsCount(smss.size(), classId);
-			for(String sms:smss){
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						//inotify.sendEmail(sms, message, subject, from);
-					}
-				}).start();
+			}*/
+			if(smss.size()>0){
+				ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
+				settingstransaction.reduceSmsCount(smss.size(), classId);
+				for(String sms:smss){
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							//inotify.sendEmail(sms, message, subject, from);
+						}
+					}).start();
+				}
 			}
 		}
 		return (String) statusMap.get("status");
@@ -86,16 +89,17 @@ public class SmsNotificationTransaction {
 		String status = null;
 		HashMap statusMap = new HashMap();
 		statusMap.put("access", true);
+		int smsSize = smss.size();
 		if(settings.getInstituteStats().getSmsLeft()==0 ){
 			status = "No sms id remaining";
 			statusMap.put("access", false);
 			statusMap.put("status", status);
-		}else if(smss.size()>settings.getInstituteStats().getSmsLeft()){
+		}else if(smsSize>settings.getInstituteStats().getSmsLeft()){
 			smss = smss.subList(0, settings.getInstituteStats().getSmsLeft());
-			status = "Only %d sms is sent";
-			status = String.format(status, settings.getInstituteStats().getSmsLeft());
+			status = "Only %d sms is left so you can't send %d smses";
+			status = String.format(status, settings.getInstituteStats().getSmsLeft(),smsSize);
 			statusMap.put("status", status);
-			statusMap.put("access", true);
+			statusMap.put("access", false);
 			statusMap.put("leftsms", settings.getInstituteStats().getSmsLeft());
 		}else{
 			System.out.println("sending sms");

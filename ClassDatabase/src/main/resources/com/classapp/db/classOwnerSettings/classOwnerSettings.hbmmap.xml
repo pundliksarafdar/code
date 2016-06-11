@@ -8,29 +8,29 @@
             <column name="regId" />
         </id>
         <property name="smsPayment" type="boolean">
-            <column name="smsPayment"/>
+            <column name="smsPayment" default="false"/>
         </property>
         <property name="emailPayment" type="boolean">
-            <column name="emailPayment"/>
+            <column name="emailPayment" default="false"/>
         </property>
         <property name="parentPayment" type="boolean">
-            <column name="parentPayment"/>
+            <column name="parentPayment" default="false"/>
         </property>
         <property name="studentPayment" type="boolean">
-            <column name="studentPayment"/>
+            <column name="studentPayment" default="false"/>
         </property>
         
 		<property name="smsPaymentDue" type="boolean">
-            <column name="smsPaymentDue"/>
+            <column name="smsPaymentDue" default="false"/>
         </property>
         <property name="emailPaymentDue" type="boolean">
-            <column name="emailPaymentDue"/>
+            <column name="emailPaymentDue" default="false"/>
         </property>
         <property name="parentPaymentDue" type="boolean">
-            <column name="parentPaymentDue"/>
+            <column name="parentPaymentDue" default="false"/>
         </property>
         <property name="studentPaymentDue" type="boolean">
-            <column name="studentPaymentDue"/>
+            <column name="studentPaymentDue" default="false"/>
         </property>
 		
 		<property name="smsAttendanceDaily" type="boolean">
