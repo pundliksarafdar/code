@@ -102,8 +102,7 @@ public class StudentExcelData {
 				boolean isValidDateOfBirth=true;
 				boolean isValidFeesDiscountType=true;
 				boolean isValidData=true;
-				boolean isValidFees=true;
-				
+								
 				String firstName=row.getCell(1).getStringCellValue();
 				String middleName=row.getCell(2).getStringCellValue();
 				String lastName= row.getCell(3).getStringCellValue();
@@ -142,15 +141,7 @@ public class StudentExcelData {
 					isValidFeesDiscountType=false;
 					listOfErrors.add("Invalid input for column 'Discount in %' or 'Discount in  ₹'");
 				}
-				/*Date startDate=null;
-				
-						if(isValidDate(row.getCell(17).getStringCellValue())){
-							startDate=row.getCell(17).getDateCellValue();	
-						}else{
-							startDate=new Date();
-							listOfErrors.add("Invalid Date of start! please set it manually.");
-						}*/
-					
+								
 				
 				RegisterBean registerBean = new RegisterBean();
 				registerBean.setFname(firstName);
@@ -163,8 +154,7 @@ public class StudentExcelData {
 				registerBean.setAddr1(address);
 				registerBean.setCity(city);
 				registerBean.setState(state);
-				//registerBean.setStartDate(formatter.format(startDate));
-				
+								
 				com.service.beans.Student student=new com.service.beans.Student();
 				student.setParentEmail(parentEmailID);
 				student.setParentFname(parentFirstName);
@@ -184,7 +174,7 @@ public class StudentExcelData {
 				batchIds.add(batchId);
 				List<com.classapp.db.fees.BatchFees> batchFees=feesTransaction.getBatchFeesList(instId, divId,batchIds);
 				List<Student_Fees> listOfStudentFeesHistory= new ArrayList<Student_Fees>();
-				if(batchFees!=null){
+				if(batchFees!=null && batchFees.size()>0){
 				studentFees.setBatch_fees(batchFees.get(0).getBatch_fees());
 					if(isValidFeesDiscountType && feesDiscountType.equalsIgnoreCase("amt") && batchFees.get(0).getBatch_fees()> feesDiscount){
 						studentFees.setDiscount(feesDiscount);
@@ -200,10 +190,13 @@ public class StudentExcelData {
 				StudentRegisterServiceBean studentBean=new StudentRegisterServiceBean();
 				studentBean.setRegisterBean(registerBean);
 				studentBean.setStudent(student);
-				studentBean.setStudent_FeesList(listOfStudentFeesHistory);
+				
+				if(listOfStudentFeesHistory.size()>0){
+					studentBean.setStudent_FeesList(listOfStudentFeesHistory);
+				}
 				
 				System.out.println(studentBean.toString()+" isValidData:"+isValidData+" isValidDateOfBirth:"+isValidDateOfBirth);
-				if(isValidData && isValidDateOfBirth && isValidFees){
+				if(isValidData && isValidDateOfBirth){
 					students.add(studentBean);
 					System.out.println("Student added successfully!");
 				}
