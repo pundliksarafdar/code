@@ -183,9 +183,6 @@ public class StudentExcelData {
 						listOfErrors.add("Invalid discount amount! Discount can not be greater than batch fees. Discount set to 0. Please set it manually.");
 					}					
 					listOfStudentFeesHistory.add(studentFees);
-				}else{
-					isValidFees=false;
-					listOfErrors.add("Invalid Batch fees. Unable to add student without batch fees.");
 				}
 				StudentRegisterServiceBean studentBean=new StudentRegisterServiceBean();
 				studentBean.setRegisterBean(registerBean);
