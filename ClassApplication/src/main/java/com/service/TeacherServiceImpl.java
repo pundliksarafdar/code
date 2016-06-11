@@ -78,6 +78,10 @@ import com.transaction.student.StudentTransaction;
 import com.transaction.studentmarks.StudentMarksTransaction;
 import com.transaction.teacher.TeacherTransaction;
 import com.user.UserBean;
+import com.datalayer.exam.Question;
+import com.datalayer.exam.TeacherMCQuestionPaper;
+import com.datalayer.exam.TeacherSubjectiveQuestionPaper;
+import com.service.beans.QuestionExcelUploadBean;
 
 @Path("/teacher") 
 public class TeacherServiceImpl extends ServiceBase {
@@ -958,4 +962,59 @@ public class TeacherServiceImpl extends ServiceBase {
 		}
 		return object;
 	}
+	
+	@POST
+    @Path("/upload/xls/")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+    public Response uploadQuestionExcelFile(QuestionExcelUploadBean questionFileBean) 
+ 	{
+		List<Question> listOfQuestions=null;
+		String response="";
+		int regId=getRegId();
+		HashMap<String,ArrayList<String>> invalidQuestionResponseMap=null;
+		QuestionBankTransaction qbTransaction= new QuestionBankTransaction();
+	 	//Subjective question upload via excel
+		 if(questionFileBean.getQues_type().equals("1")){				 
+			 TeacherSubjectiveQuestionPaper paper= new TeacherSubjectiveQuestionPaper(questionFileBean.getFileName());
+			 paper.LoadQuestionPaper();
+			 invalidQuestionResponseMap=paper.getInvalidQuestionResponseMap();
+			 listOfQuestions=paper.getQuestions();
+			 response="Subjective Question Paper uploaded successfully";
+		 }
+		
+		 //Objective question upload via excel
+		 if(questionFileBean.getQues_type().equals("2")){				
+			 TeacherMCQuestionPaper paper= new TeacherMCQuestionPaper(questionFileBean.getFileName());
+			 paper.LoadQuestionPaper();
+			 invalidQuestionResponseMap=paper.getInvalidQuestionResponseMap();
+		 listOfQuestions=paper.getQuestions();
+			 response="Objective Question Paper uploaded successfully";
+		 }
+		 List<Integer> responseList=qbTransaction.saveQuestionsInBulk(listOfQuestions, questionFileBean.getQues_type(), questionFileBean.getDiv_id(), questionFileBean.getSub_id(), regId);
+	        if(responseList.size()==listOfQuestions.size()){
+	        	response="Unable to add all Questions. Please verify your input file.";
+	        	
+	        }else{
+	        	if(responseList.size()==0){
+	        		response="Successfully added all questions i.e. "+listOfQuestions.size()+" questions";
+	        	}else{
+	        		response="Successfully added "+(listOfQuestions.size()-responseList.size())+" questions. Unable to add "+responseList.size()+" questions. Correct entry for question number:";
+	        		String questionnumberstr="";	        		
+		        	for (Integer questionNumber : responseList) {
+		        		if(questionnumberstr.equals("")){
+		        			questionnumberstr=questionnumberstr+questionNumber;
+		        		}else{
+		        			questionnumberstr=questionnumberstr+","+questionNumber;
+		        		}
+					}
+		        	response=response+questionnumberstr;
+	        	}
+	        }
+	        
+	        ArrayList<String> addedQuestionResponseList=new ArrayList<String>();
+	        addedQuestionResponseList.add(response);
+	        invalidQuestionResponseMap.put("addedQuestionsResponse",addedQuestionResponseList);
+			return Response.ok(invalidQuestionResponseMap).build();
+    }
 }

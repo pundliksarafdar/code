@@ -334,10 +334,10 @@ padding-top: 2px;
 		</div>
 		<div class="row">	
 			<div class="col-md-3">
-				<a href="./question/SampleFiles/SubjectiveType_Sample.xls" class="btn" role="button">Sample Subjective Questions Excel</a>
+				<a href="./SampleFiles/SubjectiveType_Sample.xls" class="btn" role="button">Sample Subjective Questions Excel</a>
 			</div>
 			<div class="col-md-3">
-				<a href="./question/SampleFiles/MCQType_Sample.xls" class="btn" role="button">Sample Objective Questions Excel</a>
+				<a href="./SampleFiles/MCQType_Sample.xls" class="btn" role="button">Sample Objective Questions Excel</a>
 			</div>		
 			<div class="col-md-3" id="browseExcelDiv">
 			<span class="btn fileinput-button">

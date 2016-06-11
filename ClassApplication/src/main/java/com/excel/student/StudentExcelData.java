@@ -101,7 +101,9 @@ public class StudentExcelData {
 				
 				boolean isValidDateOfBirth=true;
 				boolean isValidFeesDiscountType=true;
-				boolean isValidData=true;				
+				boolean isValidData=true;
+				boolean isValidFees=true;
+				
 				String firstName=row.getCell(1).getStringCellValue();
 				String middleName=row.getCell(2).getStringCellValue();
 				String lastName= row.getCell(3).getStringCellValue();
@@ -191,6 +193,9 @@ public class StudentExcelData {
 						listOfErrors.add("Invalid discount amount! Discount can not be greater than batch fees. Discount set to 0. Please set it manually.");
 					}					
 					listOfStudentFeesHistory.add(studentFees);
+				}else{
+					isValidFees=false;
+					listOfErrors.add("Invalid Batch fees. Unable to add student without batch fees.");
 				}
 				StudentRegisterServiceBean studentBean=new StudentRegisterServiceBean();
 				studentBean.setRegisterBean(registerBean);
@@ -198,7 +203,7 @@ public class StudentExcelData {
 				studentBean.setStudent_FeesList(listOfStudentFeesHistory);
 				
 				System.out.println(studentBean.toString()+" isValidData:"+isValidData+" isValidDateOfBirth:"+isValidDateOfBirth);
-				if(isValidData && isValidDateOfBirth){
+				if(isValidData && isValidDateOfBirth && isValidFees){
 					students.add(studentBean);
 					System.out.println("Student added successfully!");
 				}

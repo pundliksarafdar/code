@@ -83,6 +83,14 @@ padding-top: 2px;
 		
 		$("#classownerQuestionTypeSelect").change(function(){
 			var quesType = $("#classownerQuestionTypeSelect").val();
+			var subId=$("#classownerUploadexamSubjectNameSelect").val();
+						
+				if(subId!="-1" && quesType!="-1"){
+					$("#uploadQuestionPaperBtn").removeAttr('disabled');
+					$("#uploadQuestionPaperBtn").empty();
+				}else{
+					$("#uploadQuestionPaperBtn").prop("disabled",true);
+				}
 			$("#MCQDiv").hide();
 			$("#subjectiveDiv").hide();
 			$("#paragraphDiv").hide();
@@ -94,6 +102,52 @@ padding-top: 2px;
 				$("#paragraphDiv").show();
 			}
 		});
+		
+		$("#uploadQuestionPaperBtn").on("click",function(e){
+						var handler = {};
+						handler.success = function(e){				
+							var uri = "rest/classownerservice/addExcelFile/"+e.fileid;
+							var handlers = {};
+							handlers.success = function(e){
+							var quesType = $("#classownerQuestionTypeSelect").val();
+								var divisionID = $("#divisionSelect").val();
+								var subjectID = $("#subjectSelect").val();
+							var inst_id = $("#instituteSelect").val();
+								var QuestionExcelUploadBean= {};
+								QuestionExcelUploadBean.sub_id=subjectID;
+								QuestionExcelUploadBean.div_id=divisionID;
+								QuestionExcelUploadBean.ques_type=quesType;
+								QuestionExcelUploadBean.fileName=e.fileid;
+								QuestionExcelUploadBean.inst_id=inst_id;
+								var questionExcelUploadBean = JSON.stringify(QuestionExcelUploadBean);
+							var handlersSuccess = {};
+							rest.post("rest/teacher/upload/xls/", handlersSuccess,
+										questionExcelUploadBean, false);
+							handlersSuccess.success = function(successResp){
+								console.log("Success",successResp);
+							}
+							console.log("Success",e);
+								}
+						handlers.error = function(e){console.log("Error",e)}
+							rest.post(uri,handlers);
+					}
+				handler.error = function(){};
+						
+						var submitDataFile = $(".excelUpload")[0];
+						var file=document.getElementById("excelUploadBrowseID").value;
+						var flagUpload=true;
+					if(file==""){				
+							$("#browseExcelErrorSpan").html("Please select the file!");
+							flagUpload=false;
+						}else{
+							$("#browseExcelErrorSpan").html("");
+						flagUpload=true;
+						}
+						if(flagUpload==true){
+							rest.uploadExcelFile(submitDataFile ,handler,false);
+						}
+									
+				});
 		
 		$("#divisionSelect").on("change",function(e){
 			var subjectArray = [];
@@ -108,7 +162,9 @@ padding-top: 2px;
 				$("#divisionSelectError").html("");
 				var uploadExam = new UploadExam();
 				uploadExam.getSubjectsInDivision($(this).val());
-			}
+			}else{
+				$("#uploadQuestionPaperBtn").prop("disabled",true);
+ 			}
 		});
 		
 		$("#subjectSelect").change(function(){
@@ -120,6 +176,14 @@ padding-top: 2px;
 			var divisionID = $("#divisionSelect").val();
 			var subjectID = $("#subjectSelect").val();
 			var inst_id = $("#instituteSelect").val();
+			var quesType = $("#classownerQuestionTypeSelect").val();
+						
+			if(subjectID!="-1" && quesType!="-1"){
+			 	$("#uploadQuestionPaperBtn").removeAttr('disabled');
+			 	$("#uploadQuestionPaperBtn").empty();
+			}else{
+				$("#uploadQuestionPaperBtn").prop("disabled",true);
+			}
 			if(subjectID != "-1"){
 			$("#subjectSelectError").html("");
 			var handler = {};
@@ -139,6 +203,16 @@ padding-top: 2px;
 			}
 		});
 		
+		$("#topicSelect").change(function(){
+				var topicId=$("#topicSelect").val();
+				var quesType = $("#classownerQuestionTypeSelect").val();
+				if(topicId!="-1" && quesType!="-1"){
+				 	$("#uploadQuestionPaperBtn").removeAttr('disabled');
+				 	$("#uploadQuestionPaperBtn").empty();
+				}else{
+					$("#uploadQuestionPaperBtn").prop("disabled",true);
+			 	}
+		});
 		
 	});
 	
@@ -279,6 +353,26 @@ padding-top: 2px;
 				</select>
 			</div>
 		</div>
+		<div class="row">	
+			<div class="col-md-3">
+				<a href="./SampleFiles/SubjectiveType_Sample.xls" class="btn" role="button">Sample Subjective Questions Excel</a>
+			</div>
+			<div class="col-md-3">
+				<a href="./SampleFiles/MCQType_Sample.xls" class="btn" role="button">Sample Objective Questions Excel</a>
+			</div>		
+			<div class="col-md-3" id="browseExcelDiv">
+			<span class="btn fileinput-button">
+							<i class="glyphicon glyphicon-folder-open"></i> 
+						<span>Browse Your Question Paper Excel</span>
+							<input type="file" id="excelUploadBrowseID" class="excelUpload">							
+						</span>
+						<span class="error" id="browseExcelErrorSpan">
+						</span>
+		</div>	
+			<div class="col-md-3">
+				<input type="button" id="uploadQuestionPaperBtn" value="Upload" disabled/>
+			</div>	
+ 		</div>		
 		<div class="row">
 			
 		</div>
