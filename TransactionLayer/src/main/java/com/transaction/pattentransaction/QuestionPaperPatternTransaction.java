@@ -692,11 +692,12 @@ public class QuestionPaperPatternTransaction {
 		
 		List<Integer> questionId = new ArrayList<Integer>();
 		Set<Integer> questionIdSet = new HashSet<Integer>();
-		
+		int counter = 0;
 		Random random = new Random();
-		while(questionIdSet.size()<count){
+		while(questionIdSet.size()<count && allQuestionId.size()>counter){
 			int index = random.nextInt(allQuestionId.size());
 			questionIdSet.add(allQuestionId.get(index));
+			counter++;
 		}
 		questionId.addAll(questionIdSet);
 		return questionId;

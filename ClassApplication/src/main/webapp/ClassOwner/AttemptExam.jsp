@@ -39,6 +39,11 @@ function SubmitExam(){
 		}else{
 			answers=answers+" / "+checkedanswers;
 		}
+		}else{
+			if(count>0){
+				
+				answers=answers+" / "+"";
+			}
 		}
 		count++;
 	}
@@ -92,6 +97,14 @@ function SubmitExam(){
 				<tr style="background: #eee;padding-top: 1%">
 					<c:if test="${element.item_type eq 'Section' }">
 						<td colspan="3" align="center">
+							<c:out value="${element.item_description }"></c:out>
+						</td>
+					</c:if>
+					<c:if test="${element.item_type eq 'Instruction' }">
+						<td>
+							<c:out value="${element.item_no}"></c:out>
+						</td>
+						<td colspan="3">
 							<c:out value="${element.item_description }"></c:out>
 						</td>
 					</c:if>
