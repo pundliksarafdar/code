@@ -319,7 +319,7 @@ function onEdit(event){
 			modal.modalConfirm("Timetable", "Do you want to update schedule for all upcomming event", "Current", "All",loadAllUpcommingEvent,[event]);
 		}
 		$(EDIT_SCHEDULE).attr("data-edit-roll","specific");
-		$(SUBJECT_SELECT).val(event.subId).trigger("change");
+		$(SUBJECT_SELECT).val(event.subId).trigger("change",[event]);
 		$(START_TIME).find('input').val(startTime);
 		$(END_TIME).find('input').val(endTime);
 		$("#addModifyTimetableForm").tooltip("show");
@@ -387,8 +387,9 @@ function filldropdown()
 	});
 }
 
-function subjectSelectChange()
+function subjectSelectChange(e,eventSelected)
   {
+	console.log(eventSelected && eventSelected.teacher_id ?eventSelected.teacher_id:"-1");
 	  var subname = $(SUBJECT_SELECT).val();
 		  var reg;
 		  $.ajax({
@@ -424,6 +425,7 @@ function subjectSelectChange()
 	            	   }
 	            	   sell1Options[i+1]= new Option(firstname[i]+" "+lastname[i]+" "+suffix[i], teacherid[i]);
 	            	   }
+	               sell1Select.val(eventSelected && eventSelected.teacher_id ?eventSelected.teacher_id:"-1");
 	               }else{
 	            	   modal.launchAlert("Teacher","Teacher Not Available For This Subject");
 	               }
