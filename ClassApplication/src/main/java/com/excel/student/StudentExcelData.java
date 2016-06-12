@@ -1,7 +1,6 @@
 package com.excel.student;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
@@ -15,7 +14,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.NumberToTextConverter;
@@ -25,6 +23,8 @@ import com.service.beans.StudentRegisterServiceBean;
 import com.service.beans.Student_Fees;
 import com.transaction.fee.FeesTransaction;
 import com.transaction.register.RegisterTransaction;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 public class StudentExcelData {
 	private String fileName;
@@ -62,21 +62,22 @@ public class StudentExcelData {
 	public void loadStudents(int instId, int divId, int batchId) {
 		System.out.println("Inst id:"+instId+" divId:"+divId);
 		File myFile = new File(this.fileName);
-		POIFSFileSystem pfs = null;
-		FileInputStream fis = null;
 		org.apache.poi.ss.usermodel.Workbook workbook = null;
 
 		try {
 
-			fis = new FileInputStream(myFile);
-			pfs = new POIFSFileSystem(fis);
-			// Finds the workbook instance for XLSX file
-			workbook = WorkbookFactory.create(pfs);
+			workbook = WorkbookFactory.create(myFile);
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch (EncryptedDocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -103,13 +104,13 @@ public class StudentExcelData {
 				boolean isValidFeesDiscountType=true;
 				boolean isValidData=true;
 								
-				String firstName=row.getCell(1).getStringCellValue();
-				String middleName=row.getCell(2).getStringCellValue();
-				String lastName= row.getCell(3).getStringCellValue();
-				String str = NumberToTextConverter.toText(row.getCell(4).getNumericCellValue());
+				String firstName=row.getCell(1).getStringCellValue().trim();
+				String middleName=row.getCell(2).getStringCellValue().trim();
+				String lastName= row.getCell(3).getStringCellValue().trim();
+				String str = NumberToTextConverter.toText(row.getCell(4).getNumericCellValue()).trim();
 						
 				Long phoneNumber= Long.parseLong(str);
-				String emailId=row.getCell(5).getStringCellValue();
+				String emailId=row.getCell(5).getStringCellValue().trim();
 				Date dob=null;
 				SimpleDateFormat formatter1= new SimpleDateFormat("MM/dd/yyyy");
 				if(HSSFDateUtil.isCellDateFormatted(row.getCell(6)) && isValidDate(formatter1.format(row.getCell(6).getDateCellValue()))){
@@ -120,13 +121,13 @@ public class StudentExcelData {
 					isValidDateOfBirth=false;
 				}
 				
-				String address=row.getCell(7).getStringCellValue();
-				String city=row.getCell(9).getStringCellValue();
-				String state=row.getCell(8).getStringCellValue();
-				String parentFirstName=row.getCell(10).getStringCellValue();
-				String parentLastName=row.getCell(11).getStringCellValue();
+				String address=row.getCell(7).getStringCellValue().trim();
+				String city=row.getCell(9).getStringCellValue().trim();
+				String state=row.getCell(8).getStringCellValue().trim();
+				String parentFirstName=row.getCell(10).getStringCellValue().trim();
+				String parentLastName=row.getCell(11).getStringCellValue().trim();
 				Long parentPhoneNo= Long.parseLong(NumberToTextConverter.toText(row.getCell(12).getNumericCellValue()));
-				String parentEmailID=row.getCell(13).getStringCellValue();
+				String parentEmailID=row.getCell(13).getStringCellValue().trim();
 				double feePaid=row.getCell(14).getNumericCellValue();
 				isValidData=validateExcelData(firstName, middleName, lastName, phoneNumber, emailId, address, city, state, parentFirstName, parentLastName, parentPhoneNo, parentEmailID, feePaid, listOfErrors);
 				double feesDiscount=0.0;
@@ -230,7 +231,7 @@ public class StudentExcelData {
 					listOfErrors.add("First name column can not be blank or empty");
 				}else if(firstName.length()>100){
 					listOfErrors.add("First name value is too long.");
-				}else if(!firstName.matches( "[a-zA-Z]*" )){
+				}else if(!firstName.matches( "[a-zA-Z ]*" )){
 					listOfErrors.add("Invalid characters in column First Name.");
 				}
 				
@@ -239,7 +240,7 @@ public class StudentExcelData {
 					listOfErrors.add("Middle name column can not be blank or empty");
 				}else if(middleName.length()>100){
 					listOfErrors.add("Middle name value is too long.");
-				}else if(!middleName.matches( "[a-zA-Z]*" )){
+				}else if(!middleName.matches( "[a-zA-Z ]*" )){
 					listOfErrors.add("Invalid characters in column Middle Name.");
 				}
 				
@@ -248,7 +249,7 @@ public class StudentExcelData {
 					listOfErrors.add("Last name column can not be blank or empty");
 				}else if(lastName.length()>100){
 					listOfErrors.add("Last name value is too long.");
-				}else if(!lastName.matches( "[a-zA-Z]*" )){
+				}else if(!lastName.matches( "[a-zA-Z ]*" )){
 					listOfErrors.add("Invalid characters in column Last Name.");
 				}
 				//validate phone number
@@ -300,7 +301,7 @@ public class StudentExcelData {
 					listOfErrors.add("Parent's First name column can not be blank or empty");
 				}else if(parentFirstName.length()>100){
 					listOfErrors.add("Parent's First name value is too long.");
-				}else if(!parentFirstName.matches( "[a-zA-Z]*" )){
+				}else if(!parentFirstName.matches( "[a-zA-Z ]*" )){
 					listOfErrors.add("Invalid characters in column Parent's First Name.");
 				}
 				
@@ -309,7 +310,7 @@ public class StudentExcelData {
 					listOfErrors.add("Parent's Last name column can not be blank or empty");
 				}else if(parentLastName.length()>100){
 					listOfErrors.add("Parent's Last name value is too long.");
-				}else if(!parentLastName.matches( "[a-zA-Z]*" )){
+				}else if(!parentLastName.matches( "[a-zA-Z ]*" )){
 					listOfErrors.add("Invalid characters in column Parent's Last Name.");
 					
 				}

@@ -1,16 +1,16 @@
 package com.datalayer.exam;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
  * A class to load all Question paper.
@@ -58,21 +58,22 @@ public class SubjectiveQuestionPaper {
 	public void LoadQuestionPaper() {
 
 		File myFile = new File(fileName);
-		POIFSFileSystem pfs = null;
-		FileInputStream fis = null;
 		org.apache.poi.ss.usermodel.Workbook workbook = null;
 
 		try {
 
-			fis = new FileInputStream(myFile);
-			pfs = new POIFSFileSystem(fis);
-			// Finds the workbook instance for XLSX file
-			workbook = WorkbookFactory.create(pfs);
+			workbook = WorkbookFactory.create(myFile);
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch (EncryptedDocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -91,36 +92,42 @@ public class SubjectiveQuestionPaper {
 		// Traversing over each row of XLSX file
 		while (rowIterator.hasNext()) {
 			Row row = rowIterator.next();
-			try{
-				if (row.getCell(1).getStringCellValue().length() <= 500
-						&& isDigit(Double.toString(row.getCell(2).getNumericCellValue()))
-						&& row.getCell(2).getNumericCellValue() > 0) {
-					SubjectiveQuestion question = new SubjectiveQuestion(row.getRowNum(),row.getCell(1).getStringCellValue(),row.getCell(2).getNumericCellValue());
-					System.out.println(question.toString());
-					questions.add(question);
-				} else {
-					ArrayList<String> listOfErrors = new ArrayList<String>();
-					if (row.getCell(1).getStringCellValue().toString().length() > 500) {
-						listOfErrors.add("Question text is greater than 500 words.");
-					}
-					if (!isDigit(Double.toString(row.getCell(2).getNumericCellValue()))) {
-						listOfErrors.add("Invalid marks value. Remove non numeric value.");
+			ArrayList<String> listOfErrors= new ArrayList<String>();
+			if(null==row.getCell(1) || null==row.getCell(2)){
+				listOfErrors.add("Required columns values are missig for row "+row.getRowNum()+".");
+				invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
+			}else{
+				try{
+					if (row.getCell(1).getStringCellValue().length() <= 500
+							&& isDigit(Double.toString(row.getCell(2).getNumericCellValue()))
+							&& row.getCell(2).getNumericCellValue() > 0) {
+						SubjectiveQuestion question = new SubjectiveQuestion(row.getRowNum(),row.getCell(1).getStringCellValue(),row.getCell(2).getNumericCellValue());
+						System.out.println(question.toString());
+						questions.add(question);
 					} else {
-						if (row.getCell(2).getNumericCellValue() < 0) {
-							listOfErrors.add("Invalid marks value.");
+						//ArrayList<String> listOfErrors = new ArrayList<String>();
+						if (row.getCell(1).getStringCellValue().toString().length() > 500) {
+							listOfErrors.add("Question text is greater than 500 words.");
 						}
+						if (!isDigit(Double.toString(row.getCell(2).getNumericCellValue()))) {
+							listOfErrors.add("Invalid marks value. Remove non numeric value.");
+						} else {
+							if (row.getCell(2).getNumericCellValue() < 0) {
+								listOfErrors.add("Invalid marks value.");
+							}
+						}
+						invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
 					}
+				} catch(IllegalStateException e){
+					//ArrayList<String> listOfErrors=new ArrayList<String>();
+					listOfErrors.add(e.getMessage());
 					invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
+				}catch(NullPointerException e){
+					//ArrayList<String> listOfErrors=new ArrayList<String>();
+					listOfErrors.add(e.getMessage());
+					invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
+					System.out.println(listOfErrors);
 				}
-			} catch(IllegalStateException e){
-				ArrayList<String> listOfErrors=new ArrayList<String>();
-				listOfErrors.add(e.getMessage());
-				invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
-			}catch(NullPointerException e){
-				ArrayList<String> listOfErrors=new ArrayList<String>();
-				listOfErrors.add(e.getMessage());
-				invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
-				System.out.println(listOfErrors);
 			}
 		}
 		System.out.println("Number of questions:" + questions.size());
