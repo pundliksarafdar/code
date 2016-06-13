@@ -62,7 +62,7 @@
 
 	<context-param>
         <param-name>resteasy.providers</param-name>
-        <param-value>com.exception.ExceptionMapperHandler</param-value>
+        <param-value>com.exception.ExceptionMapperHandler,com.corex.filter.AuthFilter</param-value>
 	</context-param>
   <listener>
    <listener-class>

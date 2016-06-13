@@ -37,6 +37,7 @@ public class TimeTableServiceImpl extends ServiceBase{
 
 	@GET
 	@Path("/test")
+	@AuthorizeRole(role=AuthorizeRole.ROLE.all)
 	public Response serviceOn() {
 		getRegId();
 		return Response.status(200).entity("Service OK sc!..").build();

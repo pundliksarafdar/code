@@ -14,11 +14,11 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class ExceptionMapperHandler implements ExceptionMapper<NoUserBeanException>{
+public class ExceptionMapperHandler implements ExceptionMapper<Exception>{
 	private static Properties EXCEPTION_MAP;
 	
 	@Override
-	public Response toResponse(NoUserBeanException exception) {
+	public Response toResponse(Exception exception) {
 		if(null==EXCEPTION_MAP || EXCEPTION_MAP.isEmpty()){
 			EXCEPTION_MAP = getExceptionProperties();
 		}
