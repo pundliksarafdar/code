@@ -312,7 +312,7 @@ padding-top: 2px;
 				var imgTag = "<img src='"+e.target.result+"' width='200px' height='200px'/>";
 				var hiddenTag = "<input type='hidden' value='"+e.target.result+"' name='questionImagesStr'/>";
 				var closeButton = '<button type="button" class="Question_image_with_btn_remove close" aria-hidden="true">&times;</button>';
-				<!-- This element contains the object -->
+				/* This element contains the object */
 				var imageColElement = "<div class='col-sm-3 image_with_btn'>"+closeButton+imgTag+hiddenTag+"</div>"
 				var imageRow = $("#questionImageFileList");
 				imageRow.append(imageColElement);	

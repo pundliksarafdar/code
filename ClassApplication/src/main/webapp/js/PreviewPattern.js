@@ -26,7 +26,7 @@ function recursive(element,recursionLevel){
 		var itemMarks = innerElement.find("#createExamItemMarks").val();
 		$("#previewModal").find(".modal-body").append("<div class='row' ><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-1'>"+itemMarks+"</div></div>")
 	}else{
-		var itemName = innerElement.find("#createExamItemName").val();
+		var itemName = "Question";//innerElement.find("#createExamItemName").val();
 		var itemNo = innerElement.find("#questionNo").val();
 		var itemMarks = innerElement.find("#createExamItemMarks").val();
 		$("#previewModal").find(".modal-body").append("<div class='row' ><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-1'>"+itemMarks+"</div></div>")
