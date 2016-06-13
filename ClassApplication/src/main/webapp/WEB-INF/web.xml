@@ -60,6 +60,10 @@
    </param-value>
   </context-param>
 
+	<context-param>
+        <param-name>resteasy.providers</param-name>
+        <param-value>com.exception.ExceptionMapperHandler</param-value>
+	</context-param>
   <listener>
    <listener-class>
       org.apache.struts2.tiles.StrutsTilesListener

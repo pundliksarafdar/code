@@ -38,6 +38,7 @@ public class TimeTableServiceImpl extends ServiceBase{
 	@GET
 	@Path("/test")
 	public Response serviceOn() {
+		getRegId();
 		return Response.status(200).entity("Service OK sc!..").build();
 	}
 	
