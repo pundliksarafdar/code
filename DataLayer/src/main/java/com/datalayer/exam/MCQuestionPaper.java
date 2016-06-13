@@ -107,34 +107,92 @@ public class MCQuestionPaper {
 							&& correctAnswerStr.length() <=255 
 							&& isValidCorrectAnswer(correctAnswerStr.toString())
 							&& isDigit(Double.toString(row.getCell(13).getNumericCellValue()))
-							&& row.getCell(13).getNumericCellValue()>0 
-							&& row.getCell(3).getStringCellValue().length()<=100
-							&& row.getCell(4).getStringCellValue().length()<=100
-							&& row.getCell(5).getStringCellValue().length()<=100
-							&& row.getCell(6).getStringCellValue().length()<=100
-							&& row.getCell(7).getStringCellValue().length()<=100
-							&& row.getCell(8).getStringCellValue().length()<=100
-							&& row.getCell(9).getStringCellValue().length()<=100
-							&& row.getCell(10).getStringCellValue().length()<=100
-							&& row.getCell(11).getStringCellValue().length()<=100
-							&& row.getCell(12).getStringCellValue().length()<=100){
+							&& row.getCell(13).getNumericCellValue()>0){
 						MCQuestion question = new MCQuestion(row.getRowNum(),correctAnswerStr
 						, row.getCell(1).getStringCellValue(), row.getCell(13).getNumericCellValue());
 			
-						HashMap<String, String> optionMap = question.getOptions();
-						optionMap.put("1", row.getCell(3).getStringCellValue());
-						optionMap.put("2", row.getCell(4).getStringCellValue());
-						optionMap.put("3", row.getCell(5).getStringCellValue());
-						optionMap.put("4", row.getCell(6).getStringCellValue());
-						optionMap.put("5", row.getCell(7).getStringCellValue());
-						optionMap.put("6", row.getCell(8).getStringCellValue());
-						optionMap.put("7", row.getCell(9).getStringCellValue());
-						optionMap.put("8", row.getCell(10).getStringCellValue());
-						optionMap.put("9", row.getCell(11).getStringCellValue());
-						optionMap.put("10", row.getCell(12).getStringCellValue());
 						
-						System.out.println(question.toString());
-						questions.add(question);
+						HashMap<String, String> optionMap = question.getOptions();
+						boolean isMinimumTwoOptionsSet=false;
+						if(null!=row.getCell(3) && row.getCell(3).getStringCellValue().toString().length()<=100){
+							optionMap.put("1", row.getCell(3).getStringCellValue());						
+							if(null!=row.getCell(4) && row.getCell(4).getStringCellValue().toString().length()<=100 ){
+								optionMap.put("2", row.getCell(4).getStringCellValue());
+								isMinimumTwoOptionsSet=true;
+								if(null!=row.getCell(5) && row.getCell(5).getStringCellValue().toString().length()<=100){
+									optionMap.put("3", row.getCell(5).getStringCellValue());
+									if(null!=row.getCell(6) && row.getCell(6).getStringCellValue().toString().length()<=100){	
+										optionMap.put("4", row.getCell(6).getStringCellValue());
+										if(null!=row.getCell(7) && row.getCell(7).getStringCellValue().toString().length()<=100){
+											optionMap.put("5", row.getCell(7).getStringCellValue());
+											if(null!=row.getCell(8) && row.getCell(8).getStringCellValue().toString().length()<=100){
+												optionMap.put("6", row.getCell(8).getStringCellValue());
+												if(null!=row.getCell(9) && row.getCell(9).getStringCellValue().toString().length()<=100){
+													optionMap.put("7", row.getCell(9).getStringCellValue());
+													if(null!=row.getCell(10) && row.getCell(10).getStringCellValue().toString().length()<=100){	
+														optionMap.put("8", row.getCell(10).getStringCellValue());
+														if(null!=row.getCell(11) && row.getCell(11).getStringCellValue().toString().length()<=100){	
+															optionMap.put("9", row.getCell(11).getStringCellValue());
+															if(null!=row.getCell(12) && row.getCell(12).getStringCellValue().toString().length()<=100){	
+																optionMap.put("10", row.getCell(12).getStringCellValue());
+															}else{
+																listOfErrors.add("Either option no. 10 is empty or Option text is greater than 100 words.");
+															}
+														}else{
+															listOfErrors.add("Either option no. 9 is empty or Option text is greater than 100 words. Remaining options will not be set.");
+														}
+													}else{
+														listOfErrors.add("Either option no. 8 is empty or Option text is greater than 100 words. Remaining options will not be set.");
+													}
+												}else{
+													listOfErrors.add("Either option no. 7 is empty or Option text is greater than 100 words. Remaining options will not be set.");
+												}
+											}else{
+												listOfErrors.add("Either option no. 6 is empty or Option text is greater than 100 words. Remaining options will not be set.");
+											}
+										}else{
+											listOfErrors.add("Either option no. 5 is empty or Option text is greater than 100 words. Remaining options will not be set.");
+										}
+									}else{
+										listOfErrors.add("Either option no. 4 is empty or Option text is greater than 100 words. Remaining options will not be set.");
+									}
+								}else{
+									listOfErrors.add("Either option no. 3 is empty or Option text is greater than 100 words. Remaining options will not be set.");
+								}
+							}else{
+								listOfErrors.add("Either option no. 2 is empty or Option text is greater than 100 words. Remaining options will not be set.");
+							}
+						}else{
+							listOfErrors.add("Either option no. 1 is empty or Option text is greater than 100 words. Remaining options will not be set.");
+						}
+						
+						if(!correctAnswerStr.equals("")){
+							String[] correctOptions=correctAnswerStr.split(",");
+							boolean isValidCorrectOptions=true;
+							for (String correctOptionStr : correctOptions) {								
+								try{
+									int correctOption=Integer.parseInt(correctOptionStr);
+									if(correctOption<=optionMap.size()){
+										continue;
+									}else{
+										isValidCorrectOptions=false;
+										listOfErrors.add("Invalid value in column 'Correct Option'. Correct Option number does not match with available options.");
+										break;
+									}
+								} catch(NumberFormatException e){
+									listOfErrors.add("Invalid value in column 'Correct Option'.");
+								}
+							}
+							if(isValidCorrectOptions && isMinimumTwoOptionsSet){
+								System.out.println(question.toString());
+								questions.add(question);
+							}
+							
+							if(!isMinimumTwoOptionsSet){
+								listOfErrors.add("Atleast 2 options are compulsory. Please set atleast two valid options first.");
+							}
+						}
+						invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
 					}else{
 						//ArrayList<String> listOfErrors= new ArrayList<String>();
 						
@@ -185,7 +243,7 @@ public class MCQuestionPaper {
 							listOfErrors.add("Option10 text is greater than 100 words. Current length is "+row.getCell(12).getStringCellValue().length());
 						}				
 						invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
-						System.out.println(listOfErrors);
+						//System.out.println(listOfErrors);
 					}
 				}catch(IllegalStateException e){
 					//ArrayList<String> listOfErrors=new ArrayList<String>();
@@ -201,7 +259,7 @@ public class MCQuestionPaper {
 			}
 			
 		}
-		
+		System.out.println(invalidQuestionResponseMap);
 		System.out.println("Number of questions:"+questions.size());
 	}
 	
