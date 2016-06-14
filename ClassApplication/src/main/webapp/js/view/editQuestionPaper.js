@@ -42,6 +42,51 @@ var selectedChooseQuestionItemId;
 var patternId;
 var paperId;
 $(document).ready(function(){
+	
+	$("#division").change(function(){
+		var division = $("#division").val(); 
+		if(division != "-1"){
+	$.ajax({
+		   url: "classOwnerServlet",
+		   data: {
+		    	 methodToCall: "getSubjectOfDivisionForExam",
+		    	 divisionId: division
+		   		},
+		   type:"POST",
+		   success:function(data){
+			   wosSubjectID = "";
+			   wosTopicID = "";
+			   $("#subject").empty();
+			   $("#subject").append("<option value='-1'>Select Subject</option>");
+			   data = JSON.parse(data);
+			   if(data.status == "success"){
+				   var subjectnames = data.subjectnames;
+				   var subjectIds = data.subjectids;
+				   var subjectType = data.subjectType;
+				   var i = 0;
+				   var subjectnameArray = subjectnames.split(",");
+					var subjectidArray =  subjectIds.split(",");  
+					var subjectTypeArray = subjectType.split(",");  
+				   while(i < subjectnameArray.length){
+				   		if(subjectTypeArray[i] == "1"){
+				   		$("#subject").append("<option class='combineSub' value='"+subjectidArray[i]+"'>"+subjectnameArray[i]+"</option>");
+				   		}else{
+				   		$("#subject").append("<option class='singleSub' value='"+subjectidArray[i]+"'>"+subjectnameArray[i]+"</option>");
+				   		}
+				   		i++;
+				   }
+			   }
+		   },
+			error:function(){
+		   		modal.launchAlert("Error","Error");
+		   	}
+		   });
+		}else{
+			 $("#subject").empty();
+			 $("#subject").append("<option value='-1'>Select Subject</option>");			   
+		}
+	});
+	
 	$(SAVE_SECTION).hide();
 	$("body").on("click",BACK_TO_LIST,backToQuestionPaperList);
 	$("body").on("click",CHOOSE_QUE_BTN,function(){
@@ -73,7 +118,7 @@ $(document).ready(function(){
 		var handlers = {};
 		handlers.success = function(resp){
 			$.notify({message: "Exam updated successfully"},{type: 'success'});
-			loadSubjectAndTopic(resp);
+			/*loadSubjectAndTopic(resp);*/
 			backToQuestionPaperList();
 			$(SEARCH_QUESTION_PAPER).trigger("click");
 		};
@@ -171,6 +216,17 @@ $(document).ready(function(){
 		handler.error = function(e){console.log(e);}
 		rest.post(url,handler,JSON.stringify(generateExamObjectList));
 	});
+			
+			$("#subject").change(function(){
+				var handlers = {};
+				handlers.success = function(resp){
+					loadSubjectAndTopic(resp);
+				};
+				handlers.error = function(e){};
+				var subject = $(this).val();
+				var division = $("#division").val();
+				rest.post("rest/classownerservice/getSubjectsAndTopicsForExam/"+division+"/"+subject,handlers);
+			});
 });
 
 /*Function*/
@@ -234,17 +290,18 @@ var searchQuestionPaper = function(){
 	handler.success = searchQuestionPaperSuccess;
 	handler.error = searchQuestionPaperError;
 	var divisionId = $(DIVISION_DROPDOWN).val();
+	var subject = $("#subject").val();
 	if(divisionId!=-1){
-		rest.get(getList+divisionId,handler);
+		rest.get(getList+divisionId+"/"+subject,handler);
 	}
 	
-	var handlers = {};
+	/*var handlers = {};
 		handlers.success = function(resp){
 			loadSubjectAndTopic(resp);
 		};
 		handlers.error = function(e){};
 		
-		rest.post("rest/classownerservice/getSubjectsAndTopics/"+divisionId,handlers);
+		rest.post("rest/classownerservice/getSubjectsAndTopics/"+divisionId,handlers);*/
 }
 
 var searchQuestionPaperSuccess = function(data){
@@ -283,6 +340,9 @@ function loadSubjectAndTopicSelect(){
 		var val = $(this).attr("value");
 		$(this).val(val);
 		loadTopicSelect(that,topicNSubject[val] && topicNSubject[val].topic?topicNSubject[val].topic:[]);
+		if($(this).val() == null){
+			$(this).val("-1")
+		}
 	});
 }
 

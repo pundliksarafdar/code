@@ -107,25 +107,33 @@ $(document).ready(function(){
 		editExamID = $(this).prop("id");
 		var handlers = {};
 		handlers.success = function(e){
-		for(i=0;i<$(".examSubjectPapers").length;i++){
-			for(j=0;j<e.length;j++){
-				$('#headerDesc').val(e[j].header_id);
-			 if($($(".examSubjectPapers")[i]).find("#subjectCheckbox").val() == e[j].sub_id){
-				 $($(".examSubjectPapers")[i]).find("#subjectCheckbox").prop('checked', true);
-				 $($(".examSubjectPapers")[i]).find(".marks").val( e[j].marks);
-				 $($(".examSubjectPapers")[i]).find(".examHour").val(e[j].duration.split(":")[0]);
-				 $($(".examSubjectPapers")[i]).find(".examMinute").val(e[j].duration.split(":")[1]);
-				 $($(".examSubjectPapers")[i]).find(".examPaperID").val(e[j].exam_paper_id);
-				 $($(".examSubjectPapers")[i]).find(".paper-type").val(e[j].paper_type);
-				 for(k=0;k<queationPaperList.length;k++){
-					 if(queationPaperList[k].paper_id == e[j].question_paper_id){
-						 $($(".examSubjectPapers")[i]).find(".questionPaperName").html(queationPaperList[k].paper_description);
-						 $($(".examSubjectPapers")[i]).find(".selectedQuestionPaperID").val(queationPaperList[k].paper_id);
-					 }
-				 }
-				} 
+			var innerHandlers = {};
+			innerHandlers.success = function(data){
+				queationPaperList = data;
+				for(i=0;i<$(".examSubjectPapers").length;i++){
+					for(j=0;j<e.length;j++){
+						$('#headerDesc').val(e[j].header_id);
+					 if($($(".examSubjectPapers")[i]).find("#subjectCheckbox").val() == e[j].sub_id){
+						 $($(".examSubjectPapers")[i]).find("#subjectCheckbox").prop('checked', true);
+						 $($(".examSubjectPapers")[i]).find(".marks").val( e[j].marks);
+						 $($(".examSubjectPapers")[i]).find(".examHour").val(e[j].duration.split(":")[0]);
+						 $($(".examSubjectPapers")[i]).find(".examMinute").val(e[j].duration.split(":")[1]);
+						 $($(".examSubjectPapers")[i]).find(".examPaperID").val(e[j].exam_paper_id);
+						 $($(".examSubjectPapers")[i]).find(".paper-type").val(e[j].paper_type);
+						 for(k=0;k<queationPaperList.length;k++){
+							 if(queationPaperList[k].paper_id == e[j].question_paper_id){
+								 $($(".examSubjectPapers")[i]).find(".questionPaperName").html(queationPaperList[k].paper_description);
+								 $($(".examSubjectPapers")[i]).find(".selectedQuestionPaperID").val(queationPaperList[k].paper_id);
+							 }
+						 }
+						} 
+					}
+					}
 			}
-			}}
+			innerHandlers.error = function(data){$.notify({message: "Error"},{type: 'danger'});};
+			rest.get("rest/classownerservice/getExamQuestionPaperList/"+division+"/"+editExamID,innerHandlers);
+			
+		}
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.post("rest/classownerservice/getExam/"+division+"/"+$(this).prop("id")+"/"+batch,handlers);
 	});
@@ -137,8 +145,16 @@ $(document).ready(function(){
 	
 	var that;
 	$(".subjectDiv").on("click",".chooseQuestionPaper",function(){
-		$("#questionPaperListModal").modal("toggle");
+		var subject = $($(this).closest("tr")).find("#subjectCheckbox").val();
+		var division = $("#division").val(); 
 		that = $(this);
+		var handlers = {};
+		handlers.success = function(e){console.log("Success",e);
+		createQuestionPaperListTable(e);
+		$("#questionPaperListModal").modal("toggle");
+		}
+		handlers.error = function(e){console.log("Error",e)}
+		rest.get("rest/classownerservice/getQuestionPaperList/"+division+"/"+subject,handlers);
 	});
 	
 	$("#questionPaperListModal").on("click",".confirmQuestionPaper",function(){
@@ -253,7 +269,7 @@ function searchExams(){
 		$.notify({message: "Error while fetching exam list"},{type: 'danger'});
 	};
 	rest.post("rest/classownerservice/getExamList/"+division+"/"+batch,handlers);
-	var handler = {};
+	/* var handler = {};
 	handler.success = function(e){console.log("Success",e);
 	queationPaperList = e;
 	createQuestionPaperListTable(e);
@@ -261,7 +277,7 @@ function searchExams(){
 	handler.error = function(e){
 		$.notify({message: "Error"},{type: 'danger'});
 	}
-	rest.get("rest/classownerservice/getQuestionPaperList/"+division,handler);
+	rest.get("rest/classownerservice/getQuestionPaperList/"+division,handler); */
 $.ajax({
 	   url: "classOwnerServlet",
 	   data: {

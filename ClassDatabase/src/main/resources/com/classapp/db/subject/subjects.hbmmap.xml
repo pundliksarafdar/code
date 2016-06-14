@@ -14,5 +14,11 @@
          <property name="institute_id" type="java.lang.Integer">
             <column name="institute_id"/>
         </property> 
+         <property name="sub_type" type="string">
+            <column name="sub_type"/>
+        </property>
+         <property name="com_subjects" type="string">
+            <column name="com_subjects"/>
+        </property>
     </class>
 </hibernate-mapping>

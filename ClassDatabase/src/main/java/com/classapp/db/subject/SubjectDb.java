@@ -1,6 +1,7 @@
 package com.classapp.db.subject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
@@ -19,7 +20,7 @@ import com.classapp.persistence.HibernateUtil;
 
 public class SubjectDb {
 
-	public String updateDb(Subjects subjects,int classid){
+	public int updateDb(Subjects subjects,int classid){
 		String status = "0";
 		Session session = null;
 		Transaction transaction = null;
@@ -29,7 +30,6 @@ public class SubjectDb {
 			session.save(subjects);
 			transaction.commit();
 		}catch(Exception e){
-			status = "1";
 			e.printStackTrace();
 			if(null!=transaction){
 				transaction.rollback();
@@ -39,8 +39,9 @@ public class SubjectDb {
 				session.close();
 			}
 		}
-		return status;
+		return subjects.getSubjectId();
 	}
+	
 	public String updateDb(Subject subjects){
 		String status = "0";
 		Session session = null;
@@ -48,7 +49,7 @@ public class SubjectDb {
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			session.save(subjects);
+			session.saveOrUpdate(subjects);
 			transaction.commit();
 		}catch(Exception e){
 			status = "1";
@@ -332,6 +333,36 @@ public String getschedulesubject(int subjectid) {
 		return queryResult;
 	}
 	
+public Subject getSubject(int institute_id,int sub_id){
+		
+		Session session = null;
+		Transaction transaction = null;
+		List<Subject> queryResult=null;
+		String queryString="from Subject where institute_id = :institute_id and subjectId = :subjectId";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("institute_id", institute_id);  
+			query.setParameter("subjectId", sub_id); 
+			queryResult = query.list();
+			if(queryResult != null){
+				if(queryResult.size() > 0){
+					return queryResult.get(0);
+				}
+			}
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		
+		return null;
+	}
+	
 public List<Subject> recentlyaddedsubfirst(int institute_id){
 		
 		Session session = null;
@@ -440,6 +471,74 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 				}
 			}
 			if(subjectIds.size()>0){
+				subjectlist=getSubjectList(subjectIds);
+				subjectIds=new ArrayList<Integer>();
+				for (Iterator iterator = subjectlist.iterator(); iterator.hasNext();) {
+					Subject subject = (Subject) iterator.next();
+					if("1".equals(subject.getSub_type())){
+						String Ids[] = subject.getCom_subjects().split(",");
+						if(Ids.length > 0){
+							for (String string : Ids) {
+								subjectIds.add(Integer.parseInt(string));
+							}
+						}
+					}
+					subjectIds.add(subject.getSubjectId());
+				}
+				subjectlist=getSubjectList(subjectIds);
+			}
+		}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		
+		return subjectlist;
+	}
+	
+	public List<Subject> getSubjectRelatedToDivForExam(int div_id,int inst_id) {
+		Session session = null;
+		Transaction transaction = null;
+		List<Batch> queryResult=null;
+		List<Integer> subjectIds=null;
+		List<Subject> subjectlist=null;
+		String queryString="from Batch where class_id = :inst_id and div_id=:div_id";
+	
+		try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery(queryString);
+		query.setParameter("inst_id", inst_id);	
+		query.setParameter("div_id", div_id);	
+		queryResult=query.list();
+		if(queryResult!=null){
+			subjectIds=new ArrayList<Integer>();
+			for (int i = 0; i < queryResult.size(); i++) {
+				String ids[]=queryResult.get(i).getSub_id().split(",");
+				for (int j = 0; j < ids.length; j++) {
+					if(!subjectIds.contains(ids[j])){
+						subjectIds.add(Integer.parseInt(ids[j]));
+					}
+				}
+			}
+			if(subjectIds.size()>0){
+			subjectlist=getSubjectList(subjectIds);
+			subjectIds=new ArrayList<Integer>();
+			for (Iterator iterator = subjectlist.iterator(); iterator.hasNext();) {
+				Subject subject = (Subject) iterator.next();
+				if("1".equals(subject.getSub_type())){
+					String Ids[] = subject.getCom_subjects().split(",");
+					if(Ids.length > 0){
+						for (String string : Ids) {
+							subjectIds.add(Integer.parseInt(string));
+						}
+					}
+				}
+				subjectIds.add(subject.getSubjectId());
+			}
 			subjectlist=getSubjectList(subjectIds);
 			}
 		}
@@ -657,5 +756,35 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 			}
 		}	
 	return false;
+	}
+	
+	public List<Subject> getCompositeSubjectrelatedtoSubject(int inst_id,String subjectid) {
+		Session session = null;
+		Transaction transaction = null;
+		List<Subject> subjectList = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from Subject where (com_subjects LIKE :sub_id1 OR "
+											+ "com_subjects LIKE :sub_id2 OR com_subjects LIKE :sub_id3 OR "
+											+ "com_subjects = :sub_id4) and institute_id = :class_id");
+			query.setParameter("sub_id1", subjectid+",%");
+			query.setParameter("sub_id2", "%,"+subjectid);
+			query.setParameter("sub_id3", "%,"+subjectid+",%");
+			query.setParameter("sub_id4", subjectid);
+			query.setParameter("class_id", inst_id);
+			subjectList = query.list();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return subjectList;
 	}
 }

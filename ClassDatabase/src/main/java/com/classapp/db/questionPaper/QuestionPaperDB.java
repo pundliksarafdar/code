@@ -67,7 +67,7 @@ public class QuestionPaperDB {
 
 	}
 	
-	public List<QuestionPaper> getQuestionPaperList(int div_id,int inst_id) {
+	public List<QuestionPaper> getQuestionPaperList(int div_id,int inst_id,int subject) {
 		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
@@ -76,6 +76,8 @@ public class QuestionPaperDB {
 		Criterion criterion = Restrictions.eq("inst_id", inst_id);
 		criteria.add(criterion);
 		criterion = Restrictions.eq("div_id", div_id);
+		criteria.add(criterion);
+		criterion = Restrictions.eq("sub_id", subject);
 		criteria.add(criterion);
 		List<QuestionPaper> questionPaperList = criteria.list();
 		if(session!=null){
@@ -180,6 +182,35 @@ public class QuestionPaperDB {
 		}
 		}
 		return  true;
+
+	}
+	
+	public List<QuestionPaper> getQuestionPaperListRelatedToExam(int paper_id,int inst_id,int div_id) {
+		Transaction transaction=null;
+		Session session=null;
+		List<QuestionPaper> questionPaperList = null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("select qp  from QuestionPaper qp,Exam_Paper ep "
+				+ "where  qp.inst_id = :inst_id and qp.div_id=:div_id  and qp.inst_id = ep.inst_id "
+				+ "and qp.div_id = ep.div_id and qp.paper_id = ep.question_paper_id and ep.exam_id = :paper_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("paper_id", paper_id);
+		questionPaperList = query.list();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  questionPaperList;
 
 	}
 }

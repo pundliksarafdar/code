@@ -13,6 +13,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.classapp.db.subject.Subject;
+import com.classapp.db.subject.Subjects;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.service.beans.AttendanceScheduleServiceBean;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.attendance.AttendanceTransaction;
@@ -50,7 +54,8 @@ public class DeleteServiceImpl extends ServiceBase {
 		// TODO Auto-generated method stub
 		SubjectTransaction subjectTransaction = new SubjectTransaction();
 		subjectTransaction.deleteSubject(getRegId(),sub_id);
-		return Response.status(Response.Status.OK).build();
+		List<Subjects> subjects=subjectTransaction.getAllClassSubjects(getRegId());
+		return Response.status(Response.Status.OK).entity(subjects).build();
 	}
 	
 	@DELETE

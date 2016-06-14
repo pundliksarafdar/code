@@ -4,17 +4,17 @@
 <!-- Generated 18 Jul, 2014 11:15:40 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.classapp.db.question.Questionbank" table="question_bank" catalog="classdb">
-      <id name="que_id" type="java.lang.Integer">
+      <!-- <id name="que_id" type="java.lang.Integer">
             <column name="que_id" />
             <generator class="identity" />
-        </id>
-    	<!-- <composite-id>
+        </id> -->
+    	<composite-id>
     	<key-property name="inst_id" column="inst_id"></key-property>
 		<key-property name="div_id" column="div_id"></key-property>
 		<key-property name="sub_id" column="sub_id"></key-property>
 		<key-property name="que_id" column="que_id"></key-property>
-    	</composite-id> -->
-    	<property name="inst_id" type="int">
+    	</composite-id>
+    	<!-- <property name="inst_id" type="int">
             <column name="inst_id" />
         </property>
         <property name="div_id" type="int">
@@ -22,7 +22,7 @@
         </property>
         <property name="sub_id" type="int">
             <column name="sub_id" />
-        </property>
+        </property> -->
         
         <property name="added_by" type="int">
             <column name="added_by" />

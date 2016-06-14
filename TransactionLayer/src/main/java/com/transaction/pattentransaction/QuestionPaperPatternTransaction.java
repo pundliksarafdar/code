@@ -102,9 +102,9 @@ public class QuestionPaperPatternTransaction {
 		return true;
 	}
 	
-	public List<com.service.beans.QuestionPaperPattern> getQuestionPaperPatternList(int div_id,String pattern_type) {
+	public List<com.service.beans.QuestionPaperPattern> getQuestionPaperPatternList(int div_id,int sub_id,String pattern_type) {
 		QuestionPaperPatternDB paperPatternDB = new QuestionPaperPatternDB();
-		List<QuestionPaperPattern> questionPaperPatternList =   paperPatternDB.getQuestionPaperPatternList(inst_id, div_id,pattern_type);
+		List<QuestionPaperPattern> questionPaperPatternList =   paperPatternDB.getQuestionPaperPatternList(inst_id, div_id,sub_id,pattern_type);
 		List<com.service.beans.QuestionPaperPattern> paperPatternList = new ArrayList<com.service.beans.QuestionPaperPattern>();
 		if(questionPaperPatternList != null){
 			for (int i = 0; i < questionPaperPatternList.size(); i++) {
@@ -306,9 +306,14 @@ public class QuestionPaperPatternTransaction {
 		return questionPaperDataList;
 	}
 	
-	public List<QuestionPaper> getQuestionPaperList(int div_id) {
+	public List<QuestionPaper> getQuestionPaperList(int div_id,int subject) {
 		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
-		return questionPaperDB.getQuestionPaperList(div_id, inst_id);
+		return questionPaperDB.getQuestionPaperList(div_id, inst_id,subject);
+	}
+	
+	public List<QuestionPaper> getQuestionPaperListRelatedToExam(int div_id,int paper_id) {
+		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
+		return questionPaperDB.getQuestionPaperListRelatedToExam(paper_id, inst_id,div_id);
 	}
 	
 	public boolean deleteQuestionPaper(int div_id,int paper_id) {
@@ -333,7 +338,7 @@ public class QuestionPaperPatternTransaction {
 		return questionPaperDB.deleteQuestionPaperRelatedToClass(inst_id, div_id);
 	}
 	
-	public boolean saveQuestionPaper(QuestionPaperFileObject fileObject,int userID) {
+	public boolean saveQuestionPaper(QuestionPaperFileObject fileObject,int userID,int subject) {
 		boolean success = false;
 		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
 		if(questionPaperDB.verifyPaperName(fileObject.getClass_id(), inst_id, fileObject.getPaper_description())){
@@ -346,6 +351,7 @@ public class QuestionPaperPatternTransaction {
 		questionPaper.setPaper_description(fileObject.getPaper_description());
 		questionPaper.setCreated_by(userID);
 		questionPaper.setCreated_dt(new Date(new java.util.Date().getTime()));
+		questionPaper.setSub_id(subject);
 		int paper_id =questionPaperDB.save(questionPaper);
 		fileObject.setPaper_id(paper_id);
 		if(paper_id !=-1 ){
@@ -583,6 +589,10 @@ public class QuestionPaperPatternTransaction {
 		return onlineExam;
 	}
 	
+	/*public List<OnlineExamPaperElement> getAlinedExam(List<OnlineExamPaperElement>) {
+		
+	}*/
+	
 	class ArrayListOverride<E> extends ArrayList<E>{
 		@Override
 		public String toString() {
@@ -692,12 +702,10 @@ public class QuestionPaperPatternTransaction {
 		
 		List<Integer> questionId = new ArrayList<Integer>();
 		Set<Integer> questionIdSet = new HashSet<Integer>();
-		int counter = 0;
 		Random random = new Random();
-		while(questionIdSet.size()<count && allQuestionId.size()>counter){
+		while(questionIdSet.size()<count && allQuestionId.size()>questionIdSet.size()){
 			int index = random.nextInt(allQuestionId.size());
 			questionIdSet.add(allQuestionId.get(index));
-			counter++;
 		}
 		questionId.addAll(questionIdSet);
 		return questionId;

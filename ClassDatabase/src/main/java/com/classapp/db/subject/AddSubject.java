@@ -31,7 +31,7 @@ public class AddSubject {
 		return status;
 	}
 
-	public boolean addSubject(Subject subject,int regID){
+	public int addSubject(Subject subject,int regID){
 		Subjects subjects = new Subjects();
 		try {
 			BeanUtils.copyProperties(subjects, subject);
@@ -44,13 +44,8 @@ public class AddSubject {
 		} 
 		boolean status = false;
 		SubjectDb subjectDb=new SubjectDb();
-		String statusCode = subjectDb.updateDb(subjects,regID);
-		if(!"0".equals(statusCode)){
-			status = false;
-		}else{
-			status = true;
-		}
-		return status;
+		int sub_id = subjectDb.updateDb(subjects,regID);
+		return sub_id;
 	}
 	
 }

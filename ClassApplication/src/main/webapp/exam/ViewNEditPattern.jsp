@@ -66,7 +66,9 @@ font-size: 12px;
 }
 </style>
 <script type="text/javascript">
+var subjectType = "";
 var division  = "";
+var subject  = "";
 var editString = "";
 var questionPaperPattern = {};
 var subjectArray = [];
@@ -124,6 +126,51 @@ function createPatternTable(data){
 }
 $(document).ready(function(){
 	$("#division").change(function(){
+		var division = $("#division").val(); 
+		if(division != "-1"){
+	$.ajax({
+		   url: "classOwnerServlet",
+		   data: {
+		    	 methodToCall: "getSubjectOfDivisionForExam",
+		    	 divisionId: division
+		   		},
+		   type:"POST",
+		   success:function(data){
+			   wosSubjectID = "";
+			   wosTopicID = "";
+			   $("#subject").empty();
+			   $("#subject").append("<option value='-1'>Select Subject</option>");
+			   data = JSON.parse(data);
+			   if(data.status == "success"){
+				   var subjectnames = data.subjectnames;
+				   var subjectIds = data.subjectids;
+				   var subjectType = data.subjectType;
+				   var i = 0;
+				   var subjectnameArray = subjectnames.split(",");
+					var subjectidArray =  subjectIds.split(",");  
+					var subjectTypeArray = subjectType.split(",");  
+				   while(i < subjectnameArray.length){
+				   		if(subjectTypeArray[i] == "1"){
+				   		$("#subject").append("<option class='combineSub' value='"+subjectidArray[i]+"'>"+subjectnameArray[i]+"</option>");
+				   		}else{
+				   		$("#subject").append("<option class='singleSub' value='"+subjectidArray[i]+"'>"+subjectnameArray[i]+"</option>");
+				   		}
+				   		i++;
+				   }
+			   }
+		   },
+			error:function(){
+		   		modal.launchAlert("Error","Error");
+		   	}
+		   });
+		}else{
+			 $("#subject").empty();
+			 $("#subject").append("<option value='-1'>Select Subject</option>");			   
+		}
+	});
+	
+	 $("#subject").change(function(){
+		subjectType = $(this).find('option:selected').prop("class");
 		var handlers = {};
 		handlers.success = function(e){
 		console.log("Success",e);
@@ -136,10 +183,12 @@ $(document).ready(function(){
 		}
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		division = $("#division").val();
-		rest.post("rest/classownerservice/getSubjectsAndTopics/"+division,handlers);
-	});
+		subject = $("#subject").val();
+		rest.post("rest/classownerservice/getSubjectsAndTopicsForExam/"+division+"/"+subject,handlers);
+	}); 
 	$("#searchPattern").click(function(){
 		division = $("#division").val();
+		subject = $("#subject").val();
 		var patternType = $("#patternType").val();
 		var obj = {};
 		/* obj.division = division;
@@ -159,7 +208,7 @@ $(document).ready(function(){
 		} */	
 		};
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
-		rest.post("rest/classownerservice/searchQuestionPaperPattern/"+division+"/"+patternType,handlers,obj,false);
+		rest.post("rest/classownerservice/searchQuestionPaperPattern/"+division+"/"+subject+"/"+patternType,handlers,obj,false);
 	});
 	
 	$("#patternListTable").on("click",".viewPattern",function(){
@@ -373,14 +422,20 @@ function recursiveEdit(questionPaperPatternArray,newQuestionPaperPatternArray,ed
 			'<span id="descriptionError" class="patternError"/>'+
 			'</div>'+
 			'<div class="col-md-2">'+
-			'<select class="form-control createExamSelectQuestionSubject" id="createExamSelectQuestionSubject">'+
-			'<option value="-1">Select Subject</option>';
+			'<select class="form-control createExamSelectQuestionSubject" id="createExamSelectQuestionSubject">';
+			if(subjectArray.length > 0){
+				if(subjectType == "combineSub"){
+				editString = editString + '<option value="-1">Select Subject</option>';
+				}
 			for(var k=0;k<subjectArray.length;k++){
 				if(subjectArray[k].subjectId == subject_id){
 					editString = editString + '<option value="'+subjectArray[k].subjectId+'" selected>'+subjectArray[k].subjectName+'</option>';	
 				}else{
 				editString = editString + '<option value="'+subjectArray[k].subjectId+'">'+subjectArray[k].subjectName+'</option>';
 				}
+			}
+			}else{
+				
 			}
 			editString = editString + '</select>'+
 			'</div>'+
@@ -505,8 +560,11 @@ function recursiveEdit(questionPaperPatternArray,newQuestionPaperPatternArray,ed
 			editString = editString + '</select>'+
 			'</div>'+
 			'<div class="col-md-2">'+
-			'<select class="form-control createExamSelectQuestionSubject" id="createExamSelectQuestionSubject">'+
-			'<option value="-1">Select Subject</option>';
+			'<select class="form-control createExamSelectQuestionSubject" id="createExamSelectQuestionSubject">';
+			if(subjectArray.length > 0){
+				if(subjectType == "combineSub"){
+				editString = editString + '<option value="-1">Select Subject</option>';
+				}
 			for(var k=0;k<subjectArray.length;k++){
 				if(subjectArray[k].subjectId == subject_id){
 					editString = editString + '<option value="'+subjectArray[k].subjectId+'" selected>'+subjectArray[k].subjectName+'</option>';	
@@ -514,18 +572,23 @@ function recursiveEdit(questionPaperPatternArray,newQuestionPaperPatternArray,ed
 				editString = editString + '<option value="'+subjectArray[k].subjectId+'">'+subjectArray[k].subjectName+'</option>';
 				}
 			}
+			}else{
+				editString = editString + '<option value="-1">Select Subject</option>';
+			}
 			editString = editString + '</select>'+
 			'</div>'+
 			'<div class="col-md-2">'+
 			'<select class="form-control createExamSelectQuestionTopic" id="createExamSelectQuestionTopic">'+
 			'<option value="-1">Select Topic</option>';
 			if(subject_id != -1 && subject_id != ""){
+			if(topicMap[subject_id] != undefined ){
 			for(var k=0;k<topicMap[subject_id].topics.length;k++){
 				if(topicMap[subject_id].topics[k].topic_id == question_topic){
 					editString = editString + '<option value="'+topicMap[subject_id].topics[k].topic_id+'" selected>'+topicMap[subject_id].topics[k].topic_name+'</option>';	
 				}else{
 				editString = editString + '<option value="'+topicMap[subject_id].topics[k].topic_id+'">'+topicMap[subject_id].topics[k].topic_name+'</option>';
 				}
+			}
 			}
 			}
 			editString = editString + '</select>'+
@@ -992,6 +1055,12 @@ function ExamPatternObject(){
 				<span id="divisionError" class="patternError"></span>
 			</div>
 			<div class="col-md-3">
+				<select id="subject" name="subject" class="form-control">
+					<option value="-1">Select Subject</option>
+				</select>
+				<span id="divisionError" class="patternError"></span>
+			</div>
+			<div class="col-md-3">
 				<select id="patternType" name="patternType" class="form-control">
 					<option value="-1">Any Pattern Type</option>
 					<option value="WS">Pattern With Section</option>
@@ -1049,7 +1118,7 @@ function ExamPatternObject(){
 			</div>
 			<div class="col-md-2 actionOptionWOS" style="display: none;">
 				<select class="form-control" id="wosSelect">
-					<option value="addInstruction">Add Instrction</option>
+					<option value="addInstruction">Add Instrution</option>
 					<option value="addQuestion">Add Question</option>
 				</select>
 			</div>

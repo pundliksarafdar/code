@@ -130,13 +130,15 @@ var allAjax = {
 			   }
 		});
 	},
-	addSubject :function(regId,subjectName,successCallback,errorCallback){
+	addSubject :function(regId,subjectName,combinationSub,subIds,successCallback,errorCallback){
 		$.ajax({
 			   url: "classOwnerServlet",
 			   data: {
 			    	 methodToCall: "addSubject",
 					 regId:regId,
-					 subjectName:subjectName
+					 subjectName:subjectName,
+					 combinationSub:combinationSub,
+					 subIds:subIds
 			   		},
 			   type:"POST",
 			   success:function(e){

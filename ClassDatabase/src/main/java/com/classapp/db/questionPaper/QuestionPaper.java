@@ -12,6 +12,7 @@ public class QuestionPaper {
 	int created_by;
 	int modified_by;
 	int marks;
+	int sub_id;
 	public int getInst_id() {
 		return inst_id;
 	}
@@ -65,6 +66,12 @@ public class QuestionPaper {
 	}
 	public void setMarks(int marks) {
 		this.marks = marks;
+	}
+	public int getSub_id() {
+		return sub_id;
+	}
+	public void setSub_id(int sub_id) {
+		this.sub_id = sub_id;
 	}
 	
 	

@@ -97,6 +97,12 @@ font-size: 12px;
 				<span id="divisionError" class="patternError"></span>
 			</div>
 			<div class="col-md-3">
+				<select id="subject" name="subject" class="form-control">
+					<option value="-1">Select Subject</option>
+				</select>
+				<span id="divisionError" class="patternError"></span>
+			</div>
+			<div class="col-md-3">
 				<select id="patternType" name="patternType" class="form-control">
 					<option value="-1">Any Pattern Type</option>
 					<option value="WS">Pattern With Section</option>

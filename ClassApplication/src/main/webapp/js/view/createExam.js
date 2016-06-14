@@ -60,15 +60,10 @@ $(document).ready(function(){
 	$("#batchSelect").change(function(){
 		$(".actionOption").hide();
 		$(".subjectDiv").empty();
-		var handlers = {};
-		handlers.success = function(e){console.log("Success",e);
-		createQuestionPaperListTable(e);
-		}
-		handlers.error = function(e){console.log("Error",e)}
 		var division = $("#division").val(); 
 		var batch = $("#batchSelect").val(); 
 		if(batch != "-1"){
-		rest.get("rest/classownerservice/getQuestionPaperList/"+division,handlers);
+		
 	$.ajax({
 		   url: "classOwnerServlet",
 		   data: {
@@ -116,8 +111,18 @@ $(document).ready(function(){
 	});
 	var that;
 	$(".subjectDiv").on("click",".chooseQuestionPaper",function(){
-		$("#questionPaperListModal").modal("toggle");
+		var subject = $($(this).closest("tr")).find("#subjectCheckbox").val();
+		var division = $("#division").val(); 
 		that = $(this);
+		var handlers = {};
+		handlers.success = function(e){console.log("Success",e);
+		createQuestionPaperListTable(e);
+		$("#questionPaperListModal").modal("toggle");
+		}
+		handlers.error = function(e){console.log("Error",e)}
+		rest.get("rest/classownerservice/getQuestionPaperList/"+division+"/"+subject,handlers);
+		
+		
 	});
 	
 	$("#questionPaperListModal").on("click",".confirmQuestionPaper",function(){

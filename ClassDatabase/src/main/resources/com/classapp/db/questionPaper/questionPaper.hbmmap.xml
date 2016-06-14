@@ -17,6 +17,9 @@
         <property name="marks" type="int">
             <column name="marks" />
         </property>
+        <property name="sub_id" type="int">
+            <column name="sub_id" />
+        </property>
         <property name="paper_description" type="java.lang.String">
             <column name="paper_description" length="50"/>
         </property>

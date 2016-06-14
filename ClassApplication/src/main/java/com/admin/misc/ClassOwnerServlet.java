@@ -191,12 +191,14 @@ public class ClassOwnerServlet extends HttpServlet{
 				regId = userBean.getRegId();
 			}
 			String subjectName = (String) req.getParameter("subjectName");
+			String combinationSub = (String) req.getParameter("combinationSub");
+			String subIds = (String) req.getParameter("subIds");
 			com.classapp.db.subject.Subject subject = new com.classapp.db.subject.Subject();
 			/*subject.setRegId(regId);*/
 			subject.setSubjectName(subjectName);
 			subject.setInstitute_id(regId);
 			SubjectTransaction subjectTransaction = new SubjectTransaction();
-			if(subjectTransaction.addUpdateSubjectToDb(subject,regId)){
+			if(subjectTransaction.addUpdateSubjectToDb(subject,regId,combinationSub,subIds)){
 				List<Subjects> subjects=subjectTransaction.getAllClassSubjects(regId);
 				Gson gson=new Gson();
 				String json=gson.toJson(subjects);
@@ -2419,6 +2421,81 @@ public class ClassOwnerServlet extends HttpServlet{
 		
 		respObject.addProperty("subjectnames", subjectnames.toString());
 		respObject.addProperty("subjectids", subjectids.toString());
+		
+	}else if("getSubjectOfDivisionForExam".equalsIgnoreCase(methodToCall)){
+		respObject.addProperty(STATUS, "success");
+		SubjectTransaction subjectTransaction = new SubjectTransaction();
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId = null;
+		if(0 == userBean.getRole() || !"".equals(regId)){
+			if(null == regId){
+				regId = userBean.getRegId();
+			}
+		}else{
+			regId = userBean.getRegId();
+		}
+		String divisionId = req.getParameter("divisionId");
+	String institute=	req.getParameter("institute");
+	if(userBean.getRole()==2){
+		regId=Integer.parseInt(institute);
+	}
+	
+		List<Subject> subjects = subjectTransaction.getSubjectRelatedToDivForExam(Integer.parseInt(divisionId), regId);
+		TeacherTransaction teacherTransaction=new TeacherTransaction();
+		List<Subject> list=new ArrayList<Subject>();
+		if(userBean.getRole()==2){
+			list= teacherTransaction.getTeacherSubject(userBean.getRegId(), regId);
+		}
+		StringBuilder subjectids=new StringBuilder();
+		StringBuilder subjectnames=new StringBuilder();
+		StringBuilder subjectType=new StringBuilder();
+		int i=0;
+		if(null!=subjects && subjects.size()>0){
+			if(userBean.getRole()==2){
+				while(subjects.size()>i){
+					Subject subject = subjects.get(i);
+					if (list!=null) {
+						int j=0;
+						while (j<list.size()) {
+						
+							if(list.get(j).getSubjectId()==subject.getSubjectId())
+							{
+								subjectids.append(subject.getSubjectId()+",");
+								subjectnames.append(subject.getSubjectName()+",");
+								subjectType.append(subject.getSub_type()+",");
+							}
+						j++;
+						}
+					}
+					
+					i++;
+				}
+			}else{
+		while(subjects.size()>i){
+			Subject subject = subjects.get(i);
+			subjectids.append(subject.getSubjectId()+",");
+			subjectnames.append(subject.getSubjectName()+",");
+			subjectType.append(subject.getSub_type()+",");
+			i++;
+		}
+		}
+		subjectnames.deleteCharAt(subjectnames.length()-1);
+		subjectids.deleteCharAt(subjectids.length()-1);
+		subjectType.deleteCharAt(subjectType.length()-1);
+		Gson gson=new Gson();
+		JsonElement jsonElement = gson.toJsonTree(subjects);
+		respObject.add("subjectJson",jsonElement);
+		respObject.addProperty(STATUS, "success");
+		}else{
+			subjectnames.append("");
+			subjectids.append("");
+			subjectType.append("");
+			respObject.addProperty(STATUS, "error");
+		}
+		
+		respObject.addProperty("subjectnames", subjectnames.toString());
+		respObject.addProperty("subjectids", subjectids.toString());
+		respObject.addProperty("subjectType", subjectType.toString());
 		
 	}else if("getBatchesByDivisionNSubject".equalsIgnoreCase(methodToCall)){
 		respObject.addProperty(STATUS, "success");

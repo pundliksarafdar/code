@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -16,6 +17,7 @@ import com.classapp.db.exam.ExamPaperDB;
 import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.subject.AddSubject;
+import com.classapp.db.subject.CombinationSubjects;
 import com.classapp.db.subject.GetSubject;
 import com.classapp.db.subject.SubjectDb;
 import com.classapp.db.subject.Subject;
@@ -33,14 +35,22 @@ import com.transaction.teacher.TeacherTransaction;
 
 
 public class SubjectTransaction {
-	public boolean addUpdateSubjectToDb(Subject subject,int regID){
+	public boolean addUpdateSubjectToDb(Subject subject,int regID,String combinationSub, String subIds){
 		boolean status = false;
 		AddSubject addSubject = new AddSubject();
 		GetSubject getSubject = new GetSubject();	
 		String result =getSubject.isSubjectExists(subject.getSubjectName(),regID);
 		if(result=="false"){
-			status = addSubject.addSubject(subject,regID);
-		//	addSubject.addSubjecttoclass(subject,regID);
+		if("true".equals(combinationSub)){
+			subject.setSub_type("1");
+			subject.setCom_subjects(subIds);
+			int sub_id = addSubject.addSubject(subject,regID);
+		}else{
+			subject.setSub_type("0");
+			subject.setCom_subjects("");
+			int sub_id = addSubject.addSubject(subject,regID);
+		}
+		status = true;
 		}
 		else{
 			status = false;
@@ -50,8 +60,6 @@ public class SubjectTransaction {
 	
 	public List<Subjects> getAllClassSubjects(int regId){
 		GetSubject getSubject = new GetSubject();
-		//List subids=getSubject.getAllClassSubjectcodes(regId+"");
-		
 		return getSubject.getAllClassSubjectsNames(regId);
 	}
 	
@@ -115,6 +123,7 @@ public class SubjectTransaction {
 		marksTransaction.deleteStudentMarksrelatedtosubject(inst_id,sub_id);
 		SubjectTransaction subjectTransaction = new SubjectTransaction();
 		subjectTransaction.deleteTopicsrelatedToSubject(inst_id, sub_id);
+		getCompositeSubjectrelatedtoSubject(inst_id, sub_id+"");
 		SubjectDb subjectDb=new SubjectDb();
 		subjectDb.deleteSubject(sub_id);
 		return true;
@@ -154,6 +163,13 @@ public class SubjectTransaction {
 		List<Subject> subjects = new ArrayList<Subject>();
 		SubjectDb subjectDb = new SubjectDb();
 		subjects = subjectDb.getSubjectRelatedToDiv(div_id, inst_id);
+		return subjects;
+	}
+	
+	public List<Subject> getSubjectRelatedToDivForExam(int div_id,int inst_id) {
+		List<Subject> subjects = new ArrayList<Subject>();
+		SubjectDb subjectDb = new SubjectDb();
+		subjects = subjectDb.getSubjectRelatedToDivForExam(div_id, inst_id);
 		return subjects;
 	}
 	
@@ -252,6 +268,42 @@ public class SubjectTransaction {
 		}
 		return subjectsofDivision;
 		
+	}
+	
+	public List<Subject> getCombineSubjects(int inst_id,int sub_id) {
+		SubjectDb subjectDb=new SubjectDb();
+		Subject subjects =  subjectDb.getSubject(inst_id, sub_id);
+		if(subjects != null){
+			String subjectIDArray [] = subjects.getCom_subjects().split(",");
+			List<Integer> subIDList = new ArrayList<Integer>();
+			for (String string : subjectIDArray) {
+				subIDList.add(Integer.parseInt(string));
+			}
+			return subjectDb.getSubjectList(subIDList);
+		}
+		return null;
+	}
+	
+	public List<Subject> getCompositeSubjectrelatedtoSubject(int inst_id,String sub_id) {
+		SubjectDb subjectDb=new SubjectDb();
+		List<Subject> subjects =  subjectDb.getCompositeSubjectrelatedtoSubject(inst_id, sub_id);
+		if(subjects != null){
+			for (Subject subject : subjects) {
+				String subArray[] = subject.getCom_subjects().split(",");
+				StringBuilder comsub_Ids = new StringBuilder();
+				for (String string : subArray) {
+					if(!sub_id.equals(string)){
+						comsub_Ids.append(string+",");
+					}
+				}
+				if(comsub_Ids.length()>0){
+				comsub_Ids.deleteCharAt(comsub_Ids.length()-1);
+				}
+				subject.setCom_subjects(comsub_Ids.toString());
+				subjectDb.updateDb(subject);
+			}
+		}
+		return null;
 	}
 
 	public static void main(String[] args) {

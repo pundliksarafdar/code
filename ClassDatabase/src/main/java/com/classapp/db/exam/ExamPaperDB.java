@@ -453,7 +453,7 @@ public class ExamPaperDB {
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("select ex from Exam ex,Exam_Paper ep "
+			Query query = session.createQuery("select distinct ex from Exam ex,Exam_Paper ep "
 					+ "where ex.inst_id = :inst_id and ex.exam_id = ep.exam_id and "
 					+ "ex.inst_id = ep.inst_id and ep.paper_type = 2 and ep.div_id = :div_id and ep.batch_id = :batch_id");
 			query.setParameter("inst_id", inst_id);

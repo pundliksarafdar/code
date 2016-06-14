@@ -181,8 +181,20 @@ public int getNextBatchID(int inst_id,int div_id){
 			subidsList.add(Integer.parseInt(subjectids[i]));
 		}
 		SubjectDb db=new SubjectDb();
-		List Batchsubjects=db.getSubjects(subidsList);
-		
+		List<com.classapp.db.subject.Subjects> Batchsubjects=db.getSubjects(subidsList);
+		if(Batchsubjects != null){
+			subidsList = new ArrayList();
+			for (com.classapp.db.subject.Subjects batchSubjects : Batchsubjects) {
+				if("1".equals(batchSubjects.getSub_type())){
+					String ids[] = batchSubjects.getCom_subjects().split(",");
+					for (String string : ids) {
+						subidsList.add(Integer.parseInt(string));
+					}
+				}
+				subidsList.add(batchSubjects.getSubjectId());
+			}
+			 Batchsubjects=db.getSubjects(subidsList);
+		}
 		return Batchsubjects;
 		}
 		return null;

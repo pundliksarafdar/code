@@ -112,10 +112,11 @@ $(document).ready(function(){
 	
 	$("#division").change(function(){
 		var division = $("#division").val(); 
+		if(division != "-1"){
 	$.ajax({
 		   url: "classOwnerServlet",
 		   data: {
-		    	 methodToCall: "getSubjectOfDivision",
+		    	 methodToCall: "getSubjectOfDivisionForExam",
 		    	 divisionId: division
 		   		},
 		   type:"POST",
@@ -128,9 +129,11 @@ $(document).ready(function(){
 			   if(data.status == "success"){
 				   var subjectnames = data.subjectnames;
 				   var subjectIds = data.subjectids;
+				   var subjectType = data.subjectType;
 				   var i = 0;
 				   var subjectnameArray = subjectnames.split(",");
 					var subjectidArray =  subjectIds.split(",");  
+					var subjectTypeArray = subjectType.split(",");  
 					subjectList = [];
 					$(".createExamSelectQuestionSubject").empty();
 					$(".createExamSelectQuestionSubject").append("<option value='-1'>Select Subject</option>");
@@ -139,7 +142,12 @@ $(document).ready(function(){
 				   		subjectObj.id = subjectidArray[i];
 				   		subjectObj.name = 	subjectnameArray[i];
 				   		subjectList.push(subjectObj);
-				   		$(".createExamSelectQuestionSubject").append("<option value='"+subjectidArray[i]+"'>"+subjectnameArray[i]+"</option>");
+				   		/* $(".createExamSelectQuestionSubject").append("<option value='"+subjectidArray[i]+"'>"+subjectnameArray[i]+"</option>"); */
+				   		if(subjectTypeArray[i] == "1"){
+				   		$("#subject").append("<option class='combineSub' value='"+subjectidArray[i]+"'>"+subjectnameArray[i]+"</option>");
+				   		}else{
+				   		$("#subject").append("<option class='singleSub' value='"+subjectidArray[i]+"'>"+subjectnameArray[i]+"</option>");
+				   		}
 				   		i++;
 				   }
 			   }
@@ -152,14 +160,64 @@ $(document).ready(function(){
 		   		modal.launchAlert("Error","Error");
 		   	}
 		   });
+		}else{
+			 $("#subject").empty();
+			 $("#subject").append("<option value='-1'>Select Subject</option>");
+			 $(".createExamSelectQuestionSubject").empty();
+			 $(".createExamSelectQuestionSubject").append("<option value='-1'>Select Subject</option>");
+			 $(".createExamSelectQuestionTopic").empty();
+			 $(".createExamSelectQuestionTopic").append("<option value='-1'>Select Topic</option>");
+			   
+		}
 	});
 	
+	$("#subject").change(function(){
+		if ($(this).find('option:selected').prop("class") == "singleSub"){
+			subjectList = [];
+			var subjectObj = {};
+		   	subjectObj.id = this.value;
+		   	subjectObj.name = 	$(this).find('option:selected').text();
+		   	subjectList.push(subjectObj);
+			$(".createExamSelectQuestionSubject").empty();
+			$(".createExamSelectQuestionSubject").append("<option value='"+this.value+"'>"+$(this).find('option:selected').text()+"</option>");
+			getTopics(this.value,this,"allChange");
+			
+		}else if ($(this).find('option:selected').prop("class") == "combineSub"){
+			var handlers = {};
+			handlers.success = function(data){	
+				$(".createExamSelectQuestionTopic").empty();
+				$(".createExamSelectQuestionTopic").append("<option value='-1'>Select Topic</option>");
+				$(".createExamSelectQuestionSubject").empty();
+				$(".createExamSelectQuestionSubject").append("<option value='-1'>Select Subject</option>");
+				subjectList = [];
+				var subjectObj = {};
+			   	subjectObj.id = "-1";
+			   	subjectObj.name = 	"Select Subject";
+				subjectList.push(subjectObj);
+			   	if(data != null){
+			   		$.each(data,function(index,subject){
+			   			var subjectInnerObj = {};
+			   			subjectInnerObj.id = subject.subjectId;
+			   			subjectInnerObj.name = 	subject.subjectName;
+						subjectList.push(subjectInnerObj);
+						$(".createExamSelectQuestionSubject").append("<option value='"+subject.subjectId+"'>"+subject.subjectName+"</option>");
+			   		});
+			   	}
+			};
+			handlers.error = function(){};
+			rest.get("rest/classownerservice/getCombineSubjects/"+this.value,handlers);
+		}
+	});
+	
+	
 	$("#examPattern").on("change",".createExamSelectQuestionSubject",function(){
+		if($(this).closest("ul").attr("data-item-type") != "Section"){
 		var subID = $(this).val();
 		if(wosSubjectID == ""){
 		wosSubjectID = subID;
 		}
 		getTopics(subID,$(this));
+		}
 	});
 	
 	$("#examPattern").on("change",".createExamSelectQuestionTopic",function(){
@@ -227,8 +285,18 @@ function getTopics(subID,that,scenario){
 						   i++;						   
 					   }
 				   }   
-			   }else if(scenario == "newItem"){
-				   
+			   }else if(scenario == "allChange"){
+				   $(".createExamSelectQuestionTopic").empty();
+				   $(".createExamSelectQuestionTopic").append("<option value='-1'>Select Topic</option>");
+				   if(topic_names.length > 0 ){
+					   var i=0;
+					   while(i<topic_names.length){
+						   if(topic_names[i] != ""){
+							   $(".createExamSelectQuestionTopic").append("<option value='"+topic_ids[i]+"'>"+topic_names[i]+"</option>");
+						   }
+						   i++;						   
+					   }
+				   }    
 			   }else{
 			   $(that).closest(".createExamPatternItem").first().find(".createExamSelectQuestionTopic").empty();
 			   $(that).closest(".createExamPatternItem").first().find(".createExamSelectQuestionTopic").append("<option value='-1'>Select Topic</option>");
@@ -480,7 +548,7 @@ function getItem(parent,itemType,that){
 		var subjectSelect = "";
 		i =0;
 		if(subjectList.length > 0){
-			var subjectSelectString = "<div class='col-md-2'><select class='form-control createExamSelectQuestionSubject' id='createExamSelectQuestionSubject'><option value='-1'>Select Subject</option>";
+			var subjectSelectString = "<div class='col-md-2'><select class='form-control createExamSelectQuestionSubject' id='createExamSelectQuestionSubject'>";
 			while(i < subjectList.length)	
 			{
 				if((selectedSectionSubject != "" && selectedSectionSubject != "-1" && selectedSectionSubject == subjectList[i].id) || (wosSubjectID != "" && wosSubjectID==subjectList[i].id && $("#patternType").val() == "WOS")){
@@ -613,11 +681,6 @@ function ExamPatternObject(){
 	<div class="container" style="padding: 2%; background: #eee">
 		<div class="row">
 			<div class="col-md-3">
-				<input type="text" id="examPatternName" name="examPatternName"
-					placeholder="Exam Pattern Name" class="form-control">
-					<span id="examPatternNameError" class="patternError"></span>
-			</div>
-			<div class="col-md-3">
 				<select id="division" name="division" class="form-control">
 					<option value="-1">Select Class</option>
 					<c:forEach items="${divisionList}" var="division">
@@ -630,11 +693,24 @@ function ExamPatternObject(){
 				<span id="divisionError" class="patternError"></span>
 			</div>
 			<div class="col-md-3">
+				<select id="subject" name="subject" class="form-control">
+					<option value="-1">Select Subject</option>
+				</select>
+				<span id="divisionError" class="patternError"></span>
+			</div>
+			<div class="col-md-3">
 				<select id="patternType" name="patternType" class="form-control">
 					<option value="-1">Select Pattern Type</option>
 					<option value="WS">Pattern With Section</option>
 					<option value="WOS">Pattern Without Section</option>
 				</select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3">
+				<input type="text" id="examPatternName" name="examPatternName"
+					placeholder="Exam Pattern Name" class="form-control">
+					<span id="examPatternNameError" class="patternError"></span>
 			</div>
 			<div class="col-md-3">
 				<input type="number" placeholder="Total Marks" id="totalMarks"

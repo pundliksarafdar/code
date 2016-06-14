@@ -96,6 +96,12 @@ font-size: 12px;
 				</select>
 				<span id="divisionError" class="patternError"></span>
 			</div>
+			<div class="col-md-3">
+				<select id="subject" name="subject" class="form-control">
+					<option value="-1">Select Subject</option>
+				</select>
+				<span id="divisionError" class="patternError"></span>
+			</div>
 			<div class="col-md-1">
 				<button class="form-control btn btn-primary btn-sm" id="searchQuestionPaper">Search</button>
 			</div>
