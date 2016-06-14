@@ -17,7 +17,6 @@ import com.classapp.db.exam.ExamPaperDB;
 import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.subject.AddSubject;
-import com.classapp.db.subject.CombinationSubjects;
 import com.classapp.db.subject.GetSubject;
 import com.classapp.db.subject.SubjectDb;
 import com.classapp.db.subject.Subject;

@@ -484,7 +484,7 @@ public class TeacherServiceImpl extends ServiceBase {
 		String storagePath = com.config.Constants.STORAGE_PATH+File.separator+inst_id;
 		userBean.getUserStatic().setStorageSpace(storagePath);
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),inst_id);
-		List<QuestionPaperPattern> questionPaperPatternList = patternTransaction.getQuestionPaperPatternList(division,patternType);
+		List<QuestionPaperPattern> questionPaperPatternList = patternTransaction.getQuestionPaperPatternList(division,1,patternType);
 		return Response.status(Status.OK).entity(questionPaperPatternList).build();
 	}
 	
@@ -589,7 +589,7 @@ public class TeacherServiceImpl extends ServiceBase {
 		}
 		
 		fileObject.setQuestionPaperFileElementList(questionPaperFileElements);
-		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId());
+		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId(),1);
 		return Response.status(Status.OK).entity(status).build();
 	}
 	
@@ -601,7 +601,7 @@ public class TeacherServiceImpl extends ServiceBase {
 		String storagePath = com.config.Constants.STORAGE_PATH+File.separator+inst_id;
 		userBean.getUserStatic().setStorageSpace(storagePath);
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),inst_id,userBean.getUserStatic().getExamPath());
-		List<QuestionPaper> questionPaperList = patternTransaction.getQuestionPaperList(Integer.parseInt(division));
+		List<QuestionPaper> questionPaperList = patternTransaction.getQuestionPaperList(Integer.parseInt(division),1);
 		return Response.status(Status.OK).entity(questionPaperList).build();
 	}
 	
