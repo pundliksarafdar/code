@@ -452,7 +452,9 @@ public class QuestionPaperPatternTransaction {
 		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
 		File file = new File(questionPaperStorageURL+File.separator+div_id+File.separator+paper_id);
 		QuestionPaperFileObject fileObject = (QuestionPaperFileObject) readObject(file);
-		List<QuestionPaperFileElement> fileElements=fileObject.getQuestionPaperFileElementList();
+		List<QuestionPaperFileElement> fileElementsUnsorted=fileObject.getQuestionPaperFileElementList();
+		
+		List<QuestionPaperFileElement> fileElements = makeTree(fileElementsUnsorted);
 		List<List<Integer>> list = new ArrayListOverride<List<Integer>>();
 		for (Iterator iterator = fileElements.iterator(); iterator.hasNext();) {
 			QuestionPaperFileElement questionPaperFileElement = (QuestionPaperFileElement) iterator.next();
@@ -710,6 +712,56 @@ public class QuestionPaperPatternTransaction {
 		questionId.addAll(questionIdSet);
 		return questionId;
 	}
+	
+	private List<QuestionPaperFileElement> formTreeForQuestions(List<QuestionPaperFileElement> questionPaperFileElements){
+		List<QuestionPaperFileElement> questionsCopy = new ArrayList<QuestionPaperFileElement>();
+		questionsCopy.addAll(questionPaperFileElements);
+		
+		
+		return questionPaperFileElements;
+	}
+	
+	public List<QuestionPaperFileElement> makeTree(List<QuestionPaperFileElement> nodes){
+		List<QuestionPaperFileElement> rootQuestionPaperFileElements = new ArrayList<QuestionPaperFileElement>();
+		for(QuestionPaperFileElement node:nodes){
+			if(node.getParent_id() == null){
+				rootQuestionPaperFileElements.add(node);
+			}
+		}
+		nodes.removeAll(rootQuestionPaperFileElements);
+		
+		List<QuestionPaperFileElement>sortedTreeList = new ArrayList<QuestionPaperFileElement>();
+		for(QuestionPaperFileElement node:rootQuestionPaperFileElements){
+			sortedTreeList.add(node);
+			List<QuestionPaperFileElement>cQuestionPaperFileElement = getChildQuestionPaperFileElements(node, nodes);
+			sortedTreeList.addAll(cQuestionPaperFileElement);
+		}
+		System.out.println("Sorted list...."+sortedTreeList);
+		return sortedTreeList;
+	}
+	
+	public List<QuestionPaperFileElement> getChildQuestionPaperFileElements(QuestionPaperFileElement rootQuestionPaperFileElement,List<QuestionPaperFileElement>nodes){
+		List<QuestionPaperFileElement> childQuestionPaperFileElements = new ArrayList<QuestionPaperFileElement>();
+		boolean found = false;
+		for(QuestionPaperFileElement node:nodes){
+			if(rootQuestionPaperFileElement.getItem_id().equals(node.getParent_id())){
+				childQuestionPaperFileElements.add(node);
+				found = true;
+			}
+		}
+		if(childQuestionPaperFileElements.size()>0){
+			nodes.removeAll(childQuestionPaperFileElements);
+			List<QuestionPaperFileElement>cQuestionPaperFileElement = new ArrayList<QuestionPaperFileElement>();
+			for(QuestionPaperFileElement childQuestionPaperFileElement:childQuestionPaperFileElements){
+				cQuestionPaperFileElement.addAll(getChildQuestionPaperFileElements(childQuestionPaperFileElement, nodes));
+			}
+			childQuestionPaperFileElements.addAll(cQuestionPaperFileElement);
+			//System.out.println("Child..."+childQuestionPaperFileElements);
+			
+		}
+		return childQuestionPaperFileElements;
+	}
+
 
 	public String getPatternStorageURL() {
 		return patternStorageURL;
