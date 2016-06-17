@@ -126,6 +126,9 @@ function createPatternTable(data){
 }
 $(document).ready(function(){
 	$("#division").change(function(){
+		$("#viewPatternDiv").hide();
+		$("#patternListTableDiv").hide();
+		$("#editPatternDiv").hide();
 		var division = $("#division").val(); 
 		if(division != "-1"){
 	$.ajax({
@@ -142,6 +145,7 @@ $(document).ready(function(){
 			   $("#subject").append("<option value='-1'>Select Subject</option>");
 			   data = JSON.parse(data);
 			   if(data.status == "success"){
+				   $("#subject").select2().val("-1").change();
 				   var subjectnames = data.subjectnames;
 				   var subjectIds = data.subjectids;
 				   var subjectType = data.subjectType;
@@ -157,6 +161,10 @@ $(document).ready(function(){
 				   		}
 				   		i++;
 				   }
+			   }else{
+				   $("#subject").empty();
+					 $("#subject").select2().val("").change();
+					 $("#subject").select2({data:"",placeholder:"Subjects not available"});
 			   }
 		   },
 			error:function(){
@@ -165,11 +173,15 @@ $(document).ready(function(){
 		   });
 		}else{
 			 $("#subject").empty();
-			 $("#subject").append("<option value='-1'>Select Subject</option>");			   
+			 $("#subject").select2().val("").change();
+			 $("#subject").select2({data:"",placeholder:"Select Subject"});			   
 		}
 	});
 	
 	 $("#subject").change(function(){
+		$("#viewPatternDiv").hide();
+		$("#patternListTableDiv").hide();
+		$("#editPatternDiv").hide();
 		subjectType = $(this).find('option:selected').prop("class");
 		var handlers = {};
 		handlers.success = function(e){
@@ -184,12 +196,29 @@ $(document).ready(function(){
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		division = $("#division").val();
 		subject = $("#subject").val();
+		if(subject != "-1" && subject != "" && subject != null){
 		rest.post("rest/classownerservice/getSubjectsAndTopicsForExam/"+division+"/"+subject,handlers);
+		}
 	}); 
 	$("#searchPattern").click(function(){
+		$("#viewPatternDiv").hide();
+		$("#patternListTableDiv").hide();
+		$("#editPatternDiv").hide();
+		$(".validation-message").html("");
 		division = $("#division").val();
 		subject = $("#subject").val();
+		var validationFlag = false;
 		var patternType = $("#patternType").val();
+		if(division == "-1" || division == "" || division == null){
+			$("#divisionError").html("Select Class");
+			validationFlag = true;
+		}
+		
+		if(subject == "-1" || subject == "" || subject == null){
+			$("#subjectError").html("Select Subject");
+			validationFlag = true;
+		}
+		if(validationFlag == false){
 		var obj = {};
 		/* obj.division = division;
 		obj.patternType = patternType; */
@@ -198,6 +227,9 @@ $(document).ready(function(){
 		console.log("Success",e)
 		$("#patternListTable").find("tbody").empty();
 		createPatternTable(e);
+		$("#viewPatternDiv").hide();
+		$("#patternListTableDiv").show();
+		$("#editPatternDiv").hide();
 		/* if(e.length > 0)
 		{
 			for(var i=0; i<e.length; i++){
@@ -209,6 +241,7 @@ $(document).ready(function(){
 		};
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.post("rest/classownerservice/searchQuestionPaperPattern/"+division+"/"+subject+"/"+patternType,handlers,obj,false);
+		}
 	});
 	
 	$("#patternListTable").on("click",".viewPattern",function(){
@@ -1052,13 +1085,13 @@ function ExamPatternObject(){
 						</option>
 					</c:forEach>
 				</select>
-				<span id="divisionError" class="patternError"></span>
+				<span id="divisionError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3">
 				<select id="subject" name="subject" class="form-control">
 					<option value="-1">Select Subject</option>
 				</select>
-				<span id="divisionError" class="patternError"></span>
+				<span id="subjectError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3">
 				<select id="patternType" name="patternType" class="form-control">
@@ -1072,8 +1105,8 @@ function ExamPatternObject(){
 			</div>
 		</div>
 	</div>
-	<div class="container" id="patternListTableDiv">
-		<table class="table" id="patternListTable">
+	<div class="container" id="patternListTableDiv" style="display: none;width: 100%">
+		<table class="table" id="patternListTable" style="width: 100%">
 		<thead>
 			<tr>
 				<th>Sr No.</th>

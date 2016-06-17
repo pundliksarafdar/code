@@ -26,15 +26,19 @@
 			if($(this).val()!=-1){
 				rest.get(getBatchUrl+$(this).val(),handler,true);
 			}else{
-				
+				$("#batchSelect").empty();
+				 $("#batchSelect").select2().val("").change();
+				 $("#batchSelect").select2({data:"",placeholder:"Select Batch"});
 			}
 		});
 		
 		$(SEND_TO_TEACHER).on("click",sendToTeacher);
 		$(SEND_TO_STU_PAR).on("click",sendToStuNPar);
+		$("select").select2();
 	});
 	
 	function loadBatchOfDiv(data){
+		if(data.length > 0){
 		var option = "<option value='-1'>Select batch</option>";
 		$.each(data,function(key,val){
 			var text = val.batch_name;
@@ -43,6 +47,12 @@
 		});
 		$(BATCH_SELECT).empty();
 		$(BATCH_SELECT).append(option);
+		$(BATCH_SELECT).select2().val("-1").change();
+		}else{
+			$(BATCH_SELECT).empty();
+			 $(BATCH_SELECT).select2().val("").change();
+			 $(BATCH_SELECT).select2({data:"",placeholder:"Batch not available"});
+		}
 	}
 	
 	function getTeacherList(){

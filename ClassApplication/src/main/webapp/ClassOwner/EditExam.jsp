@@ -52,8 +52,16 @@ $(document).ready(function(){
 	$("body").on("click",".deleteExam",deleteExam).
 		on("click",".preview",preview);
 	
+	$("#batchSelect").change(function(){
+		$("#examListDiv").hide();
+		$("#editModeDiv").hide();
+	});
+	
 	$("#division").change(function(){
+		$("#examListDiv").hide();
+		$("#editModeDiv").hide();
 		var divisionId = $("#division").val();
+		if(divisionId != "-1"){
 		$.ajax({
 			   url: "classOwnerServlet",
 			   data: {
@@ -73,11 +81,18 @@ $(document).ready(function(){
 						batchDataArray.push(data);
 					});
 				    $("#batchSelect").select({data:batchDataArray,placeholder:"type batch name"});*/
+				    if(data.status != "error"){
 				    $("#batchSelect").append("<option value='-1'>Select Batch</option>");
 				    if(data.batches != null){
+				    	$("#batchSelect").select2().val("-1").change();
 				    	$.each(data.batches,function(key,val){
 				    		 $("#batchSelect").append("<option value='"+val.batch_id+"'>"+val.batch_name+"</option>");
 						});
+				    }
+				    }else{
+				    	 $("#batchSelect").empty();
+						 $("#batchSelect").select2().val("").change();
+						 $("#batchSelect").select2({data:"",placeholder:"Batch not available"});
 				    }
 			   	},
 			   error:function(e){
@@ -86,6 +101,11 @@ $(document).ready(function(){
 			   }
 			   
 		});
+		}else{
+			 $("#batchSelect").empty();
+			 $("#batchSelect").select2().val("").change();
+			 $("#batchSelect").select2({data:"",placeholder:"Select Batch"});
+		}
 	});
 	
 	$("#searchExam").click(searchExams);
@@ -260,15 +280,31 @@ function createExamListTable(data){
 }
 
 function searchExams(){
+	$("#examListDiv").hide();
+	$("#editModeDiv").hide();
+	$(".validation-message").html("");
 	division = $("#division").val();
 	batch =  $("#batchSelect").val();
+	var validationFlag = false;
+	if(division == "-1" || division == "" || division == null){
+		$("#divisionError").html("Select Class");
+		validationFlag = true;
+	}
+	
+	if(batch == "-1" || batch == "" || batch == null){
+		$("#batchError").html("Select Batch");
+		validationFlag = true;
+	}
+	if(validationFlag == false){
 	var handlers = {};
 	handlers.success = function(e){console.log("Success",e);
+	$("#examListDiv").show();
 	createExamListTable(e);};
 	handlers.error = function(e){
 		$.notify({message: "Error while fetching exam list"},{type: 'danger'});
 	};
 	rest.post("rest/classownerservice/getExamList/"+division+"/"+batch,handlers);
+	
 	/* var handler = {};
 	handler.success = function(e){console.log("Success",e);
 	queationPaperList = e;
@@ -319,6 +355,7 @@ $.ajax({
 	   		modal.launchAlert("Error","Error");
 	   	}
 	   });
+	}
 }
 
 function deleteExam(){
@@ -439,12 +476,13 @@ function getHeaderError(e){
 						</option>
 					</c:forEach>
 				</select>
-				<span id="divisionError" class="patternError"></span>
+				<span id="divisionError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3">
 				<select class="form-control" id="batchSelect" >
 					<option value="-1">Select Batch</option>
 				</select>
+				<span id="batchError" class="validation-message"></span>
 			</div>
 			<div class="col-md-1">
 				<button class="form-control btn btn-primary btn-sm" id="searchExam">Search</button>

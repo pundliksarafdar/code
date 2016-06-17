@@ -13,7 +13,7 @@
 	<div class="container banner_gray_background">
 		<div class="row">
 			<div class="col-lg-3">
-				<select class="btn btn-default btn-sm" id="divisionSelect">
+				<select class="form-control" id="divisionSelect">
 					<option value="-1">Select Division</option>
 					<c:forEach var="division" items="${divisions}">
 						<option value='<c:out value="${division.divId}"></c:out>'><c:out value="${division.divisionName}"></c:out> <c:out value="${division.stream}"></c:out></option>
@@ -21,7 +21,7 @@
 				</select>
 			</div>
 			<div class="col-lg-3">
-				<select class="btn btn-default btn-sm" id="batchSelect">
+				<select class="form-control" id="batchSelect">
 					<option value="-1">Select batch</option>
 					<option></option>
 					<option></option>

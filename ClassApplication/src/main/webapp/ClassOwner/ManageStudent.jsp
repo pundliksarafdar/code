@@ -169,11 +169,12 @@ var wayOfAddition="";
 					var studentExcelUploadBean = JSON.stringify(StudentExcelUploadBean);
 					
 					var handlersSuccess = {};
-					rest.post("rest/files/upload/student/xls/", handlersSuccess,
-							studentExcelUploadBean, false);
 					handlersSuccess.success = function(successResp){
 						console.log("Success",successResp);
 					}
+					rest.post("rest/files/upload/student/xls/", handlersSuccess,
+							studentExcelUploadBean, false);
+					
 					console.log("Success",e);
 					}
 				handlers.error = function(e){console.log("Error",e)}
@@ -447,8 +448,9 @@ var wayOfAddition="";
 		var divisionId = $('#division').val();
 
 		if(!divisionId || divisionId.trim()=="" || divisionId == -1){
-			$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please select a division');
-			$('div#addStudentModal .error').show();
+			$("#batches").empty();
+			 $("#batches").select2().val("").change();
+			 $("#batches").select2({data:"",placeholder:"Select Batch"});
 		}else{		
 		  $.ajax({
 		   url: "classOwnerServlet",

@@ -19,11 +19,11 @@ $(document).ready(function(){
 			$("#divisionError").html("Select Class");
 			validationFlag = true;
 		}
-		if(batch == "-1"){
+		if(batch == "-1" || batch == "" || batch == null){
 			$("#batchError").html("Select Batch");
 			validationFlag = true;
 		}
-		if(exam == "-1"){
+		if(exam == "-1" || exam == "" || exam == null){
 			$("#examError").html("Select Exam");
 			validationFlag = true;
 		}
@@ -42,16 +42,24 @@ $(document).ready(function(){
 		var batch = $("#batchSelect").val();
 		 $("#subjectTableDiv").hide();
 		 $("#studentTableDiv").hide();
-		$("#exam").val("-1")
-		$("#exam").find('option:gt(0)').remove();
-		if(batch != "-1"){
+		 $("#exam").empty();
+		 $("#exam").select2().val("").change();
+		 $("#exam").select2({data:"",placeholder:"Select Exam"});
+		if(batch != "-1" && batch != "" && batch != null){
 			$("#batchError").html("");
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
 		$("#exam").empty();
+		if(e.length > 0){
 		$("#exam").append("<option value='-1'>Select Exam</option>");
+		$("#exam").select2().val("-1").change();
 		for(var i=0;i<e.length;i++){
 			$("#exam").append("<option value='"+e[i].exam_id+"'>"+e[i].exam_name+"</option>");
+		}}
+		else{
+			$("#exam").empty();
+			 $("#exam").select2().val("").change();
+			 $("#exam").select2({data:"",placeholder:"Exam not available"});
 		}
 		};
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
@@ -60,10 +68,9 @@ $(document).ready(function(){
 	});
 	$("#division").change(function(){
 		var divisionId = $("#division").val();
-		$("#batchSelect").val("-1")
-		$("#batchSelect").find('option:gt(0)').remove();
-		$("#exam").val("-1")
-		$("#exam").find('option:gt(0)').remove();
+		$("#exam").empty();
+		 $("#exam").select2().val("").change();
+		 $("#exam").select2({data:"",placeholder:"Select Exam"});
 		$("#subjectTableDiv").hide();
 		$("#studentTableDiv").hide();
 		if(divisionId != "-1"){
@@ -87,11 +94,18 @@ $(document).ready(function(){
 						batchDataArray.push(data);
 					});
 				    $("#batchSelect").select({data:batchDataArray,placeholder:"type batch name"});*/
+				    if(data.status != "error"){
 				    $("#batchSelect").append("<option value='-1'>Select Batch</option>");
 				    if(data.batches != null){
+				    	$("#batchSelect").select2().val("-1").change();
 				    	$.each(data.batches,function(key,val){
 				    		 $("#batchSelect").append("<option value='"+val.batch_id+"'>"+val.batch_name+"</option>");
 						});
+				    }
+				    }else{
+				    	$("#batchSelect").empty();
+						 $("#batchSelect").select2().val("").change();
+						 $("#batchSelect").select2({data:"",placeholder:"Batch not available"});
 				    }
 			   	},
 			   error:function(e){
@@ -100,6 +114,10 @@ $(document).ready(function(){
 			   }
 			   
 		});
+		}else{
+			$("#batchSelect").empty();
+			 $("#batchSelect").select2().val("").change();
+			 $("#batchSelect").select2({data:"",placeholder:"Select Batch"});
 		}
 	});
 	$("#exam").change(function(){

@@ -20,7 +20,7 @@ $(document).ready(function(){
 			$("#divisionError").html("Select Class");
 			validationFlag = true;
 		}
-		if(batch == "-1"){
+		if(batch == "-1" || batch == "" || batch == null){
 			$("#batchError").html("Select Batch");
 			validationFlag = true;
 		}
@@ -29,12 +29,12 @@ $(document).ready(function(){
 			validationFlag = true;
 		}else{
 			if(viewType == "1"){
-		if(exam == "-1"){
+		if(exam == "-1" || exam == "" || exam == null){
 			$("#examError").html("Select Exam");
 			validationFlag = true;
 		}
 		}else{
-			if(subject == "-1"){
+			if(subject == "-1" || subject == "" || subject == null){
 				$("#examError").html("Select Subject");
 				validationFlag = true;
 			}
@@ -66,11 +66,13 @@ $(document).ready(function(){
 	
 $("#batchSelect").change(function(){
 	$("#studentTableDiv").hide();	
-	$("#exam").val("-1")
-	$("#exam").find('option:gt(0)').remove();
-	$("#subjects").val("-1")
-	$("#subjects").find('option:gt(0)').remove();
-		 if($("#batchSelect").val() != "-1"){
+	$("#exam").empty();
+	 $("#exam").select2().val("").change();
+	 $("#exam").select2({data:"",placeholder:"Select Exam"});
+	 $("#subjects").empty();
+	 $("#subjects").select2().val("").change();
+	 $("#subjects").select2({data:"",placeholder:"Select Subject"});
+		 if($("#batchSelect").val() != "-1" && $("#batchSelect").val()!= "" && $("#batchSelect").val() != null){
 		 $("#batchError").html("");
 		getViewData();
 		 }
@@ -86,12 +88,12 @@ $("#batchSelect").change(function(){
 	$("#division").change(function(){
 		var divisionId = $("#division").val();
 		$("#studentTableDiv").hide();
-		$("#batchSelect").val("-1")
-		$("#batchSelect").find('option:gt(0)').remove();
-		$("#exam").val("-1")
-		$("#exam").find('option:gt(0)').remove();
-		$("#subjects").val("-1")
-		$("#subjects").find('option:gt(0)').remove();
+		$("#exam").empty();
+		 $("#exam").select2().val("").change();
+		 $("#exam").select2({data:"",placeholder:"Select Exam"});
+		 $("#subjects").empty();
+		 $("#subjects").select2().val("").change();
+		 $("#subjects").select2({data:"",placeholder:"Select Subject"});
 		if(divisionId != "-1"){
 			$("#divisionError").html("");
 		$.ajax({
@@ -113,11 +115,17 @@ $("#batchSelect").change(function(){
 						batchDataArray.push(data);
 					});
 				    $("#batchSelect").select({data:batchDataArray,placeholder:"type batch name"});*/
+				    if(data.status != "error"){
 				    $("#batchSelect").append("<option value='-1'>Select Batch</option>");
 				    if(data.batches != null){
+				    	$("#batchSelect").select2().val("-1").change();
 				    	$.each(data.batches,function(key,val){
 				    		 $("#batchSelect").append("<option value='"+val.batch_id+"'>"+val.batch_name+"</option>");
 						});
+				    }}else{
+				    	$("#batchSelect").empty();
+						 $("#batchSelect").select2().val("").change();
+						 $("#batchSelect").select2({data:"",placeholder:"Batch not available"});
 				    }
 			   	},
 			   error:function(e){
@@ -126,6 +134,10 @@ $("#batchSelect").change(function(){
 			   }
 			   
 		});
+		}else{
+			$("#batchSelect").empty();
+			 $("#batchSelect").select2().val("").change();
+			 $("#batchSelect").select2({data:"",placeholder:"Select Batch"});
 		}
 	});
 	$('#subjectTable').on("click",".fillMarks",function(){
@@ -194,13 +206,19 @@ function getViewData(){
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
 		$("#exam").empty();
+		if(e.length > 0){
 		$("#exam").append("<option value='-1'>Select Exam</option>");
+		$("#exam").select2().val("-1").change();
 		for(var i=0;i<e.length;i++){
 			$("#exam").append("<option value='"+e[i].exam_id+"'>"+e[i].exam_name+"</option>");
 		}
-	
-		$("#subjects").hide();
-		$("#exam").show();
+		}else{
+			$("#exam").empty();
+			 $("#exam").select2().val("").change();
+			 $("#exam").select2({data:"",placeholder:"Exam not available"});
+		}
+		$("#subjectsSelectDiv").hide();
+		$("#examSelectDiv").show();
 		};
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.post("rest/classownerservice/getExamList/"+division+"/"+batch,handlers);
@@ -223,13 +241,20 @@ function getViewData(){
 				var subjectidArray =  subjectIds.split(",");  
 				subjectList = [];
 				$("#subjects").empty();
+				if(subjectnameArray.length > 0){
 				$("#subjects").append("<option value='-1'>Select Subject</option>");
+				$("#subjects").select2().val("-1").change();
 				while(i < subjectnameArray.length){
 			   		$("#subjects").append("<option value='"+subjectidArray[i]+"'>"+subjectnameArray[i]+"</option>");
 			   		i++;
 			   }
-				$("#subjects").show();
-				$("#exam").hide();
+				}else{
+					$("#subjects").empty();
+					 $("#subjects").select2().val("").change();
+					 $("#subjects").select2({data:"",placeholder:"Subject not available"});
+				}
+				$("#subjectsSelectDiv").show();
+				$("#examSelectDiv").hide();
 		   }
 	   },
 		error:function(){
@@ -340,7 +365,7 @@ function createStudentExamSubjectMarksTable(data){
 				</select>
 				<span id="divisionError" class="validation-message"></span>
 			</div>
-			<div class="col-md-2">
+			<div class="col-md-3">
 				<select class="form-control" id="batchSelect" >
 					<option value="-1">Select Batch</option>
 				</select>
@@ -354,13 +379,17 @@ function createStudentExamSubjectMarksTable(data){
 				</select>
 				<span id="viewTypeError" class="validation-message"></span>
 			</div>
-			<div class="col-md-2">
-				<select id="exam" name="exam" class="form-control marksViewType">
+			<div class="col-md-3">
+			<div id="examSelectDiv" style="width: 100%">
+				<select id="exam" name="exam" class="form-control marksViewType" style="width: 100%">
 					<option value="-1">Select Exam</option>
 				</select>
-				<select id="subjects" name="subjects" class="form-control marksViewType" style="display: none;">
+			</div>
+			<div id="subjectsSelectDiv" style="display: none; width: 100%">
+				<select id="subjects" name="subjects" class="form-control marksViewType"  style="width: 100%">
 					<option value="-1">Select Subject</option>
 				</select>
+				</div>
 				<span id="examError" class="validation-message"></span>
 			</div>
 			<div class="col-md-1">

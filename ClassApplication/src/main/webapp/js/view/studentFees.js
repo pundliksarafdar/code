@@ -106,16 +106,24 @@ function getBatches(){
 	handler.success = getBatchSuccess;
 	handler.error = getBatchError;
 	rest.get(getBatchListUrl+division,handler);
+	}else{
+		$("#batchSelect").empty();
+		 $("#batchSelect").select2().val("").change();
+		 $("#batchSelect").select2({data:"",placeholder:"Select Batch"});
 	}
 }
 
 function getBatchSuccess(batches){
 	$(BATCH_SELECT).find('option').not('option[value="-1"]').remove();
 	$(BATCH_SELECT).find('optgroup').remove();
+	$("#batchSelect").empty();
 	var optionsHasLink = "";
 	var optionsNoLink = "";
 	var optGroupHasLink;
 	var optGroupNoLink;
+	if(batches.length > 0){
+		$(BATCH_SELECT).append("<option value='-1'>Select Batch</option>");
+		  $(BATCH_SELECT).select2().val("-1").change();
 	$.each(batches,function(index,val){
 		if(val.feesLinkStatus == "Yes"){
 			optionsHasLink = optionsHasLink + "<option value='"+val.batch.batch_id+"'>"+val.batch.batch_name+"</option>";
@@ -132,6 +140,11 @@ function getBatchSuccess(batches){
 		optGroupNoLink = '<optgroup label="No link" linked="no">'+optionsNoLink+'</optgroup>';
 	}
 	$(BATCH_SELECT).append(optGroupHasLink+optGroupNoLink);	
+	}else{
+    	$("#batchSelect").empty();
+		 $("#batchSelect").select2().val("").change();
+		 $("#batchSelect").select2({data:"",placeholder:"Batch not available"});
+   }
 }
 
 function getBatchError(error){

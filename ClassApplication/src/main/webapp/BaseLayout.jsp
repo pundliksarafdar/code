@@ -196,6 +196,7 @@ $( document ).ajaxStop(function() {
 });
 
 $(document).ready(function(){
+	$("select").select2();
 	var cookieValue = commonfunctions.getCookies("logincreation");
 	$(document).mousemove(function(){
 		eventOccuredSience = new Date();

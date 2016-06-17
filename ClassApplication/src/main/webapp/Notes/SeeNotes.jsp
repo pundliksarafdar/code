@@ -190,7 +190,7 @@ $(document).ready(function(){
 			var uploadExam = new UploadExam();
 			uploadExam.getSubjectsInDivision($(this).val());
 		}else{
-			$("#subject").val("-1")
+			$("#subject").select2().val("-1").change();
 			$("#subject").find('option:gt(0)').remove();
 			
 		}
@@ -408,6 +408,7 @@ function UploadExam(){
 	
 	var displaySubjectDropDown = function (data){
 		var selectOptionDropdown = "#subject";
+		$(selectOptionDropdown).select2().val("-1").change();
 		$(selectOptionDropdown).find("option:not(:first)").remove();
 		data = JSON.parse(data);
 		if(data.subjectnames.trim()!=="" || data.subjectids.trim()!==""){

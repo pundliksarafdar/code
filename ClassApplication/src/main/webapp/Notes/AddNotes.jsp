@@ -46,6 +46,7 @@ var file=document.getElementByID("myFile");
 }
 
 $(document).ready(function(){
+	$("#classownerUploadexamSelectBatchName").select2({data:"",placeholder:"Select Batch"});
 	$("select").on("change",function(e){
 		$(".alert-danger").hide();
 	});
@@ -60,9 +61,13 @@ $(document).ready(function(){
 			$("#divisionError").html("");
 			
 		}else{
-			$("#classownerUploadexamSubjectNameSelect").prop("disabled",true);
-			$("#classownerUploadexamSelectBatchName").prop("disabled",true);
-			$("#classownerUploadexamAddExam").prop("disabled",true);
+			$("#classownerUploadexamSubjectNameSelect").select2("val", "");
+			$("#classownerUploadexamSubjectNameSelect").html("");
+			$("#classownerUploadexamSubjectNameSelect").select2({data:"",placeholder:"Select Subject"});
+			$("#batchError").html("");
+			$("#classownerUploadexamSelectBatchName").select2("val", "");
+			$("#classownerUploadexamSelectBatchName").html("");
+			$("#classownerUploadexamSelectBatchName").select2({data:"",placeholder:"Select Batch"});
 		}
 	});
 	
@@ -70,14 +75,14 @@ $(document).ready(function(){
 		var uploadExam = new UploadExam();
 		var subjectId = $(this).val();
 		var divisionId = $("#classownerUploadexamDivisionName").val();
-		if(subjectId!="-1"){
+		if(subjectId!="-1" && subjectId != "" && subjectId != null){
 			$("#subjectError").html("");
 			uploadExam.getBatchFromDivisonNSubject(subjectId,divisionId);	
 		}else{
 			$("#batchError").html("");
-			$("#classownerUploadexamSelectBatchName").select2({data:batchDataArray,placeholder:"type batch name"});
 			$("#classownerUploadexamSelectBatchName").select2("val", "");
-			$("#classownerUploadexamSelectBatchName").prop("disabled",true);
+			$("#classownerUploadexamSelectBatchName").html("");
+			$("#classownerUploadexamSelectBatchName").select2({data:"",placeholder:"Select Batch"});
 			
 		}
 	});
@@ -109,7 +114,7 @@ $(document).ready(function(){
 		$("#divisionError").html("Select Class");
 		flag= false;
 	}
-	if(subject == "-1"){
+	if(subject == "-1" || subject == "" || subject == null){
 		$("#subjectError").html("Select Subject");
 		flag= false;
 	}
@@ -324,11 +329,15 @@ function UploadExam(){
 	
 	var displaySubjectDropDown = function (data){
 		var selectOptionDropdown = "#classownerUploadexamSubjectNameSelect";
-		$(selectOptionDropdown).find("option:not(:first)").remove();
+		$(selectOptionDropdown).empty();
 		data = JSON.parse(data);
 		if(data.subjectnames.trim()!=="" || data.subjectids.trim()!==""){
 		var subjectnames = data.subjectnames.split(",");
 		var subjectids = data.subjectids.split(",");
+		$("<option/>",{
+			value:"-1",
+			text:"Select Subject"
+		}).appendTo(selectOptionDropdown);
 			for(subjectNameIndex in subjectnames){
 				console.log(subjectnames[subjectNameIndex]);
 				console.log(subjectids[subjectNameIndex]);
@@ -337,19 +346,19 @@ function UploadExam(){
 					text:subjectnames[subjectNameIndex]
 				}).appendTo(selectOptionDropdown);
 			}
+			$(selectOptionDropdown).select2().val("-1").change();
 			batchDataArray = [];
 			$("#batchError").html("");
-			$("#classownerUploadexamSelectBatchName").select2({data:batchDataArray,placeholder:"type batch name"});
+			$("#classownerUploadexamSelectBatchName").html("");
+			$("#classownerUploadexamSelectBatchName").select2({data:batchDataArray,placeholder:"Select Batch"});
 			$("#classownerUploadexamSelectBatchName").select2("val", "");
-			$("#classownerUploadexamSelectBatchName").prop("disabled",true);
 			
 		}else{
-			$("#classownerUploadexamSubjectNameSelect").prop("disabled",true);
-			batchDataArray = [];
+			$(selectOptionDropdown).select2({data:"",placeholder:"Subjects not available"});
 			$("#batchError").html("");
-			$("#classownerUploadexamSelectBatchName").select2({data:batchDataArray,placeholder:"type batch name"});
 			$("#classownerUploadexamSelectBatchName").select2("val", "");
-			$("#classownerUploadexamSelectBatchName").prop("disabled",true);
+			$("#classownerUploadexamSelectBatchName").html("");
+			$("#classownerUploadexamSelectBatchName").select2({data:"",placeholder:"Select Batch"});
 		}
 		
 	}
@@ -378,7 +387,7 @@ function UploadExam(){
 			batchDataArray.push(batchDataObject);
 		});
 		$("#classownerUploadexamSelectBatchName").empty();
-		$("#classownerUploadexamSelectBatchName").select2({data:batchDataArray,placeholder:"type batch name",multiple: true});
+		$("#classownerUploadexamSelectBatchName").select2({data:batchDataArray,placeholder:"Select Batch"});
 		$("#classownerUploadexamSelectBatchName").prop("disabled",false);
 		}else{
 			$("#classownerUploadexamSelectBatchName").prop("disabled",true);
@@ -440,14 +449,13 @@ if(notes!=null){
 				<span id="divisionError" class="error"></span>
 			</div>
 			<div class="col-md-3 subjectDropDown">
-				<select name="subject" id="classownerUploadexamSubjectNameSelect" class="form-control" width="100px" disabled="disabled">
+				<select name="subject" id="classownerUploadexamSubjectNameSelect" class="form-control" width="100px" >
 					<option value="-1">Select Subject</option>
 				</select>
 				<span id="subjectError" class="error"></span>
 			</div>
 			<div class="col-md-3 batchDropDown">
-				<select name="batch" id="classownerUploadexamSelectBatchName" class="form-control" width="100px" disabled="disabled">
-					<option value="-1">Select Batch</option>
+				<select name="batch" id="classownerUploadexamSelectBatchName" class="form-control" width="100px" multiple="multiple">
 				</select>
 				<span id="batchError" class="error"></span>
 			</div>

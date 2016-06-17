@@ -126,7 +126,9 @@ $(document).ready(function(){
 			   $("#subject").empty();
 			   $("#subject").append("<option value='-1'>Select Subject</option>");
 			   data = JSON.parse(data);
+			   subjectList = [];
 			   if(data.status == "success"){
+				   $("#subject").select2().val("-1").change();
 				   var subjectnames = data.subjectnames;
 				   var subjectIds = data.subjectids;
 				   var subjectType = data.subjectType;
@@ -134,14 +136,11 @@ $(document).ready(function(){
 				   var subjectnameArray = subjectnames.split(",");
 					var subjectidArray =  subjectIds.split(",");  
 					var subjectTypeArray = subjectType.split(",");  
-					subjectList = [];
-					$(".createExamSelectQuestionSubject").empty();
-					$(".createExamSelectQuestionSubject").append("<option value='-1'>Select Subject</option>");
 				   while(i < subjectnameArray.length){
-					 	 var subjectObj = {};
+					 	 /* var subjectObj = {};
 				   		subjectObj.id = subjectidArray[i];
 				   		subjectObj.name = 	subjectnameArray[i];
-				   		subjectList.push(subjectObj);
+				   		subjectList.push(subjectObj); */
 				   		/* $(".createExamSelectQuestionSubject").append("<option value='"+subjectidArray[i]+"'>"+subjectnameArray[i]+"</option>"); */
 				   		if(subjectTypeArray[i] == "1"){
 				   		$("#subject").append("<option class='combineSub' value='"+subjectidArray[i]+"'>"+subjectnameArray[i]+"</option>");
@@ -150,9 +149,15 @@ $(document).ready(function(){
 				   		}
 				   		i++;
 				   }
+			   }else{
+				   $("#subject").empty();
+					 $("#subject").select2().val("").change();
+					 $("#subject").select2({data:"",placeholder:"Subjects not available"});
 			   }
 			   topic_names = "";
 			   topic_ids = "";
+			   $(".createExamSelectQuestionSubject").empty();
+			   $(".createExamSelectQuestionSubject").append("<option value='-1'>Select Subject</option>");
 			   $(".createExamSelectQuestionTopic").empty();
 			   $(".createExamSelectQuestionTopic").append("<option value='-1'>Select Topic</option>")
 		   },
@@ -162,7 +167,8 @@ $(document).ready(function(){
 		   });
 		}else{
 			 $("#subject").empty();
-			 $("#subject").append("<option value='-1'>Select Subject</option>");
+			 $("#subject").select2().val("").change();
+			 $("#subject").select2({data:"",placeholder:"Select Subjects"});
 			 $(".createExamSelectQuestionSubject").empty();
 			 $(".createExamSelectQuestionSubject").append("<option value='-1'>Select Subject</option>");
 			 $(".createExamSelectQuestionTopic").empty();
@@ -172,6 +178,8 @@ $(document).ready(function(){
 	});
 	
 	$("#subject").change(function(){
+		subjectList = [];
+		if(this.value != "-1"){
 		if ($(this).find('option:selected').prop("class") == "singleSub"){
 			subjectList = [];
 			var subjectObj = {};
@@ -207,13 +215,19 @@ $(document).ready(function(){
 			handlers.error = function(){};
 			rest.get("rest/classownerservice/getCombineSubjects/"+this.value,handlers);
 		}
+		}else{
+			$(".createExamSelectQuestionTopic").empty();
+			$(".createExamSelectQuestionTopic").append("<option value='-1'>Select Topic</option>");
+			$(".createExamSelectQuestionSubject").empty();
+			$(".createExamSelectQuestionSubject").append("<option value='-1'>Select Subject</option>");
+		}
 	});
 	
 	
 	$("#examPattern").on("change",".createExamSelectQuestionSubject",function(){
 		if($(this).closest("ul").attr("data-item-type") != "Section"){
 		var subID = $(this).val();
-		if(wosSubjectID == ""){
+		if(patternType == "WOS"){
 		wosSubjectID = subID;
 		}
 		getTopics(subID,$(this));
@@ -222,7 +236,7 @@ $(document).ready(function(){
 	
 	$("#examPattern").on("change",".createExamSelectQuestionTopic",function(){
 		var topicID = $(this).val();
-		if(wosTopicID == ""){
+		if(patternType == "WOS"){
 			wosTopicID = topicID;
 		}
 	});
@@ -271,8 +285,10 @@ function getTopics(subID,that,scenario){
 		   async:false,
 		   success:function(data){
 			   var resultJson=JSON.parse(data);
+			   if(resultJson.status != "error" ){
 			   topic_names=resultJson.topic_names.split(",");
 			   topic_ids=resultJson.topic_ids.split(",");
+			   }
 			   if(scenario == "sectionSubject"){
 				   $(that).find(".createExamSelectQuestionTopic").empty();
 				   $(that).find(".createExamSelectQuestionTopic").append("<option value='-1'>Select Topic</option>");
@@ -474,7 +490,9 @@ function getItem(parent,itemType,that){
 		if(selectedSectionSubjectCheckbox == "true"){
 			selectedSectionSubject=that.closest(".sectionUl").first().find("#createExamSelectQuestionSubject").val();
 		}
+		if ($("#subject").find('option:selected').prop("class") != "singleSub"){
 		getTopics(selectedSectionSubject,that);
+		}
 	}
 	var section = $("<ul></ul>",{
 		class:"createExamPatternItem",
@@ -597,6 +615,10 @@ function verifyPattern(){
 		$("#divisionError").html("Select Class");
 		errorFlag = true;
 	}
+	if($("#subject").val() == "-1" || $("#subject").val() == "" || $("#subject").val() == null){
+		$("#subjectError").html("Select Subject");
+		errorFlag = true;
+	}
 	
 	var recursionLevel = 0;
 	var sectionCount = $("#examPattern").children().length;
@@ -696,7 +718,7 @@ function ExamPatternObject(){
 				<select id="subject" name="subject" class="form-control">
 					<option value="-1">Select Subject</option>
 				</select>
-				<span id="divisionError" class="patternError"></span>
+				<span id="subjectError" class="patternError"></span>
 			</div>
 			<div class="col-md-3">
 				<select id="patternType" name="patternType" class="form-control">

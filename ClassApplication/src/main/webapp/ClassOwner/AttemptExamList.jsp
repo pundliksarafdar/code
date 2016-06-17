@@ -17,11 +17,28 @@ $(document).ready(function(){
 		getBatchesOfDivision();
 	});
 	
+	$("#batches").change(function(){
+		$("#examDiv").hide();
+		$("#examSubjectDiv").hide();
+	});
+	
 	$(".searchExams").click(function(){
+		$(".validation-message").html("");
 		 division = $('#division').val();
 		 batch =  $("#batches").val();
 		 $("#examDiv").hide();
 		$("#examSubjectDiv").hide();
+		var validationFlag = false;
+		if(division == "-1" || division == "" || division == null){
+			$("#divisionError").html("Select Class");
+			validationFlag = true;
+		}
+		
+		if(batch == "-1" || batch == "" || batch == null){
+			$("#batchError").html("Select Batch");
+			validationFlag = true;
+		}
+		if(validationFlag == false){
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
 		
@@ -29,6 +46,7 @@ $(document).ready(function(){
 		}
 		handlers.error = function(e){console.log("Error",e)}
 		rest.get("rest/classownerservice/getOnlineExamList/"+division+"/"+batch,handlers);
+		}
 	});
 	
 	$("#examTable").on("click",".attemptExamList",function(){
@@ -137,6 +155,8 @@ function createExamTable(data){
 }
 
 function getBatchesOfDivision(){
+	$("#examDiv").hide();
+	$("#examSubjectDiv").hide();
 	$(".chkBatch:checked").removeAttr('checked');
 	$('#checkboxes').children().remove();
 	$('div#addStudentModal .error').hide();
@@ -145,6 +165,8 @@ function getBatchesOfDivision(){
 	if(!divisionId || divisionId.trim()=="" || divisionId == -1){
 		$('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Please select a division');
 		$('div#addStudentModal .error').show();
+		$('#batches').empty();
+		 $("#batches").select2({data:null,placeholder:"Select Batch"});
 	}else{		
 	  $.ajax({
 	   url: "classOwnerServlet",
@@ -159,6 +181,10 @@ function getBatchesOfDivision(){
 		   var batchDataArray = [];
 		    var data = JSON.parse(e);
 		    if(data.status != "error"){
+		    	var tempData = {};
+		    	tempData.id = "-1";
+		    	tempData.text = "Select Batch";
+				batchDataArray.push(tempData);
 		    $.each(data.batches,function(key,val){
 				var data = {};
 				data.id = val.batch_id;
@@ -167,7 +193,7 @@ function getBatchesOfDivision(){
 			});
 		    $("#batches").select2({data:batchDataArray,placeholder:"type batch name"});
 		    }else{
-		    	 $("#batches").select2({data:null,placeholder:"Batch not found"});
+		    	 $("#batches").select2({data:null,placeholder:"Batch not Available"});
 		    }
 	   	},
 	   error:function(e){
@@ -194,13 +220,13 @@ function getBatchesOfDivision(){
 			<option value=<c:out value='${division.divId }'></c:out>><c:out value="${division.divisionName }"></c:out> <c:out value="${division.stream }"></c:out></option>
 		</c:forEach>
 	</select>
-	<span class="error" id="divisionError"></span>
+	<span class="validation-message" id="divisionError"></span>
 </div>
 <div class="col-md-3">
 <select id="batches" style="width:100%">
-	<option>Select Batch</option>
+	<option value="-1">Select Batch</option>
 </select>
-<span class="error" id="batchError"></span>
+<span class="validation-message" id="batchError"></span>
 </div>
 <div class="col-md-1">
 	<button class="btn btn-primary btn-sm searchExams">Search</button>

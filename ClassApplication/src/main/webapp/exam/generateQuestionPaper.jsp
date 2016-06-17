@@ -94,13 +94,13 @@ font-size: 12px;
 						</option>
 					</c:forEach>
 				</select>
-				<span id="divisionError" class="patternError"></span>
+				<span id="divisionError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3">
 				<select id="subject" name="subject" class="form-control">
 					<option value="-1">Select Subject</option>
 				</select>
-				<span id="divisionError" class="patternError"></span>
+				<span id="subjectError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3">
 				<select id="patternType" name="patternType" class="form-control">
@@ -114,8 +114,8 @@ font-size: 12px;
 			</div>
 		</div>
 	</div>
-	<div class="container" id="patternListTableDiv">
-		<table class="table" id="patternListTable">
+	<div class="container" id="patternListTableDiv" style="width: 100%">
+		<table class="table" id="patternListTable" style="width: 100%">
 		</table>
 	</div>
 	<div id="viewPatternDiv" style="display: none;" class="container">

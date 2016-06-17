@@ -60,6 +60,7 @@ $(document).ready(function(){
 			   $("#subject").append("<option value='-1'>Select Subject</option>");
 			   data = JSON.parse(data);
 			   if(data.status == "success"){
+				   $("#subject").select2().val("-1").change();
 				   var subjectnames = data.subjectnames;
 				   var subjectIds = data.subjectids;
 				   var subjectType = data.subjectType;
@@ -75,6 +76,10 @@ $(document).ready(function(){
 				   		}
 				   		i++;
 				   }
+			   }else{
+				   $("#subject").empty();
+					 $("#subject").select2().val("").change();
+					 $("#subject").select2({data:"",placeholder:"Subjects not available"});
 			   }
 		   },
 			error:function(){
@@ -82,8 +87,9 @@ $(document).ready(function(){
 		   	}
 		   });
 		}else{
-			 $("#subject").empty();
-			 $("#subject").append("<option value='-1'>Select Subject</option>");			   
+			$("#subject").empty();
+			 $("#subject").select2().val("").change();
+			 $("#subject").select2({data:"",placeholder:"Select Subject"});				   
 		}
 	});
 	
@@ -256,6 +262,7 @@ var loadQuestionPaper = function(){
 	var divisionId = $(DIVISION_DROPDOWN).val();
 		
 	if(paperId){
+		$("#viewPatternData").show();
 		rest.get(getQuestionPaperUrl+divisionId+"/"+paperId,handler);
 	}
 	
@@ -286,12 +293,27 @@ var loadQuestionPaperError = function(e){
 }
 
 var searchQuestionPaper = function(){
+	$("#editQuestionPaperListContainer").hide();
+	$("#viewPatternData").hide();
+	$("#saveSection").hide();
+	$(".validation-message").html("");
 	var handler = {};
 	handler.success = searchQuestionPaperSuccess;
 	handler.error = searchQuestionPaperError;
 	var divisionId = $(DIVISION_DROPDOWN).val();
 	var subject = $("#subject").val();
-	if(divisionId!=-1){
+	var validationFlag = false;
+	if(divisionId == "-1" || divisionId == "" || divisionId == null){
+		$("#divisionError").html("Select Class");
+		validationFlag = true;
+	}
+	
+	if(subject == "-1" || subject == "" || subject == null){
+		$("#subjectError").html("Select Subject");
+		validationFlag = true;
+	}
+	if(validationFlag == false){
+		$("#editQuestionPaperListContainer").show();
 		rest.get(getList+divisionId+"/"+subject,handler);
 	}
 	

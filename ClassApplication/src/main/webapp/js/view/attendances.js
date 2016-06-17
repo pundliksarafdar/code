@@ -111,11 +111,17 @@ function getBatches(){
 				batchDataArray.push(data);
 			});
 		    $("#batchSelect").select({data:batchDataArray,placeholder:"type batch name"});*/
+		    if(data.status != "error"){
 		    $("#batchSelect").append("<option value='-1'>Select Batch</option>");
+		    $("#batchSelect").select2().val("-1").change();
 		    if(data.batches != null){
 		    	$.each(data.batches,function(key,val){
 		    		 $("#batchSelect").append("<option value='"+val.batch_id+"'>"+val.batch_name+"</option>");
 				});
+		    }}else{
+		    	$("#batchSelect").empty();
+				 $("#batchSelect").select2().val("").change();
+				 $("#batchSelect").select2({data:"",placeholder:"Batch not available"});
 		    }
 	   	},
 	   error:function(e){
@@ -125,6 +131,10 @@ function getBatches(){
 	   
 });
 	
+}else{
+	$("#batchSelect").empty();
+	 $("#batchSelect").select2().val("").change();
+	 $("#batchSelect").select2({data:"",placeholder:"Select Batch"});
 }
 }
 

@@ -139,6 +139,8 @@ function getSubjectName(subId){
 $(document).ready(function(){
 	
 	$("#division").change(function(){
+		$("#viewPatternDiv").hide();
+		$("#patternListTableDiv").hide();
 		var division = $("#division").val(); 
 		if(division != "-1"){
 	$.ajax({
@@ -155,6 +157,7 @@ $(document).ready(function(){
 			   $("#subject").append("<option value='-1'>Select Subject</option>");
 			   data = JSON.parse(data);
 			   if(data.status == "success"){
+				   $("#subject").select2().val("-1").change();
 				   var subjectnames = data.subjectnames;
 				   var subjectIds = data.subjectids;
 				   var subjectType = data.subjectType;
@@ -170,6 +173,10 @@ $(document).ready(function(){
 				   		}
 				   		i++;
 				   }
+			   }else{
+				   $("#subject").empty();
+					 $("#subject").select2().val("").change();
+					 $("#subject").select2({data:"",placeholder:"Subjects not available"});
 			   }
 		   },
 			error:function(){
@@ -178,7 +185,8 @@ $(document).ready(function(){
 		   });
 		}else{
 			 $("#subject").empty();
-			 $("#subject").append("<option value='-1'>Select Subject</option>");			   
+			 $("#subject").select2().val("").change();
+			 $("#subject").select2({data:"",placeholder:"Select Subject"});			   
 		}
 	});
 	
@@ -317,6 +325,8 @@ $(document).ready(function(){
 	});
 	
 	$("#subject").change(function(){
+		$("#viewPatternDiv").hide();
+		$("#patternListTableDiv").hide();
 		var handlers = {};
 		handlers.success = function(resp){
 			loadSubjectAndTopic(resp);
@@ -324,31 +334,38 @@ $(document).ready(function(){
 		handlers.error = function(e){};
 		var subject = $(this).val();
 		var division = $("#division").val();
+		if(subject != "-1" && subject != "" && subject != null){
 		rest.post("rest/classownerservice/getSubjectsAndTopicsForExam/"+division+"/"+subject,handlers);
+		}
 	});
 	$("#searchPattern").click(function(){
+		$("#viewPatternDiv").hide();
+		$("#patternListTableDiv").hide();
+		$(".validation-message").html("");
 		division = $("#division").val();
 		subject = $("#subject").val();
 		var patternType = $("#patternType").val();
+		var validationFlag = false;
+		if(division == "-1" || division == "" || division == null){
+			$("#divisionError").html("Select Class");
+			validationFlag = true;
+		}
+		
+		if(subject == "-1" || subject == "" || subject == null){
+			$("#subjectError").html("Select Subject");
+			validationFlag = true;
+		}
+		if(validationFlag == false){
 		var obj = {};
-		/* obj.division = division;
-		obj.patternType = patternType; */
 		var handlers = {};
 		handlers.success = function(e){
-		
 		$("#patternListTable").find("tbody").empty();
 		createPatternTable(e);
-		/* if(e.length > 0)
-		{
-			for(var i=0; i<e.length; i++){
-			$("#patternListTable").find("tbody").append("<tr><td>"+(i+1)+"</td><td>"+e[i].pattern_name+"</td><td>"+e[i].marks+"</td><td><button class='btn btn-primary btn-xs viewPattern' id='"+e[i].pattern_id+"'>View/Edit</button></td><td><button class='btn btn-danger btn-xs deletePattern' id='"+e[i].pattern_id+"'>Delete</button></td>");
-		}
-		}else{
-			$("#patternListTable").find("tbody").append("<tr><td colspan='5' align='center'>Paterns not available for selected criteria</td></tr>");
-		} */	
+		$("#patternListTableDiv").show();
 		};
 		handlers.error = function(e){console.log("Error",e)};
 		rest.post("rest/classownerservice/searchQuestionPaperPattern/"+division+"/"+subject+"/"+patternType,handlers,obj,false);
+		}
 	});
 	
 	$("#patternListTable").on("click",".viewPattern",function(){
@@ -398,6 +415,27 @@ $(document).ready(function(){
 });
 
 var alternateValueMap = [];
+function loadSubjectRelatedToTopicSelect(){
+	var subjectId = $(this).val();
+	
+	var topicSelect = $(this).closest('.row').find(SELECT_TOPIC);
+	var topic = "<option value='-1'>Select topic</option>";
+	var topics = topicNSubject[subjectId]?topicNSubject[subjectId].topic:[];
+	$.each(topics,function(key,val){
+		topic = topic + "<option value='"+val.topicId+"'>"+val.topicName+"</option>";
+	});
+	topicSelect.empty();
+	topicSelect.append(topic);
+	
+	/*
+	$.each($(SELECT_SUBJECT),function(){
+		var that= $(this);
+		loadTopicSelect(that,topicNSubject[val] && topicNSubject[val].topic?topicNSubject[val].topic:[]);
+	});
+	loadTopicSelect(that,topicNSubject[val] && topicNSubject[val].topic?topicNSubject[val].topic:[]);
+	*/
+}
+
 function recursiveView(data,recursionLevel,dataArray){
 	recursionLevel++;
 	var preAlternateValue = 0;
@@ -457,7 +495,7 @@ function recursiveView(data,recursionLevel,dataArray){
 					class:"btn btn-default selectSubject btn-xs",
 					style:"width:100%;",
 					value:data[i].subject_id
-				});
+				}).on('change',loadSubjectRelatedToTopicSelect);
 				
 				var subjectDiv = $("<div/>",{
 					class:"col-md-2"

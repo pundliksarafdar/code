@@ -23,6 +23,7 @@ $(document).ready(function(){
 		$(".subjectDiv").empty();
 		$(".actionOption").hide();
 		var divisionId = $("#division").val();
+		if(divisionId != "-1"){
 		$.ajax({
 			   url: "classOwnerServlet",
 			   data: {
@@ -42,11 +43,18 @@ $(document).ready(function(){
 						batchDataArray.push(data);
 					});
 				    $("#batchSelect").select({data:batchDataArray,placeholder:"type batch name"});*/
+				    if(data.status != "error"){
 				    $("#batchSelect").append("<option value='-1'>Select Batch</option>");
 				    if(data.batches != null){
+				    	 $("#batchSelect").select2().val("-1").change();
 				    	$.each(data.batches,function(key,val){
 				    		 $("#batchSelect").append("<option value='"+val.batch_id+"'>"+val.batch_name+"</option>");
 						});
+				    }
+				    }else{
+				    	 $("#batchSelect").empty();
+						 $("#batchSelect").select2().val("").change();
+						 $("#batchSelect").select2({data:"",placeholder:"Batch not available"});
 				    }
 			   	},
 			   error:function(e){
@@ -55,6 +63,11 @@ $(document).ready(function(){
 			   }
 			   
 		});
+		}else{
+			 $("#batchSelect").empty();
+			 $("#batchSelect").select2().val("").change();
+			 $("#batchSelect").select2({data:"",placeholder:"Select Batch"});
+		}
 	});
 	
 	$("#batchSelect").change(function(){
@@ -62,7 +75,7 @@ $(document).ready(function(){
 		$(".subjectDiv").empty();
 		var division = $("#division").val(); 
 		var batch = $("#batchSelect").val(); 
-		if(batch != "-1"){
+		if(batch != "-1" && batch!= "" && batch != null){
 		
 	$.ajax({
 		   url: "classOwnerServlet",

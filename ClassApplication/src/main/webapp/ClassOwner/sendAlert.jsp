@@ -29,7 +29,9 @@
 			</div>
 			<div class="col-md-3">
 				<div id="sendAlert">
-	  			<Select name="batchSelect" id="batchSelect" class="form-control" width="100px"></Select>
+	  			<Select name="batchSelect" id="batchSelect" class="form-control" width="100px">
+	  				<option value="-1">Select Batch</option>
+	  			</Select>
 	  			</div>
 	  		</div>
 	  		

@@ -58,7 +58,9 @@
 			</div>
 			<div class="col-md-6">
 				<div>
-	  			<Select name="divisionSelect" id="batchSelect" class="form-control" width="100px"></Select>
+	  			<Select name="batchSelect" id="batchSelect" class="form-control" width="100px">
+	  			<option value="-1">Select Batch</option>
+	  			</Select>
 	  			</div>
 	  		</div>
 	  		</div>
