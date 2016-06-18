@@ -865,7 +865,7 @@ public class TeacherServiceImpl extends ServiceBase {
 		fileObject.setQuestionPaperFileElementList(questionPaperFileElements);
 		fileObject.setPaper_id(paperId);
 		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
-		boolean status = patternTransaction.updateQuestionPaper(fileObject, getRegId());
+		boolean status = patternTransaction.updateQuestionPaper(fileObject, getRegId(),"");
 		return Response.status(Status.OK).entity(status).build();
 	}
 	
