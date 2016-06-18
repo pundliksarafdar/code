@@ -483,7 +483,9 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 							}
 						}
 					}
+					if(!"1".equals(subject.getSub_type())){
 					subjectIds.add(subject.getSubjectId());
+					}
 				}
 				subjectlist=getSubjectList(subjectIds);
 			}

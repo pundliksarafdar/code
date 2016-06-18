@@ -86,10 +86,19 @@ $(document).ready(function(){
 		$("#actionform").find("#exam").val(exam);
 		$("#actionform").find("#subject").val($(this).closest("div").find(".subject").val());
 		/* $("#actionform").submit(); */
-		var formData = $("#actionform").serialize();
-		console.log(formData);
-		window.open("attemptExam?"+formData,"","width=500, height=500"); 
 		e.preventDefault();
+		var handlers ={};
+		handlers.success = function(e){console.log("Success",e);
+		if(e){
+			var formData = $("#actionform").serialize();
+			console.log(formData);
+			window.open("attemptExam?"+formData,"","width=500, height=500"); 
+		}else{
+			$.notify({message: "Question Paper Not available"},{type: 'danger'});
+		}
+		}
+		handlers.error = function(e){console.log("Error",e)}
+		rest.get("rest/classownerservice/questionPaperAvailability/"+$(this).prop("id")+"/"+division+"/"+$(this).closest("div").find(".subject").val(),handlers);
 	});
 });
 

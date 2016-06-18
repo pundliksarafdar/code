@@ -47,6 +47,7 @@ import com.config.Constants;
 import com.google.gson.Gson;
 import com.service.beans.AttendanceScheduleServiceBean;
 import com.service.beans.BatchStudentExamMarks;
+import com.service.beans.EditQuestionPaper;
 import com.service.beans.ExamSubject;
 import com.service.beans.GenerateQuestionPaperResponse;
 import com.service.beans.MonthlyScheduleServiceBean;
@@ -589,7 +590,7 @@ public class TeacherServiceImpl extends ServiceBase {
 		}
 		
 		fileObject.setQuestionPaperFileElementList(questionPaperFileElements);
-		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId(),1);
+		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId(),1,"");
 		return Response.status(Status.OK).entity(status).build();
 	}
 	
@@ -614,7 +615,7 @@ public class TeacherServiceImpl extends ServiceBase {
 		userBean.getUserStatic().setStorageSpace(storagePath);
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),inst_id,userBean.getUserStatic().getExamPath());
 		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
-		QuestionPaperEditFileObject fileObject = patternTransaction.getQuestionPaper(Integer.parseInt(division), Integer.parseInt(paper_id));
+		EditQuestionPaper fileObject = patternTransaction.getQuestionPaper(Integer.parseInt(division), Integer.parseInt(paper_id));
 		return Response.status(Status.OK).entity(fileObject).build();
 	}
 	

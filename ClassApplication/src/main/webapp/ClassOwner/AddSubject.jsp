@@ -235,9 +235,11 @@ function validateInput(inputText){
 					var subjectArray = [];
 					$.each(data,function(key,val){
 						var data = {};
+						if(val.sub_type != "1"){
 						data.id = val.subjectId;
 						data.text = val.subjectName;
 						subjectArray.push(data);
+						}
 					});
 					$("#combinationSubjects").select2({data:subjectArray,placeholder:"Select Subjects"});
 				}
@@ -262,9 +264,11 @@ function validateInput(inputText){
 				var subjectArray = [];
 				$.each(data,function(key,val){
 					var data = {};
+					if(val.sub_type != "1"){
 					data.id = val.subjectId;
 					data.text = val.subjectName;
 					subjectArray.push(data);
+					}
 				});
 				$(that.closest("tr")).find(".editSubjectSelect").select2({data:subjectArray,placeholder:"Select Subjects"}).val(combineSubjectsIds).change();
 			}

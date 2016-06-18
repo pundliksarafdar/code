@@ -13,6 +13,7 @@ public class QuestionPaper {
 	int modified_by;
 	int marks;
 	int sub_id;
+	String compSubjectIds;
 	public int getInst_id() {
 		return inst_id;
 	}
@@ -72,6 +73,12 @@ public class QuestionPaper {
 	}
 	public void setSub_id(int sub_id) {
 		this.sub_id = sub_id;
+	}
+	public String getCompSubjectIds() {
+		return compSubjectIds;
+	}
+	public void setCompSubjectIds(String compSubjectIds) {
+		this.compSubjectIds = compSubjectIds;
 	}
 	
 	

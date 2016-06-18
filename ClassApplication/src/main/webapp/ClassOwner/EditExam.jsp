@@ -391,7 +391,8 @@ function preview(){
 	$(MARKS).html(marks);
 }
 
-function previewSuccess(data){
+function previewSuccess(resp){
+	var data = resp.fileObject;
 	var questionPaperFileElementList = data.questionPaperFileElementList;
 	$(PREVIEW_PAGE_CONTENT).empty();
 	$.each(questionPaperFileElementList,function(){

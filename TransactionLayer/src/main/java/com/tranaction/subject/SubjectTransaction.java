@@ -15,6 +15,7 @@ import com.classapp.db.batch.BatchDB;
 import com.classapp.db.exam.ExamDB;
 import com.classapp.db.exam.ExamPaperDB;
 import com.classapp.db.exam.Exam_Paper;
+import com.classapp.db.questionPaper.QuestionPaperDB;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.subject.AddSubject;
 import com.classapp.db.subject.GetSubject;
@@ -122,7 +123,9 @@ public class SubjectTransaction {
 		marksTransaction.deleteStudentMarksrelatedtosubject(inst_id,sub_id);
 		SubjectTransaction subjectTransaction = new SubjectTransaction();
 		subjectTransaction.deleteTopicsrelatedToSubject(inst_id, sub_id);
-		getCompositeSubjectrelatedtoSubject(inst_id, sub_id+"");
+		deleteCompositeSubjectrelatedtoSubject(inst_id, sub_id+"");
+		QuestionPaperDB paperDB = new QuestionPaperDB();
+		paperDB.deleteQuestionPaperRelatedToSubject(inst_id, sub_id);
 		SubjectDb subjectDb=new SubjectDb();
 		subjectDb.deleteSubject(sub_id);
 		return true;
@@ -283,7 +286,7 @@ public class SubjectTransaction {
 		return null;
 	}
 	
-	public List<Subject> getCompositeSubjectrelatedtoSubject(int inst_id,String sub_id) {
+	public List<Subject> deleteCompositeSubjectrelatedtoSubject(int inst_id,String sub_id) {
 		SubjectDb subjectDb=new SubjectDb();
 		List<Subject> subjects =  subjectDb.getCompositeSubjectrelatedtoSubject(inst_id, sub_id);
 		if(subjects != null){

@@ -23,6 +23,9 @@
         <property name="paper_description" type="java.lang.String">
             <column name="paper_description" length="50"/>
         </property>
+        <property name="compSubjectIds" type="java.lang.String">
+            <column name="compSubjectIds" />
+        </property>
         <property name="created_by" type="int">
             <column name="created_by" />
         </property>

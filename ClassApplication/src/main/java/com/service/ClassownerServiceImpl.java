@@ -34,6 +34,7 @@ import com.classapp.db.exam.Exam;
 import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.questionPaper.QuestionPaper;
+import com.classapp.db.questionPaper.QuestionPaperDB;
 import com.classapp.db.student.StudentDetails;
 import com.classapp.db.student.StudentMarks;
 import com.classapp.db.subject.Subject;
@@ -45,6 +46,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.service.beans.AddBatchBean;
+import com.service.beans.EditQuestionPaper;
 import com.service.beans.ExamSubject;
 import com.service.beans.ExamWiseStudentDetails;
 import com.service.beans.GenerateQuestionPaperResponse;
@@ -351,11 +353,11 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	}
 	
 	@POST
-	@Path("/saveQuestionPaper/{patternId}/{questionPaperName}/{divisionId}/{subject}")
+	@Path("/saveQuestionPaper/{patternId}/{questionPaperName}/{divisionId}/{subject}/{compSubjectIds}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response saveQuestionPaper(@PathParam("patternId") String patternId,@PathParam("questionPaperName") String questionPaperName,
-			@PathParam("divisionId") String divisionId,@PathParam("subject") int subject
+			@PathParam("divisionId") String divisionId,@PathParam("subject") int subject,@PathParam("compSubjectIds")String compSubjectIds
 			,Map<String, String>questionAndItem){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		
@@ -400,7 +402,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		
 		fileObject.setQuestionPaperFileElementList(questionPaperFileElements);
 		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
-		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId(),subject);
+		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId(),subject,compSubjectIds);
 		if(status)
 			return Response.status(Status.OK).entity(status).build();
 		else
@@ -408,11 +410,11 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	}
 	
 	@POST
-	@Path("/updateQuestionPaper/{patternId}/{questionPaperName}/{divisionId}/{paperId}")
+	@Path("/updateQuestionPaper/{patternId}/{questionPaperName}/{divisionId}/{paperId}/{compSubjectIds}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateQuestionPaper(@PathParam("patternId") String patternId,@PathParam("questionPaperName") String questionPaperName,
-			@PathParam("divisionId") String divisionId,@PathParam("paperId") int paperId
+			@PathParam("divisionId") String divisionId,@PathParam("paperId") int paperId,@PathParam("compSubjectIds")String compSubjectIds
 			,Map<String, String>questionAndItem){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		
@@ -457,7 +459,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		fileObject.setQuestionPaperFileElementList(questionPaperFileElements);
 		fileObject.setPaper_id(paperId);
 		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
-		boolean status = patternTransaction.updateQuestionPaper(fileObject, getRegId());
+		boolean status = patternTransaction.updateQuestionPaper(fileObject, getRegId(),compSubjectIds);
 		return Response.status(Status.OK).entity(status).build();
 	}
 	
@@ -468,7 +470,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
 		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
-		QuestionPaperEditFileObject fileObject = patternTransaction.getQuestionPaper(Integer.parseInt(division), Integer.parseInt(paper_id));
+		EditQuestionPaper fileObject = patternTransaction.getQuestionPaper(Integer.parseInt(division), Integer.parseInt(paper_id));
 		return Response.status(Status.OK).entity(fileObject).build();
 	}
 	
@@ -856,5 +858,17 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		List<QuestionPaper> questionPaperList = patternTransaction.getQuestionPaperListRelatedToExam(division, exam_id);
 
 		return Response.status(Status.OK).entity(questionPaperList).build();
+	}
+	
+	@GET
+	@Path("/questionPaperAvailability/{paper_id}/{div_id}/{sub_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response checkQuestionPaperAvailability(@PathParam("paper_id")int paper_id,@PathParam("div_id")int div_id,@PathParam("sub_id")int sub_id){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		boolean status = patternTransaction.checkQuestionPaperAvailability(paper_id, getRegId(), div_id, sub_id);
+
+		return Response.status(Status.OK).entity(status).build();
 	}
 }

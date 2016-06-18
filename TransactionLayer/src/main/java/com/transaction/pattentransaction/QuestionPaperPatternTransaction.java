@@ -31,6 +31,7 @@ import com.classapp.db.student.StudentMarks;
 import com.classapp.logger.AppLogger;
 import com.classapp.persistence.Constants;
 import com.datalayer.exam.ParagraphQuestion;
+import com.service.beans.EditQuestionPaper;
 import com.service.beans.GenerateQuestionPaperResponse;
 import com.service.beans.NewQuestionRequest;
 import com.service.beans.OnlineExam;
@@ -316,6 +317,11 @@ public class QuestionPaperPatternTransaction {
 		return questionPaperDB.getQuestionPaperListRelatedToExam(paper_id, inst_id,div_id);
 	}
 	
+	public boolean checkQuestionPaperAvailability(int paper_id,int inst_id,int div_id,int sub_id) {
+		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
+		return questionPaperDB.checkQuestionPaperAvailability(paper_id, inst_id,div_id,sub_id);
+	}
+	
 	public boolean deleteQuestionPaper(int div_id,int paper_id) {
 		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
 		File file = new File(questionPaperStorageURL+File.separator+div_id+File.separator+paper_id);
@@ -338,7 +344,7 @@ public class QuestionPaperPatternTransaction {
 		return questionPaperDB.deleteQuestionPaperRelatedToClass(inst_id, div_id);
 	}
 	
-	public boolean saveQuestionPaper(QuestionPaperFileObject fileObject,int userID,int subject) {
+	public boolean saveQuestionPaper(QuestionPaperFileObject fileObject,int userID,int subject,String compSubjectIds) {
 		boolean success = false;
 		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
 		if(questionPaperDB.verifyPaperName(fileObject.getClass_id(), inst_id, fileObject.getPaper_description())){
@@ -352,6 +358,7 @@ public class QuestionPaperPatternTransaction {
 		questionPaper.setCreated_by(userID);
 		questionPaper.setCreated_dt(new Date(new java.util.Date().getTime()));
 		questionPaper.setSub_id(subject);
+		questionPaper.setCompSubjectIds(compSubjectIds);
 		int paper_id =questionPaperDB.save(questionPaper);
 		fileObject.setPaper_id(paper_id);
 		if(paper_id !=-1 ){
@@ -364,7 +371,7 @@ public class QuestionPaperPatternTransaction {
 		return success;
 	}
 	
-	public boolean updateQuestionPaper(QuestionPaperFileObject fileObject,int userID) {
+	public boolean updateQuestionPaper(QuestionPaperFileObject fileObject,int userID,String compSubjectIds) {
 		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
 		if(questionPaperDB.verifyUpdatePaperName(fileObject.getClass_id(), inst_id, fileObject.getPaper_description(),fileObject.getPaper_id())){
 			return false;
@@ -377,6 +384,7 @@ public class QuestionPaperPatternTransaction {
 		questionPaper.setModified_by(userID);
 		questionPaper.setModified_dt(new Date(new java.util.Date().getTime()));
 		questionPaper.setPaper_id(fileObject.getPaper_id());
+		questionPaper.setCompSubjectIds(compSubjectIds);
 		questionPaperDB.updateQuestionPaper(questionPaper);
 		fileObject.setInst_id(inst_id);
 		String filePath = questionPaperStorageURL+File.separator+fileObject.getClass_id()+File.separator+fileObject.getPaper_id();
@@ -385,7 +393,7 @@ public class QuestionPaperPatternTransaction {
 		return true;
 	}
 	
-	public QuestionPaperEditFileObject getQuestionPaper(int div_id,int paper_id) {
+	public EditQuestionPaper getQuestionPaper(int div_id,int paper_id) {
 		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
 		File file = new File(questionPaperStorageURL+File.separator+div_id+File.separator+paper_id);
 		QuestionPaperFileObject fileObject = (QuestionPaperFileObject) readObject(file);
@@ -425,9 +433,10 @@ public class QuestionPaperPatternTransaction {
 			}
 			editFileElementList.add(editFileElement);
 		}
-		
+		List<GenerateQuestionPaperServicebean> generateQuestionPaperServicebeans = new ArrayList<GenerateQuestionPaperServicebean>();
 		for (Iterator iterator = editFileElementList.iterator(); iterator
 				.hasNext();) {
+			boolean flag = false;
 			QuestionPaperEditFileElement editFileElement = (QuestionPaperEditFileElement) iterator.next();
 			for (Iterator iterator2 = questionbankList.iterator(); iterator2
 					.hasNext();) {
@@ -442,10 +451,45 @@ public class QuestionPaperPatternTransaction {
 				}
 				
 			}
+			GenerateQuestionPaperServicebean questionPaperServicebean = new GenerateQuestionPaperServicebean();
+			questionPaperServicebean.setMarks(editFileElement.getItem_marks());
+			questionPaperServicebean.setQuestion_type(editFileElement.getQuestion_type());
+			questionPaperServicebean.setSubject_id(editFileElement.getSubject_id());
+			if(editFileElement.getQuestion_topic() != null && !"".equals(editFileElement.getQuestion_topic())){
+			questionPaperServicebean.setTopic_id(Integer.parseInt(editFileElement.getQuestion_topic()));
+			}
+			for (Iterator innerIterator = generateQuestionPaperServicebeans
+					.iterator(); innerIterator.hasNext();) {
+				GenerateQuestionPaperServicebean generateQuestionPaperServicebean = (GenerateQuestionPaperServicebean) innerIterator
+						.next();
+				if(generateQuestionPaperServicebean.getSubject_id() == editFileElement.getSubject_id() 
+						&& generateQuestionPaperServicebean.getTopic_id() == Integer.parseInt(editFileElement.getQuestion_topic())
+						&& generateQuestionPaperServicebean.getQuestion_type().equals(editFileElement.getQuestion_type()) 
+						&& generateQuestionPaperServicebean.getMarks() == editFileElement.getItem_marks()){
+					List<Integer> Ids = new ArrayList<Integer>();
+					Ids =  generateQuestionPaperServicebean.getQuestion_ids();
+					Ids.add(editFileElement.getQues_no());
+					generateQuestionPaperServicebean.setCount(generateQuestionPaperServicebean.getCount()+1);
+					generateQuestionPaperServicebean.setQuestion_ids(Ids);
+					flag = true;
+					break;
+				}
+				
+			}
+			if(flag == false){
+			List<Integer> Ids = new ArrayList<Integer>();
+			Ids.add(editFileElement.getQues_no());
+			questionPaperServicebean.setQuestion_ids(Ids);
+			questionPaperServicebean.setCount(1);
+			generateQuestionPaperServicebeans.add(questionPaperServicebean);
+			}
 			
 		}
 		editFileObject.setQuestionPaperFileElementList(editFileElementList);
-		return editFileObject;
+		EditQuestionPaper editQuestionPaper = new EditQuestionPaper();
+		editQuestionPaper.setFileObject(editFileObject);
+		editQuestionPaper.setGenerateQuestionPaperServicebeanList(generateQuestionPaperServicebeans);
+		return editQuestionPaper;
 	}
 	
 	public OnlineExamPaper getOnlineQuestionPaper(int div_id,int paper_id) {

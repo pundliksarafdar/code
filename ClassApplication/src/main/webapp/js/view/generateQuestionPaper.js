@@ -297,6 +297,13 @@ $(document).ready(function(){
 	});
 	
 	$(SAVE_QUESTION_PAPER).on("click",function(){
+		var compSubjectIds = [];
+		for(var i = 0 ; i<$(".selectSubject").length ; i++){
+			if(jQuery.inArray($($(".selectSubject")[i]).val(),compSubjectIds) == -1){
+			compSubjectIds.push($($(".selectSubject")[i]).val())
+			}
+		}
+		compSubjectIds = compSubjectIds.join(",");
 		var questionPaperData = {};
 		$.each($(QUESTION),function(key,val){
 			questionPaperData[$(val).closest('[item_id]').attr('item_id')] = $(val).data(QUESTION_ID);
@@ -313,7 +320,7 @@ $(document).ready(function(){
 		var desc = $(QUESTION_PAPER_DESC).val();
 		if(desc && desc.trim().length!==0){
 			questionPaperData.desc = desc;
-			rest.post("rest/classownerservice/saveQuestionPaper/"+patternId+"/"+questionPaperName+"/"+division+"/"+subject,handlers,JSON.stringify(questionPaperData),true);	
+			rest.post("rest/classownerservice/saveQuestionPaper/"+patternId+"/"+questionPaperName+"/"+division+"/"+subject+"/"+compSubjectIds,handlers,JSON.stringify(questionPaperData),true);	
 		}else{
 			$("#saveQuestionPaperName").focus();
 		}

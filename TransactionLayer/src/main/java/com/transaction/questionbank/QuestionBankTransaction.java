@@ -187,7 +187,7 @@ public class QuestionBankTransaction {
 		
 		public boolean deleteQuestionrelatedtoSubject(int inst_id,int sub_id) {
 			QuestionbankDB db=new QuestionbankDB();
-			return db.deleteQuestionrelatedtosubject(sub_id, inst_id);
+			return db.deleteQuestionrelatedtosubject(inst_id, sub_id);
 	}
 		
 		public boolean updateQuestionrelatedtoTopic(int inst_id,int sub_id,int div_id,int topic_id) {
