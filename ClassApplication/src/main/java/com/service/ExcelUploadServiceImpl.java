@@ -1,6 +1,8 @@
 package com.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -8,6 +10,10 @@ import java.util.Set;
  
 
 
+
+
+
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -19,6 +25,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.datalayer.exam.MCQuestionPaper;
 import com.datalayer.exam.Question;
@@ -98,7 +105,7 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 	        ArrayList<String> addedQuestionResponseList=new ArrayList<String>();
 	        addedQuestionResponseList.add(response);
 	        invalidQuestionResponseMap.put("addedQuestionsResponse",addedQuestionResponseList);
-			return Response.ok(invalidQuestionResponseMap).build();
+	        return Response.status(Status.OK).entity(invalidQuestionResponseMap).build();
 	    }    
 		
 		@POST
@@ -153,7 +160,8 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 		        ArrayList<String> addedQuestionResponseList=new ArrayList<String>();
 		        addedQuestionResponseList.add(response);
 		        invalidQuestionResponseMap.put("addedQuestionsResponse",addedQuestionResponseList);
-				return Response.ok(invalidQuestionResponseMap).build();
+				//return Response.ok(invalidQuestionResponseMap).build();
+				return Response.status(Status.OK).entity(invalidQuestionResponseMap).build();
 	    }    
 		
 				@POST
@@ -188,7 +196,7 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 						addedStudentResponseList.add(response);
 					}     
 				       
-				        invalidStudentResponseMap.put("addedStudentsResponse",addedStudentResponseList);
-					return Response.ok(invalidStudentResponseMap).build();
+				        invalidStudentResponseMap.put("addedStudentsResponse",addedStudentResponseList);												
+					return Response.status(Status.OK).entity(invalidStudentResponseMap).build();
 			    }
 }

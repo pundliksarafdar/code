@@ -170,7 +170,24 @@ var wayOfAddition="";
 					
 					var handlersSuccess = {};
 					handlersSuccess.success = function(successResp){
-						console.log("Success",successResp);
+						
+						var errorResponse=successResp.ERROR;												
+						if(errorResponse!=null && !errorResponse==""){
+							var content="";
+							for(var i=0; i<errorResponse.length; i++){
+								content=content+"<tr>";
+								var errorMessages=errorResponse[i].split("#");																
+								content=content+"<td>"+errorMessages[0]+"</td><td>";
+									for(var j=1;j<errorMessages.length;j++){										
+										content=content+errorMessages[j]+"<br>";									
+									}
+								content="</td>"+content+"</tr>";
+							}							
+							var table='<table><tr><th>Row number</th><th>Messages</th></tr>'+content+'</table>';
+							$("#errorMSGDiv").append(table);
+							$($("#errorMSGDiv").find("table")).DataTable();
+						}
+						
 					}
 					rest.post("rest/files/upload/student/xls/", handlersSuccess,
 							studentExcelUploadBean, false);
@@ -552,6 +569,7 @@ var wayOfAddition="";
 			</div>	
  		</div>
 </div>
+<div id="errorMSGDiv"></div>
 <div class="container studentform" style="padding-top: 2%;border: 2px solid;border-color: #1FC0C0;margin-top: 2%;border-radius: 5%;display: none;">
 <div class="row">
 <div class="col-md-4 alert alert-success" style="padding: 0px;margin-left: 5%;display: none;" id="addsuccess"><span>Student Added Successfully!!</span></div>
