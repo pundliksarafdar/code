@@ -142,7 +142,7 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 		        	
 		        }else{
 		        	if(responseList.size()==0){
-		        		response="Successfully added all questions i.e. "+listOfQuestions.size()+" questions";
+		        		 response = "Successfully added " + listOfQuestions.size() + " questions";
 		        	}else{
 		        		response="Successfully added "+(listOfQuestions.size()-responseList.size())+" questions. Unable to add "+responseList.size()+" questions. Correct entry for question number:";
 		        		String questionnumberstr="";	        		
@@ -157,46 +157,45 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 		        	}
 		        }
 		        
-		        ArrayList<String> addedQuestionResponseList=new ArrayList<String>();
+		        ArrayList<String> addedQuestionResponseList = new ArrayList<String>();
 		        addedQuestionResponseList.add(response);
-		        invalidQuestionResponseMap.put("addedQuestionsResponse",addedQuestionResponseList);
-				//return Response.ok(invalidQuestionResponseMap).build();
-				return Response.status(Status.OK).entity(invalidQuestionResponseMap).build();
+		        invalidQuestionResponseMap.put("addedQuestionsResponse", addedQuestionResponseList);
+		        return Response.status((Response.Status)Response.Status.OK).entity(invalidQuestionResponseMap).build();
 	    }    
 		
 				@POST
 			    @Path("/upload/student/xls/")
 				@Produces(MediaType.APPLICATION_JSON)
 				@Consumes(MediaType.APPLICATION_JSON)
-			    public Response uploadStudentExcelFile(StudentExcelUploadBean studentFileBean) 
-			 	{
-					System.out.println("Start uploadStudentExcelFile:");
-					String response="";
-					int regId=getRegId();
-					HashMap<String,ArrayList<String>> invalidStudentResponseMap=null;
-					
-					StudentExcelData studentData= new StudentExcelData(studentFileBean.getFileName());
-					System.out.println("Loading data..");
-					studentData.loadStudents(regId, studentFileBean.getDivId(), studentFileBean.getBatchId()[0]);
-					System.out.println("Loading completed..\n Processing the data..");
-					studentData.processData(regId, studentFileBean.getDivId(), studentFileBean.getBatchId()[0]);
-					System.out.println("Processing completed..");
-					invalidStudentResponseMap=studentData.getInvalidStudentResponseMap();
-					response="Students added successfully";
-					Set<Entry<Integer, Boolean>> entrySet=studentData.getSuccessStudentMap().entrySet();
-					
-					ArrayList<String> addedStudentResponseList=new ArrayList<String>();
-			        
-					for(Entry<Integer, Boolean> entry : entrySet){
-						if(entry.getValue()){
-							response="Student with student ID="+entry.getKey()+" is added successfully";
-						}else{
-							response="Unable to add student with student ID="+entry.getKey();
-						}
-						addedStudentResponseList.add(response);
-					}     
-				       
-				        invalidStudentResponseMap.put("addedStudentsResponse",addedStudentResponseList);												
-					return Response.status(Status.OK).entity(invalidStudentResponseMap).build();
+				public Response uploadStudentExcelFile(StudentExcelUploadBean studentFileBean) {
+			        System.out.println("Start uploadStudentExcelFile:");
+			        String response = "";
+			        int regId = this.getRegId();
+			        HashMap<String, ArrayList<String>> invalidStudentResponseMap = null;
+			        StudentExcelData studentData = new StudentExcelData(studentFileBean.getFileName());
+			        System.out.println("Loading data..");
+			        studentData.loadStudents(regId, studentFileBean.getDivId(), studentFileBean.getBatchId()[0]);
+			        System.out.println("Loading completed..\n Processing the data..");
+			        studentData.processData(regId, studentFileBean.getDivId(), studentFileBean.getBatchId()[0]);
+			        System.out.println("Processing completed..");
+			        invalidStudentResponseMap = studentData.getInvalidStudentResponseMap();
+			        response = "Students added successfully";
+			        Set<Entry<Integer, Boolean>>  entrySet = studentData.getSuccessStudentMap().entrySet();
+			        ArrayList<String> addedStudentResponseList = new ArrayList<String>();
+			        int successCount = 0;
+			        for (Entry<Integer, Boolean> entry : entrySet) {
+			            if (entry.getValue()) {
+			                response = "Student with student ID=" + entry.getKey() + " is added successfully";
+			                ++successCount;
+			            } else {
+			                response = "Unable to add student with student ID=" + entry.getKey();
+			            }
+			            addedStudentResponseList.add(response);
+			        }
+			        ArrayList<String> suuccessCountList = new ArrayList<String>();
+			        suuccessCountList.add("" + successCount + " students added successfully.");
+			        invalidStudentResponseMap.put("SUCCESS", suuccessCountList);
+			        invalidStudentResponseMap.put("addedStudentsResponse", addedStudentResponseList);
+			        return Response.status((Response.Status)Response.Status.OK).entity((Object)invalidStudentResponseMap).build();
 			    }
 }
