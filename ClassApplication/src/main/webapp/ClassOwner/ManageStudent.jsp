@@ -165,8 +165,9 @@ var wayOfAddition="";
 			$(".studentInfoManually").hide();
 			$(".studentInfobyID").hide();
 			$("#countDiv").empty();
-			$('errorMSGDiv').empty();
-			$('errorMSGDiv').show();
+			$('#errorMSGDiv').empty();
+			$('#errorMSGDiv').show();
+			$("#countDiv").show();
 			var handler = {};
 			handler.success = function(e){				
 				var uri = "rest/classownerservice/addExcelFile/"+e.fileid;
@@ -588,12 +589,13 @@ var wayOfAddition="";
  		</div>
 </div>
 <div class="row">
-<div class="col-md-3"></div>
-<div class="col-md-8" id="countDiv"></div>
+<div class="col-md-5"></div>
+<div class="col-md-6" id="countDiv"></div>
 </div>
 
 <div class="row">
-<div id="errorMSGDiv"></div>
+<div class="col-md-3"></div>
+<div class="col-md-6" id="errorMSGDiv"></div>
 </div>
 
 <div class="container studentform" style="padding-top: 2%;border: 2px solid;border-color: #1FC0C0;margin-top: 2%;border-radius: 5%;display: none;">

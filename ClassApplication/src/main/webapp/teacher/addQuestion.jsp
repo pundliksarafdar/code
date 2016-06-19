@@ -398,13 +398,15 @@ padding-top: 2px;
 			</div>	
  		</div>
  		<div class="row">
-			<div class="col-md-3"></div>
-			<div class="col-md-8" id="countDiv"></div>
+			<div class="col-md-5"></div>
+			<div class="col-md-6" id="countDiv"></div>
 		</div>
-			
+
 		<div class="row">
-			<div id="errorMSGDiv"></div>
-		</div> 		
+			<div class="col-md-3"></div>
+			<div class="col-md-6" id="errorMSGDiv"></div>
+		</div>	
+		
 		<div class="row">
 			
 		</div>
