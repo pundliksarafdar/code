@@ -16,37 +16,81 @@ padding-top: 2px;
 		</style>
 	<body>
 	<script>
+	var teacherSubjectArray = [];
+	var divisionTempData = {};
+	divisionTempData.id = "-1";
+	divisionTempData.text = "Select Class";
+	var subjectTempData = {};
+	subjectTempData.id = "-1";
+	subjectTempData.text = "Select Subject";
+	var topicTempData = {};
+	topicTempData.id = "-1";
+	topicTempData.text = "Select Topic";
 	$(document).ready(function(){
+		$("#instituteSelect").change(function(){
+			var divisionArray = [];
+			var subjectArray = [];
+			var topicArray = [];
+			divisionArray.push(divisionTempData);
+			subjectArray.push(subjectTempData);
+			topicArray.push(topicTempData);
+			$("#divisionSelect").empty();
+			$("#subjectSelect").empty();
+			$("#topicSelect").empty();
+			 $("#divisionSelect").select2({data:divisionArray});
+			 $("#subjectSelect").select2({data:subjectArray});
+			 $("#topicSelect").select2({data:topicArray});
+			var inst_id = $(this).val();
+			if(inst_id != "-1"){
+			$("#instituteSelectError").html("");
+			var handler = {};
+			handler.success = function(e){
+			console.log("Success",e);
+			var divisionArray = [];
+	 	 $.each(e.divisionList,function(key,val){
+				var data = {};
+				data.id = val.divId;
+				data.text = val.divisionName+" "+val.stream;
+				divisionArray.push(data);
+			});
+	 		teacherSubjectArray = e.subjectList;
+		    $("#divisionSelect").select2({data:divisionArray,placeholder:"Type Topic Name"});
+			}
+			handler.error = function(e){console.log("Error",e)};
+			rest.get("rest/teacher/getDivisionAndSubjects/"+inst_id,handler);
+			}
+		});
+		
 		$("#subjectiveQuestion").addExpresssion();
-		$("#objectiveQuestion").addExpresssion();
-		$("#paragraph").addExpresssion();
+		
 		if($("#quesstatus").val() == "success"){
 			$.notify({message: "Question successfuly added"},{type: 'success'});
-			$("#classownerUploadexamSubjectNameSelect").prop("disabled",false);
-			$("#classownerUploadQuestionTopicSelect").prop("disabled",false);
+			$("#subjectSelect").prop("disabled",false);
+			$("#topicSelect").prop("disabled",false);
 			if(!$("#commonSelectForm").find("#topicID").val() == "-1" && !$("#commonSelectForm").find("#topicID").val() == "0"){
-			$("#classownerUploadQuestionTopicSelect").select2().val($("#commonSelectForm").find("#topicID").val()).change();;
+			$("#topicSelect").select2().val($("#commonSelectForm").find("#topicID").val()).change();;
 			}else if($("#commonSelectForm").find("#topicID").val() == "0"){
-				$("#classownerUploadQuestionTopicSelect").empty();
-				 $("#classownerUploadQuestionTopicSelect").select2({data:"",placeholder:"Topic Not Found"});
+				$("#topicSelect").empty();
+				 $("#topicSelect").select2({data:"",placeholder:"Topic Not Found"});
 			}else {
-				$("#classownerUploadQuestionTopicSelect").select2();
+				$("#topicSelect").select2();
 			}
-			$("#classownerUploadexamSubjectNameSelect").select2().val($("#commonSelectForm").find("#subject").val()).change();;
-			$("#classownerUploadexamDivisionName").select2().val($("#commonSelectForm").find("#division").val()).change();
+			$("#subjectSelect").select2().val($("#commonSelectForm").find("#subject").val()).change();;
+			$("#divisionSelect").select2().val($("#commonSelectForm").find("#division").val()).change();
 		}
-		$("#classownerUploadexamDivisionName").select2();
+		
+		$("#divisionSelect").select2();
+		
 		$("#classownerQuestionTypeSelect").change(function(){
-			var quesType = $("#classownerQuestionTypeSelect").val();			
+			var quesType = $("#classownerQuestionTypeSelect").val();
 			var subId=$("#classownerUploadexamSubjectNameSelect").val();
-			
-			if(subId!="-1" && quesType!="-1"){
-			 	$("#uploadQuestionPaperBtn").removeAttr('disabled');
-			 	$("#uploadQuestionPaperBtn").empty();
-			}else{
-				$("#uploadQuestionPaperBtn").prop("disabled",true);
-			}
-
+						
+				if(subId!="-1" && quesType!="-1"){
+					$("#uploadQuestionPaperBtn").removeAttr('disabled');
+					$("#uploadQuestionPaperBtn").empty();
+				}else{
+					$("#uploadQuestionPaperBtn").prop("disabled",true);
+				}
 			$("#MCQDiv").hide();
 			$("#subjectiveDiv").hide();
 			$("#paragraphDiv").hide();
@@ -58,139 +102,141 @@ padding-top: 2px;
 				$("#paragraphDiv").show();
 			}
 		});
+		
 		$("#uploadQuestionPaperBtn").on("click",function(e){
-			var handler = {};
-			handler.success = function(e){				
-				var uri = "rest/classownerservice/addExcelFile/"+e.fileid;
-				var handlers = {};
-				handlers.success = function(e){
-					var quesType = $("#classownerQuestionTypeSelect").val();
-					var divisionID = $("#classownerUploadexamDivisionName").val();
-					var subjectID = $("#classownerUploadexamSubjectNameSelect").val();
-					var QuestionExcelUploadBean= {};
-					QuestionExcelUploadBean.sub_id=subjectID;
-					QuestionExcelUploadBean.div_id=divisionID;
-					QuestionExcelUploadBean.ques_type=quesType;
-					QuestionExcelUploadBean.fileName=e.fileid;
-					var questionExcelUploadBean = JSON.stringify(QuestionExcelUploadBean);
-					var handlersSuccess = {};
-					rest.post("rest/files/upload/xls/", handlersSuccess,
-							questionExcelUploadBean, false);
-					handlersSuccess.success = function(successResp){
-						console.log("Success",successResp);
+			$("#countDiv").empty();
+			$('#errorMSGDiv').empty();
+			$('#errorMSGDiv').show();
+						var handler = {};
+						handler.success = function(e){				
+							var uri = "rest/classownerservice/addExcelFile/"+e.fileid;
+							var handlers = {};
+							handlers.success = function(e){
+							var quesType = $("#classownerQuestionTypeSelect").val();
+								var divisionID = $("#divisionSelect").val();
+								var subjectID = $("#subjectSelect").val();
+							var inst_id = $("#instituteSelect").val();
+								var QuestionExcelUploadBean= {};
+								QuestionExcelUploadBean.sub_id=subjectID;
+								QuestionExcelUploadBean.div_id=divisionID;
+								QuestionExcelUploadBean.ques_type=quesType;
+								QuestionExcelUploadBean.fileName=e.fileid;
+								QuestionExcelUploadBean.inst_id=inst_id;
+								var questionExcelUploadBean = JSON.stringify(QuestionExcelUploadBean);
+							var handlersSuccess = {};
+							handlersSuccess.success = function(successResp){
+								$("#countDiv").append("<h3>"+successResp.addedQuestionsResponse[0]+"</h3>");
+								var errorResponse=successResp.ERROR;												
+								if(errorResponse!=null && !errorResponse==""){
+									var content="";
+									for(var i=0; i<errorResponse.length; i++){
+										content=content+"<tr>";
+										var errorMessages=errorResponse[i].split("#");																
+										content=content+"<td>"+errorMessages[0]+"</td><td>";
+											for(var j=1;j<errorMessages.length;j++){										
+												content=content+errorMessages[j]+"<br>";									
+											}
+										content="</td>"+content+"</tr>";
+									}							
+									var table='<table class="table"><thead><tr><th>Row number</th><th>Messages</th></tr></thead><tbody>'+content+'</tbody></table>';
+									$("#errorMSGDiv").append(table);
+									$($("#errorMSGDiv").find("table")).DataTable({
+										paging : false,
+										scrollY:"200px"
+									});
+								}
+								
+							}
+							rest.post("rest/teacher/upload/xls/", handlersSuccess,
+										questionExcelUploadBean, false);
+							
+							console.log("Success",e);
+								}
+						handlers.error = function(e){console.log("Error",e)}
+							rest.post(uri,handlers);
 					}
-					console.log("Success",e);
-					}
-				handlers.error = function(e){console.log("Error",e)}
-				rest.post(uri,handlers);
-			}
-			handler.error = function(){};
-			
-			var submitDataFile = $(".excelUpload")[0];
-			var file=document.getElementById("excelUploadBrowseID").value;
-			var flagUpload=true;
-			if(file==""){				
-				$("#browseExcelErrorSpan").html("Please select the file!");
-				flagUpload=false;
-			}else{
-				$("#browseExcelErrorSpan").html("");
-				flagUpload=true;
-			}
-			if(flagUpload==true){
-				rest.uploadExcelFile(submitDataFile ,handler,false);
-			}
+				handler.error = function(){};
 						
-		});
-		$("#classownerUploadexamDivisionName").on("change",function(e){
-			//$(SUBJECT_DROPDOWN).hide();
-			//$(BATCH_DROPDOWN).hide();
-			//$(ADD_BUTTON).hide();
-			if($("#classownerUploadexamSubjectNameSelect").val()!= null ){
-				$("#classownerUploadexamSubjectNameSelect").select2().val("-1").change();
-				$("#classownerUploadexamSubjectNameSelect").find('option:gt(0)').remove();
-				}
-				if($("#classownerUploadQuestionTopicSelect").val()!= null ){
-				$("#classownerUploadQuestionTopicSelect").select2().val("-1").change();
-				$("#classownerUploadQuestionTopicSelect").find('option:gt(0)').remove();
-				}
+						var submitDataFile = $(".excelUpload")[0];
+						var file=document.getElementById("excelUploadBrowseID").value;
+						var flagUpload=true;
+					if(file==""){				
+							$("#browseExcelErrorSpan").html("Please select the file!");
+							flagUpload=false;
+						}else{
+							$("#browseExcelErrorSpan").html("");
+						flagUpload=true;
+						}
+						if(flagUpload==true){
+							rest.uploadExcelFile(submitDataFile ,handler,false);
+						}
+									
+				});
+		
+		$("#divisionSelect").on("change",function(e){
+			var subjectArray = [];
+			var topicArray = [];
+			subjectArray.push(subjectTempData);
+			topicArray.push(topicTempData);
+			$("#subjectSelect").empty();
+			$("#topicSelect").empty();
+			 $("#subjectSelect").select2({data:subjectArray});
+			 $("#topicSelect").select2({data:topicArray});
 			if($(this).val()!=-1){
+				$("#divisionSelectError").html("");
 				var uploadExam = new UploadExam();
 				uploadExam.getSubjectsInDivision($(this).val());
-			}else{
-				
-				/* $("#classownerUploadexamSubjectNameSelect").prop("disabled",true);
-				$("#classownerUploadQuestionTopicSelect").prop("disabled",true);
-				$("#classownerUploadexamAddExam").prop("disabled",true);*/
-				$("#uploadQuestionPaperBtn").prop("disabled",true); 
-			}
-		});
-		
-		$("#classownerUploadQuestionTopicSelect").change(function(){
-			var topicId=$("#classownerUploadQuestionTopicSelect").val();
-			var quesType = $("#classownerQuestionTypeSelect").val();
-			if(topicId!="-1" && quesType!="-1"){
-			 	$("#uploadQuestionPaperBtn").removeAttr('disabled');
-			 	$("#uploadQuestionPaperBtn").empty();
 			}else{
 				$("#uploadQuestionPaperBtn").prop("disabled",true);
  			}
 		});
 		
-		$("#classownerUploadexamSubjectNameSelect").change(function(){
-			var divisionID = $("#classownerUploadexamDivisionName").val();
-			var subjectID = $("#classownerUploadexamSubjectNameSelect").val();
+		$("#subjectSelect").change(function(){
+			var topicArray = [];
+			topicArray.push(topicTempData);
+			$("#topicSelect").empty();
+			$("#topicSelect").select2({data:topicArray});
+			 
+			var divisionID = $("#divisionSelect").val();
+			var subjectID = $("#subjectSelect").val();
+			var inst_id = $("#instituteSelect").val();
 			var quesType = $("#classownerQuestionTypeSelect").val();
-			if($("#classownerUploadQuestionTopicSelect").val()!= null ){
-				$("#classownerUploadQuestionTopicSelect").select2().val("-1").change();
-				$("#classownerUploadQuestionTopicSelect").find('option:gt(0)').remove();
-				}
+						
 			if(subjectID!="-1" && quesType!="-1"){
 			 	$("#uploadQuestionPaperBtn").removeAttr('disabled');
 			 	$("#uploadQuestionPaperBtn").empty();
 			}else{
 				$("#uploadQuestionPaperBtn").prop("disabled",true);
 			}
-			if($(this).val()!="-1"){
-		$.ajax({
-			   url: "classOwnerServlet",
-			   data: {
-			    	 methodToCall: "getDivisionsTopics",
-			    	 divisionID: divisionID,
-			    	 subID:subjectID
-			   		},
-			   type:"POST",
-			   success:function(data){
-				   $("#classownerUploadQuestionTopicSelect").removeAttr('disabled');
-				   $("#classownerUploadQuestionTopicSelect").empty();
-				   var subjectArray = [];
-				 	var data = JSON.parse(data);
-				 	if(data.status == "success"){
-				 		var tempData = {};
-				 		tempData.id = "-1";
-				 		tempData.text = "Select Topic";
-				 		subjectArray.push(tempData);
-				 	 $.each(data.topicJson,function(key,val){
-							var data = {};
-							data.id = val.topic_id;
-							data.text = val.topic_name;
-							subjectArray.push(data);
-						});
-				 	 
-					    $("#classownerUploadQuestionTopicSelect").select2({data:subjectArray,placeholder:"Type Topic Name"});
-				 	 }else{
-				 		 $("#classownerUploadQuestionTopicSelect").select2({data:"",placeholder:"Topic Not Found"});
-				 	 }
-					    //displaySubjectDropDown(data);
-			   },
-				error:function(){
-			   		modal.launchAlert("Error","Error");
-			   	}
-			   });
-			}else{
-				/* $("#classownerUploadQuestionTopicSelect").prop("disabled",true); */
+			if(subjectID != "-1"){
+			$("#subjectSelectError").html("");
+			var handler = {};
+			handler.success = function(e){console.log("Success",e);
+	 	 $.each(e,function(key,val){
+				var data = {};
+				data.id = val.topic_id;
+				data.text = val.topic_name;
+				topicArray.push(data);
+			});
+	 	 
+		    $("#topicSelect").select2({data:topicArray,placeholder:"Type Topic Name"});
+		    $("#topicSelect").prop("disabled",false);
+			}
+			handler.error = function(e){console.log("Error",e)}
+			rest.get("rest/teacher/getDivisionsTopics/"+inst_id+"/"+divisionID+"/"+subjectID,handler);
 			}
 		});
 		
+		$("#topicSelect").change(function(){
+				var topicId=$("#topicSelect").val();
+				var quesType = $("#classownerQuestionTypeSelect").val();
+				if(topicId!="-1" && quesType!="-1"){
+				 	$("#uploadQuestionPaperBtn").removeAttr('disabled');
+				 	$("#uploadQuestionPaperBtn").empty();
+				}else{
+					$("#uploadQuestionPaperBtn").prop("disabled",true);
+			 	}
+		});
 		
 	});
 	
@@ -198,40 +244,39 @@ padding-top: 2px;
 	
 	var getSubjectsInDivision = function(division){
 	
-	$.ajax({
-		   url: "classOwnerServlet",
-		   data: {
-		    	 methodToCall: "getSubjectOfDivision",
-		    	 divisionId: division
-		   		},
-		   type:"POST",
-		   success:function(data){
-			   $("#classownerUploadexamSubjectNameSelect").removeAttr('disabled');
-			   $("#classownerUploadexamSubjectNameSelect").empty();
-			   var subjectArray = [];
-			 	var data = JSON.parse(data);
-			 	if(data.status == "success"){
-			 		var tempData = {};
-			 		tempData.id = "-1";
-			 		tempData.text = "Select Subject";
-			 		subjectArray.push(tempData);
-			 	 $.each(data.subjectJson,function(key,val){
-						var data = {};
-						data.id = val.subjectId;
-						data.text = val.subjectName;
-						subjectArray.push(data);
-					});
-			 	 
-				    $("#classownerUploadexamSubjectNameSelect").select2({data:subjectArray,placeholder:"Type Subject Name"});
-			 	 }else{
-			 		 $("#classownerUploadexamSubjectNameSelect").select2({data:"",placeholder:"Subject Not Found"});
-			 	 }
-				    //displaySubjectDropDown(data);
-		   },
-			error:function(){
-		   		modal.launchAlert("Error","Error");
-		   	}
-		   });
+		var inst_id = $("#instituteSelect").val();
+		var handler = {};
+		handler.success = function(e){console.log("Success",e);
+		$("#subjectSelect").empty();
+		var subjectArray = [];
+		var tempData = {};
+		if(teacherSubjectArray.length > 0){
+ 		tempData.id = "-1";
+ 		tempData.text = "Select Subject";
+ 		subjectArray.push(tempData);
+ 	 $.each(e,function(key,val){
+ 		$.each(teacherSubjectArray,function(innerKey,innerVal){
+ 			if(val.subjectId == innerVal.subjectId){
+			var data = {};
+			data.id = val.subjectId;
+			data.text = val.subjectName;
+			subjectArray.push(data);
+ 			return false;
+ 			}
+ 		});
+		});
+ 	 	if(subjectArray.length > 1){
+	    $("#subjectSelect").select2({data:subjectArray,placeholder:"Type Subject Name"});
+	    $("#subjectSelect").prop("disabled",false);
+ 	 	}else{
+ 	 		subjectArray = [];
+ 	 		$("#subjectSelect").select2({data:subjectArray,placeholder:"Subjects not available"});
+ 		    $("#subjectSelect").prop("disabled",false);
+ 	 	}
+		}
+		}
+		handler.error = function(e){console.log("Error",e)}
+		rest.get("rest/teacher/getSubjectOfDivision/"+inst_id+"/"+division,handler);
 	}
 	this.getSubjectsInDivision = getSubjectsInDivision;
 	}
@@ -279,9 +324,10 @@ padding-top: 2px;
 	}
 	
 	</script>
-	<jsp:include page="../ClassOwner/QuestionBankHeader.jsp" >
-		<jsp:param value="active" name="addquestion"/>
-	</jsp:include>
+	<ul class="nav nav-tabs" style="border-radius: 10px">
+		<li class="active"><a href="#addnotestab" data-toggle = "tab">Add question</a></li>
+		<li><a href="searchTeacherQuestion">Search/Edit question</a></li>
+	</ul>
 	<form method="post" action="<c:out value="${forwardAction}" ></c:out>" id="commonSelectForm">
 	<div class="container bs-callout" style="margin-bottom: 5px;background-color: #eee">
 		
@@ -297,33 +343,32 @@ padding-top: 2px;
 		</div>
 		<div class="row">
 			<div class="col-md-3">
-				<select name="division" id="classownerUploadexamDivisionName" class="form-control" width="100px">
-					<option value="-1">Select Class</option>
-					<c:forEach items="${requestScope.divisions}" var="division">
-						<option value="<c:out value="${division.divId}"></c:out>"><c:out value="${division.divisionName}"></c:out>&nbsp;<c:out value="${division.stream}"></c:out></option>
+				<select name="instituteSelect" id="instituteSelect" class="form-control" width="100px">
+					<option value="-1">Select Institute</option>
+					<c:forEach items="${requestScope.registerBeanList}" var="institute">
+						<option value="<c:out value="${institute.regId}"></c:out>"><c:out value="${institute.className}"></c:out></option>
 					</c:forEach>							
 				</select>
-				<span id="divisionError" class="validation-message"></span>
+				<span id="instituteSelectError" class="validation-message"></span>
 			</div>
-			<div class="col-md-3 subjectDropDown">
-				<select name="subject" id="classownerUploadexamSubjectNameSelect" class="form-control" width="100px">
+			<div class="col-md-3">
+				<select name="division" id="divisionSelect" class="form-control" width="100px">
+					<option value="-1">Select Class</option>							
+				</select>
+				<span id="divisionSelectError" class="validation-message"></span>
+			</div>
+			<div class="col-md-2 subjectDropDown">
+				<select name="subject" id="subjectSelect" class="form-control" width="100px">
 					<option value="-1">Select Subject</option>
-					<c:forEach items="${requestScope.subjects}" var="subject">
-						<option value="<c:out value="${subject.subjectId}"></c:out>"><c:out value="${subject.subjectName}"></c:out></option>
-					</c:forEach>
 				</select>
-				<span id="subjectError" class="validation-message"></span>
+				<span id="subjectSelectError" class="validation-message"></span>
 			</div>
-			<div class="col-md-3 topicDropDown">
-				<select name="subject" id="classownerUploadQuestionTopicSelect" class="form-control" width="100px" >
+			<div class="col-md-2 topicDropDown">
+				<select name="topic" id="topicSelect" class="form-control" width="100px">
 					<option value="-1">Select Topic</option>
-					<c:forEach items="${requestScope.topics}" var="topic">
-						<option value="<c:out value="${topic.topic_id}"></c:out>"><c:out value="${topic.topic_name}"></c:out></option>
-					</c:forEach>
 				</select>
-				<span id="topicError" class="validation-message"></span>
 			</div>
-			<div class="col-md-3 questionTypeDropDown">
+			<div class="col-md-2 questionTypeDropDown">
 				<select name="subject" id="classownerQuestionTypeSelect" class="form-control" width="100px">
 					<option value="-1">Select Question Type</option>
 					<option value="1">Subjective</option>
@@ -342,16 +387,27 @@ padding-top: 2px;
 			<div class="col-md-3" id="browseExcelDiv">
 			<span class="btn fileinput-button">
 							<i class="glyphicon glyphicon-folder-open"></i> 
-							<span>Browse Your Question Paper Excel</span>
+						<span>Browse Your Question Paper Excel</span>
 							<input type="file" id="excelUploadBrowseID" class="excelUpload">							
 						</span>
 						<span class="error" id="browseExcelErrorSpan">
 						</span>
 			</div>	
 			<div class="col-md-3">
-				<input type="button" id="uploadQuestionPaperBtn" value="Upload" disabled/>
+				<input type="button" id="uploadQuestionPaperBtn" value="Upload Excel" disabled/>
 			</div>	
  		</div>
+ 		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-8" id="countDiv"></div>
+		</div>
+			
+		<div class="row">
+			<div id="errorMSGDiv"></div>
+		</div> 		
+		<div class="row">
+			
+		</div>
 	</div>
 	</form>
 	<jsp:include page="addSubjectiveQuestion.jsp"></jsp:include>

@@ -44,7 +44,9 @@ public class MCQuestionPaper {
 	public MCQuestionPaper(String fileName) {
 		this.fileName = fileName;
 		this.questions = new ArrayList<Question>();
+		ArrayList<String> listOfErrors=new ArrayList<>();
 		this.invalidQuestionResponseMap= new HashMap<String,ArrayList<String>>();
+		this.invalidQuestionResponseMap.put("ERROR", listOfErrors);
 	}
 
 	/**
@@ -91,7 +93,7 @@ public class MCQuestionPaper {
 			ArrayList<String> listOfErrors= new ArrayList<String>();
 			if(null==row.getCell(1) || null==row.getCell(2) ||null==row.getCell(13)){
 				listOfErrors.add("Required columns values are missig for row "+row.getRowNum()+".");
-				invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
+				//invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
 			}
 			else{
 			
@@ -184,7 +186,7 @@ public class MCQuestionPaper {
 								}
 							}
 							if(isValidCorrectOptions && isMinimumTwoOptionsSet){
-								System.out.println(question.toString());
+							//	System.out.println(question.toString());
 								questions.add(question);
 							}
 							
@@ -192,7 +194,7 @@ public class MCQuestionPaper {
 								listOfErrors.add("Atleast 2 options are compulsory. Please set atleast two valid options first.");
 							}
 						}
-						invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
+						//invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
 					}else{
 						//ArrayList<String> listOfErrors= new ArrayList<String>();
 						
@@ -241,26 +243,33 @@ public class MCQuestionPaper {
 						}
 						if(row.getCell(12).getStringCellValue().length()>100){
 							listOfErrors.add("Option10 text is greater than 100 words. Current length is "+row.getCell(12).getStringCellValue().length());
-						}				
-						invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
+						}	
+						
+						
+						//invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
 						//System.out.println(listOfErrors);
 					}
 				}catch(IllegalStateException e){
 					//ArrayList<String> listOfErrors=new ArrayList<String>();
 					listOfErrors.add(e.getMessage());
-					invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
-					System.out.println(listOfErrors);
+					//invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
+					//System.out.println(listOfErrors);
 				}catch(NullPointerException e){
 					//ArrayList<String> listOfErrors=new ArrayList<String>();
-					listOfErrors.add(e.getMessage());
-					invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
-					System.out.println(listOfErrors);
+					listOfErrors.add("No value defined for some columns. please check your excel sheet.");
+					//invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
+					//System.out.println(listOfErrors);
 				}
+					
 			}
-			
+			String errorResponseString=convertToStringResponse(listOfErrors, row.getRowNum());
+			ArrayList<String> resultStringList=invalidQuestionResponseMap.get("ERROR");
+			if(!errorResponseString.equals("")){
+				resultStringList.add(errorResponseString);
+			}
+			invalidQuestionResponseMap.put("ERROR",resultStringList);
 		}
-		System.out.println(invalidQuestionResponseMap);
-		System.out.println("Number of questions:"+questions.size());
+		
 	}
 	
 	public boolean isValidCorrectAnswer(String correctAnswer){
@@ -281,6 +290,25 @@ public class MCQuestionPaper {
 		}		
 		return result;
 	}
+	
+	private String convertToStringResponse(ArrayList<String> listOfErrors, int rownum){
+		String errorResponse="";
+		if(listOfErrors.size()==0){
+			return errorResponse;
+		}
+			if(listOfErrors.size()==1){
+				errorResponse=rownum+"#"+listOfErrors.get(0);
+			}else{
+				errorResponse=rownum+"#";
+				for(String error:listOfErrors){
+					errorResponse=errorResponse.concat(error+"#");
+				}
+				errorResponse=errorResponse.substring(0, errorResponse.length()-1);
+			}
+			System.out.println(errorResponse);
+		return errorResponse;
+	}
+	
 	public static void main(String[] args) {
 		MCQuestionPaper paper= new MCQuestionPaper("E:\\exam1.xls");
 		paper.LoadQuestionPaper();

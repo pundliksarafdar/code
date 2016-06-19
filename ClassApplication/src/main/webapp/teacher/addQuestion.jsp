@@ -104,6 +104,9 @@ padding-top: 2px;
 		});
 		
 		$("#uploadQuestionPaperBtn").on("click",function(e){
+			$("#countDiv").empty();
+			$('#errorMSGDiv').empty();
+			$('#errorMSGDiv').show();
 						var handler = {};
 						handler.success = function(e){				
 							var uri = "rest/classownerservice/addExcelFile/"+e.fileid;
@@ -121,11 +124,32 @@ padding-top: 2px;
 								QuestionExcelUploadBean.inst_id=inst_id;
 								var questionExcelUploadBean = JSON.stringify(QuestionExcelUploadBean);
 							var handlersSuccess = {};
+							handlersSuccess.success = function(successResp){
+								$("#countDiv").append("<h3>"+successResp.addedQuestionsResponse[0]+"</h3>");
+								var errorResponse=successResp.ERROR;												
+								if(errorResponse!=null && !errorResponse==""){
+									var content="";
+									for(var i=0; i<errorResponse.length; i++){
+										content=content+"<tr>";
+										var errorMessages=errorResponse[i].split("#");																
+										content=content+"<td>"+errorMessages[0]+"</td><td>";
+											for(var j=1;j<errorMessages.length;j++){										
+												content=content+errorMessages[j]+"<br>";									
+											}
+										content="</td>"+content+"</tr>";
+									}							
+									var table='<table class="table"><thead><tr><th>Row number</th><th>Messages</th></tr></thead><tbody>'+content+'</tbody></table>';
+									$("#errorMSGDiv").append(table);
+									$($("#errorMSGDiv").find("table")).DataTable({
+										paging : false,
+										scrollY:"200px"
+									});
+								}
+								
+							}
 							rest.post("rest/teacher/upload/xls/", handlersSuccess,
 										questionExcelUploadBean, false);
-							handlersSuccess.success = function(successResp){
-								console.log("Success",successResp);
-							}
+							
 							console.log("Success",e);
 								}
 						handlers.error = function(e){console.log("Error",e)}
@@ -368,11 +392,19 @@ padding-top: 2px;
 						</span>
 						<span class="error" id="browseExcelErrorSpan">
 						</span>
-		</div>	
-			<div class="col-md-3">
-				<input type="button" id="uploadQuestionPaperBtn" value="Upload" disabled/>
 			</div>	
- 		</div>		
+			<div class="col-md-3">
+				<input type="button" id="uploadQuestionPaperBtn" value="Upload Excel" disabled/>
+			</div>	
+ 		</div>
+ 		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-8" id="countDiv"></div>
+		</div>
+			
+		<div class="row">
+			<div id="errorMSGDiv"></div>
+		</div> 		
 		<div class="row">
 			
 		</div>

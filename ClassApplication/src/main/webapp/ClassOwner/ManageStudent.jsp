@@ -91,6 +91,10 @@ var wayOfAddition="";
 			$(".classfloorID").show();
 			$(".studentInfobyID").show();
 			$(".studentInfoManually").hide();
+			$("#errorMSGDiv").hide();
+			$("#errorMSGDiv").empty();
+			$("#countDiv").hide();
+			
 		});
 		
 		$("#manualAddition").click(function(){
@@ -100,6 +104,9 @@ var wayOfAddition="";
 			$(".classfloorID").hide();
 			$(".studentInfoManually").show();
 			$(".studentInfobyID").hide();
+			$("#errorMSGDiv").hide();
+			$("#errorMSGDiv").empty();
+			$("#countDiv").hide();
 		});
 		
 		$("#classfloorID").change(function(){
@@ -152,6 +159,14 @@ var wayOfAddition="";
 		});
 		*/
 		$("#uploadStudentExcelBtn").on("click",function(e){
+			$("#addsuccess").hide();
+			$(".studentform").hide();
+			$(".classfloorID").hide();
+			$(".studentInfoManually").hide();
+			$(".studentInfobyID").hide();
+			$("#countDiv").empty();
+			$('errorMSGDiv').empty();
+			$('errorMSGDiv').show();
 			var handler = {};
 			handler.success = function(e){				
 				var uri = "rest/classownerservice/addExcelFile/"+e.fileid;
@@ -170,7 +185,7 @@ var wayOfAddition="";
 					
 					var handlersSuccess = {};
 					handlersSuccess.success = function(successResp){
-						
+						$("#countDiv").append("<h4>"+successResp.SUCCESS[0]+"</h4>");
 						var errorResponse=successResp.ERROR;												
 						if(errorResponse!=null && !errorResponse==""){
 							var content="";
@@ -183,9 +198,12 @@ var wayOfAddition="";
 									}
 								content="</td>"+content+"</tr>";
 							}							
-							var table='<table><tr><th>Row number</th><th>Messages</th></tr>'+content+'</table>';
+							var table='<table class="table"><thead><tr><th>Row number</th><th>Messages</th></tr></thead><tbody>'+content+'</tbody></table>';
 							$("#errorMSGDiv").append(table);
-							$($("#errorMSGDiv").find("table")).DataTable();
+							$($("#errorMSGDiv").find("table")).DataTable({
+								paging : false,
+								scrollY:"200px"
+							});
 						}
 						
 					}
@@ -565,11 +583,19 @@ var wayOfAddition="";
 						</span>
 			</div>	
 			<div class="col-md-3">
-				<input type="button" id="uploadStudentExcelBtn" value="Upload" disabled/>
+				<input type="button" id="uploadStudentExcelBtn" value="Upload Excel" disabled/>
 			</div>	
  		</div>
 </div>
+<div class="row">
+<div class="col-md-3"></div>
+<div class="col-md-8" id="countDiv"></div>
+</div>
+
+<div class="row">
 <div id="errorMSGDiv"></div>
+</div>
+
 <div class="container studentform" style="padding-top: 2%;border: 2px solid;border-color: #1FC0C0;margin-top: 2%;border-radius: 5%;display: none;">
 <div class="row">
 <div class="col-md-4 alert alert-success" style="padding: 0px;margin-left: 5%;display: none;" id="addsuccess"><span>Student Added Successfully!!</span></div>
@@ -737,4 +763,3 @@ var wayOfAddition="";
 </div>
 </body>
 </html>
-		

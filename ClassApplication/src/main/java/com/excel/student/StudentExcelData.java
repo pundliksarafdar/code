@@ -13,7 +13,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.NumberToTextConverter;
@@ -23,8 +25,6 @@ import com.service.beans.StudentRegisterServiceBean;
 import com.service.beans.Student_Fees;
 import com.transaction.fee.FeesTransaction;
 import com.transaction.register.RegisterTransaction;
-import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 public class StudentExcelData {
 	private String fileName;
@@ -238,7 +238,9 @@ public class StudentExcelData {
 			}
 			String errorResponseString=convertToStringResponse(listOfErrors, row.getRowNum());
 			ArrayList<String> resultStringList=invalidStudentResponseMap.get("ERROR");
-			resultStringList.add(errorResponseString);
+			if(!errorResponseString.equals("")){
+				resultStringList.add(errorResponseString);
+			}
 			invalidStudentResponseMap.put("ERROR",resultStringList);
 			//System.out.println(this.invalidStudentResponseMap);
 		}
@@ -403,31 +405,43 @@ public class StudentExcelData {
 	public void processData(int instId, int divId, int batchId){
 		FeesTransaction feesTransaction = new FeesTransaction();
 		RegisterTransaction registerTransaction = new RegisterTransaction();
-		for (StudentRegisterServiceBean serviceBean : students) {			
-			int student_id = registerTransaction.registerStudentManually(instId,serviceBean.getRegisterBean(), serviceBean.getStudent(),divId,Integer.toString(batchId));
-			for (Iterator iterator = serviceBean.getStudent_FeesList().iterator(); iterator
-					.hasNext();) {
-				Student_Fees student_Fees = (Student_Fees) iterator.next();
-				student_Fees.setStudent_id(student_id);
+		String errorResponseString="Duplicate Entries";
+		for (StudentRegisterServiceBean serviceBean : students) {
+			int student_id = 0;
+				student_id = registerTransaction.registerStudentManually(instId,serviceBean.getRegisterBean(), serviceBean.getStudent(),divId,Integer.toString(batchId));
+				for (Iterator iterator = serviceBean.getStudent_FeesList().iterator(); iterator
+						.hasNext();) {
+					Student_Fees student_Fees = (Student_Fees) iterator.next();
+					student_Fees.setStudent_id(student_id);
+				}
+				
+			if(student_id==0){
+				errorResponseString.concat("#Error occured while adding student with mobile number "+serviceBean.getRegisterBean().getPhone1()+" in databas. Check if student already registered!");
+			}else{
+				boolean status = feesTransaction.saveStudentBatchFees(instId, serviceBean.getStudent_FeesList());
+				this.successStudentMap.put(student_id, status);
 			}
-			boolean status = feesTransaction.saveStudentBatchFees(instId, serviceBean.getStudent_FeesList());
-			this.successStudentMap.put(student_id, status);
+			
+			ArrayList<String> resultStringList=invalidStudentResponseMap.get("ERROR");
+			if(!errorResponseString.equals("Duplicate Entries")){
+				resultStringList.add(errorResponseString);
+			}
+			if(resultStringList.size()>0){
+				invalidStudentResponseMap.put("ERROR",resultStringList);
+			}
 		}
 	}
 	
 	private String convertToStringResponse(ArrayList<String> listOfErrors, int rownum){
 		String errorResponse="";
 		if(listOfErrors.size()==0){
-			errorResponse=rownum+"#Student added successfully without errors.";
+			return errorResponse;
 		}
-		else if(listOfErrors.size()==1){
+			if(listOfErrors.size()==1){
 				errorResponse=rownum+"#"+listOfErrors.get(0);
 			}else{
 				errorResponse=rownum+"#";
 				for(String error:listOfErrors){
-					if(error==null){
-						System.out.println("null "+rownum);
-					}
 					errorResponse=errorResponse.concat(error+"#");
 				}
 				errorResponse=errorResponse.substring(0, errorResponse.length()-1);

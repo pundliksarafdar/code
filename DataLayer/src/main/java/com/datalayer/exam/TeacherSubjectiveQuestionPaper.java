@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 
+
+
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.EncryptedDocumentException;
@@ -35,7 +38,9 @@ public class TeacherSubjectiveQuestionPaper {
 	public TeacherSubjectiveQuestionPaper(String fileName) {
 		this.fileName = fileName;
 		this.questions = new ArrayList<Question>();
-		this.invalidQuestionResponseMap = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> listOfErrors=new ArrayList<>();
+		this.invalidQuestionResponseMap= new HashMap<String,ArrayList<String>>();
+		this.invalidQuestionResponseMap.put("ERROR", listOfErrors);
 	}
 	
 
@@ -96,7 +101,7 @@ public class TeacherSubjectiveQuestionPaper {
 			ArrayList<String> listOfErrors= new ArrayList<String>();
 			if(null==row.getCell(1) || null==row.getCell(2)){
 				listOfErrors.add("Required columns values are missig for row "+row.getRowNum()+".");
-				invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
+				//invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
 			}else{
 				try{
 					if (row.getCell(1).getStringCellValue().length() <= 500
@@ -117,19 +122,25 @@ public class TeacherSubjectiveQuestionPaper {
 								listOfErrors.add("Invalid marks value.");
 							}
 						}
-						invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
+						//invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
 					}
 				} catch(IllegalStateException e){
 					//ArrayList<String> listOfErrors=new ArrayList<String>();
 					listOfErrors.add(e.getMessage());
-					invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
+					//invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
 				}catch(NullPointerException e){
 					//ArrayList<String> listOfErrors=new ArrayList<String>();
-					listOfErrors.add(e.getMessage());
-					invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
-					System.out.println(listOfErrors);
+					listOfErrors.add("No value defined for some columns. please check your excel sheet.");
+					//invalidQuestionResponseMap.put(""+row.getRowNum(),listOfErrors);
+					//System.out.println(listOfErrors);
 				}
 			}
+			String errorResponseString=convertToStringResponse(listOfErrors, row.getRowNum());
+			ArrayList<String> resultStringList=invalidQuestionResponseMap.get("ERROR");
+			if(!errorResponseString.equals("")){
+				resultStringList.add(errorResponseString);
+			}
+			invalidQuestionResponseMap.put("ERROR",resultStringList);
 		}
 		System.out.println("Number of questions:" + questions.size());
 	}
@@ -142,6 +153,23 @@ public class TeacherSubjectiveQuestionPaper {
 		return result;
 	}
 
+	private String convertToStringResponse(ArrayList<String> listOfErrors, int rownum){
+		String errorResponse="";
+		if(listOfErrors.size()==0){
+			return errorResponse;
+		}
+			if(listOfErrors.size()==1){
+				errorResponse=rownum+"#"+listOfErrors.get(0);
+			}else{
+				errorResponse=rownum+"#";
+				for(String error:listOfErrors){
+					errorResponse=errorResponse.concat(error+"#");
+				}
+				errorResponse=errorResponse.substring(0, errorResponse.length()-1);
+			}
+			System.out.println(errorResponse);
+		return errorResponse;
+	}
 	public static void main(String[] args) {
 		TeacherSubjectiveQuestionPaper paper = new TeacherSubjectiveQuestionPaper(
 				"E:\\exam2.xls");
