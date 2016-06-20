@@ -125,9 +125,9 @@ padding-top: 2px;
 								var questionExcelUploadBean = JSON.stringify(QuestionExcelUploadBean);
 							var handlersSuccess = {};
 							handlersSuccess.success = function(successResp){
-								$("#countDiv").append("<h3>"+successResp.addedQuestionsResponse[0]+"</h3>");
+								$("#countDiv").append(successResp.addedQuestionsResponse[0]);
 								var errorResponse=successResp.ERROR;												
-								if(errorResponse!=null && !errorResponse==""){
+								if(errorResponse!=null && !errorResponse=="" && errorResponse.length!=0){
 									var content="";
 									for(var i=0; i<errorResponse.length; i++){
 										content=content+"<tr>";
@@ -398,8 +398,8 @@ padding-top: 2px;
 			</div>	
  		</div>
  		<div class="row">
-			<div class="col-md-5"></div>
-			<div class="col-md-6" id="countDiv"></div>
+			<div class="col-md-4"></div>
+			<div class="col-md-6 control-label" id="countDiv"></div>
 		</div>
 
 		<div class="row">

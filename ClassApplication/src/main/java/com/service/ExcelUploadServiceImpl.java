@@ -138,7 +138,7 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 			 }
 			 List<Integer> responseList=qbTransaction.saveQuestionsInBulk(listOfQuestions, questionFileBean.getQues_type(), questionFileBean.getDiv_id(), questionFileBean.getSub_id(), regId);
 		        if(responseList.size()==listOfQuestions.size()){
-		        	response="Unable to add all Questions. Please verify your input file.";
+		        	response="Unable to add questions.";
 		        	
 		        }else{
 		        	if(responseList.size()==0){
