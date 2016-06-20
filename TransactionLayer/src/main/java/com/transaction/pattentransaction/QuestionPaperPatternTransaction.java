@@ -868,23 +868,19 @@ public class QuestionPaperPatternTransaction {
 		boolean found = false;
 		for(QuestionPaperFileElement node:nodes){
 			if(rootQuestionPaperFileElement.getItem_id().equals(node.getParent_id())){
-				childQuestionPaperFileElements.add(node);
-				found = true;
+				List<QuestionPaperFileElement> childQuestionPaperFileElementsFromRecursion = 
+						getChildQuestionPaperFileElements(node, nodes);
+				if(childQuestionPaperFileElementsFromRecursion.size() == 0){
+					childQuestionPaperFileElements.add(node);
+				}else{
+					childQuestionPaperFileElements.add(node);
+					childQuestionPaperFileElements.addAll(childQuestionPaperFileElementsFromRecursion);
+				}
+				
 			}
-		}
-		if(childQuestionPaperFileElements.size()>0){
-			nodes.removeAll(childQuestionPaperFileElements);
-			List<QuestionPaperFileElement>cQuestionPaperFileElement = new ArrayList<QuestionPaperFileElement>();
-			for(QuestionPaperFileElement childQuestionPaperFileElement:childQuestionPaperFileElements){
-				cQuestionPaperFileElement.addAll(getChildQuestionPaperFileElements(childQuestionPaperFileElement, nodes));
-			}
-			childQuestionPaperFileElements.addAll(cQuestionPaperFileElement);
-			//System.out.println("Child..."+childQuestionPaperFileElements);
-			
 		}
 		return childQuestionPaperFileElements;
 	}
-
 
 	public String getPatternStorageURL() {
 		return patternStorageURL;

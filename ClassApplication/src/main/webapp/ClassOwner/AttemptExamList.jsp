@@ -92,7 +92,14 @@ $(document).ready(function(){
 		if(e){
 			var formData = $("#actionform").serialize();
 			console.log(formData);
-			window.open("attemptExam?"+formData,"","width=500, height=500"); 
+			var params = [
+			              'height='+screen.height,
+			              'width='+screen.width,
+			              'fullscreen=yes' // only works in IE, but here for completeness
+			          ].join(',');
+			var win = window.open("attemptExam?"+formData,"",params)
+			if(win){win.moveTo(0,0);} 
+			
 		}else{
 			$.notify({message: "Question Paper Not available"},{type: 'danger'});
 		}

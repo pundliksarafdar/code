@@ -1,3 +1,8 @@
+<!-- Assumpation made
+	Code all alternate question will come one after another
+	Always will be objective question
+ -->
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -13,6 +18,10 @@
 .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
 border-top : 0px solid #ddd
 }
+
+.table td:FIRST-CHILD{
+	width: 5%;
+}
 </style>
 <script>
 $(document).ready(function(){
@@ -22,8 +31,29 @@ $(document).ready(function(){
 		modal.modalConfirm("Submit","Do you want to Submit?","Cancel","Submit",SubmitExam,[]);
 		
 	});
+	
+	showOr();
 });
+
+function showOr(){
+	var alternateIds = $("[alternameId]");
+	var OredIdElm = {};
+	$.each(alternateIds,function(){
+		var itemsid = $(this).attr("alternameId");
+		OredIdElm[itemsid] = $("[alternameId='"+itemsid+"']");
+	});
+	
+	
+	$.each(OredIdElm,function(key,val){
+		$.each($(val).closest("tr"),function(key,val){
+			if(key){
+				$(val).before("<tr><td></td><td align='center'>Or</td></tr>");	
+			}
+		});		
+	});
+}
 function SubmitExam(){
+	/*
 	var answers="";
 	var count=0;
 	while(count<$("#questionPaperSize").val()){
@@ -65,6 +95,21 @@ function SubmitExam(){
 	console.log(onlineexam);
 	onlineexam = JSON.stringify(onlineexam);
 	rest.post("rest/classownerservice/getOnlineExamPaperMarks",handlers,onlineexam);
+	*/
+	var questionAndAns = {};
+	$.each($("[question]"),function(key,val){
+		var questionId = $(this).attr("question");
+		$.each($('[question-id="'+questionId+'"]'),function(key,val){
+			if(!questionAndAns[questionId]){
+				questionAndAns[questionId] = [];
+			}
+			if($(val).is(":checked")){
+				questionAndAns[questionId].push($(val).val());	
+			}
+			
+		});
+	});
+	console.log(questionAndAns);
 }
 </script>
 </head>
@@ -81,7 +126,10 @@ function SubmitExam(){
 		<div class="container" id="examDiv">
 			<div class="row">
 				<div class="col-md-offset-4 col-md-3">
-					<c:out value="${onlineExamPaper.paper_description }"></c:out>
+					<strong><c:out value="${onlineExamPaper.paper_description }"></c:out></strong>
+				</div>
+				<div class="col-md-3">
+					<strong>Marks:-<c:out value="${onlineExamPaper.marks }"></c:out></strong>
 				</div>
 			</div>
 			<table id="questionTable" width="100%" class="table">
@@ -94,206 +142,180 @@ function SubmitExam(){
 			<tbody>
 			<c:forEach items="${onlineExamPaper.onlineExamPaperElementList }"
 				var="element" varStatus="varStat">
-				<tr style="background: #eee;padding-top: 1%">
+				
+				<tr style="padding-top: 1%">
 					<c:if test="${element.item_type eq 'Section' }">
-						<td colspan="3" align="center">
-							<c:out value="${element.item_description }"></c:out>
+						<td colspan="3" align="center" style="font-weight: bolder;" class="section">
+							<c:out value="${element.item_description }" default="No section"></c:out>
 						</td>
 					</c:if>
-					<c:if test="${element.item_type eq 'Instruction' }">
-						<td>
+					<c:if test="${element.item_type eq 'Instruction' }" >
+						<td  style="font-weight: bold;" class="instruction">
 							<c:out value="${element.item_no}"></c:out>
 						</td>
-						<td colspan="3">
-							<c:out value="${element.item_description }"></c:out>
+						<td colspan="3"   style="font-weight: bold;">
+							<c:out value="${element.item_description }" default="No instruction"></c:out>
 						</td>
 					</c:if>
 					<c:if test="${element.item_type eq 'Question' }">
-						<td>
+						<td class="question" alternameId="<c:out value='${element.alternate_value}'></c:out>">
 							<c:out value="${element.item_no}"></c:out>
 						</td>
-						<td>
-							<c:out value="${element.questionbank.que_text }"></c:out>
+						<td question="<c:out value='${element.questionbank.que_id}'></c:out>">
+							<c:out value="${element.questionbank.que_text }" default="No question" ></c:out>
 						</td>
 					</c:if>
 				</tr>
 				<c:if test="${element.questionbank.opt_1 ne null }">
 					<tr>
+					<td></td>
+					<td>
 						<c:if test="${element.ans_type eq 'multiple' }">
-							<td>
 								<input type="checkbox"
-									name='<c:out value="${varStat.index }"></c:out>' value="0">
-							</td>
+									name='<c:out value="${varStat.index }"></c:out>' value="0" question-id="<c:out value='${element.questionbank.que_id}'></c:out>">
+							
 						</c:if>
 						<c:if test="${element.ans_type eq 'single' }">
-							<td>
 								<input type="radio"
-									name='<c:out value="${varStat.index }"></c:out>' value ="0">
-							</td>
+									name='<c:out value="${varStat.index }"></c:out>' value ="0" question-id="<c:out value='${element.questionbank.que_id}'></c:out>">
+							
 						</c:if>
-						<td>
+						
 							<c:out value="${element.questionbank.opt_1 }"></c:out>
 						</td>
 					</tr>
 				</c:if>
 				<c:if test="${element.questionbank.opt_2 ne null }">
 					<tr>
+					<td></td>
+					<td>
 						<c:if test="${element.ans_type eq 'multiple' }">
-							<td>
-								<input type="checkbox"  name='<c:out value="${varStat.index }"></c:out>' value="1">
-							</td>
+								<input type="checkbox"  name='<c:out value="${varStat.index }"></c:out>' value="1" question-id="<c:out value='${element.questionbank.que_id}'></c:out>">
 						</c:if>
 						<c:if test="${element.ans_type eq 'single' }">
-							<td>
 								<input type="radio"
-									name='<c:out value="${varStat.index }"></c:out>' value="1">
-							</td>
+									name='<c:out value="${varStat.index }"></c:out>' value="1" question-id="<c:out value='${element.questionbank.que_id}'></c:out>">
 						</c:if>
-						<td>
 							<c:out value="${element.questionbank.opt_2 }"></c:out>
-						</td>
+					</td>
 					</tr>
 				</c:if>
 				<c:if test="${element.questionbank.opt_3 ne null }">
 					<tr>
+					<td></td>
+					<td>
 						<c:if test="${element.ans_type eq 'multiple' }">
-							<td>
-								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="2">
-							</td>
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="2">
 						</c:if>
 						<c:if test="${element.ans_type eq 'single' }">
-							<td>
 								<input type="radio"
-									name='<c:out value="${varStat.index }"></c:out>' value="2">
-							</td>
+									name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="2">
 						</c:if>
-						<td>
 							<c:out value="${element.questionbank.opt_3 }"></c:out>
 						</td>
 						</tr>
 				</c:if>
 				<c:if test="${element.questionbank.opt_4 ne null }">
 					<tr>
+					<td></td>
+					<td>
 						<c:if test="${element.ans_type eq 'multiple' }">
-							<td>							
-								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="3">
-							</td>
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="3">
 						</c:if>
 						<c:if test="${element.ans_type eq 'single' }">
-							<td>
 								<input type="radio"
-									name='<c:out value="${varStat.index }"></c:out>' value="3">
-							</td>
+									name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="3">
 						</c:if>
-						<td>
 							<c:out value="${element.questionbank.opt_4 }"></c:out>
 						</td>
 					</tr>
 				</c:if>
 				<c:if test="${element.questionbank.opt_5 ne null }">
 					<tr>
+					<td></td>
+					<td>	
 						<c:if test="${element.ans_type eq 'multiple' }">
-							<td>
-								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="4">
-							</td>
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="4">
 						</c:if>
 						<c:if test="${element.ans_type eq 'single' }">
-							<td>
 								<input type="radio"
-									name='<c:out value="${varStat.index }"></c:out>' value="4">
-							</td>
+									name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="4">
 						</c:if>
-						<td>
 							<c:out value="${element.questionbank.opt_5 }"></c:out>
 						</td>
 					</tr>
 				</c:if>
 				<c:if test="${element.questionbank.opt_6 ne null }">
 					<tr>
+					<td></td>
+					<td>	
 						<c:if test="${element.ans_type eq 'multiple' }">
-							<td>
-								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="5">
-							</td>
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="5">
 						</c:if>
 						<c:if test="${element.ans_type eq 'single' }">
-							<td>
 								<input type="radio"
-									name='<c:out value="${varStat.index }"></c:out>' value="5">
-							</td>
+									name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="5">
 						</c:if>
-						<td>
 							<c:out value="${element.questionbank.opt_6 }"></c:out>
 						</td>
 					</tr>
 				</c:if>
 				<c:if test="${element.questionbank.opt_7 ne null }">
 					<tr>
+					<td></td>
+					<td>	
 						<c:if test="${element.ans_type eq 'multiple' }">
-							<td>
-								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="6">
-							</td>
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="6">
 						</c:if>
 						<c:if test="${element.ans_type eq 'single' }">
-							<td>
 								<input type="radio"
-									name='<c:out value="${varStat.index }"></c:out>' value="6">
-							</td>
+									name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="6">
 						</c:if>
-						<td>						
 							<c:out value="${element.questionbank.opt_7 }"></c:out>
 						</td>
 					</tr>
 				</c:if>
 				<c:if test="${element.questionbank.opt_8 ne null }">
 					<tr>
+					<td></td>
+					<td>	
 						<c:if test="${element.ans_type eq 'multiple' }">
-							<td>
-								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="7">
-							</td>
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="7">
 						</c:if>
 						<c:if test="${element.ans_type eq 'single' }">
-							<td>
 								<input type="radio"
-									name='<c:out value="${varStat.index }"></c:out>' value="7">
-							</td>
+									name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="7">
 						</c:if>
-						<td>
 							<c:out value="${element.questionbank.opt_8 }"></c:out>
 						</td>
 					</tr>
 				</c:if>
 				<c:if test="${element.questionbank.opt_9 ne null }">
 					<tr>
+					<td></td>
+					<td>	
 						<c:if test="${element.ans_type eq 'multiple' }">
-							<td>
-								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="8">
-							</td>
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="8">
 						</c:if>
 						<c:if test="${element.ans_type eq 'single' }">
-							<td>
 								<input type="radio"
-									name='<c:out value="${varStat.index }"></c:out>' value="8">
-							</td>
+									name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="8">
 						</c:if>
-						<td>
 							<c:out value="${element.questionbank.opt_9 }"></c:out>
 						</td>
 					</tr>
 				</c:if>
 				<c:if test="${element.questionbank.opt_10 ne null }">
 					<tr>
+					<td></td>
+					<td>
 						<c:if test="${element.ans_type eq 'multiple' }">
-							<td>
-								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' value="9">
-							</td>
+								<input type="checkbox" name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="9">
 						</c:if>
 						<c:if test="${element.ans_type eq 'single' }">
-							<td>
 								<input type="radio"
-									name='<c:out value="${varStat.index }"></c:out>' value="9">
-							</td>
+									name='<c:out value="${varStat.index }"></c:out>' question-id="<c:out value='${element.questionbank.que_id}'></c:out>" value="9">
 						</c:if>
-						<td>
 							<c:out value="${element.questionbank.opt_10 }"></c:out>
 						</td>
 					</tr>
