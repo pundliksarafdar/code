@@ -113,6 +113,7 @@ $(document).ready(function(){
 		var tRow = $(this).closest('tr');
 		var data = questionListTable.row(tRow).data();
 		updateQuestionList(data);
+		$(SAVE_QUESTION_PAPER).prop("disabled",false);
 		$(QUESTION_LIST_MODAL).modal('hide');
 	});
 	
@@ -125,7 +126,12 @@ $(document).ready(function(){
 		}
 		var questionPaperData = {};
 		$.each($(QUESTION),function(key,val){
-			questionPaperData[$(val).closest('[item_id]').attr('item_id')] = $(val).data(QUESTION_ID);
+			var questionPaperFileElement = {};
+			questionPaperFileElement.subject_id = $($(val).closest('.questionRow')).find('.selectSubject').val();
+			questionPaperFileElement.ques_no = $(val).data(QUESTION_ID);
+			questionPaperFileElement.question_topic = $($(val).closest('.questionRow')).find('.selectTopic').val();
+			console.log(questionPaperFileElement);
+			questionPaperData[$(val).closest('[item_id]').attr('item_id')] = questionPaperFileElement;
 		});
 		var handlers = {};
 		handlers.success = function(resp){
@@ -139,7 +145,7 @@ $(document).ready(function(){
 		var questionPaperName = $(QUESTION_PAPER_DESC).val();
 		var desc = $(QUESTION_PAPER_DESC).val();
 		if(desc && desc.trim().length!==0){
-			questionPaperData.desc = desc;
+			/*questionPaperData.desc = desc;*/
 			rest.post("rest/classownerservice/updateQuestionPaper/"+patternId+"/"+questionPaperName+"/"+division+"/"+paperId+"/"+compSubjectIds,handlers,JSON.stringify(questionPaperData),true);	
 		}else{
 			$("#saveQuestionPaperName").focus();
@@ -168,7 +174,13 @@ $(document).ready(function(){
 			
 			RegenerateObj.questionPaperStructure = generateExamObject;
 			RegenerateObj.generateQuestionPaperServicebeanList = questionPaperServicebeanList;
-			
+			var currentIds = [];
+			$.each($(QUESTION),function(key,val){
+				if( $($(val).closest('.questionRow')).find('.selectSubject').val() == selectSub.val()){
+					currentIds.push($(val).data(QUESTION_ID));
+				}
+			});
+			RegenerateObj.currentIds = currentIds;
 			var url = "rest/classownerservice/generateQuestionPaperSpecific/"+$("#division").val();
 			var handler = {};
 			handler.success = function(e){
@@ -176,13 +188,26 @@ $(document).ready(function(){
 				questionPaperServicebeanList = e.questionPaperServicebeanList;
 				if(e.questionPaperDataList && e.questionPaperDataList.length){
 					$.each(e.questionPaperDataList,function(key,val){
-						$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
-						$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
+						if(val.dataStatus != "N" && val.dataStatus != "MN"){
+							$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
+							$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
+							}else if(val.dataStatus == "MN"){
+								$.notify({message: "More Questions are not available for criteria"},{type: 'danger'});
+							}else if(val.dataStatus == "N"){
+								$.notify({message: "Questions are not available for criteria"},{type: 'danger'});
+								$("[item_id='"+val.item_id+"']").find(QUESTION).html("<div class='error'>Questions are not available for criteria</div>");
+							}
 					});					
 				}else{
 					$("[item_id='"+generateExamObject.item_id+"']").find(QUESTION).html('<div class="error">Questions are not available for criteria</div>');	
 					$("[item_id='"+generateExamObject.item_id+"']").find(QUESTION).removeData(QUESTION_ID);
 				}
+						
+		if($(".question").find(".error").length == 0){
+			$(SAVE_QUESTION_PAPER).prop("disabled",false);
+		}else{
+			$(SAVE_QUESTION_PAPER).prop("disabled",true);
+		}
 			}
 			handler.error = function(e){console.log(e);}
 			rest.post(url,handler,JSON.stringify(RegenerateObj));
@@ -293,7 +318,12 @@ var loadQuestionPaperSuccess = function(resp){
 		recursiveView(e.questionPaperFileElementList,0,e.questionPaperFileElementList);
 		loadSubjectAndTopicSelect();
 	$(QUESTION_PAPER_DESC).val(e.paper_description);	
-	$(SAVE_SECTION).show();	
+	if($(".question").find(".error").length == 0){
+		$(SAVE_QUESTION_PAPER).prop("disabled",false);
+	}else{
+		$(SAVE_QUESTION_PAPER).prop("disabled",true);
+	}
+	$(SAVE_SECTION).show();
 }
 
 var loadQuestionPaperError = function(e){
@@ -387,7 +417,10 @@ function loadSubjectRelatedToTopicSelect(){
 	});
 	topicSelect.empty();
 	topicSelect.append(topic);
-	
+	$($(this).closest(".questionRow")).find(QUESTION).text("");	
+	$($(this).closest(".questionRow")).find(QUESTION).data(QUESTION_ID,-1);
+	$($(this).closest(".questionRow")).find(QUESTION).html("<div class='error'>Press refresh to get Question</div>");
+	$(SAVE_QUESTION_PAPER).prop("disabled",true);
 	/*
 	$.each($(SELECT_SUBJECT),function(){
 		var that= $(this);

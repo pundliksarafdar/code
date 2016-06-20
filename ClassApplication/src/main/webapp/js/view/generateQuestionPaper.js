@@ -108,7 +108,7 @@ function loadSubjectAndTopicSelect(){
 		var that= $(this);
 		var val = $(this).attr("value");
 		$(this).val(val);
-		if($(this).val() != null){
+		if($(this).val() != null && $(this).val() != "-1"){
 		if(topicNSubject[val] != undefined){
 		loadTopicSelect(that,topicNSubject[val].topic);
 		}
@@ -206,7 +206,13 @@ $(document).ready(function(){
 			
 			RegenerateObj.questionPaperStructure = generateExamObject;
 			RegenerateObj.generateQuestionPaperServicebeanList = questionPaperServicebeanList;
-			
+			var currentIds = [];
+			$.each($(QUESTION),function(key,val){
+				if( $($(val).closest('.questionRow')).find('.selectSubject').val() == selectSub.val()){
+					currentIds.push($(val).data(QUESTION_ID));
+				}
+			});
+			RegenerateObj.currentIds = currentIds;
 			var url = "rest/classownerservice/generateQuestionPaperSpecific/"+$("#division").val();
 			var handler = {};
 			handler.success = function(e){
@@ -214,11 +220,19 @@ $(document).ready(function(){
 				questionPaperServicebeanList = e.questionPaperServicebeanList;
 				if(e.questionPaperDataList && e.questionPaperDataList.length){
 					$.each(e.questionPaperDataList,function(key,val){
-						if(val.dataStatus != "N"){
+						if(val.dataStatus != "N" && val.dataStatus != "MN"){
 						$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
 						$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
+						}else if(val.dataStatus == "MN"){
+							$.notify({message: "More Questions are not available for criteria"},{type: 'danger'});
+						}else if(val.dataStatus == "N"){
+							$.notify({message: "Questions are not available for criteria"},{type: 'danger'});
+							$("[item_id='"+val.item_id+"']").find(QUESTION).html("<div class='error'>Questions are not available for criteria</div>");
 						}
-					});					
+					});			
+					if($(".question").find(".error").length == 0){
+						$(SAVE_SECTION).show();
+					}
 				}
 			}
 			handler.error = function(e){console.log(e);}
@@ -297,6 +311,7 @@ $(document).ready(function(){
 	});
 	
 	$(SAVE_QUESTION_PAPER).on("click",function(){
+		
 		var compSubjectIds = [];
 		for(var i = 0 ; i<$(".selectSubject").length ; i++){
 			if(jQuery.inArray($($(".selectSubject")[i]).val(),compSubjectIds) == -1){
@@ -306,7 +321,12 @@ $(document).ready(function(){
 		compSubjectIds = compSubjectIds.join(",");
 		var questionPaperData = {};
 		$.each($(QUESTION),function(key,val){
-			questionPaperData[$(val).closest('[item_id]').attr('item_id')] = $(val).data(QUESTION_ID);
+			var questionPaperFileElement = {};
+			questionPaperFileElement.subject_id = $($(val).closest('.questionRow')).find('.selectSubject').val();
+			questionPaperFileElement.ques_no = $(val).data(QUESTION_ID);
+			questionPaperFileElement.question_topic = $($(val).closest('.questionRow')).find('.selectTopic').val();
+			console.log(questionPaperFileElement);
+			questionPaperData[$(val).closest('[item_id]').attr('item_id')] = questionPaperFileElement;
 		});
 		var handlers = {};
 		handlers.success = function(resp){
@@ -316,10 +336,10 @@ $(document).ready(function(){
 		handlers.error = function(e){};
 		var division = $("#division").val();
 		subject = $("#subject").val();
-		var questionPaperName = $("#saveQuestionPaperName").val();
+		var questionPaperName = $(QUESTION_PAPER_DESC).val();
 		var desc = $(QUESTION_PAPER_DESC).val();
 		if(desc && desc.trim().length!==0){
-			questionPaperData.desc = desc;
+			//questionPaperData.desc = desc;
 			rest.post("rest/classownerservice/saveQuestionPaper/"+patternId+"/"+questionPaperName+"/"+division+"/"+subject+"/"+compSubjectIds,handlers,JSON.stringify(questionPaperData),true);	
 		}else{
 			$("#saveQuestionPaperName").focus();
@@ -434,6 +454,10 @@ function loadSubjectRelatedToTopicSelect(){
 	topicSelect.empty();
 	topicSelect.append(topic);
 	
+	$($(this).closest(".questionRow")).find(QUESTION).text("");	
+	$($(this).closest(".questionRow")).find(QUESTION).data(QUESTION_ID,-1);
+	$($(this).closest(".questionRow")).find(QUESTION).html("<div class='error'>Press refresh to get Question</div>");
+	$(SAVE_SECTION).hide();
 	/*
 	$.each($(SELECT_SUBJECT),function(){
 		var that= $(this);
@@ -617,4 +641,7 @@ var loadQuestionList = function(subject_id,item_id,question_type,item_type,quest
 	function updateQuestionList(data){
 		$("[item_id='"+data.item_id+"']").find(QUESTION).text(data.questionbank.que_text);	
 		$("[item_id='"+data.item_id+"']").find(QUESTION).data(QUESTION_ID,data.questionbank.que_id);
+		if($(".question").find(".error").length == 0){
+			$(SAVE_SECTION).show();
+		}
 	}

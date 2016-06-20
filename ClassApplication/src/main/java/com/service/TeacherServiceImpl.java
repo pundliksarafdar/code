@@ -194,7 +194,7 @@ public class TeacherServiceImpl extends ServiceBase {
 		
 		boolean success = bankTransaction.updateSubjectiveQuestion(subjectiveExamBean.getQuestionId(), subjectiveExamBean.getInst_id(), subjectiveExamBean.getSubjectId(),
 				Integer.parseInt(subjectiveExamBean.getClassId()), subjectiveExamBean.getQuestion(),
-				subjectiveExamBean.getMarks());
+				subjectiveExamBean.getMarks(),questionbank.getTopic_id());
 		if(success){
 			ImageTransactions imageTransactions = new ImageTransactions(Constants.STORAGE_PATH);
 			imageTransactions.saveQuestionImage(subjectiveExamBean.getImages(), subjectiveExamBean.getQuestionId(), subjectiveExamBean.getInst_id());
@@ -402,7 +402,7 @@ public class TeacherServiceImpl extends ServiceBase {
 				paraQuestionBean.getInstId(),
 				paraQuestionBean.getSubjectId(),
 				paraQuestionBean.getClassId(),
-				paraQuestionBean.getMarks());
+				paraQuestionBean.getMarks(),1);
 		bankTransaction.saveParaObject(Constants.STORAGE_PATH,paraQuestionBean, queId);
 		
 		/*

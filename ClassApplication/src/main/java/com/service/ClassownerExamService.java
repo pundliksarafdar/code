@@ -89,7 +89,7 @@ public class ClassownerExamService extends ServiceBase{
 		
 		boolean success = bankTransaction.updateSubjectiveQuestion(subjectiveExamBean.getQuestionId(), getRegId(), subjectiveExamBean.getSubjectId(),
 				Integer.parseInt(subjectiveExamBean.getClassId()), subjectiveExamBean.getQuestion(),
-				subjectiveExamBean.getMarks());
+				subjectiveExamBean.getMarks(),subjectiveExamBean.getTopicId());
 		if(success){
 			ImageTransactions imageTransactions = new ImageTransactions(Constants.STORAGE_PATH);
 			imageTransactions.saveQuestionImage(subjectiveExamBean.getImages(), subjectiveExamBean.getQuestionId(), getRegId());
@@ -299,7 +299,7 @@ public class ClassownerExamService extends ServiceBase{
 				getRegId(),
 				paraQuestionBean.getSubjectId(),
 				paraQuestionBean.getClassId(),
-				paraQuestionBean.getMarks());
+				paraQuestionBean.getMarks(),paraQuestionBean.getTopicId());
 		bankTransaction.saveParaObject(Constants.STORAGE_PATH,paraQuestionBean, queId);
 		
 		/*

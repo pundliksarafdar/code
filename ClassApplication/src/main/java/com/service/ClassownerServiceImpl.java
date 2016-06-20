@@ -358,7 +358,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response saveQuestionPaper(@PathParam("patternId") String patternId,@PathParam("questionPaperName") String questionPaperName,
 			@PathParam("divisionId") String divisionId,@PathParam("subject") int subject,@PathParam("compSubjectIds")String compSubjectIds
-			,Map<String, String>questionAndItem){
+			,Map<String, QuestionPaperFileElement>questionAndItem){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId());
@@ -374,7 +374,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		//fileObject.setPaper_description(questionPaperPattern.);
 		fileObject.setPattern_id(questionPaperPattern.getPattern_id());
 		//Description is added in question item as its too long to send
-		fileObject.setPaper_description(questionAndItem.get("desc"));
+		fileObject.setPaper_description(questionPaperName);
 		List<QuestionPaperFileElement> questionPaperFileElements = new ArrayList<QuestionPaperFileElement>();
 		for(int index=0;index<questionPaperPatternList.size();index++){
 			QuestionPaperFileElement questionPaperFileElement = new QuestionPaperFileElement();
@@ -395,11 +395,12 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 			questionPaperFileElements.add(questionPaperFileElement);
 			
 			if(questionAndItem.containsKey(itemId)){
-				int question_number = Integer.parseInt(questionAndItem.get(itemId));
-				questionPaperFileElement.setQues_no(question_number);
+				QuestionPaperFileElement questionpaper= questionAndItem.get(itemId);
+				questionPaperFileElement.setSubject_id(questionpaper.getSubject_id());
+				questionPaperFileElement.setQuestion_topic(questionpaper.getQuestion_topic());
+				questionPaperFileElement.setQues_no(questionpaper.getQues_no());
 			}
 		}
-		
 		fileObject.setQuestionPaperFileElementList(questionPaperFileElements);
 		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
 		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId(),subject,compSubjectIds);
@@ -415,7 +416,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateQuestionPaper(@PathParam("patternId") String patternId,@PathParam("questionPaperName") String questionPaperName,
 			@PathParam("divisionId") String divisionId,@PathParam("paperId") int paperId,@PathParam("compSubjectIds")String compSubjectIds
-			,Map<String, String>questionAndItem){
+			,Map<String, QuestionPaperFileElement>questionAndItem){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId());
@@ -430,7 +431,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		//fileObject.setPaper_description(questionPaperPattern.);
 		fileObject.setPattern_id(questionPaperPattern.getPattern_id());
 		//Description is added in question item as its too long to send
-		fileObject.setPaper_description(questionAndItem.get("desc"));
+		fileObject.setPaper_description(questionPaperName);
 		List<QuestionPaperFileElement> questionPaperFileElements = new ArrayList<QuestionPaperFileElement>();
 		for(int index=0;index<questionPaperPatternList.size();index++){
 			QuestionPaperFileElement questionPaperFileElement = new QuestionPaperFileElement();
@@ -451,8 +452,10 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 			questionPaperFileElements.add(questionPaperFileElement);
 			
 			if(questionAndItem.containsKey(itemId)){
-				int question_number = Integer.parseInt(questionAndItem.get(itemId));
-				questionPaperFileElement.setQues_no(question_number);
+				QuestionPaperFileElement questionpaper= questionAndItem.get(itemId);
+				questionPaperFileElement.setSubject_id(questionpaper.getSubject_id());
+				questionPaperFileElement.setQuestion_topic(questionpaper.getQuestion_topic());
+				questionPaperFileElement.setQues_no(questionpaper.getQues_no());
 			}
 		}
 		

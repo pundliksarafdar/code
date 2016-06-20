@@ -124,9 +124,9 @@ public class QuestionBankTransaction {
 		return true;
 	}
 	
-	public boolean updateSubjectiveQuestion(int que_id,int inst_id,int sub_id,int div_id, String que_text, int marks) {
+	public boolean updateSubjectiveQuestion(int que_id,int inst_id,int sub_id,int div_id, String que_text, int marks,int topic_id) {
 		QuestionbankDB questionbankDB=new QuestionbankDB();
-		questionbankDB.updateSubjectiveQuestion(que_id, inst_id, sub_id, div_id, que_text, marks);
+		questionbankDB.updateSubjectiveQuestion(que_id, inst_id, sub_id, div_id, que_text, marks,topic_id);
 		return true;
 	}
 	
@@ -136,9 +136,9 @@ public class QuestionBankTransaction {
 		return true;
 	}
 	
-	public boolean updateParagraphQuestion(int que_id,int inst_id,int sub_id,int div_id, int marks) {
+	public boolean updateParagraphQuestion(int que_id,int inst_id,int sub_id,int div_id, int marks,int topic_id) {
 		QuestionbankDB questionbankDB=new QuestionbankDB();
-		questionbankDB.updateParagraphQuestion(que_id, inst_id, sub_id, div_id, marks);
+		questionbankDB.updateParagraphQuestion(que_id, inst_id, sub_id, div_id, marks,topic_id);
 		return true;
 	}
 	

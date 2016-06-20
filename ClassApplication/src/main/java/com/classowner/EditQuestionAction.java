@@ -154,7 +154,7 @@ public class EditQuestionAction extends BaseAction{
 			}	
 			
 			if("1".equals(questiontype)){
-				bankTransaction.updateSubjectiveQuestion(questionNumber, inst_id, Integer.parseInt(subject), Integer.parseInt(division), question, questionmarks);
+				//bankTransaction.updateSubjectiveQuestion(questionNumber, inst_id, Integer.parseInt(subject), Integer.parseInt(division), question, questionmarks);
 			}else if("2".equals(questiontype)){
 			subjectTransaction=new SubjectTransaction();
 			Subject subbean=subjectTransaction.getSubject(Integer.parseInt(subject));
@@ -261,7 +261,7 @@ public class EditQuestionAction extends BaseAction{
 			questionbank.setQue_type(questiontype);
 			bankTransaction.updateObjectiveQuestion(questionbank);
 			}else if("3".equals(questiontype)){
-				bankTransaction.updateParagraphQuestion(questionNumber, inst_id, Integer.parseInt(subject), Integer.parseInt(division), questionmarks);
+			//	bankTransaction.updateParagraphQuestion(questionNumber, inst_id, Integer.parseInt(subject), Integer.parseInt(division), questionmarks);
 				ParagraphQuestion paragraphQuestion =new ParagraphQuestion();
 				paragraphQuestion.setParagraphText(paragraphText);
 				paragraphQuestion.setParaPerQuestionMarks(paraPerQuestionMarks);

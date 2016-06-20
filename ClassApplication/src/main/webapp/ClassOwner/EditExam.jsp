@@ -424,12 +424,18 @@ function previewSuccess(resp){
 					}).appendTo(parentDiv);
 			}
 
-			if(this.item_type == ITEM_TYPE.QUESTION){
+			if(this.item_type == ITEM_TYPE.QUESTION && this.questionbank != null){
 					$("<div/>",{
 						text:this.questionbank.que_text,
 						style:'text-align:left;',
 						class:"col-xs-10",
 					}).appendTo(parentDiv);
+			}if(this.item_type == ITEM_TYPE.QUESTION && this.questionbank == null){
+				$("<div/>",{
+					text:'Question not available',
+					style:'text-align:left;color:red',
+					class:"col-xs-10",
+				}).appendTo(parentDiv);
 			}
 			
 				$("<div/>",{

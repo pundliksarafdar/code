@@ -49,7 +49,7 @@ function addMoreParaQuestion(){
 function loadParaquestion(data,queId){
 	$("#paragraph").val(data.paragraph);
 	$("#totalMarks").val(data.marks);
-	
+	$("#topicSelect").select2().val(data.topicId).change();
 	var images = "";
 	for(var index=0;index<data.images.length;index++){
 		//images = images + "<img src=/rest/commonservices/image/"+data.primaryImage[index]+" width='200px' height='200px'>";
@@ -101,6 +101,7 @@ function updateParagraphQuestion(){
 		paraQuestionBean.topicId = topicId;
 		paraQuestionBean.questionType = "3";//3 is for paragraph
 		
+		paraQuestionBean.topicId = $("#topicSelect").val();
 		paraQuestionBean.paragraph = $(PARA).val();
 		paraQuestionBean.marks = $(MARKS).val();
 		paraQuestionBean.images = [];

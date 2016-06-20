@@ -5,6 +5,13 @@ import java.util.List;
 public class NewQuestionRequest {
 	QuestionPaperStructure questionPaperStructure;
 	List<GenerateQuestionPaperServicebean> generateQuestionPaperServicebeanList;
+	List<Integer> currentIds;
+	public List<Integer> getCurrentIds() {
+		return currentIds;
+	}
+	public void setCurrentIds(List<Integer> currentIds) {
+		this.currentIds = currentIds;
+	}
 	public QuestionPaperStructure getQuestionPaperStructure() {
 		return questionPaperStructure;
 	}

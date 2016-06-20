@@ -46,7 +46,6 @@ var BUTTONS_MANAGE = '<div class="default">' +
 					'</div>';
 					
 var BUTTONS_COMBINESUBJECT_MANAGE = '<div class="default">' +
-					'<button class="btn btn-primary btn-xs btn-manage">Manage</button>'+
 					'<button class="btn btn-primary btn-xs btn-combineEdit">Edit</button>'+
 					'<button class="btn btn-danger btn-xs btn-delete">Delete</button>'+
 				'</div>';
@@ -445,7 +444,7 @@ function validateInput(inputText){
 </div>
 
 <div class="container">
-<div class="col-lg-offset-4 col-lg-4">
+<div class="col-md-offset-8 col-md-3" style="padding: 2%">
 	<input type="text" class="form-control" id="tableSearchCustom" placeholder="search">
  </div>
  <table class="table table-striped subjectTable" id="subjectTable" width="100%">
@@ -469,11 +468,12 @@ function validateInput(inputText){
 		</td>
  		<td width="20%">
 			<div class="default">
-				<button class="btn btn-primary btn-xs btn-manage">Manage</button>
+				
 				<c:if test="${subject.sub_type eq 1}">
 				<button class="btn btn-primary btn-xs btn-combineEdit">Edit</button>
 				</c:if>
 				<c:if test="${subject.sub_type ne 1}">
+				<button class="btn btn-primary btn-xs btn-manage">Manage</button>
 				<button class="btn btn-primary btn-xs btn-edit">Edit</button>
 				</c:if>
 				<button class="btn btn-danger btn-xs btn-delete">Delete</button>

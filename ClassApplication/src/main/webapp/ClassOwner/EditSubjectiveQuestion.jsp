@@ -35,6 +35,14 @@
 					<input type="number" required class="form-control" id="questionmarks" name="questionmarks" maxlength="5" size="5" style="width: 50%;" min="1"/>
 					<span class="validation-message" id="questionMarksError"></span>
 				</div>
+				<div class="col-md-offset-2 col-sm-2">
+				<select class="form-control" id="topicSelect">
+					<option value="-1">Select Topic</option>
+					 <c:forEach items="${topicList}" var="topic" varStatus="counter">
+					 <option value="<c:out value="${topic.topic_id}"></c:out>"><c:out value="${topic.topic_name}"></c:out></option>
+					 </c:forEach>
+				</select>
+				</div>
 			</div>
 			<div class="form-group">
 				<label for="questionmarks" class="col-sm-2 control-label"></label>

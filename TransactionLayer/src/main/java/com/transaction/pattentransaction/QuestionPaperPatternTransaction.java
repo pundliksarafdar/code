@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import javax.persistence.criteria.CriteriaBuilder.In;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.TTCCLayout;
 
@@ -234,36 +236,114 @@ public class QuestionPaperPatternTransaction {
 			}
 			}
 		}
-		
+		List<GenerateQuestionPaperServicebean> servicebeanList = new ArrayList<GenerateQuestionPaperServicebean>();
 		for (Iterator iterator = generateQuestionPaperServicebeans.iterator(); iterator
 				.hasNext();) {
 			GenerateQuestionPaperServicebean generateQuestionPaperServicebean = (GenerateQuestionPaperServicebean) iterator
 					.next();
+			boolean innerFlag = false;
 			generateQuestionPaperServicebean.setQuestion_PickUpCounter(0);
+			for (Iterator iterator2 = servicebeanList.iterator(); iterator2.hasNext();) {
+				GenerateQuestionPaperServicebean bean = (GenerateQuestionPaperServicebean) iterator2
+						.next();
+				if(generateQuestionPaperServicebean.getSubject_id() == bean.getSubject_id() && generateQuestionPaperServicebean.getMarks() == bean.getMarks()){
+					List<Integer> list = bean.getQuestion_ids();
+					list.addAll(generateQuestionPaperServicebean.getQuestion_ids());
+					bean.setQuestion_ids(list);
+					innerFlag = true;
+					break;
+ 				}
+			}
+			if(innerFlag == false){
+				generateQuestionPaperServicebean.setTopic_id(-1);
+				servicebeanList.add(generateQuestionPaperServicebean);
+			}
 		}
 		GenerateQuestionPaperResponse generateQuestionPaperResponse = new GenerateQuestionPaperResponse();
 		generateQuestionPaperResponse.setQuestionPaperDataList(questionPaperDataList);
-		generateQuestionPaperResponse.setQuestionPaperServicebeanList(generateQuestionPaperServicebeans);
+		generateQuestionPaperResponse.setQuestionPaperServicebeanList(servicebeanList);
 		return generateQuestionPaperResponse;
 	}
 	
 	public GenerateQuestionPaperResponse generateQuestionPaperSpecific(int div_id,NewQuestionRequest newQuestionRequest) {
 		GenerateQuestionPaperResponse generateQuestionPaperResponse = new GenerateQuestionPaperResponse();
-		
+		boolean flag = false;
 		if(null == newQuestionRequest.getGenerateQuestionPaperServicebeanList()){
 			return generateQuestionPaperResponse;
 		}
 		for (Iterator iterator = newQuestionRequest.getGenerateQuestionPaperServicebeanList().iterator(); iterator.hasNext();) {
 			GenerateQuestionPaperServicebean generateQuestionPaperServicebean = (GenerateQuestionPaperServicebean) iterator.next();
 			if(generateQuestionPaperServicebean.getSubject_id() == newQuestionRequest.getQuestionPaperStructure().getSubject_id() &&
-					generateQuestionPaperServicebean.getTopic_id() == Integer.parseInt(newQuestionRequest.getQuestionPaperStructure().getQuestion_topic()) &&
 					generateQuestionPaperServicebean.getQuestion_type().equals(newQuestionRequest.getQuestionPaperStructure().getQuestion_type()) &&
 					generateQuestionPaperServicebean.getMarks() == newQuestionRequest.getQuestionPaperStructure().getItem_marks()){
 				QuestionPaperData questionPaperData = new QuestionPaperData();
 				QuestionbankDB questionbankDB = new QuestionbankDB();
 				questionPaperData.setItem_id(newQuestionRequest.getQuestionPaperStructure().getItem_id());
+				generateQuestionPaperServicebean.setTopic_id(Integer.parseInt(newQuestionRequest.getQuestionPaperStructure().getQuestion_topic()));
 				List<Integer> questionIdsList = questionbankDB.getQuestionsForGenerateExam(inst_id, div_id, generateQuestionPaperServicebean);
 				if(questionIdsList.size() > 0){
+				questionIdsList =generateRandomQuestionId(questionIdsList,1);
+				generateQuestionPaperServicebean.getQuestion_ids().add(questionIdsList.get(0));
+				Questionbank  questionbank = questionbankDB.getQuestion(questionIdsList.get(0), inst_id, generateQuestionPaperServicebean.getSubject_id(), div_id);	
+				questionPaperData.setQuestionbank(questionbank);
+				if(generateQuestionPaperServicebean.getQuestion_type().equals("3")){
+					 ParagraphQuestion paragraphQuestion = (ParagraphQuestion) readObject(new File(questionStorageURL+File.separator+generateQuestionPaperServicebean.getSubject_id()+File.separator+div_id+File.separator+generateQuestionPaperServicebean.getQuestion_ids().get(generateQuestionPaperServicebean.getQuestion_PickUpCounter())));
+					 questionPaperData.setParagraphQuestion(paragraphQuestion);
+				  }
+				questionPaperData.setDataStatus("Y");
+				}else if(generateQuestionPaperServicebean.getQuestion_ids().size() > 0 && newQuestionRequest.getCurrentIds().size() > 0){
+					generateQuestionPaperServicebean.setQuestion_ids(newQuestionRequest.getCurrentIds());
+					questionIdsList = questionbankDB.getQuestionsForGenerateExam(inst_id, div_id, generateQuestionPaperServicebean);
+					if(questionIdsList.size() > 0){
+						questionIdsList =generateRandomQuestionId(questionIdsList,1);
+						generateQuestionPaperServicebean.getQuestion_ids().add(questionIdsList.get(0));
+						Questionbank  questionbank = questionbankDB.getQuestion(questionIdsList.get(0), inst_id, generateQuestionPaperServicebean.getSubject_id(), div_id);	
+						questionPaperData.setQuestionbank(questionbank);
+						if(generateQuestionPaperServicebean.getQuestion_type().equals("3")){
+							 ParagraphQuestion paragraphQuestion = (ParagraphQuestion) readObject(new File(questionStorageURL+File.separator+generateQuestionPaperServicebean.getSubject_id()+File.separator+div_id+File.separator+generateQuestionPaperServicebean.getQuestion_ids().get(generateQuestionPaperServicebean.getQuestion_PickUpCounter())));
+							 questionPaperData.setParagraphQuestion(paragraphQuestion);
+						  }
+						questionPaperData.setDataStatus("Y");
+					}
+					else{
+						questionPaperData.setDataStatus("MN");
+					}
+				}else{
+					questionPaperData.setDataStatus("N");
+				}
+				List<QuestionPaperData> paperDatasList = new ArrayList<QuestionPaperData>();
+				paperDatasList.add(questionPaperData);
+				generateQuestionPaperResponse.setQuestionPaperDataList(paperDatasList);
+				generateQuestionPaperServicebean.setTopic_id(-1);
+				flag = true;
+				break;
+			}
+		}
+		if(flag == false){
+			QuestionPaperData questionPaperData = new QuestionPaperData();
+			QuestionbankDB questionbankDB = new QuestionbankDB();
+			GenerateQuestionPaperServicebean generateQuestionPaperServicebean = new GenerateQuestionPaperServicebean();
+			questionPaperData.setItem_id(newQuestionRequest.getQuestionPaperStructure().getItem_id());
+			generateQuestionPaperServicebean.setCount(1);
+			generateQuestionPaperServicebean.setMarks(newQuestionRequest.getQuestionPaperStructure().getItem_marks());
+			List<Integer> Ids = new ArrayList<Integer>();
+			for (Iterator iterator = newQuestionRequest.getGenerateQuestionPaperServicebeanList().iterator(); iterator.hasNext();) {
+				GenerateQuestionPaperServicebean servicebean = (GenerateQuestionPaperServicebean) iterator.next();
+				if(servicebean.getSubject_id() == newQuestionRequest.getQuestionPaperStructure().getSubject_id() &&
+				   servicebean.getQuestion_type().equals(newQuestionRequest.getQuestionPaperStructure().getQuestion_type()) &&
+				   servicebean.getMarks() == newQuestionRequest.getQuestionPaperStructure().getItem_marks()){
+					Ids.addAll(servicebean.getQuestion_ids());
+				}
+			}
+			generateQuestionPaperServicebean.setQuestion_ids(Ids);
+			generateQuestionPaperServicebean.setQuestion_PickUpCounter(0);
+			generateQuestionPaperServicebean.setQuestion_type(newQuestionRequest.getQuestionPaperStructure().getQuestion_type());
+			generateQuestionPaperServicebean.setSubject_id(newQuestionRequest.getQuestionPaperStructure().getSubject_id());
+			if(newQuestionRequest.getQuestionPaperStructure().getQuestion_topic() != null && !"".equals(newQuestionRequest.getQuestionPaperStructure().getQuestion_topic())){
+			generateQuestionPaperServicebean.setTopic_id(Integer.parseInt(newQuestionRequest.getQuestionPaperStructure().getQuestion_topic()));
+			}
+			List<Integer> questionIdsList = questionbankDB.getQuestionsForGenerateExam(inst_id, div_id, generateQuestionPaperServicebean);
+			if(questionIdsList.size() > 0){
 				questionIdsList =generateRandomQuestionId(questionIdsList,1);
 				generateQuestionPaperServicebean.getQuestion_ids().add(questionIdsList.get(0));
 				Questionbank  questionbank = questionbankDB.getQuestion(questionIdsList.get(0), inst_id, generateQuestionPaperServicebean.getSubject_id(), div_id);	
@@ -276,11 +356,10 @@ public class QuestionPaperPatternTransaction {
 				}else{
 					questionPaperData.setDataStatus("N");
 				}
-				List<QuestionPaperData> paperDatasList = new ArrayList<QuestionPaperData>();
-				paperDatasList.add(questionPaperData);
-				generateQuestionPaperResponse.setQuestionPaperDataList(paperDatasList);
-				break;
-			}
+			List<QuestionPaperData> paperDatasList = new ArrayList<QuestionPaperData>();
+			paperDatasList.add(questionPaperData);
+			generateQuestionPaperResponse.setQuestionPaperDataList(paperDatasList);
+			newQuestionRequest.getGenerateQuestionPaperServicebeanList().add(generateQuestionPaperServicebean);
 		}
 		generateQuestionPaperResponse.setQuestionPaperServicebeanList(newQuestionRequest.getGenerateQuestionPaperServicebeanList());
 		return generateQuestionPaperResponse;
@@ -463,7 +542,7 @@ public class QuestionPaperPatternTransaction {
 				GenerateQuestionPaperServicebean generateQuestionPaperServicebean = (GenerateQuestionPaperServicebean) innerIterator
 						.next();
 				if(generateQuestionPaperServicebean.getSubject_id() == editFileElement.getSubject_id() 
-						&& generateQuestionPaperServicebean.getTopic_id() == Integer.parseInt(editFileElement.getQuestion_topic())
+						/*&& generateQuestionPaperServicebean.getTopic_id() == Integer.parseInt(editFileElement.getQuestion_topic())*/
 						&& generateQuestionPaperServicebean.getQuestion_type().equals(editFileElement.getQuestion_type()) 
 						&& generateQuestionPaperServicebean.getMarks() == editFileElement.getItem_marks()){
 					List<Integer> Ids = new ArrayList<Integer>();

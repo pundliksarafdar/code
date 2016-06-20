@@ -61,6 +61,7 @@
 			subjectiveExamBean.questionType = "1";
 			subjectiveExamBean.question = $("#subjectiveQuestion").val();
 			subjectiveExamBean.marks = $("#questionmarks").val();
+			subjectiveExamBean.topicId = $("#topicSelect").val();
 			subjectiveExamBean.images = [];
 			var queImgs = $(ADD_SUBJECT_FORM).find("input#questionImage");
 			$.each(queImgs,function(key,queImg){
@@ -97,6 +98,7 @@
 })();
 
 function loadSubjectiveQuestion(data){
+	$("#topicSelect").select2().val(data.topic_id).change();
 	$("#subjectiveQuestion").val(data.que_text);
 	$("#questionmarks").val(data.marks);
 	$("#questionId").val(data.que_id);

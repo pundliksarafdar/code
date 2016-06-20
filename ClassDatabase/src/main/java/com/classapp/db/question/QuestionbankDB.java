@@ -3,8 +3,11 @@ package com.classapp.db.question;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder.In;
 
@@ -53,19 +56,21 @@ public boolean editQuestion(Questionbank questionbank) {
 
 }
 
-public boolean updateSubjectiveQuestion(int que_id,int inst_id,int sub_id,int div_id,String que_text,int marks) {
+public boolean updateSubjectiveQuestion(int que_id,int inst_id,int sub_id,int div_id,String que_text,int marks,int topic_id) {
 	Transaction transaction=null;
 	Session session=null;
 	try{
 	session=HibernateUtil.getSessionfactory().openSession();
 	transaction=session.beginTransaction();
-	Query query = session.createQuery("update Questionbank set que_text = :que_text , marks = :marks where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id = :que_id");
+	Query query = session.createQuery("update Questionbank set que_text = :que_text , marks = :marks, topic_id = :topic_id where  inst_id = :inst_id "
+			+ "and div_id=:div_id and sub_id=:sub_id and que_id = :que_id");
 	query.setParameter("inst_id", inst_id);
 	query.setParameter("div_id", div_id);
 	query.setParameter("sub_id", sub_id);
 	query.setParameter("que_id", que_id);
 	query.setParameter("que_text", que_text);
 	query.setParameter("marks", marks);
+	query.setParameter("topic_id", topic_id);
 	query.executeUpdate();
 	transaction.commit();
 	}catch(Exception e){
@@ -89,7 +94,7 @@ public boolean updateObjectiveQuestion(Questionbank questionbank) {
 	try{
 	session=HibernateUtil.getSessionfactory().openSession();
 	transaction=session.beginTransaction();
-	Query query = session.createQuery("update Questionbank set que_text = :que_text , marks = :marks, opt_1 = :opt_1, opt_2 = :opt_2 " +
+	Query query = session.createQuery("update Questionbank set que_text = :que_text , marks = :marks,topic_id = :topic_id, opt_1 = :opt_1, opt_2 = :opt_2 " +
 			", opt_3 = :opt_3, opt_4 = :opt_4, opt_5 = :opt_5, opt_6 = :opt_6, opt_7 = :opt_7, opt_8 = :opt_8, opt_9 = :opt_9, opt_10 = :opt_10 " +
 			",ans_id=:ans_id where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id = :que_id");
 	query.setParameter("inst_id", questionbank.getInst_id());
@@ -109,6 +114,7 @@ public boolean updateObjectiveQuestion(Questionbank questionbank) {
 	query.setParameter("opt_9", questionbank.getOpt_9());
 	query.setParameter("opt_10", questionbank.getOpt_10());
 	query.setParameter("ans_id", questionbank.getAns_id());
+	query.setParameter("topic_id", questionbank.getTopic_id());
 	query.executeUpdate();
 	transaction.commit();
 	}catch(Exception e){
@@ -126,18 +132,20 @@ public boolean updateObjectiveQuestion(Questionbank questionbank) {
 
 }
 
-public boolean updateParagraphQuestion(int que_id,int inst_id,int sub_id,int div_id,int marks) {
+public boolean updateParagraphQuestion(int que_id,int inst_id,int sub_id,int div_id,int marks,int topic_id) {
 	Transaction transaction=null;
 	Session session=null;
 	try{
 	session=HibernateUtil.getSessionfactory().openSession();
 	transaction=session.beginTransaction();
-	Query query = session.createQuery("update Questionbank set marks = :marks where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id = :que_id");
+	Query query = session.createQuery("update Questionbank set marks = :marks,topic_id = :topic_id where  inst_id = :inst_id and div_id=:div_id "
+			+ "and sub_id=:sub_id and que_id = :que_id");
 	query.setParameter("inst_id", inst_id);
 	query.setParameter("div_id", div_id);
 	query.setParameter("sub_id", sub_id);
 	query.setParameter("que_id", que_id);
 	query.setParameter("marks", marks);
+	query.setParameter("topic_id", topic_id);
 	query.executeUpdate();
 	transaction.commit();
 	}catch(Exception e){
@@ -518,6 +526,12 @@ public List<GenerateQuestionPaperServicebean> getQuestionsForGenerateExam(int in
 	session=HibernateUtil.getSessionfactory().openSession();
 	transaction=session.beginTransaction();
 	for (int i = 0; i < list.size(); i++) {
+	List<Integer> idList = new ArrayList<Integer>();
+	for(int j=0;j<i;j++){
+		if(list.get(i).getSubject_id() == list.get(j).getSubject_id() && list.get(i).getMarks() == list.get(j).getMarks()){
+			idList = list.get(j).getQuestion_ids();
+		}
+	}
 	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.property("que_id")).addOrder(Order.asc("created_dt"));
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
 	criteria.add(criterion);
@@ -535,8 +549,13 @@ public List<GenerateQuestionPaperServicebean> getQuestionsForGenerateExam(int in
 		if(list.get(i).getTopic_id()!=-1){
 			criteria.add(Restrictions.eq("topic_id", list.get(i).getTopic_id()));
 		}
+		if(idList.size() > 0){
+			criteria.add(Restrictions.not(
+				    Restrictions.in("que_id", idList)
+					  ));
+			}
 		List<Integer> questionList = criteria.list();
-	list.get(i).setQuestion_ids(questionList);
+	list.get(i).setQuestion_ids(generateRandomQuestionId(questionList, list.get(i).getCount()));
 	}
 	transaction.commit();
 	session.close();
@@ -565,9 +584,11 @@ public List<Integer> getQuestionsForGenerateExam(int inst_id,int div_id,Generate
 		if(questionPaperServicebean.getTopic_id()!=-1){
 			criteria.add(Restrictions.eq("topic_id", questionPaperServicebean.getTopic_id()));
 		}
+		if(questionPaperServicebean.getQuestion_ids().size() > 0){
 		criteria.add(Restrictions.not(
 			    Restrictions.in("que_id", questionPaperServicebean.getQuestion_ids())
 				  ));
+		}
 		List<Integer> questionList = criteria.list();
 	transaction.commit();
 	session.close();
@@ -889,6 +910,19 @@ public List<Questionbank> getQuestionBankList(List<List<Integer>> list,int inst_
 		}
 	}
 	return questionlist;
+}
+
+private List<Integer> generateRandomQuestionId(List<Integer> allQuestionId,int count){
+	
+	List<Integer> questionId = new ArrayList<Integer>();
+	Set<Integer> questionIdSet = new HashSet<Integer>();
+	Random random = new Random();
+	while(questionIdSet.size()<count && allQuestionId.size()>questionIdSet.size()){
+		int index = random.nextInt(allQuestionId.size());
+		questionIdSet.add(allQuestionId.get(index));
+	}
+	questionId.addAll(questionIdSet);
+	return questionId;
 }
 
 }

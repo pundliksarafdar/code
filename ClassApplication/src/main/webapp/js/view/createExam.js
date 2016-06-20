@@ -295,12 +295,19 @@ function previewSuccess(resp){
 					}).appendTo(sparentDiv);
 			}
 
-			if(this.item_type == ITEM_TYPE.QUESTION){
+			if(this.item_type == ITEM_TYPE.QUESTION && this.questionbank != null){
 					$("<div/>",{
 						text:this.questionbank.que_text,
 						style:'text-align:left;float:left;width:80%;',
 						
 					}).appendTo(sparentDiv);
+			}
+			if(this.item_type == ITEM_TYPE.QUESTION && this.questionbank == null){
+				$("<div/>",{
+					text:'Question not available',
+					style:'text-align:left;color:red',
+					class:"col-xs-10",
+				}).appendTo(parentDiv);
 			}
 			
 				$("<div/>",{
