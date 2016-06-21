@@ -25,13 +25,18 @@ border-top : 0px solid #ddd
 </style>
 <script>
 $(document).ready(function(){
-	/* $('#questionTable').DataTable(); */
-	
 	$("#examSubmit").click(function(){
 		modal.modalConfirm("Submit","Do you want to Submit?","Cancel","Submit",SubmitExam,[]);
-		
 	});
-	
+	var milliSeconds = 100000;
+	var socket = new WebSocket("ws://"+location.host+"/websocket/timer/"+milliSeconds);
+	socket.onmessage = function(message){console.log(message.data)
+		var dataObj = JSON.parse(message.data);
+		if(dataObj.examEnded){
+			SubmitExam();
+		}
+		$("#timeLeft").html(dataObj.timer);
+	}
 	showOr();
 });
 
@@ -97,18 +102,35 @@ function SubmitExam(){
 	rest.post("rest/classownerservice/getOnlineExamPaperMarks",handlers,onlineexam);
 	*/
 	var questionAndAns = {};
-	$.each($("[question]"),function(key,val){
+	$.each($("[question]"),function(key){
 		var questionId = $(this).attr("question");
 		$.each($('[question-id="'+questionId+'"]'),function(key,val){
 			if(!questionAndAns[questionId]){
 				questionAndAns[questionId] = [];
 			}
 			if($(val).is(":checked")){
-				questionAndAns[questionId].push($(val).val());	
+				if(questionAndAns[questionId].indexOf($(val).val())==-1){questionAndAns[questionId].push($(val).val());}	
 			}
 			
 		});
 	});
+	
+	var handlers = {};
+	handlers.success = function(e){
+		alert(e);
+		location.href="showScore";
+	}
+	handlers.error = function(e){console.log("Error",e)}
+	var onlineexam = {};
+	onlineexam.instId = $("#inst_id").val();
+	onlineexam.subId = $("#subject").val();
+	onlineexam.batchId = $("#batch").val();
+	onlineexam.division = $("#division").val();
+	onlineexam.questionPaperId = $("#question_paper_id").val()
+	
+	onlineexam.examMap = questionAndAns;
+	
+	rest.post("rest/classownerservice/evaluateExam",handlers,JSON.stringify(onlineexam));
 	console.log(questionAndAns);
 }
 </script>
@@ -125,7 +147,10 @@ function SubmitExam(){
 	<input type="hidden" id="inst_id" value="<c:out value="${inst_id}"></c:out>">
 		<div class="container" id="examDiv">
 			<div class="row">
-				<div class="col-md-offset-4 col-md-3">
+				<div class="col-md-3">
+					<div id="timeLeft"></div>
+				</div>
+				<div class="col-md-3">
 					<strong><c:out value="${onlineExamPaper.paper_description }"></c:out></strong>
 				</div>
 				<div class="col-md-3">
@@ -163,6 +188,9 @@ function SubmitExam(){
 						</td>
 						<td question="<c:out value='${element.questionbank.que_id}'></c:out>">
 							<c:out value="${element.questionbank.que_text }" default="No question" ></c:out>
+						</td>
+						<td question="<c:out value='${element.questionbank.que_id}'></c:out>">
+							<c:out value="${element.questionbank.marks }" default="No question" ></c:out>
 						</td>
 					</c:if>
 				</tr>

@@ -47,6 +47,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.service.beans.AddBatchBean;
 import com.service.beans.EditQuestionPaper;
+import com.service.beans.EvaluateExamBean;
 import com.service.beans.ExamSubject;
 import com.service.beans.ExamWiseStudentDetails;
 import com.service.beans.GenerateQuestionPaperResponse;
@@ -873,5 +874,30 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		boolean status = patternTransaction.checkQuestionPaperAvailability(paper_id, getRegId(), div_id, sub_id);
 
 		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Path("/evaluateExam")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response evaluateExam(EvaluateExamBean evaluateExamBean){
+		UserBean userBean = getUserBean();
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
+		int marks = patternTransaction.evaluteExam(evaluateExamBean.getExamMap(),evaluateExamBean.getDivision(),evaluateExamBean.getQuestionPaperId());
+		StudentMarksTransaction studentMarksTransaction = new StudentMarksTransaction();
+		
+		StudentMarks studentMarks = new StudentMarks();
+		studentMarks.setStudent_id(getRegId());
+		studentMarks.setAns_ids("");
+		studentMarks.setBatch_id(evaluateExamBean.getBatchId());
+		studentMarks.setDiv_id(evaluateExamBean.getDivision());
+		studentMarks.setExam_id(evaluateExamBean.getQuestionPaperId());
+		studentMarks.setInst_id(evaluateExamBean.getInstId());
+		studentMarks.setMarks(marks);
+		studentMarks.setSub_id(evaluateExamBean.getSubId());
+		
+		studentMarksTransaction.saveStudentMarks(studentMarks);
+		return Response.status(Status.OK).entity(marks).build();
 	}
 }

@@ -5,7 +5,7 @@
 <struts>
 	<constant name="struts.devMode" value="true" />
 	<constant name="struts.action.excludePattern"
-		value="/admajxsrvlt,/classOwnerServlet,/notificationServlet,/reloadConfig,/notifications,/rest.*" />
+		value="/admajxsrvlt,/classOwnerServlet,/notificationServlet,/reloadConfig,/notifications,/rest.*,/websocket.*" />
 	<constant name="struts.multipart.maxSize" value="5000000" />
 	<constant name="struts.custom.i18n.resources" value="global" />
 	<package name="classapp" extends="struts-default">
@@ -380,6 +380,12 @@
 		<action name="attemptExam" class="com.exam.AttemptExamAction"
 			method="execute">
 			<result name="success" type="tiles">classowner.attemptexam</result>
+			<result name="examresult" type="tiles">classowner.examresult</result>
+		</action>
+		
+		<action name="showScore" class="com.exam.ShowScore"
+			method="execute">
+			<result name="success" type="tiles">classowner.showscore</result>
 			<result name="examresult" type="tiles">classowner.examresult</result>
 		</action>
 		

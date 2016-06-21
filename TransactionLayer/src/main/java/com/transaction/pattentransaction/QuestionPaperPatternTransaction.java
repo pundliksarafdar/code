@@ -12,9 +12,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -573,7 +575,7 @@ public class QuestionPaperPatternTransaction {
 	
 	public OnlineExamPaper getOnlineQuestionPaper(int div_id,int paper_id) {
 		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
-		File file = new File(questionPaperStorageURL+File.separator+div_id+File.separator+paper_id);
+		File file = new File(this.questionPaperStorageURL+File.separator+div_id+File.separator+paper_id);
 		QuestionPaperFileObject fileObject = (QuestionPaperFileObject) readObject(file);
 		List<QuestionPaperFileElement> fileElementsUnsorted=fileObject.getQuestionPaperFileElementList();
 		
@@ -629,7 +631,6 @@ public class QuestionPaperPatternTransaction {
 							onlineExamPaperElement.setAns_type("single");
 						}
 					
-					questionbank.setAns_id("");
 					onlineExamPaperElement.setQuestionbank(questionbank);
 					if("3".equals(questionbank.getQue_type())){
 						 ParagraphQuestion paragraphQuestion = (ParagraphQuestion) readObject(new File(questionStorageURL+File.separator+questionbank.getSub_id()+File.separator+div_id+File.separator+questionbank.getQue_id()));
@@ -880,6 +881,29 @@ public class QuestionPaperPatternTransaction {
 			}
 		}
 		return childQuestionPaperFileElements;
+	}
+	
+	public int evaluteExam(Map<String,List<String>> examMap,int division,int questionPaperId){
+		int marks = 0;
+		OnlineExamPaper onlineExamPaper = this.getOnlineQuestionPaper(division,questionPaperId);
+		List<OnlineExamPaperElement> examPaperElements = onlineExamPaper.getOnlineExamPaperElementList();
+		for(OnlineExamPaperElement onlineExamPaperElement:examPaperElements){
+			int queNo = onlineExamPaperElement.getQues_no();
+			List<String> list = (List) examMap.get(queNo+"");
+			Questionbank questionBank = onlineExamPaperElement.getQuestionbank();
+			if(null!=list && null!=questionBank){
+				for(String l:list){
+					if(questionBank.getAns_id().contains(l)){
+						System.out.println(questionBank.getQue_text()+"::::::Answer is correct");
+						marks = marks + questionBank.getMarks();
+					}else{
+						System.out.println(questionBank.getQue_text()+":::::::Answer is wrong");
+					}
+				}
+			}
+			
+		}
+		return marks;
 	}
 
 	public String getPatternStorageURL() {
