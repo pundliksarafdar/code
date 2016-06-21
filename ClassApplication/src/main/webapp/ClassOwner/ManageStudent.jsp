@@ -186,7 +186,7 @@ var wayOfAddition="";
 					
 					var handlersSuccess = {};
 					handlersSuccess.success = function(successResp){
-						$("#countDiv").append("<h4>"+successResp.SUCCESS[0]+"</h4>");
+						$("#countDiv").append(successResp.SUCCESS[0]);
 						var errorResponse=successResp.ERROR;												
 						if(errorResponse!=null && !errorResponse==""){
 							var content="";
@@ -590,12 +590,11 @@ var wayOfAddition="";
 </div>
 <div class="row">
 <div class="col-md-5"></div>
-<div class="col-md-6" id="countDiv"></div>
+<div class="col-md-6 control-label" id="countDiv"></div>
 </div>
 
 <div class="row">
-<div class="col-md-3"></div>
-<div class="col-md-6" id="errorMSGDiv"></div>
+<div id="errorMSGDiv"></div>
 </div>
 
 <div class="container studentform" style="padding-top: 2%;border: 2px solid;border-color: #1FC0C0;margin-top: 2%;border-radius: 5%;display: none;">
