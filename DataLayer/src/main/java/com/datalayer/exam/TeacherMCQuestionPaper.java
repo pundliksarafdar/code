@@ -109,7 +109,14 @@ public class TeacherMCQuestionPaper {
 							&& isValidCorrectAnswer(correctAnswerStr.toString())
 							&& isDigit(Double.toString(row.getCell(13).getNumericCellValue()))
 							&& row.getCell(13).getNumericCellValue()>0){
-						MCQuestion question = new MCQuestion(row.getRowNum(),correctAnswerStr
+								
+						String updatedCorrectOptions="";		
+						
+						for(String option:correctAnswerStr.split(",")){
+							updatedCorrectOptions=updatedCorrectOptions.concat((Integer.parseInt(option)-1)+"");
+						}
+						
+						MCQuestion question = new MCQuestion(row.getRowNum(),updatedCorrectOptions
 						, row.getCell(1).getStringCellValue(), row.getCell(13).getNumericCellValue());
 			
 						
