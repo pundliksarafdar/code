@@ -26,6 +26,9 @@
         <property name="marks" type="int">
             <column name="marks" />
         </property>
+        <property name="pass_marks" type="int">
+            <column name="pass_marks" />
+        </property>
         <property name="paper_type" type="int">
             <column name="paper_type" />
         </property>

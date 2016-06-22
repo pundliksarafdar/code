@@ -18,6 +18,7 @@ public class Exam_Paper {
 	private int question_paper_id;
 	private String header_id;
 	private int paper_type;
+	private int pass_marks;
 	public int getExam_paper_id() {
 		return exam_paper_id;
 	}
@@ -107,6 +108,12 @@ public class Exam_Paper {
 	}
 	public void setPaper_type(int paper_type) {
 		this.paper_type = paper_type;
+	}
+	public int getPass_marks() {
+		return pass_marks;
+	}
+	public void setPass_marks(int pass_marks) {
+		this.pass_marks = pass_marks;
 	}
 	
 	

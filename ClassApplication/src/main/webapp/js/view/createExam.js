@@ -97,8 +97,9 @@ $(document).ready(function(){
 					$(".subjectDiv").empty();
 					var tableRow = "<table class='table table-striped'>";
 					tableRow += "<tr><th width='5%'></th><th width='10%'>Subjects</th>" +
-					"<th width='40%'>Question Paper</th>"+
+					"<th width='30%'>Question Paper</th>"+
 	   				"<th width='10%'>Marks</th>"+
+	   				"<th width='10%'>Passing Marks</th>"+
 	   				"<th width='20%'>Duration</th>"+
 	   				"<th width='10%'>Paper Type</th><th width='5%'>Preview</th></tr>"
 
@@ -107,6 +108,7 @@ $(document).ready(function(){
 		   				subjectnameArray[i]+"</td><td>"+
 		   				"<button class='btn btn-primary btn-xs chooseQuestionPaper'>Choose Question Paper</button>"+
 		   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></td><td><input type='text' class='form-control marks' placeholder='Marks' title='Marks of selected question paper'></td>"+
+		   				"<td><input type='text' class='form-control passMarks' placeholder='Passing' title='Passing Marks'></td>"+
 		   				"<td><div class='col-md-3'><input type='number' class='form-control examHour' placeholder='HH'></div><div class='col-md-3'><input type='number' class='form-control examMinute' placeholder='MM'></div></td>"+
 		   				"<td><select class='form-control paper-type'><option value='-1'>Paper Type</option><option value='1'>Offline</option><option value='2'>Online</option></select></td><td><button class='btn btn-primary btn-xs preview'>Preview</button></td></tr>"
 				   		i++;
@@ -177,6 +179,7 @@ $(document).ready(function(){
 			exam_paper.question_paper_id = $($(".examSubjectPapers")[i]).find(".selectedQuestionPaperID").val();
 			exam_paper.header_id = $("#headerDesc").val();
 			exam_paper.paper_type = $($(".examSubjectPapers")[i]).find(".paper-type").val();
+			exam_paper.pass_marks = $($(".examSubjectPapers")[i]).find(".passMarks").val();
 			exam_paperList.push(exam_paper);
 			}
 		}

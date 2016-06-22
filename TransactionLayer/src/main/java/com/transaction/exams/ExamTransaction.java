@@ -119,6 +119,7 @@ public class ExamTransaction {
 				Exam_Paper updatedExam_Paper = (Exam_Paper) innerIterator.next();
 				if( updatedExam_Paper.getExam_paper_id() == exam_Paper.getExam_paper_id()){
 					exam_Paper.setMarks(updatedExam_Paper.getMarks());
+					exam_Paper.setPass_marks(updatedExam_Paper.getPass_marks());
 					exam_Paper.setDuration(updatedExam_Paper.getDuration());
 					exam_Paper.setQuestion_paper_id(updatedExam_Paper.getQuestion_paper_id());
 					exam_Paper.setHeader_id(updatedExam_Paper.getHeader_id());

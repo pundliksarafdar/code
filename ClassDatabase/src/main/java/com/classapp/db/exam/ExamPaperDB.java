@@ -99,7 +99,7 @@ public class ExamPaperDB {
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("update Exam_Paper set marks = :marks , duration = :duration," +
 					"header_id = :header_id, question_paper_id = :question_paper_id,modified_by = :modified_by," +
-					"modified_dt = :modified_dt  where inst_id = :inst_id and div_id = :div_id and exam_id = :exam_id and exam_paper_id = :exam_paper_id ");
+					"modified_dt = :modified_dt,pass_marks = :pass_marks  where inst_id = :inst_id and div_id = :div_id and exam_id = :exam_id and exam_paper_id = :exam_paper_id ");
 			query.setParameter("inst_id", exam_Paper.getInst_id());
 			query.setParameter("div_id", exam_Paper.getDiv_id());
 			query.setParameter("exam_id", exam_Paper.getExam_id());
@@ -110,6 +110,7 @@ public class ExamPaperDB {
 			query.setParameter("question_paper_id", exam_Paper.getQuestion_paper_id());
 			query.setParameter("modified_by", exam_Paper.getModified_by());
 			query.setParameter("modified_dt", exam_Paper.getModified_dt());
+			query.setParameter("pass_marks", exam_Paper.getPass_marks());
 			query.executeUpdate();
 		}catch(Exception e){
 			e.printStackTrace();

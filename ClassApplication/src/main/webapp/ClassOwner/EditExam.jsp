@@ -120,6 +120,7 @@ $(document).ready(function(){
 		$(".examMinute").val("");
 		$(".paper-type").val("-1");
 		$("input[name=subjectCheckbox]").prop("checked",false);
+		$(".passMarks").val("");
 		$("#examListDiv").hide();
 		$("#editModeDiv").show();
 		division = $("#division").val();
@@ -140,6 +141,7 @@ $(document).ready(function(){
 						 $($(".examSubjectPapers")[i]).find(".examMinute").val(e[j].duration.split(":")[1]);
 						 $($(".examSubjectPapers")[i]).find(".examPaperID").val(e[j].exam_paper_id);
 						 $($(".examSubjectPapers")[i]).find(".paper-type").val(e[j].paper_type);
+						 $($(".examSubjectPapers")[i]).find(".passMarks").val(e[j].pass_marks);
 						 for(k=0;k<queationPaperList.length;k++){
 							 if(queationPaperList[k].paper_id == e[j].question_paper_id){
 								 $($(".examSubjectPapers")[i]).find(".questionPaperName").html(queationPaperList[k].paper_description);
@@ -204,6 +206,7 @@ $(document).ready(function(){
 			exam_paper.header_id = $("#headerDesc").val();
 			exam_paper.exam_paper_id =  $($(".examSubjectPapers")[i]).find(".examPaperID").val();
 			exam_paper.paper_type = $($(".examSubjectPapers")[i]).find(".paper-type").val();
+			exam_paper.pass_marks = $($(".examSubjectPapers")[i]).find(".passMarks").val();
 			exam_paperList.push(exam_paper);
 			}
 		}
@@ -334,8 +337,9 @@ $.ajax({
 				$(".subjectDiv").empty();
 				var tableRow = "<table class='table table-striped'>";
 				tableRow += "<tr><th width='5%'></th><th width='10%'>Subjects</th>" +
-				"<th width='40%'>Question Paper</th>"+
+				"<th width='30%'>Question Paper</th>"+
    				"<th width='10%'>Marks</th>"+
+   				"<th width='10%'>Passing Marks</th>"+
    				"<th width='20%'>Duration</th>"+
    				"<th width='10%'>Paper Type</th><th width='5%'>Preview</th></tr>"
 				while(i < subjectnameArray.length){
@@ -343,6 +347,7 @@ $.ajax({
 	   				subjectnameArray[i]+"</td><td>"+
 	   				"<button class='btn btn-primary btn-xs chooseQuestionPaper'>Choose Question Paper</button>"+
 	   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></td><td><input type='text' class='form-control marks' placeholder='Marks' title='Marks of selected question paper'></td>"+
+	   				"<td><input type='text' class='form-control passMarks' placeholder='Passing' title='Passing Marks'></td>"+
 	   				"<td><div class='col-md-3'><input type='number' class='form-control examHour' placeholder='HH'></div><div class='col-md-3'><input type='number' class='form-control examMinute' placeholder='MM'></div></td>"+
 	   				"<td><select class='form-control paper-type'><option value='-1'>Paper Type</option><option value='1'>Offline</option><option value='2'>Online</option></select></td><td><button class='btn btn-primary btn-xs preview'>Preview</button></td></tr>"
 			   		i++;

@@ -45,6 +45,9 @@ var globalThat;
 $(document).ready(function(){
 	
 	$("#division").change(function(){
+		$("#editQuestionPaperListContainer").hide();
+		$("#viewPatternData").hide();
+		$("#saveSection").hide();
 		var division = $("#division").val(); 
 		if(division != "-1"){
 	$.ajax({
@@ -261,6 +264,9 @@ $(document).ready(function(){
 	});
 			
 			$("#subject").change(function(){
+				$("#editQuestionPaperListContainer").hide();
+				$("#viewPatternData").hide();
+				$("#saveSection").hide();
 				var handlers = {};
 				handlers.success = function(resp){
 					loadSubjectAndTopic(resp);
