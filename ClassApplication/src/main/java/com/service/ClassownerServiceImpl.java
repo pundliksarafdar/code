@@ -405,10 +405,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		fileObject.setQuestionPaperFileElementList(questionPaperFileElements);
 		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
 		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId(),subject,compSubjectIds);
-		if(status)
-			return Response.status(Status.OK).entity(status).build();
-		else
-			return Response.status(Status.BAD_REQUEST).entity(status).build();
+		return Response.status(Status.OK).entity(status).build();
 	}
 	
 	@POST
@@ -817,8 +814,10 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteNotes(Notes notes){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		UserStatic userStatic = userBean.getUserStatic();
+	    String notesPath=  userStatic.getNotesPath()+File.separator+notes.getSubid()+File.separator+notes.getDivid();
 		NotesTransaction notesTransaction=new NotesTransaction();
-		notesTransaction.deleteNotes( notes.getNotesid(), userBean.getRegId(), notes.getDivid(), notes.getSubid());
+		notesTransaction.deleteNotes( notes.getNotesid(), userBean.getRegId(), notes.getDivid(), notes.getSubid(),notesPath);
 		return Response.status(Status.OK).entity(true).build();
 	}
 	

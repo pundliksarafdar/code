@@ -79,6 +79,7 @@ $(document).ready(function(){
 		handler.success = function(e){
 		console.log("Success",e);
 		var divisionArray = [];
+		if(e.divisionList.length > 0){
  	 $.each(e.divisionList,function(key,val){
 			var data = {};
 			data.id = val.divId;
@@ -87,6 +88,10 @@ $(document).ready(function(){
 		});
  		teacherSubjectArray = e.subjectList;
 	    $("#divisionSelect").select2({data:divisionArray,placeholder:"Type Topic Name"});
+		}else{
+			$("#divisionSelect").empty();
+ 	 		$("#divisionSelect").select2({data:"",placeholder:"Class not available"});	
+		}
 		}
 		handler.error = function(e){console.log("Error",e)};
 		rest.get("rest/teacher/getDivisionAndSubjects/"+inst_id,handler);
@@ -159,11 +164,11 @@ $(document).ready(function(){
 	var allnotesrowid="";
 	var i=0;
 	var filesize=0;
-	if(division == "-1"){
+	if(division == "-1" || division == "" || division == null){
 		$("#divisionError").html("Select Class");
 		flag= false;
 	}
-	if(subject == "-1"){
+	if(subject == "-1" || subject == "" || subject == null){
 		$("#subjectError").html("Select Subject");
 		flag= false;
 	}

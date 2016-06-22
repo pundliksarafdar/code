@@ -1,4 +1,5 @@
 var division  = "";
+var subject = "";
 var editString = "";
 var questionPaperPattern = {};
 var subjectArray = [];
@@ -46,7 +47,6 @@ var CHOOSE_QUESTION = ".chooseQuestionFromTable";
 var SAVE_QUESTION_PAPER = "#saveQuestionPaper";
 var SAVE_SECTION = "#saveSection";
 var QUESTION_PAPER_DESC = "#saveQuestionPaperDesc";
-var inst_id = "";
 function createPatternTable(data){
 	//data = JSON.parse(data);
 	var i=0;
@@ -99,7 +99,7 @@ function loadSubjectAndTopic(topicNSubjectAttr){
 }
 
 function loadSubjectAndTopicSelect(){
-	var optionString = "<option value='-1'>Select</option>";
+	var optionString = "<option value='-1'>Select subject</option>";
 	$.each(topicNSubject,function(key,val){
 		optionString = optionString + "<option value='"+key+"'>"+val.subjectName+"</option>";
 	});
@@ -108,14 +108,21 @@ function loadSubjectAndTopicSelect(){
 		var that= $(this);
 		var val = $(this).attr("value");
 		$(this).val(val);
+		if($(this).val() != null && $(this).val() != "-1"){
+		if(topicNSubject[val] != undefined){
 		loadTopicSelect(that,topicNSubject[val].topic);
+		}
+		}else{
+		$(this).val("-1");
+		loadTopicSelect(that,[]);	
+		}
 	});
 }
 
 function loadTopicSelect(selectSub,topics){
 	var topicSelect = selectSub.closest('.row').find(SELECT_TOPIC);
 	var topic = "";
-	topic = topic + "<option value='-1'>Select</option>";
+	topic = topic + "<option value='-1'>Select topic</option>";
 	$.each(topics,function(key,val){
 		topic = topic + "<option value='"+val.topicId+"'>"+val.topicName+"</option>";
 	});
@@ -131,7 +138,15 @@ function getSubjectName(subId){
 
 $(document).ready(function(){
 	$("#instituteSelect").change(function(){
-		 inst_id = $(this).val();
+		var inst_id = $(this).val();
+		$("#subject").empty();
+		 $("#subject").select2().val("").change();
+		 $("#subject").select2({data:"",placeholder:"Select Subjects"});
+		 $(".createExamSelectQuestionSubject").empty();
+		 $(".createExamSelectQuestionSubject").append("<option value='-1'>Select Subject</option>");
+		 $(".createExamSelectQuestionTopic").empty();
+		 $(".createExamSelectQuestionTopic").append("<option value='-1'>Select Topic</option>");
+		if(inst_id != "-1"){
 		var handler = {};
 		handler.success = function(e){
 		console.log("Success",e);
@@ -150,13 +165,68 @@ $(document).ready(function(){
  	 	for(i=0;i<divisionArray.length;i++){
  	 		$("#division").append("<option value='"+divisionArray[i].id+"'>"+divisionArray[i].text+"</option>")
  	 	}
-	   // $("#division").select2({data:divisionArray,placeholder:"Type Topic Name"});
+	   if(divisionArray.length == 1){
+		   $("#division").empty();
+			 $("#division").select2().val("").change();
+			 $("#division").select2({data:"",placeholder:"Class not available"});
+	   }else{
+		   $("#division").select2().val("-1").change();
+	   }
 		}
 		handler.error = function(e){console.log("Error",e)};
 		rest.get("rest/teacher/getDivisionAndSubjects/"+inst_id,handler);
+		}else{
+			$("#division").empty();
+			 $("#division").select2().val("").change();
+			 $("#division").select2({data:"",placeholder:"Select Class"});
+		}
 
 	});
+	
+	$("#division").change(function(){
+		var inst_id = $("#instituteSelect").val();
+		var division = $("#division").val();
+		 $(".createExamSelectQuestionSubject").empty();
+		 $(".createExamSelectQuestionSubject").append("<option value='-1'>Select Subject</option>");
+		 $(".createExamSelectQuestionTopic").empty();
+		 $(".createExamSelectQuestionTopic").append("<option value='-1'>Select Topic</option>");
+		if(division != "-1" && division != "" && division != null){
+		var handler = {};
+		handler.success = function(data){console.log("Success",data);
+		 wosSubjectID = "";
+		   wosTopicID = "";
+		   $("#subject").empty();
+		   if(data.length > 0 ){
+		   $("#subject").append("<option value='-1'>Select Subject</option>");
+		   $("#subject").select2().val("-1").change();
+			   var i = 0;  
+				subjectList = [];
+			   while(i < data.length){
+				   if(data[i].sub_type == "1"){
+				   		$("#subject").append("<option class='combineSub' value='"+data[i].subjectId+"'>"+data[i].subjectName+"</option>");
+				   		}else{
+				   		$("#subject").append("<option class='singleSub' value='"+data[i].subjectId+"'>"+data[i].subjectName+"</option>");
+				   		}
+			   		i++;
+			   }
+		   }else{
+			   $("#subject").empty();
+			   $("#subject").select2().val("").change();
+			   $("#subject").select2({data:"",placeholder:"Subjects not available"}); 
+		   }
+		}
+		handler.error = function(e){console.log("Error",e)}
+		rest.get("rest/teacher/getSubjectOfDivisionForExam/"+inst_id+"/"+division,handler);
+		}else{
+			 $("#subject").empty();
+			 $("#subject").select2().val("").change();
+			 $("#subject").select2({data:"",placeholder:"Select Subjects"});
+			
+		}
+		});
+	
 	$("body").on("click",REGENERATE_QUE_BTN,function(e){
+			var inst_id = $("#instituteSelect").val();
 			var RegenerateObj = {};
 			var selectSub = $(this).closest('.row').find(SELECT_SUBJECT);
 			var selectTopic = $(this).closest('.row').find(SELECT_TOPIC);
@@ -172,7 +242,13 @@ $(document).ready(function(){
 			
 			RegenerateObj.questionPaperStructure = generateExamObject;
 			RegenerateObj.generateQuestionPaperServicebeanList = questionPaperServicebeanList;
-			
+			var currentIds = [];
+			$.each($(QUESTION),function(key,val){
+				if( $($(val).closest('.questionRow')).find('.selectSubject').val() == selectSub.val()){
+					currentIds.push($(val).data(QUESTION_ID));
+				}
+			});
+			RegenerateObj.currentIds = currentIds;
 			var url = "rest/teacher/generateQuestionPaperSpecific/"+inst_id+"/"+$("#division").val();
 			var handler = {};
 			handler.success = function(e){
@@ -180,11 +256,19 @@ $(document).ready(function(){
 				questionPaperServicebeanList = e.questionPaperServicebeanList;
 				if(e.questionPaperDataList && e.questionPaperDataList.length){
 					$.each(e.questionPaperDataList,function(key,val){
-						if(val.dataStatus != "N"){
+						if(val.dataStatus != "N" && val.dataStatus != "MN"){
 						$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
 						$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
+						}else if(val.dataStatus == "MN"){
+							$.notify({message: "More Questions are not available for criteria"},{type: 'danger'});
+						}else if(val.dataStatus == "N"){
+							$.notify({message: "Questions are not available for criteria"},{type: 'danger'});
+							$("[item_id='"+val.item_id+"']").find(QUESTION).html("<div class='error'>Questions are not available for criteria</div>");
 						}
-					});					
+					});			
+					if($(".question").find(".error").length == 0){
+						$(SAVE_SECTION).show();
+					}
 				}
 			}
 			handler.error = function(e){console.log(e);}
@@ -192,6 +276,7 @@ $(document).ready(function(){
 			});
 		
 	$("body").on("click",GENERATE_QUESTION_PAPER,function(){
+		var inst_id = $("#instituteSelect").val();
 		var generateExamObjectList = [];
 		$.each($(ROW_ITEM),function(key,val){
 			var selectSub = $(this).find(SELECT_SUBJECT);
@@ -211,6 +296,7 @@ $(document).ready(function(){
 		//console.log(generateExamObjectList);
 		var url = "rest/teacher/generateQuestionPaper/"+inst_id+"/"+$("#division").val();
 		var handler = {};
+		
 		handler.success = function(e){
 			//This flag is false if no availibility
 			var availibilityFlag = true;
@@ -218,13 +304,14 @@ $(document).ready(function(){
 			if(e.questionPaperDataList.length){
 				$.each(e.questionPaperDataList,function(key,val){
 					if(val.dataStatus != "N"){
-					$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
-					$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
+						$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
+						$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
 					}else{
 						availibilityFlag = false;
 						$.notify({message: "Questions are not available for criteria"},{type: 'danger'});
 						$("[item_id='"+val.item_id+"']").find(QUESTION).html("<div class='error'>Questions are not available for criteria</div>");
 					}
+					
 				});
 			$(".noRegenerate").removeClass("noRegenerate");
 			}
@@ -261,24 +348,40 @@ $(document).ready(function(){
 	});
 	
 	$(SAVE_QUESTION_PAPER).on("click",function(){
+		var inst_id = $("#instituteSelect").val();
+		var compSubjectIds = [];
+		for(var i = 0 ; i<$(".selectSubject").length ; i++){
+			if(jQuery.inArray($($(".selectSubject")[i]).val(),compSubjectIds) == -1){
+			compSubjectIds.push($($(".selectSubject")[i]).val())
+			}
+		}
+		compSubjectIds = compSubjectIds.join(",");
 		var questionPaperData = {};
 		$.each($(QUESTION),function(key,val){
-			questionPaperData[$(val).closest('[item_id]').attr('item_id')] = $(val).data(QUESTION_ID);
+			var questionPaperFileElement = {};
+			questionPaperFileElement.subject_id = $($(val).closest('.questionRow')).find('.selectSubject').val();
+			questionPaperFileElement.ques_no = $(val).data(QUESTION_ID);
+			questionPaperFileElement.question_topic = $($(val).closest('.questionRow')).find('.selectTopic').val();
+			console.log(questionPaperFileElement);
+			questionPaperData[$(val).closest('[item_id]').attr('item_id')] = questionPaperFileElement;
 		});
-		console.log(questionPaperData);
 		var handlers = {};
 		handlers.success = function(resp){
-			loadSubjectAndTopic(resp);
+			if(resp == true){
+			$.notify({message: "Exam saved successfully"},{type: 'success'});
+			}else{
+				$.notify({message: "Exam with same description already present.Please enter different description"},{type: 'danger'});
+			}
 		};
 		handlers.error = function(e){};
 		var division = $("#division").val();
-		var questionPaperName = $("#saveQuestionPaperName").val();
+		subject = $("#subject").val();
+		var questionPaperName = $(QUESTION_PAPER_DESC).val();
 		var desc = $(QUESTION_PAPER_DESC).val();
-		if(questionPaperName && questionPaperName.trim().length!==0){
-			questionPaperData.desc = desc;
-			rest.post("rest/teacher/saveQuestionPaper/"+inst_id+"/"+patternId+"/"+questionPaperName+"/"+division,handlers,JSON.stringify(questionPaperData),true);	
+		if(desc && desc.trim().length!==0){
+			//questionPaperData.desc = desc;
+			rest.post("rest/teacher/saveQuestionPaper/"+inst_id+"/"+patternId+"/"+questionPaperName+"/"+division+"/"+subject+"/"+compSubjectIds,handlers,JSON.stringify(questionPaperData),true);	
 		}else{
-			modal.launchAlert("Error","Please enter exam name");
 			$("#saveQuestionPaperName").focus();
 		}
 		
@@ -288,44 +391,58 @@ $(document).ready(function(){
 	
 	});
 	
-	$("#division").change(function(){
-		 inst_id = $("#instituteSelect").val();
+	
+	$("#subject").change(function(){
+		var inst_id = $("#instituteSelect").val();
+		$("#viewPatternDiv").hide();
+		$("#patternListTableDiv").hide();
 		var handlers = {};
 		handlers.success = function(resp){
 			loadSubjectAndTopic(resp);
 		};
 		handlers.error = function(e){};
-		var division = $(this).val();
-		rest.get("rest/teacher/getSubjectsAndTopics/"+inst_id+"/"+division,handlers);
+		var subject = $(this).val();
+		var division = $("#division").val();
+		if(subject != "-1" && subject != "" && subject != null){
+			rest.post("rest/teacher/getSubjectsAndTopicsForExam/"+inst_id+"/"+division+"/"+subject,handlers);
+		}
 	});
+	
 	$("#searchPattern").click(function(){
-	    inst_id = $("#instituteSelect").val();
+		$("#viewPatternDiv").hide();
+		$("#patternListTableDiv").hide();
+		$(".validation-message").html("");
+		var inst_id = $("#instituteSelect").val();
 		division = $("#division").val();
+		subject = $("#subject").val();
 		var patternType = $("#patternType").val();
+		var validationFlag = false;
+		if(division == "-1" || division == "" || division == null){
+			$("#divisionError").html("Select Class");
+			validationFlag = true;
+		}
+		
+		if(subject == "-1" || subject == "" || subject == null){
+			$("#subjectError").html("Select Subject");
+			validationFlag = true;
+		}
+		if(validationFlag == false){
 		var obj = {};
-		/* obj.division = division;
-		obj.patternType = patternType; */
 		var handlers = {};
 		handlers.success = function(e){
-		
 		$("#patternListTable").find("tbody").empty();
 		createPatternTable(e);
-		/* if(e.length > 0)
-		{
-			for(var i=0; i<e.length; i++){
-			$("#patternListTable").find("tbody").append("<tr><td>"+(i+1)+"</td><td>"+e[i].pattern_name+"</td><td>"+e[i].marks+"</td><td><button class='btn btn-primary btn-xs viewPattern' id='"+e[i].pattern_id+"'>View/Edit</button></td><td><button class='btn btn-danger btn-xs deletePattern' id='"+e[i].pattern_id+"'>Delete</button></td>");
-		}
-		}else{
-			$("#patternListTable").find("tbody").append("<tr><td colspan='5' align='center'>Paterns not available for selected criteria</td></tr>");
-		} */	
+		$("#patternListTableDiv").show();
 		};
 		handlers.error = function(e){console.log("Error",e)};
-		rest.get("rest/teacher/searchQuestionPaperPattern/"+inst_id+"/"+division+"/"+patternType,handlers);
+		rest.get("rest/teacher/searchQuestionPaperPattern/"+inst_id+"/"+division+"/"+subject+"/"+patternType,handlers);
+		}
 	});
 	
 	$("#patternListTable").on("click",".viewPattern",function(){
 		$("#viewPatternDiv").show();
 		$("#patternListTableDiv").hide();
+		var inst_id = $("#instituteSelect").val();
 		patternId = $(this).attr("id");
 		var handlers = {};
 		handlers.success = function(e){
@@ -352,7 +469,7 @@ $(document).ready(function(){
 		$(".actionOptionWOS").hide();		
 	});
 	
-	$("#patternType").change(function(){
+	/*$("#patternType").change(function(){
 		patternType = $("#patternType").val();
 		$("#examPattern").empty();
 		$("#actionOptions").hide();
@@ -366,10 +483,35 @@ $(document).ready(function(){
 			$("#withSectionOptions").hide();
 			$("#withoutSectionOptions").hide();
 		}
-	});
+	});*/
 });
 
 var alternateValueMap = [];
+function loadSubjectRelatedToTopicSelect(){
+	var subjectId = $(this).val();
+	
+	var topicSelect = $(this).closest('.row').find(SELECT_TOPIC);
+	var topic = "<option value='-1'>Select topic</option>";
+	var topics = topicNSubject[subjectId]?topicNSubject[subjectId].topic:[];
+	$.each(topics,function(key,val){
+		topic = topic + "<option value='"+val.topicId+"'>"+val.topicName+"</option>";
+	});
+	topicSelect.empty();
+	topicSelect.append(topic);
+	
+	$($(this).closest(".questionRow")).find(QUESTION).text("");	
+	$($(this).closest(".questionRow")).find(QUESTION).data(QUESTION_ID,-1);
+	$($(this).closest(".questionRow")).find(QUESTION).html("<div class='error'>Press refresh to get Question</div>");
+	$(SAVE_SECTION).hide();
+	/*
+	$.each($(SELECT_SUBJECT),function(){
+		var that= $(this);
+		loadTopicSelect(that,topicNSubject[val] && topicNSubject[val].topic?topicNSubject[val].topic:[]);
+	});
+	loadTopicSelect(that,topicNSubject[val] && topicNSubject[val].topic?topicNSubject[val].topic:[]);
+	*/
+}
+
 function recursiveView(data,recursionLevel,dataArray){
 	recursionLevel++;
 	var preAlternateValue = 0;
@@ -394,9 +536,9 @@ function recursiveView(data,recursionLevel,dataArray){
 				var itemNo = data[i].item_no;
 				var itemMarks = data[i].item_marks;
 				if(recursionLevel == 1 || recursionLevel==2){
-				$("#viewPatternData").append("<div class='row' style='font-weight:bold'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-1'>"+itemMarks+"</div></div>")
+				$("#viewPatternData").append("<div class='row' style='font-weight:bold'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-2 pull-right' title='Marks'>"+itemMarks+"</div></div>")
 				}else{
-					$("#viewPatternData").append("<div class='row'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-1'>"+itemMarks+"</div></div>")
+					$("#viewPatternData").append("<div class='row'><div class='col-md-1' style='padding-left:"+recursionLevel+"%'>"+itemNo+"</div><div class='col-md-8'>"+itemName+"</div><div class='col-md-2 pull-right' title='Marks'>"+itemMarks+"</div></div>")
 				}
 				data[i].status = "viewed";
 			}else{
@@ -429,7 +571,7 @@ function recursiveView(data,recursionLevel,dataArray){
 					class:"btn btn-default selectSubject btn-xs",
 					style:"width:100%;",
 					value:data[i].subject_id
-				});
+				}).on('change',loadSubjectRelatedToTopicSelect);
 				
 				var subjectDiv = $("<div/>",{
 					class:"col-md-2"
@@ -514,7 +656,7 @@ var loadQuestionList = function(subject_id,item_id,question_type,item_type,quest
 			var RegenerateObj = {};
 			RegenerateObj.questionPaperStructure = generateExamObject;
 			RegenerateObj.generateQuestionPaperServicebeanList = questionPaperServicebeanList;
-			
+			var inst_id = $("#instituteSelect").val();
 			var url = "rest/teacher/getQuestionList/"+inst_id+"/"+$("#division").val();
 			var handler = {};
 			$(QUESTION_LIST_MODAL).modal('show');
@@ -544,4 +686,7 @@ var loadQuestionList = function(subject_id,item_id,question_type,item_type,quest
 	function updateQuestionList(data){
 		$("[item_id='"+data.item_id+"']").find(QUESTION).text(data.questionbank.que_text);	
 		$("[item_id='"+data.item_id+"']").find(QUESTION).data(QUESTION_ID,data.questionbank.que_id);
+		if($(".question").find(".error").length == 0){
+			$(SAVE_SECTION).show();
+		}
 	}

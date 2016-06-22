@@ -1,11 +1,14 @@
 package com.teacher;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.classapp.db.subject.Topics;
 import com.config.BaseAction;
+import com.tranaction.subject.SubjectTransaction;
 import com.user.UserBean;
 
 public class EditQuestionTeacherAction extends BaseAction{
@@ -15,6 +18,7 @@ public class EditQuestionTeacherAction extends BaseAction{
 	int questiontype;
 	int questionNumber;
 	int inst_id;
+	List<Topics> topicList;
 	@Override
 	public String performBaseAction(UserBean userBean, HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
@@ -29,6 +33,8 @@ public class EditQuestionTeacherAction extends BaseAction{
 		default:questionType = "none";
 			break;
 		}
+		SubjectTransaction subjectTransaction = new SubjectTransaction();
+		topicList = subjectTransaction.getTopics(inst_id, subject, division);
 		return questionType;
 	}
 	public int getDivision() {
@@ -66,6 +72,12 @@ public class EditQuestionTeacherAction extends BaseAction{
 	}
 	public void setInst_id(int inst_id) {
 		this.inst_id = inst_id;
+	}
+	public List<Topics> getTopicList() {
+		return topicList;
+	}
+	public void setTopicList(List<Topics> topicList) {
+		this.topicList = topicList;
 	}
 
 	

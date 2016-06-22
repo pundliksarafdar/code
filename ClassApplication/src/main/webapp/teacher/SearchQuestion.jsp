@@ -70,6 +70,9 @@ $(document).ready(function(){
 	$("#searchQuestionDivision").select2();
 	
 	$("#instituteSelect").change(function(){
+		$("#paginationDiv").hide();
+		$("#questionListDiv").hide();
+		$("#filterDiv").hide();
 		var divisionArray = [];
 		var subjectArray = [];
 		divisionArray.push(divisionTempData);
@@ -85,6 +88,7 @@ $(document).ready(function(){
 		var handler = {};
 		handler.success = function(e){
 		console.log("Success",e);
+		if(e.divisionList.length > 0){
  	 $.each(e.divisionList,function(key,val){
 			var data = {};
 			data.id = val.divId;
@@ -96,6 +100,11 @@ $(document).ready(function(){
 	    if(divId != -1){
 	    	$("#searchQuestionDivision").val(divId).trigger("change");
 	    }
+		}else{
+			 $("#searchQuestionDivision").empty();
+			 $("#searchQuestionDivision").select2().val("").change();
+			 $("#searchQuestionDivision").select2({data:"",placeholder:"Class not available"});
+		}
 		}
 		handler.error = function(e){console.log("Error",e)};
 		rest.get("rest/teacher/getDivisionAndSubjects/"+inst_id,handler);
@@ -104,6 +113,9 @@ $(document).ready(function(){
 	});
 	
 $("#searchQuestionDivision").on("change",function(e){
+	$("#paginationDiv").hide();
+	$("#questionListDiv").hide();
+	$("#filterDiv").hide();
 	var subjectArray = [];
 	subjectArray.push(subjectTempData);
 	$("#searchQuestionSubject").empty();
@@ -116,12 +128,18 @@ $("#searchQuestionDivision").on("change",function(e){
 });
 	
 	$("#searchQuestionSubject").on("change",function(e){
+		$("#paginationDiv").hide();
+		$("#questionListDiv").hide();
+		$("#filterDiv").hide();
 		if($("#searchQuestionSubject").val() != "-1"){
 		$("#searchQuestionSubjectError").html("");
 		}
 	});
 	
 	$("#searchQuestionType").on("change",function(e){
+		$("#paginationDiv").hide();
+		$("#questionListDiv").hide();
+		$("#filterDiv").hide();
 		if($("#searchQuestionType").val() != "-1"){
 		$("#searchQuestionTypeError").html("");
 		}
@@ -328,7 +346,7 @@ function searchQuestion(pageNo){
 		$("#searchQuestionInstituteError").html("Select Institute!");
 		flag = true;
 	}
-	if(division == "-1"){
+	if(division == "-1" || division == null){
 		$("#searchQuestionDivisionError").html("Select Class!");
 		flag = true;
 	}

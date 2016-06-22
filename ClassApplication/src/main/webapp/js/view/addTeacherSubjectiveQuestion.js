@@ -52,11 +52,11 @@
 			$("#instituteSelectError").html("Select Institute");
 			validateFlag = true;
 		}
-		if($("#divisionSelect").val() == "-1"){
+		if($("#divisionSelect").val() == "-1" || $("#divisionSelect").val() == "" || $("#divisionSelect").val() == null){
 			$("#divisionSelectError").html("Select Class");
 			validateFlag = true;
 		}
-		if($("#subjectSelect").val() == "-1"){
+		if($("#subjectSelect").val() == "-1" || $("#subjectSelect").val() == "" || $("#subjectSelect").val() == null){
 			$("#subjectSelectError").html("Select Subject");
 			validateFlag = true;
 		}

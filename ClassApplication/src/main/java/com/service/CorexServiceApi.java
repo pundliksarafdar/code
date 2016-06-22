@@ -323,7 +323,7 @@ public class CorexServiceApi extends ServiceBase{
 	public Response uploadNotes(MultipartFormDataInput input,@PathParam("notescount") int notescount,@PathParam("division") int division,
 			@PathParam("subject") int subject,@PathParam("batch") String batch){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
-	      UserStatic userStatic = userBean.getUserStatic();
+	    UserStatic userStatic = userBean.getUserStatic();
 	    String destPath=  userStatic.getNotesPath()+File.separator+subject+File.separator+division;
 		for(int i=0;i<=notescount;i++){
 		String fileName="";

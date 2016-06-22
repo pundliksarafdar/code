@@ -122,6 +122,68 @@ public class TeacherServiceImpl extends ServiceBase {
 	}
 	
 	@GET
+	@Path("/getSubjectOfDivisionForExam/{inst_id}/{div_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSubjectOfDivisionForExam(@PathParam("inst_id") int inst_id,@PathParam("div_id") int div_id) {
+		SubjectTransaction subjectTransaction = new SubjectTransaction();
+		List<Subject> subjects = subjectTransaction.getSubjectRelatedToDivForExam(div_id, inst_id);
+		TeacherTransaction teacherTransaction=new TeacherTransaction();
+		List<Subject> list=new ArrayList<Subject>();
+		list= teacherTransaction.getTeacherSubject(getRegId(), inst_id);
+		List<Subject> subjectsList = new ArrayList<Subject>();
+		if(subjects != null){
+		for (Subject subject : subjects) {
+			for (Subject teachersSubject : list) {
+				if(teachersSubject.getSubjectId() == subject.getSubjectId()){
+					subjectsList.add(teachersSubject);
+					break;
+				}
+			}
+		}
+		}
+			
+			return Response.status(200).entity(subjectsList).build();
+	}
+	
+	@POST
+	@Path("/getSubjectsAndTopicsForExam/{inst_id}/{division}/{subject}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSubjectsAndTopicsForExam(@PathParam("inst_id") int inst_id,@PathParam("division") String division,@PathParam("subject") int subject_id){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		SubjectTransaction subjectTransaction = new SubjectTransaction();
+		Map<Integer, SubjectsWithTopics> map = new HashMap<Integer,SubjectsWithTopics>();
+		Subject subject = subjectTransaction.getSubject(subject_id);
+		if("1".equals(subject.getSub_type())){
+			String subjectArray[] = subject.getCom_subjects().split(",");
+			for (String string : subjectArray) {
+				Subject combineSubjects = subjectTransaction.getSubject( Integer.parseInt(string));
+				List<Topics> topics = subjectTransaction.getTopics(inst_id, Integer.parseInt(string), Integer.parseInt(division));
+				SubjectsWithTopics subjectsWithTopics = new SubjectsWithTopics();
+				subjectsWithTopics.setSubject(combineSubjects);
+				subjectsWithTopics.setTopics(topics);
+				map.put(Integer.parseInt(string), subjectsWithTopics);
+			}
+			
+		}else{
+		List<Topics> topics = subjectTransaction.getTopics(inst_id, subject.getSubjectId(), Integer.parseInt(division));
+		SubjectsWithTopics subjectsWithTopics = new SubjectsWithTopics();
+		subjectsWithTopics.setSubject(subject);
+		subjectsWithTopics.setTopics(topics);
+		map.put(subject.getSubjectId(), subjectsWithTopics);
+		}
+		return Response.status(Status.OK).entity(map).build();
+	}
+	
+	@GET
+	@Path("/getCombineSubjects/{inst_id}/{subject}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getCombineSubjects(@PathParam("inst_id")int inst_id,@PathParam("subject")int subject){
+		SubjectTransaction subjectTransaction = new SubjectTransaction();
+		List<Subject> subjectList =  subjectTransaction.getCombineSubjects(inst_id, subject);
+		return Response.status(Status.OK).entity(subjectList).build();
+	}
+	
+	@GET
 	@Path("/getSubjectOfInstitutesDivision/{inst_id}/{div_id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSubjectOfInstitutesDivision(@PathParam("inst_id") int inst_id,@PathParam("div_id") int div_id) {
@@ -402,7 +464,7 @@ public class TeacherServiceImpl extends ServiceBase {
 				paraQuestionBean.getInstId(),
 				paraQuestionBean.getSubjectId(),
 				paraQuestionBean.getClassId(),
-				paraQuestionBean.getMarks(),1);
+				paraQuestionBean.getMarks(),paraQuestionBean.getTopicId());
 		bankTransaction.saveParaObject(Constants.STORAGE_PATH,paraQuestionBean, queId);
 		
 		/*
@@ -478,14 +540,15 @@ public class TeacherServiceImpl extends ServiceBase {
 	}
 	
 	@GET
-	@Path("/searchQuestionPaperPattern/{inst_id}/{division}/{patternType}")
+	@Path("/searchQuestionPaperPattern/{inst_id}/{division}/{subject}/{patternType}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response searchQuestionPaperPattern(@PathParam("inst_id") int inst_id,@PathParam("division") int division,@PathParam("patternType") String patternType){
+	public Response searchQuestionPaperPattern(@PathParam("inst_id") int inst_id,@PathParam("division") int division,
+			@PathParam("subject") int subject,@PathParam("patternType") String patternType){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		String storagePath = com.config.Constants.STORAGE_PATH+File.separator+inst_id;
 		userBean.getUserStatic().setStorageSpace(storagePath);
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),inst_id);
-		List<QuestionPaperPattern> questionPaperPatternList = patternTransaction.getQuestionPaperPatternList(division,1,patternType);
+		List<QuestionPaperPattern> questionPaperPatternList = patternTransaction.getQuestionPaperPatternList(division,subject,patternType);
 		return Response.status(Status.OK).entity(questionPaperPatternList).build();
 	}
 	
@@ -541,12 +604,12 @@ public class TeacherServiceImpl extends ServiceBase {
 	}
 	
 	@POST
-	@Path("/saveQuestionPaper/{inst_id}/{patternId}/{questionPaperName}/{divisionId}")
+	@Path("/saveQuestionPaper/{inst_id}/{patternId}/{questionPaperName}/{divisionId}/{subject}/{compSubjectIds}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response saveQuestionPaper(@PathParam("inst_id") int inst_id,@PathParam("patternId") String patternId,@PathParam("questionPaperName") String questionPaperName,
-			@PathParam("divisionId") String divisionId
-			,Map<String, String>questionAndItem){
+			@PathParam("divisionId") String divisionId,@PathParam("subject") int subject,@PathParam("compSubjectIds")String compSubjectIds
+			,Map<String, QuestionPaperFileElement>questionAndItem){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		String storagePath = com.config.Constants.STORAGE_PATH+File.separator+inst_id;
 		userBean.getUserStatic().setStorageSpace(storagePath);
@@ -563,7 +626,7 @@ public class TeacherServiceImpl extends ServiceBase {
 		//fileObject.setPaper_description(questionPaperPattern.);
 		fileObject.setPattern_id(questionPaperPattern.getPattern_id());
 		//Description is added in question item as its too long to send
-		fileObject.setPaper_description(questionAndItem.get("desc"));
+		fileObject.setPaper_description(questionPaperName);
 		List<QuestionPaperFileElement> questionPaperFileElements = new ArrayList<QuestionPaperFileElement>();
 		for(int index=0;index<questionPaperPatternList.size();index++){
 			QuestionPaperFileElement questionPaperFileElement = new QuestionPaperFileElement();
@@ -584,25 +647,27 @@ public class TeacherServiceImpl extends ServiceBase {
 			questionPaperFileElements.add(questionPaperFileElement);
 			
 			if(questionAndItem.containsKey(itemId)){
-				int question_number = Integer.parseInt(questionAndItem.get(itemId));
-				questionPaperFileElement.setQues_no(question_number);
+				QuestionPaperFileElement questionpaper= questionAndItem.get(itemId);
+				questionPaperFileElement.setSubject_id(questionpaper.getSubject_id());
+				questionPaperFileElement.setQuestion_topic(questionpaper.getQuestion_topic());
+				questionPaperFileElement.setQues_no(questionpaper.getQues_no());
 			}
 		}
-		
 		fileObject.setQuestionPaperFileElementList(questionPaperFileElements);
-		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId(),1,"");
+		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
+		boolean status = patternTransaction.saveQuestionPaper(fileObject, getRegId(),subject,compSubjectIds);
 		return Response.status(Status.OK).entity(status).build();
 	}
 	
 	@GET
-	@Path("/getQuestionPaperList/{inst_id}/{division}")
+	@Path("/getQuestionPaperList/{inst_id}/{division}/{subject}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getQuestionPaperList(@PathParam("inst_id") int inst_id,@PathParam("division") String division){
+	public Response getQuestionPaperList(@PathParam("inst_id") int inst_id,@PathParam("division") String division,@PathParam("subject") int subject){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		String storagePath = com.config.Constants.STORAGE_PATH+File.separator+inst_id;
 		userBean.getUserStatic().setStorageSpace(storagePath);
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),inst_id,userBean.getUserStatic().getExamPath());
-		List<QuestionPaper> questionPaperList = patternTransaction.getQuestionPaperList(Integer.parseInt(division),1);
+		List<QuestionPaper> questionPaperList = patternTransaction.getQuestionPaperList(Integer.parseInt(division),subject);
 		return Response.status(Status.OK).entity(questionPaperList).build();
 	}
 	
@@ -816,13 +881,15 @@ public class TeacherServiceImpl extends ServiceBase {
 	}
 	
 	@POST
-	@Path("/updateQuestionPaper/{inst_id}/{patternId}/{questionPaperName}/{divisionId}/{paperId}")
+	@Path("/updateQuestionPaper/{inst_id}/{patternId}/{questionPaperName}/{divisionId}/{paperId}/{compSubjectIds}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateQuestionPaper(@PathParam("inst_id") int inst_id,@PathParam("patternId") String patternId,@PathParam("questionPaperName") String questionPaperName,
-			@PathParam("divisionId") String divisionId,@PathParam("paperId") int paperId
-			,Map<String, String>questionAndItem){
+			@PathParam("divisionId") String divisionId,@PathParam("paperId") int paperId,@PathParam("compSubjectIds")String compSubjectIds
+			,Map<String, QuestionPaperFileElement>questionAndItem){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		String storagePath = com.config.Constants.STORAGE_PATH+File.separator+inst_id;
+		userBean.getUserStatic().setStorageSpace(storagePath);
 		
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),inst_id);
 		QuestionPaperPattern questionPaperPattern = patternTransaction.getQuestionPaperPattern(Integer.parseInt(divisionId), Integer.parseInt(patternId));
@@ -836,7 +903,7 @@ public class TeacherServiceImpl extends ServiceBase {
 		//fileObject.setPaper_description(questionPaperPattern.);
 		fileObject.setPattern_id(questionPaperPattern.getPattern_id());
 		//Description is added in question item as its too long to send
-		fileObject.setPaper_description(questionAndItem.get("desc"));
+		fileObject.setPaper_description(questionPaperName);
 		List<QuestionPaperFileElement> questionPaperFileElements = new ArrayList<QuestionPaperFileElement>();
 		for(int index=0;index<questionPaperPatternList.size();index++){
 			QuestionPaperFileElement questionPaperFileElement = new QuestionPaperFileElement();
@@ -857,15 +924,17 @@ public class TeacherServiceImpl extends ServiceBase {
 			questionPaperFileElements.add(questionPaperFileElement);
 			
 			if(questionAndItem.containsKey(itemId)){
-				int question_number = Integer.parseInt(questionAndItem.get(itemId));
-				questionPaperFileElement.setQues_no(question_number);
+				QuestionPaperFileElement questionpaper= questionAndItem.get(itemId);
+				questionPaperFileElement.setSubject_id(questionpaper.getSubject_id());
+				questionPaperFileElement.setQuestion_topic(questionpaper.getQuestion_topic());
+				questionPaperFileElement.setQues_no(questionpaper.getQues_no());
 			}
 		}
 		
 		fileObject.setQuestionPaperFileElementList(questionPaperFileElements);
 		fileObject.setPaper_id(paperId);
 		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
-		boolean status = patternTransaction.updateQuestionPaper(fileObject, getRegId(),"");
+		boolean status = patternTransaction.updateQuestionPaper(fileObject, getRegId(),compSubjectIds);
 		return Response.status(Status.OK).entity(status).build();
 	}
 	
@@ -1018,4 +1087,44 @@ public class TeacherServiceImpl extends ServiceBase {
 	        invalidQuestionResponseMap.put("addedQuestionsResponse",addedQuestionResponseList);
 			return Response.ok(invalidQuestionResponseMap).build();
     }
+	
+	@POST
+	@Path("/deleteNotes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteNotes(Notes notes){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		 UserStatic userStatic = userBean.getUserStatic();
+	      String storagePath = Constants.STORAGE_PATH+File.separator+notes.getInst_id();
+	     userStatic.setStorageSpace(storagePath);
+	    String notesPath=  userStatic.getNotesPath(notes.getSubid(),notes.getDivid());
+		NotesTransaction notesTransaction=new NotesTransaction();
+		notesTransaction.deleteNotes( notes.getNotesid(), notes.getInst_id(), notes.getDivid(), notes.getSubid(),notesPath);
+		return Response.status(Status.OK).entity(true).build();
+	}
+	
+	@POST
+	@Path("/deleteQuestionPaperPattern/{inst_id}/{division}/{patternid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteQuestionPaperPattern(@PathParam("inst_id") int inst_id,@PathParam("division") String division,@PathParam("patternid") String patternId){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		String storagePath = com.config.Constants.STORAGE_PATH+File.separator+inst_id;
+		userBean.getUserStatic().setStorageSpace(storagePath);
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),inst_id);
+		boolean status = patternTransaction.deleteQuestionPaperPattern(Integer.parseInt(division), Integer.parseInt(patternId));
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@DELETE
+	@Path("/deleteQuestionPaper/{inst_id}/{division}/{paper_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteQuestionPaper(@PathParam("inst_id") int inst_id,@PathParam("division") String division,@PathParam("paper_id") String paper_id){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		String storagePath = com.config.Constants.STORAGE_PATH+File.separator+inst_id;
+		userBean.getUserStatic().setStorageSpace(storagePath);
+		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),inst_id,userBean.getUserStatic().getExamPath());
+		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
+		boolean status = patternTransaction.deleteQuestionPaper(Integer.parseInt(division), Integer.parseInt(paper_id));
+		return Response.status(Status.OK).entity(status).build();
+	}
 }

@@ -91,27 +91,28 @@ font-size: 12px;
 						<option value="<c:out value="${institute.regId}"></c:out>"><c:out value="${institute.className}"></c:out></option>
 					</c:forEach>							
 				</select>
+				<span id="instituteError" class="patternError"></span>
 			</div>
 			<div class="col-md-3">
 				<select id="division" name="division" class="form-control">
 					<option value="-1">Select Class</option>
-					<c:forEach items="${divisionList}" var="division">
-						<option value="<c:out value="${division.divId }"></c:out>">
-							<c:out value="${division.divisionName }"></c:out>
-							<c:out value="${division.stream }"></c:out>
-						</option>
-					</c:forEach>
 				</select>
 				<span id="divisionError" class="patternError"></span>
+			</div>
+			<div class="col-md-3">
+				<select id="subject" name="subject" class="form-control">
+					<option value="-1">Select Subject</option>
+				</select>
+				<span id="subjectError" class="patternError"></span>
 			</div>
 			<div class="col-md-1">
 				<button class="form-control btn btn-primary btn-sm" id="searchQuestionPaper">Search</button>
 			</div>
 		</div>		
 	</div>	
-	<div class="row" id="editQuestionPaperListContainer">
+	<div class="row" id="editQuestionPaperListContainer" style="display: none;width: 100%">
 			<div class="col-md-12">
-				<table id="editQuestionPaperList" class="table"></table>
+				<table id="editQuestionPaperList" class="table" style="width: 100%"></table>
 			</div>
 		</div>
 		<div id="viewPatternData"></div>

@@ -66,7 +66,9 @@ font-size: 12px;
 }
 </style>
 <script type="text/javascript">
+var subjectType = "";
 var division  = "";
+var subject  = "";
 var editString = "";
 var questionPaperPattern = {};
 var subjectArray = [];
@@ -89,7 +91,6 @@ var enumData = {addSection:"addSection",addInstruction:"addInstruction",addQuest
 var errorFlag;
 var patternType;
 var subjectList = [];
-var inst_id = "";
 function createPatternTable(data){
 	//data = JSON.parse(data);
 	var i=0;
@@ -97,9 +98,7 @@ function createPatternTable(data){
 		bDestroy:true,
 		data: data,
 		lengthChange: false,
-		columns: [{title:"#",data:null,render:function(data,event,row){
-			return ++i;
-			},sWidth:"10%"},
+		columns: [{title:"#",data:null,sWidth:"10%"},
 			{ title: "Pattern Name",data:null,render:function(data,event,row){
 				var div = '<div class="default defaultBatchName">'+row.pattern_name+'</div>';
 				return div;
@@ -121,11 +120,23 @@ function createPatternTable(data){
 			},sWidth:"10%"}
 		]
 	});
-	
+	dataTable.on( 'order.dt search.dt', function () {
+        dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+			});
+		}).draw(); 
 }
 $(document).ready(function(){
 	$("#instituteSelect").change(function(){
 		var inst_id = $(this).val();
+		$("#subject").empty();
+		 $("#subject").select2().val("").change();
+		 $("#subject").select2({data:"",placeholder:"Select Subjects"});
+		 $(".createExamSelectQuestionSubject").empty();
+		 $(".createExamSelectQuestionSubject").append("<option value='-1'>Select Subject</option>");
+		 $(".createExamSelectQuestionTopic").empty();
+		 $(".createExamSelectQuestionTopic").append("<option value='-1'>Select Topic</option>");
+		if(inst_id != "-1"){
 		var handler = {};
 		handler.success = function(e){
 		console.log("Success",e);
@@ -144,13 +155,71 @@ $(document).ready(function(){
  	 	for(i=0;i<divisionArray.length;i++){
  	 		$("#division").append("<option value='"+divisionArray[i].id+"'>"+divisionArray[i].text+"</option>")
  	 	}
-	   // $("#division").select2({data:divisionArray,placeholder:"Type Topic Name"});
+	   if(divisionArray.length == 1){
+		   $("#division").empty();
+			 $("#division").select2().val("").change();
+			 $("#division").select2({data:"",placeholder:"Class not available"});
+	   }else{
+		   $("#division").select2().val("-1").change();
+	   }
 		}
 		handler.error = function(e){console.log("Error",e)};
 		rest.get("rest/teacher/getDivisionAndSubjects/"+inst_id,handler);
+		}else{
+			$("#division").empty();
+			 $("#division").select2().val("").change();
+			 $("#division").select2({data:"",placeholder:"Select Class"});
+		}
 
 	});
+	
 	$("#division").change(function(){
+		var inst_id = $("#instituteSelect").val();
+		var division = $("#division").val();
+		 $(".createExamSelectQuestionSubject").empty();
+		 $(".createExamSelectQuestionSubject").append("<option value='-1'>Select Subject</option>");
+		 $(".createExamSelectQuestionTopic").empty();
+		 $(".createExamSelectQuestionTopic").append("<option value='-1'>Select Topic</option>");
+		if(division != "-1" && division != "" && division != null){
+		var handler = {};
+		handler.success = function(data){console.log("Success",data);
+		 wosSubjectID = "";
+		   wosTopicID = "";
+		   $("#subject").empty();
+		   if(data.length > 0 ){
+		   $("#subject").append("<option value='-1'>Select Subject</option>");
+		   $("#subject").select2().val("-1").change();
+			   var i = 0;  
+				subjectList = [];
+			   while(i < data.length){
+				   if(data[i].sub_type == "1"){
+				   		$("#subject").append("<option class='combineSub' value='"+data[i].subjectId+"'>"+data[i].subjectName+"</option>");
+				   		}else{
+				   		$("#subject").append("<option class='singleSub' value='"+data[i].subjectId+"'>"+data[i].subjectName+"</option>");
+				   		}
+			   		i++;
+			   }
+		   }else{
+			   $("#subject").empty();
+			   $("#subject").select2().val("").change();
+			   $("#subject").select2({data:"",placeholder:"Subjects not available"}); 
+		   }
+		}
+		handler.error = function(e){console.log("Error",e)}
+		rest.get("rest/teacher/getSubjectOfDivisionForExam/"+inst_id+"/"+division,handler);
+		}else{
+			 $("#subject").empty();
+			 $("#subject").select2().val("").change();
+			 $("#subject").select2({data:"",placeholder:"Select Subjects"});
+			
+		}
+		});
+	
+	 $("#subject").change(function(){
+		$("#viewPatternDiv").hide();
+		$("#patternListTableDiv").hide();
+		$("#editPatternDiv").hide();
+		subjectType = $(this).find('option:selected').prop("class");
 		var handlers = {};
 		handlers.success = function(e){
 		console.log("Success",e);
@@ -162,13 +231,39 @@ $(document).ready(function(){
 		} 
 		}
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
+		var inst_id = $("#instituteSelect").val();
 		division = $("#division").val();
-		inst_id = $("#instituteSelect").val();
-		rest.get("rest/teacher/getSubjectsAndTopics/"+inst_id+"/"+division,handlers);
-	});
+		subject = $("#subject").val();
+		if(subject != "-1" && subject != "" && subject != null){
+		rest.post("rest/teacher/getSubjectsAndTopicsForExam/"+inst_id+"/"+division+"/"+subject,handlers);
+		}
+	}); 
 	$("#searchPattern").click(function(){
+		$(".patternError").html("");
+		$("#viewPatternDiv").hide();
+		$("#patternListTableDiv").hide();
+		$("#editPatternDiv").hide();
+		$(".validation-message").html("");
+		var inst_id = $("#instituteSelect").val();
 		division = $("#division").val();
+		subject = $("#subject").val();
+		var validationFlag = false;
 		var patternType = $("#patternType").val();
+		if(inst_id == "-1" || inst_id == "" || inst_id == null){
+			$("#instituteError").html("Select Institute");
+			validationFlag = true;
+		}
+		
+		if(division == "-1" || division == "" || division == null){
+			$("#divisionError").html("Select Class");
+			validationFlag = true;
+		}
+		
+		if(subject == "-1" || subject == "" || subject == null){
+			$("#subjectError").html("Select Subject");
+			validationFlag = true;
+		}
+		if(validationFlag == false){
 		var obj = {};
 		/* obj.division = division;
 		obj.patternType = patternType; */
@@ -177,6 +272,9 @@ $(document).ready(function(){
 		console.log("Success",e)
 		$("#patternListTable").find("tbody").empty();
 		createPatternTable(e);
+		$("#viewPatternDiv").hide();
+		$("#patternListTableDiv").show();
+		$("#editPatternDiv").hide();
 		/* if(e.length > 0)
 		{
 			for(var i=0; i<e.length; i++){
@@ -187,10 +285,12 @@ $(document).ready(function(){
 		} */	
 		};
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
-		rest.get("rest/teacher/searchQuestionPaperPattern/"+inst_id+"/"+division+"/"+patternType,handlers);
+		rest.get("rest/teacher/searchQuestionPaperPattern/"+inst_id+"/"+division+"/"+subject+"/"+patternType,handlers);
+		}
 	});
 	
 	$("#patternListTable").on("click",".viewPattern",function(){
+		var inst_id = $("#instituteSelect").val();
 		$("#viewPatternDiv").show();
 		$("#patternListTableDiv").hide();
 		var patternid = $(this).attr("id");
@@ -300,6 +400,8 @@ $(document).ready(function(){
 	
 	$("#patternListTable").on("click",".deletePattern",function(){
 		var patternid = $(this).attr("id");
+		var inst_id = $("#instituteSelect").val();
+		var that = $(this);
 		var handlers = {};
 		handlers.success = function(){
 			$.notify({message: "Pattern successfuly deleted"},{type: 'success'});
@@ -311,10 +413,12 @@ $(document).ready(function(){
 			createPatternTable(e);
 			};
 			handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
-			rest.post("rest/classownerservice/searchQuestionPaperPattern/"+division+"/"+patternType,handlers,obj,false);
+			var table = $("#patternListTable").DataTable();
+			that.closest("tr").addClass('selected');
+			table.row('.selected').remove().draw( false );
 		};
 		handlers.error = function(){$.notify({message: "Error"},{type: 'danger'});};
-		rest.post("rest/classownerservice/deleteQuestionPaperPattern/"+division+"/"+patternid,handlers);
+		rest.post("rest/teacher/deleteQuestionPaperPattern/"+inst_id+"/"+division+"/"+patternid,handlers);
 	});
 	
 });
@@ -401,14 +505,20 @@ function recursiveEdit(questionPaperPatternArray,newQuestionPaperPatternArray,ed
 			'<span id="descriptionError" class="patternError"/>'+
 			'</div>'+
 			'<div class="col-md-2">'+
-			'<select class="form-control createExamSelectQuestionSubject" id="createExamSelectQuestionSubject">'+
-			'<option value="-1">Select Subject</option>';
+			'<select class="form-control createExamSelectQuestionSubject" id="createExamSelectQuestionSubject">';
+			if(subjectArray.length > 0){
+				if(subjectType == "combineSub"){
+				editString = editString + '<option value="-1">Select Subject</option>';
+				}
 			for(var k=0;k<subjectArray.length;k++){
 				if(subjectArray[k].subjectId == subject_id){
 					editString = editString + '<option value="'+subjectArray[k].subjectId+'" selected>'+subjectArray[k].subjectName+'</option>';	
 				}else{
 				editString = editString + '<option value="'+subjectArray[k].subjectId+'">'+subjectArray[k].subjectName+'</option>';
 				}
+			}
+			}else{
+				
 			}
 			editString = editString + '</select>'+
 			'</div>'+
@@ -533,8 +643,11 @@ function recursiveEdit(questionPaperPatternArray,newQuestionPaperPatternArray,ed
 			editString = editString + '</select>'+
 			'</div>'+
 			'<div class="col-md-2">'+
-			'<select class="form-control createExamSelectQuestionSubject" id="createExamSelectQuestionSubject">'+
-			'<option value="-1">Select Subject</option>';
+			'<select class="form-control createExamSelectQuestionSubject" id="createExamSelectQuestionSubject">';
+			if(subjectArray.length > 0){
+				if(subjectType == "combineSub"){
+				editString = editString + '<option value="-1">Select Subject</option>';
+				}
 			for(var k=0;k<subjectArray.length;k++){
 				if(subjectArray[k].subjectId == subject_id){
 					editString = editString + '<option value="'+subjectArray[k].subjectId+'" selected>'+subjectArray[k].subjectName+'</option>';	
@@ -542,18 +655,23 @@ function recursiveEdit(questionPaperPatternArray,newQuestionPaperPatternArray,ed
 				editString = editString + '<option value="'+subjectArray[k].subjectId+'">'+subjectArray[k].subjectName+'</option>';
 				}
 			}
+			}else{
+				editString = editString + '<option value="-1">Select Subject</option>';
+			}
 			editString = editString + '</select>'+
 			'</div>'+
 			'<div class="col-md-2">'+
 			'<select class="form-control createExamSelectQuestionTopic" id="createExamSelectQuestionTopic">'+
 			'<option value="-1">Select Topic</option>';
 			if(subject_id != -1 && subject_id != ""){
+			if(topicMap[subject_id] != undefined ){
 			for(var k=0;k<topicMap[subject_id].topics.length;k++){
 				if(topicMap[subject_id].topics[k].topic_id == question_topic){
 					editString = editString + '<option value="'+topicMap[subject_id].topics[k].topic_id+'" selected>'+topicMap[subject_id].topics[k].topic_name+'</option>';	
 				}else{
 				editString = editString + '<option value="'+topicMap[subject_id].topics[k].topic_id+'">'+topicMap[subject_id].topics[k].topic_name+'</option>';
 				}
+			}
 			}
 			}
 			editString = editString + '</select>'+
@@ -596,51 +714,6 @@ function getTopics(subID,that,scenario){
 	topic_names="";
 	topic_ids="";
 	if(subID != ""){
-	 /* $.ajax({
-		 
-		   url: "classOwnerServlet",
-		   data: {
-		    	 methodToCall: "getDivisionsTopics",
-		    	 divisionID:divisionID,
-		    	 subID:subID
-		   		},
-		   type:"POST",
-		   async:false,
-		   success:function(data){
-			   var resultJson=JSON.parse(data);
-			   topic_names=resultJson.topic_names.split(",");
-			   topic_ids=resultJson.topic_ids.split(",");
-			   if(scenario == "sectionSubject"){
-				   $(that).find(".createExamSelectQuestionTopic").empty();
-				   $(that).find(".createExamSelectQuestionTopic").append("<option value='-1'>Select Topic</option>");
-				   if(topic_names.length > 0 ){
-					   var i=0;
-					   while(i<topic_names.length){
-						   if(topic_names[i] != ""){
-							   $(that).find(".createExamSelectQuestionTopic").append("<option value='"+topic_ids[i]+"'>"+topic_names[i]+"</option>");
-						   }
-						   i++;						   
-					   }
-				   }   
-			   }else if(scenario == "newItem"){
-				   
-			   }else{
-			   $(that).closest(".createExamPatternItem").first().find(".createExamSelectQuestionTopic").empty();
-			   $(that).closest(".createExamPatternItem").first().find(".createExamSelectQuestionTopic").append("<option value='-1'>Select Topic</option>");
-			   if(topic_names.length > 0 ){
-				   var i=0;
-				   while(i<topic_names.length){
-					   if(topic_names[i] != ""){
-						   $(that).closest(".createExamPatternItem").first().find(".createExamSelectQuestionTopic").append("<option value='"+topic_ids[i]+"'>"+topic_names[i]+"</option>");
-					   }
-					   i++;						   
-				   }
-			   }
-			   }
-		   },
-		   error:function(){
-			   }
-		   }); */
 	 var divisionID = $("#division").val();
 		var inst_id = $("#instituteSelect").val();
 		var handler = {};
@@ -667,8 +740,18 @@ function getTopics(subID,that,scenario){
 				   i++;						   
 			   }
 		   }   
-	   }else if(scenario == "newItem"){
-		   
+	   }else if(scenario == "allChange"){
+		   $(".createExamSelectQuestionTopic").empty();
+		   $(".createExamSelectQuestionTopic").append("<option value='-1'>Select Topic</option>");
+		   if(topic_names.length > 0 ){
+			   var i=0;
+			   while(i<topic_names.length){
+				   if(topic_names[i] != ""){
+					   $(".createExamSelectQuestionTopic").append("<option value='"+topic_ids[i]+"'>"+topic_names[i]+"</option>");
+				   }
+				   i++;						   
+			   }
+		   }    
 	   }else{
 	   $(that).closest(".createExamPatternItem").first().find(".createExamSelectQuestionTopic").empty();
 	   $(that).closest(".createExamPatternItem").first().find(".createExamSelectQuestionTopic").append("<option value='-1'>Select Topic</option>");
@@ -712,6 +795,7 @@ var deleteItem = function(){
 };
 
 function generatePattern(){
+	var inst_id = $("#instituteSelect").val();
 	verifyPattern();
 	if(errorFlag == false){
 	var alternateValue = 0;
@@ -807,9 +891,9 @@ function generatePattern(){
 	var QuestionPaperPattern = {};
 	QuestionPaperPattern.pattern_name = $("#examPatternName").val();
 	QuestionPaperPattern.class_id = division;
+	QuestionPaperPattern.inst_id = inst_id;
 	QuestionPaperPattern.sub_id = $("#subject").val();
 	QuestionPaperPattern.marks = $("#totalMarks").val();
-	QuestionPaperPattern.inst_id = inst_id;
 	QuestionPaperPattern.pattern_id = $("#pattern_id").val();
 	QuestionPaperPattern.questionPaperStructure = questionPaperStructure;
 	var QuestionPaperPatternJson = JSON.stringify(QuestionPaperPattern);
@@ -1061,20 +1145,21 @@ function ExamPatternObject(){
 						<option value="<c:out value="${institute.regId}"></c:out>"><c:out value="${institute.className}"></c:out></option>
 					</c:forEach>							
 				</select>
+				<span id="instituteError" class="patternError"></span>
 			</div>
 			<div class="col-md-3">
 				<select id="division" name="division" class="form-control">
 					<option value="-1">Select Class</option>
-					<c:forEach items="${divisionList}" var="division">
-						<option value="<c:out value="${division.divId }"></c:out>">
-							<c:out value="${division.divisionName }"></c:out>
-							<c:out value="${division.stream }"></c:out>
-						</option>
-					</c:forEach>
 				</select>
 				<span id="divisionError" class="patternError"></span>
 			</div>
 			<div class="col-md-3">
+				<select id="subject" name="subject" class="form-control">
+					<option value="-1">Select Subject</option>
+				</select>
+				<span id="subjectError" class="patternError"></span>
+			</div>
+			<div class="col-md-2">
 				<select id="patternType" name="patternType" class="form-control">
 					<option value="-1">Any Pattern Type</option>
 					<option value="WS">Pattern With Section</option>
@@ -1086,8 +1171,8 @@ function ExamPatternObject(){
 			</div>
 		</div>
 	</div>
-	<div class="container" id="patternListTableDiv">
-		<table class="table" id="patternListTable">
+	<div class="container" id="patternListTableDiv" style="display: none;width: 100%">
+		<table class="table" id="patternListTable" style="width: 100%">
 		<thead>
 			<tr>
 				<th>Sr No.</th>

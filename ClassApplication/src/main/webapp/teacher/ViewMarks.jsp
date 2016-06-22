@@ -18,6 +18,7 @@ examTempData.id = "-1";
 examTempData.text = "Select Exam";
 $(document).ready(function(){
 	$("#instituteSelect").change(function(){
+		$("#studentTableDiv").hide();
 		var divisionArray = [];
 		var batchArray = [];
 		divisionArray.push(divisionTempData);
@@ -29,7 +30,9 @@ $(document).ready(function(){
 		 $("#batchSelect").select2({data:batchArray});
 		 $("#exam").append("<option value='-1'>Select Exam</option>");
 		 $("#subjects").empty();
-			$("#subjects").append("<option value='-1'>Select Subject</option>");
+		 $("#subjects").append("<option value='-1'>Select Subject</option>");
+		 $("#exam").select2().val("-1").change();
+		 $("#subjects").select2().val("-1").change();
 		var inst_id = $(this).val();
 		if(inst_id != "-1"){
 		$("#instituteError").html("");
@@ -45,6 +48,7 @@ $(document).ready(function(){
  	 	if(divisionArray.length > 1){
  	 	$("#division").select2({data:divisionArray});
  	 	}else{
+ 	 		$("#division").empty();
  	 		$("#division").select2({data:"",placeholder:"Class not available"});	
  	 	}
 		}
@@ -54,6 +58,7 @@ $(document).ready(function(){
 	});
 	
 	$("#searchMarks").click(function(){
+		$("#studentTableDiv").hide();
 		$(".validation-message").html("");
 		var validationFlag = false;
 		var inst_id = $("#instituteSelect").val();
@@ -66,11 +71,11 @@ $(document).ready(function(){
 			$("#instituteError").html("Select Institute");
 			validationFlag = true;
 		}
-		if(division == "-1"){
+		if(division == "-1" || division == "" || division == null){
 			$("#divisionError").html("Select Class");
 			validationFlag = true;
 		}
-		if(batch == "-1"){
+		if(batch == "-1" || batch == "" || batch == null){
 			$("#batchError").html("Select Batch");
 			validationFlag = true;
 		}
@@ -79,12 +84,12 @@ $(document).ready(function(){
 			validationFlag = true;
 		}else{
 			if(viewType == "1"){
-		if(exam == "-1"){
+		if(exam == "-1" || exam == "" || exam == null){
 			$("#examError").html("Select Exam");
 			validationFlag = true;
 		}
 		}else{
-			if(subject == "-1"){
+			if(subject == "-1" || subject == "" || subject == null){
 				$("#examError").html("Select Subject");
 				validationFlag = true;
 			}
@@ -110,12 +115,15 @@ $(document).ready(function(){
 	
 	
 	$("#viewType").change(function(){
+		$("#studentTableDiv").hide();
 		var examArray = [];
 		examArray.push(examTempData);
 		$("#exam").empty();
-		 $("#exam").append("<option value='-1'>Select Exam</option>");
-		 $("#subjects").empty();
-			$("#subjects").append("<option value='-1'>Select Subject</option>");
+		$("#exam").append("<option value='-1'>Select Exam</option>");
+		$("#subjects").empty();
+		$("#subjects").append("<option value='-1'>Select Subject</option>");
+		$("#exam").select2().val("-1").change();
+		$("#subjects").select2().val("-1").change();
 		if($("#viewType").val() != "-1"){
 		$("#viewTypeError").html("");
 		getViewData();
@@ -129,11 +137,13 @@ $(document).ready(function(){
 	});
 	
 	$("#batchSelect").change(function(){
-		
+		$("#studentTableDiv").hide();
 		$("#exam").empty();
 		$("#exam").append("<option value='-1'>Select Exam</option>");
 		$("#subjects").empty();
 		$("#subjects").append("<option value='-1'>Select Subject</option>");
+		$("#exam").select2().val("-1").change();
+		 $("#subjects").select2().val("-1").change();
 		 if($("#batchSelect").val() != "-1"){
 		 $("#batchError").html("");
 		getViewData();
@@ -142,13 +152,17 @@ $(document).ready(function(){
 	
 	
 	$("#division").change(function(){
+		$("#studentTableDiv").hide();
 		var batchArray = [];
 		batchArray.push(batchTempData);
 		$("#batchSelect").empty();
 		$("#exam").empty();
 		 $("#batchSelect").select2({data:batchArray});
 		 $("#exam").append("<option value='-1'>Select Exam</option>");
-		 
+		 $("#subjects").empty();
+		 $("#subjects").append("<option value='-1'>Select Subject</option>");
+		 $("#exam").select2().val("-1").change();
+		 $("#subjects").select2().val("-1").change();
 	var division = $("#division").val();
 	var inst_id = $("#instituteSelect").val();
 	if(division != "-1"){
@@ -232,33 +246,45 @@ function getViewData(){
 	var inst_id = $("#instituteSelect").val();
 	if($("#viewType").val() != "-1"){
 	if($("#viewType").val() == "1"){
-		$("#subjects").hide();
-		$("#exam").show();
+		$("#subjectDiv").hide();
+		$("#examDiv").show();
 		if(batch != "-1"){
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
 		$("#exam").empty();
+		if(e.length > 0){
 		$("#exam").append("<option value='-1'>Select Exam</option>");
+		$("#exam").select2().val("-1").change();
 		for(var i=0;i<e.length;i++){
 			$("#exam").append("<option value='"+e[i].exam_id+"'>"+e[i].exam_name+"</option>");
+		}
+		}else{
+			$("#exam").empty();
+	        $("#exam").select2({data:"",placeholder:"Exam not available"}); 
 		}
 		};
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.get("rest/teacher/getExamList/"+inst_id+"/"+division+"/"+batch,handlers);
 		}
 	}else{		
-	$("#subjects").show();
-	$("#exam").hide();
+	$("#subjectDiv").show();
+	$("#examDiv").hide();
 	if(batch != "-1"){
 	var handlers = {};
 	handlers.success = function(e){console.log("Success",e);
 	$("#subjects").empty();
+	if(e.length > 0){
 	$("#subjects").append("<option value='-1'>Select Subject</option>");
+	$("#subjects").select2().val("-1").change();
 	var i = 0;
 	while(i < e.length){
    		$("#subjects").append("<option value='"+e[i].subjectId+"'>"+e[i].subjectName+"</option>");
    		i++;
   	 }
+	}else{
+		$("#subjects").empty();
+        $("#subjects").select2({data:"",placeholder:"Subject not available"}); 
+	}
 	};
 	handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 	rest.get("rest/teacher/getBatchSubjects/"+inst_id+"/"+division+"/"+batch,handlers);
@@ -381,12 +407,16 @@ function createStudentExamSubjectMarksTable(data){
 				<span id="viewTypeError" class="validation-message"></span>
 			</div>
 			<div class="col-md-2">
+				<div id="examDiv">
 				<select id="exam" name="exam" class="form-control viewTypes">
 					<option value="-1">Select Exam</option>
 				</select>
-				<select id="subjects" name="subjects" class="form-control viewTypes" style="display: none;">
+				</div>
+				<div id="subjectDiv" style="display: none;width: 100%">
+				<select id="subjects" name="subjects" class="form-control viewTypes"  style="width: 100%">
 					<option value="-1">Select Subject</option>
 				</select>
+				</div>
 				<span id="examError" class="validation-message"></span>
 			</div>
 			<div class="col-md-1">

@@ -67,6 +67,7 @@ var SAVE_OBJECTIVE_EXAM = "#saveObjectiveExam";
 			objectiveExamBean.questionType = "2";
 			objectiveExamBean.question = $("#objectiveQuestion").val();
 			objectiveExamBean.marks = $("#objectiveQuestionmarks").val();
+			objectiveExamBean.topicId = $("#topicSelect").val();
 			objectiveExamBean.images = [];
 			
 			var queImgs = $(ADD_OBJECT_FORM).find("input.objectiveQuestionImage");
@@ -144,7 +145,7 @@ var SAVE_OBJECTIVE_EXAM = "#saveObjectiveExam";
 function loadObjectiveQuestion(data){
 	$("#objectiveQuestion").val(data.que_text);
 	$("#objectiveQuestionmarks").val(data.marks);
-	
+	$("#topicSelect").select2().val(data.topic_id).change();
 	var images = "";
 	for(var index=0;index<data.primaryImage.length;index++){
 		//images = images + "<img src=/rest/commonservices/image/"+data.primaryImage[index]+" width='200px' height='200px'>";

@@ -169,6 +169,7 @@ function deletenotes(notesid){
 
 $(document).ready(function(){
 	$("#instituteSelect").change(function(){
+		$("#notesdiv").hide();
 		var divisionArray = [];
 		var subjectArray = [];
 		divisionArray.push(divisionTempData);
@@ -184,6 +185,7 @@ $(document).ready(function(){
 		var handler = {};
 		handler.success = function(e){
 		console.log("Success",e);
+		if(e.divisionList.length > 0){
 		var divisionArray = [];
  	 $.each(e.divisionList,function(key,val){
 			var data = {};
@@ -193,6 +195,10 @@ $(document).ready(function(){
 		});
  		teacherSubjectArray = e.subjectList;
 	    $("#division").select2({data:divisionArray,placeholder:"Type Topic Name"});
+		}else{
+			$("#division").empty();
+ 	 		$("#division").select2({data:"",placeholder:"Class not available"});	
+		}
 		}
 		handler.error = function(e){console.log("Error",e)};
 		rest.get("rest/teacher/getDivisionAndSubjects/"+inst_id,handler);
@@ -220,6 +226,7 @@ $(document).ready(function(){
 	        }
 	    } );
 	$("#division").on("change",function(e){
+		$("#notesdiv").hide();
 		var subjectArray = [];
 		subjectArray.push(subjectTempData);
 		$("#subject").empty();
@@ -232,6 +239,7 @@ $(document).ready(function(){
 	});
 	
 	$("#subject").on("change",function(e){
+		$("#notesdiv").hide();
 		var uploadExam = new UploadExam();
 		var subjectId = $(this).val();
 		var divisionId = $("#division").val();
@@ -279,11 +287,11 @@ $(document).ready(function(){
 			$("#instituteError").html("Select Institute");
 			flag= false;
 		}
-		if(subject=="-1"){
+		if(subject=="-1" || subject == "" || subject == null){
 			$("#subjectError").html("Select Subject");
 			flag=false;
 		}
-		if(division=="-1"){
+		if(division=="-1" || division == "" || division == null){
 			$("#divisionError").html("Select Class");
 			flag=false;
 		}
@@ -294,6 +302,7 @@ $(document).ready(function(){
 			var handlers = {};
 			handlers.success = function(data){
 				var dataTable = $('#notestable').DataTable({
+					autoWidth:false,
 					bDestroy:true,
 					data: data,
 					lengthChange: false,
@@ -318,7 +327,7 @@ $(document).ready(function(){
 		            cell.innerHTML = i+1;
 					});
 				}).draw();
-				
+				 $("#notesdiv").show();
 			}
 			handlers.error = function(){
 				
@@ -382,10 +391,12 @@ $(document).ready(function(){
 	$("#notestable").on("click",".deletenotes",function(){
 		/* var subject=$("#subject").val();
 		var division=$("#division").val(); */
+		var inst_id = $("#instituteSelect").val();
 		var notes = {};
 		notes.notesid = $(this).prop("id");
 		notes.divid = division;
 		notes.subid = subject;
+		notes.inst_id = inst_id;
 		var that = this;
 		var handlers = {};
 		handlers.success = function(data){
@@ -396,11 +407,12 @@ $(document).ready(function(){
 			}
 			$(that.closest("tr")).addClass('removeRow');
 			table.row('.removeRow').remove().draw( false );
+			$.notify({message: 'Notes deleted successfully'},{type: 'success'});
 		};
 		handlers.error = function(){
 			console.log("error");
 		};
-		rest.post("rest/classownerservice/deleteNotes",handlers,JSON.stringify(notes));
+		rest.post("rest/teacher/deleteNotes",handlers,JSON.stringify(notes));
 	});
 	
 	
@@ -571,8 +583,8 @@ function UploadExam(){
 		</div>
 		</div>
 
-   <div id="notesdiv" class="container">
-   <table id="notestable" class="table table-bordered table-hover" style="background-color: white;">
+   <div id="notesdiv" class="container" style="width: 100%">
+   <table id="notestable" class="table table-bordered table-hover" style="background-color: white;width: 100%">
   
    </table>
  

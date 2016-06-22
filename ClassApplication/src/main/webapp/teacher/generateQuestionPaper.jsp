@@ -91,20 +91,21 @@ font-size: 12px;
 						<option value="<c:out value="${institute.regId}"></c:out>"><c:out value="${institute.className}"></c:out></option>
 					</c:forEach>							
 				</select>
+				<span id="instituteError" class="patternError"></span>
 			</div>
 			<div class="col-md-3">
 				<select id="division" name="division" class="form-control">
 					<option value="-1">Select Class</option>
-					<c:forEach items="${divisionList}" var="division">
-						<option value="<c:out value="${division.divId }"></c:out>">
-							<c:out value="${division.divisionName }"></c:out>
-							<c:out value="${division.stream }"></c:out>
-						</option>
-					</c:forEach>
 				</select>
 				<span id="divisionError" class="patternError"></span>
 			</div>
 			<div class="col-md-3">
+				<select id="subject" name="subject" class="form-control">
+					<option value="-1">Select Subject</option>
+				</select>
+				<span id="subjectError" class="patternError"></span>
+			</div>
+			<div class="col-md-2">
 				<select id="patternType" name="patternType" class="form-control">
 					<option value="-1">Any Pattern Type</option>
 					<option value="WS">Pattern With Section</option>
@@ -116,8 +117,8 @@ font-size: 12px;
 			</div>
 		</div>
 	</div>
-	<div class="container" id="patternListTableDiv">
-		<table class="table" id="patternListTable">
+	<div class="container" id="patternListTableDiv" style="display: none;width: 100%">
+		<table class="table" id="patternListTable" style="width: 100%">
 		</table>
 	</div>
 	<div id="viewPatternDiv" style="display: none;" class="container">
@@ -129,7 +130,6 @@ font-size: 12px;
 		<br>
 		<div class="container well" id="saveSection" style="padding:1%;margin:1%;">
 		<div class="row" >
-			<div class="col-xs-5"><input type="text" class="form-control" id="saveQuestionPaperName" placeholder="Question paper name"></div>
 			<div class="col-xs-5"><input type="text" class="form-control" id="saveQuestionPaperDesc" placeholder="Question paper description"></div>
 			<div class="col-xs-2"><input type="button" value="Save" class="btn btn-default" id="saveQuestionPaper"/></div>
 		</div>

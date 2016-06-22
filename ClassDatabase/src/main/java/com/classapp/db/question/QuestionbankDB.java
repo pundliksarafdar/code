@@ -1,6 +1,8 @@
 package com.classapp.db.question;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,6 +13,7 @@ import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder.In;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -28,17 +31,25 @@ import com.service.beans.GenerateQuestionPaperServicebean;
 
 public class QuestionbankDB {
 public int saveQuestion(Questionbank questionbank) {
+	questionbank.setModified_dt(new Date(new java.util.Date().getTime()));
+	Question_Bank question_Bank = new Question_Bank();
+	try {
+		BeanUtils.copyProperties(question_Bank, questionbank);
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} 
 	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
 	transaction=session.beginTransaction();
-	session.saveOrUpdate(questionbank);
+	session.saveOrUpdate(question_Bank);
 	transaction.commit();
 	System.out.println("Quesbank ID:-"+questionbank.getQue_id());
 	if(session!=null){
 		session.close();
 	}
-	return  questionbank.getQue_id();
+	return  question_Bank.getQue_id();
 
 
 }

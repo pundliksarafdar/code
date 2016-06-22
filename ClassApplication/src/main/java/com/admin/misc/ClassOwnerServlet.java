@@ -2304,7 +2304,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	String realpath=	req.getSession().getServletContext().getRealPath("/"+path);
 	File file = new File(realpath);
 	  file.delete();
-	  notesTransaction.deleteNotes(Integer.parseInt(notesid),1,1,1);
+	//  notesTransaction.deleteNotes(Integer.parseInt(notesid),1,1,1);
 	respObject.addProperty(STATUS, "success");
 	
 }else if("sendmessage".equals(methodToCall)){

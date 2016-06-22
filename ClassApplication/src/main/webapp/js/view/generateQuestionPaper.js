@@ -330,8 +330,11 @@ $(document).ready(function(){
 		});
 		var handlers = {};
 		handlers.success = function(resp){
-			$.notify({message: "Exam saved successfully"},{type: 'success'});
-			loadSubjectAndTopic(resp);
+			if(resp == true){
+				$.notify({message: "Exam saved successfully"},{type: 'success'});
+				}else{
+					$.notify({message: "Exam with same description already present.Please enter different description"},{type: 'danger'});
+				}
 		};
 		handlers.error = function(e){};
 		var division = $("#division").val();

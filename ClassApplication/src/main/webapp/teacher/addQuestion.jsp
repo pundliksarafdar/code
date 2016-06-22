@@ -46,6 +46,7 @@ padding-top: 2px;
 			var handler = {};
 			handler.success = function(e){
 			console.log("Success",e);
+			if(e.divisionList.length > 0){
 			var divisionArray = [];
 	 	 $.each(e.divisionList,function(key,val){
 				var data = {};
@@ -55,6 +56,11 @@ padding-top: 2px;
 			});
 	 		teacherSubjectArray = e.subjectList;
 		    $("#divisionSelect").select2({data:divisionArray,placeholder:"Type Topic Name"});
+			}else{
+				 $("#divisionSelect").empty();
+				 $("#divisionSelect").select2().val("").change();
+				 $("#divisionSelect").select2({data:"",placeholder:"Class not available"});
+			}
 			}
 			handler.error = function(e){console.log("Error",e)};
 			rest.get("rest/teacher/getDivisionAndSubjects/"+inst_id,handler);

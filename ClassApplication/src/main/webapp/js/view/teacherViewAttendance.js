@@ -34,6 +34,7 @@ $(document).ready(function(){
 		$("#instituteError").html("");
 		var handler = {};
 		handler.success = function(e){
+		if(e.divisionList.length > 0){
  	 $.each(e.divisionList,function(key,val){
 			var data = {};
 			data.id = val.divId;
@@ -42,6 +43,10 @@ $(document).ready(function(){
 		});
  	 $("#divisionSelect").select2({data:divisionArray});
  	 	teacherSubjectArray = e.subjectList;
+		}else{
+			$("#divisionSelect").empty();
+ 	 		$("#divisionSelect").select2({data:"",placeholder:"Class not available"});	
+		}
 		}
 		handler.error = function(e){console.log("Error",e)};
 		rest.get("rest/teacher/getDivisionAndSubjects/"+inst_id,handler);
@@ -68,11 +73,11 @@ $(document).ready(function(){
 			$("#instituteError").html("Select Institute");
 			validationFlag = true;
 		}
-		if(division == "-1"){
+		if(division == "-1" || division == "" || division == null){
 			$("#divisionError").html("Select Class");
 			validationFlag = true;
 		}
-		if(batch == "-1"){
+		if(batch == "-1" || batch == "" || batch == null){
 			$("#batchError").html("Select Batch");
 			validationFlag = true;
 		}

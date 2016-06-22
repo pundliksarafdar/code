@@ -10,6 +10,10 @@
   <script src="../js/bootstrap-datetimepicker.min.js"></script> -->
   <style type="text/css">
  #attendanceStudentListDiv .dataTables_filter { visibility: hidden;}
+ #datetimepicker .form-control{
+ padding: 6px 10px;
+ height: 29px
+ }
   </style>
 </head>
 <body>
@@ -27,20 +31,20 @@
 				</select>
 				<span id="instituteError" class="validation-message"></span>
 			</div>
-			<div class="col-md-2">
-				<select class="btn btn-default" id="divisionSelect">
+			<div class="col-md-3">
+				<select class="form-control" id="divisionSelect">
 					<option value="-1">Select Class</option>
 				</select>
 				<span id="divisionError" class="validation-message"></span>
 			</div>
-			<div class="col-md-2">
+			<div class="col-md-3">
 				<select class="form-control" id="batchSelect">
 					<option value="-1">Select Batch</option>
 				</select>
 				<span id="batchError" class="validation-message"></span>
 			</div>
-			<div class="col-md-3">
-				<div id="datetimepicker" class="input-group" style="width :190px;">
+			<div class="col-md-2">
+				<div id="datetimepicker" class="input-group">
 					<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
 						type="text" id="date" placeholder="Select Date" readonly/> <span class="input-group-addon add-on"> <i
 						class="glyphicon glyphicon-calendar glyphicon-time"></i>

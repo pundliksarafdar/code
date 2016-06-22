@@ -20,6 +20,8 @@ examTempData.text = "Select Exam";
 
 $(document).ready(function(){
 	$("#instituteSelect").change(function(){
+		$("#subjectTableDiv").hide();
+		$("#studentTableDiv").hide();
 		var divisionArray = [];
 		var batchArray = [];
 		var examArray = [];
@@ -49,6 +51,7 @@ $(document).ready(function(){
  	 	if(divisionArray.length > 1){
  	 	$("#division").select2({data:divisionArray});
  	 	}else{
+ 	 		$("#division").empty();
  	 		$("#division").select2({data:"",placeholder:"Class not available"});	
  	 	}
 		}
@@ -58,6 +61,8 @@ $(document).ready(function(){
 	});
 	
 	$("#exam").change(function(){
+		$("#subjectTableDiv").hide();
+		$("#studentTableDiv").hide();
 		if($("#exam").val() != "-1"){
 			$("#examError").html("");
 		}
@@ -76,15 +81,15 @@ $(document).ready(function(){
 			$("#instituteError").html("Select Institute");
 			validationFlag = true;
 		}
-		if(division == "-1"){
+		if(division == "-1" || division == "" || division == null){
 			$("#divisionError").html("Select Class");
 			validationFlag = true;
 		}
-		if(batch == "-1"){
+		if(batch == "-1" || batch == "" || batch == null){
 			$("#batchError").html("Select Batch");
 			validationFlag = true;
 		}
-		if(exam == "-1"){
+		if(exam == "-1" || exam == "" || exam == null){
 			$("#examError").html("Select Exam");
 			validationFlag = true;
 		}
@@ -100,6 +105,8 @@ $(document).ready(function(){
 	});
 	
 	$("#batchSelect").change(function(){
+		$("#subjectTableDiv").hide();
+		$("#studentTableDiv").hide();
 		var examArray = [];
 		examArray.push(examTempData);
 		$("#exam").empty();
@@ -131,6 +138,8 @@ $(document).ready(function(){
 	});
 	
 	$("#division").change(function(){
+		$("#subjectTableDiv").hide();
+		$("#studentTableDiv").hide();
 		var batchArray = [];
 		var examArray = [];
 		batchArray.push(batchTempData);

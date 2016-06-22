@@ -41,6 +41,7 @@ var questionListTable;
 var selectedChooseQuestionItemId;
 var patternId;
 var paperId;
+var globalThat;
 $(document).ready(function(){
 	
 	$("#division").change(function(){
@@ -135,10 +136,15 @@ $(document).ready(function(){
 		});
 		var handlers = {};
 		handlers.success = function(resp){
-			$.notify({message: "Exam updated successfully"},{type: 'success'});
-			/*loadSubjectAndTopic(resp);*/
-			backToQuestionPaperList();
-			$(SEARCH_QUESTION_PAPER).trigger("click");
+			if(resp == true){
+				$.notify({message: "Exam updated successfully"},{type: 'success'});
+				/*loadSubjectAndTopic(resp);*/
+				backToQuestionPaperList();
+				/*$(SEARCH_QUESTION_PAPER).trigger("click");*/
+				$(globalThat.closest("tr")).find(".defaultDesc").html(questionPaperName);
+				}else{
+					$.notify({message: "Exam with same description already present.Please enter different description"},{type: 'danger'});
+				}
 		};
 		handlers.error = function(e){};
 		var division = $("#division").val();
@@ -291,7 +297,7 @@ var loadQuestionPaper = function(){
 	handler.error = loadQuestionPaperError;
 	var paperId = data.paper_id;
 	var divisionId = $(DIVISION_DROPDOWN).val();
-		
+	globalThat = $(this);	
 	if(paperId){
 		$("#viewPatternData").show();
 		rest.get(getQuestionPaperUrl+divisionId+"/"+paperId,handler);
@@ -372,7 +378,7 @@ var searchQuestionPaperSuccess = function(data){
 		lengthChange: false,
 		columns:[
 	{
-		title: "Question paper",data:'paper_description'
+		title: "Question paper",data:'paper_description',render:function(data){return "<div class='defaultDesc'>"+data+"</div>";}
 	},
 	{
 		title: "Created date",data:'created_dt'
