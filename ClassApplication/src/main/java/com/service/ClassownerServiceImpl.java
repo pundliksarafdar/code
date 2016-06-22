@@ -685,7 +685,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
 		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
-		OnlineExamPaper onlineExamPaper = patternTransaction.getOnlineQuestionPaper(div_id,paper_id);
+		OnlineExamPaper onlineExamPaper = patternTransaction.getOnlineQuestionPaper(div_id,paper_id,getRegId());
 	/*	for (Questionbank questionbank : fileObject.getQuestionPaperFileElementList()) {
 			
 		}*/
@@ -883,7 +883,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		UserBean userBean = getUserBean();
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
 		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
-		int marks = patternTransaction.evaluteExam(evaluateExamBean.getExamMap(),evaluateExamBean.getDivision(),evaluateExamBean.getQuestionPaperId());
+		int marks = patternTransaction.evaluteExam(evaluateExamBean.getExamMap(),evaluateExamBean.getDivision(),evaluateExamBean.getQuestionPaperId(),evaluateExamBean.getInstId());
 		StudentMarksTransaction studentMarksTransaction = new StudentMarksTransaction();
 		
 		StudentMarks studentMarks = new StudentMarks();

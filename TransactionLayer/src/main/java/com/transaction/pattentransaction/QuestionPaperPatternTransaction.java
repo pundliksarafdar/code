@@ -55,6 +55,15 @@ public class QuestionPaperPatternTransaction {
 	int inst_id;
 	String questionStorageURL;
 	String questionPaperStorageURL;
+	
+	String EXAM_IMAGE_FOLDER = "examImage";
+	String SUBJECTIVE = "subjective";
+	String OBJECTIVE = "objective";
+	String PARAGRAPH = "paragraph";
+	String PARAGRAPH_QUESTION = "paragraphQuestions";
+	String QUESTION = "question";
+	String OPTION = "option";
+	
 	public QuestionPaperPatternTransaction(String storageURL,int inst_id) {
 		this.patternStorageURL = storageURL;
 		this.inst_id = inst_id;
@@ -573,7 +582,7 @@ public class QuestionPaperPatternTransaction {
 		return editQuestionPaper;
 	}
 	
-	public OnlineExamPaper getOnlineQuestionPaper(int div_id,int paper_id) {
+	public OnlineExamPaper getOnlineQuestionPaper(int div_id,int paper_id,int instId) {
 		QuestionPaperDB questionPaperDB = new QuestionPaperDB();
 		File file = new File(this.questionPaperStorageURL+File.separator+div_id+File.separator+paper_id);
 		QuestionPaperFileObject fileObject = (QuestionPaperFileObject) readObject(file);
@@ -638,6 +647,12 @@ public class QuestionPaperPatternTransaction {
 					}
 					}
 				}
+				
+				List<String>primaryImage = getPrimaryImage(instId, questionbank.getQue_id(), questionbank.getQue_type());
+				questionbank.setPrimaryImage(primaryImage);
+				
+				HashMap<Integer, List<String>>secondaryImage = getSecondaryImage(instId, questionbank.getQue_id(), questionbank.getQue_type());
+				questionbank.setSecondaryImage(secondaryImage);
 				
 			}
 			
@@ -883,9 +898,9 @@ public class QuestionPaperPatternTransaction {
 		return childQuestionPaperFileElements;
 	}
 	
-	public int evaluteExam(Map<String,List<String>> examMap,int division,int questionPaperId){
+	public int evaluteExam(Map<String,List<String>> examMap,int division,int questionPaperId,int regId){
 		int marks = 0;
-		OnlineExamPaper onlineExamPaper = this.getOnlineQuestionPaper(division,questionPaperId);
+		OnlineExamPaper onlineExamPaper = this.getOnlineQuestionPaper(division,questionPaperId,regId);
 		List<OnlineExamPaperElement> examPaperElements = onlineExamPaper.getOnlineExamPaperElementList();
 		for(OnlineExamPaperElement onlineExamPaperElement:examPaperElements){
 			int queNo = onlineExamPaperElement.getQues_no();
@@ -904,6 +919,78 @@ public class QuestionPaperPatternTransaction {
 			
 		}
 		return marks;
+	}
+	
+	public List<String> getPrimaryImage(int regId,int questionId,String questionType){
+		List<String> primaryImages = new ArrayList<String>();
+		String primaryImageDest = "";
+		if(questionType.equals("1")){
+			primaryImageDest = Constants.STORAGE_PATH + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + SUBJECTIVE + File.separatorChar + questionId;
+		}else 
+		if(questionType.equals("2")){
+			primaryImageDest = Constants.STORAGE_PATH + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + questionId + File.separatorChar + QUESTION ;
+		}else 
+		if(questionType.equals("3")){
+			primaryImageDest = Constants.STORAGE_PATH + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + PARAGRAPH + File.separatorChar + questionId + PARAGRAPH;
+		}
+		
+		if(null!=primaryImageDest && primaryImageDest.trim().length()>0){
+			File folder = new File(primaryImageDest);
+			
+			if(null==folder || !folder.exists()){
+				return primaryImages;
+			}
+			File[] images = folder.listFiles();
+			
+			if(null==images || !(images.length != 0)){
+				return primaryImages;
+			}
+			
+			for(File image:images){
+				if(image.isFile()){
+					if(questionType.equals("1")){
+						primaryImages.add(EXAM_IMAGE_FOLDER+"_"+SUBJECTIVE+"_"+questionId+"_"+image.getName());
+					}else if(questionType.equals("2")){
+						primaryImages.add(EXAM_IMAGE_FOLDER+"_"+OBJECTIVE+"_"+questionId+"_"+QUESTION+"_"+image.getName());
+					}else if(questionType.equals("3")){
+						primaryImages.add(EXAM_IMAGE_FOLDER+"_"+PARAGRAPH+"_"+questionId+"_"+PARAGRAPH+"_"+image.getName());
+					}
+				}
+			}
+		}
+		return primaryImages;
+	}
+	
+	public HashMap<Integer, List<String>> getSecondaryImage(int regId,int questionId,String questionType){
+		HashMap<Integer, List<String>> secImages = new HashMap<Integer, List<String>>();
+		String secImageDest = "";
+		if(questionType.equals("2")){
+			secImageDest = Constants.STORAGE_PATH + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + questionId + File.separatorChar + OPTION;
+		}else 
+		if(questionType.equals("3")){
+			secImageDest = Constants.STORAGE_PATH + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + PARAGRAPH + File.separatorChar + questionId + PARAGRAPH;
+		}
+		
+		if(null!=secImageDest && secImageDest.trim().length()>0){
+			File optionsImageFolder = new File(secImageDest);
+			if(optionsImageFolder!=null && optionsImageFolder.exists()){
+				File[] optionImageFolder = optionsImageFolder.listFiles();
+				for(int index=0;index<optionImageFolder.length;index++){
+					String optionImageFolderName = EXAM_IMAGE_FOLDER+"_"+OBJECTIVE+"_"+questionId+"_"+OPTION+"_"+ optionImageFolder[index].getName();
+					File[] imageFiles = optionImageFolder[index].listFiles();
+					List<String> imageList = new ArrayList<String>();
+					for(int indexFile=0;indexFile<imageFiles.length;indexFile++){
+						imageList.add(optionImageFolderName+"_"+imageFiles[indexFile].getName());
+					}
+					secImages.put(Integer.parseInt(optionImageFolder[index].getName()),imageList);
+				}
+			}
+		}
+		return secImages;
+	}
+	
+	public void setStoragePath(String storagePath){
+		Constants.STORAGE_PATH = storagePath;
 	}
 
 	public String getPatternStorageURL() {

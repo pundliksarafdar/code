@@ -49,8 +49,10 @@ public class AttemptExamAction extends BaseAction {
 		}
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),inst_id,userBean.getUserStatic().getExamPath());
 		patternTransaction.setQuestionPaperStorageURL(Constants.STORAGE_PATH+File.separator+inst_id+File.separator+"QuestionPaper");
-		onlineExamPaper = patternTransaction.getOnlineQuestionPaper(division,question_paper_id);
+		patternTransaction.setStoragePath(Constants.STORAGE_PATH);
+		onlineExamPaper = patternTransaction.getOnlineQuestionPaper(division,question_paper_id,inst_id);
 		questionPaperSize = onlineExamPaper.getOnlineExamPaperElementList().size();
+		
 	return SUCCESS;
 	}
 

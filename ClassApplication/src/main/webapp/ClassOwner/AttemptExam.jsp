@@ -194,6 +194,14 @@ function SubmitExam(){
 						</td>
 					</c:if>
 				</tr>
+				<tr>
+					<td colspan="3">
+					<c:forEach items="${element.questionbank.primaryImage}" var="imgsrc">
+						<img src='/rest/commonservices/image/<c:out value="${imgsrc}"></c:out>' width="200px" height="200px"/>
+					</c:forEach>
+						
+					</td>
+				</tr>
 				<c:if test="${element.questionbank.opt_1 ne null }">
 					<tr>
 					<td></td>
