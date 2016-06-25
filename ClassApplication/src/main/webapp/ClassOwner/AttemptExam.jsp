@@ -220,6 +220,13 @@ function SubmitExam(){
 							<c:out value="${element.questionbank.opt_1 }"></c:out>
 						</td>
 					</tr>
+					<tr>
+					<td colspan="3">
+					<c:forEach items="${element.questionbank.secondaryImageStr['0']}" var="imgsrc">
+						<img src='/rest/commonservices/image/<c:out value="${imgsrc}"></c:out>' width="200px" height="200px"/>
+					</c:forEach>
+					</td>
+				</tr>
 				</c:if>
 				<c:if test="${element.questionbank.opt_2 ne null }">
 					<tr>

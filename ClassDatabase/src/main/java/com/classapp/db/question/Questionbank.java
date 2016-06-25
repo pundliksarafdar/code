@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class Questionbank implements Serializable {
 
@@ -39,9 +42,16 @@ public class Questionbank implements Serializable {
 	 * Secondary image are images of options in objective and question in paragraph image  
 	 */
 	List<String> primaryImage;
-HashMap<Integer, List<String>>secondaryImage;
+	HashMap<Integer, List<String>>secondaryImage;
+	HashMap<String, List<String>>secondaryImageStr;
 	
 	
+	public HashMap<String, List<String>> getSecondaryImageStr() {
+		return secondaryImageStr;
+	}
+	public void setSecondaryImageStr(HashMap<String, List<String>> secondaryImageStr) {
+		this.secondaryImageStr = secondaryImageStr;
+	}
 	public List<String> getPrimaryImage() {
 		return primaryImage;
 	}
@@ -53,6 +63,14 @@ HashMap<Integer, List<String>>secondaryImage;
 	}
 	public void setSecondaryImage(HashMap<Integer, List<String>> secondaryImage) {
 		this.secondaryImage = secondaryImage;
+		this.secondaryImageStr = new HashMap<String, List<String>>();
+		Map<Integer, List<String>> map = secondaryImage;
+		for (Entry<Integer, List<String>> entry : map.entrySet())
+		{
+		    System.out.println(entry.getKey() + "/" + entry.getValue());
+		    this.secondaryImageStr.put(entry.getKey().toString(), entry.getValue());
+		}
+		
 	}
 	public int getInst_id() {
 		return inst_id;
