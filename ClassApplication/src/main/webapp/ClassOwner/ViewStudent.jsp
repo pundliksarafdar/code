@@ -999,6 +999,7 @@ var graphData = [];
 <div class="studentList">
 <ul class="nav nav-tabs" style="border-radius:10px">
   <li><a href="managestudent">Add Student</a></li>
+   <li><a href="bulkStudentUpload">Add Student Through File</a></li>
   <li class="active"><a href="#viewstudenttab" data-toggle = "tab">View Student</a></li>
 </ul>
 

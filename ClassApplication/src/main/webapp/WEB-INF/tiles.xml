@@ -709,4 +709,17 @@
       <put-attribute name="topnav" value="/teacher/menu.jsp" />
       <put-attribute name="body"   value="/teacher/EditParaQuestion.jsp"/>      
    </definition>
+   <definition name="classowner.bulkStudentUpload" extends="baseLayout">
+		<put-attribute name="title" value="Manage Student" />
+		<put-attribute name="body" value="/ClassOwner/BulkStudentUpload.jsp" />
+	</definition>
+	<definition name="classowner.bulkQuestionupload" extends="baseLayout">
+		<put-attribute name="title" value="Add Question" />
+		<put-attribute name="body" value="/question/BulkQuestionUpload.jsp" />
+	</definition>
+	<definition name="teacher.teacherBulkQuestionupload" extends="baseLayout">
+		<put-attribute name="title" value="Start Uploading Exam" />
+		<put-attribute name="topnav" value="/teacher/menu.jsp" />
+		<put-attribute name="body" value="/teacher/BulkQuestionUpload.jsp" />
+	</definition>
 </tiles-definitions>

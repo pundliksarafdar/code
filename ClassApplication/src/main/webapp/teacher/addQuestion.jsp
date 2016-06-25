@@ -332,6 +332,7 @@ padding-top: 2px;
 	</script>
 	<ul class="nav nav-tabs" style="border-radius: 10px">
 		<li class="active"><a href="#addnotestab" data-toggle = "tab">Add question</a></li>
+		<li><a href="teacherBulkQuestionupload">Add Questions Through File</a></li>
 		<li><a href="searchTeacherQuestion">Search/Edit question</a></li>
 	</ul>
 	<form method="post" action="<c:out value="${forwardAction}" ></c:out>" id="commonSelectForm">

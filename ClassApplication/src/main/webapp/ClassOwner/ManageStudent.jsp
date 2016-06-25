@@ -527,6 +527,7 @@ var wayOfAddition="";
 <body>
 <ul class="nav nav-tabs" style="border-radius:10px">
   <li class="active"><a href="#addstudenttab" data-toggle = "tab">Add Student</a></li>
+  <li><a href="bulkStudentUpload">Add Student Through File</a></li>
   <li><a href="viewstudent">View Student</a></li>
 </ul>
 

@@ -509,6 +509,7 @@ var searchQuestionBtnClick  = function(){
 <body>
 	<ul class="nav nav-tabs" style="border-radius: 10px">
 		<li><a href="addteacherquestion">Add question</a></li>
+		<li><a href="teacherBulkQuestionupload">Add Questions Through File</a></li>
 		<li class="active"><a href="#addnotestab" data-toggle = "tab">Search/Edit question</a></li>
 	</ul>
 <form method="post" action="<c:out value="${forwardAction}" ></c:out>" id="commonSelectForm">

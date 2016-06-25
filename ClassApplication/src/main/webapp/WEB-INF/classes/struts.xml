@@ -619,6 +619,18 @@
 			<result name="paragraph" type="tiles">teacher.editParaQuestion</result>
 			<!-- <result name="starteditingquestion" type="tiles">classowner.starteditingquestion</result> -->
 		</action>
-		
+		<action name="bulkStudentUpload" class="com.classowner.ManageStudentAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.bulkStudentUpload</result>
+			<result name="error" type="tiles">register</result>
+		</action>
+		<action name="bulkQuestionupload" class="com.classowner.AddQuestionAction"
+			method="execute">
+			<result name="startaddingquestion" type="tiles">classowner.bulkQuestionupload</result>
+		</action>
+		<action name="teacherBulkQuestionupload" class="com.teacher.AddTeacherQuestionAction"
+			method="execute">
+			<result name="success" type="tiles">teacher.teacherBulkQuestionupload</result>
+		</action>
 	</package>
 </struts>
