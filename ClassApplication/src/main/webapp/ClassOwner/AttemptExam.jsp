@@ -117,8 +117,9 @@ function SubmitExam(){
 	
 	var handlers = {};
 	handlers.success = function(e){
-		alert(e);
-		location.href="showScore";
+		$("#showScoreForm").find("[name='passingMarks']").val(100);
+		$("#showScoreForm").find("[name='marks']").val(e);
+		$("#showScoreForm").submit();
 	}
 	handlers.error = function(e){console.log("Error",e)}
 	var onlineexam = {};
