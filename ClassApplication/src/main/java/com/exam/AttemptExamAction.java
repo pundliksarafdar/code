@@ -36,6 +36,8 @@ public class AttemptExamAction extends BaseAction {
 	int batch,subject,division,question_paper_id,exam,inst_id;
 	OnlineExamPaper onlineExamPaper;
 	int questionPaperSize;
+	boolean isSolved = true;
+	boolean isShowAnswer = true;
 	@Override
 	public String performBaseAction(UserBean userBean,
 			HttpServletRequest request, HttpServletResponse response,
@@ -53,6 +55,11 @@ public class AttemptExamAction extends BaseAction {
 		onlineExamPaper = patternTransaction.getOnlineQuestionPaper(division,question_paper_id,inst_id);
 		questionPaperSize = onlineExamPaper.getOnlineExamPaperElementList().size();
 		
+		ExamTransaction examTransaction = new ExamTransaction();
+		isSolved = examTransaction.isExamSolved(userBean.getRegId(), inst_id, subject, division, batch, exam);
+		if(isSolved){
+			return "solved";
+		}
 	return SUCCESS;
 	}
 
