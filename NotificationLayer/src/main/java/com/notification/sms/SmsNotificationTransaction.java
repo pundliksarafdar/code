@@ -74,7 +74,7 @@ public class SmsNotificationTransaction {
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
-							//inotify.sendEmail(sms, message, subject, from);
+							inotify.sendSms(smss, message, classId);
 						}
 					}).start();
 				}

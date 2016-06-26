@@ -11,6 +11,7 @@ import com.user.UserBean;
 public class ShowScore extends BaseAction{
 	int marks;
 	int passingMarks;
+	int totalMarks = 50;
 	String message;
 	@Override
 	public String performBaseAction(UserBean userBean, HttpServletRequest request, HttpServletResponse response,
@@ -22,6 +23,18 @@ public class ShowScore extends BaseAction{
 			}
 		return SUCCESS;
 	}
+	
+	
+	public int getTotalMarks() {
+		return totalMarks;
+	}
+
+
+	public void setTotalMarks(int totalMarks) {
+		this.totalMarks = totalMarks;
+	}
+
+
 	public int getMarks() {
 		return marks;
 	}

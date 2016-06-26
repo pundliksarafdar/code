@@ -380,6 +380,7 @@
 		<action name="attemptExam" class="com.exam.AttemptExamAction"
 			method="execute">
 			<result name="success" type="tiles">classowner.attemptexam</result>
+			<result name="solved" type="tiles">classowner.solvedexam</result>
 			<result name="examresult" type="tiles">classowner.examresult</result>
 		</action>
 		

@@ -396,6 +396,11 @@
 		<put-attribute name="body" value="/ClassOwner/AttemptExam.jsp" />
 	</definition>
 	
+	<definition name="classowner.solvedexam" extends="NoLinkBaseLayout">
+		<put-attribute name="title" value="Choose Subject" />
+		<put-attribute name="body" value="/ClassOwner/ExamSolved.jsp" />
+	</definition>
+	
 	<definition name="classowner.showscore" extends="NoLinkBaseLayout">
 		<put-attribute name="title" value="Score" />
 		<put-attribute name="body" value="/ClassOwner/ExamSocre.jsp" />

@@ -891,7 +891,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		studentMarks.setAns_ids("");
 		studentMarks.setBatch_id(evaluateExamBean.getBatchId());
 		studentMarks.setDiv_id(evaluateExamBean.getDivision());
-		studentMarks.setExam_id(evaluateExamBean.getQuestionPaperId());
+		studentMarks.setExam_id(evaluateExamBean.getExamId());
 		studentMarks.setInst_id(evaluateExamBean.getInstId());
 		studentMarks.setMarks(marks);
 		studentMarks.setSub_id(evaluateExamBean.getSubId());

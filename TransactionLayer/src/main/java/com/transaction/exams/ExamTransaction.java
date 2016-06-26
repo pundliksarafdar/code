@@ -8,6 +8,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 
 import com.classapp.db.exam.CompExam;
 import com.classapp.db.exam.Exam;
@@ -17,9 +22,12 @@ import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.exams.MCQData;
 import com.classapp.db.exams.MCQDataDB;
 import com.classapp.db.question.QuestionbankDB;
+import com.classapp.db.questionPaper.QuestionPaper;
+import com.classapp.db.student.StudentMarks;
 import com.classapp.db.subject.StudentMarksDB;
 import com.classapp.db.subject.Subject;
 import com.classapp.logger.AppLogger;
+import com.classapp.persistence.HibernateUtil;
 import com.datalayer.exam.QuestionSearchRequest;
 import com.datalayer.exambean.ExamData;
 import com.service.beans.ExamSubject;
@@ -220,5 +228,30 @@ public class ExamTransaction {
 	    }
 
 		}
+	
+	public boolean isExamSolved(int studentId,int instId,int subId,int divId,int batchId,int examId){
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Criteria criteria = session.createCriteria(StudentMarks.class);
+		Criterion criterion = Restrictions.eq("student_id", studentId);
+		criteria.add(criterion);
+		criterion = Restrictions.eq("inst_id", instId);
+		criteria.add(criterion);
+		criterion = Restrictions.eq("sub_id", subId);
+		criteria.add(criterion);
+		criterion = Restrictions.eq("div_id", divId);
+		criteria.add(criterion);
+		criterion = Restrictions.eq("batch_id", batchId);
+		criteria.add(criterion);
+		criterion = Restrictions.eq("exam_id", examId);
+		criteria.add(criterion);
+		List<StudentMarks> StudentMarksList = criteria.list();
+		if(session!=null){
+			session.close();
+		}
+		return StudentMarksList.size()>0;
+	}
 	
 }

@@ -4,6 +4,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<style type="text/css">
+	.select2-container {
+	  min-width: 260px !important;
+	}
+</style>
 </head>
 <body>
 	<ul class="nav nav-tabs">
@@ -48,7 +53,7 @@
 	  		<div class="container row">
 	  		<div class="col-md-6">
 		  		<div>
-		  		<select name="divisionSelect" id="divisionSelect" class="form-control" width="100px">
+		  		<select name="divisionSelect" id="divisionSelect" class="form-control">
 					<option value="-1">Select Class</option>
 					<c:forEach items="${requestScope.divisions}" var="division">
 						<option value="<c:out value="${division.divId}"></c:out>"><c:out value="${division.divisionName}"></c:out>&nbsp;<c:out value="${division.stream}"></c:out></option>

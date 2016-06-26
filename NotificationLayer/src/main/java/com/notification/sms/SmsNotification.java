@@ -1,11 +1,11 @@
 package com.notification.sms;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.notification.access.iNotify;
 import com.notification.bean.MessageDetailBean;
-import com.service.beans.ClassownerSettingsNotification;
-import com.transaction.classownersettingtransaction.ClassownerSettingstransaction;
+import com.notification.test.SMSSentMock;
 
 public class SmsNotification implements iNotify{
 
@@ -13,9 +13,14 @@ public class SmsNotification implements iNotify{
 	public String send(MessageDetailBean messageDetailBean,String message) {
 		System.out.println("Start sending sms message for "+messageDetailBean.getStudentId()+" wait time:1sec");
 		try {
-		//	wait(1000);
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
+			SMSSentMock smsSentMock = new SMSSentMock();
+			if(messageDetailBean.isSendToParent()){
+				smsSentMock.sms(messageDetailBean.getParentPhone(), message);
+			}else if(messageDetailBean.isSendToParent()){
+				smsSentMock.sms(messageDetailBean.getParentPhone(), message);
+			}
+			
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		System.out.println("End sending sms message for "+messageDetailBean.getStudentId()+" wait time:1sec");

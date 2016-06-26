@@ -4,10 +4,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<%@taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 </head>
 <body>
-	Score :- <c:out value="${marks}"></c:out>/<c:out value="${totalMarks}"></c:out>
-	<c:out value="${message}"></c:out>
+	Exam already solved
 </body>
 </html>

@@ -14,6 +14,10 @@
 		init();
 		getTeacherList();
 		
+		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+			$("select").select2();
+		});
+		
 		$("#divisionSelect").on("change",function(e){
 			var handler = {};
 			handler.success = function(data){

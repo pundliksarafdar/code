@@ -127,6 +127,7 @@ function SubmitExam(){
 	onlineexam.subId = $("#subject").val();
 	onlineexam.batchId = $("#batch").val();
 	onlineexam.division = $("#division").val();
+	onlineexam.examId = $("#exam").val();
 	onlineexam.questionPaperId = $("#question_paper_id").val()
 	
 	onlineexam.examMap = questionAndAns;
@@ -375,5 +376,9 @@ function SubmitExam(){
 	
 	</div>
 	</div>
+	<form id="showScoreForm" method="post" action="showScore">
+		<input type="hidden" name="passingMarks"/>
+		<input type="hidden" name="marks"/>
+	</form>
 </body>
 </html>

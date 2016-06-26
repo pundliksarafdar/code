@@ -13,7 +13,14 @@ public class EvaluateExamBean implements Serializable{
 	private int division;
 	private int batchId;
 	private int questionPaperId;
+	private int examId;
 	
+	public int getExamId() {
+		return examId;
+	}
+	public void setExamId(int examId) {
+		this.examId = examId;
+	}
 	public Map<String, List<String>> getExamMap() {
 		return examMap;
 	}
