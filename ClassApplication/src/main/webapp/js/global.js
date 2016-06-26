@@ -200,11 +200,49 @@ $(document).ready(function(){
 		});
 		
 		this.clearPreview = function(){
-			console.log("Clear preview.....");
+			
 		}
-		return this;
+		
+		var langSelect = $("<select/>",{id:"mathSelect",class:""})
+			.append("<option value="+google.elements.transliteration.LanguageCode.ENGLISH+">English</option>")
+			.append("<option value="+google.elements.transliteration.LanguageCode.MARATHI+">Marathi</option>")
+			.append("<option value="+google.elements.transliteration.LanguageCode.HINDI+">Hindi</option>")
+			.append("<option value="+google.elements.transliteration.LanguageCode.KANNADA+">Kannada</option>")
+			.append("<option value="+google.elements.transliteration.LanguageCode.TAMIL+">Tamil</option>")
+			.append("<option value="+google.elements.transliteration.LanguageCode.TELAGU+">Telgu</option>")
+			.append("<option value="+google.elements.transliteration.LanguageCode.GUJARATI+">Gujarathi</option>");
+		//$(this).parent().prepend("<input type='button' value='Math'/>");
+		$(this).parent().prepend(langSelect);
+		
+		var transliterationControl;
+		
+		langSelect.on("change",function(){
+			var lang = $(this).val();
+			if(transliterationControl){
+				if(lang==google.elements.transliteration.LanguageCode.ENGLISH){
+					transliterationControl.disableTransliteration();
+				}else{
+					transliterationControl.enableTransliteration();
+					languageChangeHandler(transliterationControl,undefined,lang);
+				}
+				
+			}else{
+				if(lang!=google.elements.transliteration.LanguageCode.ENGLISH){
+				transliterationControl = onLoad(that.attr("id"),lang);
+				}
 			}
+		});
+		
+		return this;
+	}
 });
+
+function languageChangeHandler(transliterationControl,oldLang,newLang) {
+	  transliterationControl.setLanguagePair(
+	    google.elements.transliteration.LanguageCode.ENGLISH,
+	    newLang);
+}
+
 
 var PreviewModal = {
 		  delay: 150,        // delay after keystroke before updating
@@ -227,7 +265,7 @@ var PreviewModal = {
 		  //  the results of running MathJax are more accurate that way.)
 		  //
 		  SwapBuffers: function () {
-			  console.log("Swapping buffer");
+			  //console.log("Swapping buffer");
 		    var buffer = this.preview, preview = this.buffer;
 		    this.buffer = buffer; this.preview = preview;
 		    buffer.style.visibility = "hidden"; buffer.style.position = "absolute";
@@ -263,7 +301,7 @@ var PreviewModal = {
 		    } else {
 		      this.buffer.innerHTML = this.oldtext = text;
 		      this.mjRunning = true;
-		      console.log(this.buffer.innerHTML);
+		      //console.log(this.buffer.innerHTML);
 		      MathJax.Hub.Queue(
 			["Typeset",MathJax.Hub,this.buffer],
 			["PreviewDone",this]
@@ -275,7 +313,7 @@ var PreviewModal = {
 		  //  and swap the buffers to show the results.
 		  //
 		  PreviewDone: function () {
-			  console.log("PreviewDone");
+			  //console.log("PreviewDone");
 		    this.mjRunning = this.mjPending = false;
 		    this.SwapBuffers();
 		  }
@@ -303,7 +341,7 @@ var PreviewQuestionAndOption = {
 		  //  the results of running MathJax are more accurate that way.)
 		  //
 		  SwapBuffers: function () {
-			  console.log("Swapping buffer");
+			  //console.log("Swapping buffer");
 		    var buffer = this.preview, preview = this.buffer;
 		    this.buffer = buffer; this.preview = preview;
 		    buffer.style.visibility = "hidden"; buffer.style.position = "absolute";
@@ -341,7 +379,7 @@ var PreviewQuestionAndOption = {
 		    } else {
 		      this.buffer.innerHTML = this.oldtext = text;
 		      this.mjRunning = true;
-		      console.log(this.buffer.innerHTML);
+		      //console.log(this.buffer.innerHTML);
 		      MathJax.Hub.Queue(
 			["Typeset",MathJax.Hub,this.buffer],
 			["PreviewDone",this]
@@ -353,8 +391,32 @@ var PreviewQuestionAndOption = {
 		  //  and swap the buffers to show the results.
 		  //
 		  PreviewDone: function () {
-			  console.log("PreviewDone");
+			  //console.log("PreviewDone");
 		    this.mjRunning = this.mjPending = false;
 		    this.SwapBuffers();
 		  }
 		};
+
+
+/*Google translator api*/
+function onLoad(id,destLanguage) {
+    var options = {
+        sourceLanguage:
+            google.elements.transliteration.LanguageCode.ENGLISH,
+        destinationLanguage:
+            [destLanguage?destLanguage:google.elements.transliteration.LanguageCode.HINDI],
+        shortcutKey: 'ctrl+g',
+        transliterationEnabled: true
+    };
+
+    // Create an instance on TransliterationControl with the required
+    // options.
+    var control =
+        new google.elements.transliteration.TransliterationControl(options);
+
+    // Enable transliteration in the textbox with id
+    // 'transliterateTextarea'.
+    control.makeTransliteratable([id]);
+    return control;
+}
+  

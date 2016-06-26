@@ -174,7 +174,7 @@ a.floatButton>div{
 <script src="js/raphael.min.js"></script>
 <script src="js/morris.min.js"></script>
 
-
+<script type="text/javascript" src="https://www.google.com/jsapi">
 <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/fixedcolumns/3.2.1/js/dataTables.fixedColumns.min.js"></script>
 <script src="js/bootstrap-notify.min.js"></script>
@@ -194,6 +194,10 @@ $( document ).ajaxStart(function() {
 $( document ).ajaxStop(function() {
 	  $("#loaderModal").modal("hide")
 });
+
+google.load("elements", "1", {
+    packages: "transliteration"
+  });
 
 $(document).ready(function(){
 	$("select").select2();
