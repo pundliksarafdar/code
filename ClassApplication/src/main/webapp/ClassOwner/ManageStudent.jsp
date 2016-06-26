@@ -74,7 +74,7 @@ var wayOfAddition="";
 		$("#division").change(function(){
 			getBatchesOfDivision();
 		});
-		$("#batches").change(function(){
+		/* $("#batches").change(function(){
 						var divId=$("#division").val();
 						var batch = $("#batches").val();
 						if(divId!="-1" && batch!="-1" && batch!="" && batch!=null && batch!="Select Batch"){
@@ -83,7 +83,7 @@ var wayOfAddition="";
 						}else{
 							$("#uploadStudentExcelBtn").prop("disabled",true);
 			 			}
-			 		});
+			 		}); */
 		$("#classfloorIDAddition").click(function(){
 			wayOfAddition="byStudentID";
 			$("#addsuccess").hide();
@@ -91,9 +91,9 @@ var wayOfAddition="";
 			$(".classfloorID").show();
 			$(".studentInfobyID").show();
 			$(".studentInfoManually").hide();
-			$("#errorMSGDiv").hide();
+			/* $("#errorMSGDiv").hide();
 			$("#errorMSGDiv").empty();
-			$("#countDiv").hide();
+			$("#countDiv").hide(); */
 			
 		});
 		
@@ -104,9 +104,9 @@ var wayOfAddition="";
 			$(".classfloorID").hide();
 			$(".studentInfoManually").show();
 			$(".studentInfobyID").hide();
-			$("#errorMSGDiv").hide();
+			/* $("#errorMSGDiv").hide();
 			$("#errorMSGDiv").empty();
-			$("#countDiv").hide();
+			$("#countDiv").hide(); */
 		});
 		
 		$("#classfloorID").change(function(){
@@ -158,7 +158,7 @@ var wayOfAddition="";
 			}
 		});
 		*/
-		$("#uploadStudentExcelBtn").on("click",function(e){
+		/* $("#uploadStudentExcelBtn").on("click",function(e){
 			$("#addsuccess").hide();
 			$(".studentform").hide();
 			$(".classfloorID").hide();
@@ -232,7 +232,7 @@ var wayOfAddition="";
 				rest.uploadExcelFile(submitDataFile ,handler,false);
 			}
 						
-		});
+		}); */
 	});
 	
 	function calculateFee(){
@@ -571,7 +571,7 @@ var wayOfAddition="";
 		<span class="badge" style="padding: 18%;border-radius:30px">OR</span>
 	</div>
 </div>
-<div class="row">	
+<!-- <div class="row">	
 			<div class="col-md-3">
 				<a href="/SampleFiles/SampleStudent.xls" class="btn" role="button">Sample Student Excel</a>
 			</div>
@@ -588,7 +588,7 @@ var wayOfAddition="";
 				<input type="button" id="uploadStudentExcelBtn" value="Upload Excel" disabled/>
 			</div>	
  		</div>
-</div>
+</div> 
 <div class="row">
 <div class="col-md-5"></div>
 <div class="col-md-6 control-label" id="countDiv"></div>
@@ -596,7 +596,7 @@ var wayOfAddition="";
 
 <div class="row">
 <div id="errorMSGDiv"></div>
-</div>
+</div>-->
 
 <div class="container studentform" style="padding-top: 2%;border: 2px solid;border-color: #1FC0C0;margin-top: 2%;border-radius: 5%;display: none;">
 <div class="row">

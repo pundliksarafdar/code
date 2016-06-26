@@ -78,6 +78,74 @@ $.ajax({
 		/* $("#classownerUploadQuestionTopicSelect").prop("disabled",true); */
 	}
 });
+
+$("#uploadQuestionPaperBtn").on("click",function(e){
+	$("#countDiv").empty();
+	$('#errorMSGDiv').empty();
+	$('#errorMSGDiv').show();
+	var handler = {};
+	handler.success = function(e){				
+		var uri = "rest/classownerservice/addExcelFile/"+e.fileid;
+		var handlers = {};
+		handlers.success = function(e){
+			var quesType = $("#classownerQuestionTypeSelect").val();
+			var divisionID = $("#classownerUploadexamDivisionName").val();
+			var subjectID = $("#classownerUploadexamSubjectNameSelect").val();
+			var QuestionExcelUploadBean= {};
+			QuestionExcelUploadBean.sub_id=subjectID;
+			QuestionExcelUploadBean.div_id=divisionID;
+			QuestionExcelUploadBean.ques_type=quesType;
+			QuestionExcelUploadBean.fileName=e.fileid;
+			var questionExcelUploadBean = JSON.stringify(QuestionExcelUploadBean);
+			var handlersSuccess = {};
+			handlersSuccess.success = function(successResp){
+				$("#countDiv").append(successResp.addedQuestionsResponse[0]);
+				var errorResponse=successResp.ERROR;												
+				if(errorResponse!=null && !errorResponse=="" && errorResponse.length!=0){
+					var content="";
+					for(var i=0; i<errorResponse.length; i++){
+						content=content+"<tr>";
+						var errorMessages=errorResponse[i].split("#");																
+						content=content+"<td>"+errorMessages[0]+"</td><td>";
+							for(var j=1;j<errorMessages.length;j++){										
+								content=content+errorMessages[j]+"<br>";									
+							}
+						content="</td>"+content+"</tr>";
+					}							
+					var table='<table class="table"><thead><tr><th>Row number</th><th>Messages</th></tr></thead><tbody>'+content+'</tbody></table>';
+					$("#errorMSGDiv").append(table);
+					$($("#errorMSGDiv").find("table")).DataTable({
+						paging : false,
+						scrollY:"200px"
+					});
+				}
+				
+			}
+			rest.post("rest/files/upload/xls/", handlersSuccess,
+					questionExcelUploadBean, false);
+			
+			console.log("Success",e);
+			}
+		handlers.error = function(e){console.log("Error",e)}
+		rest.post(uri,handlers);
+	}
+	handler.error = function(){};
+	
+	var submitDataFile = $(".excelUpload")[0];
+	var file=document.getElementById("excelUploadBrowseID").value;
+	var flagUpload=true;
+	if(file==""){				
+		$("#browseExcelErrorSpan").html("Please select the file!");
+		flagUpload=false;
+	}else{
+		$("#browseExcelErrorSpan").html("");
+		flagUpload=true;
+	}
+	if(flagUpload==true){
+		rest.uploadExcelFile(submitDataFile ,handler,false);
+	}
+				
+});
 });
 
 function getSubjectsInDivision(division){

@@ -40,12 +40,12 @@ padding-top: 2px;
 			var quesType = $("#classownerQuestionTypeSelect").val();			
 			var subId=$("#classownerUploadexamSubjectNameSelect").val();
 			
-			if(subId!="-1" && quesType!="-1"){
+			/* if(subId!="-1" && quesType!="-1"){
 			 	$("#uploadQuestionPaperBtn").removeAttr('disabled');
 			 	$("#uploadQuestionPaperBtn").empty();
 			}else{
 				$("#uploadQuestionPaperBtn").prop("disabled",true);
-			}
+			} */
 
 			$("#MCQDiv").hide();
 			$("#subjectiveDiv").hide();
@@ -58,7 +58,7 @@ padding-top: 2px;
 				$("#paragraphDiv").show();
 			}
 		});
-		$("#uploadQuestionPaperBtn").on("click",function(e){
+		/* $("#uploadQuestionPaperBtn").on("click",function(e){
 			$("#countDiv").empty();
 			$('#errorMSGDiv').empty();
 			$('#errorMSGDiv').show();
@@ -124,7 +124,7 @@ padding-top: 2px;
 				rest.uploadExcelFile(submitDataFile ,handler,false);
 			}
 						
-		});
+		}); */
 		$("#classownerUploadexamDivisionName").on("change",function(e){
 			//$(SUBJECT_DROPDOWN).hide();
 			//$(BATCH_DROPDOWN).hide();
@@ -140,24 +140,24 @@ padding-top: 2px;
 			if($(this).val()!=-1){
 				var uploadExam = new UploadExam();
 				uploadExam.getSubjectsInDivision($(this).val());
-			}else{
+			}/* else{ */
 				
 				/* $("#classownerUploadexamSubjectNameSelect").prop("disabled",true);
 				$("#classownerUploadQuestionTopicSelect").prop("disabled",true);
 				$("#classownerUploadexamAddExam").prop("disabled",true);*/
-				$("#uploadQuestionPaperBtn").prop("disabled",true); 
-			}
+				/* $("#uploadQuestionPaperBtn").prop("disabled",true); 
+			} */
 		});
 		
 		$("#classownerUploadQuestionTopicSelect").change(function(){
 			var topicId=$("#classownerUploadQuestionTopicSelect").val();
 			var quesType = $("#classownerQuestionTypeSelect").val();
-			if(topicId!="-1" && quesType!="-1"){
+			/* if(topicId!="-1" && quesType!="-1"){
 			 	$("#uploadQuestionPaperBtn").removeAttr('disabled');
 			 	$("#uploadQuestionPaperBtn").empty();
 			}else{
 				$("#uploadQuestionPaperBtn").prop("disabled",true);
- 			}
+ 			} */
 		});
 		
 		$("#classownerUploadexamSubjectNameSelect").change(function(){
@@ -168,12 +168,12 @@ padding-top: 2px;
 				$("#classownerUploadQuestionTopicSelect").select2().val("-1").change();
 				$("#classownerUploadQuestionTopicSelect").find('option:gt(0)').remove();
 				}
-			if(subjectID!="-1" && quesType!="-1"){
+			/* if(subjectID!="-1" && quesType!="-1"){
 			 	$("#uploadQuestionPaperBtn").removeAttr('disabled');
 			 	$("#uploadQuestionPaperBtn").empty();
 			}else{
 				$("#uploadQuestionPaperBtn").prop("disabled",true);
-			}
+			} */
 			if($(this).val()!="-1"){
 		$.ajax({
 			   url: "classOwnerServlet",
@@ -356,7 +356,7 @@ padding-top: 2px;
 				</select>
 			</div>
 		</div>
-		<div class="row">	
+		<%-- <div class="row">	
 			<div class="col-md-3">
 				<a href="./SampleFiles/SubjectiveType_Sample.xls" class="btn" role="button">Sample Subjective Questions Excel</a>
 			</div>
@@ -383,7 +383,7 @@ padding-top: 2px;
 
 		<div class="row">
 			<div id="errorMSGDiv"></div>
-		</div> 		
+		</div>  --%>		
 	</div>
 	</form>
 	<jsp:include page="addSubjectiveQuestion.jsp"></jsp:include>

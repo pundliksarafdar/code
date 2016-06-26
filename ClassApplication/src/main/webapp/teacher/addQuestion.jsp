@@ -91,12 +91,12 @@ padding-top: 2px;
 			var quesType = $("#classownerQuestionTypeSelect").val();
 			var subId=$("#classownerUploadexamSubjectNameSelect").val();
 						
-				if(subId!="-1" && quesType!="-1"){
+				/* if(subId!="-1" && quesType!="-1"){
 					$("#uploadQuestionPaperBtn").removeAttr('disabled');
 					$("#uploadQuestionPaperBtn").empty();
 				}else{
 					$("#uploadQuestionPaperBtn").prop("disabled",true);
-				}
+				} */
 			$("#MCQDiv").hide();
 			$("#subjectiveDiv").hide();
 			$("#paragraphDiv").hide();
@@ -108,7 +108,7 @@ padding-top: 2px;
 				$("#paragraphDiv").show();
 			}
 		});
-		
+		/* 
 		$("#uploadQuestionPaperBtn").on("click",function(e){
 			$("#countDiv").empty();
 			$('#errorMSGDiv').empty();
@@ -177,7 +177,7 @@ padding-top: 2px;
 							rest.uploadExcelFile(submitDataFile ,handler,false);
 						}
 									
-				});
+				}); */
 		
 		$("#divisionSelect").on("change",function(e){
 			var subjectArray = [];
@@ -192,9 +192,9 @@ padding-top: 2px;
 				$("#divisionSelectError").html("");
 				var uploadExam = new UploadExam();
 				uploadExam.getSubjectsInDivision($(this).val());
-			}else{
+			}/* else{
 				$("#uploadQuestionPaperBtn").prop("disabled",true);
- 			}
+ 			} */
 		});
 		
 		$("#subjectSelect").change(function(){
@@ -208,12 +208,12 @@ padding-top: 2px;
 			var inst_id = $("#instituteSelect").val();
 			var quesType = $("#classownerQuestionTypeSelect").val();
 						
-			if(subjectID!="-1" && quesType!="-1"){
+			/* if(subjectID!="-1" && quesType!="-1"){
 			 	$("#uploadQuestionPaperBtn").removeAttr('disabled');
 			 	$("#uploadQuestionPaperBtn").empty();
 			}else{
 				$("#uploadQuestionPaperBtn").prop("disabled",true);
-			}
+			} */
 			if(subjectID != "-1"){
 			$("#subjectSelectError").html("");
 			var handler = {};
@@ -236,12 +236,12 @@ padding-top: 2px;
 		$("#topicSelect").change(function(){
 				var topicId=$("#topicSelect").val();
 				var quesType = $("#classownerQuestionTypeSelect").val();
-				if(topicId!="-1" && quesType!="-1"){
+				/* if(topicId!="-1" && quesType!="-1"){
 				 	$("#uploadQuestionPaperBtn").removeAttr('disabled');
 				 	$("#uploadQuestionPaperBtn").empty();
 				}else{
 					$("#uploadQuestionPaperBtn").prop("disabled",true);
-			 	}
+			 	} */
 		});
 		
 	});
@@ -384,7 +384,7 @@ padding-top: 2px;
 				</select>
 			</div>
 		</div>
-		<div class="row">	
+		<%-- <div class="row">	
 			<div class="col-md-3">
 				<a href="./SampleFiles/SubjectiveType_Sample.xls" class="btn" role="button">Sample Subjective Questions Excel</a>
 			</div>
@@ -411,7 +411,7 @@ padding-top: 2px;
 
 		<div class="row">
 			<div id="errorMSGDiv"></div>
-		</div>		
+		</div>		 --%>
 		<div class="row">
 			
 		</div>
