@@ -118,7 +118,7 @@ padding-left: 2px;
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h4 class="modal-title" id="myModalLabel">Question Paper list</h4>
 		  </div>
-		  <div class="modal-body">
+		  <div class="modal-body" style="overflow: auto;"> 
 		  
 		  	<div id="preview_pageHeader">
 				
