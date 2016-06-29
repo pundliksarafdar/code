@@ -6,10 +6,13 @@ public class StudentAttendanceNotificationData {
 	int student_id;
 	String student_name;
 	String parent_name;
+	String inst_name;
 	int total_lectures;
 	int present_lectures;
 	double average;
 	Date att_date;
+	Date start_date;
+	Date end_date;
 	public int getStudent_id() {
 		return student_id;
 	}
@@ -51,6 +54,24 @@ public class StudentAttendanceNotificationData {
 	}
 	public void setAtt_date(Date att_date) {
 		this.att_date = att_date;
+	}
+	public Date getStart_date() {
+		return start_date;
+	}
+	public void setStart_date(Date start_date) {
+		this.start_date = start_date;
+	}
+	public Date getEnd_date() {
+		return end_date;
+	}
+	public void setEnd_date(Date end_date) {
+		this.end_date = end_date;
+	}
+	public String getInst_name() {
+		return inst_name;
+	}
+	public void setInst_name(String inst_name) {
+		this.inst_name = inst_name;
 	}
 	
 	

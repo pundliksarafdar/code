@@ -48,5 +48,22 @@ private Constants(){
 	public static final String DIVISIONS = "divisions";
 	public static final String ALL_LOGINS = "alllogins";
 	public static String STORAGE_PATH = "";
+	public static int COMMON_ZERO = 0;
+	/*Message Types*/
+	public static String AUTO_DAILY_MSG = "1";
+	public static String AUTO_WEEKLY_MSG = "2";
+	public static String AUTO_MONTHLY_MSG = "3";
+	public static String MANUAL_DAILY_MSG = "4";
+	public static String MANUAL_WEEKLY_MSG = "5";
+	public static String MANUAL_MONTHLY_MSG = "6";
+	public static String GENERAL_STUDENT_MSG = "7";
+	public static String GENERAL_PARENT_MSG = "8";
+	public static String GENERAL_TEACHER_MSG = "9";
+	public static String MANUAL_PROGRESS_CARD = "10";
 	
+	//Roles
+	public static int CLASSOWNER_ROLE = 1;
+	public static int TEACHER_ROLE = 2;
+	public static int STUDENT_ROLE = 3 ;
+	public static int PARENT_ROLE = 4;
 }

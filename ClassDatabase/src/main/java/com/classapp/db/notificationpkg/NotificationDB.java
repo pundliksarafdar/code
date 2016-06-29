@@ -133,4 +133,18 @@ public class NotificationDB {
 			
 	
 	}
+	
+	public Boolean add(Institute_MsgLog msgLog) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		session.save(msgLog);
+		transaction.commit();
+		if(session!=null){
+			session.close();
+		}
+		return  true;
+	
+	}
 }

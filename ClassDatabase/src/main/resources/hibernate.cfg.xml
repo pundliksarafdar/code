@@ -70,6 +70,7 @@
  		<mapping resource="com/classapp/db/Schedule/Groups.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/classOwnerSettings/classOwnerSettings.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/questionbbank/question_bank.hbmmap.xml"></mapping>
+ 		<mapping resource="com/classapp/db/notification/institute_msglog.hbmmap.xml"></mapping>
        <!--  <mapping resource="com/classapp/db/classwithsubjects/ClassWithSubjects.hbmmap.xml"></mapping> --> 
     </session-factory>
 </hibernate-configuration>

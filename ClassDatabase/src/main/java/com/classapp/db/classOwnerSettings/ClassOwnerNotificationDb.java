@@ -92,7 +92,7 @@ public class ClassOwnerNotificationDb {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			String queryString="from ClassOwnerNotificationBean "
-					+ "where weeklyRecurrence like :day";
+					+ "where weeklyRecurrence like :day and (smsAttendanceDaily = true or emailAttendanceDaily = true)";
 			Query query = session.createQuery(queryString);
 			query.setParameter("day", "%"+day+"%");
 			resultList =query.list();
@@ -117,7 +117,31 @@ public class ClassOwnerNotificationDb {
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			String queryString="from ClassOwnerNotificationBean ";
+			String queryString="from ClassOwnerNotificationBean where  smsAttendanceWeekly = true or emailAttendanceWeekly = true";
+			Query query = session.createQuery(queryString);
+			resultList =query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return resultList;
+	}
+	
+	public List<ClassOwnerNotificationBean> getInstitutesForMonthlyAttendance(){
+		Transaction transaction=null;
+		Session session=null;
+		List resultList = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			String queryString="from ClassOwnerNotificationBean where  smsAttendanceMonthly = true or emailAttendanceMonthly = true";
 			Query query = session.createQuery(queryString);
 			resultList =query.list();
 		}catch(Exception e){

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="com.classapp.db.notificationpkg.Institute_MsgLog" table="notifications" catalog="classdb">
+    <id name="msg_id" type="java.lang.Integer">
+            <column name="msg_id" />
+             <generator class="identity" />
+        </id>
+        <property name="inst_id" type="int">
+            <column name="inst_id"/>
+        </property>
+         <property name="div_id" type="int">
+            <column name="div_id"/>
+        </property>
+        <property name="batch_id" type="int">
+            <column name="batch_id"/>
+        </property>
+        <property name="msg_type" type="string">
+            <column name="msg_type" length="25"/>
+        </property>
+        <property name="msg_text" type="string">
+            <column name="msg_text" length="500"/>
+        </property>
+        <property name="msg_count" type="int">
+            <column name="msg_count"/>
+        </property>
+        <property name="role" type="int">
+            <column name="role"/>
+        </property>
+        <property name="msg_date">
+            <column name="msg_date"/>
+        </property> 
+        <property name="msg_status" type="string">
+            <column name="msg_status" length="1"/>
+        </property>    
+         <property name="msg_remark" type="string">
+            <column name="msg_remark" length="50"/>
+        </property>  
+        </class>
+</hibernate-mapping>

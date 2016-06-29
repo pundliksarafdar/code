@@ -149,6 +149,6 @@ public class NotificationServiceHelper {
 		NotificationImpl notificationImpl = new NotificationImpl();
 		String csv = bean.getExamList().toString().replace("[", "").replace("]", "")
 	            .replace(", ", ",");
-		notificationImpl.sendStudentProgressCard(inst_id, bean.getDivId(), bean.getBatchId(), csv);
+		notificationImpl.sendStudentProgressCard(inst_id, bean.getDivId(), bean.getBatchId(), csv, bean.isEmail(), bean.isSms(), bean.isParent(), bean.isStudent());
 	}
 }

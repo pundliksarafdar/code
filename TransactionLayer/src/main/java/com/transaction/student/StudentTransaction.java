@@ -267,8 +267,10 @@ public class StudentTransaction {
 				for (int i = 0; i < students.size(); i++) {
 					StudentDetails studentDetails=new StudentDetails();
 					registerBeans.get(i).setLoginPass("");
+					studentDetails.setStudentId(students.get(i).getStudent_id());
 					studentDetails.setStudentUserBean(registerBeans.get(i));
 					studentDetails.setDivision(division);
+					studentDetails.setStudent(students.get(i));
 					String batchIDArray[] = students.get(i).getBatch_id().split(",");
 					List<Batch> studentBatchList = new ArrayList<Batch>();
 					if(batchIDArray.length > 1){
