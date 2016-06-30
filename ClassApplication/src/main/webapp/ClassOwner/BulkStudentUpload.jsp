@@ -12,6 +12,17 @@ $(document).ready(function(){
 	$("#division").change(function(){
 		getBatchesOfDivision();
 	});
+	$("#batches").change(function(){
+		var divId=$("#division").val();
+		var batch = $("#batches").val();
+		if(divId!="-1" && batch!="-1" && batch!="" && batch!=null && batch!="Select Batch"){
+		 	$("#uploadStudentExcelBtn").removeAttr('disabled');
+		 	$("#uploadStudentExcelBtn").empty();
+		}else{
+			$("#uploadStudentExcelBtn").prop("disabled",true);
+			}
+		});
+	
 	 $("#uploadStudentExcelBtn").on("click",function(e){
 			$("#addsuccess").hide();
 			$(".studentform").hide();
@@ -110,6 +121,10 @@ function getBatchesOfDivision(){
 		   var batchDataArray = [];
 		    var data = JSON.parse(e);
 		    if(data.status != "error"){
+		    	var tempData = {};
+		 		tempData.id = "-1";
+		 		tempData.text = "Select Batch";
+		 		batchDataArray.push(tempData);
 		    $.each(data.batches,function(key,val){
 				var data = {};
 				data.id = val.batch_id;
@@ -154,7 +169,7 @@ function getBatchesOfDivision(){
 	<span class="error" id="divisionError"></span>
 </div>
 <div class="col-md-3">
-<select id="batches" multiple="multiple" style="width:100%">
+<select id="batches" style="width:100%">
 	<option value="-1">Select Batch</option>
 </select>
 <span class="error" id="batchError"></span>
