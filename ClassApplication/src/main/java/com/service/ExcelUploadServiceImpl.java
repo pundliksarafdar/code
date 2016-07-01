@@ -174,9 +174,9 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 			        HashMap<String, ArrayList<String>> invalidStudentResponseMap = null;
 			        StudentExcelData studentData = new StudentExcelData(studentFileBean.getFileName());
 			        System.out.println("Loading data..");
-			        studentData.loadStudents(regId, studentFileBean.getDivId(), studentFileBean.getBatchId()[0]);
+			        studentData.loadStudents(regId, studentFileBean.getDivId(), studentFileBean.getBatchId());
 			        System.out.println("Loading completed..\n Processing the data..");
-			        studentData.processData(regId, studentFileBean.getDivId(), studentFileBean.getBatchId()[0]);
+			        studentData.processData(regId, studentFileBean.getDivId(), studentFileBean.getBatchId());
 			        System.out.println("Processing completed..");
 			        invalidStudentResponseMap = studentData.getInvalidStudentResponseMap();
 			        response = "Students added successfully";
