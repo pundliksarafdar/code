@@ -18,6 +18,7 @@ import com.classapp.db.fees.FeesStructure;
 import com.classapp.db.fees.Student_Fees;
 import com.classapp.db.fees.Student_Fees_Transaction;
 import com.classapp.db.register.RegisterBean;
+import com.classapp.db.register.RegisterDB;
 import com.classapp.db.student.Student;
 import com.classapp.utils.Constants;
 import com.service.beans.BatchFees;
@@ -26,6 +27,8 @@ import com.service.beans.BatchServiceBean;
 import com.service.beans.BatchStudentFees;
 import com.service.beans.FeeStructure;
 import com.service.beans.StudentFeesServiceBean;
+import com.service.beans.StudentFessNotificationData;
+import com.transaction.batch.BatchTransactions;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.student.StudentTransaction;
 

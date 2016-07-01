@@ -48,6 +48,12 @@
 		  	<label for="">Student</label>
 		  	<input type="checkbox" data-size="mini" id="studentPaymentDue">
 		  </div>
+		   <div class="row"><div class="col-md-1"><label for="">Due date:</label></div><div id="datetimepicker" class="col-md-3 input-group">
+						<input class="form-control" data-format="MM/dd/yyyy HH:mm:ss PP"
+						type="text" id="paymentDueDate" placeholder="Select Date" readonly/> <span class="input-group-addon add-on"> <i
+						class="glyphicon glyphicon-calendar glyphicon-time"></i>
+						</span></div>
+			</div>
 	  </div>
 	  
 	  <label>Attendance</label>

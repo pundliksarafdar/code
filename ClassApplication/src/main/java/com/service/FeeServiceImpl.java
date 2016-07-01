@@ -27,6 +27,7 @@ import com.service.beans.FeeStructure;
 import com.service.beans.PrintDetailResponce;
 import com.service.beans.StudentFeesServiceBean;
 import com.service.beans.Student_Fees_Transaction;
+import com.service.helper.NotificationServiceHelper;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.fee.FeesTransaction;
 import com.user.UserBean;
@@ -158,7 +159,8 @@ public class FeeServiceImpl  extends ServiceBase {
 		FeesTransaction feesTransaction = new FeesTransaction();
 		boolean status = feesTransaction.saveStudentBatchFeesTransaction(getRegId(), serviceFees_Transaction);
 		if(status){
-			NotifcationAccess access = new NotifcationAccess();
+			NotificationServiceHelper helper = new NotificationServiceHelper();
+			helper.sendFeesPaymentNotification(getRegId(), serviceFees_Transaction);
 			
 		}
 		return Response.status(Status.OK).entity(status).build();

@@ -587,6 +587,36 @@ public List getStudents(List StudentIDs) {
 		
 	}
 	
+	public RegisterBean getInstitute(int inst_id) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> subidList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("from RegisterBean where  regId = :inst_id and role=1");
+			query.setParameter("inst_id", inst_id);
+			subidList = query.list();
+			if(subidList!=null)
+			{
+				return subidList.get(0);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return null;
+		
+	}
+	
 	public boolean updateInstituteStatus(int regId,String inst_status) {
 		Session session = null;
 		Transaction transaction = null;

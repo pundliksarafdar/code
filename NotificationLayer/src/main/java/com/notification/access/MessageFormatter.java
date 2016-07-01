@@ -67,4 +67,62 @@ public class MessageFormatter {
 			return null;
 		}
 	}
+	
+public String formatParentMessage(MessageDetailBean messageDetailBean,NotificationEnum.MessageType messageType) {
+		
+		if(NotificationEnum.MessageType.SMS.equals(messageType)){
+			if(messageDetailBean.getSmsMessage() != null && messageDetailBean.getSmsMessage().trim().length() == 0){
+				return messageDetailBean.getSmsMessage();
+			}else{
+				String templates =  messageDetailBean.getSmsParentTemplate();
+				Object bean = messageDetailBean.getSmsParentObject();
+				MustacheFactory mustacheFactory = new DefaultMustacheFactory();
+		        Mustache mustache = mustacheFactory.compile(templates);
+		        StringWriter writer = new StringWriter();
+		        try {
+					mustache.execute(writer, bean).flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				}
+				return writer.toString();
+			}
+		}else if(NotificationEnum.MessageType.EMAIL.equals(messageType)){
+			if(messageDetailBean.getEmailMessage() != null /*|| messageDetailBean.getEmailMessage().trim().length() != 0*/){
+				return messageDetailBean.getEmailMessage();
+			}else{
+				String templates =  messageDetailBean.getParentEmailTemplate();
+				Object bean = messageDetailBean.getParentEmailObject();
+				MustacheFactory mustacheFactory = new DefaultMustacheFactory();
+		        Mustache mustache = mustacheFactory.compile(templates);
+		        StringWriter writer = new StringWriter();
+		        try {
+					mustache.execute(writer, bean).flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				}
+				return writer.toString();
+			}
+		}else if(NotificationEnum.MessageType.PUSH.equals(messageType)){
+			if(messageDetailBean.getPushMessage() != null && messageDetailBean.getPushMessage().trim().length() == 0){
+				return messageDetailBean.getPushMessage();
+			}else{
+				String templates =  messageDetailBean.getPushTemplate();
+				Object bean = messageDetailBean.getPushObject();
+				MustacheFactory mustacheFactory = new DefaultMustacheFactory();
+		        Mustache mustache = mustacheFactory.compile(templates);
+		        StringWriter writer = new StringWriter();
+		        try {
+					mustache.execute(writer, bean).flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				}
+				return writer.toString();
+			}
+		}else{
+			return null;
+		}
+	}
 }

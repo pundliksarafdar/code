@@ -94,6 +94,12 @@ public class NotificationImpl {
 				messageDetailBean.setParentEmailMessage(null);
 				messageDetailBean.setParentEmailObject(data);
 				messageDetailBean.setParentEmailTemplate("feesAlertParent.tmpl");
+				messageDetailBean.setSmsMessage(null);
+				messageDetailBean.setSmsTemplate("manualFeesDueAlertStudentSMS.tmpl");
+				messageDetailBean.setSmsObject(data);
+				messageDetailBean.setSmsParentMessage(null);
+				messageDetailBean.setSmsParentObject(data);
+				messageDetailBean.setSmsParentTemplate("manualFeesDueAlertParentSMS.tmpl");
 				detailBeans.add(messageDetailBean);
 			}
 			NotifcationAccess notifcationAccess = new NotifcationAccess();
@@ -365,7 +371,7 @@ public class NotificationImpl {
 						/ (double) ((Number) object[6]).intValue()) < threshold) {
 					MessageDetailBean messageDetailBean = new MessageDetailBean();
 					messageDetailBean.setFrom(institute.getClassName());
-					messageDetailBean.setEmailSubject("Daily Attendance Report");
+					messageDetailBean.setEmailSubject("Weekly Attendance Report");
 					messageDetailBean.setStudentId(((Number) object[0]).intValue());
 					messageDetailBean.setStudentEmail((String) object[4]);
 					if (!"".equals((String) object[3])) {
@@ -477,7 +483,7 @@ public class NotificationImpl {
 						/ (double) ((Number) object[6]).intValue()) < threshold) {
 					MessageDetailBean messageDetailBean = new MessageDetailBean();
 					messageDetailBean.setFrom(institute.getClassName());
-					messageDetailBean.setEmailSubject("Daily Attendance Report");
+					messageDetailBean.setEmailSubject("Monthly Attendance Report");
 					messageDetailBean.setStudentId(((Number) object[0]).intValue());
 					messageDetailBean.setStudentEmail((String) object[4]);
 					if (!"".equals((String) object[3])) {
@@ -544,6 +550,150 @@ public class NotificationImpl {
 				statusMap.put("status", status);
 			}
 		return statusMap;
+	}
+	
+	public HashMap sendFeesPaymentNotification(int inst_id,int div_id,int batch_id,int student_id,List<StudentFessNotificationData> paymentDataList){
+		ClassownerSettingstransaction settingsTx = new ClassownerSettingstransaction();
+		ClassownerSettingsNotification settings = settingsTx.getSettings(inst_id);
+		HashMap statusMap = new HashMap<>();
+		String status = "";
+		if(settings.getInstituteStats().isSmsAccess() || settings.getInstituteStats().isEmailAccess()){
+		RegisterDB db =new RegisterDB();
+		FeesDB feesDB = new FeesDB();
+		RegisterBean institute =db.getRegistereduser(inst_id);
+		List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
+		int msgCounter = 0;
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student = studentTransaction.getclassStudent(student_id, inst_id);
+		RegisterBean studentRegisterBean = db.getRegistereduser(student_id);
+		for (StudentFessNotificationData data : paymentDataList) {
+				MessageDetailBean messageDetailBean = new MessageDetailBean();
+				messageDetailBean.setFrom(institute.getClassName());
+				messageDetailBean.setEmailSubject("Fees Payment");
+				messageDetailBean.setStudentId(student_id);
+				messageDetailBean.setStudentEmail(studentRegisterBean.getEmail());
+				if(!"".equals(studentRegisterBean.getPhone1())){
+				messageDetailBean.setStudentPhone(Long.parseLong(studentRegisterBean.getPhone1()));
+				}
+				messageDetailBean.setParentEmail(student.getParentEmail());
+				if(!"".equals(student.getParentPhone())){
+				messageDetailBean.setParentPhone(Long.parseLong(student.getParentPhone()));
+				}
+				messageDetailBean.setMessageTypeEmail(settings.getClassOwnerNotificationBean().isEmailPayment());
+				messageDetailBean.setMessageTypeSms(settings.getClassOwnerNotificationBean().isSmsPayment());
+				messageDetailBean.setSendToParent(settings.getClassOwnerNotificationBean().isParentPayment());
+				messageDetailBean.setSendToStudent(settings.getClassOwnerNotificationBean().isStudentPayment());
+				if(messageDetailBean.getStudentPhone()!= null && messageDetailBean.isSendToStudent() && messageDetailBean.getStudentPhone()!= 0){
+					msgCounter ++;
+				}
+				if(messageDetailBean.getParentPhone()!= null && messageDetailBean.isSendToParent() && messageDetailBean.getParentPhone()!= 0){
+					msgCounter ++;
+				}
+				data.setInst_name(institute.getClassName());
+				data.setParent_name(student.getParentFname()+" "+student.getParentLname());
+				data.setStudent_name(studentRegisterBean.getFname()+" "+studentRegisterBean.getLname());
+				messageDetailBean.setEmailMessage(null);
+				messageDetailBean.setEmailObject(data);
+				messageDetailBean.setEmailTemplate("feesPaymentStudentAlertEmail.tmpl");
+				messageDetailBean.setParentEmailMessage(null);
+				messageDetailBean.setParentEmailObject(data);
+				messageDetailBean.setParentEmailTemplate("feesPaymentParentAlertEmail.tmpl");
+				messageDetailBean.setSmsMessage(null);
+				messageDetailBean.setSmsTemplate("feesPaymentStudentAlertSMS.tmpl");
+				messageDetailBean.setSmsObject(data);
+				messageDetailBean.setSmsParentMessage(null);
+				messageDetailBean.setSmsParentObject(data);
+				messageDetailBean.setSmsParentTemplate("feesPaymentParentAlertSMS.tmpl");
+				detailBeans.add(messageDetailBean);
+		}
+			NotifcationAccess notifcationAccess = new NotifcationAccess();
+			if(settings.getClassOwnerNotificationBean().isSmsPayment()){
+			SmsNotificationTransaction  notificationTransaction = new SmsNotificationTransaction();
+			statusMap = notificationTransaction.validateNSendSms(msgCounter, "", inst_id,Constants.COMMON_ZERO,Constants.COMMON_ZERO,Constants.PARENT_ROLE,Constants.AUTO_DAILY_MSG);;
+			if(statusMap.containsKey("access") && (boolean)statusMap.get("access")){
+			notifcationAccess.send(detailBeans);
+			ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
+			settingstransaction.reduceSmsCount(msgCounter, institute.getRegId());
+			}
+			}else{
+			notifcationAccess.send(detailBeans);
+			}
+		}else{
+			statusMap.put("status", status);
+		}
+		return statusMap;
+	}
+	
+	public void sendFeesPaymentNotification(int inst_id,List<Integer> studentIDs) {
+		Date date =new Date(new java.util.Date().getTime());
+		RegisterDB db =new RegisterDB();
+		FeesDB feesDB = new FeesDB();
+		ClassownerSettingstransaction settingsTx = new ClassownerSettingstransaction();
+		ClassownerSettingsNotification settings = settingsTx.getSettings(inst_id);
+		RegisterBean institute =db.getRegistereduser(inst_id);
+		List students = feesDB.getStudentForFeesPaymentNotification(inst_id, studentIDs);
+		int msgCounter = 0;
+		List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
+		if(settings.getInstituteStats().isSmsAccess() || settings.getInstituteStats().isEmailAccess()){
+		for (Iterator iterator = students.iterator(); iterator.hasNext();) {
+				Object[] object = (Object[]) iterator.next();
+				MessageDetailBean messageDetailBean = new MessageDetailBean();
+				messageDetailBean.setFrom(institute.getClassName());
+				messageDetailBean.setEmailSubject("Fees Due");
+				messageDetailBean.setStudentId(((Number)object[0]).intValue());
+				messageDetailBean.setStudentEmail((String)object[4]);
+				if(!"".equals((String)object[3])){
+				messageDetailBean.setStudentPhone(Long.parseLong((String)object[3]));
+				}
+				messageDetailBean.setParentEmail((String)object[8]);
+				if(!"".equals((String)object[7])){
+				messageDetailBean.setParentPhone(Long.parseLong((String)object[7]));
+				}
+				messageDetailBean.setMessageTypeEmail(settings.getClassOwnerNotificationBean().isEmailPayment());
+				messageDetailBean.setMessageTypeSms(settings.getClassOwnerNotificationBean().isSmsPayment());
+				messageDetailBean.setSendToParent(settings.getClassOwnerNotificationBean().isParentPayment());
+				messageDetailBean.setSendToStudent(settings.getClassOwnerNotificationBean().isStudentPayment());
+				if(messageDetailBean.getStudentPhone()!= null && messageDetailBean.isSendToStudent() && messageDetailBean.getStudentPhone()!= 0){
+					msgCounter ++;
+				}
+				if(messageDetailBean.getParentPhone()!= null && messageDetailBean.isSendToParent() && messageDetailBean.getParentPhone()!= 0){
+					msgCounter ++;
+				}
+				StudentFessNotificationData data = new StudentFessNotificationData(); 
+				data.setStudent_name((String)object[1]+" "+(String)object[2]);
+				data.setParent_name((String)object[5]+" "+(String)object[6]);
+				data.setTotal_fees(((Number)object[9]).doubleValue());
+				data.setAmount_paid(((Number)object[10]).doubleValue());
+				data.setFees_paid(((Number)object[10]).doubleValue());
+				data.setFee_due(((Number)object[11]).doubleValue());
+				data.setBatch_name((String)object[12]);
+				messageDetailBean.setEmailMessage(null);
+				messageDetailBean.setEmailObject(data);
+				messageDetailBean.setEmailTemplate("feesPaymentStudentAlertEmail.tmpl");
+				messageDetailBean.setParentEmailMessage(null);
+				messageDetailBean.setParentEmailObject(data);
+				messageDetailBean.setParentEmailTemplate("feesPaymentParentAlertEmail.tmpl");
+				messageDetailBean.setSmsMessage(null);
+				messageDetailBean.setSmsTemplate("feesPaymentStudentAlertSMS.tmpl");
+				messageDetailBean.setSmsObject(data);
+				messageDetailBean.setSmsParentMessage(null);
+				messageDetailBean.setSmsParentObject(data);
+				messageDetailBean.setSmsParentTemplate("feesPaymentParentAlertSMS.tmpl");
+				detailBeans.add(messageDetailBean);
+			}
+			NotifcationAccess notifcationAccess = new NotifcationAccess();
+			if(settings.getClassOwnerNotificationBean().isSmsPayment()){
+			SmsNotificationTransaction  notificationTransaction = new SmsNotificationTransaction();
+			HashMap statusMap = notificationTransaction.validateNSendSms(msgCounter, "", inst_id,Constants.COMMON_ZERO,Constants.COMMON_ZERO,Constants.PARENT_ROLE,Constants.AUTO_DAILY_MSG);;
+			if(statusMap.containsKey("access") && (boolean)statusMap.get("access")){
+			notifcationAccess.send(detailBeans);
+			ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
+			settingstransaction.reduceSmsCount(msgCounter, institute.getRegId());
+			}
+			}else{
+				notifcationAccess.send(detailBeans);
+			}
+		}
 	}
 	
 	

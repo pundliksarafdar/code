@@ -3,12 +3,20 @@
 </head>
 <body>
 Hi {{student_name}},
-<table style="width:100%" border="0"> 
+<div>Your fee payment is due.
+</div>
+<table style="width:100%" border="1">
 <tr>
-<td>Name : {{student_name}}</td>
+<td>Batch</td>
+<td>Total Fees Paid</td>
+<td>Total Batch Fees</td>
+<td>Fees Due</td>
 </tr>
 <tr>
-<td>Total Fees:- {{total_fees}}</td><td>Fees Paid:-{{fees_paid}}</td><td>Fees Due:-{{fee_due}}</td>
+<td>{{batch_name}}</td>
+<td>{{fees_paid}}</td>
+<td>{{total_fees}}</td>
+<td>{{fee_due}}</td>
 </tr>
 </table>
 </body>

@@ -158,6 +158,32 @@ public class ClassOwnerNotificationDb {
 		return resultList;
 	}
 	
+	public List<ClassOwnerNotificationBean> getInstitutesForFeesDueNotifications(Date date){
+		Transaction transaction=null;
+		Session session=null;
+		List resultList = null;
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			String queryString="from ClassOwnerNotificationBean "
+					+ "where paymentDueDate like :date and (smsPaymentDue = true or emailPaymentDue = true)";
+			Query query = session.createQuery(queryString);
+			query.setParameter("date", date);
+			resultList =query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return resultList;
+	}
+	
 	public class ListCustomToString<E> extends ArrayList<E>{
 		/*
 		@Override

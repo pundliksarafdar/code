@@ -13,6 +13,7 @@ import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
 import com.schedule.quartz.DailyScheduler;
+import com.schedule.quartz.FeesDueScheduler;
 import com.schedule.quartz.SchedulerJob;
 
 public class QuartzSchedulerListener implements ServletContextListener {
@@ -31,6 +32,8 @@ public class QuartzSchedulerListener implements ServletContextListener {
 				.withIdentity("anyJobName", "weeklyGroup").build();
 		JobDetail monthlyJob = JobBuilder.newJob(DailyScheduler.class)
 				.withIdentity("anyJobName", "monthlyGroup").build();
+		JobDetail feesDueJob = JobBuilder.newJob(FeesDueScheduler.class)
+				.withIdentity("anyJobName", "feesDueGroup").build();
 		try {
 
 			Trigger trigger = TriggerBuilder
@@ -73,7 +76,17 @@ public class QuartzSchedulerListener implements ServletContextListener {
 			Scheduler monthlyScheduler = new StdSchedulerFactory().getScheduler();
 			monthlyScheduler.start();
 			monthlyScheduler.scheduleJob(monthlyJob, monthlyTrigger);
-
+			
+			Trigger feesDueTrigger = TriggerBuilder
+					.newTrigger()
+					.withIdentity("anyTriggerName", "feesDueGroup")
+					.withSchedule(
+							CronScheduleBuilder.cronSchedule("0 00 7 * * ?"))
+					.build();
+			Scheduler feesDueScheduler = new StdSchedulerFactory().getScheduler();
+			feesDueScheduler.start();
+			feesDueScheduler.scheduleJob(feesDueJob, feesDueTrigger);
+			
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}

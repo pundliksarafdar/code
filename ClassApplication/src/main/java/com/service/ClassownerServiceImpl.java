@@ -71,6 +71,7 @@ import com.service.beans.StudentFeesServiceBean;
 import com.service.beans.StudentRegisterServiceBean;
 import com.service.beans.Student_Fees;
 import com.service.beans.SubjectsWithTopics;
+import com.service.helper.NotificationServiceHelper;
 import com.serviceinterface.ClassownerServiceApi;
 import com.tranaction.header.HeaderTransaction;
 import com.tranaction.subject.SubjectTransaction;
@@ -563,6 +564,10 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 			student_Fees.setStudent_id(student_id);
 		}
 		boolean status = feesTransaction.saveStudentBatchFees(getRegId(), serviceBean.getStudent_FeesList());
+		if(status){
+			NotificationServiceHelper helper = new NotificationServiceHelper();
+			helper.sendFeesPaymentNotification(getRegId(), serviceBean.getStudent_FeesList());
+		}
 		return Response.status(Status.OK).entity(status).build();
 	}
 	
@@ -575,6 +580,10 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		StudentTransaction studentTransaction = new StudentTransaction();
 		studentTransaction.addStudentByID(getRegId(),serviceBean.getStudent());
 		boolean status = feesTransaction.saveStudentBatchFees(getRegId(), serviceBean.getStudent_FeesList());
+		if(status){
+			NotificationServiceHelper helper = new NotificationServiceHelper();
+			helper.sendFeesPaymentNotification(getRegId(), serviceBean.getStudent_FeesList());
+		}
 		return Response.status(Status.OK).entity(status).build();
 	}
 	

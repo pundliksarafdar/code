@@ -564,14 +564,14 @@ var wayOfAddition="";
 		<button id="manualAddition" class="btn btn-default">Add Student Manually</button>
 	</div>
 </div>
-<div class="row">
+<!-- <div class="row">
 	<div class="col-md-5">
 	</div>
 	<div class="col-md-1">
 		<span class="badge" style="padding: 18%;border-radius:30px">OR</span>
 	</div>
 </div>
-<!-- <div class="row">	
+ <div class="row">	
 			<div class="col-md-3">
 				<a href="/SampleFiles/SampleStudent.xls" class="btn" role="button">Sample Student Excel</a>
 			</div>
@@ -587,16 +587,16 @@ var wayOfAddition="";
 			<div class="col-md-3">
 				<input type="button" id="uploadStudentExcelBtn" value="Upload Excel" disabled/>
 			</div>	
- 		</div>
+ 		</div> -->
 </div> 
-<div class="row">
+<!-- <div class="row">
 <div class="col-md-5"></div>
 <div class="col-md-6 control-label" id="countDiv"></div>
-</div>
+</div> -->
 
 <div class="row">
 <div id="errorMSGDiv"></div>
-</div>-->
+</div>
 
 <div class="container studentform" style="padding-top: 2%;border: 2px solid;border-color: #1FC0C0;margin-top: 2%;border-radius: 5%;display: none;">
 <div class="row">

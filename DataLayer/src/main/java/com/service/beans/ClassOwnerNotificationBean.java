@@ -1,5 +1,7 @@
 package com.service.beans;
 
+import java.sql.Date;
+
 public class ClassOwnerNotificationBean {
 	boolean smsPayment;
 	boolean emailPayment;
@@ -10,6 +12,7 @@ public class ClassOwnerNotificationBean {
 	boolean emailPaymentDue;
 	boolean parentPaymentDue;
 	boolean studentPaymentDue;
+	Date paymentDueDate;
 	
 	boolean smsAttendanceDaily;
 	boolean emailAttendanceDaily;
@@ -291,6 +294,12 @@ public class ClassOwnerNotificationBean {
 	}
 	public void setWeeklyRecurrence(String weeklyRecurrence) {
 		this.weeklyRecurrence = weeklyRecurrence;
+	}
+	public Date getPaymentDueDate() {
+		return paymentDueDate;
+	}
+	public void setPaymentDueDate(Date paymentDueDate) {
+		this.paymentDueDate = paymentDueDate;
 	}
 	
 		

@@ -3,9 +3,11 @@ package com.notification.sms;
 import java.io.IOException;
 import java.util.List;
 
+import com.notification.access.MessageFormatter;
 import com.notification.access.iNotify;
 import com.notification.bean.MessageDetailBean;
 import com.notification.test.SMSSentMock;
+import com.util.NotificationEnum;
 
 public class SmsNotification implements iNotify{
 
@@ -17,6 +19,8 @@ public class SmsNotification implements iNotify{
 			if(messageDetailBean.isSendToParent()){
 				smsSentMock.sms(messageDetailBean.getParentPhone(), message);
 			}else if(messageDetailBean.isSendToParent()){
+				MessageFormatter formatter = new MessageFormatter();
+				 message = formatter.formatParentMessage(messageDetailBean, NotificationEnum.MessageType.SMS);
 				smsSentMock.sms(messageDetailBean.getParentPhone(), message);
 			}
 			

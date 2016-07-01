@@ -141,6 +141,8 @@
 		<property name="weeklyRecurrence" type="string">
             <column name="weeklyRecurrence" length="300" not-null="true" unique="false"/>
         </property>
-		
+		<property name="paymentDueDate" type="date">
+            <column name="paymentDueDate" unique="false"/>
+        </property>
     </class>
 </hibernate-mapping>

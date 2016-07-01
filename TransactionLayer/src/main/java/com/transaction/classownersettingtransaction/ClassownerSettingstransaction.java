@@ -1,6 +1,8 @@
 package com.transaction.classownersettingtransaction;
 
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Date;
+
 import org.apache.commons.beanutils.BeanUtils;
 import com.classapp.db.classOwnerSettings.ClassOwnerNotificationDb;
 import com.classapp.db.institutestats.InstituteStatsDB;
@@ -12,10 +14,18 @@ import com.util.NotificationEnum;
 public class ClassownerSettingstransaction {
 	public boolean saveSettings(ClassOwnerNotificationBean bean,int inst_id ){
 		ClassOwnerNotificationDb db= new ClassOwnerNotificationDb();
+		boolean dueDateFlag = false;
+		if(bean.getPaymentDueDate() == null){
+			bean.setPaymentDueDate(new Date(new java.util.Date().getTime()));
+			dueDateFlag = true;
+		}
 		com.classapp.db.classOwnerSettings.ClassOwnerNotificationBean dbBean = new com.classapp.db.classOwnerSettings.ClassOwnerNotificationBean(); 
 		bean.setRegId(inst_id);
 		try {
 			BeanUtils.copyProperties(dbBean, bean);
+			if(dueDateFlag == true){
+				dbBean.setPaymentDueDate(null);
+			}
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
@@ -47,7 +57,15 @@ public class ClassownerSettingstransaction {
 			ClassOwnerNotificationBean classownerSettingsNotificationBean = new ClassOwnerNotificationBean();
 			try {
 				if(null!=classOwnerNotificationBeanDb){
+					boolean dueDateFlag = false;
+					if(classOwnerNotificationBeanDb.getPaymentDueDate() == null){
+						classOwnerNotificationBeanDb.setPaymentDueDate(new Date(new java.util.Date().getTime()));
+						dueDateFlag = true;
+					}
 					BeanUtils.copyProperties(classownerSettingsNotificationBean, classOwnerNotificationBeanDb);
+					if(dueDateFlag == true){
+						classownerSettingsNotificationBean.setPaymentDueDate(null);
+					}
 				}
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();

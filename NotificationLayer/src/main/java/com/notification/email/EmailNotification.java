@@ -11,18 +11,24 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.notification.access.MessageFormatter;
 import com.notification.access.iNotify;
 import com.notification.bean.MessageDetailBean;
+import com.util.NotificationEnum;
 
 public class EmailNotification implements iNotify{
 
 	@Override
 	public String send(MessageDetailBean messageDetailBean,String message) {
 		if(messageDetailBean.isSendToStudent()){
+			MessageFormatter formatter = new MessageFormatter();
+			message = formatter.formatMessage(messageDetailBean, NotificationEnum.MessageType.EMAIL);
 			this.sendEmail(messageDetailBean.getStudentEmail(), message, messageDetailBean.getEmailSubject(),messageDetailBean.getFrom());
 		}
 		
 		if(messageDetailBean.isSendToParent()){
+			MessageFormatter formatter = new MessageFormatter();
+			message = formatter.formatParentMessage(messageDetailBean, NotificationEnum.MessageType.EMAIL);
 			this.sendEmail(messageDetailBean.getParentEmail(), message, messageDetailBean.getEmailSubject(),messageDetailBean.getFrom());
 		}
 		return null;

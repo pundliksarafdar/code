@@ -35,7 +35,10 @@ public class MessageDetailBean {
 	String parentEmailMessage;
 	String parentEmailTemplate;
 	Object parentEmailObject;
-		
+	
+	String smsParentMessage;
+	String smsParentTemplate;
+	Object smsParentObject;
 	//if message is null parse template and object 
 	String pushMessage;
 	String pushTemplate;
@@ -209,6 +212,24 @@ public class MessageDetailBean {
 	}
 	public void setParentEmailObject(Object parentEmailObject) {
 		this.parentEmailObject = parentEmailObject;
+	}
+	public String getSmsParentMessage() {
+		return smsParentMessage;
+	}
+	public void setSmsParentMessage(String smsParentMessage) {
+		this.smsParentMessage = smsParentMessage;
+	}
+	public String getSmsParentTemplate() {
+		return smsParentTemplate;
+	}
+	public void setSmsParentTemplate(String smsParentTemplate) {
+		this.smsParentTemplate = smsParentTemplate;
+	}
+	public Object getSmsParentObject() {
+		return smsParentObject;
+	}
+	public void setSmsParentObject(Object smsParentObject) {
+		this.smsParentObject = smsParentObject;
 	}
 	
 	

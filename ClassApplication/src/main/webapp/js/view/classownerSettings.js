@@ -16,6 +16,12 @@ $(document).ready(function(){
 		});
 		objectToSave.emailAttendanceWeeklyThreshold = $("#editNotificationSettingForm").find("#emailAttendanceWeeklyThreshold").val();
 		objectToSave.emailAttendanceMonthlyThreshold = $("#editNotificationSettingForm").find("#emailAttendanceMonthlyThreshold").val();
+		var paymentDueDate = $("#paymentDueDate").val();
+		if(paymentDueDate != ""){
+			paymentDueDate = paymentDueDate.split("/");
+			paymentDueDate = paymentDueDate[2]+"-"+paymentDueDate[1]+"-"+paymentDueDate[0];
+		}
+		objectToSave.paymentDueDate = paymentDueDate;
 		var recurrenceSelection = $(WEEKLY_DAY_SELECTION).find('input[type="checkbox"]');
 		
 		var weeklyRecurrence = {};
@@ -31,6 +37,10 @@ $(document).ready(function(){
 		handler.error = function(e){$.notify({message: "Error occured"},{type: 'danger'});}
 		rest.post(ClassownerSettingsUrl,handler,JSON.stringify(objectToSave));
 	});
+	 $( "#datetimepicker" ).datetimepicker({
+		  pickTime: false,
+		  format: 'DD/MM/YYYY'
+	  }).data("DateTimePicker");
 });
 
 function loadData(){
@@ -68,6 +78,12 @@ function onDataLoad(data){
 					$(val).prop("checked",true);
 				}
 			});
+			var paymentDueDate = data.classOwnerNotificationBean.paymentDueDate;
+			if(paymentDueDate != null){
+				paymentDueDate = paymentDueDate.split("-");
+				paymentDueDate = paymentDueDate[2]+"/"+paymentDueDate[1]+"/"+paymentDueDate[0];
+				$("#paymentDueDate").val(paymentDueDate);
+			}
 			$("#editNotificationSettingForm").find("[type='checkbox'][data-size='mini']").bootstrapSwitch();
 			$("#editNotificationSettingForm").find("#emailAttendanceWeeklyThreshold").val(data.classOwnerNotificationBean.emailAttendanceWeeklyThreshold);
 			$("#editNotificationSettingForm").find("#emailAttendanceMonthlyThreshold").val(data.classOwnerNotificationBean.emailAttendanceMonthlyThreshold);

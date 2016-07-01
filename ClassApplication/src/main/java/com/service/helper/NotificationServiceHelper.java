@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.classapp.db.batch.Batch;
+import com.classapp.db.fees.FeesDB;
+import com.classapp.db.fees.Student_Fees;
 import com.notification.access.NotificationImpl;
 import com.notification.email.EmailNotificationTransaction;
 import com.notification.sms.SmsNotificationTransaction;
@@ -13,6 +16,8 @@ import com.service.beans.SendAcademicAlertAttendanceBean;
 import com.service.beans.SendAcademicAlertFeeDueBean;
 import com.service.beans.SendAcademicAlertProgressCardBean;
 import com.service.beans.SendNotificationMesssageBean;
+import com.service.beans.StudentFessNotificationData;
+import com.transaction.batch.BatchTransactions;
 import com.transaction.classownersettingtransaction.ClassownerSettingstransaction;
 
 public class NotificationServiceHelper {
@@ -150,5 +155,52 @@ public class NotificationServiceHelper {
 		String csv = bean.getExamList().toString().replace("[", "").replace("]", "")
 	            .replace(", ", ",");
 		notificationImpl.sendStudentProgressCard(inst_id, bean.getDivId(), bean.getBatchId(), csv, bean.isEmail(), bean.isSms(), bean.isParent(), bean.isStudent());
+	}
+	
+	public void sendFeesPaymentNotification(int inst_id,com.service.beans.Student_Fees_Transaction serviceFees_Transaction){
+		FeesDB feesDB = new FeesDB();
+		Student_Fees fees = feesDB.getStudentBatchFees(inst_id, serviceFees_Transaction.getDiv_id(), serviceFees_Transaction.getBatch_id(),serviceFees_Transaction.getStudent_id());
+		BatchTransactions transactions = new BatchTransactions();
+		Batch batch = transactions.getBatch(serviceFees_Transaction.getBatch_id(), inst_id, serviceFees_Transaction.getDiv_id());
+		List<StudentFessNotificationData> notificationList = new ArrayList<StudentFessNotificationData>();
+		if(fees!=null){
+		StudentFessNotificationData data = new StudentFessNotificationData();
+		data.setAmount_paid(serviceFees_Transaction.getAmt_paid());
+		data.setFees_paid(fees.getFees_paid());
+		data.setFee_due(fees.getFees_due());
+		data.setTotal_fees(fees.getFinal_fees_amt());
+		data.setBatch_id(serviceFees_Transaction.getBatch_id());
+		data.setBatch_name(batch.getBatch_name());
+		notificationList.add(data);
+		NotificationImpl notificationImpl = new NotificationImpl();
+		notificationImpl.sendFeesPaymentNotification(inst_id, serviceFees_Transaction.getDiv_id(), serviceFees_Transaction.getBatch_id(), serviceFees_Transaction.getStudent_id(), notificationList);
+		}
+	}
+	
+	public void sendFeesPaymentNotification(int inst_id,List<com.service.beans.Student_Fees> student_FeesList){
+		for (com.service.beans.Student_Fees student_Fees : student_FeesList) {
+			FeesDB feesDB = new FeesDB();
+			Student_Fees fees = feesDB.getStudentBatchFees(inst_id, student_Fees.getDiv_id(), student_Fees.getBatch_id(),student_Fees.getStudent_id());
+		if(student_Fees.getFees_paid() > 0){
+		BatchTransactions transactions = new BatchTransactions();
+		Batch batch = transactions.getBatch(student_Fees.getBatch_id(), inst_id, student_Fees.getDiv_id());
+		List<StudentFessNotificationData> notificationList = new ArrayList<StudentFessNotificationData>();
+		StudentFessNotificationData data = new StudentFessNotificationData();
+		data.setAmount_paid(student_Fees.getFees_paid());
+		data.setFees_paid(student_Fees.getFees_paid());
+		data.setFee_due(fees.getFees_due());
+		data.setTotal_fees(fees.getFinal_fees_amt());
+		data.setBatch_id(student_Fees.getBatch_id());
+		data.setBatch_name(batch.getBatch_name());
+		notificationList.add(data);
+		NotificationImpl notificationImpl = new NotificationImpl();
+		notificationImpl.sendFeesPaymentNotification(inst_id, student_Fees.getDiv_id(), student_Fees.getBatch_id(), student_Fees.getStudent_id(), notificationList);
+		}
+		}
+	}
+	
+	public void getStudentForFeesPaymentNotification(int inst_id,List<Integer> studentIDs){
+		NotificationImpl notificationImpl = new NotificationImpl();
+		notificationImpl.sendFeesPaymentNotification(inst_id, studentIDs);
 	}
 }
