@@ -103,16 +103,21 @@ public class MonthlyScheduler implements Job {
 				data.setAverage((double) (((Number)object[5]).intValue()*100)/(double)((Number)object[6]).intValue());
 				data.setStart_date(startDate);
 				data.setEnd_date(endDate);
+				data.setBatch_name((String)object[13]);
+				data.setMonth(new SimpleDateFormat("MMM").format(date)+" "+new SimpleDateFormat("YYYY").format(date));
 				messageDetailBean.setEmailMessage(null);
 				messageDetailBean.setEmailObject(data);
-				messageDetailBean.setEmailTemplate("attendance.tmpl");
+				messageDetailBean.setEmailTemplate("monthlyAttendanceStudentEmail.tmpl");
 				messageDetailBean.setParentEmailMessage(null);
 				messageDetailBean.setParentEmailObject(data);
-				messageDetailBean.setParentEmailTemplate("attendanceAlertParent.tmpl");
+				messageDetailBean.setParentEmailTemplate("monthlyAttendanceParentEmail.tmpl");
 				
 				messageDetailBean.setSmsMessage(null);
 				messageDetailBean.setSmsObject(data);
-				messageDetailBean.setSmsTemplate("monthlyAttendanceMSG.tmpl");
+				messageDetailBean.setSmsTemplate("monthlyAttendanceStudentSMS.tmpl");
+				messageDetailBean.setSmsParentMessage(null);
+				messageDetailBean.setSmsObject(data);
+				messageDetailBean.setSmsParentTemplate("monthlyAttendanceParentSMS.tmpl");
 				detailBeans.add(messageDetailBean);
 			}
 			NotifcationAccess notifcationAccess = new NotifcationAccess();

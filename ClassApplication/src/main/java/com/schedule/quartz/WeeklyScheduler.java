@@ -103,14 +103,17 @@ public class WeeklyScheduler implements Job{
 				data.setEnd_date(endDate);
 				messageDetailBean.setEmailMessage(null);
 				messageDetailBean.setEmailObject(data);
-				messageDetailBean.setEmailTemplate("attendance.tmpl");
+				messageDetailBean.setEmailTemplate("weeklyAttendanceStudentEmail.tmpl");
 				messageDetailBean.setParentEmailMessage(null);
 				messageDetailBean.setParentEmailObject(data);
-				messageDetailBean.setParentEmailTemplate("attendanceAlertParent.tmpl");
+				messageDetailBean.setParentEmailTemplate("weeklyAttendanceParentEmail.tmpl");
 				
 				messageDetailBean.setSmsMessage(null);
 				messageDetailBean.setSmsObject(data);
-				messageDetailBean.setSmsTemplate("weeklyAttendanceMSG.tmpl");
+				messageDetailBean.setSmsTemplate("weeklyAttendanceStudentSMS.tmpl");
+				messageDetailBean.setSmsParentMessage(null);
+				messageDetailBean.setSmsObject(data);
+				messageDetailBean.setSmsParentTemplate("weeklyAttendanceParentSMS.tmpl");
 				detailBeans.add(messageDetailBean);
 			}
 			NotifcationAccess notifcationAccess = new NotifcationAccess();

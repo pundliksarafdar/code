@@ -13,6 +13,8 @@ public class StudentAttendanceNotificationData {
 	Date att_date;
 	Date start_date;
 	Date end_date;
+	String batch_name;
+	String month;
 	public int getStudent_id() {
 		return student_id;
 	}
@@ -72,6 +74,18 @@ public class StudentAttendanceNotificationData {
 	}
 	public void setInst_name(String inst_name) {
 		this.inst_name = inst_name;
+	}
+	public String getBatch_name() {
+		return batch_name;
+	}
+	public void setBatch_name(String batch_name) {
+		this.batch_name = batch_name;
+	}
+	public String getMonth() {
+		return month;
+	}
+	public void setMonth(String month) {
+		this.month = month;
 	}
 	
 	

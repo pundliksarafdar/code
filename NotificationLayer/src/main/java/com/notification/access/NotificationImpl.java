@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.classapp.db.attendance.AttendanceDB;
+import com.classapp.db.batch.Batch;
 import com.classapp.db.classOwnerSettings.ClassOwnerNotificationBean;
 import com.classapp.db.classOwnerSettings.ClassOwnerNotificationDb;
 import com.classapp.db.fees.FeesDB;
@@ -30,6 +31,7 @@ import com.service.beans.ClassownerSettingsNotification;
 import com.service.beans.StudentAttendanceNotificationData;
 import com.service.beans.StudentFessNotificationData;
 import com.service.beans.StudentProgressCard;
+import com.transaction.batch.BatchTransactions;
 import com.transaction.classownersettingtransaction.ClassownerSettingstransaction;
 import com.transaction.student.StudentTransaction;
 import com.transaction.studentmarks.StudentMarksTransaction;
@@ -203,11 +205,14 @@ public class NotificationImpl {
 				messageDetailBean.setEmailTemplate("progressCard.tmpl");
 				messageDetailBean.setParentEmailMessage(null);
 				messageDetailBean.setParentEmailObject(progressCard);
-				messageDetailBean.setParentEmailTemplate("progressCard.tmpl");
+				messageDetailBean.setParentEmailTemplate("progressCardParentEmail.tmpl");
 				
 				messageDetailBean.setSmsMessage(null);
 				messageDetailBean.setSmsObject(progressCard);
 				messageDetailBean.setSmsTemplate("progressCardSMS.tmpl");
+				messageDetailBean.setSmsParentMessage(null);
+				messageDetailBean.setSmsObject(progressCard);
+				messageDetailBean.setSmsParentTemplate("progressCardParentSMS.tmpl");
 				detailBeans.add(messageDetailBean);
 			}
 		}
@@ -247,6 +252,8 @@ public class NotificationImpl {
 		}
 		if("".equals(status)){
 		int msgCounter = 0;
+		BatchTransactions batchTransactions = new BatchTransactions();
+		Batch batch = batchTransactions.getBatch(batch_id, inst_id, div_id);
 		StudentDB studentDB = new StudentDB();
 		List<Student> students=studentDB.getStudentrelatedtoBatch(batch_id+"", inst_id, div_id);
 		List<Integer> studentIds=students.stream().map(Student::getStudent_id).collect(Collectors.toList());
@@ -292,6 +299,7 @@ public class NotificationImpl {
 				data.setTotal_lectures(((Number) object[6]).intValue());
 				data.setAverage(
 						(double) (((Number) object[5]).intValue() * 100) / (double) ((Number) object[6]).intValue());
+				data.setBatch_name(batch.getBatch_name());
 				messageDetailBean.setEmailMessage(null);
 				messageDetailBean.setEmailObject(data);
 				messageDetailBean.setEmailTemplate("attendance.tmpl");
@@ -302,6 +310,9 @@ public class NotificationImpl {
 				messageDetailBean.setSmsMessage(null);
 				messageDetailBean.setSmsObject(data);
 				messageDetailBean.setSmsTemplate("dailyAttendanceMSG.tmpl");
+				messageDetailBean.setSmsParentMessage(null);
+				messageDetailBean.setSmsObject(data);
+				messageDetailBean.setSmsParentTemplate("dailyAttendanceParentSMS.tmpl");
 				detailBeans.add(messageDetailBean);
 			}
 		}
@@ -356,6 +367,8 @@ public class NotificationImpl {
 		 calendar.add(calendar.DATE, 6);
 		//calendar.set(Calendar.DAY_OF_MONTH, lastdate);
 		Date endDate =  new Date(calendar.getTime().getTime());
+		BatchTransactions batchTransactions = new BatchTransactions();
+		Batch batch = batchTransactions.getBatch(batch_id, inst_id, div_id);
 		StudentDB studentDB = new StudentDB();
 		List<Student> students = studentDB.getStudentrelatedtoBatch(batch_id + "", inst_id, div_id);
 		List<Integer> studentIds = students.stream().map(Student::getStudent_id).collect(Collectors.toList());
@@ -401,18 +414,23 @@ public class NotificationImpl {
 					data.setTotal_lectures(((Number) object[6]).intValue());
 					data.setAverage((double) (((Number) object[5]).intValue() * 100)
 							/ (double) ((Number) object[6]).intValue());
+					data.setBatch_name(batch.getBatch_name());
 					data.setStart_date(startDate);
 					data.setEnd_date(endDate);
+					data.setBatch_name((String) object[13]);
 					messageDetailBean.setEmailMessage(null);
 					messageDetailBean.setEmailObject(data);
-					messageDetailBean.setEmailTemplate("attendance.tmpl");
+					messageDetailBean.setEmailTemplate("weeklyAttendanceStudentEmail.tmpl");
 					messageDetailBean.setParentEmailMessage(null);
 					messageDetailBean.setParentEmailObject(data);
-					messageDetailBean.setParentEmailTemplate("attendanceAlertParent.tmpl");
+					messageDetailBean.setParentEmailTemplate("weeklyAttendanceParentEmail.tmpl");
 					
 					messageDetailBean.setSmsMessage(null);
 					messageDetailBean.setSmsObject(data);
-					messageDetailBean.setSmsTemplate("weeklyAttendanceMSG.tmpl");
+					messageDetailBean.setSmsTemplate("weeklyAttendanceStudentSMS.tmpl");
+					messageDetailBean.setSmsParentMessage(null);
+					messageDetailBean.setSmsObject(data);
+					messageDetailBean.setSmsParentTemplate("weeklyAttendanceParentSMS.tmpl");
 					detailBeans.add(messageDetailBean);
 				}
 			}
@@ -468,6 +486,8 @@ public class NotificationImpl {
 		int lastdate = calendar.getActualMaximum(Calendar.DATE);
 		calendar.set(Calendar.DAY_OF_MONTH, lastdate);
 		Date endDate =  new Date(calendar.getTime().getTime());
+		BatchTransactions batchTransactions = new BatchTransactions();
+		Batch batch = batchTransactions.getBatch(batch_id, inst_id, div_id);
 		StudentDB studentDB = new StudentDB();
 		List<Student> students = studentDB.getStudentrelatedtoBatch(batch_id + "", inst_id, div_id);
 		List<Integer> studentIds = students.stream().map(Student::getStudent_id).collect(Collectors.toList());
@@ -514,16 +534,21 @@ public class NotificationImpl {
 							/ (double) ((Number) object[6]).intValue());
 					data.setStart_date(startDate);
 					data.setEnd_date(endDate);
+					data.setBatch_name(batch.getBatch_name());
+					data.setMonth(new SimpleDateFormat("MMM").format(date)+" "+new SimpleDateFormat("YYYY").format(date));
 					messageDetailBean.setEmailMessage(null);
 					messageDetailBean.setEmailObject(data);
-					messageDetailBean.setEmailTemplate("attendance.tmpl");
+					messageDetailBean.setEmailTemplate("monthlyAttendanceStudentEmail.tmpl");
 					messageDetailBean.setParentEmailMessage(null);
 					messageDetailBean.setParentEmailObject(data);
-					messageDetailBean.setParentEmailTemplate("attendanceAlertParent.tmpl");
+					messageDetailBean.setParentEmailTemplate("monthlyAttendanceParentEmail.tmpl");
 					
 					messageDetailBean.setSmsMessage(null);
 					messageDetailBean.setSmsObject(data);
-					messageDetailBean.setSmsTemplate("monthlyAttendanceMSG.tmpl");
+					messageDetailBean.setSmsTemplate("monthlyAttendanceStudentSMS.tmpl");
+					messageDetailBean.setSmsParentMessage(null);
+					messageDetailBean.setSmsObject(data);
+					messageDetailBean.setSmsParentTemplate("monthlyAttendanceParentSMS.tmpl");
 					detailBeans.add(messageDetailBean);
 				}
 			}

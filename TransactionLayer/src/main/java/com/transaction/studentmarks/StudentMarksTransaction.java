@@ -472,10 +472,13 @@ public class StudentMarksTransaction {
 			studentProgressCard.setSubject_name(distinctSubjectsList.stream().map(com.datalayer.subject.Subject::getSubjectName).collect(Collectors.toList()));
 			studentProgressCard.setStudent_name(studentData.getFname()+" "+studentData.getLname());
 			List<String[]> dataArrayList = new ArrayList<String[]>();
+			List<String[]> examSMSDataList = new ArrayList<String[]>();
 			for (com.service.beans.Exam exam : examList) {
 				int pos=0;
 				String examData[] = new String[distinctSubjectsList.size()+4];
+				String examSMSData[] = new String[distinctSubjectsList.size()+4];
 				examData[pos] =exam.getExam_name();
+				examSMSData[0] =exam.getExam_name()+" : ";
 				int total_marks = 0;
 				for (com.datalayer.subject.Subject subject : distinctSubjectsList) {
 					pos++;
@@ -498,8 +501,11 @@ public class StudentMarksTransaction {
 				examData[++pos] = String.valueOf(total_marks);
 				examData[++pos] = String.valueOf(exam.getTotal_marks());
 				examData[++pos] = String.valueOf(df2.format(((float)total_marks/(float)exam.getTotal_marks())*100)+"%");
+				examSMSData[1] = String.valueOf(df2.format(((float)total_marks/(float)exam.getTotal_marks())*100)+"%");
 				dataArrayList.add(examData);
+				examSMSDataList.add(examSMSData);
 			}
+			studentProgressCard.setExamSMSDATA(examSMSDataList);
 			studentProgressCard.setDataList(dataArrayList);
 			studentProgressCard.setBatch_name(batch.getBatch_name());
 			studentProgressCard.setClass_name(division.getDivisionName());

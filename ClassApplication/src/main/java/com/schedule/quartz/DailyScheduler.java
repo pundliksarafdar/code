@@ -96,6 +96,7 @@ public class DailyScheduler implements Job  {
 				data.setPresent_lectures(((Number)object[5]).intValue());
 				data.setTotal_lectures(((Number)object[6]).intValue());
 				data.setAverage((double) (((Number)object[5]).intValue()*100)/(double)((Number)object[6]).intValue());
+				data.setBatch_name((String)object[13]);
 				messageDetailBean.setEmailMessage(null);
 				messageDetailBean.setEmailObject(data);
 				messageDetailBean.setEmailTemplate("attendance.tmpl");
@@ -106,6 +107,9 @@ public class DailyScheduler implements Job  {
 				messageDetailBean.setSmsMessage(null);
 				messageDetailBean.setSmsObject(data);
 				messageDetailBean.setSmsTemplate("dailyAttendanceMSG.tmpl");
+				messageDetailBean.setSmsParentMessage(null);
+				messageDetailBean.setSmsObject(data);
+				messageDetailBean.setSmsParentTemplate("dailyAttendanceParentSMS.tmpl");
 				detailBeans.add(messageDetailBean);
 			}
 			NotifcationAccess notifcationAccess = new NotifcationAccess();

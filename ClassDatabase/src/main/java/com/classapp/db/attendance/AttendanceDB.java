@@ -634,10 +634,10 @@ public class AttendanceDB {
 		List list = null;
 		String queryString = " SELECT std.student_id,reg.fname,reg.lname,reg.phone1,reg.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
 							+ "count(distinct att.schedule_id),std.parentFname,std.parentLname,"
-							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id FROM Attendance att, RegisterBean reg,Student std "
+							+ "std.parentPhone,std.parentEmail,att.div_id,att.batch_id,batch.batch_name FROM Attendance att, RegisterBean reg,Student std,Batch batch "
 							+"where  reg.regId = att.student_id and std.student_id = att.student_id and std.class_id = att.inst_id"
 							+ " and std.div_id = att.div_id and att.inst_id=:inst_id " +
-							"and att.att_date=:att_date group by att.student_id,att.batch_id,att.div_id order by att.student_id,att.batch_id,att.div_id";
+							"and att.att_date=:att_date and batch.batch_id = att.batch_id and batch.class_id = att.inst_id and batch.div_id = att.div_id group by att.student_id,att.batch_id,att.div_id order by att.student_id,att.batch_id,att.div_id";
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
@@ -697,10 +697,11 @@ public class AttendanceDB {
 		List list = null;
 		String queryString =" SELECT std.student_id,reg.fname,reg.lname,reg.phone1,reg.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
 							+ "count(distinct att.schedule_id,att_date),std.parentFname,std.parentLname,"
-							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id  FROM Attendance att, regtable reg,Student std "
+							+ "std.parentPhone,std.parentEmail,att.div_id,att.batch_id,batch.batch_name  FROM Attendance att, regtable reg,Student std,Batch batch "
 							+ "where  reg.REG_ID = att.student_id and std.student_id = att.student_id and std.class_id = att.inst_id"
 							+ " and std.div_id = att.div_id and att.inst_id=:inst_id  "
-							+ "and  att_date>=:start_date and att_date<=:end_date group by att.student_id,att.batch_id,att.div_id "
+							+ "and  att_date>=:start_date and att_date<=:end_date and batch.batch_id = att.batch_id and batch.class_id = att.inst_id and batch.div_id = att.div_id"
+							+ " group by att.student_id,att.batch_id,att.div_id "
 							+ "order by att.student_id,att.batch_id,att.div_id";
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
@@ -762,10 +763,11 @@ public class AttendanceDB {
 		List list = null;
 		String queryString = " SELECT std.student_id,reg.fname,reg.lname,reg.phone1,reg.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
 							+ "count(distinct att.schedule_id,att_date),std.parentFname,std.parentLname,"
-							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id  FROM Attendance att, regtable reg,Student std "
+							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id,batch.batch_name  FROM Attendance att, regtable reg,Student std,Batch batch "
 							+ "where  reg.REG_ID = att.student_id and std.student_id = att.student_id and std.class_id = att.inst_id"
 							+ " and std.div_id = att.div_id and att.inst_id=:inst_id  "
-							+ "and  att_date>=:start_date and att_date<=:end_date group by att.student_id,att.batch_id,att.div_id "
+							+ "and  att_date>=:start_date and att_date<=:end_date and batch.batch_id = att.batch_id and batch.class_id = att.inst_id and batch.div_id = att.div_id"
+							+ " group by att.student_id,att.batch_id,att.div_id "
 							+ "order by att.student_id,att.batch_id,att.div_id";
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();

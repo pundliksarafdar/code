@@ -11,6 +11,7 @@ public class StudentProgressCard {
 	private String inst_name;
 	List<String[]> dataList;
 	List<String> subject_name;
+	List<String[]> examSMSDATA;
 	public String getStudent_name() {
 		return student_name;
 	}
@@ -59,5 +60,12 @@ public class StudentProgressCard {
 	public void setStudent_id(int student_id) {
 		this.student_id = student_id;
 	}
+	public List<String[]> getExamSMSDATA() {
+		return examSMSDATA;
+	}
+	public void setExamSMSDATA(List<String[]> examSMSDATA) {
+		this.examSMSDATA = examSMSDATA;
+	}
+	
 	
 }

@@ -27,7 +27,7 @@ $(document).ready(function(){
 	$(CALENDAR_CONTAINER).hide();
 	$("body").on("change",DIVISION_SELECT,getBatches)
 		.on("click",'[data-event-id]',editTimeTableFunction)
-		.on("change",BATCH_SELECT,getTimeTableData)
+		.on("change",BATCH_SELECT,batchChange)
 		.on("change",SUBJECT_SELECT,subjectSelectChange)
 		.on("click",SAVE_SCHEDULE,saveSchedule)
 		.on("click",EDIT_SCHEDULE,editSchedule)
@@ -98,7 +98,10 @@ $(document).ready(function(){
 		markTodaysDayOfWeek();
 		
 		 $.validator.addMethod("valueNotEquals", function(value, element, arg){
-		  return arg != value;
+			 if(arg.constructor == Array){
+				 return (arg.indexOf(value)==-1);
+			 }
+			 return arg != value;
 		 }, "Value must not equal arg.");
 		 
 		 $.validator.addMethod("endDateRequired", function(value, element, arg){
@@ -107,10 +110,10 @@ $(document).ready(function(){
 		 
 		 validatorForm = $(SCHEDULE_FORM).validate({
 		  rules: {
-		   divisionSelect: { valueNotEquals: "-1" },
-		   batchSelect:{ valueNotEquals: "-1" },
-		   subjectSelect:{ valueNotEquals: "-1" },
-		   teacherSelect:{ valueNotEquals: "-1" },
+		   divisionSelect: { valueNotEquals: "-1"},
+		   batchSelect:{ valueNotEquals: ["-1",null,""] },
+		   subjectSelect:{ valueNotEquals: ["-1",null,""] },
+		   teacherSelect:{ valueNotEquals: ["-1",null,""] },
 			endDate:{endDateRequired:true}
 		  },
 		  messages: {
@@ -204,6 +207,7 @@ function resetSchedule(){
 }
 
 function getBatches(){
+	$(BATCH_SELECT).empty();
 	var handler = {}
 	var division = $(this).val();
 	if(division>-1){
@@ -211,22 +215,35 @@ function getBatches(){
 		handler.error = getBatchError;
 		rest.get(getBatchListUrl+division,handler);
 	}else{
+		var options = "<option value='-1'>Select Batch</option>";
+		$(BATCH_SELECT).append(options);	
+		$(BATCH_SELECT).select2().val("-1").change();
 		$(CALENDAR_CONTAINER).hide();
 	}
 }
 
 function getBatchSuccess(batches){
-	$(BATCH_SELECT).find('option').not('option[value="-1"]').remove();
-	var options = "";
+	if(batches.length >0){
+	var options = "<option value='-1'>Select Batch</option>";
 	$.each(batches,function(index,val){
 			options = options + "<option value='"+val.batch.batch_id+"'>"+val.batch.batch_name+"</option>";		
 	});
-	$(BATCH_SELECT).append(options);	
+	$(BATCH_SELECT).append(options);
+	$(BATCH_SELECT).select2().val("-1").change();
+	}else{
+		$(BATCH_SELECT).empty();
+		$(BATCH_SELECT).select2().val("").change();
+		$(BATCH_SELECT).select2({data:"",placeholder:"Batch not available"});
+	}
 }
 
 function getBatchError(error){
 }
 
+function batchChange(){
+	$(SUBJECT_SELECT).select2().val("-1").change();
+	getTimeTableData();
+}
 function getTimeTableData(){
 	var divId = $(DIVISION_SELECT).val();
 	var batchId = $(BATCH_SELECT).val();
@@ -237,7 +254,9 @@ function getTimeTableData(){
 	var handler = {};
 	handler.success = function(e){setTimetable(e)};
 	handler.error = function(e){$(CALENDAR_CONTAINER).hide();};
+	if(batchId != "-1" && batchId!=null && batchId != ""){
 	rest.get(getTimetable+batchId+"/"+divId+"/"+dateNow+"/0",handler);
+	}
 	filldropdown();
 }
 
@@ -352,10 +371,12 @@ function editTimeTableFunction(){
 }
 
 function filldropdown()
-{
+{	
+	$(SUBJECT_SELECT).empty();
 	  var batchName = $(BATCH_SELECT).val();
 	  var batchdivision=$(DIVISION_SELECT).val();
 	  var reg;
+	  if(batchName != "-1" && batchName!=null && batchName != ""){
 	  $.ajax({
 		   url: "classOwnerServlet",
 		    data: {
@@ -370,7 +391,7 @@ function filldropdown()
 			   if(subjectstatus==""){
 			   var subjectnames= resultJson.Batchsubjects.split(",");
 			   var subjectids= resultJson.BatchsubjectsIds.split(",");
-			   var options = "";
+			   var options = "<option value='-1'>Select Subject</option>";
 					for(index=0;index<subjectnames.length;index++){
 						var subjectname = subjectnames[index];
 						var subjectId = subjectids[index];
@@ -378,6 +399,11 @@ function filldropdown()
 					}
 				$(SUBJECT_SELECT).find('option').not('option[value="-1"]').remove();	
 				$(SUBJECT_SELECT).append(options);
+				$(SUBJECT_SELECT).select2().val("-1").change();
+			   }else{
+					$(SUBJECT_SELECT).empty();
+					$(SUBJECT_SELECT).select2().val("").change();
+					$(SUBJECT_SELECT).select2({data:"",placeholder:"Subject not available"});
 			   }
 		     
 		   	},
@@ -385,12 +411,19 @@ function filldropdown()
 			   alert("error");
 		   }
 	});
+	  }else{
+		  	var options = "<option value='-1'>Select Subject</option>";
+		  	$(SUBJECT_SELECT).append(options);
+			$(SUBJECT_SELECT).select2().val("-1").change();
+	  }
 }
 
 function subjectSelectChange(e,eventSelected)
   {
+	$(TEACHER_SELECT).empty();
 	console.log(eventSelected && eventSelected.teacher_id ?eventSelected.teacher_id:"-1");
 	  var subname = $(SUBJECT_SELECT).val();
+	  if(subname != "-1" && subname != null && subname != ""){
 		  var reg;
 		  $.ajax({
 			   url: "classOwnerServlet",
@@ -426,14 +459,22 @@ function subjectSelectChange(e,eventSelected)
 	            	   sell1Options[i+1]= new Option(firstname[i]+" "+lastname[i]+" "+suffix[i], teacherid[i]);
 	            	   }
 	               sell1Select.val(eventSelected && eventSelected.teacher_id ?eventSelected.teacher_id:"-1");
+	               $(TEACHER_SELECT).select2().val("-1").change();
 	               }else{
-	            	   modal.launchAlert("Teacher","Teacher Not Available For This Subject");
+	            	   $(TEACHER_SELECT).empty();
+					   $(TEACHER_SELECT).select2().val("").change();
+					   $(TEACHER_SELECT).select2({data:"",placeholder:"Teacher not available"});
 	               }
 			   	},
 			   error:function(data){
 				   alert("Teacher Not Available");
 			   }
 		});
+	  }else{
+		  var options = "<option value='-1'>Select Teacher</option>";
+		  	$(TEACHER_SELECT).append(options);
+			$(TEACHER_SELECT).select2().val("-1").change();
+	  }
   }
   
   function saveSchedule(){
