@@ -11,10 +11,13 @@ import java.util.Iterator;
 
 
 
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+
+import com.classapp.logger.AppLogger;
 
 /**
  * A class to load all Question paper.
@@ -71,17 +74,13 @@ public class TeacherSubjectiveQuestionPaper {
 			workbook = WorkbookFactory.create(myFile);
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			AppLogger.logError(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}catch (EncryptedDocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			AppLogger.logError(e);
 		} catch (InvalidFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}
 
 		// Return first sheet from the XLSX workbook

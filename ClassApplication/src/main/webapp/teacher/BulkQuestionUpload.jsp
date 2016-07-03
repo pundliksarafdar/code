@@ -143,7 +143,16 @@ $(document).ready(function(){
 			$("#uploadQuestionPaperBtn").prop("disabled",true);
 			}
 	});
-	
+	$("#classownerQuestionTypeSelect").change(function(){
+		var subjectID = $("#subjectSelect").val();
+		var quesType = $("#classownerQuestionTypeSelect").val();
+		if(subjectID!="-1" && quesType!="-1"){
+			$("#uploadQuestionPaperBtn").removeAttr('disabled');
+		 	$("#uploadQuestionPaperBtn").empty();
+		}else{
+			$("#uploadQuestionPaperBtn").prop("disabled",true);
+		}
+	});
 	$("#subjectSelect").change(function(){
 		var topicArray = [];
 		topicArray.push(topicTempData);

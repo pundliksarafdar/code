@@ -8,6 +8,16 @@
 <title>Insert title here</title>
 <script type="text/javascript">
 $(document).ready(function(){
+	$("#classownerQuestionTypeSelect").change(function(){
+		var subjectID = $("#classownerUploadexamSubjectNameSelect").val();
+		var quesType = $("#classownerQuestionTypeSelect").val();
+		if(subjectID!="-1" && quesType!="-1"){
+			$("#uploadQuestionPaperBtn").removeAttr('disabled');
+		 	$("#uploadQuestionPaperBtn").empty();
+		}else{
+			$("#uploadQuestionPaperBtn").prop("disabled",true);
+		}
+	});
 $("#classownerUploadexamDivisionName").on("change",function(e){
 	if($("#classownerUploadexamSubjectNameSelect").val()!= null ){
 		$("#classownerUploadexamSubjectNameSelect").select2().val("-1").change();

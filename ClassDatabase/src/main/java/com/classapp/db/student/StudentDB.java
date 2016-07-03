@@ -1,6 +1,5 @@
 package com.classapp.db.student;
 
-import java.lang.ProcessBuilder.Redirect;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,10 +11,9 @@ import org.hibernate.Transaction;
 
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.BatchDB;
-import com.classapp.db.batch.division.Division;
 import com.classapp.db.batch.division.DivisionDB;
-import com.classapp.db.batch.division.DivisionData;
 import com.classapp.db.register.RegisterBean;
+import com.classapp.logger.AppLogger;
 import com.classapp.persistence.HibernateUtil;
 
 public class StudentDB {
@@ -31,7 +29,7 @@ public class StudentDB {
 			transaction.commit();
 		}catch(Exception e){
 			status = "1";
-			e.printStackTrace();
+			AppLogger.logError(e);
 			if(null!=transaction){
 				transaction.rollback();
 			}
@@ -63,7 +61,7 @@ public class StudentDB {
 			transaction.commit();
 		}catch(Exception e){
 			status = "1";
-			e.printStackTrace();
+			AppLogger.logError(e);
 			if(null!=transaction){
 				transaction.rollback();
 			}
@@ -97,7 +95,7 @@ public class StudentDB {
 			}
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			if(null!=session){
 				session.close();
@@ -130,20 +128,24 @@ public class StudentDB {
 				studentDetails.setDivision(divisionDB.retriveByID(entry.getDiv_id()));
 				studentDetails.setStudentUserBean(getStudentDetailsFromID(entry.getStudent_id()));
 				
-				String[] batchids=entry.getBatch_id().split(",");
+				
 				List<Batch> batches= new ArrayList<Batch>();
-				for (String batchId : batchids) {
-					Batch batch=batchDB.getBatchFromID(Integer.parseInt(batchId),class_id,entry.getDiv_id());
-					if(batch!=null){
-						batches.add(batch);
-					}
+					
+					if(null!=entry.getBatch_id() && !entry.getBatch_id().equals("")){
+						String[] batchids=entry.getBatch_id().split(",");
+							for (String batchId : batchids) {
+								Batch batch=batchDB.getBatchFromID(Integer.parseInt(batchId),class_id,entry.getDiv_id());
+								if(batch!=null){
+									batches.add(batch);
+								}
+							}
 				}
 				studentDetails.setBatches(batches);
 				listOfStudent.add(studentDetails);
 			}
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			if(null!=session){
 				session.close();
@@ -175,7 +177,7 @@ public class StudentDB {
 			}
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			if(null!=session){
 				session.close();
@@ -203,7 +205,7 @@ public class StudentDB {
 			}
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			if(null!=session){
 				session.close();
@@ -232,7 +234,7 @@ public class StudentDB {
 			}
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			if(null!=session){
 				session.close();
@@ -261,7 +263,7 @@ public class StudentDB {
 			}
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			if(null!=session){
 				session.close();
@@ -292,7 +294,7 @@ public class StudentDB {
 			}
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			if(null!=session){
 				session.close();
@@ -332,7 +334,7 @@ public class StudentDB {
 			}
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			if(null!=session){
 				session.close();
@@ -362,7 +364,7 @@ public class StudentDB {
 			
 			transaction.commit();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			if(null!=session){
 				session.close();
@@ -390,7 +392,7 @@ public class StudentDB {
 			
 			transaction.commit();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -420,7 +422,7 @@ public class StudentDB {
 			
 			transaction.commit();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -452,7 +454,7 @@ public class StudentDB {
 			
 			transaction.commit();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -479,7 +481,7 @@ public class StudentDB {
 			*/
 			transaction.commit();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -508,7 +510,7 @@ public class StudentDB {
 			}
 			transaction.commit();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			if(null!=session)
 			session.close();
@@ -535,7 +537,7 @@ public class StudentDB {
 			}
 			transaction.commit();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -566,7 +568,7 @@ public class StudentDB {
 			
 			transaction.commit();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -594,7 +596,7 @@ public class StudentDB {
 			
 			transaction.commit();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -617,7 +619,7 @@ public class StudentDB {
 			query.executeUpdate();
 			transaction.commit();
 		}catch(Exception e){
-				e.printStackTrace();
+				AppLogger.logError(e);
 			}finally{
 				session.close();
 			}
@@ -644,7 +646,7 @@ public class StudentDB {
 			
 			transaction.commit();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -669,7 +671,7 @@ public class StudentDB {
 				return list.get(0);
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -694,7 +696,7 @@ public class StudentDB {
 				return list.get(0);
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -737,7 +739,7 @@ public class StudentDB {
 				list= query.list();
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -759,7 +761,7 @@ public class StudentDB {
 			query.setParameter("class_id", class_id);
 				list= query.list();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -794,7 +796,7 @@ public class StudentDB {
 			
 			transaction.commit();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -834,7 +836,7 @@ public class StudentDB {
 			
 			transaction.commit();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -868,7 +870,7 @@ public class StudentDB {
 			
 			transaction.commit();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -907,7 +909,7 @@ public class StudentDB {
 			
 			transaction.commit();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
@@ -926,7 +928,7 @@ public class StudentDB {
 			transaction.commit();
 		}catch(Exception e){
 			status = "1";
-			e.printStackTrace();
+			AppLogger.logError(e);
 			if(null!=transaction){
 				transaction.rollback();
 			}
@@ -964,7 +966,7 @@ public class StudentDB {
 			
 			transaction.commit();
 		}catch(Exception e){
-			e.printStackTrace();
+			AppLogger.logError(e);
 		}finally{
 			session.close();
 		}
