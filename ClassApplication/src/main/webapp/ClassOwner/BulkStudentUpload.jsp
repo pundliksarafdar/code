@@ -33,6 +33,8 @@ $(document).ready(function(){
 			$('#errorMSGDiv').empty();
 			$('#errorMSGDiv').show();
 			$("#countDiv").show();
+			$("#successMSGDiv").hide();
+			$("#successMSGDiv").empty();
 			var handler = {};
 			handler.success = function(e){				
 				var uri = "rest/classownerservice/addExcelFile/"+e.fileid;
@@ -52,8 +54,15 @@ $(document).ready(function(){
 					var handlersSuccess = {};
 					handlersSuccess.success = function(successResp){
 						$("#countDiv").append(successResp.SUCCESS[0]);
-						var errorResponse=successResp.ERROR;												
+						var errorResponse=successResp.ERROR;
+						if(successResp.SUCCESS != null ){
+							if(successResp.SUCCESS.length > 0){
+								$("#successMSGDiv").show();
+								$("#successMSGDiv").append(successResp.SUCCESS[0]);
+							}
+						}
 						if(errorResponse!=null && !errorResponse==""){
+							if(errorResponse.length > 0){
 							var content="";
 							for(var i=0; i<errorResponse.length; i++){
 								content=content+"<tr>";
@@ -71,7 +80,7 @@ $(document).ready(function(){
 								scrollY:"200px"
 							});
 						}
-						
+						}
 					}
 					rest.post("rest/files/upload/student/xls/", handlersSuccess,
 							studentExcelUploadBean, false);
@@ -195,6 +204,7 @@ function getBatchesOfDivision(){
 </div>
 </div>
 <div class="container">
+<div id="successMSGDiv" class="well" style="padding: 3px;padding-left: 2%;margin-top: 1%;background: #dff0d8;display: none" ></div>
 <div class="row">
 <div id="errorMSGDiv"></div>
 </div>

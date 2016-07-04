@@ -193,7 +193,7 @@ public class RegisterBean implements Serializable{
 	public void setLastlogin(Date lastlogin) {
 		this.lastlogin = lastlogin;
 	}
-	public String getDaysLeft() {
+	/*public String getDaysLeft() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		try {
 			Date dateStart = dateFormat.parse(this.getStartDate());
@@ -205,7 +205,7 @@ public class RegisterBean implements Serializable{
 			e.printStackTrace();
 		}
 		return this.daysLeft;
-	}
+	}*/
 	public void setDaysLeft(String daysLeft) {
 		this.daysLeft = daysLeft;
 	}
