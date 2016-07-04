@@ -43,7 +43,7 @@
 	
 	function loadBatchOfDiv(data){
 		if(data.length > 0){
-		var option = "<option value='-1'>Select batch</option>";
+		var option = "<option value='-1'>Select Batch</option>";
 		$.each(data,function(key,val){
 			var text = val.batch_name;
 			var id = val.batch_id;

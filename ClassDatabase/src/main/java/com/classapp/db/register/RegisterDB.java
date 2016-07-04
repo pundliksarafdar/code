@@ -815,4 +815,31 @@ public List getStudents(List StudentIDs) {
 		}	
 		return namesList;
 	}
+	
+	public List getManuallyRegisteredStudentData(int inst_id,List<Integer> studentIDs) {
+		Session session = null;
+		Transaction transaction = null;
+		List studentDataList = null;
+		
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("select reg.regId,reg.loginName,reg.loginPass,reg.fname,reg.lname, reg.email,std.parentFname,std.parentLname,std.parentEmail from RegisterBean reg,Student std where  reg.regId in :list and std.class_id = :inst_id and "
+											+ "std.student_id = reg.regId");
+			query.setParameter("inst_id", inst_id);
+			query.setParameterList("list", studentIDs);
+			studentDataList = query.list();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return studentDataList;
+	}
 }

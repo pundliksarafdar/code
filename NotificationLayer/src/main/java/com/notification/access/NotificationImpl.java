@@ -28,6 +28,7 @@ import com.notification.bean.MessageDetailBean;
 import com.notification.bean.ProgressCardMessage;
 import com.notification.sms.SmsNotificationTransaction;
 import com.service.beans.ClassownerSettingsNotification;
+import com.service.beans.ManualRegisteredStudentNotificationData;
 import com.service.beans.StudentAttendanceNotificationData;
 import com.service.beans.StudentFessNotificationData;
 import com.service.beans.StudentProgressCard;
@@ -719,6 +720,52 @@ public class NotificationImpl {
 				notifcationAccess.send(detailBeans);
 			}
 		}
+	}
+	
+	public void sendManualRegistrationNotification(int inst_id,List<Integer> studentIDs) {
+		Date date =new Date(new java.util.Date().getTime());
+		RegisterDB db =new RegisterDB();
+		ClassownerSettingstransaction settingsTx = new ClassownerSettingstransaction();
+		ClassownerSettingsNotification settings = settingsTx.getSettings(inst_id);
+		RegisterBean institute =db.getRegistereduser(inst_id);
+		List students = db.getManuallyRegisteredStudentData(inst_id, studentIDs);
+		int msgCounter = 0;
+		List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
+		if(settings.getInstituteStats().isEmailAccess()){
+		for (Iterator iterator = students.iterator(); iterator.hasNext();) {
+				Object[] object = (Object[]) iterator.next();
+				MessageDetailBean messageDetailBean = new MessageDetailBean();
+				messageDetailBean.setFrom(institute.getClassName());
+				messageDetailBean.setEmailSubject("Registered!!");
+				messageDetailBean.setStudentId(((Number)object[0]).intValue());
+				messageDetailBean.setStudentEmail((String)object[5]);
+				messageDetailBean.setParentEmail((String)object[8]);
+				messageDetailBean.setMessageTypeEmail(true);
+				messageDetailBean.setMessageTypeSms(false);
+				if(messageDetailBean.getStudentEmail() != null && !"".equals(messageDetailBean.getStudentEmail())){
+				messageDetailBean.setSendToStudent(true);
+				messageDetailBean.setSendToParent(false);
+				}else{
+				messageDetailBean.setSendToStudent(false);
+				messageDetailBean.setSendToParent(true);
+				}
+				ManualRegisteredStudentNotificationData data = new ManualRegisteredStudentNotificationData(); 
+				data.setStudent_name((String)object[3]+" "+(String)object[4]);
+				data.setParent_name((String)object[6]+" "+(String)object[7]);
+				data.setUser_name((String)object[1]);
+				data.setPassword((String)object[2]);
+				messageDetailBean.setEmailMessage(null);
+				messageDetailBean.setEmailObject(data);
+				messageDetailBean.setEmailTemplate("manualRegisteredStudentEmail.tmpl");
+				messageDetailBean.setParentEmailMessage(null);
+				messageDetailBean.setParentEmailObject(data);
+				messageDetailBean.setParentEmailTemplate("manualRegisteredParentEmail.tmpl");
+				detailBeans.add(messageDetailBean);
+			}
+			NotifcationAccess notifcationAccess = new NotifcationAccess();
+				notifcationAccess.send(detailBeans);
+			}
+		
 	}
 	
 	

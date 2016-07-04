@@ -322,7 +322,7 @@ var graphData = [];
 			htmlString = htmlString + "</thead></table>";
 		}
 			}else{
-				htmlString = htmlString + "<div>Attendance Data is not available</div>";
+				htmlString = htmlString + "<div class='well'>Attendance Data is not available</div>";
 			}
 		}
 		
@@ -359,33 +359,35 @@ var graphData = [];
 		
 		$("#feesTab").append(htmlString);
 	}
-	function createProgressCard(data){
+	function createProgressCard(data,studentBatches){
 		graphData = [];
 		$("#marksTab #marksTabData").empty();
 		var htmlString = "";
-		/* htmlString = htmlString +"<div align='center' class='row'><b>"+instituteName+"</b></div>"
-		htmlString = htmlString +"<div class='row'><b>Name : </b>"+that.closest("tr").find(".studentname").val()+"</div>";
-		htmlString = htmlString +"<div class='row'><div class='col-md-3' style='padding: 0%;'><b>Class : </b>"+divisionText+"</div><div class='col-md-3'><b>Batch : </b>"+batchText+"</div></div>";
- */		if(data.batchIds != null){	
-	 	for(outer = 0 ; data.batchIds.length > outer;outer++){
-		htmlString = htmlString +"<div class='row'><table class='table table-bordered'><thead><tr><th></th>";
+		if(data.detailMarklist != null){
+		if(studentBatches != null){	
+	 	for(outer = 0 ; studentBatches.length > outer;outer++){
+		var newBatchData = "<div class='container'><b>Batch : "+studentBatches[outer].batch_name+"</b><div class='row'><table class='table table-bordered'><thead><tr><th></th>";
+		var subjectFlag = false;
 		for(i =0 ; i<data.batchExamDistinctSubjectList.length;i++){
-			if(data.batchExamDistinctSubjectList[i].batch_id == data.batchIds[outer])
-			htmlString = htmlString + "<th>"+data.batchExamDistinctSubjectList[i].subject_name+"</th>";
+			if(data.batchExamDistinctSubjectList[i].batch_id == studentBatches[outer].batch_id){
+			newBatchData = newBatchData + "<th>"+data.batchExamDistinctSubjectList[i].subject_name+"</th>";
+			subjectFlag = true;
+			}
 		}
-		htmlString = htmlString + "<th>Total</th>";
-		htmlString = htmlString + "<th>Out Of</th>";
-		htmlString = htmlString + "<th>Percentage</th>";
-		htmlString = htmlString + "</tr></thead>";
-		 htmlString = htmlString + "<tbody>";
+		if(subjectFlag == true ){
+		newBatchData = newBatchData + "<th>Total</th>";
+		newBatchData = newBatchData + "<th>Out Of</th>";
+		newBatchData = newBatchData + "<th>Percentage</th>";
+		newBatchData = newBatchData + "</tr></thead>";
+		 newBatchData = newBatchData + "<tbody>";
 		 
 		for(i =0 ; i<data.batchExamList.length;i++){
-			if(data.batchExamList[i].batch_id == data.batchIds[outer]){
+			if(data.batchExamList[i].batch_id == studentBatches[outer].batch_id){
 				var innerGraphData = [];
-			htmlString = htmlString + "<tr><td>"+data.batchExamList[i].exam_name+"</td>";
+			newBatchData = newBatchData + "<tr><td>"+data.batchExamList[i].exam_name+"</td>";
 			var total_marks = 0;
 					for(k=0;k<data.batchExamDistinctSubjectList.length;k++){
-						if(data.batchExamDistinctSubjectList[k].batch_id == data.batchIds[outer]){
+						if(data.batchExamDistinctSubjectList[k].batch_id == studentBatches[outer].batch_id){
 						var flag = false;
 							for(l=0;l<data.detailMarklist.length;l++){
 								if(data.batchExamList[i].exam_id == data.detailMarklist[l].exam_id 
@@ -394,17 +396,17 @@ var graphData = [];
 									var obj = {};
 									if(data.detailMarklist[l].examPresentee == ""){
 										obj.marks = 0;
-										htmlString = htmlString + "<td>-</td>";
+										newBatchData = newBatchData + "<td>-</td>";
 									}else if(data.detailMarklist[l].examPresentee == "A"){
 										obj.marks = 0;
-										htmlString = htmlString + "<td>A</td>";
+										newBatchData = newBatchData + "<td>A</td>";
 									}else{
 									if(data.detailMarklist[l].marks>0){
 									obj.marks = parseFloat(((data.detailMarklist[l].marks/data.detailMarklist[l].examSubjectTotalMarks)*100).toFixed(2));
 									}else{
 										obj.marks = 0;
 									}
-									htmlString = htmlString + "<td>"+data.detailMarklist[l].marks+"</td>";
+									newBatchData = newBatchData + "<td>"+data.detailMarklist[l].marks+"</td>";
 									total_marks = total_marks + data.detailMarklist[l].marks;
 									}
 									if(data.detailMarklist[l].avgMarks > 0){
@@ -418,32 +420,40 @@ var graphData = [];
 										obj.topper = 0;
 									}
 									obj.sub = data.batchExamDistinctSubjectList[k].subject_name;
-									obj.exam_name = data.batchExamList[i].exam_name;
+									obj.exam_name = "Batch : "+studentBatches[outer].batch_name+" / Exam : "+data.batchExamList[i].exam_name;
 									innerGraphData.push(obj);
 									flag = true;
 									break;
 								}
 							}
 							if(flag == false ){
-								htmlString = htmlString + "<td>-</td>";
+								newBatchData = newBatchData + "<td>-</td>";
 							}
 						}
 					}
-					htmlString = htmlString + "<td>"+total_marks+"</td>";
-					htmlString = htmlString + "<td>"+data.batchExamList[i].marks+"</td>";
+					newBatchData = newBatchData + "<td>"+total_marks+"</td>";
+					newBatchData = newBatchData + "<td>"+data.batchExamList[i].marks+"</td>";
 					if(data.batchExamList[i].marks > 0){
-					htmlString = htmlString + "<td>"+parseFloat(((total_marks/data.batchExamList[i].marks)*100).toFixed(2))+"%</td>";
+					newBatchData = newBatchData + "<td>"+parseFloat(((total_marks/data.batchExamList[i].marks)*100).toFixed(2))+"%</td>";
 					}else{
-						htmlString = htmlString + "<td>0%</td>";
+						newBatchData = newBatchData + "<td>0%</td>";
 					}
 					graphData.push(innerGraphData);
-			htmlString = htmlString + "</tr>";
+			newBatchData = newBatchData + "</tr>";
 			}
 		} 
-		htmlString = htmlString +"</tbody></table></div>";
+		newBatchData = newBatchData +"</tbody></table></div></div>";
+		}else{
+			newBatchData = "<div class='container'><b>Batch : "+studentBatches[outer].batch_name+"</b><div class='well'>Marks Data is not available.</div></div>"
+		}
+		htmlString = htmlString + newBatchData;
  }
  }
  	console.log("Graph Data"+graphData);
+		//$("#marksTab #marksTabData").append(htmlString);
+		}else{
+			htmlString = htmlString + "<div class='well'>Marks Data is not available.</div>";
+		}
 		$("#marksTab #marksTabData").append(htmlString);
 	}
 	
@@ -524,7 +534,7 @@ var graphData = [];
 		   $("#studentDetailsParentName").html(data.student.parentFname+" "+data.student.parentLname);
 		   $("#studentDetailsParentPhone").html(data.student.parentPhone);
 		   $("#studentDetailsParentEmail").html(data.student.parentEmail);
-		   createProgressCard(data.examWiseStudentDetails);
+		   createProgressCard(data.examWiseStudentDetails,data.batches);
 		   createAttenanceTab(data.attendanceData);
 		   createFeesTab(data.feesServiceBean,data.batches);
 		$(".studentDetailsDiv").show();
@@ -1133,14 +1143,11 @@ var graphData = [];
     </div>
   </div>
   <div id="marksTab" class="tab-pane fade marksTab">
-    <h3>Marks</h3>
-    <p>Marks Tab</p>
     <div id="marksTabData"></div>
     <div id="marksGraphData"></div>
   </div>
   <div id="feesTab" class="tab-pane fade">
     <h3>Fees</h3>
-    <p>Fees Tab</p>
   </div>
   <div id="attendanceTab" class="tab-pane fade">
   </div>

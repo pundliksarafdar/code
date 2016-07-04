@@ -153,6 +153,7 @@ var addStudent = function(){
 	}else{
 	$(".error").empty();
 		$("#addphoneError").hide();
+		$("#addemailError").hide();
 		var regStringExpr = /^[a-zA-Z]+$/;
 		var regPhoneNumber = /^[0-9]+$/;
 		var filter = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
@@ -266,6 +267,11 @@ var addStudent = function(){
 		
 		if(parentPhone == "" && studentPhone == ""){
 			$("#addphoneError").show();
+			flag=true;
+		}
+		
+		if(parentEmail == "" && studentEmail == ""){
+			$("#addemailError").show();
 			flag=true;
 		}
 		

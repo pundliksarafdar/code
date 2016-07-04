@@ -194,5 +194,10 @@ function getBatchesOfDivision(){
  		</div>
 </div>
 </div>
+<div class="container">
+<div class="row">
+<div id="errorMSGDiv"></div>
+</div>
+ </div>
 </body>
 </html>

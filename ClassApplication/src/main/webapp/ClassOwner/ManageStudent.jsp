@@ -327,6 +327,7 @@ var wayOfAddition="";
 	function addStudentManually(){
 		$(".error").empty();
 		$("#addphoneError").hide();
+		$("#addemailError").hide();
 		var regStringExpr = /^[a-zA-Z]+$/;
 		var regPhoneNumber = /^[0-9]+$/;
 		var filter = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
@@ -440,6 +441,11 @@ var wayOfAddition="";
 		
 		if(parentPhone == "" && studentPhone == ""){
 			$("#addphoneError").show();
+			flag=true;
+		}
+		
+		if(parentEmail == "" && studentEmail == ""){
+			$("#addemailError").show();
 			flag=true;
 		}
 		
@@ -602,6 +608,7 @@ var wayOfAddition="";
 <div class="row">
 <div class="col-md-4 alert alert-success" style="padding: 0px;margin-left: 5%;display: none;" id="addsuccess"><span>Student Added Successfully!!</span></div>
 <div class="col-md-4 alert alert-danger" style="padding: 0px;margin-left: 5%;display: none;" id="addphoneError"><span>Please enter atleast one phone no!!</span></div>
+<div class="col-md-4 alert alert-danger" style="padding: 0px;margin-left: 5%;display: none;" id="addemailError"><span>Please enter atleast one email!!</span></div>
 </div>
 <div class="row classfloorID" style="padding-left: 2%">
 <div class="col-md-2"><strong align="left">Class-Floor ID</strong></div>

@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -241,6 +242,10 @@ public class RegisterTransaction {
 			}else{
 			break;
 			}
+		default:
+			UUID id = UUID.randomUUID();
+			username = (registerBean.getFname().charAt(0))+""+(registerBean.getLname().charAt(0))+""+id.toString().substring(id.toString().length() -5);
+			break;
 		}
 		registerBean.setLoginName(username);
 		registerBean.setLoginPass(new java.util.Date().getTime()+"");

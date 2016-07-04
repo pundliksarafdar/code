@@ -8,6 +8,7 @@ import java.util.List;
 import com.classapp.db.batch.Batch;
 import com.classapp.db.fees.FeesDB;
 import com.classapp.db.fees.Student_Fees;
+import com.classapp.db.register.RegisterDB;
 import com.notification.access.NotificationImpl;
 import com.notification.email.EmailNotificationTransaction;
 import com.notification.sms.SmsNotificationTransaction;
@@ -197,6 +198,11 @@ public class NotificationServiceHelper {
 		notificationImpl.sendFeesPaymentNotification(inst_id, student_Fees.getDiv_id(), student_Fees.getBatch_id(), student_Fees.getStudent_id(), notificationList);
 		}
 		}
+	}
+	
+	public void sendManualRegistrationNotification(int inst_id,List<Integer> studentIDs){
+		NotificationImpl notificationImpl = new NotificationImpl();
+		notificationImpl.sendManualRegistrationNotification(inst_id, studentIDs);
 	}
 	
 	public void getStudentForFeesPaymentNotification(int inst_id,List<Integer> studentIDs){

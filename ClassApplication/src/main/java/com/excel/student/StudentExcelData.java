@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -98,6 +99,7 @@ public class StudentExcelData {
 		// Traversing over each row of XLSX file
 		while (rowIterator.hasNext()) {
 			Row row = rowIterator.next();
+			if(row != null){
 			ArrayList<String> listOfErrors = new ArrayList<String>();
 			try{
 				
@@ -105,10 +107,26 @@ public class StudentExcelData {
 				boolean isValidDateOfBirth=true;
 				boolean isValidFeesDiscountType=true;
 				boolean isValidData=true;
-								
-				String firstName=row.getCell(1).getStringCellValue().trim();
-				String middleName=row.getCell(2).getStringCellValue().trim();
-				String lastName= row.getCell(3).getStringCellValue().trim();
+				String firstName = "";
+				String middleName="";
+				String lastName= "";
+				String emailId = "";
+				String address="";
+				String city="";
+				String state="";
+				String parentFirstName="";
+				String parentLastName="";
+				String parentEmailID ="";
+				double feePaid = 0;
+				if(row.getCell(1)!=null){
+			    firstName=row.getCell(1).getStringCellValue().trim();
+				}
+				if(row.getCell(2)!=null){
+				middleName=row.getCell(2).getStringCellValue().trim();
+				}
+				if(row.getCell(3)!=null){
+				lastName= row.getCell(3).getStringCellValue().trim();
+				}
 				String phoneNumberStr ="";
 				Long phoneNumber= 0l;
 				try{
@@ -120,7 +138,9 @@ public class StudentExcelData {
 					listOfErrors.add("Invalid parent's phone number."+e.getMessage());
 				}						
 				
-				String emailId=row.getCell(5).getStringCellValue().trim();
+				if(row.getCell(5)!=null){
+				emailId=row.getCell(5).getStringCellValue().trim();
+				}
 				Date dob=null;
 				SimpleDateFormat formatter1= new SimpleDateFormat("MM/dd/yyyy");
 				if(HSSFDateUtil.isCellDateFormatted(row.getCell(6)) && isValidDate(formatter1.format(row.getCell(6).getDateCellValue()))){
@@ -130,12 +150,21 @@ public class StudentExcelData {
 					listOfErrors.add("Invalid Date of Birth!");		
 					isValidDateOfBirth=false;
 				}
-				
-				String address=row.getCell(7).getStringCellValue().trim();
-				String city=row.getCell(9).getStringCellValue().trim();
-				String state=row.getCell(8).getStringCellValue().trim();
-				String parentFirstName=row.getCell(10).getStringCellValue().trim();
-				String parentLastName=row.getCell(11).getStringCellValue().trim();
+				if(row.getCell(7)!=null){
+				address=row.getCell(7).getStringCellValue().trim();
+				}
+				if(row.getCell(9)!=null){
+				city=row.getCell(9).getStringCellValue().trim();
+				}
+				if(row.getCell(8)!=null){
+				state=row.getCell(8).getStringCellValue().trim();
+				}
+				if(row.getCell(10)!=null){
+				parentFirstName=row.getCell(10).getStringCellValue().trim();
+				}
+				if(row.getCell(11)!=null){
+				parentLastName=row.getCell(11).getStringCellValue().trim();
+				}
 				String parentPhoneNumberStr="";
 				Long parentPhoneNo=0l;
 				try
@@ -148,9 +177,17 @@ public class StudentExcelData {
 				}catch(NullPointerException e){
 					listOfErrors.add("Invalid phone number."+e.getMessage());
 				}
-				
-				String parentEmailID=row.getCell(13).getStringCellValue().trim();
-				double feePaid=row.getCell(14).getNumericCellValue();
+				if(row.getCell(13)!=null){
+				 parentEmailID=row.getCell(13).getStringCellValue().trim();
+				}
+				if(row.getCell(14)!=null){
+				feePaid=row.getCell(14).getNumericCellValue();
+				}
+				if("".equals(firstName.trim()) && "".equals(middleName.trim()) && "".equals(lastName.trim()) && "".equals(emailId.trim())
+						&& "".equals(address.trim()) && "".equals(city.trim()) && "".equals(state.trim()) && "".equals(parentFirstName.trim())
+						&& "".equals(parentLastName.trim()) && "".equals(parentEmailID.trim()) && phoneNumber == 0 && parentPhoneNo == 0){
+					continue;
+				}
 				isValidData=validateExcelData(firstName, middleName, lastName, phoneNumber, emailId, address, city, state, parentFirstName, parentLastName, parentPhoneNo, parentEmailID, feePaid, listOfErrors);
 				double feesDiscount=0.0;
 				String feesDiscountType="";
@@ -180,8 +217,10 @@ public class StudentExcelData {
 				registerBean.setLname( lastName);
 				registerBean.setPhone1(Long.toString(phoneNumber));
 				registerBean.setEmail(emailId);
+				if(isValidDateOfBirth){
 				SimpleDateFormat formatter= new SimpleDateFormat("yyyyddMM");		
 				registerBean.setDob(formatter.format(dob));
+				}
 				registerBean.setAddr1(address);
 				registerBean.setCity(city);
 				registerBean.setState(state);
@@ -244,6 +283,7 @@ public class StudentExcelData {
 			invalidStudentResponseMap.put("ERROR",resultStringList);
 			//System.out.println(this.invalidStudentResponseMap);
 		}
+		}
 		//System.out.println("Number of students:" + students.size());
 	}
 	
@@ -273,7 +313,7 @@ public class StudentExcelData {
 				
 				//validate middle name
 				if(null==middleName || middleName.equals("")){
-					listOfErrors.add("Middle name column can not be blank or empty");
+					middleName="";
 				}else if(middleName.length()>100){
 					listOfErrors.add("Middle name value is too long.");
 				}else if(!middleName.matches( "[a-zA-Z ]*" )){
@@ -409,17 +449,19 @@ public class StudentExcelData {
 		for (StudentRegisterServiceBean serviceBean : students) {
 			int student_id = 0;
 				student_id = registerTransaction.registerStudentManually(instId,serviceBean.getRegisterBean(), serviceBean.getStudent(),divId,Integer.toString(batchId));
+				if(serviceBean.getStudent_FeesList() != null){
 				for (Iterator iterator = serviceBean.getStudent_FeesList().iterator(); iterator
 						.hasNext();) {
 					Student_Fees student_Fees = (Student_Fees) iterator.next();
 					student_Fees.setStudent_id(student_id);
 				}
+				feesTransaction.saveStudentBatchFees(instId, serviceBean.getStudent_FeesList());
+				}
 				
 			if(student_id==0){
 				errorResponseString.concat("#Error occured while adding student with mobile number "+serviceBean.getRegisterBean().getPhone1()+" in databas. Check if student already registered!");
 			}else{
-				boolean status = feesTransaction.saveStudentBatchFees(instId, serviceBean.getStudent_FeesList());
-				this.successStudentMap.put(student_id, status);
+				this.successStudentMap.put(student_id, true);
 			}
 			
 			ArrayList<String> resultStringList=invalidStudentResponseMap.get("ERROR");
@@ -451,8 +493,11 @@ public class StudentExcelData {
 	}
 	
 	public static void main(String[] args) {
-		StudentExcelData excelSheetData = new StudentExcelData("E:\\SampleStudent.xls");
-		excelSheetData.loadStudents(4, 28, 1);
+		UUID idOne = UUID.randomUUID();
+		System.out.println(idOne.toString());
+		System.out.println(idOne.toString().substring(idOne.toString().length() -5));
+		/*StudentExcelData excelSheetData = new StudentExcelData("E:\\SampleStudent.xls");
+		excelSheetData.loadStudents(4, 28, 1);*/
 		//System.out.println(excelSheetData.isValidateDate("31/12/1987"));
 	}
 }

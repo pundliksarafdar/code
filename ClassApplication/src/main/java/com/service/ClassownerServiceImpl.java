@@ -567,6 +567,9 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		if(status){
 			NotificationServiceHelper helper = new NotificationServiceHelper();
 			helper.sendFeesPaymentNotification(getRegId(), serviceBean.getStudent_FeesList());
+			List<Integer> list= new ArrayList<Integer>();
+			list.add(student_id);
+			helper.sendManualRegistrationNotification(getRegId(), list);
 		}
 		return Response.status(Status.OK).entity(status).build();
 	}
