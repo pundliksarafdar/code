@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.NumberToTextConverter;
@@ -130,12 +131,18 @@ public class StudentExcelData {
 				String phoneNumberStr ="";
 				Long phoneNumber= 0l;
 				try{
+					if(row.getCell(4) != null){
+					if(row.getCell(4).getCellType() == Cell.CELL_TYPE_NUMERIC){
 					phoneNumberStr = NumberToTextConverter.toText(row.getCell(4).getNumericCellValue()).trim();
 					phoneNumber=Long.parseLong(phoneNumberStr);
+					}else{
+						listOfErrors.add("Invalid student's phone number.");
+					}
+					}
 				}catch(IllegalStateException e){
-					listOfErrors.add("Invalid parent's phone number."+e.getMessage());
+					listOfErrors.add("Invalid student's phone number."+e.getMessage());
 				}catch(NullPointerException e){
-					listOfErrors.add("Invalid parent's phone number."+e.getMessage());
+					listOfErrors.add("Invalid student's phone number."+e.getMessage());
 				}						
 				
 				if(row.getCell(5)!=null){
@@ -143,12 +150,19 @@ public class StudentExcelData {
 				}
 				Date dob=null;
 				SimpleDateFormat formatter1= new SimpleDateFormat("MM/dd/yyyy");
+				if(row.getCell(6) != null){
+					if(row.getCell(6).getCellType() == Cell.CELL_TYPE_NUMERIC){
 				if(HSSFDateUtil.isCellDateFormatted(row.getCell(6)) && isValidDate(formatter1.format(row.getCell(6).getDateCellValue()))){
 						dob=row.getCell(6).getDateCellValue();
 						isValidDateOfBirth=true;										
 				}else{
 					listOfErrors.add("Invalid Date of Birth!");		
 					isValidDateOfBirth=false;
+				}
+				}else{
+					listOfErrors.add("Invalid Date of Birth!");		
+					isValidDateOfBirth=false;
+				}
 				}
 				if(row.getCell(7)!=null){
 				address=row.getCell(7).getStringCellValue().trim();
@@ -173,15 +187,20 @@ public class StudentExcelData {
 					parentPhoneNo= 
 							Long.parseLong(parentPhoneNumberStr);
 				}catch(IllegalStateException e){
-					listOfErrors.add("Invalid phone number."+e.getMessage());
+					listOfErrors.add("Invalid Parent's phone number."+e.getMessage());
 				}catch(NullPointerException e){
-					listOfErrors.add("Invalid phone number."+e.getMessage());
+					listOfErrors.add("Invalid Parent's phone number."+e.getMessage());
 				}
 				if(row.getCell(13)!=null){
 				 parentEmailID=row.getCell(13).getStringCellValue().trim();
 				}
 				if(row.getCell(14)!=null){
+				if(row.getCell(14).getCellType() == Cell.CELL_TYPE_NUMERIC){
 				feePaid=row.getCell(14).getNumericCellValue();
+				}else{
+					listOfErrors.add("Invalid fee amount.");
+					isValidFeesDiscountType=false;
+				}
 				}
 				if("".equals(firstName.trim()) && "".equals(middleName.trim()) && "".equals(lastName.trim()) && "".equals(emailId.trim())
 						&& "".equals(address.trim()) && "".equals(city.trim()) && "".equals(state.trim()) && "".equals(parentFirstName.trim())
@@ -192,23 +211,40 @@ public class StudentExcelData {
 				double feesDiscount=0.0;
 				String feesDiscountType="";
 				try{
-					if(row.getCell(15).getNumericCellValue()<=100.0){
+					if(row.getCell(15) != null){
+					if(row.getCell(15).getCellType() == Cell.CELL_TYPE_NUMERIC){
+						if(row.getCell(15).getNumericCellValue()<=100.0){
 						feesDiscountType="per";
 						feesDiscount=row.getCell(15).getNumericCellValue();
 						isValidFeesDiscountType=true;
 					}
-					
+					}else{
+						listOfErrors.add("Invalid discount percentage.");
+						isValidFeesDiscountType=false;	
+						isValidData = false;
+					}	
+					}
 				}catch(NullPointerException e){
-					isValidFeesDiscountType=false;					
+					isValidFeesDiscountType=false;	
+					isValidData = false;
 				}
 				try{
+					if(row.getCell(16) != null){
+						if(row.getCell(16).getCellType() == Cell.CELL_TYPE_NUMERIC){
 					if(row.getCell(16).getNumericCellValue()!=0.0 && row.getCell(15).getNumericCellValue()==0.0){
 						feesDiscountType="amt";
 						feesDiscount=row.getCell(16).getNumericCellValue();
 						isValidFeesDiscountType=true;
 					}
+					}else{
+						listOfErrors.add("Invalid discount amount.");
+						isValidFeesDiscountType=false;	
+						isValidData = false;
+					}
+					}
 				}catch(NullPointerException e){
-					isValidFeesDiscountType=false;					
+					isValidFeesDiscountType=false;	
+					isValidData = false;
 				}				
 				
 				RegisterBean registerBean = new RegisterBean();
@@ -332,7 +368,7 @@ public class StudentExcelData {
 				if (phoneNumber==0l) {
 					 listOfErrors.add("Phone Number can not be blank or empty.");
 				 }				
-				else if (!phoneNumber.toString().matches("\\d{10}")) 
+				else if (!phoneNumber.toString().matches("\\d{10}") && phoneNumber!=0l) 
 				 {
 					 listOfErrors.add("Invalid value in column Phone Number.");
 				 }
