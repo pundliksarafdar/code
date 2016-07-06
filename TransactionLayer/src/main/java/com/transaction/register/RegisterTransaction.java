@@ -249,6 +249,8 @@ public class RegisterTransaction {
 		}
 		registerBean.setLoginName(username);
 		registerBean.setLoginPass(new java.util.Date().getTime()+"");
+		registerBean.setStatus("M");
+		registerBean.setActivationcode("");
 		RegisterBean bean = new RegisterBean();
 		try {
 			BeanUtils.copyProperties(bean, registerBean);

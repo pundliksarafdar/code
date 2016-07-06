@@ -26,7 +26,7 @@
     }
 
     .bigicon {
-        font-size: 67px;
+        font-size: 45px;
         color: white;
         margin-top: 20px;
         margin-bottom: 10px;
@@ -34,7 +34,7 @@
 
     .icontext {
         color: white;
-        font-size: 16px;
+       /*  font-size: 16px; */
     }
 
     .bigicondark {
@@ -50,24 +50,24 @@
     }
 
     
-    #tile1 {
-        background: #7C91C7;
+     #tile1 {
+        background: #FF7D28;
     }
 
     #tile2 {
-        background: #3B579D;
+        background: #87CEFA;
     }
 
     #tile3 {
-        background: #153178;
+        background: #DC2878;
     }
 
     #tile4 {
-        background: #EACF46;
+        background: #2cc822;
     }
 
     #tile5 {
-        background: #EACF46;
+        background: #FFD602;
     }
 
     #tile6 {
@@ -93,6 +93,15 @@
 	.modal {
 		-webkit-transition: all 0.5s ease;
 		transition: all 0.5s ease;
+	}
+	
+	 #tileMenuModal img{
+	 	height:67px;
+	 	width:67px;
+	 	padding: 5px;
+	 }
+	#tileMenuModal .markGlyphicon{
+		height:67px;
 	}
 
 </style>
@@ -143,13 +152,13 @@
 	<div class="row">
         <div class="col-sm-2 col-xs-2">
             <a href="studenttimetable">
-			<div id="tile8" class="tile">
+			<div id="tile2" class="tile">
 			      <div class="carousel slide" data-ride="carousel">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="glyphicon glyphicon-calendar bigicon"></span>
+                                <img src="/images/Timetable.svg">
                             </div>
                             <div class="icontext">
                                 Timetable
@@ -165,13 +174,13 @@
         
         <div class="col-sm-2 col-xs-2">
             <a href="viewStudentsNotes">
-			<div id="tile8" class="tile">
+			<div id="tile3" class="tile">
 			      <div class="carousel slide" data-ride="carousel">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="glyphicon glyphicon-book bigicon"></span>
+                                <img src="/images/Notes.svg">
                             </div>
                             <div class="icontext">
                                 Notes
@@ -187,13 +196,13 @@
         
         <div class="col-sm-2 col-xs-2">
             <a href="ViewExamListAction">
-			<div id="tile8" class="tile">
+			<div id="tile4" class="tile">
 			      <div class="carousel slide" data-ride="carousel">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="glyphicon glyphicon-pencil bigicon"></span>
+                                <img src="/images/Exam.svg">
                             </div>
                             <div class="icontext">
                                 Exam
@@ -208,12 +217,12 @@
         </div>
          <div class="col-sm-2 col-xs-2">
             <a href="ViewMarksAction">
-			<div id="tile8" class="tile">
+			<div id="tile5" class="tile">
 			      <div class="carousel slide" data-ride="carousel">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
-                            <div>
+                            <div class="markGlyphicon">
                                 <span class="glyphicon glyphicon-signal bigicon"></span>
                             </div>
                             <div class="icontext">

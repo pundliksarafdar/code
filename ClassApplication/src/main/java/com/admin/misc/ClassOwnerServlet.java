@@ -1997,6 +1997,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	int regID=userBean.getRegId();
 	RegisterTransaction registerTransaction=new RegisterTransaction();
 	registerTransaction.resetpassword(regID, password);
+	userBean.setStatus("");
 	respObject.addProperty(STATUS, "success");
 	
 }else if("addfeedback".equals(methodToCall)){

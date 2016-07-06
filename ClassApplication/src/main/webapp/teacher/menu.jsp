@@ -222,6 +222,15 @@ function RenderTimer(completedTime,totalTime){
 	  overflow-y: auto;
 	  overflow-x: hidden;
 	 }
+	 
+	 #tileMenuModal img{
+	 	height:67px;
+	 	width:67px;
+	 	padding: 5px;
+	 }
+	#tileMenuModal .markGlyphicon{
+		height:67px;
+	}
 		
 </style>
 	<div id="menuNotificationDetails" style="display:none">
@@ -334,12 +343,12 @@ function RenderTimer(completedTime,totalTime){
 	<div class="row">
 	<div class="col-sm-2 col-xs-4">
             <a href="addteacherquestion">
-            <div id="tile8" class="tile">
+            <div id="tile2" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                               <img src="/images/Question.svg">
                             </div>
                             <div class="icontext">
                                 Question
@@ -352,12 +361,12 @@ function RenderTimer(completedTime,totalTime){
         </div>
 		<div class="col-sm-2 col-xs-4">
             <a href="createTeacherExamPatten">
-            <div id="tile8" class="tile">
+            <div id="tile3" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                                <img src="/images/Exam.svg">
                             </div>
                             <div class="icontext">
                                 Exam
@@ -370,12 +379,12 @@ function RenderTimer(completedTime,totalTime){
         </div>
         <div class="col-sm-2 col-xs-4">
             <a href="teacherExamMarks">
-            <div id="tile8" class="tile">
+            <div id="tile4" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
-                            <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                            <div class="markGlyphicon">
+                                <span class="glyphicon glyphicon-signal bigicon "></span>
                             </div>
                             <div class="icontext">
                                 Marks
@@ -388,12 +397,12 @@ function RenderTimer(completedTime,totalTime){
         </div>
 		<div class="col-sm-2 col-xs-4">
 		 <a href="teacherAttendance">
-            <div id="tile8" class="tile">
+            <div id="tile5" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                               <img src="/images/Attendance.svg">
                             </div>
                             <div class="icontext">
                                 Attendance
@@ -406,12 +415,12 @@ function RenderTimer(completedTime,totalTime){
         </div>
 		<div class="col-sm-2 col-xs-4">
 		 <a href="addteachernotesoption">
-            <div id="tile8" class="tile">
+            <div id="tile6" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                                <img src="/images/Notes.svg">
                             </div>
                             <div class="icontext">
                                 Notes
@@ -424,12 +433,12 @@ function RenderTimer(completedTime,totalTime){
         </div>
 		<div class="col-sm-2 col-xs-4">
 		<a href="teachertimetable">
-            <div id="tile8" class="tile">
+            <div id="tile7" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                                <img src="/images/Timetable.svg">
                             </div>
                             <div class="icontext">
                                 Timetable
@@ -456,7 +465,7 @@ function RenderTimer(completedTime,totalTime){
     }
 
     .bigicon {
-        font-size: 67px;
+        font-size: 45px;
         color: white;
         margin-top: 20px;
         margin-bottom: 10px;
@@ -464,7 +473,7 @@ function RenderTimer(completedTime,totalTime){
 
     .icontext {
         color: white;
-        font-size: 16px;
+        /* font-size: 16px; */
     }
 
     .bigicondark {
@@ -480,32 +489,32 @@ function RenderTimer(completedTime,totalTime){
     }
 
     
-    #tile1 {
-        background: #7C91C7;
+   #tile1 {
+        background: #FF7D28;
     }
 
     #tile2 {
-        background: #3B579D;
+        background: #87CEFA;
     }
 
     #tile3 {
-        background: #153178;
+        background: #DC2878;
     }
 
     #tile4 {
-        background: #EACF46;
+        background: #2cc822;
     }
 
     #tile5 {
-        background: #EACF46;
+        background: #FFD602;
     }
 
     #tile6 {
-        background: #FFED94;
+        background: #ff0a00;
     }
 
     #tile7 {
-        background: white;
+        background: #EACF46;
     }
 
     #tile8 {

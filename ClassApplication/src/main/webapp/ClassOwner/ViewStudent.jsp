@@ -534,6 +534,15 @@ var graphData = [];
 		   $("#studentDetailsParentName").html(data.student.parentFname+" "+data.student.parentLname);
 		   $("#studentDetailsParentPhone").html(data.student.parentPhone);
 		   $("#studentDetailsParentEmail").html(data.student.parentEmail);
+		   if(data.studentUserBean.status == "M"){
+			 $("#generalTab").append("<div class='row'><label>Credential Information</label></div>"+
+					 	"<div class='row'><div class='col-md-2'>Username</div>"+
+				    	"<div class='col-md-1'>:</div>"+
+				    	"<div class='col-md-3'>"+data.studentUserBean.loginName+"</div>"+
+				    	"<div class='col-md-2'>Password</div>"+
+				    	"<div class='col-md-1'>:</div>"+
+				    	"<div class='col-md-3'>"+data.studentUserBean.loginPass+"</div>");  
+		   }
 		   createProgressCard(data.examWiseStudentDetails,data.batches);
 		   createAttenanceTab(data.attendanceData);
 		   createFeesTab(data.feesServiceBean,data.batches);

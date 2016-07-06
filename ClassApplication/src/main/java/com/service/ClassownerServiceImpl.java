@@ -738,7 +738,9 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		RegisterTransaction registerTransaction=new RegisterTransaction();
 		com.classapp.db.register.RegisterBean studentBean=registerTransaction.getregistereduser(student_id);
+		if(!"M".equals(studentBean.getStatus())){
 		studentBean.setLoginPass("");
+		}
 		StudentTransaction studentTransaction=new StudentTransaction();
 		com.classapp.db.student.Student student = studentTransaction.getStudentByStudentID(student_id, userBean.getRegId());
 		BatchTransactions batchTransactions = new BatchTransactions();

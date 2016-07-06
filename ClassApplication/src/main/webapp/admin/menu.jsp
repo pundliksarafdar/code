@@ -71,6 +71,16 @@ siteMapApp.controller("SiteMapController",function($scope){
 	  overflow-y: auto;
 	  overflow-x: hidden;
 	 }
+	 
+	 #tileMenuModal img{
+	 	height:67px;
+	 	width:67px;
+	 	padding: 5px;
+	 }
+	#tileMenuModal .markGlyphicon{
+		height:67px;
+	}
+	
 		
 </style>
 	<div id="menuNotificationDetails" style="display:none">
@@ -213,13 +223,13 @@ siteMapApp.controller("SiteMapController",function($scope){
 	<div class="row">
         <div class="col-sm-4 col-xs-8">
             <a href="manageclass">
-			<div id="tile8" class="tile">
+			<div id="tile2" class="tile">
 			      <div class="carousel slide" data-ride="carousel">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                                <img src="/images/class.svg">
                             </div>
                             <div class="icontext">
                                 Classes, subject & batch
@@ -234,12 +244,12 @@ siteMapApp.controller("SiteMapController",function($scope){
         </div>
         <div class="col-sm-2 col-xs-4">
         	<a href="managestudent">
-            <div id="tile8" class="tile">
+            <div id="tile3" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                                <img src="/images/Student.svg">
                             </div>
                             <div class="icontext">
                                 Student
@@ -252,12 +262,12 @@ siteMapApp.controller("SiteMapController",function($scope){
         </div>
 		<div class="col-sm-2 col-xs-4">
 			<a href="manageteacher">
-            <div id="tile8" class="tile">
+            <div id="tile4" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                                <img src="/images/Teacher.svg">
                             </div>
                             <div class="icontext">
                                 Teacher
@@ -270,14 +280,14 @@ siteMapApp.controller("SiteMapController",function($scope){
         </div>
         <div class="col-sm-2 col-xs-4">
             <a href="addnotesoption">
-            <div id="tile8" class="tile">
+            <div id="tile5" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
-                            <div>
-                                <span class="fa fa-spinner bigicon"></span>
-                            </div>
-                            <div class="icontext">
+									<div>
+									<img src="/images/Notes.svg">
+									</div>
+									<div class="icontext">
                                 Notes
                             </div>
                             
@@ -288,12 +298,12 @@ siteMapApp.controller("SiteMapController",function($scope){
         </div>
 		<div class="col-sm-2 col-xs-4">
             <a href="createExamPatten">
-            <div id="tile8" class="tile">
+            <div id="tile6" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                                <img src="/images/Exam.svg">
                             </div>
                             <div class="icontext">
                                 Exam
@@ -306,12 +316,12 @@ siteMapApp.controller("SiteMapController",function($scope){
         </div>
         <div class="col-sm-2 col-xs-4">
             <a href="examMarks">
-            <div id="tile8" class="tile">
+            <div id="tile7" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
-                            <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                            <div class="markGlyphicon">
+                                 <span class="glyphicon glyphicon-signal bigicon "></span>
                             </div>
                             <div class="icontext">
                                 Marks
@@ -329,7 +339,7 @@ siteMapApp.controller("SiteMapController",function($scope){
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                               <img src="/images/Attendance.svg">
                             </div>
                             <div class="icontext">
                                 Attendance
@@ -342,12 +352,12 @@ siteMapApp.controller("SiteMapController",function($scope){
         </div>
 		<div class="col-sm-2 col-xs-4">
             <a href="fees">
-            <div id="tile8" class="tile">
+            <div id="tile9" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                                <img src="/images/Fees.svg">
                             </div>
                             <div class="icontext">
                                 Fees
@@ -360,12 +370,12 @@ siteMapApp.controller("SiteMapController",function($scope){
         </div>
 		<div class="col-sm-2 col-xs-4">
 		<a href="alertAction">
-            <div id="tile8" class="tile">
+            <div id="tile10" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                            	<span class="fa fa-spinner bigicon"></span>
+                            	<img src="/images/Alert.svg">
                             </div>
                             <div class="icontext">
                                 Alert
@@ -378,12 +388,12 @@ siteMapApp.controller("SiteMapController",function($scope){
         </div>
 		<div class="col-sm-2 col-xs-4">
 		<a href="timetableall">
-            <div id="tile8" class="tile">
+            <div id="tile11" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                               <img src="/images/Timetable.svg">
                             </div>
                             <div class="icontext">
                                 Timetable
@@ -394,48 +404,17 @@ siteMapApp.controller("SiteMapController",function($scope){
             </div>
         </a>    
         </div>
-		<div class="col-sm-2 col-xs-4">
-            <div id="tile8" class="tile">
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner">
-                        <div class="item active text-center">
-                            <div>
-                                <span class="fa fa-spinner bigicon"></span>
-                            </div>
-                            <div class="icontext">
-                                Parent control
-                            </div>
-                            
-                        </div>
-                    </div>
-            </div>
-        </div>
-		<div class="col-sm-2 col-xs-4">
-            <div id="tile8" class="tile">
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner">
-                        <div class="item active text-center">
-                            <div>
-                                <span class="fa fa-spinner bigicon"></span>
-                            </div>
-                            <div class="icontext">
-                                Report
-                            </div>
-                            
-                        </div>
-                    </div>
-            </div>
-        </div>
+		
         <div class="col-sm-2 col-xs-4">
         	<a href="classownerSettings">
         	<!-- This two settings need to merge -->
         	<!-- <a href="classownerSettings"> -->
-            <div id="tile8" class="tile">
+            <div id="tile12" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                                <img src="/images/Setting.svg">
                             </div>
                             <div class="icontext">
                                 Settings
@@ -450,12 +429,12 @@ siteMapApp.controller("SiteMapController",function($scope){
         	<a href="addquestion">
         	<!-- This two settings need to merge -->
         	<!-- <a href="classownerSettings"> -->
-            <div id="tile8" class="tile">
+            <div id="tile13" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                                <span class="fa fa-spinner bigicon"></span>
+                                <img src="/images/Question.svg">
                             </div>
                             <div class="icontext">
                                 Question
@@ -466,26 +445,7 @@ siteMapApp.controller("SiteMapController",function($scope){
             </div>
             </a>
         </div>
-        <div class="col-sm-2 col-xs-4">
-        	<a href="sendmessage?to=student">
-        	<!-- This two settings need to merge -->
-        	<!-- <a href="classownerSettings"> -->
-            <div id="tile8" class="tile">
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner">
-                        <div class="item active text-center">
-                            <div>
-                                <span class="glyphicon glyphicon-envelope bigicon"></span>
-                            </div>
-                            <div class="icontext">
-                                Send message
-                            </div>
-                            
-                        </div>
-                    </div>
-            </div>
-            </a>
-        </div>
+
 		<!---->
         </div>
     <%} %>
@@ -494,7 +454,7 @@ siteMapApp.controller("SiteMapController",function($scope){
 	<div class="row">
         <div class="col-sm-2 col-xs-4">
             <a href="manageClassFeature">
-            <div id="tile8" class="tile">
+            <div id="tile7" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
@@ -527,7 +487,7 @@ siteMapApp.controller("SiteMapController",function($scope){
     }
 
     .bigicon {
-        font-size: 67px;
+        font-size: 45px;
         color: white;
         margin-top: 20px;
         margin-bottom: 10px;
@@ -535,7 +495,7 @@ siteMapApp.controller("SiteMapController",function($scope){
 
     .icontext {
         color: white;
-        font-size: 16px;
+        /* font-size: 16px; */
     }
 
     .bigicondark {
@@ -552,31 +512,31 @@ siteMapApp.controller("SiteMapController",function($scope){
 
     
     #tile1 {
-        background: #7C91C7;
+        background: #FF7D28;
     }
 
     #tile2 {
-        background: #3B579D;
+        background: #87CEFA;
     }
 
     #tile3 {
-        background: #153178;
+        background: #DC2878;
     }
 
     #tile4 {
-        background: #EACF46;
+        background: #2cc822;
     }
 
     #tile5 {
-        background: #EACF46;
+        background: #FFD602;
     }
 
     #tile6 {
-        background: #FFED94;
+        background: #ff0a00;
     }
 
     #tile7 {
-        background: white;
+        background: #EACF46;
     }
 
     #tile8 {
@@ -584,11 +544,22 @@ siteMapApp.controller("SiteMapController",function($scope){
     }
 
     #tile9 {
-        background: #EACF46;
+        background: #fe6700;
     }
 
     #tile10 {
-        background: #EACF46;
+        background: #8B008B;
+    }
+    
+    #tile11 {
+    	background: #00FF7F;	
+    }
+    
+    #tile12{
+    	background: #191970;
+    }
+    #tile13 {
+    	background: #A0522D;
     }
 	
 	.modal {

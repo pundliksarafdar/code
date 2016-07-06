@@ -162,7 +162,7 @@ public class LoginUser extends BaseAction{
 				if(!"".equals(userBean.getActivationcode())){
 					return Constants.ACTIVATION;
 				}else if(userBean.getStatus()!=null){
-					if(userBean.getStatus().equals("F"))
+					if(userBean.getStatus().equals("F") || userBean.getStatus().equals("M"))
 					return Constants.RESET_PASSWORD;
 				}
 				//if (null != userBean.getStartdate()) {
