@@ -645,6 +645,32 @@ public boolean deleteBatch(int inst_id,int div_id,int batch_id) {
 	return true;
 }
 
+public List<Batch> getStudentBatches(int inst_id,int div_id,List<Integer> batchIds) {
+	Session session = null;
+	Transaction transaction = null;
+	List<Batch> batchList = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("from Batch where class_id =:class_id and div_id=:div_id and batch_id in :list");
+		query.setParameter("div_id", div_id);
+		query.setParameter("class_id", inst_id);
+		query.setParameterList("list", batchIds);
+		batchList = query.list();
+		transaction.commit();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return batchList;
+}
+
 }
 
 

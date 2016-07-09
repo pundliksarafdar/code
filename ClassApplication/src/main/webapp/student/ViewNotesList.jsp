@@ -28,16 +28,16 @@
 		<div class="col-md-3">
 		<label for="classSelect">Class select</label><br>
 			<select class="btn btn-default" id="classSelect" style="width:100%;" name="classSelect">
-				<option value="-1">Select Class</option>
+				<option value="-1">Select Institute</option>
 			</select>
 		</div>
-		
+		<!-- 
 		<div class="col-md-3">
 		<label for="divisionSelect">Division select</label><br>
 			<select class="btn btn-default" id="divisionSelect" style="width:100%;" name="divisionSelect">
 				<option value="-1">Select Division</option>
 			</select>
-		</div>
+		</div> -->
 		<div class="col-md-3">
 		<label for="batchSelect">Select batch</label><br>
 			<select class="btn btn-default" id="batchSelect" style="width:100%;" name="batchSelect">
@@ -69,7 +69,6 @@
 	</div>
 	</div>
 	<div id="notesShowMessageContainer" class="col-md-9">
-		<h4>Please select from left side to view timetable</h4>
 	</div>
 </div>
 

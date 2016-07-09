@@ -566,6 +566,10 @@ siteMapApp.controller("SiteMapController",function($scope){
 		-webkit-transition: all 0.5s ease;
 		transition: all 0.5s ease;
 	}
+	
+	.tile:hover { 
+    box-shadow: 10px 10px 5px #383838;
+	}
 
 </style>
 <script type="text/javascript">

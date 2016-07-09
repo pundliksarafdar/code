@@ -899,4 +899,130 @@ public class AttendanceDB {
 
 		return null;
 }
+	
+	public List getStudentsDailyAttendanceForStudent(String batchname,
+			int inst_id, int div_id, Date date,int student_id) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List list = null;
+		String queryString = "Select reg.fname,reg.lname, reg.regId,att.presentee,att.att_id, sch.start_time,sch.end_time,sub.subjectName,sub.subjectId,std.batchIdNRoll" +
+				" from Student std,RegisterBean reg, Attendance att,Schedule sch,Subject sub "
+				+ "where att.student_id=:student_id and (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) "
+				+ "and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id and att.student_id = reg.regId and "
+				+ "att.div_id = std.div_id and att.batch_id = :attbatch_id and att.att_date = :date and att.att_date = sch.date and  att.schedule_id = sch.schedule_id" +
+				" and att.div_id = sch.div_id and att.batch_id = sch.batch_id and std.class_id = att.inst_id and std.class_id = sch.inst_id and att.inst_id = sch.inst_id" +
+				" and sub.subjectId = att.sub_id order by reg.regId,sch.start_time ";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("batch_id1", batchname + ",%");
+			query.setParameter("batch_id2", "%," + batchname + ",%");
+			query.setParameter("batch_id3", "%," + batchname);
+			query.setParameter("batch_id4", batchname);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("attbatch_id", Integer.parseInt(batchname));
+			query.setParameter("date", date);
+			query.setParameter("student_id", student_id);
+
+			list = query.list();
+			if (list != null) {
+				return list;
+			}
+
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return null;
+}
+	public List getStudentsWeeklyPresentCountForStudent(String batchname,
+			int inst_id, int div_id, Date date,int student_id) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List list = null;
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.DAY_OF_WEEK, 1);
+		Date startDate = new Date(calendar.getTime().getTime());
+		calendar.setTime(startDate);
+		 calendar.add(calendar.DATE, 6);
+		//calendar.set(Calendar.DAY_OF_MONTH, lastdate);
+		Date endDate =  new Date(calendar.getTime().getTime());
+		String queryString = " SELECT reg.fname,reg.lname,count(att.presentee),att.att_date  ,att.student_id FROM Attendance att, RegisterBean reg "
+							+"where att.student_id = :student_id and  reg.regId = att.student_id and att.inst_id=:inst_id and att.div_id = :div_id and att.batch_id = :batch_id and att.presentee ='P' and att.att_date>=:start_date " +
+							"and att.att_date<=:end_date group by att.att_date,att.student_id order by att.student_id,att.att_date";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", Integer.parseInt(batchname));
+			query.setParameter("start_date", startDate);
+			query.setParameter("end_date", endDate);
+			query.setParameter("student_id", student_id);
+
+			list = query.list();
+			if (list != null) {
+				return list;
+			}
+
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return null;
+}
+	
+	public List getStudentsMonthlyPresentCountForStudent(String batchname,
+			int inst_id, int div_id, Date date,int student_id) {
+		Session session = null;
+		boolean status = false;
+		Transaction transaction = null;
+		List list = null;
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		Date startDate = new Date(calendar.getTime().getTime());
+		calendar.setTime(date);
+		int lastdate = calendar.getActualMaximum(Calendar.DATE);
+		calendar.set(Calendar.DAY_OF_MONTH, lastdate);
+		Date endDate =  new Date(calendar.getTime().getTime());
+		String queryString = " SELECT reg.fname,reg.lname,count(att.presentee),att.att_date  ,att.student_id FROM Attendance att, RegisterBean reg "
+							+"where att.student_id = :student_id and  reg.regId = att.student_id and att.inst_id=:inst_id and att.div_id = :div_id and att.batch_id = :batch_id and att.presentee ='P' and att.att_date>=:start_date " +
+							"and att.att_date<=:end_date group by att.att_date,att.student_id order by att.student_id,att.att_date";
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("inst_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("batch_id", Integer.parseInt(batchname));
+			query.setParameter("start_date", startDate);
+			query.setParameter("end_date", endDate);
+			query.setParameter("student_id", student_id);
+			list = query.list();
+			if (list != null) {
+				return list;
+			}
+
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+
+		return null;
+}
 }

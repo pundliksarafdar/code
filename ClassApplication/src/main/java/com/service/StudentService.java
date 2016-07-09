@@ -3,8 +3,11 @@ package com.service;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -31,6 +34,7 @@ import com.service.beans.MonthlyScheduleServiceBean;
 import com.service.beans.OnlineExam;
 import com.service.beans.OnlineExamPaperSubjects;
 import com.tranaction.subject.SubjectTransaction;
+import com.transaction.attendance.AttendanceTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.exams.ExamTransaction;
@@ -113,15 +117,16 @@ public class StudentService extends ServiceBase{
 	}
 	
 	@GET
-	@Path("getSubject/{divId}/{batchId}/{inst_id}")
+	@Path("getSubject/{batchId}/{inst_id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSubject(
 			@PathParam("batchId")int batchId,
-			@PathParam("inst_id")int inst_id,
-			@PathParam("divId")int divId
+			@PathParam("inst_id")int inst_id
 			){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student = studentTransaction.getStudentByStudentID(getRegId(), inst_id);
 		SubjectTransaction subjectTransaction = new SubjectTransaction();
-		List<Subject> subjects = subjectTransaction.getSubjectsOfBatch(batchId, inst_id, divId);
+		List<Subject> subjects = subjectTransaction.getSubjectsOfBatch(batchId, inst_id, student.getDiv_id());
 		HashMap<Integer, String>subjectIdNName = new HashMap<Integer, String>();
 		
 		for(Subject subject:subjects){
@@ -133,59 +138,64 @@ public class StudentService extends ServiceBase{
 	}
 	
 	@GET
-	@Path("/monthlySchedule/{instituteId}/{batch}/{division}/{startDate}/{endDate}")
+	@Path("/monthlySchedule/{instituteId}/{batch}/{startDate}/{endDate}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getScheduleForMonth(
 			@PathParam("instituteId") int instId,
 			@PathParam("batch") int batch,
-			@PathParam("division") int division,
 			@PathParam("startDate") long startDate,
 			@PathParam("endDate") long endDate
 		) {
-		
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student = studentTransaction.getStudentByStudentID(getRegId(), instId);
 		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
 		List<MonthlyScheduleServiceBean> scheduleList = new ArrayList<MonthlyScheduleServiceBean>();
 		if(endDate == 0){
-			scheduleList = scheduleTransaction.getMonthSchedule(batch, new Date(startDate), instId, division);
+			scheduleList = scheduleTransaction.getMonthSchedule(batch, new Date(startDate), instId, student.getDiv_id());
 		}else{
-			scheduleList = scheduleTransaction.getMonthSchedule(batch, new Date(startDate),new Date(endDate), instId, division);
+			scheduleList = scheduleTransaction.getMonthSchedule(batch, new Date(startDate),new Date(endDate), instId, student.getDiv_id());
 		}
 		return Response.status(Response.Status.OK).entity(scheduleList).build();
 	}
 	
 	@GET
-	@Path("/notes/{instituteId}/{batch}/{division}/{subjectId}")
+	@Path("/notes/{instituteId}/{batch}/{subjectId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getNotes(
 			@PathParam("instituteId") int instId,
 			@PathParam("batch") int batch,
-			@PathParam("division") int division,
 			@PathParam("subjectId")int subjectId
 		) {
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student = studentTransaction.getStudentByStudentID(getRegId(), instId);
 		NotesTransaction notesTransaction=new NotesTransaction();
 		
-		List<Notes> noteslist = notesTransaction.getNotesPath(division, subjectId, instId,batch+"");
+		List<Notes> noteslist = notesTransaction.getNotesPath(student.getDiv_id(), subjectId, instId,batch+"");
 		
 		return Response.status(Response.Status.OK).entity(noteslist).build();
 	}
 	
 	@GET
-	@Path("/getOnlineExamList/{classId}/{divId}/{batchId}")
+	@Path("/getOnlineExamList/{classId}/{batchId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getOnlineExamList(
-			@PathParam("classId")int classId,@PathParam("divId")int div_id,@PathParam("batchId")int batch_id){
+			@PathParam("classId")int instId,@PathParam("batchId")int batch_id){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student = studentTransaction.getStudentByStudentID(getRegId(), instId);
 		ExamTransaction examTransaction = new ExamTransaction();
-		List<Exam> examsList = examTransaction.getOnlineExamList(classId, div_id, batch_id);
+		List<Exam> examsList = examTransaction.getOnlineExamList(instId, student.getDiv_id(), batch_id);
 		return Response.status(Status.OK).entity(examsList).build();
 	}
 	
 	@GET
-	@Path("/getOnlineExamSubjectList/{classId}/{divId}/{batchId}/{exam}")
+	@Path("/getOnlineExamSubjectList/{classId}/{batchId}/{exam}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getOnlineExamSubjectList(
-			@PathParam("classId")int classId,@PathParam("divId")int div_id,@PathParam("batchId")int batch_id,@PathParam("exam")int exam_id){
+			@PathParam("classId")int instId,@PathParam("batchId")int batch_id,@PathParam("exam")int exam_id){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student = studentTransaction.getStudentByStudentID(getRegId(), instId);
 		ExamTransaction examTransaction = new ExamTransaction();
-		List<OnlineExamPaperSubjects> paperSubjectList = examTransaction.getOnlineExamSubjectList(classId, div_id, batch_id, exam_id);
+		List<OnlineExamPaperSubjects> paperSubjectList = examTransaction.getOnlineExamSubjectList(instId, student.getDiv_id(), batch_id, exam_id);
 		return Response.status(Status.OK).entity(paperSubjectList).build();
 	}
 	
@@ -214,11 +224,13 @@ public class StudentService extends ServiceBase{
 	}
 	
 	@GET
-	@Path("/studentMarks/{classId}/{divId}/{batchId}")
+	@Path("/studentMarks/{classId}/{batchId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getStudentMarks(@PathParam("classId")int classId,@PathParam("divId")int div_id,@PathParam("batchId")int batch_id){
+	public Response getStudentMarks(@PathParam("classId")int instId,@PathParam("batchId")int batch_id){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student = studentTransaction.getStudentByStudentID(getRegId(), instId);
 		StudentMarksTransaction studentMarksTransaction = new StudentMarksTransaction();
-		List<StudentExamMarksDao> list = studentMarksTransaction.getStudentMarksDetail(classId, getRegId(), div_id, batch_id);
+		List<StudentExamMarksDao> list = studentMarksTransaction.getStudentMarksDetail(instId, getRegId(), student.getDiv_id(), batch_id);
 		return Response.ok(list).build();
 	}
 	
@@ -229,6 +241,62 @@ public class StudentService extends ServiceBase{
 		StudentMarksTransaction studentMarksTransaction = new StudentMarksTransaction();
 		List<StudentExamMarksByExamDao> list = studentMarksTransaction.getStudentMarksDetailByExam(classId, getRegId(), div_id, batch_id,examId);
 		return Response.ok(list).build();
+	}
+	
+	@GET
+	@Path("/getStudentBatches/{inst_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentBatches(@PathParam("inst_id")int inst_id){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student = studentTransaction.getStudentByStudentID(getRegId(), inst_id);
+		List<Batch> list = new ArrayList<Batch>();
+		if(!"".equals(student.getBatch_id())){
+			BatchTransactions batchTransactions = new BatchTransactions();
+			List<Integer> batchIDs =  Stream.of(student.getBatch_id().split(","))
+			        .map(Integer::parseInt)
+			        .collect(Collectors.toList());
+			list = batchTransactions.getStudentBatches(inst_id, student.getDiv_id(), batchIDs); 
+			
+		}
+		return Response.ok(list).build();
+	}
+	
+	@GET
+	@Path("/getStudentDailyAttendance/{inst_id}/{batch_id}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentDailyAttendance(@PathParam("inst_id")int inst_id,
+											  @PathParam("batch_id")int batch_id,@PathParam("date") long date){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student = studentTransaction.getStudentByStudentID(getRegId(), inst_id);
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		List studentList = attendanceTransaction.getStudentsDailyAttendanceForStudent(batch_id+"", inst_id, student.getDiv_id(), new Date(date),getRegId());
+		return Response.status(Response.Status.OK).entity(studentList).build();
+	}
+
+	@GET
+	@Path("/getStudentsWeeklyAttendance/{inst_id}/{batch}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentsWeeklyAttendance(@PathParam("inst_id")int inst_id,@PathParam("batch") String batch,
+												@PathParam("date") long date) {
+		// TODO Auto-generated method stub
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student = studentTransaction.getStudentByStudentID(getRegId(), inst_id);
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		List studentList = attendanceTransaction.getStudentsWeeklyAttendanceForStudent(batch, inst_id, student.getDiv_id(), new Date(date),getRegId());
+		return Response.status(Response.Status.OK).entity(studentList).build();
+	}
+	
+	@GET
+	@Path("/getStudentsMonthlyAttendance/{inst_id}/{batch}/{date}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStudentsMonthlyAttendance(@PathParam("inst_id")int inst_id,@PathParam("batch") String batch,
+			@PathParam("date") long date) {
+		// TODO Auto-generated method stub
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student = studentTransaction.getStudentByStudentID(getRegId(), inst_id);
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		List studentList = attendanceTransaction.getStudentsMonthlyAttendanceForStudent(batch,inst_id, student.getDiv_id(), new Date(date),getRegId());
+		return Response.status(Response.Status.OK).entity(studentList).build();
 	}
 
 }

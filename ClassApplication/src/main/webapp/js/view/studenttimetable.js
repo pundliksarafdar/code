@@ -9,7 +9,7 @@ var CALENDAR_MESSAGE_CONTAINER = "#calendarShowMessageContainer";
 
 var getClassUrl = "rest/student/getClasses";
 var getDivisionUrl = "rest/student/getDivision/";
-var getBatchUrl = "rest/student/getBatch/";
+var getBatchUrl = "rest/student/getStudentBatches/";
 var getSubjectUrl = "rest/student/getSubject/";
 var getTimetable = "rest/student/monthlySchedule/";
 
@@ -17,9 +17,9 @@ $(document).ready(function(){
 	loadClassList();
 	
 	$("body").on("click",VIEW_BTN,viewTimetable)
-		.on("change",CLASS,loadDivision)
+		.on("change",CLASS,loadBatch)
 		.on("change",DIVISION,loadBatch)
-		.on("change",BATCH,loadSubject)
+		.on("change",BATCH,getTimeTableData)
 		.on("dp.change",CALENDAR_DATE,onCalendarDateChange)
 		.on("click",VIEW_BTN,getTimeTableData)
 		.on("change",'select',function(){
@@ -71,6 +71,15 @@ $(document).ready(function(){
 		$(select).find("option:not([value='-1'])").remove();
 		$(select).append(optionStr);
 	}
+	
+	function loadBatchData(select,batchData){
+		var optionStr = "";
+		for(var i=0;i<batchData.length;i++){
+				optionStr = optionStr + "<option value='"+batchData[i].batch_id+"'>"+batchData[i].batch_name+"</option>";
+		}
+		$(select).find("option:not([value='-1'])").remove();
+		$(select).append(optionStr);
+	}
 
 function loadClassList(){
 	var handler = {};
@@ -85,7 +94,7 @@ function viewTimetable(){
 
 function loadBatch(){
 	var handler = {};
-	handler.success = function(data){loadSelect(BATCH,data)};
+	handler.success = function(data){loadBatchData(BATCH,data)};
 	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 	rest.get(getBatchUrl+$(this).val(),handler);
 }
@@ -102,7 +111,6 @@ function onCalendarDateChange(){
 } 
 function getTimeTableData(){
 	var classId = $(CLASS).val();
-	var divId = $(DIVISION).val();
 	var batchId = $(BATCH).val();
 	var dateNow = new Date($(CALENDAR_DATE).find('input').val()).getTime();
 	if(isNaN(dateNow)){
@@ -119,7 +127,7 @@ function getTimeTableData(){
 		$(CALENDAR_CONTAINER).hide();
 		$(CALENDAR_MESSAGE_CONTAINER).show();
 	};
-	rest.get(getTimetable+classId+"/"+batchId+"/"+divId+"/"+dateNow+"/0",handler);
+	rest.get(getTimetable+classId+"/"+batchId+"/"+dateNow+"/0",handler);
 	//filldropdown();
 }
 

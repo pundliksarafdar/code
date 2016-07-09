@@ -24,6 +24,7 @@ import com.datalayer.exam.SubjectiveQuestionPaper;
 import com.excel.student.StudentExcelData;
 import com.service.beans.QuestionExcelUploadBean;
 import com.service.beans.StudentExcelUploadBean;
+import com.service.helper.NotificationServiceHelper;
 import com.transaction.questionbank.QuestionBankTransaction;
 
 
@@ -172,6 +173,7 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 			        invalidStudentResponseMap = studentData.getInvalidStudentResponseMap();
 			        response = "Students added successfully";
 			        Set<Entry<Integer, Boolean>>  entrySet = studentData.getSuccessStudentMap().entrySet();
+			        ArrayList<Integer> studentIds = new ArrayList<Integer>();
 			        ArrayList<String> addedStudentResponseList = new ArrayList<String>();
 			        int successCount = 0;
 			        for (Entry<Integer, Boolean> entry : entrySet) {
@@ -183,6 +185,9 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 			            }
 			            addedStudentResponseList.add(response);
 			        }
+			        NotificationServiceHelper notificationServiceHelper = new NotificationServiceHelper();
+			        notificationServiceHelper.sendManualRegistrationNotification(getRegId(), studentIds);
+			        notificationServiceHelper.getStudentForFeesPaymentNotification(getRegId(), studentIds);
 			        ArrayList<String> suuccessCountList = new ArrayList<String>();
 			        suuccessCountList.add("" + successCount + " students added successfully.");
 			        invalidStudentResponseMap.put("SUCCESS", suuccessCountList);
