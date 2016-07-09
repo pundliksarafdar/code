@@ -70,8 +70,8 @@
         background: #FFD602;
     }
 
-    #tile6 {
-        background: #FFED94;
+     #tile6 {
+        background: #ff0a00;
     }
 
     #tile7 {
@@ -227,6 +227,27 @@
                             </div>
                             <div class="icontext">
                                 Marks
+                            </div>
+                            
+                        </div>
+						
+                    </div>
+					</div>
+            </div>
+			</a>
+        </div>
+        <div class="col-sm-2 col-xs-2">
+            <a href="viewStudentAttendance">
+			<div id="tile6" class="tile">
+			      <div class="carousel slide" data-ride="carousel">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div class="markGlyphicon">
+                                <img src="/images/Attendance.svg">
+                            </div>
+                            <div class="icontext">
+                                Attendance
                             </div>
                             
                         </div>

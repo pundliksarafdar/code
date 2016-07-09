@@ -123,7 +123,7 @@ public List<Notes> getNotesPath(int divid,int subid,int classid,String batchids)
 		Session session = null;
 		Transaction transaction = null;
 		List<Notes> notesList = null;
-		String queryString="from Notes where classid=:classid and divid=:divid and subid=:subid";
+		String queryString="from Notes where inst_id=:classid and divid=:divid and subid=:subid";
 		if(!"-1".equals(batchids) && !"".equals(batchids)){
 			String batchidsarr[]=batchids.split(",");
 			for (int i = 0; i < batchidsarr.length; i++) {

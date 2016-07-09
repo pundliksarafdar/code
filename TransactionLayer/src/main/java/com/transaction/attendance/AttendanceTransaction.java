@@ -693,6 +693,270 @@ public class AttendanceTransaction {
 		
 	}
 	
+	public List<DailyAttendance> getStudentsDailyAttendanceForStudent(String batchid, int inst_id, int div_id,Date date,int student_id) {
+		AttendanceDB db = new AttendanceDB();
+		List<AttendanceScheduleServiceBean> attendanceScheduleServiceBeanList = new ArrayList<AttendanceScheduleServiceBean>(); 
+		List list =  db.getStudentsDailyAttendanceForStudent(batchid, inst_id, div_id,date,student_id);
+		List Timelist = db.getDistinctDailyScheduleTime(Integer.parseInt(batchid), inst_id, div_id,date);
+		List<DailyTimeTable> dailyTimeTableList = new ArrayList<DailyTimeTable>();
+		for (Iterator iterator = Timelist.iterator(); iterator.hasNext();) {
+			Object[] object = (Object[]) iterator.next();
+			DailyTimeTable dailyTimeTable = new DailyTimeTable();
+			dailyTimeTable.setStart_time((Time) object[0]);
+			dailyTimeTable.setEnd_time((Time) object[1]);
+			dailyTimeTable.setSub_name((String) object[3]);
+			dailyTimeTable.setSub_id(((Number) object[2]).intValue());
+			dailyTimeTableList.add(dailyTimeTable);
+		}
+		List<DailyAttendance> dailyAttendanceList = new ArrayList<DailyAttendance>();
+		if(list != null){
+			
+			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+				int present_count =0;
+				int total_count = dailyTimeTableList.size();
+				int i = 0;
+				Object[] object = (Object[]) iterator.next();
+				DailyAttendance bean = new DailyAttendance();
+				bean.setStudent_name((String) object[0]+" "+(String) object[1]);
+				bean.setStudent_id(((Number) object[2]).intValue());	
+				bean.setDailyTimeTableList(dailyTimeTableList);
+				String presentee[] =new String[dailyTimeTableList.size()];
+				presentee[i]= (String) object[3];
+				i++;
+				while (i<dailyTimeTableList.size()) {
+					if(iterator.hasNext()){
+					object = (Object[]) iterator.next();
+					presentee[i]= (String) object[3];
+					i++;
+					}else{
+						break;
+					}
+				}
+				for (int j = 0; j < presentee.length; j++) {
+					String string = presentee[j];
+					if("P".equals(string))
+					{
+						present_count++;
+					}
+				}
+				
+				bean.setPresent_lectures(present_count);
+				bean.setTotal_lectures(total_count);
+				bean.setAvg((present_count*100)/total_count);
+				bean.setPresentee(presentee);
+				try{
+				JsonParser parser = new JsonParser();
+				JsonObject json = (JsonObject) parser.parse((String) object[9]);
+				int roll_no = json.get(batchid).getAsInt();
+				bean.setRoll_no(roll_no);
+				}catch(Exception e){
+				bean.setRoll_no(0);
+				}
+				dailyAttendanceList.add(bean);
+			}
+		}
+		return dailyAttendanceList;
+	}
+	
+	public List<MonthlyAttendance> getStudentsWeeklyAttendanceForStudent(String batchid, int inst_id, int div_id,Date date,int student_id) {
+		AttendanceDB db = new AttendanceDB();
+		List<AttendanceScheduleServiceBean> attendanceScheduleServiceBeanList = new ArrayList<AttendanceScheduleServiceBean>(); 
+		List presentList =  db.getStudentsWeeklyPresentCountForStudent(batchid, inst_id, div_id,date,student_id);
+		List totalList =  db.getStudentsWeeklyTotalCount(batchid, inst_id, div_id,date);
+		List<MonthlyAttendance> monthlyAttendanceList = new ArrayList<MonthlyAttendance>();
+		List<MonthlyCount> monthlyCountList = new ArrayList<MonthlyCount>();
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student = studentTransaction.getStudentByStudentID(student_id, inst_id);
+		int total_lecture_count = 0;
+		for (Iterator iterator = totalList.iterator(); iterator
+				.hasNext();) {
+			Object[] object = (Object[]) iterator.next();
+			MonthlyCount monthlyCount = new MonthlyCount();
+			monthlyCount.setDate((Date) object[1]);
+			monthlyCount.setTotal_count(((Number) object[0]).intValue());
+			total_lecture_count = total_lecture_count + ((Number) object[0]).intValue();
+			monthlyCountList.add(monthlyCount);
+		}
+		
+		for (Iterator iterator = presentList.iterator(); iterator
+				.hasNext();) {
+			int total_presentee = 0;
+			Object[] object = (Object[]) iterator.next();
+			
+			MonthlyAttendance monthlyAttendance = new MonthlyAttendance();
+			monthlyAttendance.setStudent_name((String) object[0]+" "+(String) object[1]);
+			monthlyAttendance.setDate((Date) object[3]);
+			monthlyAttendance.setStudent_id(((Number) object[4]).intValue());
+			try{
+			JsonParser parser = new JsonParser();
+			JsonObject json = (JsonObject) parser.parse(student.getBatchIdNRoll());
+			int roll_no = json.get(batchid).getAsInt();
+			monthlyAttendance.setRoll_no(roll_no);
+			}catch(Exception e){
+				monthlyAttendance.setRoll_no(0);
+			}
+			String[] daily_attendance = new String[monthlyCountList.size()];
+			String[] daily_attendance_percentage = new String[monthlyCountList.size()];
+			int i = 0;
+			boolean used_flag = false;
+			if(((Date) object[3]).compareTo(monthlyCountList.get(i).getDate())==0){
+			daily_attendance[i] = Long.toString(((Number)object[2]).longValue());
+			total_presentee = total_presentee + ((Number)object[2]).intValue();
+			daily_attendance_percentage[i] = Double.toString((((Number) object[2]).doubleValue()*100)/monthlyCountList.get(i).getTotal_count());
+			monthlyAttendance.setTotal_monthly_lectures(total_lecture_count);
+			used_flag = true;
+			}else{
+				daily_attendance[i] = "0";
+				total_presentee = total_presentee + 0;
+				daily_attendance_percentage[i] = "0";
+				monthlyAttendance.setTotal_monthly_lectures(total_lecture_count);
+			}
+			i++;
+			while (i<monthlyCountList.size()) {
+				
+				if(used_flag == false){
+					if(((Date) object[3]).compareTo(monthlyCountList.get(i).getDate())==0){
+						daily_attendance[i] = Long.toString(((Number)object[2]).longValue());
+						total_presentee = total_presentee + ((Number)object[2]).intValue();
+						daily_attendance_percentage[i] = Double.toString((((Number) object[2]).doubleValue()*100)/monthlyCountList.get(i).getTotal_count());
+						used_flag =true;
+					}else{
+						daily_attendance[i] = "0";
+						total_presentee = total_presentee + 0;
+						daily_attendance_percentage[i] = "0";
+						used_flag = false;
+					}
+				}else{
+				if(iterator.hasNext()){
+				object = (Object[]) iterator.next();
+				if(((Date) object[3]).compareTo(monthlyCountList.get(i).getDate())==0){
+				daily_attendance[i] = Long.toString(((Number)object[2]).longValue());
+				total_presentee = total_presentee + ((Number)object[2]).intValue();
+				daily_attendance_percentage[i] = Double.toString((((Number) object[2]).doubleValue()*100)/monthlyCountList.get(i).getTotal_count());
+				used_flag =true;
+				}else{
+					daily_attendance[i] = "0";
+					total_presentee = total_presentee + 0;
+					daily_attendance_percentage[i] = "0";
+					used_flag = false;
+				}
+				}else{
+					break;
+				}
+		
+			}
+				
+				i++;
+			}
+			monthlyAttendance.setDaily_presentee(daily_attendance);
+			monthlyAttendance.setDaily_presentee_percentange(daily_attendance_percentage);
+			monthlyAttendance.setTotal_prsentee_percentage((total_presentee * 100)/total_lecture_count);
+			monthlyAttendance.setTotal_monthly_presentee(total_presentee);
+			monthlyAttendance.setMonthlyCountList(monthlyCountList);
+			monthlyAttendanceList.add(monthlyAttendance);
+		}
+		
+		return monthlyAttendanceList;
+	}
+	
+	public List<MonthlyAttendance> getStudentsMonthlyAttendanceForStudent(String batchid, int inst_id, int div_id,Date date,int student_id) {
+		AttendanceDB db = new AttendanceDB();
+		List<AttendanceScheduleServiceBean> attendanceScheduleServiceBeanList = new ArrayList<AttendanceScheduleServiceBean>(); 
+		List presentList =  db.getStudentsMonthlyPresentCountForStudent(batchid, inst_id, div_id,date,student_id);
+		List totalList =  db.getStudentsMonthlyTotalCount(batchid, inst_id, div_id,date);
+		List<MonthlyAttendance> monthlyAttendanceList = new ArrayList<MonthlyAttendance>();
+		List<MonthlyCount> monthlyCountList = new ArrayList<MonthlyCount>();
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student = studentTransaction.getStudentByStudentID(student_id, inst_id);
+		int total_lecture_count = 0;
+		for (Iterator iterator = totalList.iterator(); iterator
+				.hasNext();) {
+			Object[] object = (Object[]) iterator.next();
+			MonthlyCount monthlyCount = new MonthlyCount();
+			monthlyCount.setDate((Date) object[1]);
+			monthlyCount.setTotal_count(((Number) object[0]).intValue());
+			total_lecture_count = total_lecture_count + ((Number) object[0]).intValue();
+			monthlyCountList.add(monthlyCount);
+		}
+		for (Iterator iterator = presentList.iterator(); iterator
+				.hasNext();) {
+			int total_presentee = 0;
+			Object[] object = (Object[]) iterator.next();
+			MonthlyAttendance monthlyAttendance = new MonthlyAttendance();
+			monthlyAttendance.setStudent_name((String) object[0]+" "+(String) object[1]);
+			monthlyAttendance.setDate((Date) object[3]);
+			monthlyAttendance.setStudent_id(((Number) object[4]).intValue());
+			try{
+			JsonParser parser = new JsonParser();
+			JsonObject json = (JsonObject) parser.parse(student.getBatchIdNRoll());
+			int roll_no = json.get(batchid).getAsInt();
+			monthlyAttendance.setRoll_no(roll_no);
+			}catch(Exception e){
+			monthlyAttendance.setRoll_no(0);	
+			}
+			String[] daily_attendance = new String[monthlyCountList.size()];
+			String[] daily_attendance_percentage = new String[monthlyCountList.size()];
+			int i = 0;
+			boolean used_flag = false;
+			if(((Date) object[3]).compareTo(monthlyCountList.get(i).getDate())==0){
+			daily_attendance[i] = Long.toString(((Number)object[2]).longValue());
+			total_presentee = total_presentee + ((Number)object[2]).intValue();
+			daily_attendance_percentage[i] = Double.toString((((Number) object[2]).doubleValue()*100)/monthlyCountList.get(i).getTotal_count());
+			monthlyAttendance.setTotal_monthly_lectures(total_lecture_count);
+			used_flag = true;
+			}else{
+				daily_attendance[i] = "0";
+				total_presentee = total_presentee + 0;
+				daily_attendance_percentage[i] = "0";
+				monthlyAttendance.setTotal_monthly_lectures(total_lecture_count);
+			}
+			i++;
+			while (i<monthlyCountList.size()) {
+				
+				if(used_flag == false){
+					if(((Date) object[3]).compareTo(monthlyCountList.get(i).getDate())==0){
+						daily_attendance[i] = Long.toString(((Number)object[2]).longValue());
+						total_presentee = total_presentee + ((Number)object[2]).intValue();
+						daily_attendance_percentage[i] = Double.toString((((Number) object[2]).doubleValue()*100)/monthlyCountList.get(i).getTotal_count());
+						used_flag =true;
+					}else{
+						daily_attendance[i] = "0";
+						total_presentee = total_presentee + 0;
+						daily_attendance_percentage[i] = "0";
+						used_flag = false;
+					}
+				}else{
+				if(iterator.hasNext()){
+				object = (Object[]) iterator.next();
+				if(((Date) object[3]).compareTo(monthlyCountList.get(i).getDate())==0){
+				daily_attendance[i] = Long.toString(((Number)object[2]).longValue());
+				total_presentee = total_presentee + ((Number)object[2]).intValue();
+				daily_attendance_percentage[i] = Double.toString((((Number) object[2]).doubleValue()*100)/monthlyCountList.get(i).getTotal_count());
+				used_flag =true;
+				}else{
+					daily_attendance[i] = "0";
+					total_presentee = total_presentee + 0;
+					daily_attendance_percentage[i] = "0";
+					used_flag = false;
+				}
+				}else{
+					break;
+				}
+		
+			}
+				
+				i++;
+			}
+			monthlyAttendance.setDaily_presentee(daily_attendance);
+			monthlyAttendance.setDaily_presentee_percentange(daily_attendance_percentage);
+			monthlyAttendance.setTotal_prsentee_percentage((total_presentee * 100)/total_lecture_count);
+			monthlyAttendance.setTotal_monthly_presentee(total_presentee);
+			monthlyAttendance.setMonthlyCountList(monthlyCountList);
+			monthlyAttendanceList.add(monthlyAttendance);
+			}
+		return monthlyAttendanceList;
+	}
+	
 	
 	
 	class ArrayListOverride<E> extends ArrayList<E>{

@@ -32,12 +32,12 @@
 			</select>
 		</div>
 		
-		<div class="col-md-3">
+		<!-- <div class="col-md-3">
 		<label for="divisionSelect">Division select</label><br>
 			<select class="btn btn-default" id="divisionSelect" style="width:100%;" name="divisionSelect">
 				<option value="-1">Select Division</option>
 			</select>
-		</div>
+		</div> -->
 		<div class="col-md-3">
 		<label for="batchSelect">Select batch</label><br>
 			<select class="btn btn-default" id="batchSelect" style="width:100%;" name="batchSelect">

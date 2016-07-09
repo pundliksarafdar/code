@@ -42,25 +42,25 @@
 			</select>
 		</div>
 		
-		<div>
+		<!-- <div>
 		<label for="divisionSelect">Division select</label><br>
 			<select class="btn btn-default" id="divisionSelect" style="width:100%;" name="divisionSelect">
 				<option value="-1">Select Division</option>
 			</select>
-		</div>
+		</div> -->
 		<div>
 		<label for="batchSelect">Select batch</label><br>
 			<select class="btn btn-default" id="batchSelect" style="width:100%;" name="batchSelect">
 				<option value="-1">Select batch</option>
 			</select>
 		</div>
-		<div>
+		<!-- <div>
 		<label for="subjectSelect">Select subject</label><br>
 			<select class="btn btn-default" id="subjectSelect" style="width:100%;" name="subjectSelect">
 				<option value="-1">Select subject</option>
 			</select>
 		</div>
-		
+		 -->
 		<div id="buttons">
 			<div class="form-group">
                 <button class="btn btn-success" id="view">View</button>

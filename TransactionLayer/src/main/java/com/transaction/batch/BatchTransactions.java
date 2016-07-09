@@ -296,4 +296,10 @@ public int getNextBatchID(int inst_id,int div_id){
 		}
 		
 	}
+	
+	public List<Batch> getStudentBatches(int inst_id,int div_id,List<Integer> batchIds) {
+		BatchDB batchDB=new BatchDB();
+		return batchDB.getStudentBatches(inst_id, div_id, batchIds);
+		
+	}
 }

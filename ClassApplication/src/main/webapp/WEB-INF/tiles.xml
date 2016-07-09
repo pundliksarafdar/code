@@ -727,4 +727,9 @@
 		<put-attribute name="topnav" value="/teacher/menu.jsp" />
 		<put-attribute name="body" value="/teacher/BulkQuestionUpload.jsp" />
 	</definition>
+	<definition name="student.attendance" extends="baseLayout">
+      <put-attribute name="title"  value="Marks"/>
+      <put-attribute name="topnav" value="/student/menu.jsp" />
+      <put-attribute name="body"   value="/student/studentAttendance.jsp"/>      
+   </definition>
 </tiles-definitions>

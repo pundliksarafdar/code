@@ -10,7 +10,7 @@ var NOTES_TABLE = "#notesTable";
 
 var getClassUrl = "rest/student/getClasses";
 var getDivisionUrl = "rest/student/getDivision/";
-var getBatchUrl = "rest/student/getBatch/";
+var getBatchUrl = "rest/student/getStudentBatches/";
 var getSubjectUrl = "rest/student/getSubject/";
 var getNotestable = "rest/student/notes/";
 var getOnlineExamList = "rest/student/getOnlineExamList";
@@ -18,7 +18,7 @@ var getOnlineExamSubjectListUrl = "rest/student/getOnlineExamSubjectList/";
 $(document).ready(function(){
 	loadClassList();
 	
-	$("body").on("change",CLASS,loadDivision)
+	$("body").on("change",CLASS,loadBatch)
 		.on("change",DIVISION,loadBatch)
 		.on("change",BATCH,loadSubject)
 		.on("click",VIEW_BTN,getExamList)
@@ -41,6 +41,15 @@ $(document).ready(function(){
 		$(select).find("option:not([value='-1'])").remove();
 		$(select).append(optionStr);
 	}
+	
+	function loadBatchData(select,batchData){
+		var optionStr = "";
+		for(var i=0;i<batchData.length;i++){
+				optionStr = optionStr + "<option value='"+batchData[i].batch_id+"'>"+batchData[i].batch_name+"</option>";
+		}
+		$(select).find("option:not([value='-1'])").remove();
+		$(select).append(optionStr);
+	}
 
 function loadClassList(){
 	var handler = {};
@@ -52,7 +61,7 @@ function loadClassList(){
 
 function loadBatch(){
 	var handler = {};
-	handler.success = function(data){loadSelect(BATCH,data)};
+	handler.success = function(data){loadBatchData(BATCH,data)};
 	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 	rest.get(getBatchUrl+$(this).val(),handler);
 }
@@ -67,7 +76,6 @@ function loadDivision(){
  
 function getExamList(){
 	var classId = $(CLASS).val();
-	var divId = $(DIVISION).val();
 	var batchId = $(BATCH).val();
 	var subjectId = $(SUBJECT).val()
 	var handler = {};
@@ -81,18 +89,17 @@ function getExamList(){
 		$(NOTES_CONTAINER).hide();
 		$(NOTES_MESSAGE_CONTAINER).show();
 	};
-	rest.get(getOnlineExamList+"/"+classId+"/"+divId+"/"+batchId,handler);
+	rest.get(getOnlineExamList+"/"+classId+"/"+batchId,handler);
 }
 
 function loadSubject(){
 	var classId = $(CLASS).val();
-	var divId = $(DIVISION).val();
 	var batchId = $(BATCH).val();
 	
 	var handler = {};
 	handler.success = function(data){loadSelect(SUBJECT,data)};
 	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
-	rest.get(getSubjectUrl+divId+"/"+batchId+"/"+classId,handler);
+	rest.get(getSubjectUrl+batchId+"/"+classId,handler);
 }
 
 function showNotesList(data){
@@ -100,7 +107,7 @@ function showNotesList(data){
 		bDestroy:true,
 		data: data,
 		lengthChange: false,
-		columns: [
+		columns: [{title:"#",data:null},
 			{ title: "Notes",data:"exam_name",render:function(data,event,row){
 				var div = '<a examId='+row.exam_id+'>'+row.exam_name+'</a>';
 				return div;
@@ -115,18 +122,21 @@ function showNotesList(data){
 			});
 		}
 	});
-
+	dataTable.on( 'order.dt search.dt', function () {
+        dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+			});
+		}).draw(); 
 }
 
 function showSubjectExam(examId){
 	var classId = $(CLASS).val();
-	var divId = $(DIVISION).val();
 	var batchId = $(BATCH).val();
 	
 	var handler = {};
 	handler.success = function(data){showExamSubjectList(data,examId)};
 	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
-	rest.get(getOnlineExamSubjectListUrl+classId+"/"+divId+"/"+batchId+"/"+examId,handler);
+	rest.get(getOnlineExamSubjectListUrl+classId+"/"+batchId+"/"+examId,handler);
 }
 
 function showExamSubjectList(data,examId){
