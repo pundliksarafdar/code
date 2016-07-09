@@ -4,7 +4,7 @@
 
 <web-app>
   <welcome-file-list>
-  	<welcome-file>home.html</welcome-file>
+  	<welcome-file>home.jsp</welcome-file>
   </welcome-file-list>
   <display-name>Archetype Created Web Application</display-name>
   <servlet>
