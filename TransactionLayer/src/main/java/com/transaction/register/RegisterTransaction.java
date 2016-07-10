@@ -110,9 +110,10 @@ public class RegisterTransaction {
 		/*if debugging or testing user are able to use same email id*/
 		String isDebugging = ServiceMap.getSystemParam(Constants.DEBUGGING_MODE, "isdebug");
 		boolean isDebuggingBool = null!=isDebugging && isDebugging.equals("yes");
+		
 		if (isUserExits(username)) {
 			return "User already registered";
-		} else if (isMobileExits(mobileNo)) {
+		} else if (isMobileExits(mobileNo)  && !isDebuggingBool) {
 			return "Mobile number already registered";
 		}else if (isEmailExists(email) && !isDebuggingBool) {
 			return "Email ID already registered";	

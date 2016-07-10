@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.edit.DBUpdate;
 import com.classapp.logger.AppLogger;
+import com.classapp.servicetable.ServiceMap;
 import com.google.gson.JsonObject;
 import com.miscfunction.MiscFunction;
 import com.transaction.addtransaction.AdvertiseTransaction;
@@ -86,8 +87,10 @@ public class AdminAjaxServlet extends HttpServlet{
 			AppLogger.logger("Registration Id-"+mobileNum);
 			RegisterTransaction registerTransaction = new RegisterTransaction();
 			boolean result = registerTransaction.isMobileExits(mobileNum);
+			String isDebugging = ServiceMap.getSystemParam(com.classapp.persistence.Constants.DEBUGGING_MODE, "isdebug");
+			boolean isDebuggingBool = null!=isDebugging && isDebugging.equals("yes");
 			JsonObject resultJson = new JsonObject();
-			resultJson.addProperty("exists", result);
+			resultJson.addProperty("exists", result&&!isDebuggingBool);
 			String resultJsonStr = resultJson.toString();
 			writer.print(resultJsonStr);	
 		}else if("checkusername".equalsIgnoreCase(methodeToCall)){
