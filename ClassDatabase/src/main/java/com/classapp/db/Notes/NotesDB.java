@@ -474,7 +474,7 @@ public List<Notes> getStudentNotesPath(String batch,int subid,int classid,int di
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(Notes.class);
-		Criterion criterion = Restrictions.eq("classid", inst_id);
+		Criterion criterion = Restrictions.eq("inst_id", inst_id);
 		criteria.add(criterion);
 		
 		if(div_id!=-1){

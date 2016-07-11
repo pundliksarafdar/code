@@ -40,7 +40,7 @@
 <script type="text/javascript" src="js/AddSubject.js"></script>
 <script>
 var BUTTONS_MANAGE = '<div class="default">' +
-						'<button class="btn btn-primary btn-xs btn-manage">Manage</button>'+
+						'<button class="btn btn-primary btn-xs btn-manage">Manage Topics</button>'+
 						'<button class="btn btn-primary btn-xs btn-edit">Edit</button>'+
 						'<button class="btn btn-danger btn-xs btn-delete">Delete</button>'+
 					'</div>';
@@ -208,22 +208,30 @@ function validateInput(inputText){
 		$("#combinationSubjects").select2({data:"",placeholder:"Select Subjects"});
 		
 		$('#manageSubjectAddSubject').on('click',function(){
+			var subjectFlag = true;
+			$('.addSubjectContainer').find(".error").html('');
+			$(".combinationSubjectserror").html("");
 		var subjectName = $('#subjectName').val();
 		var combinationSub = $("#combinationSub").is(":checked");
 		var subIds = "";
-		if(combinationSub){
+		if(combinationSub && $("#combinationSubjects").val() == null){
+			$(".combinationSubjectserror").html("Select subjects");
+			subjectFlag = false;
+		}
+		else if(combinationSub){
 			subIds = $("#combinationSubjects").val().join(",");
 		}
 		if(!subjectName || subjectName.trim()==""){
-			$(this).closest('.addSubjectContainer').find(".error").html('Subject name cannot be blank');
-		}else{
-			$(this).closest('.addSubjectContainer').find(".error").empty();
-			if(validateInput(subjectName)){
-				allAjax.addSubject('',subjectName,combinationSub,subIds,successCallbackSubject,errorCallbackSubject);
-			}else{
-				$(this).closest('.addSubjectContainer').find(".error").html('Only character and numbers are allowed');
-			}
+			$('.addSubjectContainer').find(".error").html('Subject name cannot be blank');
+			subjectFlag = false;
+		}else if(!validateInput(subjectName)){
+			subjectFlag = false;
+			$('.addSubjectContainer').find(".error").html('Only character and numbers are allowed');
 		}
+			if(subjectFlag){
+				allAjax.addSubject('',subjectName,combinationSub,subIds,successCallbackSubject,errorCallbackSubject);
+			}
+		
 	});
 		
 		$("#combinationSub").click(function(e){
@@ -436,6 +444,7 @@ function validateInput(inputText){
   </div>
    <div class="col-md-3 addSubjectContainer">
       <select id="combinationSubjects" class="form-control" disabled="disabled" multiple="multiple"></select>
+      <div class="combinationSubjectserror" style="color: red"> &nbsp;</div>
   </div>
    <div class="col-md-3 addSubjectContainer">
         <button id="manageSubjectAddSubject" class="btn btn-primary" type="button">Add subject</button>
@@ -473,7 +482,7 @@ function validateInput(inputText){
 				<button class="btn btn-primary btn-xs btn-combineEdit">Edit</button>
 				</c:if>
 				<c:if test="${subject.sub_type ne 1}">
-				<button class="btn btn-primary btn-xs btn-manage">Manage</button>
+				<button class="btn btn-primary btn-xs btn-manage">Manage Topics</button>
 				<button class="btn btn-primary btn-xs btn-edit">Edit</button>
 				</c:if>
 				<button class="btn btn-danger btn-xs btn-delete">Delete</button>

@@ -73,12 +73,13 @@ $(document).ready(function(){
 	}
 	
 	function loadBatchData(select,batchData){
-		var optionStr = "";
+		var optionStr = "<option value='-1'>Select Batch</option>";
+		$(select).empty();
 		for(var i=0;i<batchData.length;i++){
 				optionStr = optionStr + "<option value='"+batchData[i].batch_id+"'>"+batchData[i].batch_name+"</option>";
 		}
-		$(select).find("option:not([value='-1'])").remove();
 		$(select).append(optionStr);
+		$(BATCH).select2().val("-1").change();
 	}
 
 function loadClassList(){
@@ -93,10 +94,17 @@ function viewTimetable(){
 }
 
 function loadBatch(){
+	if($(this).val()!= "-1"){
 	var handler = {};
 	handler.success = function(data){loadBatchData(BATCH,data)};
 	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 	rest.get(getBatchUrl+$(this).val(),handler);
+	}else{
+		var optionStr = "<option value='-1'>Select Batch</option>";
+		$(BATCH).empty();
+		 $(BATCH).append(optionStr);
+		 $(BATCH).select2().val("-1").change();
+	}
 }
 
 function loadDivision(){
@@ -112,6 +120,7 @@ function onCalendarDateChange(){
 function getTimeTableData(){
 	var classId = $(CLASS).val();
 	var batchId = $(BATCH).val();
+	if(batchId != "-1"){
 	var dateNow = new Date($(CALENDAR_DATE).find('input').val()).getTime();
 	if(isNaN(dateNow)){
 		dateNow = new Date().getTime();
@@ -128,6 +137,7 @@ function getTimeTableData(){
 		$(CALENDAR_MESSAGE_CONTAINER).show();
 	};
 	rest.get(getTimetable+classId+"/"+batchId+"/"+dateNow+"/0",handler);
+	}
 	//filldropdown();
 }
 

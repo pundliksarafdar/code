@@ -95,20 +95,24 @@
 		$(this).closest("tr").find(".error").remove();
 	}
 	
-	function validateElement(batchName,selectSubject){
+	function validateElement(batchName,selectSubject,divisionId){
 		$(batchName).closest("div").find(".error").remove();
 		$(selectSubject).closest("div").find(".error").remove();
-		var CHAR_AND_NUM_VALIDATION = /^[a-zA-Z0-9 -_]{1,}$/;
+		var CHAR_AND_NUM_VALIDATION = /^[a-zA-Z0-9-_\s]{1,}$/;
 		isValid = true;
 		if(batchName.val().trim()==""){
-			batchName.after("<div class='error'>Field cannot be blank</div>");
+			batchName.after("<div class='error'>Batch name cannot be blank</div>");
 			isValid = false;
 		}else if(!CHAR_AND_NUM_VALIDATION.test(batchName.val().trim())){
 			batchName.after("<div class='error'>Only characters are allowed</div>");
 			isValid = false;
 		}
 		if(selectSubject.val() == null || selectSubject.val().length < 1){
-			selectSubject.closest("div").append("<div class='error'>Field cannot be blank</div>");
+			selectSubject.closest("div").append("<div class='error'>Select Subject</div>");
+			isValid = false;
+		}
+		if(divisionId == "-1"){
+			$('#divisionError').html("Select Class");
 			isValid = false;
 		}
 		return isValid;
@@ -120,14 +124,14 @@
 		var batchName = $(this).closest("tr").find(".editBatchName").val();
 		var subjectIds = $(this).closest("tr").find(".selectSubject").val();
 		
-		var isValid = validateElement($(this).closest("tr").find(".editBatchName"),$(this).closest("tr").find(".selectSubject"));
+		var isValid = validateElement($(this).closest("tr").find(".editBatchName"),$(this).closest("tr").find(".selectSubject"),divisionId);
 		if(isValid){
-			saveBatchAjax(batchId,divisionId,batchName,subjectIds);
+			saveBatchAjax(batchId,divisionId,batchName,subjectIds,$(this).closest("tr").find(".editBatchName"));
 		}
 		
 	}
 	
-	function saveBatchAjax(batchId,batchdivisionid,batchName,subjectIds){
+	function saveBatchAjax(batchId,batchdivisionid,batchName,subjectIds,that){
 		if(subjectIds.length>0){
 			subjectIds = subjectIds.join(',');
 		}
@@ -142,8 +146,13 @@
 						 batchdivisionid:batchdivisionid
 				   		},
 				   type:"POST",
-				   success:function(data){					  
+				   success:function(data){
+					   data = JSON.parse(data);
+					   if(data.status == "success"){
 						getAllBatches();
+					   }else{
+						   that.after("<div class='error'>"+data.message+"</div>");
+					   }
 				   	},
 				   error:function(data){
 				   
@@ -255,14 +264,14 @@
 		var batchName = $("#addBatchBatchName").val();
 		var	divisonNameT = $("#addBatchSelectDivision").val();
 		var	subject = $("#addBatchSelectSubject").val();
-		
+		$('#divisionError').html("");
 		if(subject){
 			subject = subject.join(",");
 		}else{
 			subject = "";
 		}
 		
-		var isValid = validateElement($("#addBatchBatchName"),$("#addBatchSelectSubject"));
+		var isValid = validateElement($("#addBatchBatchName"),$("#addBatchSelectSubject"),divisonNameT);
 		if(isValid){
 			addBatchConfirm(batchName,divisonNameT.toString(),subject);
 		}
@@ -323,11 +332,12 @@
 	</div>
 	 <div class="col-md-3">
 	<select id="addBatchSelectDivision" class="form-control">
-		<!--Thought it is batch id written its division id only-->
+		<option value="-1">Select Class</option>
 		<c:forEach items="${batcheids}" var="divId" varStatus="counter">
 				<option value='<c:out value="${divId}"></c:out>'><c:out value="${divisionNames[counter.index]}"></c:out> &nbsp; <c:out value="${streams[counter.index]}"></c:out></option>
 		</c:forEach>
 	</select>
+	<span id='divisionError' class='error'></span>
  	</div>
  	<div class="col-md-3">
 		<select id="addBatchSelectSubject" multiple="multiple" style="width:100%"></select>

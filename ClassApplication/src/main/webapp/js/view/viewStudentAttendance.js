@@ -61,12 +61,13 @@ $(document).ready(function(){
 	}
 	
 	function loadBatchData(select,batchData){
-		var optionStr = "";
+		var optionStr = "<option value='-1'>Select Batch</option>";
+		$(select).empty();
 		for(var i=0;i<batchData.length;i++){
 				optionStr = optionStr + "<option value='"+batchData[i].batch_id+"'>"+batchData[i].batch_name+"</option>";
 		}
-		$(select).find("option:not([value='-1'])").remove();
 		$(select).append(optionStr);
+		$(BATCH).select2().val("-1").change();
 	}
 
 function loadClassList(){
@@ -78,11 +79,19 @@ function loadClassList(){
 
 
 function loadBatch(){
+	if($(this).val()!= "-1"){
 	var handler = {};
 	handler.success = function(data){loadBatchData(BATCH,data)};
 	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 	rest.get(getBatchUrl+$(this).val(),handler);
+	}else{
+		var optionStr = "<option value='-1'>Select Batch</option>";
+		$(BATCH).empty();
+		 $(BATCH).append(optionStr);
+		 $(BATCH).select2().val("-1").change();
+	}
 }
+
 
 function getDailyAttendance(){
 	$(".validation-message").html("");

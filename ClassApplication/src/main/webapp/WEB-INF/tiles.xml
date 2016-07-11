@@ -173,7 +173,7 @@
 	</definition>
 
 	<definition name="classowner.addsubject" extends="baseLayout">
-		<put-attribute name="title" value="Add Subject" />
+		<put-attribute name="title" value="Manage Subject" />
 		<put-attribute name="body" value="/ClassOwner/AddSubject.jsp" />
 	</definition>
 
@@ -465,7 +465,7 @@
    </definition>
 		
 	<definition name="classowner.addtopicinitiate" extends="baseLayout">
-      <put-attribute name="title"  value="Criteria"/>
+      <put-attribute name="title"  value="Manage Topic"/>
       <put-attribute name="body"   value="/ClassOwner/AddTopics.jsp"/>      
    </definition>
    <definition name="classowner.addmanualexam" extends="baseLayout">
@@ -732,4 +732,8 @@
       <put-attribute name="topnav" value="/student/menu.jsp" />
       <put-attribute name="body"   value="/student/studentAttendance.jsp"/>      
    </definition>
+   <definition name="aboutUs" extends="NoTopnavBaseLayout">
+		<put-attribute name="title" value="About Us" />
+		<put-attribute name="body" value="/aboutUs.jsp" />
+	</definition>
 </tiles-definitions>
