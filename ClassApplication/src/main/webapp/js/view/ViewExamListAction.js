@@ -30,25 +30,27 @@ $(document).ready(function(){
 	
 });
 
-	var loadSelect = function(select,classData){
-		var optionStr = "";
-		for(classId in classData){
-			if(classData.hasOwnProperty(classId)){
-				optionStr = optionStr + "<option value='"+classId+"'>"+classData[classId]+"</option>";
-			}
-			
+var loadSelect = function(select,classData){
+	var optionStr = "<option value='-1'>Select Subject</option>";
+	for(classId in classData){
+		if(classData.hasOwnProperty(classId)){
+			optionStr = optionStr + "<option value='"+classId+"'>"+classData[classId]+"</option>";
 		}
-		$(select).find("option:not([value='-1'])").remove();
-		$(select).append(optionStr);
+		
 	}
+	$(select).empty();
+	$(select).append(optionStr);
+	$(select).select2().val("-1").change();
+}
 	
 	function loadBatchData(select,batchData){
-		var optionStr = "";
+		var optionStr = "<option value='-1'>Select Batch</option>";
+		$(select).empty();
 		for(var i=0;i<batchData.length;i++){
 				optionStr = optionStr + "<option value='"+batchData[i].batch_id+"'>"+batchData[i].batch_name+"</option>";
 		}
-		$(select).find("option:not([value='-1'])").remove();
 		$(select).append(optionStr);
+		$(BATCH).select2().val("-1").change();
 	}
 
 function loadClassList(){
@@ -60,10 +62,17 @@ function loadClassList(){
 
 
 function loadBatch(){
+	if($(this).val()!= "-1"){
 	var handler = {};
 	handler.success = function(data){loadBatchData(BATCH,data)};
 	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 	rest.get(getBatchUrl+$(this).val(),handler);
+	}else{
+		var optionStr = "<option value='-1'>Select Batch</option>";
+		$(BATCH).empty();
+		 $(BATCH).append(optionStr);
+		 $(BATCH).select2().val("-1").change();
+	}
 }
 
 function loadDivision(){
@@ -95,11 +104,17 @@ function getExamList(){
 function loadSubject(){
 	var classId = $(CLASS).val();
 	var batchId = $(BATCH).val();
-	
+	if(batchId != "-1"){
 	var handler = {};
 	handler.success = function(data){loadSelect(SUBJECT,data)};
 	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 	rest.get(getSubjectUrl+batchId+"/"+classId,handler);
+	}else{
+		var optionStr = "<option value='-1'>Select Subject</option>";
+		$(SUBJECT).empty();
+		 $(SUBJECT).append(optionStr);
+		 $(SUBJECT).select2().val("-1").change();
+	}
 }
 
 function showNotesList(data){

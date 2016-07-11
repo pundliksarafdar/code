@@ -228,18 +228,16 @@
                  <i class="fa fa-flask  fa-5x"></i>
                             <h4> <strong>Our Location</strong> </h4>
                             <p>
-                                Dattaraj Nursery,Camp Area,Vengurla
-                                Dist:-Sindhudurga
-                                State:-Maharashtra
-                                Pin:-416516
+                                Kasturinagar,Banglore - 560043,Karnataka
                             </p>
                 </div>
             <div class="col-md-4  col-sm-4">
                   <i class="fa fa-pencil  fa-5x"></i>
                             <h4> <strong>About Company</strong> </h4>
                             <p>
-                                Rayansh established in 2015.Rayansh is an idea. We always try to 
-                                produce good quality products that fullfills customer requirement.
+                               Classfloor is a technology start-up founded in the heart of India's Silicon Valley - Bangalore by four musketeers.  Classfloor provides the excellent platform for institute management system.
+							  <a href="aboutUs">Read more ...</a>
+
                             </p>    
                 </div>
                     

@@ -11,6 +11,10 @@
      color: red;
     margin-left: 10px;
 }
+
+.editDiv{
+display: none;
+}
 </style>
 <script type="text/javascript">
 var topicid="";
@@ -18,54 +22,11 @@ $(document).ready(function(){
 	$("#topics_division").on("change",fetchTopic);
 	$(".deletetopic").on("click",deletetopic);
 	$("#addTopic").on("click",addTopic);
-	$("#saveTopic").on("click",saveedittopic);
+	/* $("#saveTopic").on("click",saveedittopic); */
+	$("#topictable").on("click",".editTopic",edittopic);	
+	$("#topictable").on("click",".cancleEdit",cancleEdit);
+	$("#topictable").on("click",".saveTopic",saveedittopic);
 	
-	$("#topictable").on("click",".deletetopic",function(e){
-		 topicid =$(this).prop("id");
-		 /*	var divisionID=$("#topics_division").val();
-		var subID=$("#subjectID").val();
-		var institute=$("form#actionform #institute").val();
-	//	var questionNumber=$("form#actionform #questionNumber").val();
-		e.preventDefault();
-		$.ajax({
-			 
-			   url: "classOwnerServlet",
-			   data: {
-			    	 methodToCall: "isTopicRelatedQuestionAvailableInExam",
-			    	 topicid:topicid,
-			    	 subject:subID,
-			    	 division:divisionID
-			    	// institute:institute
-			   		},
-			   		success:function(data){
-			   			var resultJson = JSON.parse(data);
-						   var quesstatus=resultJson.quesstatus;
-						   if(quesstatus=="Y"){
-							   $("#DeleteConfirmBody").empty();
-							  var examnames=resultJson.examnames.split(",");
-							   $("#DeleteConfirmBody").append("Few Questions related to this topic is present in following exams-<br>")
-							   for(var i=0;i<examnames.length;i++){
-								   $("#DeleteConfirmBody").append((i+1)+"."+examnames[i]+"<br>");
-							   }
-							   $("#DeleteConfirmBody").append("Still you delete, those questions will remain in exams but will not be available in search. Once you delete that exams this question will get deleted.<br>")
-						   		$("#DeleteConfirmBody").append("Do you want to continue?");
-							   $("#quesstatus").val("Y");
-							   $("#DeleteConfirmModal").modal("toggle");
-						   }else{ */
-							   $("#DeleteConfirmBody").empty();
-							   $("#DeleteConfirmBody").append("Are you sure?");
-							   $("#DeleteConfirmModal").modal("toggle");
-							   /*   $("#quesstatus").val("");
-						   }
-			   		},
-			   		error:function(error){
-			   		
-			   		}
-		});
-		/* $("#actionform").attr("action","deletequestion");
-		$("#actionname").val("deletequestion");
-		$("#actionform").submit(); */
-	}); 
 });
 
 function addTopic(){
@@ -74,9 +35,12 @@ function addTopic(){
 	var topicname=$("#topicname").val();
 	var flag=false;
 	$("#topicnameerror").html("");
+	var CHAR_AND_NUM_VALIDATION = /^[a-zA-Z0-9-_\s]{1,}$/;
 	if(topicname.trim()==""){
 		$("#topicnameerror").html("Please Enter Topic Name");
 		flag=true;
+	}else if(!CHAR_AND_NUM_VALIDATION.test(topicname.trim())){
+		$("#topicnameerror").html("Invalid Topic Name");
 	}else{
 	$.ajax({
 		 
@@ -95,6 +59,7 @@ function addTopic(){
 				   flag= true;
 				   $("#topicnameerror").html("Topic name already available!!!");
 			   }else {
+				   $.notify({message: "Topic added successfuly "},{type: 'success'});
 				   fetchTopic();
 			   }
 		   },
@@ -105,42 +70,34 @@ function addTopic(){
 	
 }
 
-/* function addTopicAfterCheck(divisionID,subID,topicname){
-
-	$.ajax({
-		 
-		   url: "classOwnerServlet",
-		   data: {
-		    	 methodToCall: "addTopic",
-		    	 divisionID:divisionID,
-		    	 subID:subID,
-		    	 topicname:topicname
-		   		},
-		   type:"POST",
-		   success:function(data){
-			   fetchTopic();
-			  // var resultJson=JSON.parse(data);
-		   },
-		   error:function(){
-			   }
-		   });
-	//
-} */
 var edittopicid="";
-function edittopic(topicid){
+function edittopic(){
+	topicid = $(this).prop("id");
 	edittopicid=topicid;
 	var topicname=$("#topic"+topicid).html();
-	$("#edittopicname").val(topicname);
-	$("#topicedit").modal('toggle');
+	$($(this).closest("tr")).find(".default").hide();
+	$($(this).closest("tr")).find("input").val($($(this).closest("tr")).find(".defaultName").html());
+	$($(this).closest("tr")).find(".editDiv").show();
+	/* $("#edittopicname").val(topicname);
+	$("#topicedit").modal('toggle'); */
+}
+
+function cancleEdit(){
+	$($(this).closest("tr")).find(".default").show();
+	$($(this).closest("tr")).find(".editDiv").hide();
 }
 
 function saveedittopic(){
+	var that = this;
 	var divisionID=$("#topics_division").val();
 	var subID=$("#subjectID").val();
-	var topicname=$("#edittopicname").val();
+	var topicname=$($(this).closest("tr")).find("#edittopicname").val();
+	var CHAR_AND_NUM_VALIDATION = /^[a-zA-Z0-9-_\s]{1,}$/;
 	if(topicname.trim()==""){
-		$("#edittopicnameerror").html("Please Enter Topic Name");
+		$($(this).closest("tr")).find("#edittopicnameerror").html("Please Enter Topic Name");
 		flag=true;
+	}else if(!CHAR_AND_NUM_VALIDATION.test(topicname.trim())){
+		$($(this).closest("tr")).find("#edittopicnameerror").html("Invalid Topic Name");
 	}else{
 	$.ajax({
 		 
@@ -158,10 +115,11 @@ function saveedittopic(){
 			   var status=resultJson.topicexists;
 			   if(status!=""){
 				   flag= true;
-				   $("#edittopicnameerror").html("Topic name already available!!!");
+				   $($(that).closest("tr")).find("#edittopicnameerror").html("Topic name already available!!!");
 			   }else {
+				   $.notify({message: "Topic updated successfuly "},{type: 'success'});
 				   fetchTopic();
-				   $("#topicedit").modal('toggle');
+				  /*  $("#topicedit").modal('toggle'); */
 			   }
 		   },
 		   error:function(){
@@ -215,7 +173,12 @@ function fetchTopic(){
 			   var topic_ids=resultJson.topic_ids.split(",");
 			   if(topic_ids[0]!=""){
 				   for(var i=0;i<topic_ids.length;i++){
-					   $("#topictable tbody").append("<tr><td>"+(i+1)+"</td><td id='topic"+topic_ids[i]+"'>"+topic_names[i]+"</td><td><button class='btn btn-primary' onclick='edittopic("+topic_ids[i]+")'>Edit</button></td><td><button id="+topic_ids[i]+" class='btn btn-danger deletetopic'>Delete</button></td></tr>");
+					   $("#topictable tbody").append("<tr><td>"+(i+1)+"</td>"+
+					   "<td id='topic"+topic_ids[i]+"'><div class='default defaultName'>"+topic_names[i]+"</div>"+
+					   "<div class='editDiv'><input type='text' class='form-control' id='edittopicname' maxlength='50'><div id='edittopicnameerror' class='error'></div></div></td>"+
+					   "<td><div class='default'><button class='btn btn-primary btn-xs editTopic' id='"+topic_ids[i]+"'>Edit</button>"+
+					   "<button id="+topic_ids[i]+" class='btn btn-danger deletetopic btn-xs'>Delete</button></div>"+
+					   "<div class='editDiv'><button class='btn btn-xs btn-success saveTopic'>Save</button><button class='btn btn-xs btn-danger cancleEdit'>Cancel</button></div></td></tr>");
 				   }
 				   $("#topictable").show();
 			   }else{
@@ -235,7 +198,7 @@ function fetchTopic(){
 <body>
 <input type="hidden" value="<c:out value="${subid}"> </c:out>" id="subjectID">
 <div class="container" style="margin-bottom: 5px">
-			<a type="button" class="btn btn-primary" href="addsubject?currentPage=<c:out value="${currentPage}"> </c:out>" ><span class="glyphicon glyphicon-circle-arrow-left"></span> Back To Manage Subjects</a>
+			<a type="button" class="btn btn-primary" href="managesubject"> <span class="glyphicon glyphicon-circle-arrow-left"></span> Back To Manage Subjects</a>
 </div>
 <div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
 	<div align="center" style="font-size: larger;">Add Topics</div>
@@ -257,7 +220,7 @@ function fetchTopic(){
 			</select>
 			</div>
 			<div class="col-md-4">
-			<input type="text" class="form-control" id="topicname" disabled="disabled">
+			<input type="text" class="form-control" id="topicname" disabled="disabled" maxlength="50">
 			<span id="topicnameerror" class="error"></span>
 			</div>
 			<div class="col-md-4">
@@ -273,7 +236,6 @@ function fetchTopic(){
         <th>Sr No.</th>
         <th>Topic Name</th>
         <th>Edit</th>
-        <th>Delete</th>
       </tr>
     </thead>
     <tbody>

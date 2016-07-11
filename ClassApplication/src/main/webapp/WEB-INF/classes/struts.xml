@@ -81,7 +81,7 @@
 			<result name="error" type="tiles">register</result>
 		</action>
 
-		<action name="addsubject" class="com.classowner.AddSubjectAction"
+		<action name="managesubject" class="com.classowner.AddSubjectAction"
 			method="execute">
 			<result name="success" type="tiles">classowner.addsubject</result>
 			<result name="error" type="tiles">register</result>
@@ -636,6 +636,10 @@
 		<action name="viewStudentAttendance" class="com.student.action.ViewNotesAction"
 			method="execute">
 			<result name="success" type="tiles">student.attendance</result>
+		</action>
+		<action name="aboutUs">
+			<result name="success" type="tiles">aboutUs</result>
+			<param name="ignoresession">true</param>
 		</action>
 	</package>
 </struts>

@@ -35,7 +35,7 @@
 	<div class="col-md-3" id="addModifyTimetableForm">
 		<form id="scheduleForm" onsubmit="return false;">
 		
-		<div>
+		<div style="margin-top: 1%">
 		<label for="classSelect">Class select</label><br>
 			<select class="btn btn-default" id="classSelect" style="width:100%;" name="classSelect">
 				<option value="-1">Select Class</option>
@@ -48,7 +48,7 @@
 				<option value="-1">Select Division</option>
 			</select>
 		</div> -->
-		<div>
+		<div style="margin-top: 2%">
 		<label for="batchSelect">Select batch</label><br>
 			<select class="btn btn-default" id="batchSelect" style="width:100%;" name="batchSelect">
 				<option value="-1">Select batch</option>
@@ -61,7 +61,7 @@
 			</select>
 		</div>
 		 -->
-		<div id="buttons">
+		<div id="buttons" style="margin-top: 2%">
 			<div class="form-group">
                 <button class="btn btn-success" id="view">View</button>
 			</div>
