@@ -183,9 +183,9 @@
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" style="border-color: white;border-width: 1px;">
       <i class="glyphicon glyphicon-th-large"></i>
     </button>
-    <a class="navbar-brand" href="login" style="padding: 5px 15px;">
-	<img src="images/logo.gif" alt="cxlogo" style="height: 40px;" class="img-rounded"/>
-	Class floor</a>
+    <a class="navbar-brand" href="login">
+	<img src="images/cxlogo.jpg" alt="cxlogo" style="height: 20px;" class="img-rounded"/>
+	CoreX</a>
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->
