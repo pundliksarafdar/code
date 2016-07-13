@@ -531,7 +531,7 @@ public class FeesTransaction {
 		}
 		
 		RegisterTransaction registerTransaction = new RegisterTransaction();
-		List<RegisterBean> registerBeans = registerTransaction.getStudentsInfo(studentIds, 0);
+		List<RegisterBean> registerBeans = registerTransaction.getStudentsInfo(studentIds);
 		
 		for(Student student:students){
 			boolean flag = false;

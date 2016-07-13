@@ -235,11 +235,13 @@ public class StudentService extends ServiceBase{
 	}
 	
 	@GET
-	@Path("/studentMarksByExam/{classId}/{divId}/{batchId}/{examId}")
+	@Path("/studentMarksByExam/{inst_id}/{batchId}/{examId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getStudentMarksByExam(@PathParam("classId")int classId,@PathParam("divId")int div_id,@PathParam("batchId")int batch_id,@PathParam("examId")int examId){
+	public Response getStudentMarksByExam(@PathParam("inst_id")int inst_id,@PathParam("batchId")int batch_id,@PathParam("examId")int examId){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student = studentTransaction.getStudentByStudentID(getRegId(), inst_id);
 		StudentMarksTransaction studentMarksTransaction = new StudentMarksTransaction();
-		List<StudentExamMarksByExamDao> list = studentMarksTransaction.getStudentMarksDetailByExam(classId, getRegId(), div_id, batch_id,examId);
+		List<StudentExamMarksByExamDao> list = studentMarksTransaction.getStudentMarksDetailByExam(inst_id, getRegId(), student.getDiv_id(), batch_id,examId);
 		return Response.ok(list).build();
 	}
 	

@@ -1696,7 +1696,7 @@ public class ClassOwnerServlet extends HttpServlet{
 	}
 	
 	//Taking data from database
-	int resultPerPage = Integer.parseInt(ServiceMap.getSystemParam(Constants.SERVICE_PAGINATION, "resultsperpage"));
+	/*int resultPerPage = Integer.parseInt(ServiceMap.getSystemParam(Constants.SERVICE_PAGINATION, "resultsperpage"));*/
 	if(count>0){
 		List<Student> students=new ArrayList();
 		if("".equals(batchID)){
@@ -1709,7 +1709,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			studentIDsList.add(students.get(i).getStudent_id());
 		}
 		RegisterTransaction registerTransaction=new RegisterTransaction();
-		List<RegisterBean> registerBeans= registerTransaction.getStudentsInfo(studentIDsList,resultPerPage);
+		List<RegisterBean> registerBeans= registerTransaction.getStudentsInfo(studentIDsList);
 		BatchTransactions batchTransactions=new BatchTransactions();
 		List<Batch> batchList = batchTransactions.getBatchRelatedtoDivision(Integer.parseInt(batchdivision));
 		List<StudentDetails> studentDetailsList = new ArrayList<StudentDetails>();

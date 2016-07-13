@@ -258,7 +258,7 @@ public List getTeachersInstitutes(List inst_IDs) {
 	    }
 	}
 	
-public List getStudentInfo(List StudentIDs, int resultPerPage) {
+public List getStudentInfo(List StudentIDs) {
 		
 		Session session = null;
 		Transaction transaction = null;

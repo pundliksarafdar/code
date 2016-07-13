@@ -26,6 +26,7 @@ $(document).ready(function(){
 	$("#topictable").on("click",".editTopic",edittopic);	
 	$("#topictable").on("click",".cancleEdit",cancleEdit);
 	$("#topictable").on("click",".saveTopic",saveedittopic);
+	$("#topictable").on("click",".deletetopic",deletetopic);
 	
 });
 
@@ -132,6 +133,7 @@ function saveedittopic(){
 function deletetopic(){
 	var divisionID=$("#topics_division").val();
 	var subID=$("#subjectID").val();
+	var topicid = $(this).prop("id");
 	var handlers = {};
 	handlers.success=function(){
 		$.notify({message: "Topic successfuly deleted"},{type: 'success'});

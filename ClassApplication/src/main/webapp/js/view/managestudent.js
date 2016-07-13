@@ -75,7 +75,10 @@ var addStudent = function(){
 		var parentLname=$(".parentInfo").find("#lname").val().trim();
 		var parentPhone=$(".parentInfo").find("#phone").val().trim();
 		var parentEmail=$(".parentInfo").find("#email").val().trim();
-		
+		if($("#classfloorID").val() === ""){
+			flag=true;
+			$("#classfloorIDerror").html("Enter Classfloor ID");
+		}
 		if(divisionId=="-1"){
 			flag=true;
 			$("#divisionError").html("Please select class");

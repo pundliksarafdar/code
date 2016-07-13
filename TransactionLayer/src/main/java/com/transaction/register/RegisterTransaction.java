@@ -59,9 +59,9 @@ public class RegisterTransaction {
 		return registerBeans;
 	}
 	
-	public List getStudentsInfo(List StudentIDs,int resultPerPage) {
+	public List getStudentsInfo(List StudentIDs) {
 		RegisterDB db=new RegisterDB();
-		List list=db.getStudentInfo(StudentIDs,resultPerPage);
+		List list=db.getStudentInfo(StudentIDs);
 		return list;
 	}
 	public List getStudents(List StudentIDs) {

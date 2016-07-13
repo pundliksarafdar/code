@@ -75,6 +75,7 @@ var wayOfAddition="";
 var globalBatchID = "";
 var globalDivisionID = "";
 var graphData = [];
+var enabledEdit = false;
 	$(document).ready(function(){
 		$(this).on("click",".btn-batch-edit",enableEdit)
 		.on("click",".btn-cancel",cancelEdit)
@@ -164,7 +165,8 @@ var graphData = [];
 			$(".studentDetailsDiv").hide();
 		});
 		
-		/* $("#classTable").on("change",".selectDivision",function(){
+		 $("#classTable").on("change",".selectDivision",function(){
+			 if(enabledEdit == false){
 			var divisionId	 = $(this).val();
 			var batchDataArray = [];
 			var that = $(this);
@@ -204,7 +206,9 @@ var graphData = [];
 				   }
 				   
 			});
-		}); */
+			}
+			 enabledEdit = false;
+		}); 
 		$('.nav-tabs a[href="#marksTab"]').on('shown.bs.tab', function () {
 			
 			if(graphData.length > 0){
@@ -564,12 +568,9 @@ var graphData = [];
 		rest.get("rest/classownerservice/getStudentDetails/"+studentId,handlers);
 	}
 	function enableEdit(){
+		enabledEdit = true;
 		var batchData = getBatchesForStudent($(this));
 		var classData = getAllClasses($(this));
-		
-		
-		
-		 
 		//var subjectName = $(this).closest("tr").find(".defaultteacherSuffix").text().trim();
 		//$(this).closest("tr").find(".editteacherSuffix").val(subjectName);
 		$(this).closest("tr").addClass("editEnabled");

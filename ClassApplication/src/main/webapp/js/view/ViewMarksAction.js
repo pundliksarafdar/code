@@ -139,13 +139,12 @@ function showNotesList(data){
 
 function showSubjectExamMarks(examId){
 	var classId = $(CLASS).val();
-	var divId = $(DIVISION).val();
 	var batchId = $(BATCH).val();
 	
 	var handler = {};
 	handler.success = function(data){showExamSubjectList(data,examId)};
 	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
-	rest.get(studentMarksByExamUrl+classId+"/"+divId+"/"+batchId+"/"+examId,handler);
+	rest.get(studentMarksByExamUrl+classId+"/"+batchId+"/"+examId,handler);
 }
 
 function showExamSubjectList(data){
