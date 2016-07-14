@@ -28,5 +28,8 @@
         <property name="status" type="java.lang.String">
             <column name="status" />
         </property>
+        <property name="roll_count" type="int">
+            <column name="roll_count" />
+        </property>
     </class>
 </hibernate-mapping>

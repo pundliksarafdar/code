@@ -9,7 +9,7 @@ public class Batch implements Serializable {
 	private String batch_name;
 	private String sub_id;
 	private String status;
-	
+	private int roll_count;
 	public int getBatch_id() {
 		return batch_id;
 	}
@@ -46,6 +46,12 @@ public class Batch implements Serializable {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public int getRoll_count() {
+		return roll_count;
+	}
+	public void setRoll_count(int roll_count) {
+		this.roll_count = roll_count;
 	}
 	@Override
 	public boolean equals(Object obj) {

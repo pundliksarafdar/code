@@ -671,6 +671,94 @@ public List<Batch> getStudentBatches(int inst_id,int div_id,List<Integer> batchI
 	return batchList;
 }
 
+public boolean updateBatch(int inst_id,int div_id,int batchId,int roll_count) {
+	Session session = null;
+	Transaction transaction = null;
+	List<Batch> batchList = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("update Batch set roll_count = :roll_count where class_id =:class_id and div_id=:div_id and batch_id = :batchID");
+		query.setParameter("div_id", div_id);
+		query.setParameter("class_id", inst_id);
+		query.setParameter("batchID", batchId);
+		query.setParameter("roll_count", roll_count);
+		query.executeUpdate();
+		transaction.commit();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return true;
+}
+
+public int getNextRollNo(int inst_id,int div_id,int batchId) {
+	Session session = null;
+	Transaction transaction = null;
+	List<Integer> rollNo = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("update Batch set roll_count = roll_count + 1 where class_id =:class_id and div_id=:div_id and batch_id = :batchID");
+		query.setParameter("div_id", div_id);
+		query.setParameter("class_id", inst_id);
+		query.setParameter("batchID", batchId);
+		query.executeUpdate();
+		transaction.commit();
+		query = session.createQuery("select roll_count from Batch  where class_id =:class_id and div_id=:div_id and batch_id = :batchID");
+		query.setParameter("div_id", div_id);
+		query.setParameter("class_id", inst_id);
+		query.setParameter("batchID", batchId);
+		rollNo = query.list();
+		if(rollNo != null){
+			return rollNo.get(0);
+		}
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return 0;
+}
+
+public String getBatchRollNoStstatus(int inst_id,int div_id,int batchId) {
+	Session session = null;
+	Transaction transaction = null;
+	List<String> status = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("select status from Batch  where class_id =:class_id and div_id=:div_id and batch_id = :batchID");
+		query.setParameter("div_id", div_id);
+		query.setParameter("class_id", inst_id);
+		query.setParameter("batchID", batchId);
+		status = query.list();
+		if(status != null){
+			return status.get(0);
+		}
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return "";
+}
 }
 
 

@@ -16,6 +16,7 @@ import javax.persistence.criteria.Predicate;
 import org.apache.commons.beanutils.BeanUtils;
 
 import com.classapp.db.batch.Batch;
+import com.classapp.db.batch.BatchDB;
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.fees.FeesDB;
 import com.classapp.db.register.RegisterBean;
@@ -52,7 +53,22 @@ public class StudentTransaction {
 	
 	public boolean addUpdateDb(Student student){
 		boolean status = false;
+		BatchDB batchDB = new BatchDB();
 		if (!this.studentData.isStudentExistInClass(student)){
+			String batchIDArray[] = student.getBatch_id().split(",");
+			Map<String, Integer> map = new HashMap<String, Integer>();
+			for (String batchID : batchIDArray) {
+					String rollNoStatus = batchDB.getBatchRollNoStstatus(student.getClass_id(), student.getDiv_id(), Integer.parseInt(batchID));
+					if(rollNoStatus != null)
+					if("rollGenerated=yes;".equals(rollNoStatus)){
+					int rollno = batchDB.getNextRollNo(student.getClass_id(), student.getDiv_id(), Integer.parseInt(batchID));
+					map.put(batchID, rollno);
+					}
+				
+			}
+			Gson gson = new Gson();
+			String rollNo = gson.toJson(map);
+			student.setBatchIdNRoll(rollNo);
 			this.studentData.addOrUpdateStudent(student);
 			return true;
 		}	
@@ -66,7 +82,51 @@ public class StudentTransaction {
 	
 	public boolean updateStudentDb(Student student){
 		boolean status = false;
+		StudentDB studentDB = new  StudentDB();
+		BatchDB batchDB = new BatchDB();
 		if (this.studentData.isStudentExistInClass(student)){
+			Student oldStudent = studentDB.getStudentByStudentID(student.getStudent_id(), student.getClass_id());
+			if(oldStudent.getDiv_id() == student.getDiv_id() && (oldStudent.getBatchIdNRoll() != null && !"".equals(oldStudent.getBatchIdNRoll()))){
+				if(!oldStudent.getBatch_id().equals(student.getBatch_id())){
+					JsonParser jsonParser = new JsonParser();
+					JsonObject jsonObject = jsonParser.parse(student.getBatchIdNRoll()).getAsJsonObject();
+					String batchIDArray[] = student.getBatch_id().split(",");
+					Map<String, Integer> map = new HashMap<String, Integer>();
+					for (String batchID : batchIDArray) {
+						if(jsonObject.has(batchID)){
+							map.put(batchID, jsonObject.get(batchID).getAsInt());
+						}else{
+							
+							String rollNoStatus = batchDB.getBatchRollNoStstatus(student.getClass_id(), student.getDiv_id(), Integer.parseInt(batchID));
+							if(rollNoStatus != null)
+							if("rollGenerated=yes;".equals(rollNoStatus)){
+							int rollno = batchDB.getNextRollNo(student.getClass_id(), student.getDiv_id(), Integer.parseInt(batchID));
+							map.put(batchID, rollno);
+							}
+						}
+					}
+					Gson gson = new Gson();
+					String rollNo = gson.toJson(map);
+					student.setBatchIdNRoll(rollNo);
+				}
+			}else{
+				JsonParser jsonParser = new JsonParser();
+				JsonObject jsonObject = jsonParser.parse(student.getBatchIdNRoll()).getAsJsonObject();
+				String batchIDArray[] = student.getBatch_id().split(",");
+				Map<String, Integer> map = new HashMap<String, Integer>();
+				for (String batchID : batchIDArray) {
+						String rollNoStatus = batchDB.getBatchRollNoStstatus(student.getClass_id(), student.getDiv_id(), Integer.parseInt(batchID));
+						if(rollNoStatus != null)
+						if("rollGenerated=yes;".equals(rollNoStatus)){
+						int rollno = batchDB.getNextRollNo(student.getClass_id(), student.getDiv_id(), Integer.parseInt(batchID));
+						map.put(batchID, rollno);
+						}
+					
+				}
+				Gson gson = new Gson();
+				String rollNo = gson.toJson(map);
+				student.setBatchIdNRoll(rollNo);
+			}
 			this.studentData.addOrUpdateStudent(student);
 			return true;
 		}	
@@ -334,6 +394,8 @@ public class StudentTransaction {
 		}
 		StudentDB studentDB = new StudentDB();
 		studentDB.updateDb(students);
+		BatchDB batchDB = new BatchDB();
+		batchDB.updateBatch(inst_id, div_id, Integer.parseInt(batchname), rollNumber-1);
 		return students;
 	}
 	

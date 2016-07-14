@@ -742,18 +742,18 @@ function ExamPatternObject(){
 		</div>
 	</div>
 	
-<div id="withSectionOptions" style="display: none;" class="container" align="center">	
+<div id="withSectionOptions" style="display: none;margin-top: 1%" class="container" align="center">	
 <input id="addSection" value="Add Section" type="button" class="btn btn-primary btn-sm">
 </div>
-<div id="withoutSectionOptions" style="display: none;" class="container" align="center">	
+<div id="withoutSectionOptions" style="display: none;margin-top: 1%" class="container" align="center">	
 <div class="row">
 <div class=" col-md-offset-4 col-md-2">
-<select class="form-control" id="wosSelect">
+<select id="wosSelect">
 <option value="addInstruction">Add Instrction</option>
 <option value="addQuestion">Add Question</option>
 </select>
 </div>
-<div class="col-md-2"><button class="btn btn-primary btn-xs" id="addWOS">Add</button></div>
+<div class="col-md-2"><button class="btn btn-primary btn-sm" id="addWOS">Add</button></div>
 </div>
 </div>
 <ul id="examPattern" style="padding: 0%"></ul>

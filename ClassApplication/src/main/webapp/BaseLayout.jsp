@@ -329,7 +329,7 @@ function storeMenuSelected(){
 			</div>
 			<div id="footer" style="background-color: black;color: white;" align="center">
 				<tiles:insertAttribute name="footer" />		
-				© 2015 Corex. All rights reserved
+				© 2016 Corex. All rights reserved
 			</div>
 		</div>
 	</div>
