@@ -27,7 +27,7 @@
 			maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 		});
 		
-		$("#fname,#mname,#lname").on("keyup",function(){
+		$("#fname,#mname,#lname").on("blur",function(){
 			var string = $(this).val();	
 			$(this).val(string.charAt(0).toUpperCase() + string.slice(1));
 		});

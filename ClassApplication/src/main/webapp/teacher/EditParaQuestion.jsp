@@ -25,7 +25,8 @@
 	handler.success = function(data){loadParaquestion(data,queId)};
 	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 	$(document).ready(function(){
-		rest.get(getQuestionUrl,handler,true);	
+		rest.get(getQuestionUrl,handler,true);
+		$("#paragraph").addExpresssion();
 	});
 	
 </script>

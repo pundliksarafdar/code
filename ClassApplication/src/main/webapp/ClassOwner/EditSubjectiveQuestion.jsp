@@ -17,6 +17,9 @@
 	handler.success = loadSubjectiveQuestion;
 	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 	rest.get(getQuestionUrl,handler,true);
+	$(document).ready(function(){
+		$("#subjectiveQuestion").addExpresssion();
+	});
 </script>
 </head>
 <body>

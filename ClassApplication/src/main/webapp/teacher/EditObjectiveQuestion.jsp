@@ -24,6 +24,9 @@
 	handler.success = loadObjectiveQuestion;
 	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 	rest.get(getQuestionUrl,handler,true);
+	$(document).ready(function(){
+		$("#objectiveQuestion").addExpresssion();
+	});
 </script>
 
 </head>

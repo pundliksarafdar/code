@@ -203,7 +203,7 @@ $(document).ready(function(){
 			
 		}
 		
-		var langSelect = $("<select/>",{id:"mathSelect",class:""})
+		var langSelect = $("<select/>",{id:"mathSelect",class:"","data-toggle":"tooltip", title:"","data-original-title":"Change language of typing"})
 			.append("<option value="+google.elements.transliteration.LanguageCode.ENGLISH+">English</option>")
 			.append("<option value="+google.elements.transliteration.LanguageCode.MARATHI+">Marathi</option>")
 			.append("<option value="+google.elements.transliteration.LanguageCode.HINDI+">Hindi</option>")
@@ -212,6 +212,8 @@ $(document).ready(function(){
 			.append("<option value="+google.elements.transliteration.LanguageCode.TELAGU+">Telgu</option>")
 			.append("<option value="+google.elements.transliteration.LanguageCode.GUJARATI+">Gujarathi</option>");
 		//$(this).parent().prepend("<input type='button' value='Math'/>");
+		langSelect.tooltip();
+		
 		$(this).parent().prepend(langSelect);
 		
 		var transliterationControl;
