@@ -106,7 +106,10 @@ function loadFeeStructList(data){
 }
 function deleteFeeStructureRest(id){
 	var handler = {};
-	handler.success = function(e){console.log(e);loadFeeStructureTable();}
+	handler.success = function(e){
+		loadFeeStructureTable();
+		$.notify({message: 'Fee deleted successfully'},{type: 'success'});
+	}
 	handler.error = function(e){console.log(e)}
 	rest.deleteItem(delelteUrl+id,handler);
 }

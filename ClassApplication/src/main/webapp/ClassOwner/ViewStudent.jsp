@@ -77,6 +77,7 @@ var globalDivisionID = "";
 var graphData = [];
 var enabledEdit = false;
 	$(document).ready(function(){
+		$(".containerData").hide();
 		$(this).on("click",".btn-batch-edit",enableEdit)
 		.on("click",".btn-cancel",cancelEdit)
 		.on("click",".btn-save",saveStudent)
@@ -468,14 +469,16 @@ var enabledEdit = false;
 		rest.post(generateRollNoUrl+$("#division").val()+"/"+$("#batch").val(),handler);
 	}
 	function onBatchChange(){
+		$(".containerData").hide();
 		var batchID = $(".searchStudent").find("#batch").val();
 		if(batchID!=-1){
 			var batchData = $("#batch").data("batchData")[batchID];
 			if(!batchData.status || batchData.status.indexOf("rollGenerated=yes")==-1){
-				$('.generateRollNumber').removeClass("hide").text("Generate").attr("data-toggle","tooltip").attr("title","Roll number for this batch are not generated, please generate roll number");
+				$('.generateRollNumber').removeClass("hide").text("Generate roll number").attr("data-toggle","tooltip").attr("data-original-title","Roll number for this batch are not generated, please generate roll number");
 			}else{
-				$('.generateRollNumber').removeClass("hide").text("Re Generate").attr("data-toggle","tooltip").attr("title","Roll number for this batch are already generated, Click to regenerate, this may loose previously generated roll number");
+				$('.generateRollNumber').removeClass("hide").text("Re Generate roll number").attr("data-toggle","tooltip").attr("data-original-title","Roll number for this batch are already generated, Click to regenerate, this may loose previously generated roll number");
 			}
+			$('.generateRollNumber').tooltip();
 		}else{
 			$('.generateRollNumber').addClass('hide');
 		}
@@ -677,8 +680,10 @@ var enabledEdit = false;
 	}
 	
 	function successCallbackclass(data,type){
+		$(".containerData").show();
 		data = JSON.parse(data);
 		var status = data.status;
+		$(".generateRollNumber").hide();
 		if(status != "error"){
 		if(type == "name"){
 			dataTable = $('#classTable').DataTable({
@@ -750,6 +755,7 @@ var enabledEdit = false;
 				});
 			}).draw();	
 		}else{
+			if(data.studentList.length>0){			$(".generateRollNumber").show();}
 		dataTable = $('#classTable').DataTable({
 			language: {
 			        "emptyTable":     "Students not available"
@@ -1047,7 +1053,7 @@ var enabledEdit = false;
 </div>
 <div class="col-md-2">
 <button class="btn btn-primary searchStudentByBatch">Search</button>
-<button class="btn btn-primary generateRollNumber hide">Generate Roll No</button>
+
 </div>
 </div>
 <div class="row">
@@ -1084,7 +1090,9 @@ var enabledEdit = false;
 </div>
 </div>
 </div>
-<div class="container" style="padding-top: 1%">
+<div class="container containerData" style="padding-top: 1%">
+<button class="btn btn-primary generateRollNumber hide">Generate Roll No</button>
+<br/><br/>
 <table class="table table-striped classTable" id="classTable" >
 	<thead>
 		<th>Roll no</th><th>Student name</th><th>Division</th><th>Batch</th><th></th>

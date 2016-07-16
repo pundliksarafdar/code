@@ -65,6 +65,11 @@
 	<div class="page-header">
 		<div id="notes">
 		<table id="notesTable" class="table"></table>
+		
+		</div>
+		<div id="subjects" style="display:none">
+		<input type="button" class="btn btn-xs btn-success" value="Back" id="back"/>
+		<table id="subjectsTable" class="table"></table>
 		</div>
 	</div>
 	</div>

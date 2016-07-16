@@ -35,6 +35,7 @@ import com.classapp.db.student.StudentMarks;
 import com.classapp.logger.AppLogger;
 import com.classapp.persistence.Constants;
 import com.datalayer.exam.ParagraphQuestion;
+import com.google.gson.JsonObject;
 import com.service.beans.EditQuestionPaper;
 import com.service.beans.GenerateQuestionPaperResponse;
 import com.service.beans.NewQuestionRequest;
@@ -863,7 +864,7 @@ public class QuestionPaperPatternTransaction {
 	public List<QuestionPaperFileElement> makeTree(List<QuestionPaperFileElement> nodes){
 		List<QuestionPaperFileElement> rootQuestionPaperFileElements = new ArrayList<QuestionPaperFileElement>();
 		for(QuestionPaperFileElement node:nodes){
-			if(node.getParent_id() == null){
+			if(node.getParent_id() == null || node.getParent_id().equals("undefined")){
 				rootQuestionPaperFileElements.add(node);
 			}
 		}
@@ -898,8 +899,10 @@ public class QuestionPaperPatternTransaction {
 		return childQuestionPaperFileElements;
 	}
 	
-	public int evaluteExam(Map<String,List<String>> examMap,int division,int questionPaperId,int regId){
+	public HashMap<String, Integer> evaluteExam(Map<String,List<String>> examMap,int division,int questionPaperId,int regId){
+		
 		int marks = 0;
+		int totalMarks = 0;
 		OnlineExamPaper onlineExamPaper = this.getOnlineQuestionPaper(division,questionPaperId,regId);
 		List<OnlineExamPaperElement> examPaperElements = onlineExamPaper.getOnlineExamPaperElementList();
 		for(OnlineExamPaperElement onlineExamPaperElement:examPaperElements){
@@ -908,6 +911,7 @@ public class QuestionPaperPatternTransaction {
 			Questionbank questionBank = onlineExamPaperElement.getQuestionbank();
 			if(null!=list && null!=questionBank){
 				for(String l:list){
+					totalMarks = totalMarks +questionBank.getMarks();
 					if(questionBank.getAns_id().contains(l)){
 						System.out.println(questionBank.getQue_text()+"::::::Answer is correct");
 						marks = marks + questionBank.getMarks();
@@ -918,7 +922,10 @@ public class QuestionPaperPatternTransaction {
 			}
 			
 		}
-		return marks;
+		HashMap<String, Integer>marksObj = new HashMap<String, Integer>();
+		marksObj.put("marks", marks);
+		marksObj.put("totalmarks", totalMarks);
+		return marksObj;
 	}
 	
 	public List<String> getPrimaryImage(int regId,int questionId,String questionType){

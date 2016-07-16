@@ -81,11 +81,14 @@ function saveFeeStructureInDbSuccess(e){
 	if(e==false){
 		if($("#feeStructName").closest("form").find(".error").length == 0){
 			$("#feeStructName").closest("form").append("<div class='error'>Fee Structure with same name already exists.</div>");
+			$.notify({message: 'Fee Structure with same name already exists.'},{type: 'danger'});
 		}else{
 			$("#feeStructName").closest("form").find(".error").html("Fee Structure with same name already exists.");
+			$.notify({message: 'Fee Structure with same name already exists.'},{type: 'danger'});
 		}
 	}else{
 		$("#feeStructName").closest("div").find(".error").remove();
+		$.notify({message: 'Fee Structure saved.'},{type: 'danger'});
 	}
 }
 

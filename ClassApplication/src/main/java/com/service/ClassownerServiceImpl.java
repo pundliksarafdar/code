@@ -897,7 +897,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		UserBean userBean = getUserBean();
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
 		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
-		int marks = patternTransaction.evaluteExam(evaluateExamBean.getExamMap(),evaluateExamBean.getDivision(),evaluateExamBean.getQuestionPaperId(),evaluateExamBean.getInstId());
+		HashMap<String, Integer> marksObj = patternTransaction.evaluteExam(evaluateExamBean.getExamMap(),evaluateExamBean.getDivision(),evaluateExamBean.getQuestionPaperId(),evaluateExamBean.getInstId());
 		StudentMarksTransaction studentMarksTransaction = new StudentMarksTransaction();
 		
 		StudentMarks studentMarks = new StudentMarks();
@@ -907,10 +907,10 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		studentMarks.setDiv_id(evaluateExamBean.getDivision());
 		studentMarks.setExam_id(evaluateExamBean.getExamId());
 		studentMarks.setInst_id(evaluateExamBean.getInstId());
-		studentMarks.setMarks(marks);
+		studentMarks.setMarks(marksObj.get("marks"));
 		studentMarks.setSub_id(evaluateExamBean.getSubId());
 		
 		studentMarksTransaction.saveStudentMarks(studentMarks);
-		return Response.status(Status.OK).entity(marks).build();
+		return Response.status(Status.OK).entity(marksObj).build();
 	}
 }

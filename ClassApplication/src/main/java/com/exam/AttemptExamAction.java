@@ -57,7 +57,7 @@ public class AttemptExamAction extends BaseAction {
 		
 		ExamTransaction examTransaction = new ExamTransaction();
 		isSolved = examTransaction.isExamSolved(userBean.getRegId(), inst_id, subject, division, batch, exam);
-		if(isSolved){
+		if(isSolved && userBean.getRole()==3){
 			return "solved";
 		}
 	return SUCCESS;

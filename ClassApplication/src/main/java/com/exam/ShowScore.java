@@ -16,7 +16,7 @@ public class ShowScore extends BaseAction{
 	@Override
 	public String performBaseAction(UserBean userBean, HttpServletRequest request, HttpServletResponse response,
 			Map<String, Object> session) {
-			if(marks>passingMarks){
+			if(marks>=passingMarks){
 				message = "Passed";
 			}else{
 				message = "Failed";

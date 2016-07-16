@@ -7,7 +7,9 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 </head>
 <body>
-	Score :- <c:out value="${marks}"></c:out>/<c:out value="${totalMarks}"></c:out>
-	<c:out value="${message}"></c:out>
+	<div class="alert alert-warning">
+		Score :- <c:out value="${marks}"></c:out>/<c:out value="${totalMarks}"></c:out>
+	</div>
+	
 </body>
 </html>

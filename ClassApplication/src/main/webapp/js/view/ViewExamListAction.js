@@ -6,7 +6,12 @@ var SUBJECT = "#subjectSelect";
 var NOTES_DATE = "#notesDate";
 var NOTES_CONTAINER = "#notesContainer";
 var NOTES_MESSAGE_CONTAINER = "#notesShowMessageContainer";
+
+var EXAMS_SECTION = "#notes";
 var NOTES_TABLE = "#notesTable";
+var SUB_SECTION="#subjects";
+var SUB_TABLE="#subjectsTable";
+var BACK = "#back";
 
 var getClassUrl = "rest/student/getClasses";
 var getDivisionUrl = "rest/student/getDivision/";
@@ -22,6 +27,7 @@ $(document).ready(function(){
 		.on("change",DIVISION,loadBatch)
 		.on("change",BATCH,loadSubject)
 		.on("click",VIEW_BTN,getExamList)
+		.on("click",BACK,back)
 		.on("change",'select',function(){
 			$(NOTES_CONTAINER).hide();
 			$(NOTES_MESSAGE_CONTAINER).show()
@@ -155,7 +161,9 @@ function showSubjectExam(examId){
 }
 
 function showExamSubjectList(data,examId){
-	var dataTable = $(NOTES_TABLE).DataTable({
+	$(EXAMS_SECTION).hide();
+	$(SUB_SECTION).show();
+	var dataTable = $(SUB_TABLE).DataTable({
 		bDestroy:true,
 		data: data,
 		lengthChange: false,
@@ -182,4 +190,9 @@ function showExamSubjectList(data,examId){
 		}
 	});
 
+}
+
+function back(){
+	$(SUB_SECTION).hide();
+	$(EXAMS_SECTION).show();
 }

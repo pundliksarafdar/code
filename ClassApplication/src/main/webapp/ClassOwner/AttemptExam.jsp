@@ -117,8 +117,8 @@ function SubmitExam(){
 	
 	var handlers = {};
 	handlers.success = function(e){
-		$("#showScoreForm").find("[name='passingMarks']").val(100);
-		$("#showScoreForm").find("[name='marks']").val(e);
+		$("#showScoreForm").find("[name='totalMarks']").val(e.totalMarks);
+		$("#showScoreForm").find("[name='marks']").val(e.marks);
 		$("#showScoreForm").submit();
 	}
 	handlers.error = function(e){console.log("Error",e)}
@@ -379,6 +379,7 @@ function SubmitExam(){
 	<form id="showScoreForm" method="post" action="showScore">
 		<input type="hidden" name="passingMarks"/>
 		<input type="hidden" name="marks"/>
+		<input type="hidden" name="totalMarks"/>
 	</form>
 </body>
 </html>
