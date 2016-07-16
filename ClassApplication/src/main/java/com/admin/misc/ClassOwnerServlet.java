@@ -31,7 +31,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.util.PDFImageWriter;
+import org.apache.pdfbox.pdmodel.PDPageTree;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
 import com.classapp.db.Feedbacks.Feedback;
 import com.classapp.db.Notes.Notes;
@@ -3190,12 +3192,11 @@ public class ClassOwnerServlet extends HttpServlet{
 		File file = new File(path);
 		String base64="";
         try {
-				PDDocument document = PDDocument.loadNonSeq(new File(path), null);
-				List<PDPage> pdPages = document.getDocumentCatalog().getAllPages();
-				int page = 0;
-				PDFImageWriter imageWriter=new PDFImageWriter();
-					ByteArrayOutputStream stream=new ByteArrayOutputStream();
-				    BufferedImage bim = pdPages.get(pageno).convertToImage(BufferedImage.TYPE_INT_RGB, 100);
+        	PDDocument document = PDDocument.load(new File(path));
+			PDPageTree pdPages =  document.getPages();
+			PDFRenderer pdfRenderer = new PDFRenderer(document);
+				ByteArrayOutputStream stream=new ByteArrayOutputStream();
+					BufferedImage bim = pdfRenderer.renderImageWithDPI(pageno, 100, ImageType.RGB);
 				  req.getSession().setAttribute("notesimage_"+pageno, bim);
 				     ImageIO.write(bim, "png", stream);
 				     stream.flush();

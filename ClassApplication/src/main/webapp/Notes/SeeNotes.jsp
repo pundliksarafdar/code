@@ -31,7 +31,8 @@ var batchDataArray = [];
 		            '<td><input type="text" value='+d.name+' id="newnotesname" class="form-control"><span id="notesnameerror" class="error"></span></td>';
 		        htmlString = htmlString + '<td><select multiple class="form-control" id="batches"></select><br><span id="batcherror" class="error"></span></td>';
 		        htmlString = htmlString + ''+
-		            '<td><input type="button" class="btn btn-success save" value="save" id='+d.notesid+'></td>'+
+		            '<td><input type="button" class="btn btn-success btn-sm save" value="save" id='+d.notesid+'></td>'+
+		            '<td><input type="button" class="btn btn-danger btn-sm cancel" value="cancel" id='+d.notesid+'></td>'+
 		        '</tr>'+
 		    '</table>';
 		    return htmlString;
@@ -287,6 +288,10 @@ $(document).ready(function(){
 		}
 	});
 	
+	$("#notestable").on("click",".cancel",function(){
+		$($($($(this).closest("table")).closest("tr")).prev("tr")).find(".edit").click();
+	});
+	
 	$("#notestable").on("click",".save",function(){
 		var notesid = $(this).prop("id");
 		/* var subject=$("#subject").val();
@@ -328,6 +333,11 @@ $(document).ready(function(){
 				}else{
 					$.notify({message: 'Notes updated successfully'},{type: 'success'});
 					$($($(that.closest("table")).closest("tr")).prev("tr")).find(".defaultName").html(notesname);
+					 var tr = $($($(that).closest("table")).closest("tr")).prev("tr");
+					 var table = $('#notestable').DataTable();
+				      var row = table.row( tr );
+				      row.data().batch = batchids.join(",");
+					$($($($(that).closest("table")).closest("tr")).prev("tr")).find(".edit").click();
 				}
 			};
 			handlers.error = function(){};

@@ -1131,7 +1131,7 @@ function ExamPatternObject(){
 	<div id="editPatternDiv" style="display: none;" class="container">
 		<div class="row">
 			<div class="col-md-1"><button class="cancleView btn btn-primary btn-xs" >Back To List</button></div>
-			<div class="col-md-1"><button class="cancleEdit btn btn-primary btn-xs" style="display: none;">cancle Edit</button></div>
+			<div class="col-md-1"><button class="cancleEdit btn btn-primary btn-xs" style="display: none;">cancel Edit</button></div>
 			<div class="col-md-10"></div>
 		</div>
 		<div class="row">

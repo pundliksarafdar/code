@@ -486,6 +486,7 @@ var enabledEdit = false;
 		$(".studentDetails").find("#divisionID").val(globalDivisionID);
 		$(".studentDetails").find("#studentID").val($(this).closest("tr").find("#studentId").val());
 		$(".studentDetails").find("#currentPage").val($(".paginate_button current").text());
+		 $("#generalTab").find(".crendentialDetails").empty();
 		var formdata=$(".studentDetails").serialize();
 		 studentId = $(this).closest("tr").find("#studentId").val();
 		/* $.ajax({
@@ -539,13 +540,13 @@ var enabledEdit = false;
 		   $("#studentDetailsParentPhone").html(data.student.parentPhone);
 		   $("#studentDetailsParentEmail").html(data.student.parentEmail);
 		   if(data.studentUserBean.status == "M"){
-			 $("#generalTab").append("<div class='row'><label>Credential Information</label></div>"+
+			 $("#generalTab").append("<div class='crendentialDetails'><div class='row'><label>Credential Information</label></div>"+
 					 	"<div class='row'><div class='col-md-2'>Username</div>"+
 				    	"<div class='col-md-1'>:</div>"+
 				    	"<div class='col-md-3'>"+data.studentUserBean.loginName+"</div>"+
 				    	"<div class='col-md-2'>Password</div>"+
 				    	"<div class='col-md-1'>:</div>"+
-				    	"<div class='col-md-3'>"+data.studentUserBean.loginPass+"</div>");  
+				    	"<div class='col-md-3'>"+data.studentUserBean.loginPass+"</div></div>");  
 		   }
 		   createProgressCard(data.examWiseStudentDetails,data.batches);
 		   createAttenanceTab(data.attendanceData);

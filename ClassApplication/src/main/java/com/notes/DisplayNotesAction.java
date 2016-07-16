@@ -30,8 +30,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.fontbox.cff.DataOutput;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.util.ImageIOUtil;
-import org.apache.pdfbox.util.PDFImageWriter;
+import org.apache.pdfbox.pdmodel.PDPageTree;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.struts2.ServletActionContext;
 
 import com.classapp.db.Notes.Notes;
@@ -76,13 +77,13 @@ public class DisplayNotesAction extends BaseAction{
 		String path=userStatic.getNotesPath()+File.separator+subject+File.separator+division+File.separator+filename;
 		File file = new File(path);
         try {
-				PDDocument document = PDDocument.loadNonSeq(new File(path), null);
-				List<PDPage> pdPages = document.getDocumentCatalog().getAllPages();
-				totalpages=pdPages.size();
+				PDDocument document = PDDocument.load(new File(path));
+				PDPageTree pdPages =  document.getPages();
+				PDFRenderer pdfRenderer = new PDFRenderer(document);
+				totalpages = pdPages.getCount();
 				int page = 0;
-				PDFImageWriter imageWriter=new PDFImageWriter();
 					ByteArrayOutputStream stream=new ByteArrayOutputStream();
-				    BufferedImage bim = pdPages.get(0).convertToImage(BufferedImage.TYPE_INT_RGB, 100);
+					BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 100, ImageType.RGB);
 				    request.getSession().setAttribute("notesimage_0", bim);
 				     ImageIO.write(bim, "png", stream);
 				     stream.flush();

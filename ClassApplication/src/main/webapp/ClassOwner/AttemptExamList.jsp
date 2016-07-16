@@ -250,12 +250,20 @@ function getBatchesOfDivision(){
 </div>
 </div>
 <div style="margin-top: 2%">
-<div class="container" id="examDiv">
+<div class="container" id="examDiv" style="display: none;">
+<div class="row" style="margin-top: 1%" align="center">
+<h4>Exam List</h4>
+</div>
+<div class="row" style="width: 100%">
 <table id="examTable" class="table" style="width: 100%"></table>
+</div>
 </div>
 <div class="container" id="examSubjectDiv" style="display: none;">
 <div class="row">
 <button class="btn btn-primary btn-sm back">Back</button>
+</div>
+<div class="row" align="center">
+<h4 style="margin-top: 1%">Subject List</h4>
 </div>
 <div class="row" style="width: 100%">
 <table id="examSubjectTable" class="table" style="width: 100%"></table>
