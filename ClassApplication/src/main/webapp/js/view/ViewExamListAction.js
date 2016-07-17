@@ -53,7 +53,7 @@ var loadSelect = function(select,classData){
 		var optionStr = "<option value='-1'>Select Batch</option>";
 		$(select).empty();
 		for(var i=0;i<batchData.length;i++){
-				optionStr = optionStr + "<option value='"+batchData[i].batch_id+"'>"+batchData[i].batch_name+"</option>";
+				optionStr = optionStr + "<option value='"+batchData[i].batch_id+"' divId='"+batchData[i].div_id+"'>"+batchData[i].batch_name+"</option>";
 		}
 		$(select).append(optionStr);
 		$(BATCH).select2().val("-1").change();
@@ -179,7 +179,7 @@ function showExamSubjectList(data,examId){
 				window.open("shownotes?"+"division="+data.divid+"&subject="+data.subid+"&institute="+data.classid+"&notesid="+data.notesid,"","width=500, height=500");
 				*/
 				var classId = $(CLASS).val();
-				var divId = $(DIVISION).val();
+				var divId = $(BATCH).find(":selected").attr("divid");
 				var batchId = $(BATCH).val();
 				
 				var questionPaperId = $(this).attr("quePaperId");

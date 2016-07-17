@@ -51,7 +51,9 @@ public class HeaderTransaction {
 		String header = "";
 		File file = new File(headerPath);
 		try {
-		header =	FileUtils.readFileToString(file);
+			if(file.exists()){
+				header = FileUtils.readFileToString(file);
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -895,7 +895,14 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response evaluateExam(EvaluateExamBean evaluateExamBean){
 		UserBean userBean = getUserBean();
-		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		QuestionPaperPatternTransaction patternTransaction = null;
+		if(userBean.getRole()==1){
+			patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId(),userBean.getUserStatic().getExamPath());
+		}else{
+			String examStoragePath = com.config.Constants.STORAGE_PATH+File.separator+evaluateExamBean.getInstId();
+			userBean.getUserStatic().setStorageSpace(examStoragePath);
+			patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),evaluateExamBean.getInstId(),userBean.getUserStatic().getExamPath());
+		}
 		patternTransaction.setQuestionPaperStorageURL(userBean.getUserStatic().getQuestionPaperPath());
 		HashMap<String, Integer> marksObj = patternTransaction.evaluteExam(evaluateExamBean.getExamMap(),evaluateExamBean.getDivision(),evaluateExamBean.getQuestionPaperId(),evaluateExamBean.getInstId());
 		StudentMarksTransaction studentMarksTransaction = new StudentMarksTransaction();
