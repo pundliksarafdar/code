@@ -67,7 +67,7 @@
 		      <span class="input-group-addon">
 		        <input type="checkbox">
 		      </span>
-		      <input type="text" class="form-control" id="optionText">
+		      <input type="text" class="form-control" id="">
 		      <span class="input-group-addon">
 		        <span class="fileinput-button">
 					<i class="glyphicon glyphicon-folder-open"></i>

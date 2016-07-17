@@ -114,7 +114,7 @@
 		        <input type="checkbox">
 		        <input type="hidden" id="previousId">
 		      </span>
-		      <input type="text" class="form-control">
+		      <input type="text" class="form-control" >
 		      <span class="input-group-addon">
 		        <span class="fileinput-button">
 					<i class="glyphicon glyphicon-folder-open"></i>

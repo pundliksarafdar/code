@@ -37,6 +37,7 @@
 	
 	function addParaQuestion(){
 		var paraTmpl = $(PARA_QUESTION_TMPL).clone();
+		paraTmpl.find('[type="text"]').addExpresssion(true);
 		$(PARA_QUESTION).append(paraTmpl);
 	}
 	
@@ -111,7 +112,7 @@
 			});
 			console.log(paraQuestionBean);
 			var handler={};
-			handler.success = function(e){}
+			handler.success = function(e){$.notify({message: "Question saveed successfuly"},{type: 'success'});}
 			handler.error = function(e){}
 			
 			var question = $("#paraQuestion").find(".paraQuestionTmpl");

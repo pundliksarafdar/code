@@ -42,6 +42,7 @@ function cancelEdit(){
 
 function addMoreParaQuestion(){
 	var paraTmpl = $(PARA_QUESTION_TMPL).clone();
+	paraTmpl.find('[type="text"]').addExpresssion(true);
 	$(PARA_QUESTION).append(paraTmpl);
 }
 
@@ -75,7 +76,7 @@ function getImageId(url){
 function addParaQuestion(paraQuestion,queId){
 	for(var index=0;index<paraQuestion.length;index++){
 		var paraTmpl = $(PARA_QUESTION_TMPL).clone();
-		paraTmpl.find("#paraQuestion").val(paraQuestion[index].questionText);
+		paraTmpl.find("[type='text']").val(paraQuestion[index].questionText);
 		paraTmpl.find("#questionMarks").val(paraQuestion[index].questionMarks);
 		var images = "";
 		for(var indexInner=0;indexInner < paraQuestion[index].queImage.length;indexInner++){
@@ -88,7 +89,9 @@ function addParaQuestion(paraQuestion,queId){
 			imageColElement = imageColElement.replace('{{questionImage}}',imageId);
 			images += imageColElement;
 		}	
+		
 		paraTmpl.find("#paraQuestionImage").append(images);
+		paraTmpl.find('[type="text"]').addExpresssion(true);
 		$(PARA_QUESTION).append(paraTmpl);	
 	}	
 }

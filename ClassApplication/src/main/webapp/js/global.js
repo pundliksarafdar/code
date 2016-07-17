@@ -216,9 +216,10 @@ $(document).ready(function(){
 		
 		$(this).parent().prepend(langSelect);
 		
-		var transliterationControl;
+		
 		
 		langSelect.on("change",function(){
+			var transliterationControl;
 			var lang = $(this).val();
 			if(transliterationControl){
 				if(lang==google.elements.transliteration.LanguageCode.ENGLISH){
@@ -230,6 +231,9 @@ $(document).ready(function(){
 				
 			}else{
 				if(lang!=google.elements.transliteration.LanguageCode.ENGLISH){
+					if(that.attr("id")==undefined || that.attr("id")==""){
+						that.attr("id",parseInt(Math.random()*1000));
+					}
 				transliterationControl = onLoad(that.attr("id"),lang);
 				}
 			}

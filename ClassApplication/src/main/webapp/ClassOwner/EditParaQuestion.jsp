@@ -102,7 +102,7 @@
 <div id="parahiddenQuestion" class="hide">
 	<div class="paraQuestionTmpl">
 			<div class="input-group">
-		      <input type="text" id="paraQuestion" class="form-control">
+		      <input type="text" id="" class="form-control">
 		      <span class="input-group-addon">
 		        <span class="fileinput-button">
 					<i class="glyphicon glyphicon-folder-open"></i>

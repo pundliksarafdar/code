@@ -354,7 +354,7 @@ function searchQuestion(pageNo){
 			 		for(var i=0;i<data.paragraphQuestion.length;i++){
 			 			if(data.paragraphQuestion[i] && data.paragraphQuestion[i]!=null){
 				 		$("#questionListTable tbody").append("<tr><td>"+(i+1)+"</td><td>"+data.paragraphQuestion[i].paragraph+"</td><td>"+data.paragraphQuestion[i].marks+"</td><td><a class='btn btn-primary editQuestion'"+
-				 				"id='"+data.questionList[i].que_id+"'>Edit</a></td><td><a class='btn btn-danger deleteQuestion' id='"+data.paragraphQuestion[i].questionnumber+"'>Delete</a></td>");
+				 				"id='"+data.questionList[i].que_id+"'>Edit</a></td><td><a class='btn btn-danger deleteQuestion' id='"+data.questionList[i].que_id+"'>Delete</a></td>");
 			 			}
 				 	}
 			 	}

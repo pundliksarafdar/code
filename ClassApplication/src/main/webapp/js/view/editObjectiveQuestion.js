@@ -119,6 +119,7 @@ var SAVE_OBJECTIVE_EXAM = "#saveObjectiveExam";
 	
 	function addOption(){
 		var optionComponent = $(OPTION_COMPONENT).clone();
+		optionComponent.find('[type="text"]').addExpresssion(true);
 		$(OPTION_ROW).append(optionComponent);
 	}
 	
@@ -195,6 +196,7 @@ function addOptionValue(text,selected,images,currentIndex,checked){
 	}
 	
 	$(optionComponent).find("#objectiveImageRow").append(optionImages);
+	optionComponent.find('[type="text"]').addExpresssion(true);
 	$(OPTION_ROW).append(optionComponent);
 	
 }

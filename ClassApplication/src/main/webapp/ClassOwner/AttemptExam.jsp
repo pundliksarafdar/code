@@ -45,7 +45,10 @@ function showOr(){
 	var OredIdElm = {};
 	$.each(alternateIds,function(){
 		var itemsid = $(this).attr("alternameId");
-		OredIdElm[itemsid] = $("[alternameId='"+itemsid+"']");
+		if(itemsid != 0){
+			OredIdElm[itemsid] = $("[alternameId='"+itemsid+"']");	
+		}
+		
 	});
 	
 	
