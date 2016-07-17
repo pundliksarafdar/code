@@ -120,7 +120,7 @@ function SubmitExam(){
 	
 	var handlers = {};
 	handlers.success = function(e){
-		$("#showScoreForm").find("[name='totalMarks']").val(e.totalMarks);
+		$("#showScoreForm").find("[name='totalMarks']").val(e.totalmarks);
 		$("#showScoreForm").find("[name='marks']").val(e.marks);
 		$("#showScoreForm").submit();
 	}
