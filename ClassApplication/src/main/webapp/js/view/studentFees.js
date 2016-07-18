@@ -189,13 +189,13 @@ function loadStudentTableSuccess(data){
 				title: "Paid fee",data:"fees_paid",render:function(feePaid){return "<div>"+feePaid+"</div>"}
 			},
 			{
-				title: "Pay",bSortable:false,data:null,render:function(){return "<input type='text' class='form-control payFeesInput'/>"}
+				title: "Paying fee",bSortable:false,data:null,render:function(){return "<input type='text' class='form-control payFeesInput'/>"}
 			},
 			{
 				title: "Remaining fee",data:"fees_due",render:function(feeDue){return "<div class='remaingFee' style='text-align:center;'>"+feeDue+" &#x20b9;</div>"}
 			},
 			{
-				title: "",bSortable:false,data:null,render:function(){return "<input type='button' class='btn btn-default payFees' value='Pay'/>"}
+				title: "",bSortable:false,data:null,render:function(){return "<input type='button' class='btn btn-default payFees' value='Save'/>"}
 			},
 			{
 				title: "",bSortable:false,data:null,render:function(){return "<input type='button' class='btn btn-default printReceipt' value='Print'/>"}
