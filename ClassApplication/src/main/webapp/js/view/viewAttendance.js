@@ -167,6 +167,14 @@ function loadStudentTableError(){
 	
 }
 
+Date.prototype.addDays = function(days)
+{
+    var dat = new Date(this.valueOf());
+    dat.setDate(dat.getDate() + days);
+    return dat;
+}
+
+
 function getWeeklySchedule(){
 	$(".validation-message").html("");
 	var validationFlag = false;
@@ -190,11 +198,11 @@ function getWeeklySchedule(){
 	handler.success = function(e){console.log("Success",e);
 	var dates = new Date(date[2],parseInt(date[1])-1,date[0]), y = dates.getFullYear(), m = dates.getMonth();
 	//var curr = new Date; // get current date
-	var first = dates.getDate() - dates.getDay(); // First day is the day of the month - the day of the week
+	var first =  dates.getDay(); // First day is the day of the month - the day of the week
 	var last = first + 6; // last day is the first day + 6
 	var weekDays = []
 	for (i=0;i<7;i++){
-		var firstday = new Date(dates.setDate(first+i));
+		var firstday = dates.addDays(i-first);
 		console.log(firstday);
 		weekDays.push(firstday);
 	}
@@ -381,10 +389,11 @@ function createWeeklyAttendanceScheduleTable(data,weekDays){
 function createAttendanceScheduleTable(data){
 	//data = JSON.parse(data);
 	var i=0;
-	var dataTable = $('#attendanceScheduleTable');
-	$('#attendanceScheduleTable').empty();
+	$("#dailyAttendance").empty();
+	/*var dataTable = $('#attendanceScheduleTable');
+	$('#attendanceScheduleTable').empty();*/
 	var htmlString = "";
-	htmlString = htmlString + "<thead><tr><th>Roll No</th><th>Student Name</th>";
+	htmlString = htmlString + "<table class='table-bordered' style='width: 100%'><thead><tr><th>Roll No</th><th>Student Name</th>";
 	if(data.length>0){
 	for(i=0;i<data[0].dailyTimeTableList.length;i++){
 			htmlString = htmlString + "<th>"+data[0].dailyTimeTableList[i].start_time+"-"+data[0].dailyTimeTableList[i].end_time+"</th>";
@@ -410,9 +419,9 @@ function createAttendanceScheduleTable(data){
 		htmlString = htmlString + "</tr>";
 	}
 	}
-	htmlString = htmlString + "</tbody>";
-	$('#attendanceScheduleTable').append(htmlString);
-	$('#attendanceScheduleTable').DataTable();
+	htmlString = htmlString + "</tbody></table>";
+	$('#dailyAttendance').append(htmlString);
+	$('#dailyAttendance').find("table").DataTable();
 	
 }
 function getStudents(){
