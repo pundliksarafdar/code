@@ -69,7 +69,8 @@ $(document).ready(function(){
 	 });
 	 $('#attendanceScheduleTable').on("click",".markAttendance",function(){
 		 subject_id = $(this).closest("div").find("#sub_id").val();
-		 getStudents();
+		 var schedule_id = $(this).closest("div").find("#schedule_id").val();
+		 getStudents(schedule_id);
 	 });
 	 
 	 $(".backtoSchedule").click(function(){
@@ -252,7 +253,7 @@ function createAttendanceScheduleTable(data){
 	});
 	
 }
-function getStudents(){
+function getStudents(schedule_id){
 	var inst_id = $("#instituteSelect").val();
 	var division = $("#divisionSelect").val();
 	var batch = $("#batchSelect").val();
@@ -264,7 +265,7 @@ function getStudents(){
 	$("#attendanceScheduleDiv").hide();
 	}
 	handler.error = function(e){console.log("Error",e)}
-	rest.get("rest/teacher/getStudentsForAttendanceUpdate/"+inst_id+"/"+division+"/"+batch+"/"+subject_id+"/"+new Date(date[2],parseInt(date[1])-1,date[0]).getTime(),handler);
+	rest.get("rest/teacher/getStudentsForAttendanceUpdate/"+inst_id+"/"+division+"/"+batch+"/"+subject_id+"/"+schedule_id+"/"+new Date(date[2],parseInt(date[1])-1,date[0]).getTime(),handler);
 }
 
 function createStudentAttendanceTable(data){

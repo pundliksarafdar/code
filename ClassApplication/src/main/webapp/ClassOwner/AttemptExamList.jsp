@@ -51,10 +51,12 @@ $(document).ready(function(){
 	
 	$("#examTable").on("click",".attemptExamList",function(){
 		exam = $(this).prop("id");
+		var defaultExamName = $($(this).closest("tr")).find(".defaultExamName").html();
 		var handlers = {};
 		handlers.success = function(e){console.log("Success",e);
 		$("#examDiv").hide();
 		$("#examSubjectDiv").show();
+		$("#examSubjectList").html(defaultExamName);
 		examSubjectTable(e);
 		}
 		handlers.error = function(e){console.log("Error",e)}
@@ -151,7 +153,7 @@ function createExamTable(data){
 		columns: [
 			{title:"#",data:null},
 			{ title: "Exam",data:null,render:function(data,event,row){
-				var div = '<div class="default defaultBatchName">'+row.exam_name+'</div>';
+				var div = '<div class="default defaultExamName">'+row.exam_name+'</div>';
 				return div;
 			},sWidth:"40%"},
 			{ title: "Choose",data:null,render:function(data,event,row){
@@ -263,7 +265,7 @@ function getBatchesOfDivision(){
 <button class="btn btn-primary btn-sm back">Back</button>
 </div>
 <div class="row" align="center">
-<h4 style="margin-top: 1%">Subject List</h4>
+<h4 id="examSubjectList" style="margin-top: 1%"></h4>
 </div>
 <div class="row" style="width: 100%">
 <table id="examSubjectTable" class="table" style="width: 100%"></table>

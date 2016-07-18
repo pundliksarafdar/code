@@ -131,11 +131,11 @@ public class AttendanceTransaction {
 		return listForAttendanceList;
 	}
 	
-	public List<StudentListForAttendance> getStudentForAttendanceUpdate(String batchid, int inst_id, int div_id,int sub_id,
+	public List<StudentListForAttendance> getStudentForAttendanceUpdate(String batchid, int inst_id, int div_id,int sub_id,int schedule_id,
 																		Date date) {
 		StudentDB db = new StudentDB();
 		List<AttendanceScheduleServiceBean> attendanceScheduleServiceBeanList = new ArrayList<AttendanceScheduleServiceBean>(); 
-		List list =  db.getStudentrelatedtoBatchForAttendanceUpdate(batchid, inst_id, div_id, sub_id, date);
+		List list =  db.getStudentrelatedtoBatchForAttendanceUpdate(batchid, inst_id, div_id, sub_id,schedule_id, date);
 		List<StudentListForAttendance> listForAttendanceList = new ArrayList<StudentListForAttendance>();
 		if(list != null){
 			int i = 1;

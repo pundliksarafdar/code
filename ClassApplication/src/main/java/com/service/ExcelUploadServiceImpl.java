@@ -179,6 +179,7 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 			        for (Entry<Integer, Boolean> entry : entrySet) {
 			            if (entry.getValue()) {
 			                response = "Student with student ID=" + entry.getKey() + " is added successfully";
+			                studentIds.add(entry.getKey());
 			                ++successCount;
 			            } else {
 			                response = "Unable to add student with student ID=" + entry.getKey();

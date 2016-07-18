@@ -448,7 +448,7 @@ public class AttendanceDB {
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			String queryString="select count( distinct schedule_id,att_date),batch_id,sub_id,MONTH(att_date),YEAR(att_date) from Attendance "
+			String queryString="select count( distinct schedule_id,att_date),batch_id,sub_id,MONTH(att_date),YEAR(att_date) from attendance "
 					+ "where inst_id = :inst_id and (batch_id,sub_id) in :list and div_id = :div_id and att_date>= :start_date "
 					+ "and att_date <= :end_date group by YEAR(att_date), MONTH(att_date), sub_id  order by YEAR(att_date), MONTH(att_date),sub_id";
 			queryString = queryString.replace(":list", list.toString());
@@ -509,7 +509,7 @@ public class AttendanceDB {
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			String queryString="select count(distinct schedule_id,att_date),batch_id,sub_id,MONTH(att_date),YEAR(att_date) from Attendance "
+			String queryString="select count(distinct schedule_id,att_date),batch_id,sub_id,MONTH(att_date),YEAR(att_date) from attendance "
 					+ "where inst_id = :inst_id and (batch_id,sub_id) in :list and div_id = :div_id and att_date>= :start_date "
 					+ "and att_date <= :end_date and student_id = :student_id and presentee = 'P'   group by YEAR(att_date), MONTH(att_date), sub_id  "
 					+ "order by YEAR(att_date), MONTH(att_date),sub_id";

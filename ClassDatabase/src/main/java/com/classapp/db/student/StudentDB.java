@@ -804,7 +804,7 @@ public class StudentDB {
 		return null;
 	}
 	
-	public List getStudentrelatedtoBatchForAttendanceUpdate(String batchname,int inst_id,int div_id,int sub_id,
+	public List getStudentrelatedtoBatchForAttendanceUpdate(String batchname,int inst_id,int div_id,int sub_id,int schedule_id,
 															Date date) {
 		Session session = null;
 		boolean status=false;
@@ -813,7 +813,7 @@ public class StudentDB {
 		String queryString="Select reg.fname,reg.lname, reg.regId,att.presentee,att.att_id,std.batchIdNRoll from Student std,RegisterBean reg, Attendance att " +
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
 				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id and att.student_id = reg.regId and " +
-				"att.div_id = std.div_id and att.batch_id = :attbatch_id and att.att_date = :date and att.sub_id = :sub_id";
+				"att.div_id = std.div_id and att.batch_id = :attbatch_id and att.att_date = :date and att.sub_id = :sub_id and att.schedule_id = :schedule_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
@@ -827,7 +827,7 @@ public class StudentDB {
 			query.setParameter("attbatch_id", Integer.parseInt(batchname));
 			query.setParameter("date", date);
 			query.setParameter("sub_id", sub_id);
-			
+			query.setParameter("schedule_id", schedule_id);
 				list=query.list();
 			if(list!=null)
 			{

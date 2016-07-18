@@ -825,14 +825,14 @@ public class TeacherServiceImpl extends ServiceBase {
 	}
 	
 	@GET
-	@Path("/getStudentsForAttendanceUpdate/{inst_id}/{division}/{batch}/{sub_id}/{date}")
+	@Path("/getStudentsForAttendanceUpdate/{inst_id}/{division}/{batch}/{sub_id}/{schedule_id}/{date}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getStudentsForAttendanceUpdate(@PathParam("inst_id") int inst_id,@PathParam("batch") String batch,
-			@PathParam("division") Integer division,@PathParam("sub_id") Integer sub_id,
+			@PathParam("division") Integer division,@PathParam("sub_id") Integer sub_id,@PathParam("schedule_id") Integer schedule_id,
 			@PathParam("date") long date) {
 		// TODO Auto-generated method stub
 		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
-		List studentList = attendanceTransaction.getStudentForAttendanceUpdate(batch, inst_id, division, sub_id, new Date(date));
+		List studentList = attendanceTransaction.getStudentForAttendanceUpdate(batch, inst_id, division, sub_id,schedule_id, new Date(date));
 		return Response.status(Response.Status.OK).entity(studentList).build();
 	}
 	

@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -44,7 +45,7 @@ public class LoadConfig extends HttpServlet{
 	@Override
 	public void init() throws ServletException {
 		ServiceMap.loadServiceMap();
-		
+		TimeZone.setDefault(TimeZone.getTimeZone("IST"));
 		try {
 			URL resource = getServletContext().getResource("/WEB-INF/classes/struts.xml");
 			BufferedReader in = new BufferedReader(
