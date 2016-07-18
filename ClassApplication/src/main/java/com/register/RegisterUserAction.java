@@ -26,8 +26,10 @@ import com.config.BaseAction;
 import com.config.Constants;
 import com.google.gson.Gson;
 import com.mails.AllMail;
+import com.service.beans.ClassOwnerNotificationBean;
 import com.signon.LoginBean;
 import com.signon.LoginUser;
+import com.transaction.classownersettingtransaction.ClassownerSettingstransaction;
 import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.register.RegisterTransaction;
 import com.user.UserBean;
@@ -91,6 +93,10 @@ public class RegisterUserAction extends BaseAction{
 			    	instituteStats.setUsed_memory(0);
 			    	InstituteStatTransaction statTransaction=new InstituteStatTransaction();
 			    	statTransaction.save(instituteStats);
+			    	
+			    	//Saving default settings
+			    	ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
+			    	settingstransaction.saveSettings(new ClassOwnerNotificationBean(), userBean.getRegId());
 				}
 			}
 			
