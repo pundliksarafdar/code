@@ -739,8 +739,13 @@ public boolean updateStudentFees(int inst_id,int div_id,int batch_id, int studen
 		student_Fees.setDiscount_type(amtType);
 		student_Fees.setDiv_id(div_id);
 		student_Fees.setFees_paid(student_Fees.getFees_paid()+fees_paid);
-		student_Fees.setFees_due(student_Fees.getBatch_fees()-student_Fees.getFees_paid());
-		student_Fees.setFinal_fees_amt(0);
+		if("amt".equalsIgnoreCase(amtType)){
+		student_Fees.setFinal_fees_amt(batchFee - discount);
+		student_Fees.setFees_due((batchFee - discount) - (student_Fees.getFees_paid()));
+		}else if("per".equalsIgnoreCase(amtType)){
+			student_Fees.setFinal_fees_amt(batchFee - ((discount/100)*batchFee));	
+			student_Fees.setFees_due((batchFee - ((discount/100)*batchFee)) - (student_Fees.getFees_paid()));
+		}
 		student_Fees.setInst_id(inst_id);
 		student_Fees.setStudent_id(student_id);
 		

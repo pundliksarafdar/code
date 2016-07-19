@@ -476,7 +476,7 @@ public class StudentMarksTransaction {
 			for (com.service.beans.Exam exam : examList) {
 				int pos=0;
 				String examData[] = new String[distinctSubjectsList.size()+4];
-				String examSMSData[] = new String[distinctSubjectsList.size()+4];
+				String examSMSData[] = new String[2];
 				examData[pos] =exam.getExam_name();
 				examSMSData[0] =exam.getExam_name()+" : ";
 				int total_marks = 0;

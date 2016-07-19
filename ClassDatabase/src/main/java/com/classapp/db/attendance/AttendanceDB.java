@@ -833,7 +833,7 @@ public class AttendanceDB {
 		List list = null;
 		String queryString =" SELECT std.student_id,reg.fname,reg.lname,reg.phone1,reg.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
 							+ "count(distinct att.schedule_id,att_date),std.parentFname,std.parentLname,"
-							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id  FROM Attendance att, regtable reg,Student std "
+							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id  FROM attendance att, regtable reg,student std "
 							+ "where  reg.REG_ID = att.student_id and std.student_id = att.student_id and std.class_id = att.inst_id"
 							+ " and std.div_id = att.div_id and att.inst_id=:inst_id and att.div_id =:div_id and att.batch_id=:batch_id and att.student_id in :list "
 							+ "and  att_date>=:start_date and att_date<=:end_date group by att.student_id,att.batch_id,att.div_id "
@@ -870,7 +870,7 @@ public class AttendanceDB {
 		List list = null;
 		String queryString =" SELECT std.student_id,reg.fname,reg.lname,reg.phone1,reg.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
 							+ "count(distinct att.schedule_id,att_date),std.parentFname,std.parentLname,"
-							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id  FROM Attendance att, regtable reg,Student std "
+							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id  FROM attendance att, regtable reg,student std "
 							+ "where  reg.REG_ID = att.student_id and std.student_id = att.student_id and std.class_id = att.inst_id"
 							+ " and std.div_id = att.div_id and att.inst_id=:inst_id and att.div_id =:div_id and att.batch_id=:batch_id and att.student_id in :list "
 							+ "and  att_date>=:start_date and att_date<=:end_date group by att.student_id,att.batch_id,att.div_id "

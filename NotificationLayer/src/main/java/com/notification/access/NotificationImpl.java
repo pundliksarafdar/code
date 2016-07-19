@@ -202,6 +202,7 @@ public class NotificationImpl {
 				if(messageDetailBean.getParentPhone()!= null && messageDetailBean.isSendToParent() && messageDetailBean.getParentPhone()!= 0){
 					msgCounter ++;
 				}
+				progressCard.setInst_name(institute.getClassName());
 				messageDetailBean.setEmailObject(progressCard);
 				messageDetailBean.setEmailTemplate("progressCard.tmpl");
 				messageDetailBean.setParentEmailMessage(null);
@@ -212,7 +213,7 @@ public class NotificationImpl {
 				messageDetailBean.setSmsObject(progressCard);
 				messageDetailBean.setSmsTemplate("progressCardSMS.tmpl");
 				messageDetailBean.setSmsParentMessage(null);
-				messageDetailBean.setSmsObject(progressCard);
+				messageDetailBean.setSmsParentObject(progressCard);
 				messageDetailBean.setSmsParentTemplate("progressCardParentSMS.tmpl");
 				detailBeans.add(messageDetailBean);
 			}
@@ -292,6 +293,7 @@ public class NotificationImpl {
 				}
 				
 				StudentAttendanceNotificationData data = new StudentAttendanceNotificationData();
+				data.setInst_name(institute.getClassName());
 				data.setAtt_date(date);
 				data.setStudent_id(((Number) object[0]).intValue());
 				data.setStudent_name((String) object[1] + " " + (String) object[2]);
@@ -312,7 +314,7 @@ public class NotificationImpl {
 				messageDetailBean.setSmsObject(data);
 				messageDetailBean.setSmsTemplate("dailyAttendanceMSG.tmpl");
 				messageDetailBean.setSmsParentMessage(null);
-				messageDetailBean.setSmsObject(data);
+				messageDetailBean.setSmsParentObject(data);
 				messageDetailBean.setSmsParentTemplate("dailyAttendanceParentSMS.tmpl");
 				detailBeans.add(messageDetailBean);
 			}
@@ -324,6 +326,8 @@ public class NotificationImpl {
 			statusMap = notificationTransaction.validateNSendSms(msgCounter, "", inst_id,div_id,batch_id,Constants.PARENT_ROLE,Constants.MANUAL_DAILY_MSG);;
 			if(statusMap.containsKey("access") && (boolean)statusMap.get("access")){
 		    notifcationAccess.send(detailBeans);
+		    ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
+			settingstransaction.reduceSmsCount(msgCounter, institute.getRegId());
 			}
 			}else{
 			notifcationAccess.send(detailBeans);	
@@ -407,6 +411,7 @@ public class NotificationImpl {
 					}
 					
 					StudentAttendanceNotificationData data = new StudentAttendanceNotificationData();
+					data.setInst_name(institute.getClassName());
 					data.setAtt_date(date);
 					data.setStudent_id(((Number) object[0]).intValue());
 					data.setStudent_name((String) object[1] + " " + (String) object[2]);
@@ -418,7 +423,7 @@ public class NotificationImpl {
 					data.setBatch_name(batch.getBatch_name());
 					data.setStart_date(startDate);
 					data.setEnd_date(endDate);
-					data.setBatch_name((String) object[13]);
+					/*data.setBatch_name((String) object[13]);*/
 					messageDetailBean.setEmailMessage(null);
 					messageDetailBean.setEmailObject(data);
 					messageDetailBean.setEmailTemplate("weeklyAttendanceStudentEmail.tmpl");
@@ -430,7 +435,7 @@ public class NotificationImpl {
 					messageDetailBean.setSmsObject(data);
 					messageDetailBean.setSmsTemplate("weeklyAttendanceStudentSMS.tmpl");
 					messageDetailBean.setSmsParentMessage(null);
-					messageDetailBean.setSmsObject(data);
+					messageDetailBean.setSmsParentObject(data);
 					messageDetailBean.setSmsParentTemplate("weeklyAttendanceParentSMS.tmpl");
 					detailBeans.add(messageDetailBean);
 				}
@@ -442,6 +447,8 @@ public class NotificationImpl {
 				statusMap = notificationTransaction.validateNSendSms(msgCounter, "", inst_id,div_id,batch_id,Constants.PARENT_ROLE,Constants.MANUAL_WEEKLY_MSG);;
 				if(statusMap.containsKey("access") && (boolean)statusMap.get("access")){
 				notifcationAccess.send(detailBeans);
+				ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
+				settingstransaction.reduceSmsCount(msgCounter, institute.getRegId());
 				}
 				}else{
 				notifcationAccess.send(detailBeans);	
@@ -525,6 +532,7 @@ public class NotificationImpl {
 						msgCounter ++;
 					}
 					StudentAttendanceNotificationData data = new StudentAttendanceNotificationData();
+					data.setInst_name(institute.getClassName());
 					data.setAtt_date(date);
 					data.setStudent_id(((Number) object[0]).intValue());
 					data.setStudent_name((String) object[1] + " " + (String) object[2]);
@@ -548,7 +556,7 @@ public class NotificationImpl {
 					messageDetailBean.setSmsObject(data);
 					messageDetailBean.setSmsTemplate("monthlyAttendanceStudentSMS.tmpl");
 					messageDetailBean.setSmsParentMessage(null);
-					messageDetailBean.setSmsObject(data);
+					messageDetailBean.setSmsParentObject(data);
 					messageDetailBean.setSmsParentTemplate("monthlyAttendanceParentSMS.tmpl");
 					detailBeans.add(messageDetailBean);
 				}
@@ -560,6 +568,8 @@ public class NotificationImpl {
 			    statusMap = notificationTransaction.validateNSendSms(msgCounter, "", inst_id,div_id,batch_id,Constants.PARENT_ROLE,Constants.MANUAL_MONTHLY_MSG);;
 				if(statusMap.containsKey("access") && (boolean)statusMap.get("access")){
 				notifcationAccess.send(detailBeans);
+				ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
+				settingstransaction.reduceSmsCount(msgCounter, institute.getRegId());
 				}
 				}else{
 				notifcationAccess.send(detailBeans);	

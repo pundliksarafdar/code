@@ -82,10 +82,12 @@ function calculateFee(){
 	var paidFees = tableRow.find(PAY_FEE_INPUT).val();
 	var totalFees = data.batch_fees;
 	var percentage = tableRow.find('[type="checkbox"]').is(':checked');
-	remainingFee = percentage?(totalFees - (totalFees*discount*0.01) - paidFees):(totalFees-discount - paidFees);
+	var feesPaidBefore = tableRow.find('.feePaid').html();
+	remainingFee = percentage?(totalFees - (totalFees*discount*0.01) - paidFees - feesPaidBefore):(totalFees-discount - paidFees - feesPaidBefore);
 	console.log(discount,paidFees,totalFees,percentage,remainingFee);
 	tableRow.find('.remaingFee').html(remainingFee+' &#x20b9;');
-	
+	var finalFees = percentage?(totalFees - (totalFees*discount*0.01)):(totalFees-discount);
+	tableRow.find('.finalFees').html(finalFees);
 	if(paidFees < 0){
 		row.child("<textarea class='form-control noteText' placeholder='Add you note for negative transaction if required'></textarea>").show();
 	}else{
@@ -177,7 +179,7 @@ function loadStudentTableSuccess(data){
 				title: "Total fee",data:"batch_fees"
 			},
 			{
-				title: "Final fee",data:"final_fees_amt"
+				title: "Final fee",data:"final_fees_amt",render:function(finalFees){return "<div class='finalFees'>"+finalFees+"</div>"}
 			},
 			{
 				title: "Discount",bSortable:false,data:"discount",render:function(data){return "<input type='text' class='form-control discount' value='"+data+"'/>"}
@@ -186,7 +188,7 @@ function loadStudentTableSuccess(data){
 				title: "%/&#x20b9;",bSortable:false,data:"discount_type",render:function(disTyp){return "<input type='checkbox' data-size=\"mini\"/ class='percentage' "+((disTyp=='per')?'checked':'')+">"},width:'auto',bSortable: false
 			},
 			{
-				title: "Paid fee",data:"fees_paid",render:function(feePaid){return "<div>"+feePaid+"</div>"}
+				title: "Paid fee",data:"fees_paid",render:function(feePaid){return "<div class='feePaid'>"+feePaid+"</div>"}
 			},
 			{
 				title: "Paying fee",bSortable:false,data:null,render:function(){return "<input type='text' class='form-control payFeesInput'/>"}

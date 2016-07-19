@@ -16,9 +16,9 @@ public class SmsNotification implements iNotify{
 		System.out.println("Start sending sms message for "+messageDetailBean.getStudentId()+" wait time:1sec");
 		try {
 			SMSSentMock smsSentMock = new SMSSentMock();
-			if(messageDetailBean.isSendToParent()){
-				smsSentMock.sms(messageDetailBean.getParentPhone(), message);
-			}else if(messageDetailBean.isSendToParent()){
+			if(messageDetailBean.isSendToStudent()){
+				smsSentMock.sms(messageDetailBean.getStudentPhone(), message);
+			} if(messageDetailBean.isSendToParent()){
 				MessageFormatter formatter = new MessageFormatter();
 				 message = formatter.formatParentMessage(messageDetailBean, NotificationEnum.MessageType.SMS);
 				smsSentMock.sms(messageDetailBean.getParentPhone(), message);

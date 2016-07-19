@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
  
 <hibernate-mapping>
-    <class name="com.classapp.db.notificationpkg.Institute_MsgLog" table="notifications" catalog="classdb">
+    <class name="com.classapp.db.notificationpkg.Institute_MsgLog" table="institute_msglog" catalog="classdb">
     <id name="msg_id" type="java.lang.Integer">
             <column name="msg_id" />
              <generator class="identity" />

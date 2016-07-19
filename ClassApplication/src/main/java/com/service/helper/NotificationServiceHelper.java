@@ -134,7 +134,7 @@ public class NotificationServiceHelper {
 	public void sendFeesDue(SendAcademicAlertFeeDueBean bean,int inst_id ){
 		NotificationImpl notificationImpl = new NotificationImpl();
 		notificationImpl.sendFeesDueNotification(inst_id, bean.getDivId(), bean.getBatchId(), bean.isEmail(), bean.isSms(), 
-				bean.isParent(), bean.isParent());
+				bean.isParent(), bean.isStudent());
 	}
 	
 	public void sendAttendance(SendAcademicAlertAttendanceBean bean,int inst_id ){

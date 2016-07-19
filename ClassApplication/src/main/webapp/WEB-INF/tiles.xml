@@ -577,7 +577,7 @@
       <put-attribute name="body"   value="/fee/studentFee.jsp"/>      
    </definition>
    <definition name="classowner.timetableall" extends="baseLayout">
-      <put-attribute name="title"  value="Student Fee"/>
+      <put-attribute name="title"  value="Timetable"/>
       <put-attribute name="body"   value="/Timetable/timetable.jsp"/>      
    </definition>
    <definition name="classowner.studentAttendance" extends="baseLayout">

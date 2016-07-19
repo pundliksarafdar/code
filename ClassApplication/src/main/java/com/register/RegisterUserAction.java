@@ -91,6 +91,8 @@ public class RegisterUserAction extends BaseAction{
 			    	instituteStats.setAvail_memory(100);
 			    	instituteStats.setUsed_ids(0);
 			    	instituteStats.setUsed_memory(0);
+			    	instituteStats.setSmsAlloted(25);
+			    	instituteStats.setSmsLeft(25);
 			    	InstituteStatTransaction statTransaction=new InstituteStatTransaction();
 			    	statTransaction.save(instituteStats);
 			    	
