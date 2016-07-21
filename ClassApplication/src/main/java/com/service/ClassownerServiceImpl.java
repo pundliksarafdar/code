@@ -4,6 +4,7 @@ package com.service;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -81,6 +82,7 @@ import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.fee.FeesTransaction;
 import com.transaction.image.ImageTransactions;
+import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.notes.NotesTransaction;
 import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
 import com.transaction.register.RegisterTransaction;
@@ -557,19 +559,26 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	public Response addStudentByManually(StudentRegisterServiceBean serviceBean,@PathParam("division")int division,@PathParam("batch")String batch ) {
 		FeesTransaction feesTransaction = new FeesTransaction();
 		RegisterTransaction registerTransaction = new RegisterTransaction();
+		InstituteStatTransaction statTransaction = new InstituteStatTransaction();
+		boolean status  = true;
+		if(statTransaction.isIDsAvailable(getRegId(), 1)){
 		int student_id = registerTransaction.registerStudentManually(getRegId(),serviceBean.getRegisterBean(), serviceBean.getStudent(),division,batch);
+		statTransaction.increaseUsedStudentIds(getRegId());
 		for (Iterator iterator = serviceBean.getStudent_FeesList().iterator(); iterator
 				.hasNext();) {
 			Student_Fees student_Fees = (Student_Fees) iterator.next();
 			student_Fees.setStudent_id(student_id);
 		}
-		boolean status = feesTransaction.saveStudentBatchFees(getRegId(), serviceBean.getStudent_FeesList());
+	  status = feesTransaction.saveStudentBatchFees(getRegId(), serviceBean.getStudent_FeesList());
 		if(status){
 			NotificationServiceHelper helper = new NotificationServiceHelper();
 			helper.sendFeesPaymentNotification(getRegId(), serviceBean.getStudent_FeesList());
 			List<Integer> list= new ArrayList<Integer>();
 			list.add(student_id);
 			helper.sendManualRegistrationNotification(getRegId(), list);
+		}
+		}else{
+			status = false;
 		}
 		return Response.status(Status.OK).entity(status).build();
 	}
@@ -581,11 +590,18 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	public Response addStudentByID(StudentRegisterServiceBean serviceBean) {
 		FeesTransaction feesTransaction = new FeesTransaction();
 		StudentTransaction studentTransaction = new StudentTransaction();
+		InstituteStatTransaction statTransaction = new InstituteStatTransaction();
+		boolean status  = true;
+		if(statTransaction.isIDsAvailable(getRegId(), 1)){
 		studentTransaction.addStudentByID(getRegId(),serviceBean.getStudent());
-		boolean status = feesTransaction.saveStudentBatchFees(getRegId(), serviceBean.getStudent_FeesList());
+		statTransaction.increaseUsedStudentIds(getRegId());
+		status = feesTransaction.saveStudentBatchFees(getRegId(), serviceBean.getStudent_FeesList());
 		if(status){
 			NotificationServiceHelper helper = new NotificationServiceHelper();
 			helper.sendFeesPaymentNotification(getRegId(), serviceBean.getStudent_FeesList());
+		}
+		}else{
+			status = false;
 		}
 		return Response.status(Status.OK).entity(status).build();
 	}

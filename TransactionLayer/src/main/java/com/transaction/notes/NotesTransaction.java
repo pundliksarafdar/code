@@ -16,9 +16,15 @@ public Boolean addNotes(Notes notes) {
 }
 
 public Boolean deleteNotes(int notesid,int inst_id,int div_id,int sub_id,String notesPath) {
+	NotesDB db=new NotesDB();
+	List<Notes> list = db.getNotesPathById(notesid, inst_id, sub_id, div_id);
+	if (list != null) {
+		if(list.size() > 0){
+			notesPath = notesPath + File.separator + list.get(0).getName()+".pdf";
+		}
+	}
 	File file = new File(notesPath);
 	file.delete();
-	NotesDB db=new NotesDB();
 	db.deletenotes(notesid,inst_id,div_id,sub_id);
 	return true;
 	

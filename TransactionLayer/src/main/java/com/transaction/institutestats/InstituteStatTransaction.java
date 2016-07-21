@@ -43,4 +43,24 @@ public class InstituteStatTransaction {
 	InstituteStatsDB instituteStatsDB=new InstituteStatsDB();	
 	return instituteStatsDB.getStats(inst_id);
 	}
+	
+	public boolean isIDsAvailable(int inst_id,int noOfIds) {
+		InstituteStatsDB instituteStatsDB=new InstituteStatsDB();	
+		InstituteStats instituteStats = instituteStatsDB.getStats(inst_id);
+		if(instituteStats != null){
+			if(instituteStats.getAvail_ids() >= noOfIds){
+				return true;
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
+		
+		}
+	
+	public boolean increaseUsedStudentIds(int inst_id,int noOfIds) {
+		InstituteStatsDB instituteStatsDB=new InstituteStatsDB();	
+		return instituteStatsDB.increaseUsedStudentIds(inst_id,noOfIds);	
+		}
 }

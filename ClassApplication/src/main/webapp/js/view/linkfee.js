@@ -216,15 +216,16 @@ function linkFeeStruct(){
 	loadFeeStructure(feeStruct,'rowData.fees_desc');
 }
 function saveFee(){
+	var feeId = $(FEE_STRUCT_SELECT).val();
 	var data = $(DISTRIBUTION_TABLE).data("DIST_ID");
 	var saveBean = new SaveBean();
 	var updateOrSave = "Save";
 	if(data){
 		updateOrSave = "Update";
 		saveBean = $.extend(saveBean,data);
+		saveBean.batchFees.fees_id = feeId;
 		saveBean.batchFees.batch_fees = $(".total").data('total');
 	}else{
-		var feeId = $(FEE_STRUCT_SELECT).val();
 		saveBean.batchFees.fees_id = feeId;
 		saveBean.batchFees.div_id = $(DIVISION_SELECT).val();
 		saveBean.batchFees.batch_id = $(BATCH_SELECT).val();

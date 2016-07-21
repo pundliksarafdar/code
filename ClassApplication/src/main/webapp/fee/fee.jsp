@@ -18,7 +18,7 @@ table.distributionTable {border:1px solid #000}
 	<div class="row">
 	  <div class="col-lg-12">
 		<div class="input-group">
-		  <input type="text" class="form-control" placeholder="Distribution item" id="distributionName">
+		  <input type="text" class="form-control" placeholder="Distribution item" id="distributionName" maxlength="25">
 		  <span class="input-group-btn">
 			<button id="addDistribution" class="btn btn-default" type="button"><i class="glyphicon glyphicon-plus-sign"></i>&nbsp;Add</button>
 		  </span>
@@ -30,7 +30,7 @@ table.distributionTable {border:1px solid #000}
 	  <div class="col-lg-12">
 		<form>
 		<div class="input-group">
-			<input type="text" class="form-control" placeholder="Fee name" id="feeStructName" required="required">
+			<input type="text" class="form-control" placeholder="Fee name" id="feeStructName" required="required" maxlength="25">
 		  <span class="input-group-btn">
 			<button id="saveFeeStructure" class="btn btn-default" type="button"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;Save</button>
 		  </span>

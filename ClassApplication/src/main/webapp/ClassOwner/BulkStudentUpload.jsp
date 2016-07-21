@@ -53,6 +53,7 @@ $(document).ready(function(){
 					
 					var handlersSuccess = {};
 					handlersSuccess.success = function(successResp){
+						if(successResp.IDERROR == null){
 						$("#countDiv").append(successResp.SUCCESS[0]);
 						var errorResponse=successResp.ERROR;
 						if(successResp.SUCCESS != null ){
@@ -80,6 +81,9 @@ $(document).ready(function(){
 								scrollY:"200px"
 							});
 						}
+						}
+						}else{
+							$.notify({message: "Sufficient student ID's not available"},{type: 'danger'});	
 						}
 					}
 					rest.post("rest/files/upload/student/xls/", handlersSuccess,

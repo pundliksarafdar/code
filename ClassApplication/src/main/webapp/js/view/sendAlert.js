@@ -173,6 +173,12 @@
 	ProgressCard.prototype.constructor = ProgressCard;
 	
 	var alertHandler = {};
-	alertHandler.success = function(){};
+	alertHandler.success = function(response){
+		if(response.status == null || response.status == ""){
+			$.notify({message: "Notification sent successfully"},{type: 'success'});
+		}else{
+			$.notify({message: response.status},{type: 'danger'});
+		}
+	};
 	alertHandler.error = function(){};
 })();

@@ -88,7 +88,7 @@ function saveFeeStructureInDbSuccess(e){
 		}
 	}else{
 		$("#feeStructName").closest("div").find(".error").remove();
-		$.notify({message: 'Fee Structure saved.'},{type: 'danger'});
+		$.notify({message: 'Fee Structure saved.'},{type: 'success'});
 	}
 }
 

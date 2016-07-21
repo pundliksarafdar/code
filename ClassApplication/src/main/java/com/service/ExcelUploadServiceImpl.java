@@ -25,6 +25,7 @@ import com.excel.student.StudentExcelData;
 import com.service.beans.QuestionExcelUploadBean;
 import com.service.beans.StudentExcelUploadBean;
 import com.service.helper.NotificationServiceHelper;
+import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.questionbank.QuestionBankTransaction;
 
 
@@ -166,7 +167,9 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 			        HashMap<String, ArrayList<String>> invalidStudentResponseMap = null;
 			        StudentExcelData studentData = new StudentExcelData(studentFileBean.getFileName());
 			        System.out.println("Loading data..");
-			        studentData.loadStudents(regId, studentFileBean.getDivId(), studentFileBean.getBatchId());
+			        int noOfStudents = studentData.loadStudents(regId, studentFileBean.getDivId(), studentFileBean.getBatchId());
+			        InstituteStatTransaction statTransaction = new InstituteStatTransaction();
+			        if(statTransaction.isIDsAvailable(getRegId(), noOfStudents)){
 			        System.out.println("Loading completed..\n Processing the data..");
 			        studentData.processData(regId, studentFileBean.getDivId(), studentFileBean.getBatchId());
 			        System.out.println("Processing completed..");
@@ -186,13 +189,23 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 			            }
 			            addedStudentResponseList.add(response);
 			        }
+			        statTransaction.increaseUsedStudentIds(getRegId(), noOfStudents);
 			        NotificationServiceHelper notificationServiceHelper = new NotificationServiceHelper();
+			        if(noOfStudents > 0){
 			        notificationServiceHelper.sendManualRegistrationNotification(getRegId(), studentIds);
 			        notificationServiceHelper.getStudentForFeesPaymentNotification(getRegId(), studentIds);
+			        }
 			        ArrayList<String> suuccessCountList = new ArrayList<String>();
 			        suuccessCountList.add("" + successCount + " students added successfully.");
 			        invalidStudentResponseMap.put("SUCCESS", suuccessCountList);
 			        invalidStudentResponseMap.put("addedStudentsResponse", addedStudentResponseList);
+			        invalidStudentResponseMap.put("IDERROR", null);
+			        }else{
+			        	invalidStudentResponseMap = new HashMap<String, ArrayList<String>>();
+			        	ArrayList<String> list = new ArrayList<String>();
+			        	list.add("Sufficient student ID's not available");
+			        	invalidStudentResponseMap.put("IDERROR", list);
+			        }
 			        return Response.status((Response.Status)Response.Status.OK).entity((Object)invalidStudentResponseMap).build();
 			    }
 }

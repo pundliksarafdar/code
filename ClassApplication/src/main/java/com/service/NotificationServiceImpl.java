@@ -1,6 +1,7 @@
 package com.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -43,21 +44,21 @@ public class NotificationServiceImpl extends ServiceBase{
 	@POST @Path("/sendAcademicAlerts/feeDue") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
 	public Response sendAcademicAlerts(SendAcademicAlertFeeDueBean bean){
 		NotificationServiceHelper helper = new NotificationServiceHelper();
-		helper.sendFeesDue(bean, getRegId());
-		return Response.ok().build();
+		HashMap statusMap = helper.sendFeesDue(bean, getRegId());
+		return Response.status(Status.OK).entity(statusMap).build();
 	}
 	
 	@POST @Path("/sendAcademicAlerts/attendace") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
 	public Response sendAcademicAlertsAttendance(SendAcademicAlertAttendanceBean bean){
 		NotificationServiceHelper helper = new NotificationServiceHelper();
-		helper.sendAttendance(bean, getRegId());
-		return Response.ok().build();
+		HashMap statusMap = helper.sendAttendance(bean, getRegId());
+		return Response.status(Status.OK).entity(statusMap).build();
 	}
 	
 	@POST @Path("/sendAcademicAlerts/progressCard") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
 	public Response sendAcademicAlertsProgressCard(SendAcademicAlertProgressCardBean bean){
 		NotificationServiceHelper helper = new NotificationServiceHelper();
-		helper.sendProgressCard(bean, getRegId());
-		return Response.ok().build();
+		HashMap statusMap = helper.sendProgressCard(bean, getRegId());
+		return Response.status(Status.OK).entity(statusMap).build();
 	}
 }

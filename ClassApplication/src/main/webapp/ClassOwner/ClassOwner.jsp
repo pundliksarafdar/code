@@ -99,7 +99,9 @@ $(document).ready(function(){
 		var avialableId = <c:out value="${requestScope.instituteStats.avail_ids}" default="0"></c:out>
 		var usedId = <c:out value="${requestScope.instituteStats.used_ids}" default="0"></c:out>
 		var allocatedId = <c:out value="${requestScope.instituteStats.alloc_ids}" default="0"></c:out>
-		
+		var emailAccess = <c:out value="${requestScope.instituteStats.emailAccess}" default="0"></c:out>
+		var smsAccess =  <c:out value="${requestScope.instituteStats.smsAccess}" default="0"></c:out>
+		var smsLeft =  <c:out value="${requestScope.instituteStats.smsLeft}" default="0"></c:out>	
 			
 				Morris.Donut({
 					  element: 'classownerStorageGraphCtx',
@@ -135,6 +137,17 @@ $(document).ready(function(){
 		$("td#userIdTotal").text(allocatedId).css("background","#FFD400");
 		$("td#userIdUsed").text(usedId).css("background","#3366FF");
 		$("td#userIdLeft").text(avialableId).css("background","#669900");
+		if(emailAccess == true){
+		$("#emailAccess").html("Yes");
+		}else{
+		$("#emailAccess").html("No");	
+		}
+		if(smsAccess == true){
+		$("#smsAccess").html("Yes");	
+		}else{
+		$("#smsAccess").html("No");
+		}
+		$("#smsLeft").html(smsLeft);
 	
 });
 </script>
@@ -251,6 +264,8 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
 		</div>
 		
 		<div class="col-md-6">
+		<div class="row" style="width:100%;">
+		<div class="col-md-12">
 			<div class="panel panel-default" id="notificationPanel">
 				<div class="panel-heading">
 				Notification
@@ -300,6 +315,29 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
 					}
 					%>
 				</div>
+		</div>
+		</div>
+		</div>
+		<div class="row" style="width:100%;">
+		<div class="col-md-4">
+		<div class="panel panel-default">
+				<div class="panel-heading" align="center">Email Access</div>
+				<div class="panel-body"><div id="emailAccess" align="center"></div></div>
+		</div>
+				
+		</div>
+		<div class="col-md-4">
+		<div class="panel panel-default">
+				<div class="panel-heading" align="center">SMS Access</div>
+				<div class="panel-body"><div id="smsAccess" align="center"></div></div>
+		</div>
+		</div>
+		<div class="col-md-4" >
+		<div class="panel panel-default">
+				<div class="panel-heading" align="center">SMS Left</div>
+				<div class="panel-body"><div id="smsLeft" align="center"></div></div>
+		</div>
+		</div>
 		</div>
 	</div>	
 	

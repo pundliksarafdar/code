@@ -63,7 +63,7 @@ public class StudentExcelData {
 	 * This method is to load students present in .xsl file. It generates list
 	 * of students as a output.
 	 */
-	public void loadStudents(int instId, int divId, int batchId) {
+	public int loadStudents(int instId, int divId, int batchId) {
 		System.out.println("Inst id:"+instId+" divId:"+divId);
 		File myFile = new File(this.fileName);
 		org.apache.poi.ss.usermodel.Workbook workbook = null;
@@ -320,6 +320,7 @@ public class StudentExcelData {
 			//System.out.println(this.invalidStudentResponseMap);
 		}
 		}
+		return students.size();
 		//System.out.println("Number of students:" + students.size());
 	}
 	

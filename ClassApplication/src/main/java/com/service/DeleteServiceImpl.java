@@ -23,6 +23,7 @@ import com.transaction.attendance.AttendanceTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.exams.ExamTransaction;
+import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.student.StudentTransaction;
 import com.transaction.teacher.TeacherTransaction;
 
@@ -92,6 +93,8 @@ public class DeleteServiceImpl extends ServiceBase {
 	public Response deleteStudent(@PathParam("student") Integer student_id) {
 		StudentTransaction studentTransaction = new StudentTransaction();
 		studentTransaction.deleteStudent(student_id, getRegId());
+		InstituteStatTransaction statTransaction = new  InstituteStatTransaction();
+		statTransaction.decreaseUsedStudentIds(getRegId());	
 		return Response.status(Response.Status.OK).build();
 	}
 	

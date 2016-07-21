@@ -3,6 +3,7 @@ package com.service.helper;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import com.classapp.db.batch.Batch;
@@ -131,31 +132,33 @@ public class NotificationServiceHelper {
 		return status;
 	}
 	
-	public void sendFeesDue(SendAcademicAlertFeeDueBean bean,int inst_id ){
+	public HashMap sendFeesDue(SendAcademicAlertFeeDueBean bean,int inst_id ){
 		NotificationImpl notificationImpl = new NotificationImpl();
-		notificationImpl.sendFeesDueNotification(inst_id, bean.getDivId(), bean.getBatchId(), bean.isEmail(), bean.isSms(), 
+		return notificationImpl.sendFeesDueNotification(inst_id, bean.getDivId(), bean.getBatchId(), bean.isEmail(), bean.isSms(), 
 				bean.isParent(), bean.isStudent());
 	}
 	
-	public void sendAttendance(SendAcademicAlertAttendanceBean bean,int inst_id ){
+	public HashMap sendAttendance(SendAcademicAlertAttendanceBean bean,int inst_id ){
 		NotificationImpl notificationImpl = new NotificationImpl();
+		HashMap statusMap = new HashMap();
 		if("day".equals(bean.getType())){
-			notificationImpl.sendDailyAttendanceManulNotification(new Date(bean.getDate().getTime()), inst_id, bean.getDivId(),
+			statusMap = notificationImpl.sendDailyAttendanceManulNotification(new Date(bean.getDate().getTime()), inst_id, bean.getDivId(),
 					bean.getBatchId(), bean.isEmail(), bean.isSms(), bean.isParent(), bean.isStudent(), bean.getMinAttendace());
 		}else if("week".equals(bean.getType())){
-			notificationImpl.sendWeeklyAttendanceManulNotification(new Date(bean.getDate().getTime()), inst_id, bean.getDivId(),
+			statusMap = notificationImpl.sendWeeklyAttendanceManulNotification(new Date(bean.getDate().getTime()), inst_id, bean.getDivId(),
 					bean.getBatchId(), bean.isEmail(), bean.isSms(), bean.isParent(), bean.isStudent(), bean.getMinAttendace());
 		}else if("month".equals(bean.getType())){
-			notificationImpl.sendMonthlyAttendanceManulNotification(new Date(bean.getDate().getTime()), inst_id, bean.getDivId(),
+			statusMap = notificationImpl.sendMonthlyAttendanceManulNotification(new Date(bean.getDate().getTime()), inst_id, bean.getDivId(),
 					bean.getBatchId(), bean.isEmail(), bean.isSms(), bean.isParent(), bean.isStudent(), bean.getMinAttendace());
 		}
+		return statusMap;
 	}
 	
-	public void sendProgressCard(SendAcademicAlertProgressCardBean bean,int inst_id){
+	public HashMap sendProgressCard(SendAcademicAlertProgressCardBean bean,int inst_id){
 		NotificationImpl notificationImpl = new NotificationImpl();
 		String csv = bean.getExamList().toString().replace("[", "").replace("]", "")
 	            .replace(", ", ",");
-		notificationImpl.sendStudentProgressCard(inst_id, bean.getDivId(), bean.getBatchId(), csv, bean.isEmail(), bean.isSms(), bean.isParent(), bean.isStudent());
+		return notificationImpl.sendStudentProgressCard(inst_id, bean.getDivId(), bean.getBatchId(), csv, bean.isEmail(), bean.isSms(), bean.isParent(), bean.isStudent());
 	}
 	
 	public void sendFeesPaymentNotification(int inst_id,com.service.beans.Student_Fees_Transaction serviceFees_Transaction){

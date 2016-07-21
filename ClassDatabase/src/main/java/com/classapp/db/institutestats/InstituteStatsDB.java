@@ -86,6 +86,22 @@ public class InstituteStatsDB {
 		return  true;
 	}
 	
+	public boolean increaseUsedStudentIds(int inst_id,int noOfIds) {
+		InstituteStats stats=new InstituteStats();
+		stats.setInst_id(inst_id);
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		stats=(InstituteStats) session.get(InstituteStats.class,inst_id);
+		stats.setUsed_ids(stats.getUsed_ids()+noOfIds);
+		stats.setAvail_ids(stats.getAvail_ids()-noOfIds);
+		session.saveOrUpdate(stats);
+		transaction.commit();
+		session.close();
+		return  true;
+	}
+	
 	public boolean decreaseUsedStudentIds(int inst_id) {
 		InstituteStats stats=new InstituteStats();
 		stats.setInst_id(inst_id);
