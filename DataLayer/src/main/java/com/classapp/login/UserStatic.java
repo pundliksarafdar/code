@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.service.beans.ClassownerSettingsNotification;
+
 public class UserStatic {
 	private double totalStorage;
 	private double usedSpace;
@@ -17,6 +19,7 @@ public class UserStatic {
 	private String questionPaperPath;
 	private String headerPath;
 	private Set<String> alarms;
+	private ClassownerSettingsNotification settings;
 	
 	public double getTotalStorage() {
 		return totalStorage;
@@ -96,5 +99,12 @@ public class UserStatic {
 	public String getNotesPath(int sub_id,int div_id) {
 		return this.storageSpace+File.separator+"notes"+File.separator+sub_id+File.separator+div_id;
 	}
+	public ClassownerSettingsNotification getSettings() {
+		return settings;
+	}
+	public void setSettings(ClassownerSettingsNotification settings) {
+		this.settings = settings;
+	}
+	
 	
 }

@@ -164,15 +164,18 @@ function editSchedule(){
 		scheduleBean.batch_id = event.batchId;
 		scheduleBean.sub_id = $(SUBJECT_SELECT).val();
 		scheduleBean.teacher_id = $(TEACHER_SELECT).val();
-		scheduleBean.start_time = $(START_TIME).find('input').val()+":00";
-		scheduleBean.end_time = $(END_TIME).find('input').val()+":00";
+		scheduleBean.start_time = $(START_TIME).find('input').val().length<=5?$(START_TIME).find('input').val()+":00":$(START_TIME).find('input').val();
+		scheduleBean.end_time = $(END_TIME).find('input').val().length<=5?$(END_TIME).find('input').val()+":00":$(END_TIME).find('input').val();
 		scheduleBean.date = $(START_DATE).find('input').val();
 		var repeatation = $(REPETITION_SELECT).find('input[type="checkbox"]:checked');
 		var repetations = [];
 		for(var index=0;index<repeatation.length;index++){
 			repetations.push($(repeatation[index]).val());
 		}
-		scheduleBean.rep_days = repetations.join(",");
+		var state = $("#repeat").bootstrapSwitch('state');
+		if(state){
+			scheduleBean.rep_days = repetations.join(",");
+		}
 		scheduleBean.start_date  = $(START_DATE).find('input').val();
 		scheduleBean.end_date = $(END_DATE).find('input').val();
 		
@@ -300,9 +303,9 @@ function setTimetable(data){
 		},
 		onCorexDeleteBtnClicked:function(event){
 			var handler = {};
-			handler.success = function(e){}
-			handler.error = function(e){}
-			console.log(event);
+			handler.success = function(){getTimeTableData();resetSchedule()};
+			handler.error = function(){getTimeTableData();resetSchedule()};
+			
 			if(event.grp_id){
 				modal.modalYesAndNo("Delete","Do you want to delete?","Current",function(){
 					rest.deleteItem(saveScheduleUrl+"/"+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+event.id+"/"+event.date+"/0",handler);
@@ -342,6 +345,7 @@ function onEdit(event){
 		$(START_TIME).find('input').val(startTime);
 		$(END_TIME).find('input').val(endTime);
 		$("#addModifyTimetableForm").tooltip("show");
+		$("#divisionSelect").focus();
 }	
 
 function loadAllUpcommingEvent(event){

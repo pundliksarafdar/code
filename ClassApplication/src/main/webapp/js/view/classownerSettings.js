@@ -54,11 +54,14 @@ function onDataLoad(data){
 	var messageContainer = $("#editNotificationSettingForm").find('.alert');
 	if(!data || !data.instituteStats || !(data.instituteStats.smsAccess || data.instituteStats.emailAccess)){
 		messageContainer.html(NO_SMS_EMAIL_ACCESS);
+		$(SAVE).addClass("hide");
 	}else{
 		if(!data.instituteStats.smsAccess){
 			messageContainer.html(NO_SMS_ACCESS);
+			$(".smsAccess").attr("disabled","disabled");
 		}else if(!data.instituteStats.emailAccess){
 			messageContainer.html(NO_EMAIL_ACCESS);
+			$(".emailAccess").attr("disabled","disabled");
 		}else{
 			messageContainer.html(NO_OF_SMS_LEFT.replace("{{smsleft}}",data.instituteStats.smsLeft).replace("{{smsTotal}}",data.instituteStats.smsAlloted));
 			
@@ -84,9 +87,9 @@ function onDataLoad(data){
 				paymentDueDate = paymentDueDate[2]+"/"+paymentDueDate[1]+"/"+paymentDueDate[0];
 				$("#paymentDueDate").val(paymentDueDate);
 			}
-			$("#editNotificationSettingForm").find("[type='checkbox'][data-size='mini']").bootstrapSwitch();
 			$("#editNotificationSettingForm").find("#emailAttendanceWeeklyThreshold").val(data.classOwnerNotificationBean.emailAttendanceWeeklyThreshold);
 			$("#editNotificationSettingForm").find("#emailAttendanceMonthlyThreshold").val(data.classOwnerNotificationBean.emailAttendanceMonthlyThreshold);
 		}
 	}
+	$("#editNotificationSettingForm").find("[type='checkbox'][data-size='mini']").bootstrapSwitch();
 }

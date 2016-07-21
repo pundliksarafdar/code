@@ -537,7 +537,7 @@ public class ScheduleTransaction {
 		ScheduleDB db = new ScheduleDB();
 		String msg = "";
 		List<Date> dateList = new ArrayList<Date>();
-		if ("".equals(serviceSchedule.getRep_days())) {
+		if (null==serviceSchedule.getRep_days() || "".equals(serviceSchedule.getRep_days())) {
 			Schedule schedule = new Schedule();
 			try {
 				BeanUtils.copyProperties(schedule, serviceSchedule);

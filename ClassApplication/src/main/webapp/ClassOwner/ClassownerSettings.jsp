@@ -24,9 +24,9 @@
 		  <label class="form-label" for="">On payment</label>
 		  <div>
 		  	<label for="">Sms</label>
-		  	<input type="checkbox" data-size="mini" data-size="mini" id="smsPayment">
+		  	<input type="checkbox" data-size="mini" data-size="mini" id="smsPayment" class="smsAccess">
 		  	<label for="">Email</label>
-		  	<input type="checkbox" data-size="mini" id="emailPayment">
+		  	<input type="checkbox" data-size="mini" id="emailPayment" class="emailAccess">
 		  </div>
 		  <div>
 		  	<label for="">Parent</label>
@@ -38,9 +38,9 @@
 		  <label class="form-label" for="">On fee due</label>
 		  <div>
 		  	<label for="">Sms</label>
-		  	<input type="checkbox" data-size="mini" id="smsPaymentDue">
+		  	<input type="checkbox" data-size="mini" id="smsPaymentDue"  class="smsAccess">
 		  	<label for="">Email</label>
-		  	<input type="checkbox" data-size="mini" id="emailPaymentDue">
+		  	<input type="checkbox" data-size="mini" id="emailPaymentDue" class="emailAccess">
 		  </div>
 	    <div>
 		  	<label for="">Parent</label>
@@ -61,9 +61,9 @@
 		  <label  class="form-label" for="">Daily</label>
 		  <div>
 		  	<label for="">Sms</label>
-		  	<input type="checkbox" data-size="mini" id="smsAttendanceDaily">
+		  	<input type="checkbox" data-size="mini" id="smsAttendanceDaily" class="smsAccess">
 		  	<label for="">Email</label>
-		  	<input type="checkbox" data-size="mini" id="emailAttendanceDaily">
+		  	<input type="checkbox" data-size="mini" id="emailAttendanceDaily" class="emailAccess">
 		  	<div id="weeklyDaySelection">
 		  		<label for="">Send on &nbsp;</label>
 		  		<input type="checkbox" id="Sun"><label for="Sun">Sun</label>&nbsp;
@@ -85,9 +85,9 @@
 		  <label class="form-label" for="">Weekly</label>
 		  <div>
 		  	<label for="">Sms</label>
-		  	<input type="checkbox" data-size="mini" id="smsAttendanceWeekly">
+		  	<input type="checkbox" data-size="mini" id="smsAttendanceWeekly" class="smsAccess">
 		  	<label for="">Email</label>
-		  	<input type="checkbox" data-size="mini" id="emailAttendanceWeekly">
+		  	<input type="checkbox" data-size="mini" id="emailAttendanceWeekly" class="emailAccess">
 		  	<div>
 			  	<label for="">Below %</label>
 			  	<input id="emailAttendanceWeeklyThreshold" type="number" class="form-control" min="0" max="100" style='width:10%;'/>
@@ -103,9 +103,9 @@
 		  <label class="form-label" for="">Monthly</label>
 		  <div>
 		  	<label for="">Sms</label>
-		  	<input type="checkbox" data-size="mini" id="smsAttendanceMonthly">
+		  	<input type="checkbox" data-size="mini" id="smsAttendanceMonthly" class="smsAccess">
 		  	<label for="">Email</label>
-		  	<input type="checkbox" data-size="mini" id="emailAttendanceMonthly">
+		  	<input type="checkbox" data-size="mini" id="emailAttendanceMonthly" class="emailAccess">
 		  	<div>
 			  	<label for="">Below %</label>
 			  	<input id="emailAttendanceMonthlyThreshold" type="number" class="form-control" min="0" max="100" style='width:10%;'/>
@@ -124,9 +124,9 @@
 		  <label class="form-label" for="">Newly added timetable</label>
 		  <div>
 		  	<label for="">Sms</label>
-		  	<input type="checkbox" data-size="mini" id="smsTimetableNewEntry">
+		  	<input type="checkbox" data-size="mini" id="smsTimetableNewEntry" class="smsAccess">
 		  	<label for="">Email</label>
-		  	<input type="checkbox" data-size="mini" id="emailTimetableNewEntry">
+		  	<input type="checkbox" data-size="mini" id="emailTimetableNewEntry" class="emailAccess">
 		  	
 		  	<div>
 			  	<label for="">Parent</label>
@@ -139,9 +139,9 @@
 		  <label class="form-label" for="">Change in timetable</label>
 		  <div>
 		  	<label for="">Sms</label>
-		  	<input type="checkbox" data-size="mini" id="smsTimetableEditEntry">
+		  	<input type="checkbox" data-size="mini" id="smsTimetableEditEntry" class="smsAccess">
 		  	<label for="">Email</label>
-		  	<input type="checkbox" data-size="mini" id="emailTimetableEditEntry">
+		  	<input type="checkbox" data-size="mini" id="emailTimetableEditEntry" class="emailAccess">
 		  </div>
 		  	<div>
 			  	<label for="">Parent</label>
@@ -155,9 +155,9 @@
 		  <label class="form-label" for="">Manual</label>
 		  <div>
 		  	<label for="">Sms</label>
-		  	<input type="checkbox" data-size="mini" id="smsProgressCardManual">
+		  	<input type="checkbox" data-size="mini" id="smsProgressCardManual" class="smsAccess">
 		  	<label for="">Email</label>
-		  	<input type="checkbox" data-size="mini" id="emailProgressCardManual">
+		  	<input type="checkbox" data-size="mini" id="emailProgressCardManual" class="emailAccess">
 		  </div>
 		  <div>
 			  	<label for="">Parent</label>
@@ -169,9 +169,9 @@
 		  <label class="form-label" for="">After every exam</label>
 		  <div>
 		  	<label for="">Sms</label>
-		  	<input type="checkbox" data-size="mini" id="smsProgressCardAfterEveryExam">
+		  	<input type="checkbox" data-size="mini" id="smsProgressCardAfterEveryExam" class="smsAccess">
 		  	<label for="">Email</label>
-		  	<input type="checkbox" data-size="mini" id="emailProgressCardAfterEveryExam">
+		  	<input type="checkbox" data-size="mini" id="emailProgressCardAfterEveryExam" class="emailAccess">
 		  </div>
 		  <div>
 			  	<label for="">Parent</label>

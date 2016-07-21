@@ -27,10 +27,12 @@ import com.classapp.schedule.Scheduledata;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.google.gson.Gson;
+import com.service.beans.ClassownerSettingsNotification;
 import com.sun.org.apache.bcel.internal.generic.LUSHR;
 import com.tranaction.login.login;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
+import com.transaction.classownersettingtransaction.ClassownerSettingstransaction;
 import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.notification.Data;
 import com.transaction.notification.NotificationTransaction;
@@ -464,7 +466,12 @@ public class LoginUser extends BaseAction{
 		
 		userStatic.setNotesSpace(noteSize);
 		//session.put(Constants.USER_STATIC, userStatic);
+		ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
+		ClassownerSettingsNotification settings = settingstransaction.getSettings(userBean.getRegId());
+		userStatic.setSettings(settings);
 		userBean.setUserStatic(userStatic);
+		
+		
 	}
 	
 	public boolean provisionDirectories(String storagePath){
