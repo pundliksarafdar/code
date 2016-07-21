@@ -55,6 +55,8 @@ function onDataLoad(data){
 	if(!data || !data.instituteStats || !(data.instituteStats.smsAccess || data.instituteStats.emailAccess)){
 		messageContainer.html(NO_SMS_EMAIL_ACCESS);
 		$(SAVE).addClass("hide");
+		$(".smsAccess").attr("disabled","disabled");
+		$(".emailAccess").attr("disabled","disabled");
 	}else{
 		if(!data.instituteStats.smsAccess){
 			messageContainer.html(NO_SMS_ACCESS);
