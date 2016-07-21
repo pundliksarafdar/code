@@ -137,17 +137,19 @@ $(document).ready(function(){
 		$("td#userIdTotal").text(allocatedId).css("background","#FFD400");
 		$("td#userIdUsed").text(usedId).css("background","#3366FF");
 		$("td#userIdLeft").text(avialableId).css("background","#669900");
-		if(emailAccess == true){
+		/* if(emailAccess == true){
 		$("#emailAccess").html("Yes");
 		}else{
 		$("#emailAccess").html("No");	
-		}
+		} */
 		if(smsAccess == true){
-		$("#smsAccess").html("Yes");	
-		}else{
-		$("#smsAccess").html("No");
-		}
+		$("#smsLeftPanel").show();	
 		$("#smsLeft").html(smsLeft);
+		}else{
+		$("#smsLeftPanel").hide();
+		$("#noSMSAccessPanel").show();
+		}
+		
 	
 });
 </script>
@@ -218,7 +220,7 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
 			</c:choose>
 			</div>
 			<div class="row" style="width:100%;">
-				<div class="col-md-6">
+				<div class="col-md-4">
 					<div class="panel panel-default panel-sticker">
 					  <div class="panel-heading">
 						<table width="100%">
@@ -239,7 +241,7 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
 					  </div>
 					</div>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-4">
 					<div class="panel panel-default panel-sticker">
 					  <div class="panel-heading">
 						<table width="100%">
@@ -259,6 +261,45 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
 						<i class="glyphicon glyphicon-circle-arrow-right pull-right blue"></i>
 					  </div>
 					</div>
+				</div>
+				<div class="col-md-4">
+				<div class="panel panel-default panel-sticker" id="smsLeftPanel">
+					  <div class="panel-heading">
+						<table width="100%">
+							<tr>
+								<td><div id="smsLeft"></div></td>
+								<td rowspan="2" align="right">
+									<i class="glyphicon glyphicon-send"></i>
+								</td>
+							</tr>
+							<tr>
+								<td><h5>SMS Left</h5></td>
+							</tr>
+						</table>
+					  </div>
+					  <div class="panel-body">
+						<a href="/classownerSettings">Configure</a>
+						<i class="glyphicon glyphicon-circle-arrow-right pull-right blue"></i>
+					  </div>
+					</div>
+					
+					<div class="panel panel-default panel-sticker" style="display: none;" id="noSMSAccessPanel">
+					  <div class="panel-heading">
+						<table width="100%" >
+							<tr>
+								<td>No Sms Accees</td>
+								<td rowspan="2" align="right">
+									<i class="glyphicon glyphicon-send"></i>
+								</td>
+							</tr>
+						</table>
+					  </div>
+					  <div class="panel-body">
+						<a data-toggle="modal" data-target="#myModal">Get Access
+						<i class="glyphicon glyphicon-info-sign pull-right"></i>
+						</a>
+					  </div>
+					</div>	
 				</div>
 			</div>
 		</div>
@@ -318,29 +359,27 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
 		</div>
 		</div>
 		</div>
-		<div class="row" style="width:100%;">
-		<div class="col-md-4">
-		<div class="panel panel-default">
-				<div class="panel-heading" align="center">Email Access</div>
-				<div class="panel-body"><div id="emailAccess" align="center"></div></div>
-		</div>
-				
-		</div>
-		<div class="col-md-4">
-		<div class="panel panel-default">
-				<div class="panel-heading" align="center">SMS Access</div>
-				<div class="panel-body"><div id="smsAccess" align="center"></div></div>
-		</div>
-		</div>
-		<div class="col-md-4" >
-		<div class="panel panel-default">
-				<div class="panel-heading" align="center">SMS Left</div>
-				<div class="panel-body"><div id="smsLeft" align="center"></div></div>
-		</div>
-		</div>
-		</div>
 	</div>	
 	
 	</div>
 </div>	
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+        <p>Some text in the modal.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 </html>
