@@ -69,7 +69,9 @@ function payfee(){
 	payFeeBean.discount = tableRow.find(".discount").val();
 	console.log(JSON.stringify(payFeeBean));
 	var handler = {};
-	handler.success = function(e){console.log("success",e);$.notify({message: "Fee saved successfully"},{type: 'success'});}
+	handler.success = function(e){console.log("success",e);$.notify({message: "Fee saved successfully"},{type: 'success'});
+	tableRow.find('.feePaid').html(parseInt(tableRow.find('.feePaid').html())+ parseInt(tableRow.find(PAY_FEE_INPUT).val()));
+	}
 	handler.error = function(e){console.log("error",e)}
 	rest.post(saveStudentBatchFee,handler,JSON.stringify(payFeeBean));
 }
@@ -95,7 +97,7 @@ function calculateFee(){
 			row.child().hide();
 		}
 	}
-	
+
 }
 	
 function getBatches(){
@@ -182,7 +184,7 @@ function loadStudentTableSuccess(data){
 				title: "Final fee",data:"final_fees_amt",render:function(finalFees){return "<div class='finalFees'>"+finalFees+"</div>"}
 			},
 			{
-				title: "Discount",bSortable:false,data:"discount",render:function(data){return "<input type='text' class='form-control discount' value='"+data+"'/>"}
+				title: "Discount",bSortable:false,data:"discount",render:function(data){return "<input type='number' class='form-control discount' value='"+data+"'/>"}
 			},
 			{
 				title: "%/&#x20b9;",bSortable:false,data:"discount_type",render:function(disTyp){return "<input type='checkbox' data-size=\"mini\"/ class='percentage' "+((disTyp=='per')?'checked':'')+">"},width:'auto',bSortable: false
@@ -191,7 +193,7 @@ function loadStudentTableSuccess(data){
 				title: "Paid fee",data:"fees_paid",render:function(feePaid){return "<div class='feePaid'>"+feePaid+"</div>"}
 			},
 			{
-				title: "Paying fee",bSortable:false,data:null,render:function(){return "<input type='text' class='form-control payFeesInput'/>"}
+				title: "Paying fee",bSortable:false,data:null,render:function(){return "<input type='number' class='form-control payFeesInput'/>"}
 			},
 			{
 				title: "Remaining fee",data:"fees_due",render:function(feeDue){return "<div class='remaingFee' style='text-align:center;'>"+feeDue+" &#x20b9;</div>"}
