@@ -909,9 +909,13 @@ public class QuestionPaperPatternTransaction {
 			int queNo = onlineExamPaperElement.getQues_no();
 			List<String> list = (List) examMap.get(queNo+"");
 			Questionbank questionBank = onlineExamPaperElement.getQuestionbank();
+			//If question bank is null then its not a question
+			if(null!=questionBank){
+				totalMarks = totalMarks +questionBank.getMarks();
+			}
 			if(null!=list && null!=questionBank){
 				for(String l:list){
-					totalMarks = totalMarks +questionBank.getMarks();
+					
 					if(questionBank.getAns_id().contains(l)){
 						System.out.println(questionBank.getQue_text()+"::::::Answer is correct");
 						marks = marks + questionBank.getMarks();
