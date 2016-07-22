@@ -370,10 +370,10 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Modal Header</h4>
+        <h4 class="modal-title">SMS</h4>
       </div>
       <div class="modal-body">
-        <p>Some text in the modal.</p>
+        <p>To get sms access contact 9766120685</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

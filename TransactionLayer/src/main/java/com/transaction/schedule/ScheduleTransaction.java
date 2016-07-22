@@ -179,7 +179,7 @@ public class ScheduleTransaction {
 				bean.setSubjectname((String) object[4]);
 				bean.setBatchId(((Number) object[5]).intValue());
 				bean.setBatchName((String) object[6]);
-				bean.setId(((Number) object[7]).intValue());
+				bean.setId(((Number) object[7]).intValue()+"/"+((Date) object[8]).getDate());
 				bean.setDate((Date) object[8]);
 				Timestamp timestamp = new Timestamp(((Date) object[8]).getYear(), ((Date) object[8]).getMonth(), ((Date) object[8]).getDate(), ((Time) object[9]).getHours(), ((Time) object[9]).getMinutes(), ((Time) object[9]).getSeconds(), ((Time) object[9]).getSeconds());
 				bean.setStart(timestamp.getTime());
@@ -545,7 +545,9 @@ public class ScheduleTransaction {
 				dateList.add(schedule.getDate());
 				msg = db.validateBeforeUpdate(schedule, dateList);
 				if("".equals(msg)){
+				schedule.setDate(serviceSchedule.getOld_date());
 				db.deleteSchedule(schedule);
+				schedule.setDate(serviceSchedule.getDate());
 				schedule.setSchedule_id(0);
 				db.addSchedule(schedule);
 				}
@@ -759,7 +761,7 @@ public class ScheduleTransaction {
 				bean.setSubjectname((String) object[4]);
 				bean.setBatchId(((Number) object[5]).intValue());
 				bean.setBatchName((String) object[6]);
-				bean.setId(((Number) object[7]).intValue());
+				bean.setId(((Number) object[7]).intValue()+"/"+((Date) object[8]).getDate());
 				bean.setDate((Date) object[8]);
 				Timestamp timestamp = new Timestamp(((Date) object[8]).getYear(), ((Date) object[8]).getMonth(), ((Date) object[8]).getDate(), ((Time) object[9]).getHours(), ((Time) object[9]).getMinutes(), ((Time) object[9]).getSeconds(), ((Time) object[9]).getSeconds());
 				bean.setStart(timestamp.getTime());
@@ -813,7 +815,7 @@ public class ScheduleTransaction {
 				bean.setSubjectname((String) object[4]);
 				bean.setBatchId(((Number) object[5]).intValue());
 				bean.setBatchName((String) object[6]);
-				bean.setId(((Number) object[7]).intValue());
+				bean.setId(((Number) object[7]).intValue()+"/"+((Date) object[8]).getDate());
 				bean.setDate((Date) object[8]);
 				Timestamp timestamp = new Timestamp(((Date) object[8]).getYear(), ((Date) object[8]).getMonth(), ((Date) object[8]).getDate(), ((Time) object[9]).getHours(), ((Time) object[9]).getMinutes(), ((Time) object[9]).getSeconds(), ((Time) object[9]).getSeconds());
 				bean.setStart(timestamp.getTime());

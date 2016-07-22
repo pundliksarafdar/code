@@ -18,6 +18,7 @@ public class Schedule implements Serializable {
 	String rep_days;
 	Date start_date;
 	Date end_date;
+	Date old_date;
 	public int getSchedule_id() {
 		return schedule_id;
 	}
@@ -120,6 +121,14 @@ public class Schedule implements Serializable {
 
 	public void setEnd_date(Date end_date) {
 		this.end_date = end_date;
+	}
+
+	public Date getOld_date() {
+		return old_date;
+	}
+
+	public void setOld_date(Date old_date) {
+		this.old_date = old_date;
 	}
 
 	@Override

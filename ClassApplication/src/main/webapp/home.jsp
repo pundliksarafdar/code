@@ -26,96 +26,68 @@
             <li class="hex">
                 <a class="hexIn" href="#" style="background: #8B008B;">
                     <img src="images/Alert.svg" alt="" />
-                    <h1>This is a title</h1>
-                    <p>Some sample text about the article this hexagon leads to</p>
                 </a>
             </li>
 			<li class="hex">
                 <a class="hexIn" href="#" style="background: white;">
-                    <h1>This is a title</h1>
-                    <p>Some sample text about the article this hexagon leads to</p>
                 </a>
             </li>			
              <li class="hex">
                 <a class="hexIn" href="#" style="background: #7C91C7;">
                     <img src="images/Attendance.svg" alt="" />
-                    <h1>This is a title</h1>
-                    <p>Some sample text about the article this hexagon leads to</p>
                 </a>
             </li>
 			 <li class="hex">
                 <a class="hexIn" href="#" style="background: #87CEFA;">
                     <img src="images/class.svg" alt="" />
-                    <h1>This is a title</h1>
-                    <p>Some sample text about the article this hexagon leads to</p>
                 </a>
             </li>
 			<li class="hex">
                 <a class="hexIn" href="#" style="background: #ff0a00;">
                     <img src="images/Exam.svg" alt="" />
-                    <h1>This is a title</h1>
-                    <p>Some sample text about the article this hexagon leads to</p>
                 </a>
             </li>
 			<li class="hex">
                 <a class="hexIn" href="#" style="background: #fe6700;">
                     <img src="images/Fees.svg" alt="" />
-                    <h1>This is a title</h1>
-                    <p>Some sample text about the article this hexagon leads to</p>
                 </a>
             </li>
 			<li class="hex">
                 <a class="hexIn" href="#" style="background: #191970;">
                     <img src="images/Student.svg" alt="" />
-                    <h1>This is a title</h1>
-                    <p>Some sample text about the article this hexagon leads to</p>
                 </a>
             </li>
 			<li class="hex">
-                <a class="hexIn" href="#" style="background: white;">
-                    <h1>This is a title</h1>
-                    <p>Some sample text about the article this hexagon leads to</p>
+                <a class="hexIn" href="#" style="background: white;">                    
                 </a>
             </li>
 			<li class="hex">
                 <a class="hexIn" href="#" style="background: #FFD602;">
                     <img src="images/Notes.svg" alt="" />
-                    <h1>This is a title</h1>
-                    <p>Some sample text about the article this hexagon leads to</p>
                 </a>
             </li>
 			<li class="hex">
                 <a class="hexIn" href="#" style="background: #A0522D;">
                     <img src="images/Question.svg" alt="" />
-                    <h1>This is a title</h1>
-                    <p>Some sample text about the article this hexagon leads to</p>
                 </a>
             </li>
 			<li class="hex">
                 <a class="hexIn" href="#" style="background: white;">
-                    <h1>This is a title</h1>
-                    <p>Some sample text about the article this hexagon leads to</p>
                 </a>
             </li>
 			<li class="hex">
                 <a class="hexIn" href="#" style="background: #191970;">
                     <img src="images/Setting.svg" alt="" />
-                    <h1>This is a title</h1>
-                    <p>Some sample text about the article this hexagon leads to</p>
                 </a>
             </li>
 			<li class="hex">
                 <a class="hexIn" href="#" style="background: #2cc822;">
                     <img src="images/Teacher.svg" alt="" />
-                    <h1>This is a title</h1>
-                    <p>Some sample text about the article this hexagon leads to</p>
                 </a>
             </li>
 			<li class="hex">
                 <a class="hexIn" href="#" style="background: #00FF7F;">
                     <img src="images/Timetable.svg" alt="" />
-                    <h1>This is a title</h1>
-                    <p>Some sample text about the article this hexagon leads to</p>
                 </a>
             </li>
 			

@@ -3,7 +3,7 @@ package com.service.beans;
 import java.sql.Date;
 
 public class MonthlyScheduleServiceBean {
-	int id;
+	String id;
 	String dataClass;
 	String description;
 	String title;
@@ -36,10 +36,10 @@ public class MonthlyScheduleServiceBean {
 	public void setDataClass(String dataClass) {
 		this.dataClass = dataClass;
 	}
-	public int getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getDescription() {

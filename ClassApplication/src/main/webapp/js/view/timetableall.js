@@ -18,7 +18,7 @@ var CALENDAR_CONTAINER = "#calendarContainer";
 var getBatchListUrl = "rest/feesservice/getInstituteBatch/";
 var getTimetable = "rest/schedule/getScheduleForMonth/";
 var saveScheduleUrl = "rest/schedule/schedule";
-
+var old_date;
 var timtableData,
 	calendar,
 	validatorForm;
@@ -158,7 +158,7 @@ function editSchedule(){
 	if(editRole == "all"){
 		scheduleBean.grp_id = event.grp_id;
 	}else{
-		scheduleBean.schedule_id = event.id;
+		scheduleBean.schedule_id = (event.id).split("/")[0];
 	}
 		scheduleBean.div_id = event.divId;
 		scheduleBean.batch_id = event.batchId;
@@ -167,6 +167,7 @@ function editSchedule(){
 		scheduleBean.start_time = $(START_TIME).find('input').val().length<=5?$(START_TIME).find('input').val()+":00":$(START_TIME).find('input').val();
 		scheduleBean.end_time = $(END_TIME).find('input').val().length<=5?$(END_TIME).find('input').val()+":00":$(END_TIME).find('input').val();
 		scheduleBean.date = $(START_DATE).find('input').val();
+		scheduleBean.old_date = old_date;
 		var repeatation = $(REPETITION_SELECT).find('input[type="checkbox"]:checked');
 		var repetations = [];
 		for(var index=0;index<repeatation.length;index++){
@@ -337,6 +338,8 @@ function onEdit(event){
 		$(EDIT_SCHEDULE).data("eventData",event);
 		var startTime = moment(event.start).format("HH:mm:ss");
 		var endTime = moment(event.end).format("HH:mm:ss");
+		$(START_DATE).find('input').val( moment(event.date).format("YYYY-MM-DD"));
+		old_date = moment(event.date).format("YYYY-MM-DD");
 		if(event.grp_id){
 			modal.modalConfirm("Timetable", "Do you want to update schedule for all upcomming event", "Current", "All",loadAllUpcommingEvent,[event]);
 		}
@@ -344,6 +347,7 @@ function onEdit(event){
 		$(SUBJECT_SELECT).val(event.subId).trigger("change",[event]);
 		$(START_TIME).find('input').val(startTime);
 		$(END_TIME).find('input').val(endTime);
+		
 		$("#addModifyTimetableForm").tooltip("show");
 		$("#divisionSelect").focus();
 }	
@@ -360,12 +364,14 @@ function loadAllUpcommingEvent(event){
 				}
 			}
 		}
-		var startDate = moment(event.start).format("YYYY-MM-DD");
-		var startTime = moment(event.start).format("HH:mm:ss");
+		var startDate = moment(event.start_date).format("YYYY-MM-DD");
+		var startTime = moment(event.start_date).format("HH:mm:ss");
 		var endTime = moment(event.end).format("HH:mm:ss");
+		var endDate = moment(event.end_date).format("YYYY-MM-DD");
 		$(SUBJECT_SELECT).val(event.subId);
 		$(START_DATE).find('input').val(startDate);
 		$(START_TIME).find('input').val(startTime);
+		$(END_DATE).find('input').val(endDate);
 		$(END_TIME).find('input').val(endTime);
 		
 }
@@ -462,8 +468,10 @@ function subjectSelectChange(e,eventSelected)
 	            	   }
 	            	   sell1Options[i+1]= new Option(firstname[i]+" "+lastname[i]+" "+suffix[i], teacherid[i]);
 	            	   }
-	               sell1Select.val(eventSelected && eventSelected.teacher_id ?eventSelected.teacher_id:"-1");
 	               $(TEACHER_SELECT).select2().val("-1").change();
+	               if(eventSelected && eventSelected.teacher_id) {
+	            	   $(TEACHER_SELECT).select2().val(eventSelected.teacher_id).change();
+	               }
 	               }else{
 	            	   $(TEACHER_SELECT).empty();
 					   $(TEACHER_SELECT).select2().val("").change();
