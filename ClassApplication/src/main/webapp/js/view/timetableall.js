@@ -309,13 +309,13 @@ function setTimetable(data){
 			
 			if(event.grp_id){
 				modal.modalYesAndNo("Delete","Do you want to delete?","Current",function(){
-					rest.deleteItem(saveScheduleUrl+"/"+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+event.id+"/"+event.date+"/0",handler);
+					rest.deleteItem(saveScheduleUrl+"/"+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+(event.id).split("/")[0]+"/"+event.date+"/0",handler);
 				},"All",function(){
 					rest.deleteItem(saveScheduleUrl+"/"+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/0/"+event.date+"/"+event.grp_id,handler);
 				});
 			}else{
 				modal.modalConfirm("Delete","Do you want to delete?","No","Yes",function(){
-					rest.deleteItem(saveScheduleUrl+"/"+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+event.id+"/"+event.date+"/0",handler);
+					rest.deleteItem(saveScheduleUrl+"/"+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+(event.id).split("/")[0]+"/"+event.date+"/0",handler);
 				},undefined);
 			}	
 		},
