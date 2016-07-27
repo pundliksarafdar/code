@@ -7,6 +7,11 @@
         <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
+        <!-- Autoconnect -->
+        <property name="connection.autoReconnect">true</property>
+	    <property name="connection.autoReconnectForPools">true</property>
+	    <property name="connection.is-connection-validation-required">true</property>
+	    <!-- Autoconnect ends-->
         <!-- Uncomment for openshiftdeployment  -->
         
         <!-- <property name="hibernate.connection.username">admin7wiv5Ys</property>
