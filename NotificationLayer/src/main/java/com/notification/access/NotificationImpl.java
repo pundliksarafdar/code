@@ -40,6 +40,12 @@ import com.util.NotificationEnum;
 
 public class NotificationImpl {	
 	public HashMap sendFeesDueNotification(int inst_id,int div_id,int batch_id,boolean sendEmail,boolean sendSMS,boolean sendToParent,boolean sendToStudent){
+		int parentsWithoutEmail = 0;
+		int parentsWithoutPhone = 0;
+		int studentsWithoutEmail = 0;
+		int studentsWithoutPhone = 0;
+		int totalStudents = 0;
+		int criteriaStudents = 0;
 		ClassownerSettingstransaction settingsTx = new ClassownerSettingstransaction();
 		ClassownerSettingsNotification settings = settingsTx.getSettings(inst_id);
 		HashMap statusMap = new HashMap<>();
@@ -60,7 +66,12 @@ public class NotificationImpl {
 		RegisterBean institute =db.getRegistereduser(inst_id);
 		List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
 		int msgCounter = 0;
+		StudentDB studentDB = new StudentDB();
+		totalStudents = studentDB.getStudentcountrelatedtobatch(batch_id+"", inst_id, div_id);
 		List studentList = feesDB.getStudentDueFeesForNotification(inst_id, div_id, batch_id);
+		if(studentList != null){
+			if(totalStudents > 0){
+				criteriaStudents = studentList.size();
 			for (Iterator iterator = studentList.iterator(); iterator.hasNext();) {
 				Object[] object = (Object[]) iterator.next();
 				MessageDetailBean messageDetailBean = new MessageDetailBean();
@@ -70,10 +81,14 @@ public class NotificationImpl {
 				messageDetailBean.setStudentEmail((String)object[4]);
 				if(!"".equals((String)object[3])){
 				messageDetailBean.setStudentPhone(Long.parseLong((String)object[3]));
+				}else{
+					messageDetailBean.setStudentPhone(0l);	
 				}
 				messageDetailBean.setParentEmail((String)object[8]);
 				if(!"".equals((String)object[7])){
 				messageDetailBean.setParentPhone(Long.parseLong((String)object[7]));
+				}else{
+				messageDetailBean.setParentPhone(0l);	
 				}
 				messageDetailBean.setMessageTypeEmail(sendEmail);
 				messageDetailBean.setMessageTypeSms(sendSMS);
@@ -84,6 +99,19 @@ public class NotificationImpl {
 				}
 				if(messageDetailBean.getParentPhone()!= null && messageDetailBean.isSendToParent() && messageDetailBean.getParentPhone()!= 0){
 					msgCounter ++;
+				}
+				if((messageDetailBean.getStudentPhone()== null || messageDetailBean.getStudentPhone()== 0) && messageDetailBean.isSendToStudent() ){
+					studentsWithoutPhone ++ ;
+				}
+				if((messageDetailBean.getParentPhone()== null || messageDetailBean.getParentPhone()== 0) && messageDetailBean.isSendToParent()){
+					parentsWithoutPhone ++;
+				}
+				
+				if((messageDetailBean.getStudentEmail()== null || "".equals(messageDetailBean.getStudentEmail())) && messageDetailBean.isSendToStudent() ){
+					studentsWithoutEmail ++;
+				}
+				if((messageDetailBean.getParentEmail()== null || "".equals(messageDetailBean.getParentEmail())) && messageDetailBean.isSendToParent()){
+					parentsWithoutEmail ++;
 				}
 				StudentFessNotificationData data = new StudentFessNotificationData(); 
 				data.setStudent_name((String)object[1]+" "+(String)object[2]);
@@ -105,6 +133,7 @@ public class NotificationImpl {
 				messageDetailBean.setSmsParentTemplate("manualFeesDueAlertParentSMS.tmpl");
 				detailBeans.add(messageDetailBean);
 			}
+			if(detailBeans.size() > 0){
 			NotifcationAccess notifcationAccess = new NotifcationAccess();
 			if(sendSMS){
 			SmsNotificationTransaction  notificationTransaction = new SmsNotificationTransaction();
@@ -118,8 +147,23 @@ public class NotificationImpl {
 			notifcationAccess.send(detailBeans);
 			}
 		}else{
+			status = "All students paid their complete fee.";
+		}
+		}else{
+			status = "Students not available in batch";	
+		}	
+		}
+		}else{
 			statusMap.put("status", status);
 		}
+		statusMap.put("status", status);
+		statusMap.put("parentsWithoutEmail", parentsWithoutEmail);
+		statusMap.put("parentsWithoutPhone", parentsWithoutPhone);
+		statusMap.put("studentsWithoutEmail", studentsWithoutEmail);
+		statusMap.put("studentsWithoutPhone", studentsWithoutPhone);
+		statusMap.put("totalStudents", totalStudents);
+		statusMap.put("criteriaStudents", criteriaStudents);
+		statusMap.put("criteriaMsg", "Fees Due Students :"+criteriaStudents);
 		return statusMap;
 	}
 	
@@ -147,6 +191,12 @@ public class NotificationImpl {
 	
 	public HashMap sendStudentProgressCard(int inst_id,int div_id, int batch_id, String exam_ids,boolean sendEmail,
 			boolean sendSMS,boolean sendToParent,boolean sendToStudent) {
+		int parentsWithoutEmail = 0;
+		int parentsWithoutPhone = 0;
+		int studentsWithoutEmail = 0;
+		int studentsWithoutPhone = 0;
+		int totalStudents = 0;
+		int criteriaStudents = 0;
 		HashMap statusMap = new HashMap<>();
 		String status = "";
 		ClassownerSettingstransaction settingsTx = new ClassownerSettingstransaction();
@@ -172,7 +222,9 @@ public class NotificationImpl {
 		List<StudentProgressCard> progressCardList = marksTransaction.sendStudentProgressCard(inst_id, div_id,
 				batch_id, exam_ids);
 		List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
-		
+		StudentDB studentDB = new StudentDB();
+		totalStudents = studentDB.getStudentcountrelatedtobatch(batch_id+"", inst_id, div_id);
+		if(totalStudents > 0){
 		for (StudentDetails studentDetails : studentData) {
 			List<StudentProgressCard> progressCards = progressCardList.stream().filter(cardList -> cardList.getStudent_id() ==  studentDetails.getStudentId()).collect(Collectors.toList());
 			for (StudentProgressCard progressCard : progressCards) {
@@ -202,6 +254,19 @@ public class NotificationImpl {
 				if(messageDetailBean.getParentPhone()!= null && messageDetailBean.isSendToParent() && messageDetailBean.getParentPhone()!= 0){
 					msgCounter ++;
 				}
+				if((messageDetailBean.getStudentPhone()== null || messageDetailBean.getStudentPhone()== 0) && messageDetailBean.isSendToStudent() ){
+					studentsWithoutPhone ++ ;
+				}
+				if((messageDetailBean.getParentPhone()== null || messageDetailBean.getParentPhone()== 0) && messageDetailBean.isSendToParent()){
+					parentsWithoutPhone ++;
+				}
+				
+				if((messageDetailBean.getStudentEmail()== null || "".equals(messageDetailBean.getStudentEmail())) && messageDetailBean.isSendToStudent() ){
+					studentsWithoutEmail ++;
+				}
+				if((messageDetailBean.getParentEmail()== null || "".equals(messageDetailBean.getParentEmail())) && messageDetailBean.isSendToParent()){
+					parentsWithoutEmail ++;
+				}
 				progressCard.setInst_name(institute.getClassName());
 				messageDetailBean.setEmailObject(progressCard);
 				messageDetailBean.setEmailTemplate("progressCard.tmpl");
@@ -218,6 +283,8 @@ public class NotificationImpl {
 				detailBeans.add(messageDetailBean);
 			}
 		}
+		if(detailBeans.size() > 0){
+		criteriaStudents = detailBeans.size();
 		NotifcationAccess notifcationAccess = new NotifcationAccess();
 		if(sendSMS){
 		SmsNotificationTransaction  notificationTransaction = new SmsNotificationTransaction();
@@ -231,13 +298,33 @@ public class NotificationImpl {
 		notifcationAccess.send(detailBeans);	
 		}
 		}else{
+			status = "Progress card data not available for selected exams";
+		}
+		}else{
+			status = "Students not available in batch";	
+		}	
+		}else{
 			statusMap.put("status", status);
 		}
+		statusMap.put("status", status);
+		statusMap.put("parentsWithoutEmail", parentsWithoutEmail);
+		statusMap.put("parentsWithoutPhone", parentsWithoutPhone);
+		statusMap.put("studentsWithoutEmail", studentsWithoutEmail);
+		statusMap.put("studentsWithoutPhone", studentsWithoutPhone);
+		statusMap.put("totalStudents", totalStudents);
+		statusMap.put("criteriaStudents", criteriaStudents);
+		statusMap.put("criteriaMsg", "No of Students having progress card data :"+criteriaStudents);
 		return statusMap;
 	}
 	
 	public HashMap sendDailyAttendanceManulNotification(Date date,int inst_id,int div_id,int batch_id,boolean sendEmail,
 												boolean sendSMS,boolean sendToParent,boolean sendToStudent,int threshold){
+		int parentsWithoutEmail = 0;
+		int parentsWithoutPhone = 0;
+		int studentsWithoutEmail = 0;
+		int studentsWithoutPhone = 0;
+		int totalStudents = 0;
+		int criteriaStudents = 0;
 		ClassownerSettingstransaction settingsTx = new ClassownerSettingstransaction();
 		ClassownerSettingsNotification settings = settingsTx.getSettings(inst_id);
 		HashMap statusMap = new HashMap<>();
@@ -260,11 +347,13 @@ public class NotificationImpl {
 		List<Student> students=studentDB.getStudentrelatedtoBatch(batch_id+"", inst_id, div_id);
 		List<Integer> studentIds=students.stream().map(Student::getStudent_id).collect(Collectors.toList());
 		if(studentIds.size()>0){
+		totalStudents = studentIds.size();
 		AttendanceDB attendanceDB = new AttendanceDB();
 		RegisterDB db = new RegisterDB();
 		RegisterBean institute = db.getRegistereduser(inst_id);
 		List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
 		List studentList = attendanceDB.getStudentsDailyPresentCountForManulNotification(inst_id, div_id, batch_id, date, studentIds);
+		if(studentList.size() > 0){
 		for (Iterator iterator = studentList.iterator(); iterator.hasNext();) {
 			Object[] object = (Object[]) iterator.next();
 			if (((double) (((Number) object[5]).intValue() * 100)
@@ -290,6 +379,19 @@ public class NotificationImpl {
 				}
 				if(messageDetailBean.getParentPhone()!= null && messageDetailBean.isSendToParent() && messageDetailBean.getParentPhone()!= 0){
 					msgCounter ++;
+				}
+				if((messageDetailBean.getStudentPhone()== null || messageDetailBean.getStudentPhone()== 0) && messageDetailBean.isSendToStudent() ){
+					studentsWithoutPhone ++ ;
+				}
+				if((messageDetailBean.getParentPhone()== null || messageDetailBean.getParentPhone()== 0) && messageDetailBean.isSendToParent()){
+					parentsWithoutPhone ++;
+				}
+				
+				if((messageDetailBean.getStudentEmail()== null || "".equals(messageDetailBean.getStudentEmail())) && messageDetailBean.isSendToStudent() ){
+					studentsWithoutEmail ++;
+				}
+				if((messageDetailBean.getParentEmail()== null || "".equals(messageDetailBean.getParentEmail())) && messageDetailBean.isSendToParent()){
+					parentsWithoutEmail ++;
 				}
 				
 				StudentAttendanceNotificationData data = new StudentAttendanceNotificationData();
@@ -321,6 +423,7 @@ public class NotificationImpl {
 		}
 		NotifcationAccess notifcationAccess = new NotifcationAccess();
 		if(detailBeans.size()>0){
+			criteriaStudents = detailBeans.size();
 			if(sendSMS){
 			SmsNotificationTransaction  notificationTransaction = new SmsNotificationTransaction();
 			statusMap = notificationTransaction.validateNSendSms(msgCounter, "", inst_id,div_id,batch_id,Constants.PARENT_ROLE,Constants.MANUAL_DAILY_MSG);;
@@ -337,17 +440,34 @@ public class NotificationImpl {
 			statusMap.put("status", status);
 		}
 		}else{
+			status = "Attendance data not available for selected date";
+		}
+		}else{
 			status = "Students Not Available in batch";
 			statusMap.put("status", status);
 		}
 		}else{
 			statusMap.put("status", status);
 		}
+		statusMap.put("status", status);
+		statusMap.put("parentsWithoutEmail", parentsWithoutEmail);
+		statusMap.put("parentsWithoutPhone", parentsWithoutPhone);
+		statusMap.put("studentsWithoutEmail", studentsWithoutEmail);
+		statusMap.put("studentsWithoutPhone", studentsWithoutPhone);
+		statusMap.put("totalStudents", totalStudents);
+		statusMap.put("criteriaStudents", criteriaStudents);
+		statusMap.put("criteriaMsg", "No of Students having Attendance data :"+criteriaStudents);
 		return statusMap;
 	}
 
 	public HashMap sendWeeklyAttendanceManulNotification(Date date, int inst_id, int div_id, int batch_id,
 			boolean sendEmail, boolean sendSMS, boolean sendToParent, boolean sendToStudent, int threshold) {
+		int parentsWithoutEmail = 0;
+		int parentsWithoutPhone = 0;
+		int studentsWithoutEmail = 0;
+		int studentsWithoutPhone = 0;
+		int totalStudents = 0;
+		int criteriaStudents = 0;
 		ClassownerSettingstransaction settingsTx = new ClassownerSettingstransaction();
 		ClassownerSettingsNotification settings = settingsTx.getSettings(inst_id);
 		HashMap statusMap = new HashMap<>();
@@ -378,11 +498,13 @@ public class NotificationImpl {
 		List<Student> students = studentDB.getStudentrelatedtoBatch(batch_id + "", inst_id, div_id);
 		List<Integer> studentIds = students.stream().map(Student::getStudent_id).collect(Collectors.toList());
 		if (studentIds.size() > 0) {
+			totalStudents = studentIds.size();
 			AttendanceDB attendanceDB = new AttendanceDB();
 			RegisterDB db = new RegisterDB();
 			RegisterBean institute = db.getRegistereduser(inst_id);
 			List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
 			List studentList = attendanceDB.getStudentsWeeklyPresentCountForManulNotification(inst_id, div_id, batch_id, startDate, endDate, studentIds);
+			if(studentList.size() > 0){
 			for (Iterator iterator = studentList.iterator(); iterator.hasNext();) {
 				Object[] object = (Object[]) iterator.next();
 				if (((double) (((Number) object[5]).intValue() * 100)
@@ -408,6 +530,19 @@ public class NotificationImpl {
 					}
 					if(messageDetailBean.getParentPhone()!= null && messageDetailBean.isSendToParent() && messageDetailBean.getParentPhone()!= 0){
 						msgCounter ++;
+					}
+					if((messageDetailBean.getStudentPhone()== null || messageDetailBean.getStudentPhone()== 0) && messageDetailBean.isSendToStudent() ){
+						studentsWithoutPhone ++ ;
+					}
+					if((messageDetailBean.getParentPhone()== null || messageDetailBean.getParentPhone()== 0) && messageDetailBean.isSendToParent()){
+						parentsWithoutPhone ++;
+					}
+					
+					if((messageDetailBean.getStudentEmail()== null || "".equals(messageDetailBean.getStudentEmail())) && messageDetailBean.isSendToStudent() ){
+						studentsWithoutEmail ++;
+					}
+					if((messageDetailBean.getParentEmail()== null || "".equals(messageDetailBean.getParentEmail())) && messageDetailBean.isSendToParent()){
+						parentsWithoutEmail ++;
 					}
 					
 					StudentAttendanceNotificationData data = new StudentAttendanceNotificationData();
@@ -442,6 +577,7 @@ public class NotificationImpl {
 			}
 			NotifcationAccess notifcationAccess = new NotifcationAccess();
 			if (detailBeans.size() > 0) {
+				criteriaStudents = detailBeans.size();
 				if(sendSMS){
 				SmsNotificationTransaction  notificationTransaction = new SmsNotificationTransaction();
 				statusMap = notificationTransaction.validateNSendSms(msgCounter, "", inst_id,div_id,batch_id,Constants.PARENT_ROLE,Constants.MANUAL_WEEKLY_MSG);;
@@ -458,17 +594,34 @@ public class NotificationImpl {
 				statusMap.put("status", status);
 			}
 			}else{
+				status = "Attendance data not available for selected week";
+			}
+			}else{
 				status = "Students Not Available in batch";
 				statusMap.put("status", status);
 			}
 			}else{
 				statusMap.put("status", status);
 			}
+		statusMap.put("status", status);
+		statusMap.put("parentsWithoutEmail", parentsWithoutEmail);
+		statusMap.put("parentsWithoutPhone", parentsWithoutPhone);
+		statusMap.put("studentsWithoutEmail", studentsWithoutEmail);
+		statusMap.put("studentsWithoutPhone", studentsWithoutPhone);
+		statusMap.put("totalStudents", totalStudents);
+		statusMap.put("criteriaStudents", criteriaStudents);
+		statusMap.put("criteriaMsg", "No of Students having Attendance data :"+criteriaStudents);
 		return statusMap;
 	}
 	
 	public HashMap sendMonthlyAttendanceManulNotification(Date date, int inst_id, int div_id, int batch_id,
 			boolean sendEmail, boolean sendSMS, boolean sendToParent, boolean sendToStudent, int threshold) {
+		int parentsWithoutEmail = 0;
+		int parentsWithoutPhone = 0;
+		int studentsWithoutEmail = 0;
+		int studentsWithoutPhone = 0;
+		int totalStudents = 0;
+		int criteriaStudents = 0;
 		ClassownerSettingstransaction settingsTx = new ClassownerSettingstransaction();
 		ClassownerSettingsNotification settings = settingsTx.getSettings(inst_id);
 		HashMap statusMap = new HashMap<>();
@@ -500,11 +653,13 @@ public class NotificationImpl {
 		List<Student> students = studentDB.getStudentrelatedtoBatch(batch_id + "", inst_id, div_id);
 		List<Integer> studentIds = students.stream().map(Student::getStudent_id).collect(Collectors.toList());
 		if (studentIds.size() > 0) {
+			totalStudents = studentIds.size();
 			AttendanceDB attendanceDB = new AttendanceDB();
 			RegisterDB db = new RegisterDB();
 			RegisterBean institute = db.getRegistereduser(inst_id);
 			List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
 			List studentList = attendanceDB.getStudentsMonthlyPresentCountForManulNotification(inst_id, div_id, batch_id, startDate, endDate, studentIds);
+			if(studentList.size() > 0){
 			for (Iterator iterator = studentList.iterator(); iterator.hasNext();) {
 				Object[] object = (Object[]) iterator.next();
 				if (((double) (((Number) object[5]).intValue() * 100)
@@ -531,6 +686,20 @@ public class NotificationImpl {
 					if(messageDetailBean.getParentPhone()!= null && messageDetailBean.isSendToParent() && messageDetailBean.getParentPhone()!= 0){
 						msgCounter ++;
 					}
+					if((messageDetailBean.getStudentPhone()== null || messageDetailBean.getStudentPhone()== 0) && messageDetailBean.isSendToStudent() ){
+						studentsWithoutPhone ++ ;
+					}
+					if((messageDetailBean.getParentPhone()== null || messageDetailBean.getParentPhone()== 0) && messageDetailBean.isSendToParent()){
+						parentsWithoutPhone ++;
+					}
+					
+					if((messageDetailBean.getStudentEmail()== null || "".equals(messageDetailBean.getStudentEmail())) && messageDetailBean.isSendToStudent() ){
+						studentsWithoutEmail ++;
+					}
+					if((messageDetailBean.getParentEmail()== null || "".equals(messageDetailBean.getParentEmail())) && messageDetailBean.isSendToParent()){
+						parentsWithoutEmail ++;
+					}
+					
 					StudentAttendanceNotificationData data = new StudentAttendanceNotificationData();
 					data.setInst_name(institute.getClassName());
 					data.setAtt_date(date);
@@ -563,6 +732,7 @@ public class NotificationImpl {
 			}
 			NotifcationAccess notifcationAccess = new NotifcationAccess();
 			if (detailBeans.size() > 0) {
+				criteriaStudents = detailBeans.size();
 				SmsNotificationTransaction  notificationTransaction = new SmsNotificationTransaction();
 				if(sendSMS){
 			    statusMap = notificationTransaction.validateNSendSms(msgCounter, "", inst_id,div_id,batch_id,Constants.PARENT_ROLE,Constants.MANUAL_MONTHLY_MSG);;
@@ -579,12 +749,23 @@ public class NotificationImpl {
 				statusMap.put("status", status);
 			}
 			}else{
+				status = "Attendance data not available for selected month";
+			}
+			}else{
 				status = "Students Not Available in batch";
 				statusMap.put("status", status);
 			}
 			}else{
 				statusMap.put("status", status);
 			}
+		statusMap.put("status", status);
+		statusMap.put("parentsWithoutEmail", parentsWithoutEmail);
+		statusMap.put("parentsWithoutPhone", parentsWithoutPhone);
+		statusMap.put("studentsWithoutEmail", studentsWithoutEmail);
+		statusMap.put("studentsWithoutPhone", studentsWithoutPhone);
+		statusMap.put("totalStudents", totalStudents);
+		statusMap.put("criteriaStudents", criteriaStudents);
+		statusMap.put("criteriaMsg", "No of Students having Attendance data :"+criteriaStudents);
 		return statusMap;
 	}
 	
@@ -776,6 +957,130 @@ public class NotificationImpl {
 				notifcationAccess.send(detailBeans);
 			}
 		
+	}
+	
+	public HashMap sendFeesDueNotification(int inst_id,int div_id,int batch_id,List<Integer> studentIds,
+			boolean sendEmail, boolean sendSMS, boolean sendToParent, boolean sendToStudent){
+		int parentsWithoutEmail = 0;
+		int parentsWithoutPhone = 0;
+		int studentsWithoutEmail = 0;
+		int studentsWithoutPhone = 0;
+		int totalStudents = 0;
+		int criteriaStudents = 0;
+		ClassownerSettingstransaction settingsTx = new ClassownerSettingstransaction();
+ 		ClassownerSettingsNotification settings = settingsTx.getSettings(inst_id);
+		HashMap statusMap = new HashMap<>();
+		String status = "";
+		if(sendSMS == true && settings.getInstituteStats().isSmsAccess()==false){
+			status = "You don't have SMS access";
+		}
+		if(sendEmail == true && settings.getInstituteStats().isEmailAccess() == false){
+			if("".equals(status)){
+				status = "You don't have Email access";
+			}else{
+				status = status + "and Email access";
+			}
+		}
+		if("".equals(status)){
+		StudentDB studentDB = new StudentDB();
+		totalStudents = studentDB.getStudentcountrelatedtobatch(batch_id+"", inst_id, div_id);
+		RegisterDB db =new RegisterDB();
+		FeesDB feesDB = new FeesDB();
+		RegisterBean institute =db.getRegistereduser(inst_id);
+		List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
+		int msgCounter = 0;
+		List studentList = feesDB.getStudentDueFeesForNotification(inst_id, div_id, batch_id,studentIds);
+		if(totalStudents > 0){
+			criteriaStudents = studentList.size();
+			for (Iterator iterator = studentList.iterator(); iterator.hasNext();) {
+				Object[] object = (Object[]) iterator.next();
+				MessageDetailBean messageDetailBean = new MessageDetailBean();
+				messageDetailBean.setFrom(institute.getClassName());
+				messageDetailBean.setEmailSubject("Fees Due");
+				messageDetailBean.setStudentId(((Number)object[0]).intValue());
+				messageDetailBean.setStudentEmail((String)object[4]);
+				if(!"".equals((String)object[3])){
+				messageDetailBean.setStudentPhone(Long.parseLong((String)object[3]));
+				}
+				messageDetailBean.setParentEmail((String)object[8]);
+				if(!"".equals((String)object[7])){
+				messageDetailBean.setParentPhone(Long.parseLong((String)object[7]));
+				}
+				messageDetailBean.setMessageTypeEmail(sendEmail);
+				messageDetailBean.setMessageTypeSms(sendSMS);
+				messageDetailBean.setSendToParent(sendToParent);
+				messageDetailBean.setSendToStudent(sendToStudent);
+				if(messageDetailBean.getStudentPhone()!= null && messageDetailBean.isSendToStudent() && messageDetailBean.getStudentPhone()!= 0){
+					msgCounter ++;
+				}
+				if(messageDetailBean.getParentPhone()!= null && messageDetailBean.isSendToParent() && messageDetailBean.getParentPhone()!= 0){
+					msgCounter ++;
+				}
+				if((messageDetailBean.getStudentPhone()== null || messageDetailBean.getStudentPhone()== 0) && messageDetailBean.isSendToStudent() ){
+					studentsWithoutPhone ++ ;
+				}
+				if((messageDetailBean.getParentPhone()== null || messageDetailBean.getParentPhone()== 0) && messageDetailBean.isSendToParent()){
+					parentsWithoutPhone ++;
+				}
+				
+				if((messageDetailBean.getStudentEmail()== null || "".equals(messageDetailBean.getStudentEmail())) && messageDetailBean.isSendToStudent() ){
+					studentsWithoutEmail ++;
+				}
+				if((messageDetailBean.getParentEmail()== null || "".equals(messageDetailBean.getParentEmail())) && messageDetailBean.isSendToParent()){
+					parentsWithoutEmail ++;
+				}
+				
+				StudentFessNotificationData data = new StudentFessNotificationData(); 
+				data.setStudent_name((String)object[1]+" "+(String)object[2]);
+				data.setParent_name((String)object[5]+" "+(String)object[6]);
+				data.setTotal_fees(((Number)object[9]).doubleValue());
+				data.setFees_paid(((Number)object[10]).doubleValue());
+				data.setFee_due(((Number)object[11]).doubleValue());
+				messageDetailBean.setEmailMessage(null);
+				messageDetailBean.setEmailObject(data);
+				messageDetailBean.setEmailTemplate("feesAlertStudent.tmpl");
+				messageDetailBean.setParentEmailMessage(null);
+				messageDetailBean.setParentEmailObject(data);
+				messageDetailBean.setParentEmailTemplate("feesAlertParent.tmpl");
+				messageDetailBean.setSmsMessage(null);
+				messageDetailBean.setSmsTemplate("manualFeesDueAlertStudentSMS.tmpl");
+				messageDetailBean.setSmsObject(data);
+				messageDetailBean.setSmsParentMessage(null);
+				messageDetailBean.setSmsParentObject(data);
+				messageDetailBean.setSmsParentTemplate("manualFeesDueAlertParentSMS.tmpl");
+				detailBeans.add(messageDetailBean);
+			}
+			if(detailBeans.size() > 0){
+			NotifcationAccess notifcationAccess = new NotifcationAccess();
+			if(settings.getClassOwnerNotificationBean().isSmsPaymentDue()){
+			SmsNotificationTransaction  notificationTransaction = new SmsNotificationTransaction();
+			statusMap = notificationTransaction.validateNSendSms(msgCounter, "", inst_id,Constants.COMMON_ZERO,Constants.COMMON_ZERO,Constants.PARENT_ROLE,Constants.AUTO_DAILY_MSG);;
+			if(statusMap.containsKey("access") && (boolean)statusMap.get("access")){
+			notifcationAccess.send(detailBeans);
+			ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
+			settingstransaction.reduceSmsCount(msgCounter, institute.getRegId());
+			}
+			}else{
+			notifcationAccess.send(detailBeans);
+			}
+			}else{
+				status = "All students paid their complete fee.";
+			}
+		}else{
+			status = "Students not available in batch";	
+		}	
+		}else{
+			statusMap.put("status", status);
+		}
+		statusMap.put("status", status);
+		statusMap.put("parentsWithoutEmail", parentsWithoutEmail);
+		statusMap.put("parentsWithoutPhone", parentsWithoutPhone);
+		statusMap.put("studentsWithoutEmail", studentsWithoutEmail);
+		statusMap.put("studentsWithoutPhone", studentsWithoutPhone);
+		statusMap.put("totalStudents", totalStudents);
+		statusMap.put("criteriaStudents", criteriaStudents);
+		statusMap.put("criteriaMsg", "Fees Due Students :"+criteriaStudents);
+		return statusMap;
 	}
 	
 	

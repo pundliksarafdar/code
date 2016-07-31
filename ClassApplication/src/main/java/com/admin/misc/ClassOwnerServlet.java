@@ -3188,7 +3188,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		UserStatic userStatic = userBean.getUserStatic();
 		String storagePath = com.config.Constants.STORAGE_PATH+File.separator+notes.getInst_id();
 		userStatic.setStorageSpace(storagePath);
-		String path=userStatic.getNotesPath()+File.separator+notes.getSubid()+File.separator+notes.getDivid()+File.separator+filename;
+		String path=userStatic.getNotesPath()+File.separator+notes.getDivid()+File.separator+notes.getSubid()+File.separator+filename;
 		File file = new File(path);
 		String base64="";
         try {
@@ -3503,7 +3503,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			UserStatic userStatic = userBean.getUserStatic();
 			for (int i = 0; i < questionbanks.size(); i++) {
 				//String questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionbanks.get(i).getQue_id();
-				String questionPath=com.config.Constants.STORAGE_PATH+File.separatorChar+inst_id+File.separatorChar+"exam"+File.separatorChar+"paragraph"+File.separatorChar+questionbanks.get(i).getQue_id();
+				String questionPath=com.config.Constants.STORAGE_PATH+File.separatorChar+inst_id+File.separatorChar+"exam"+File.separatorChar+"paragraph"+File.separatorChar+ division +File.separatorChar + subject +File.separatorChar+questionbanks.get(i).getQue_id();
 				ParaQuestionBean paraQuestionBean=(ParaQuestionBean) readObject(new File(questionPath));
 				paragraphQuestionList.add(paraQuestionBean);
 			}

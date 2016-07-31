@@ -74,7 +74,7 @@ public class DisplayNotesAction extends BaseAction{
 				String storagePath = Constants.STORAGE_PATH+File.separator+institute;
 				userStatic.setStorageSpace(storagePath);
 			}
-		String path=userStatic.getNotesPath()+File.separator+subject+File.separator+division+File.separator+filename;
+		String path=userStatic.getNotesPath()+File.separator+division+File.separator+subject+File.separator+filename;
 		File file = new File(path);
         try {
 				PDDocument document = PDDocument.load(new File(path));

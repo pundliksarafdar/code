@@ -58,8 +58,8 @@ public class ImageTransactions {
 		imageDB.save(image);
 	}
 	
-	public void saveQuestionImage(List<String> tempImageList,int questionId,int regId){
-		String subjectiveImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + SUBJECTIVE + File.separatorChar + questionId;
+	public void saveQuestionImage(List<String> tempImageList,int questionId,int regId,int div_id,int sub_id){
+		String subjectiveImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + SUBJECTIVE + File.separatorChar+ div_id + File.separatorChar + sub_id + File.separatorChar + questionId;
 		List<String>savedImages = new ArrayList<String>();
 		for(String tempImageName:tempImageList){
 			boolean isExist = saveImage(tempImageName, subjectiveImageDest+ File.separatorChar+tempImageName,regId);
@@ -75,8 +75,8 @@ public class ImageTransactions {
 		deleteImageListInImageFolder(subjectiveImageDest, imageNameList);
 	}
 	
-	public void saveObjectiveQuestionImage(List<String> tempImageList,int questionId,int regId){
-		String subjectiveImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + questionId + File.separatorChar + QUESTION ;
+	public void saveObjectiveQuestionImage(List<String> tempImageList,int questionId,int regId,int div_id,int sub_id){
+		String subjectiveImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + div_id + File.separatorChar + sub_id + File.separatorChar + questionId + File.separatorChar + QUESTION ;
 		List<String>savedImages = new ArrayList<String>();
 		for(String tempImageName:tempImageList){
 			boolean isExist = saveImage(tempImageName, subjectiveImageDest+ File.separatorChar+tempImageName,regId);
@@ -92,8 +92,8 @@ public class ImageTransactions {
 		deleteImageListInImageFolder(subjectiveImageDest, imageNameList);
 	}
 	
-	public void saveOptionImage(HashMap<Integer, List<String>> optionImages,int questionId,int regId){
-		String objectiveImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + questionId + File.separatorChar + OPTION +File.separatorChar;
+	public void saveOptionImage(HashMap<Integer, List<String>> optionImages,int questionId,int regId,int div_id,int sub_id){
+		String objectiveImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + div_id + File.separatorChar + sub_id + File.separatorChar + questionId + File.separatorChar + OPTION +File.separatorChar;
 		
 		for (Entry<Integer, List<String>> entry : optionImages.entrySet()) {
 			String optionIdPath = objectiveImageDest + entry.getKey() ;
@@ -112,8 +112,8 @@ public class ImageTransactions {
 		}		
 	}
 	
-	public void renameFolders(List<Integer>prevImage,List<Integer>currentImage,int questionId,int regId){
-		String objectiveImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + questionId + File.separatorChar + OPTION +File.separatorChar;
+	public void renameFolders(List<Integer>prevImage,List<Integer>currentImage,int questionId,int regId,int div_id,int sub_id){
+		String objectiveImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + div_id + File.separatorChar + sub_id + File.separatorChar + questionId + File.separatorChar + OPTION +File.separatorChar;
 		System.out.println("Renaming image.....");
 		System.out.println(prevImage);
 		System.out.println(currentImage);
@@ -128,12 +128,12 @@ public class ImageTransactions {
 	
 	public void saveParagraphImage(ParaQuestionBean paraQuestionBean,int questionId,int regId){
 		//change folder option
-		String paraImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + PARAGRAPH + File.separatorChar + questionId + File.separatorChar + PARAGRAPH +File.separatorChar;
+		String paraImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + PARAGRAPH + File.separatorChar + paraQuestionBean.getClassId() + File.separatorChar + paraQuestionBean.getSubjectId() + File.separatorChar + questionId + File.separatorChar + PARAGRAPH +File.separatorChar;
 		for(String tempImageName:paraQuestionBean.getImages()){
 			saveImage(tempImageName, paraImageDest+tempImageName,regId);
 		}
 		
-		String paraQuestionImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + PARAGRAPH + File.separatorChar + questionId + File.separatorChar + PARAGRAPH_QUESTION +File.separatorChar;
+		String paraQuestionImageDest = this.storageURL + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + PARAGRAPH + File.separatorChar + paraQuestionBean.getClassId() + File.separatorChar + paraQuestionBean.getSubjectId() + File.separatorChar + questionId + File.separatorChar + PARAGRAPH_QUESTION +File.separatorChar;
 		int index = 0;
 		for(ParaQuestion paraQuestion:paraQuestionBean.getParaQuestion()){
 			String imageOptions = paraQuestionImageDest+ index + File.separatorChar; 

@@ -438,8 +438,10 @@ var generatePattern = function(){
 		return questionPaperStructure;
 	});
 	var handlers = {};
-	handlers.success = function(e){if(e==false){
+	handlers.success = function(e){if(e=="name"){
 		$.notify({message: "Pattern with same name already available"},{type: 'danger'});
+	}else if(e=="memory"){
+		$.notify({message: "Memory not available, pattern not added"},{type: 'danger'});
 	}else {
 		$("#patternSavedNotification").modal("toggle");}
 	}

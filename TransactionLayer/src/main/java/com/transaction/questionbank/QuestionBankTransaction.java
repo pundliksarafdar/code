@@ -197,7 +197,7 @@ public class QuestionBankTransaction {
 		
 		public boolean saveParaObject(String storagePath,ParaQuestionBean paraQuestionBean,int questionId){
 			String questionpath = storagePath + File.separatorChar + paraQuestionBean.getInstId() + File.separatorChar
-					+ "exam" + File.separatorChar + "paragraph" + File.separatorChar + questionId ;
+					+ "exam" + File.separatorChar + "paragraph"+ File.separatorChar+paraQuestionBean.getClassId()+ File.separatorChar+paraQuestionBean.getSubjectId() + File.separatorChar + questionId ;
 			File file = new File(questionpath);
 			if(!file.getParentFile().exists()){
 				file.getParentFile().mkdirs();

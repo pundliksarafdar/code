@@ -70,8 +70,12 @@
 			console.log(subjectiveExamBean);
 			var handler = {};
 			handler.success = function(e){
+				if(e == ""){
 				$.notify({message: "Question updated successfuly"},{type: 'success'});
 				setTimeout(function(){cancelEdit();},1000*2);
+				}else{
+					$.notify({message: "Memory not available,question not updated"},{type: 'danger'});	
+				}
 			}
 			handler.error = function(e){console.log(e)}
 			rest.put(saveSubjectiveExamUrl,handler,JSON.stringify(subjectiveExamBean),true);

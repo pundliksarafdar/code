@@ -299,11 +299,19 @@ function previewSuccess(resp){
 			}
 
 			if(this.item_type == ITEM_TYPE.QUESTION && this.questionbank != null){
+				if(this.questionbank.que_type == "3"){
+					$("<div/>",{
+						text:this.paragraphQuestion.paragraphText,
+						style:'text-align:left;float:left;width:80%;',
+						
+					}).appendTo(sparentDiv);
+				}else{
 					$("<div/>",{
 						text:this.questionbank.que_text,
 						style:'text-align:left;float:left;width:80%;',
 						
 					}).appendTo(sparentDiv);
+				}
 			}
 			if(this.item_type == ITEM_TYPE.QUESTION && this.questionbank == null){
 				$("<div/>",{

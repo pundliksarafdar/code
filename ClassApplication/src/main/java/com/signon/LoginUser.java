@@ -454,10 +454,10 @@ public class LoginUser extends BaseAction{
 			userStatic.getAlarms().add("Error cause while creating space");
 		}
 		
-		double totalStorage = 150.0; //set to default
+		double totalStorage = 100; //set to default
 		double examSize = getFolderSize(new File(storagePath+File.separator+"exam"))/(1024.0*1024.0);
 		double noteSize = getFolderSize(new File(storagePath+File.separator+"notes"))/(1024.0*1024.0);
-		double usedSize = examSize+noteSize;
+		double usedSize = getFolderSize(new File(storagePath))/(1024.0*1024.0);
 		
 		userStatic.setTotalStorage(totalStorage);
 		userStatic.setUsedSpace(usedSize);

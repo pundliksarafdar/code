@@ -29,7 +29,28 @@
 			</div>
 		</div>
 		</div>
-		
+		<div class="container" id="actionButtons">
+		<div class="col-md-6">
+		<button class="btn btn-primary" id="sendFeesDue">Send fees due alert to Selected Students</button>
+		</div>
+		<div class="col-md-3">
+			<label >Choose method</label>	
+				<div>
+					<input type="checkbox" value="sms" id="sms" name="type" required><label for="sms">SMS</label>
+					<input type="checkbox" value="email" id="email" name="type" required><label for="email">Email</label>
+				</div>
+				<div id="typeError" style="color: red"></div>
+			</div>
+			<div class="col-md-3">
+			<label>Choose whome</label>
+				<div>
+					<input type="checkbox" value="parent" id="parent" name="sendTo" required/><label for="parent">Parent</label>
+					<input type="checkbox" value="student" id="student" name="sendTo" required/><label for="student">Student</label>
+				</div>	
+				<div id="whomeError" style="color: red"></div>
+			</div>
+		</div>
+		<div class="well alert alert-success" id="notificationSummary" style="display: none;"></div>
 		<div class="container" id="studentFeesTableDiv">
 				<table id="studentFeesTable" class="table table-striped"></table>
 		</div>

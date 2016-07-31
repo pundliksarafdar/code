@@ -324,7 +324,7 @@ public class CorexServiceApi extends ServiceBase{
 			@PathParam("subject") int subject,@PathParam("batch") String batch){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 	    UserStatic userStatic = userBean.getUserStatic();
-	    String destPath=  userStatic.getNotesPath()+File.separator+subject+File.separator+division;
+	    String destPath=  userStatic.getNotesPath()+File.separator+division+File.separator+subject;
 		for(int i=0;i<=notescount;i++){
 		String fileName="";
 		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
@@ -380,8 +380,7 @@ public class CorexServiceApi extends ServiceBase{
 		    	 notes.setTime(new Timestamp(new Date().getTime()));
 		    	 NotesTransaction notesTransaction=new NotesTransaction();
 		    	 notesTransaction.addNotes(notes);
-		    	 InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
-		    	 instituteStatTransaction.increaseUsedMemory(userBean.getRegId(), fileSize);
+		    	 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -391,7 +390,8 @@ public class CorexServiceApi extends ServiceBase{
 		JsonObject jsonObject = new JsonObject();
 		/*jsonObject.addProperty("fileid", fileName);*/
 		//jsonObject.
-		
+		InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
+		instituteStatTransaction.updateStorageSpace(getRegId(), Constants.STORAGE_PATH);
 		return Response.status(200).entity(jsonObject.toString()).type(MediaType.APPLICATION_JSON).build();
 	}
 	

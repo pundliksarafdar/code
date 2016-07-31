@@ -198,7 +198,19 @@ $(document).ready(function(){
 				if(e.questionPaperDataList && e.questionPaperDataList.length){
 					$.each(e.questionPaperDataList,function(key,val){
 						if(val.dataStatus != "N" && val.dataStatus != "MN"){
-							$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
+							if(val.questionbank.que_type == "3"){
+								if(val.paragraphQuestion.paragraphText != null){
+								if(val.paragraphQuestion.paragraphText.length > 50){
+								$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.paragraphQuestion.paragraphText.substring(0,50)+"...");	
+								}else{
+									$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.paragraphQuestion.paragraphText);		
+								}
+								}else{
+								$("[item_id='"+val.item_id+"']").find(QUESTION).text("Paragraph Text not available.");		
+								}
+								}else{
+								$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);
+								}	
 							$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
 							}else if(val.dataStatus == "MN"){
 								$.notify({message: "More Questions are not available for criteria"},{type: 'danger'});
@@ -247,7 +259,19 @@ $(document).ready(function(){
 			if(e.questionPaperDataList.length){
 				$.each(e.questionPaperDataList,function(key,val){
 					if(val.dataStatus != "N"){
-						$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);	
+						if(val.questionbank.que_type == "3"){
+							if(val.paragraphQuestion.paragraphText != null){
+							if(val.paragraphQuestion.paragraphText.length > 50){
+							$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.paragraphQuestion.paragraphText.substring(0,50)+"...");	
+							}else{
+								$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.paragraphQuestion.paragraphText);		
+							}
+							}else{
+							$("[item_id='"+val.item_id+"']").find(QUESTION).text("Paragraph Text not available.");		
+							}
+							}else{
+							$("[item_id='"+val.item_id+"']").find(QUESTION).text(val.questionbank.que_text);
+							}		
 						$("[item_id='"+val.item_id+"']").find(QUESTION).data(QUESTION_ID,val.questionbank.que_id);
 					}else{
 						availibilityFlag = false;
@@ -537,6 +561,13 @@ function recursiveView(data,recursionLevel,dataArray){
 					html:data[i].questionbank?data[i].questionbank.que_text:"<span class='error'>Question is not available</span>"
 				}).data(QUESTION_ID,(data[i].questionbank?data[i].questionbank.que_id:undefined));
 				
+				if(data[i].questionbank.que_type == "3"){
+					question = $("<div/>",{
+						class:"col-md-5 question",
+						html:data[i].questionbank?data[i].paragraphQuestion.paragraphText:"<span class='error'>Question is not available</span>"
+					}).data(QUESTION_ID,(data[i].questionbank?data[i].questionbank.que_id:undefined));
+				}
+				
 				var selectSubject = $("<select/>",{
 					class:"btn btn-default selectSubject btn-xs",
 					style:"width:100%;",
@@ -631,7 +662,13 @@ var loadQuestionList = function(subject_id,item_id,question_type,item_type,quest
 				data: data,
 				lengthChange: false,
 				columns: [
-					{ title: "Question",data:"questionbank.que_text",sWidth:"80%"},
+					{ title: "Question",data:"data",render:function(data,event,row){
+						if(row.questionbank.que_type == "3"){
+							return row.paragraphQuestion.paragraphText;
+						}else{
+							return row.questionbank.que_text;
+						}
+					},sWidth:"80%"},
 					{ title: "Marks",data:"questionbank.marks",sWidth:"10%"},
 					{ title: "",data:null,render:function(data,event,row){
 						return "<a class='btn btn-success btn-xs chooseQuestionFromTable'>Choose</a>"
@@ -645,7 +682,19 @@ var loadQuestionList = function(subject_id,item_id,question_type,item_type,quest
 			}
 		
 function updateQuestionList(data){
-		$("[item_id='"+data.item_id+"']").find(QUESTION).text(data.questionbank.que_text);	
+	if(data.questionbank.que_type == "3"){
+		if(data.paragraphQuestion.paragraphText != null){
+			if(data.paragraphQuestion.paragraphText.length > 50){
+			$("[item_id='"+data.item_id+"']").find(QUESTION).text(data.paragraphQuestion.paragraphText.substring(0,50)+"...");	
+			}else{
+				$("[item_id='"+data.item_id+"']").find(QUESTION).text(data.paragraphQuestion.paragraphText);		
+			}
+			}else{
+			$("[item_id='"+data.item_id+"']").find(QUESTION).text("Paragraph Text not available.");		
+			}
+	}else{
+	$("[item_id='"+data.item_id+"']").find(QUESTION).text(data.questionbank.que_text);	
+	}	
 		$("[item_id='"+data.item_id+"']").find(QUESTION).data(QUESTION_ID,data.questionbank.que_id);
 }
 		

@@ -71,6 +71,7 @@ import com.transaction.attendance.AttendanceTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.image.ImageTransactions;
+import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.notes.NotesTransaction;
 import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
 import com.transaction.questionbank.QuestionBankTransaction;
@@ -228,7 +229,7 @@ public class TeacherServiceImpl extends ServiceBase {
 		int questionId = bankTransaction.saveQuestion(questionbank);
 		if(questionId >= 0){
 			ImageTransactions imageTransactions = new ImageTransactions(Constants.STORAGE_PATH);
-			imageTransactions.saveQuestionImage(subjectiveExamBean.getImages(), questionId, subjectiveExamBean.getInst_id());
+			imageTransactions.saveQuestionImage(subjectiveExamBean.getImages(), questionId, subjectiveExamBean.getInst_id(),Integer.parseInt(subjectiveExamBean.getClassId()),subjectiveExamBean.getSubjectId());
 		}
 		return Response.ok().build();
 	}
@@ -259,7 +260,7 @@ public class TeacherServiceImpl extends ServiceBase {
 				subjectiveExamBean.getMarks(),questionbank.getTopic_id());
 		if(success){
 			ImageTransactions imageTransactions = new ImageTransactions(Constants.STORAGE_PATH);
-			imageTransactions.saveQuestionImage(subjectiveExamBean.getImages(), subjectiveExamBean.getQuestionId(), subjectiveExamBean.getInst_id());
+			imageTransactions.saveQuestionImage(subjectiveExamBean.getImages(), subjectiveExamBean.getQuestionId(), subjectiveExamBean.getInst_id(),Integer.parseInt(subjectiveExamBean.getClassId()),subjectiveExamBean.getSubjectId());
 		}
 		return Response.ok().build();
 	}
@@ -312,7 +313,7 @@ public class TeacherServiceImpl extends ServiceBase {
 		int questionId = bankTransaction.saveQuestion(questionbank);
 		if(questionId >= 0){
 			ImageTransactions imageTransactions = new ImageTransactions(Constants.STORAGE_PATH);
-			imageTransactions.saveObjectiveQuestionImage(objectiveExamBean.getImages(), questionId, objectiveExamBean.getInst_id());
+			imageTransactions.saveObjectiveQuestionImage(objectiveExamBean.getImages(), questionId, objectiveExamBean.getInst_id(),Integer.parseInt(objectiveExamBean.getClassId()),objectiveExamBean.getSubjectId());
 			
 			HashMap<Integer, List<String>> optionImages = new HashMap<Integer, List<String>>();
 			List<ObjectiveOptions> list =  objectiveExamBean.getOptions();
@@ -320,7 +321,7 @@ public class TeacherServiceImpl extends ServiceBase {
 			for(int index=0;index<optionsSize;index++){
 				optionImages.put(index, list.get(index).getOptionImage());
 			}
-			imageTransactions.saveOptionImage(optionImages, questionId, objectiveExamBean.getInst_id());
+			imageTransactions.saveOptionImage(optionImages, questionId, objectiveExamBean.getInst_id(),Integer.parseInt(objectiveExamBean.getClassId()),objectiveExamBean.getSubjectId());
 		}
 		
 		return Response.ok().build();
@@ -382,7 +383,7 @@ public class TeacherServiceImpl extends ServiceBase {
 				
 		if(status){
 			ImageTransactions imageTransactions = new ImageTransactions(Constants.STORAGE_PATH);
-			imageTransactions.saveObjectiveQuestionImage(objectiveExamBean.getImages(), questionbank.getQue_id(), objectiveExamBean.getInst_id());
+			imageTransactions.saveObjectiveQuestionImage(objectiveExamBean.getImages(), questionbank.getQue_id(), objectiveExamBean.getInst_id(),Integer.parseInt(objectiveExamBean.getClassId()),objectiveExamBean.getSubjectId());
 			
 			HashMap<Integer, List<String>> optionImages = new HashMap<Integer, List<String>>();
 			List<ObjectiveOptions> list =  objectiveExamBean.getOptions();
@@ -395,8 +396,8 @@ public class TeacherServiceImpl extends ServiceBase {
 				}
 				optionImages.put(index, list.get(index).getOptionImage());
 			}
-			imageTransactions.renameFolders(prevImageLocation, currentImageLocation, questionbank.getQue_id(),  objectiveExamBean.getInst_id());
-			imageTransactions.saveOptionImage(optionImages, questionbank.getQue_id(),  objectiveExamBean.getInst_id());
+			imageTransactions.renameFolders(prevImageLocation, currentImageLocation, questionbank.getQue_id(),  objectiveExamBean.getInst_id(),Integer.parseInt(objectiveExamBean.getClassId()),objectiveExamBean.getSubjectId());
+			imageTransactions.saveOptionImage(optionImages, questionbank.getQue_id(),  objectiveExamBean.getInst_id(),Integer.parseInt(objectiveExamBean.getClassId()),objectiveExamBean.getSubjectId());
 		}
 		
 		return Response.ok().build();
@@ -492,11 +493,19 @@ public class TeacherServiceImpl extends ServiceBase {
 		String storagePath = com.config.Constants.STORAGE_PATH+File.separator+examPattern.getInst_id();
 		userBean.getUserStatic().setStorageSpace(storagePath);
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),examPattern.getInst_id());
-		boolean patternStatus= patternTransaction.saveQuestionPaperPattern(examPattern,getRegId());
-		if(patternStatus == false){
-			return Response.status(Status.OK).entity(patternStatus).build();
+		int  pattern_id= patternTransaction.saveQuestionPaperPattern(examPattern,getRegId());
+		InstituteStatTransaction instituteStatTransaction = new InstituteStatTransaction();
+		if(pattern_id == 0){
+			return Response.status(Status.OK).entity("name").build();
+		}else{
+			boolean patternStatus = instituteStatTransaction.updateStorageSpace(examPattern.getInst_id(), userBean.getUserStatic().getStorageSpace());
+			if(patternStatus == false){
+				patternTransaction.deleteQuestionPaperPattern(examPattern.getClass_id(), pattern_id);
+				return Response.status(Status.OK).entity("memory").build();
+			}
+			
 		}
-		return Response.status(Status.OK).entity(patternStatus).build();
+		return Response.status(Status.OK).entity("").build();
 	}
 	
 	@POST

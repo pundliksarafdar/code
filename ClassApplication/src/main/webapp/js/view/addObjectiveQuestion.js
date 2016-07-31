@@ -100,7 +100,11 @@
 			
 			var handler = {};
 			handler.success = function(e){
+				if(e == ""){
 				$.notify({message: 'Question saved'},{type: 'success'});
+				}else{
+				$.notify({message: 'Memory not available,question not saved'},{type: 'danger'});	
+				}
 			}
 			handler.error = function(e){console.log(e)}
 			

@@ -4,7 +4,7 @@ var getAllBatchStudentsFeesUrl = "rest/feesservice/getAllBatchStudentsFees/";
 var saveStudentBatchFee = "rest/feesservice/saveStudentBatchFeesTransaction/";
 var updateStudentFeesAmt = "rest/feesservice/updateStudentFeesAmt/";
 var printReceiptUrl = "rest/feesservice/getPrintDetail/";
-
+var sendDueAlertURL ="rest/notification/sendFeesDue"
 /*************/
 var DIVISION_SELECT = "#divisionSelect";
 var BATCH_SELECT = "#batchSelect";
@@ -25,11 +25,166 @@ $(document).ready(function(){
 		.on("change",BATCH_SELECT,loadStudentTable)
 		.on("switchChange.bootstrapSwitch input",STUDENT_FEES_TABLE+" input",calculateFee)
 		.on("click",PAY_FEE,payfee)
-		.on("click",PRINT_RECEIPT,printFeeReceipt);
+		.on("click",PRINT_RECEIPT,printFeeReceipt)
+		.on("click",".sendDue",sendDue)
+		.on("click","#sendFeesDue",sendMultipleDue);
 	
 });
+function sendDue(){
+	$("#notificationSummary").hide();
+	$("#typeError").html("");
+	$("#whomeError").html("");
+	var flag = true;
+	var sms = $("#actionButtons #sms").is(":checked");
+	var email = $("#actionButtons #email").is(":checked");
+	var parent = $("#actionButtons #parent").is(":checked");
+	var student = $("#actionButtons #student").is(":checked");
+	var tableRow = $(this).closest('tr');
+	var row = feesDataTable.row(tableRow);
+	var data = row.data();
+	var studentIDArray = [];
+	studentIDArray.push(data.student_id)
+	if(sms == false && email == false){
+		flag = false;
+		$("#typeError").html("Select method");
+	}
+	if(parent == false && student ==false){
+		flag = false;
+		$("#whomeError").html("Select receipent");
+	}
+	if(flag){
+	var handler = {}
+	handler.success = function(response){
+		$("#notificationSummary").empty();
+		$("#notificationSummary").show();
+		if(response.status == null || response.status == ""){
+			var totalSMSSent = 0;
+			if($("#actionButtons #sms").is(":checked")){
+				if($("#actionButtons #student").is(":checked")){
+					totalSMSSent = totalSMSSent + (response.criteriaStudents-response.studentsWithoutPhone);
+				}
+				if( $("#actionButtons #parent").is(":checked")){
+					totalSMSSent = totalSMSSent + (response.criteriaStudents-response.parentsWithoutPhone);
+				}
+			}	
+			var totalEmailSent = 0;
+			if($("#actionButtons #email").is(":checked")){
+				if($("#actionButtons #student").is(":checked")){
+					totalEmailSent = totalEmailSent + (response.criteriaStudents-response.studentsWithoutEmail);
+				}
+				if( $("#actionButtons #parent").is(":checked")){
+					totalEmailSent = totalEmailSent + (response.criteriaStudents-response.parentsWithoutEmail);
+				}
+			}	
+			$("#notificationSummary").append("<div class='row'><div class='col-md-3'>No of students in batch :"+response.totalStudents+"</div>" +
+					"<div class='col-md-3'>"+response.criteriaMsg+"</div><div class='col-md-2'>Total SMS Sent:"+totalSMSSent+"</div>" +
+					"<div class='col-md-2'>Total Email Sent:"+totalEmailSent+"</div>" +
+					"<a data-toggle='collapse' data-target='.a' style='cursor:pointer'>[ view details ]</a></div>");
+			if($("#actionButtons #sms").is(":checked")){
+				if($("#actionButtons #student").is(":checked")){
+					$("#notificationSummary").append("<div class='row collapse a'><div class='col-md-4'>SMS sent to No of students :"+(response.criteriaStudents-response.studentsWithoutPhone)+"</div>" +
+							"<div class='col-md-4'>Students without phone no :"+response.studentsWithoutPhone+"</div></div>")
+				}
+				if( $("#actionButtons #parent").is(":checked")){
+					$("#notificationSummary").append("<div class='row collapse a'><div class='col-md-4'>SMS sent to No of parents :"+(response.criteriaStudents-response.parentsWithoutPhone)+"</div>" +
+							"<div class='col-md-4'>Parents without phone no :"+response.parentsWithoutPhone+"</div></div>")
+				}
+			}
+			if($("#actionButtons #email").is(":checked")){
+				if($("#actionButtons #student").is(":checked")){
+					$("#notificationSummary").append("<div class='row collapse a'><div class='col-md-4'>Email sent to No of students :"+(response.criteriaStudents-response.studentsWithoutEmail)+"</div>" +
+							"<div class='col-md-4'>Students without Email ID :"+response.studentsWithoutEmail+"</div></div>")
+				}
+				if( $("#actionButtons #parent").is(":checked")){
+					$("#notificationSummary").append("<div class='row collapse a'><div class='col-md-4'>Email sent to No of parents :"+(response.criteriaStudents-response.parentsWithoutEmail)+"</div>" +
+							"<div class='col-md-4'>Parents without Email ID :"+response.parentsWithoutEmail+"</div></div>")
+				}
+			}
+			/*$.notify({message: "Notification sent successfully"},{type: 'success'});*/
+		}else{
+			$.notify({message: response.status},{type: 'danger'});
+		}
+	};//function(e){console.log(e)};
+	handler.error = function(e){console.log(e)};
+	rest.post(sendDueAlertURL+"/"+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+sms+"/"+email+"/"+parent+"/"+student,handler,studentIDArray.join(","));
+	}
+}
+
+function sendMultipleDue(){
+	$("#notificationSummary").hide();
+	var sms = $("#actionButtons #sms").is(":checked");
+	var email = $("#actionButtons #email").is(":checked");
+	var parent = $("#actionButtons #parent").is(":checked");
+	var student = $("#actionButtons #student").is(":checked");
+	var studentIDArray = [];
+	$('input[name="studentCheckbox"]:checked').each(function() {
+		var tableRow = $(this).closest('tr');
+		var row = feesDataTable.row(tableRow);
+		var data = row.data();
+		studentIDArray.push(data.student_id)
+		});
+	if(studentIDArray.length > 0){
+	var handler = {}
+	handler.success = function(response){
+		$("#notificationSummary").empty();
+		$("#notificationSummary").show();
+		if(response.status == null || response.status == ""){
+			var totalSMSSent = 0;
+			if($("#actionButtons #sms").is(":checked")){
+				if($("#actionButtons #student").is(":checked")){
+					totalSMSSent = totalSMSSent + (response.criteriaStudents-response.studentsWithoutPhone);
+				}
+				if( $("#actionButtons #parent").is(":checked")){
+					totalSMSSent = totalSMSSent + (response.criteriaStudents-response.parentsWithoutPhone);
+				}
+			}	
+			var totalEmailSent = 0;
+			if($("#actionButtons #email").is(":checked")){
+				if($("#actionButtons #student").is(":checked")){
+					totalEmailSent = totalEmailSent + (response.criteriaStudents-response.studentsWithoutEmail);
+				}
+				if( $("#actionButtons #parent").is(":checked")){
+					totalEmailSent = totalEmailSent + (response.criteriaStudents-response.parentsWithoutEmail);
+				}
+			}	
+			$("#notificationSummary").append("<div class='row'><div class='col-md-3'>No of students in batch :"+response.totalStudents+"</div>" +
+					"<div class='col-md-3'>"+response.criteriaMsg+"</div><div class='col-md-2'>Total SMS Sent:"+totalSMSSent+"</div>" +
+					"<div class='col-md-2'>Total Email Sent:"+totalEmailSent+"</div>" +
+					"<a data-toggle='collapse' data-target='.a' style='cursor:pointer'>[ view details ]</a></div>");
+			if($("#actionButtons #sms").is(":checked")){
+				if($("#actionButtons #student").is(":checked")){
+					$("#notificationSummary").append("<div class='row collapse a'><div class='col-md-4'>SMS sent to No of students :"+(response.criteriaStudents-response.studentsWithoutPhone)+"</div>" +
+							"<div class='col-md-4'>Students without phone no :"+response.studentsWithoutPhone+"</div></div>")
+				}
+				if( $("#actionButtons #parent").is(":checked")){
+					$("#notificationSummary").append("<div class='row collapse a'><div class='col-md-4'>SMS sent to No of parents :"+(response.criteriaStudents-response.parentsWithoutPhone)+"</div>" +
+							"<div class='col-md-4'>Parents without phone no :"+response.parentsWithoutPhone+"</div></div>")
+				}
+			}
+			if($("#actionButtons #email").is(":checked")){
+				if($("#actionButtons #student").is(":checked")){
+					$("#notificationSummary").append("<div class='row collapse a'><div class='col-md-4'>Email sent to No of students :"+(response.criteriaStudents-response.studentsWithoutEmail)+"</div>" +
+							"<div class='col-md-4'>Students without Email ID :"+response.studentsWithoutEmail+"</div></div>")
+				}
+				if( $("#actionButtons #parent").is(":checked")){
+					$("#notificationSummary").append("<div class='row collapse a'><div class='col-md-4'>Email sent to No of parents :"+(response.criteriaStudents-response.parentsWithoutEmail)+"</div>" +
+							"<div class='col-md-4'>Parents without Email ID :"+response.parentsWithoutEmail+"</div></div>")
+				}
+			}
+			/*$.notify({message: "Notification sent successfully"},{type: 'success'});*/
+		}else{
+			$.notify({message: response.status},{type: 'danger'});
+		}
+	};//function(e){console.log(e)};
+	handler.error = function(e){console.log(e)};
+	rest.post(sendDueAlertURL+"/"+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+sms+"/"+email+"/"+parent+"/"+student,handler,studentIDArray.join(","));
+	}else{
+		$.notify({message: "Select students"},{type: 'success'})	
+	}
+}
 
 function printFeeReceipt(){
+	$("#notificationSummary").hide();
 	var tableRow = $(this).closest('tr');
 	var row = feesDataTable.row(tableRow);
 	var data = row.data();
@@ -55,6 +210,7 @@ function printFeesSuccess(data){
 	  });
 }
 function payfee(){
+	$("#notificationSummary").hide();
 	var payFeeBean = new PayFeeBean();
 	var tableRow = $(this).closest('tr');
 	var row = feesDataTable.row(tableRow);
@@ -101,6 +257,7 @@ function calculateFee(){
 }
 	
 function getBatches(){
+	$("#notificationSummary").hide();
 	$("#studentFeesTableDiv").hide();
 	$(BATCH_SELECT).find('option').not('option[value="-1"]').remove();
 	$(BATCH_SELECT).find('optgroup').remove();
@@ -155,6 +312,7 @@ function getBatchError(error){
 }
 
 function loadStudentTable(data){
+	$("#notificationSummary").hide();
 	var batchId = $(BATCH_SELECT).val();
 	var divId = $(DIVISION_SELECT).val();
 	$("#studentFeesTableDiv").hide();
@@ -174,6 +332,9 @@ function loadStudentTableSuccess(data){
 			data: data,
 			lengthChange: false,
 			columns:[
+			{
+				title: "",data:null,sDefault:'&mdash;',render:function(data){return "<input type='checkbox' name='studentCheckbox'>"}
+			},
 			{
 				title: "Name",data:null,sDefault:'&mdash;',render:function(data){return data.fname+" "+data.lname}
 			},
@@ -204,10 +365,13 @@ function loadStudentTableSuccess(data){
 			{
 				title: "",bSortable:false,data:null,render:function(){return "<input type='button' class='btn btn-default printReceipt' value='Print'/>"}
 			}
-			
+			,
+			{
+				title: "",bSortable:false,data:null,render:function(){return "<input type='button' class='btn btn-default sendDue' value='Send Due'/>"}
+			}
 			],
 			rowCallback:function(row, data, displayIndex, displayIndexFull){
-				$(row).find("input[type=\"checkbox\"]").bootstrapSwitch(optionSelect);
+				$(row).find("input[class=\"percentage\"]").bootstrapSwitch(optionSelect);
 			}
 		});
 	$("#studentFeesTableDiv").show();

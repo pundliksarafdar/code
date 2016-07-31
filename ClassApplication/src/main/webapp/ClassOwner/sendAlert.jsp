@@ -52,7 +52,7 @@
 		</div>
 		</form>
 		</div>
-		
+		<div class="well alert alert-success" id="notificationSummary" style="display: none;"></div>
 		<div class="container">
 		<div class="row">
 			<label class="col-md-3">Fee due</label>	

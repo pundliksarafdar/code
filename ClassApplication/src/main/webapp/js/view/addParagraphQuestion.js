@@ -112,7 +112,13 @@
 			});
 			console.log(paraQuestionBean);
 			var handler={};
-			handler.success = function(e){$.notify({message: "Question saveed successfuly"},{type: 'success'});}
+			handler.success = function(e){
+				if(e == ""){
+				$.notify({message: "Question saved successfuly"},{type: 'success'});
+				}else{
+				$.notify({message: "Memory not available,Question not saved"},{type: 'danger'});	
+				}
+				}
 			handler.error = function(e){}
 			
 			var question = $("#paraQuestion").find(".paraQuestionTmpl");

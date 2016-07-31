@@ -226,4 +226,20 @@ public class InstituteStatsDB {
 		}
 		return  true;
 	}
+
+	public boolean updateStorageSpace(int inst_id,double size) {
+		InstituteStats stats=new InstituteStats();
+		stats.setInst_id(inst_id);
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		stats=(InstituteStats) session.get(InstituteStats.class,inst_id);
+		stats.setUsed_memory(size);
+		stats.setAvail_memory(stats.getAlloc_memory()-size);
+		session.saveOrUpdate(stats);
+		transaction.commit();
+		session.close();
+		return  true;
+	}
 }

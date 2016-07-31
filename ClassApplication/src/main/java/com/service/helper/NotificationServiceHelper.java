@@ -212,4 +212,10 @@ public class NotificationServiceHelper {
 		NotificationImpl notificationImpl = new NotificationImpl();
 		notificationImpl.sendFeesPaymentNotification(inst_id, studentIDs);
 	}
+	
+	public HashMap sendFeesDue(int inst_id,int div_id,int batch_id,List<Integer> studentIDList,
+			boolean sendEmail, boolean sendSMS, boolean sendToParent, boolean sendToStudent ){
+		NotificationImpl notificationImpl = new NotificationImpl();
+		return notificationImpl.sendFeesDueNotification(inst_id, div_id,batch_id,studentIDList,sendEmail,sendSMS,sendToParent,sendToStudent);
+	}
 }

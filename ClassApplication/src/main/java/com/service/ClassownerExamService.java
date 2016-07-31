@@ -20,6 +20,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.resteasy.annotations.cache.Cache;
@@ -33,6 +34,7 @@ import com.service.beans.ObjectiveOptions;
 import com.service.beans.ParaQuestionBean;
 import com.service.beans.SubjectiveExamBean;
 import com.transaction.image.ImageTransactions;
+import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.questionbank.QuestionBankTransaction;
 import com.user.UserBean;
 
@@ -40,9 +42,12 @@ import com.user.UserBean;
 public class ClassownerExamService extends ServiceBase{
 	@POST
 	@Path("/saveSubjective")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response saveSubjectiveExam(SubjectiveExamBean subjectiveExamBean){
+		InstituteStatTransaction statTransaction = new InstituteStatTransaction();
+		boolean status = statTransaction.storageSpaceAvailabilityCheckForSubjective(getRegId(), subjectiveExamBean.getImages(), "save", 0, Constants.STORAGE_PATH,Integer.parseInt(subjectiveExamBean.getClassId()),subjectiveExamBean.getSubjectId());
+		if(status){
 		Questionbank questionbank = new Questionbank();
 		QuestionBankTransaction bankTransaction = new QuestionBankTransaction();
 		questionbank.setCreated_dt(new Date(new java.util.Date().getTime()));
@@ -61,16 +66,23 @@ public class ClassownerExamService extends ServiceBase{
 		int questionId = bankTransaction.saveQuestion(questionbank);
 		if(questionId >= 0){
 			ImageTransactions imageTransactions = new ImageTransactions(Constants.STORAGE_PATH);
-			imageTransactions.saveQuestionImage(subjectiveExamBean.getImages(), questionId, getRegId());
+			imageTransactions.saveQuestionImage(subjectiveExamBean.getImages(), questionId, getRegId(),Integer.parseInt(subjectiveExamBean.getClassId()),subjectiveExamBean.getSubjectId());
 		}
-		return Response.ok().build();
+		statTransaction.updateStorageSpace(getRegId(), Constants.STORAGE_PATH+"/"+getRegId());
+		}else{
+			return Response.status(Status.OK).entity("memory").build();
+		}
+		return Response.status(Status.OK).entity("").build();
 	}
 	
 	@PUT
 	@Path("/saveSubjective")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response editSubjectiveExam(SubjectiveExamBean subjectiveExamBean){
+		InstituteStatTransaction statTransaction = new InstituteStatTransaction();
+		boolean status = statTransaction.storageSpaceAvailabilityCheckForSubjective(getRegId(), subjectiveExamBean.getImages(), "edit", subjectiveExamBean.getQuestionId(), Constants.STORAGE_PATH,Integer.parseInt(subjectiveExamBean.getClassId()),subjectiveExamBean.getSubjectId());
+		if(status){
 		Questionbank questionbank = new Questionbank();
 		QuestionBankTransaction bankTransaction = new QuestionBankTransaction();
 		questionbank.setCreated_dt(new Date(new java.util.Date().getTime()));
@@ -92,17 +104,30 @@ public class ClassownerExamService extends ServiceBase{
 				subjectiveExamBean.getMarks(),subjectiveExamBean.getTopicId());
 		if(success){
 			ImageTransactions imageTransactions = new ImageTransactions(Constants.STORAGE_PATH);
-			imageTransactions.saveQuestionImage(subjectiveExamBean.getImages(), subjectiveExamBean.getQuestionId(), getRegId());
+			imageTransactions.saveQuestionImage(subjectiveExamBean.getImages(), subjectiveExamBean.getQuestionId(), getRegId(),Integer.parseInt(subjectiveExamBean.getClassId()),subjectiveExamBean.getSubjectId());
 		}
-		return Response.ok().build();
+		statTransaction.updateStorageSpace(getRegId(), Constants.STORAGE_PATH+"/"+getRegId());
+		}else{
+			return Response.status(Status.OK).entity("memory").build();
+		}
+		return Response.status(Status.OK).entity("").build();
 	}
 
 	
 	@POST
 	@Path("/saveObjective")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response saveObjectiveExam(ObjectiveExamBean objectiveExamBean){
+		HashMap<Integer, List<String>> optionImages = new HashMap<Integer, List<String>>();
+		List<ObjectiveOptions> list =  objectiveExamBean.getOptions();
+		int optionsSize = list.size();
+		for(int index=0;index<optionsSize;index++){
+			optionImages.put(index, list.get(index).getOptionImage());
+		}
+		InstituteStatTransaction statTransaction = new InstituteStatTransaction();
+		boolean status = statTransaction.storageSpaceAvailabilityCheckForObjective(getRegId(), objectiveExamBean.getImages(),optionImages, "save", objectiveExamBean.getQuestionId(), Constants.STORAGE_PATH,Integer.parseInt(objectiveExamBean.getClassId()),objectiveExamBean.getSubjectId());
+		if(status){
 		Questionbank questionbank = new Questionbank();
 		QuestionBankTransaction bankTransaction = new QuestionBankTransaction();
 		questionbank.setCreated_dt(new Date(new java.util.Date().getTime()));
@@ -146,26 +171,32 @@ public class ClassownerExamService extends ServiceBase{
 		int questionId = bankTransaction.saveQuestion(questionbank);
 		if(questionId >= 0){
 			ImageTransactions imageTransactions = new ImageTransactions(Constants.STORAGE_PATH);
-			imageTransactions.saveObjectiveQuestionImage(objectiveExamBean.getImages(), questionId, getRegId());
-			
-			HashMap<Integer, List<String>> optionImages = new HashMap<Integer, List<String>>();
-			List<ObjectiveOptions> list =  objectiveExamBean.getOptions();
-			int optionsSize = list.size();
-			for(int index=0;index<optionsSize;index++){
-				optionImages.put(index, list.get(index).getOptionImage());
-			}
-			imageTransactions.saveOptionImage(optionImages, questionId, getRegId());
+			imageTransactions.saveObjectiveQuestionImage(objectiveExamBean.getImages(), questionId, getRegId(),Integer.parseInt(objectiveExamBean.getClassId()),objectiveExamBean.getSubjectId());
+			imageTransactions.saveOptionImage(optionImages, questionId, getRegId(),Integer.parseInt(objectiveExamBean.getClassId()),objectiveExamBean.getSubjectId());
 		}
-		
-		return Response.ok().build();
+		statTransaction.updateStorageSpace(getRegId(), Constants.STORAGE_PATH+"/"+getRegId());
+		}else{
+			
+			return Response.status(Status.OK).entity("memory").build();
+		}
+		return Response.status(Status.OK).entity("").build();
 	}
 	
 
 	@PUT
 	@Path("/saveObjective")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response editObjectiveExam(ObjectiveExamBean objectiveExamBean){
+		HashMap<Integer, List<String>> optionImagesMap = new HashMap<Integer, List<String>>();
+		List<ObjectiveOptions> optionList =  objectiveExamBean.getOptions();
+		int optionListSize = optionList.size();
+		for(int index=0;index<optionListSize;index++){
+			optionImagesMap.put(index, optionList.get(index).getOptionImage());
+		}
+		InstituteStatTransaction statTransaction = new InstituteStatTransaction();
+		boolean memoryStatus = statTransaction.storageSpaceAvailabilityCheckForObjective(getRegId(), objectiveExamBean.getImages(),optionImagesMap, "edit", objectiveExamBean.getQuestionId(), Constants.STORAGE_PATH,Integer.parseInt(objectiveExamBean.getClassId()),objectiveExamBean.getSubjectId());
+		if(memoryStatus){
 		Questionbank questionbank = new Questionbank();
 		QuestionBankTransaction bankTransaction = new QuestionBankTransaction();
 		questionbank.setCreated_dt(new Date(new java.util.Date().getTime()));
@@ -217,7 +248,7 @@ public class ClassownerExamService extends ServiceBase{
 				
 		if(status){
 			ImageTransactions imageTransactions = new ImageTransactions(Constants.STORAGE_PATH);
-			imageTransactions.saveObjectiveQuestionImage(objectiveExamBean.getImages(), questionbank.getQue_id(), getRegId());
+			imageTransactions.saveObjectiveQuestionImage(objectiveExamBean.getImages(), questionbank.getQue_id(), getRegId(),Integer.parseInt(objectiveExamBean.getClassId()),objectiveExamBean.getSubjectId());
 			
 			HashMap<Integer, List<String>> optionImages = new HashMap<Integer, List<String>>();
 			List<ObjectiveOptions> list =  objectiveExamBean.getOptions();
@@ -230,18 +261,26 @@ public class ClassownerExamService extends ServiceBase{
 				}
 				optionImages.put(index, list.get(index).getOptionImage());
 			}
-			imageTransactions.renameFolders(prevImageLocation, currentImageLocation, questionbank.getQue_id(), getRegId());
-			imageTransactions.saveOptionImage(optionImages, questionbank.getQue_id(), getRegId());
+			imageTransactions.renameFolders(prevImageLocation, currentImageLocation, questionbank.getQue_id(), getRegId(),Integer.parseInt(objectiveExamBean.getClassId()),objectiveExamBean.getSubjectId());
+			imageTransactions.saveOptionImage(optionImages, questionbank.getQue_id(), getRegId(),Integer.parseInt(objectiveExamBean.getClassId()),objectiveExamBean.getSubjectId());
 		}
+		statTransaction.updateStorageSpace(getRegId(), Constants.STORAGE_PATH+"/"+getRegId());
+		}else{
+			
+			return Response.status(Status.OK).entity("memory").build();
+		}
+		return Response.status(Status.OK).entity("").build();
 		
-		return Response.ok().build();
 	}
 
 	@POST
 	@Path("/paraquestion")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response saveParaExam(ParaQuestionBean paraQuestionBean){
+		InstituteStatTransaction statTransaction = new InstituteStatTransaction();
+		boolean memoryStatus = statTransaction.storageSpaceAvailabilityCheckForParagraph(getRegId(), paraQuestionBean, Constants.STORAGE_PATH, "save",0);
+		if(memoryStatus){
 		Questionbank questionbank = new Questionbank();
 		QuestionBankTransaction bankTransaction = new QuestionBankTransaction();
 		questionbank.setCreated_dt(new Date(new java.util.Date().getTime()));
@@ -259,7 +298,12 @@ public class ClassownerExamService extends ServiceBase{
 		paraQuestionBean.setInstId(getRegId());
 		int questionNumber=  bankTransaction.saveQuestion(questionbank);
 		bankTransaction.saveParaObject(Constants.STORAGE_PATH,paraQuestionBean, questionNumber);
-		
+		statTransaction.updateStorageSpace(getRegId(), Constants.STORAGE_PATH+"/"+getRegId());
+		}else{
+			
+			return Response.status(Status.OK).entity("memory").build();
+		}
+		return Response.status(Status.OK).entity("").build();
 		/*
 		UserStatic userStatic = getUserBean().getUserStatic();
 		String examPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
@@ -271,15 +315,18 @@ public class ClassownerExamService extends ServiceBase{
 		}
 		writeObject(examPath, paraQuestionBean);
 		*/
-		return Response.ok().build();
+		
 	}
 	
 	@PUT
 	@Path("/paraquestion/{queId}")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateParaExam(@PathParam("queId")int queId,
 			ParaQuestionBean paraQuestionBean){
+		InstituteStatTransaction statTransaction = new InstituteStatTransaction();
+		boolean memoryStatus = statTransaction.storageSpaceAvailabilityCheckForParagraph(getRegId(), paraQuestionBean, Constants.STORAGE_PATH, "edit",queId);
+		if(memoryStatus){
 		Questionbank questionbank = new Questionbank();
 		QuestionBankTransaction bankTransaction = new QuestionBankTransaction();
 		questionbank.setCreated_dt(new Date(new java.util.Date().getTime()));
@@ -301,7 +348,12 @@ public class ClassownerExamService extends ServiceBase{
 				paraQuestionBean.getClassId(),
 				paraQuestionBean.getMarks(),paraQuestionBean.getTopicId());
 		bankTransaction.saveParaObject(Constants.STORAGE_PATH,paraQuestionBean, queId);
-		
+		statTransaction.updateStorageSpace(getRegId(), Constants.STORAGE_PATH+"/"+getRegId());
+		}else{
+			
+			return Response.status(Status.OK).entity("memory").build();
+		}
+		return Response.status(Status.OK).entity("").build();
 		/*
 		UserStatic userStatic = getUserBean().getUserStatic();
 		String examPath = userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionNumber;
@@ -313,7 +365,7 @@ public class ClassownerExamService extends ServiceBase{
 		}
 		writeObject(examPath, paraQuestionBean);
 		*/
-		return Response.ok().build();
+
 	}
 	
 	@GET
@@ -328,7 +380,7 @@ public class ClassownerExamService extends ServiceBase{
 		
 		if(questionbank.getQue_type().equals("3")){
 			UserBean userBean = getUserBean();
-			String questionPath=com.config.Constants.STORAGE_PATH+File.separatorChar+userBean.getRegId()+File.separatorChar+"exam"+File.separatorChar+"paragraph"+File.separatorChar+questionbank.getQue_id();
+			String questionPath=com.config.Constants.STORAGE_PATH+File.separatorChar+userBean.getRegId()+File.separatorChar+"exam"+File.separatorChar+"paragraph"+File.separatorChar+div_id+File.separatorChar+sub_id+File.separatorChar+questionbank.getQue_id();
 			ParaQuestionBean paraQuestionBean = (ParaQuestionBean) readObject(new File(questionPath));
 			
 			return Response.ok(paraQuestionBean).build();

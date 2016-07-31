@@ -1330,4 +1330,39 @@ public List getStudentForFeesPaymentNotification(int inst_id,List<Integer> stude
 
 }
 
+public List getStudentDueFeesForNotification(int inst_id,int div_id,int batch_id,List<Integer> studentIdList) {
+	Transaction transaction=null;
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	transaction=session.beginTransaction();
+	List studentFeesData = null;
+	try{
+		session = HibernateUtil.getSessionfactory().openSession();
+		transaction = session.beginTransaction();
+		Query query = session.createQuery("select std.student_id,reg.fname,reg.lname,reg.phone1,reg.email"
+										+ ",std.parentFname,std.parentLname,std.parentPhone,std.parentEmail,sf.final_fees_amt,sf.fees_paid,sf.fees_due  "
+										+ "from Student_Fees sf,Student std,RegisterBean reg" 
+										+" where sf.inst_id = :inst_id and sf.div_id = :div_id and sf.batch_id = :batch_id and sf.student_id = std.student_id and "
+										+ "sf.div_id = std.div_id and reg.regId = sf.student_id and sf.fees_due>0 and sf.student_id in :list");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("batch_id", batch_id);
+		query.setParameterList("list", studentIdList);
+		studentFeesData = query.list();
+		transaction.commit();
+	}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+	}finally{
+		if(null!=session){
+			session.close();
+		}
+	}
+	return  studentFeesData;
+
+}
+
 }

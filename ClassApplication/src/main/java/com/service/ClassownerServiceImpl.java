@@ -125,17 +125,25 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	@POST
 	@Path("/addQuestionPaperPattern")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response addQuestionPaperPattern(QuestionPaperPattern examPattern){
 		Gson gson = new Gson();
 		System.out.println(gson.toJson(examPattern));
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		QuestionPaperPatternTransaction patternTransaction = new QuestionPaperPatternTransaction(userBean.getUserStatic().getPatternPath(),userBean.getRegId());
-		boolean patternStatus= patternTransaction.saveQuestionPaperPattern(examPattern,getRegId());
-		if(patternStatus == false){
-			return Response.status(Status.OK).entity(patternStatus).build();
+		int  pattern_id= patternTransaction.saveQuestionPaperPattern(examPattern,getRegId());
+		InstituteStatTransaction instituteStatTransaction = new InstituteStatTransaction();
+		if(pattern_id == 0){
+			return Response.status(Status.OK).entity("name").build();
+		}else{
+			boolean patternStatus = instituteStatTransaction.updateStorageSpace(getRegId(), userBean.getUserStatic().getStorageSpace());
+			if(patternStatus == false){
+				patternTransaction.deleteQuestionPaperPattern(examPattern.getClass_id(), pattern_id);
+				return Response.status(Status.OK).entity("memory").build();
+			}
+			
 		}
-		return Response.status(Status.OK).entity(patternStatus).build();
+		return Response.status(Status.OK).entity("").build();
 	}
 	
 	@POST

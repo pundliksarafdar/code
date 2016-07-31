@@ -22,7 +22,9 @@
 	var BASE_FORM = "#baseform";
 	
 	$(document).ready(function(){
+		
 		$("body").on("change",DIVISION_SELECT,function(e){
+			$("#notificationSummary").hide();
 			var handler = {};
 			handler.success = function(data){
 				loadBatchOfDiv(data);
@@ -87,6 +89,7 @@
 	}
 	
 	function loadExamList(){
+		$("#notificationSummary").hide();
 		var handler = {};
 		handler.success = showExamList;
 		handler.error = function(){};
@@ -105,6 +108,7 @@
 	}
 	
 	function sendFeeDue(){
+		$("#notificationSummary").hide();
 		if($(BASE_FORM).valid()){
 			var feeDueObj = new FeeDue();
 			var feeDueObj = LoadData(feeDueObj);
@@ -115,6 +119,7 @@
 	}
 	
 	function sendAttendance(){
+		$("#notificationSummary").hide();
 		if($(this).closest("form").valid() && $(BASE_FORM).valid()){
 			var attendance = new Attnedance();
 			var attendance = LoadData(attendance);
@@ -128,6 +133,7 @@
 	}
 	
 	function sendProgressCard(){
+		$("#notificationSummary").hide();
 		if($(this).closest("form").valid() && $(BASE_FORM).valid()){
 			var progressCard = new ProgressCard();
 			var progressCard = LoadData(progressCard);
@@ -174,8 +180,52 @@
 	
 	var alertHandler = {};
 	alertHandler.success = function(response){
+		$("#notificationSummary").empty();
+		$("#notificationSummary").show();
 		if(response.status == null || response.status == ""){
-			$.notify({message: "Notification sent successfully"},{type: 'success'});
+			var totalSMSSent = 0;
+			if($("#sendAlert #sms").is(":checked")){
+				if($("#sendAlert #student").is(":checked")){
+					totalSMSSent = totalSMSSent + (response.criteriaStudents-response.studentsWithoutPhone);
+				}
+				if( $("#sendAlert #parent").is(":checked")){
+					totalSMSSent = totalSMSSent + (response.criteriaStudents-response.parentsWithoutPhone);
+				}
+			}	
+			var totalEmailSent = 0;
+			if($("#sendAlert #email").is(":checked")){
+				if($("#sendAlert #student").is(":checked")){
+					totalEmailSent = totalEmailSent + (response.criteriaStudents-response.studentsWithoutEmail);
+				}
+				if( $("#sendAlert #parent").is(":checked")){
+					totalEmailSent = totalEmailSent + (response.criteriaStudents-response.parentsWithoutEmail);
+				}
+			}	
+			$("#notificationSummary").append("<div class='row'><div class='col-md-3'>No of students in batch :"+response.totalStudents+"</div>" +
+					"<div class='col-md-3'>"+response.criteriaMsg+"</div><div class='col-md-2'>Total SMS Sent:"+totalSMSSent+"</div>" +
+					"<div class='col-md-2'>Total Email Sent:"+totalEmailSent+"</div>" +
+					"<a data-toggle='collapse' data-target='.a' style='cursor:pointer'>[ view details ]</a></div>");
+			if($("#sendAlert #sms").is(":checked")){
+				if($("#sendAlert #student").is(":checked")){
+					$("#notificationSummary").append("<div class='row collapse a'><div class='col-md-4'>SMS sent to No of students :"+(response.criteriaStudents-response.studentsWithoutPhone)+"</div>" +
+							"<div class='col-md-4'>Students without phone no :"+response.studentsWithoutPhone+"</div></div>")
+				}
+				if( $("#sendAlert #parent").is(":checked")){
+					$("#notificationSummary").append("<div class='row collapse a'><div class='col-md-4'>SMS sent to No of parents :"+(response.criteriaStudents-response.parentsWithoutPhone)+"</div>" +
+							"<div class='col-md-4'>Parents without phone no :"+response.parentsWithoutPhone+"</div></div>")
+				}
+			}
+			if($("#sendAlert #email").is(":checked")){
+				if($("#sendAlert #student").is(":checked")){
+					$("#notificationSummary").append("<div class='row collapse a'><div class='col-md-4'>Email sent to No of students :"+(response.criteriaStudents-response.studentsWithoutEmail)+"</div>" +
+							"<div class='col-md-4'>Students without Email ID :"+response.studentsWithoutEmail+"</div></div>")
+				}
+				if( $("#sendAlert #parent").is(":checked")){
+					$("#notificationSummary").append("<div class='row collapse a'><div class='col-md-4'>Email sent to No of parents :"+(response.criteriaStudents-response.parentsWithoutEmail)+"</div>" +
+							"<div class='col-md-4'>Parents without Email ID :"+response.parentsWithoutEmail+"</div></div>")
+				}
+			}
+			/*$.notify({message: "Notification sent successfully"},{type: 'success'});*/
 		}else{
 			$.notify({message: response.status},{type: 'danger'});
 		}

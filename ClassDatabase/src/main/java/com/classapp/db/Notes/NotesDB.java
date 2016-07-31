@@ -21,8 +21,8 @@ public class NotesDB {
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
-		int notesID=getNotesNextID(notes.getSubid(), notes.getInst_id(), notes.getDivid());
-		notes.setNotesid(notesID);
+		/*int notesID=getNotesNextID(notes.getSubid(), notes.getInst_id(), notes.getDivid());
+		notes.setNotesid(notesID);*/
 			session.save(notes);
 			transaction.commit();
 			session.close();
