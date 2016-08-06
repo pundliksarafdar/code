@@ -189,11 +189,11 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 			            }
 			            addedStudentResponseList.add(response);
 			        }
-			        statTransaction.increaseUsedStudentIds(getRegId(), noOfStudents);
+			        statTransaction.increaseUsedStudentIds(regId, noOfStudents);
 			        NotificationServiceHelper notificationServiceHelper = new NotificationServiceHelper();
 			        if(noOfStudents > 0){
-			        notificationServiceHelper.sendManualRegistrationNotification(getRegId(), studentIds);
-			        notificationServiceHelper.getStudentForFeesPaymentNotification(getRegId(), studentIds);
+			        notificationServiceHelper.sendManualRegistrationNotification(regId, studentIds);
+			        notificationServiceHelper.getStudentForFeesPaymentNotification(regId, studentIds);
 			        }
 			        ArrayList<String> suuccessCountList = new ArrayList<String>();
 			        suuccessCountList.add("" + successCount + " students added successfully.");

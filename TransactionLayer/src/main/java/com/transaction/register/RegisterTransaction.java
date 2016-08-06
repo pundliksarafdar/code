@@ -250,7 +250,11 @@ public class RegisterTransaction {
 		}
 		registerBean.setLoginName(username);
 		registerBean.setLoginPass(new java.util.Date().getTime()+"");
+		if(!"".equals(registerBean.getEmail())){
 		registerBean.setStatus("M");
+		}else{
+		registerBean.setStatus("E");	
+		}
 		registerBean.setActivationcode("");
 		RegisterBean bean = new RegisterBean();
 		try {
@@ -280,6 +284,18 @@ public class RegisterTransaction {
 		studentbean.setBatch_id(batch);
 		studentTransaction.addUpdateDb(studentbean);
 		return student_id;
+	}
+	
+	public boolean registerActivationCode(int regID,String activationCode) {
+		RegisterDB registerDB = new RegisterDB();
+		registerDB.updateActivationCode(regID, activationCode);
+		return true;
+	}
+	
+	public boolean updateEmail(int regID,String email) {
+		RegisterDB registerDB = new RegisterDB();
+		registerDB.updateEmail(regID, email);
+		return true;
 	}
 	}
 	

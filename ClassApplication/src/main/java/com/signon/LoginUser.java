@@ -161,11 +161,13 @@ public class LoginUser extends BaseAction{
 			
 			if (null != userBean.getRole() && 0 != userBean.getRole()
 					&& 10 != userBean.getRole()) {
-				if(!"".equals(userBean.getActivationcode())){
+				if(!"".equals(userBean.getActivationcode()) && !"E".equals(userBean.getStatus())){
 					return Constants.ACTIVATION;
 				}else if(userBean.getStatus()!=null){
 					if(userBean.getStatus().equals("F") || userBean.getStatus().equals("M"))
 					return Constants.RESET_PASSWORD;
+					if(userBean.getStatus().equals("E"))
+						return Constants.REGISTER_EMAIL;
 				}
 				//if (null != userBean.getStartdate()) {
 					
@@ -466,9 +468,11 @@ public class LoginUser extends BaseAction{
 		
 		userStatic.setNotesSpace(noteSize);
 		//session.put(Constants.USER_STATIC, userStatic);
+		if(userBean.getRole()== 1){
 		ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
 		ClassownerSettingsNotification settings = settingstransaction.getSettings(userBean.getRegId());
 		userStatic.setSettings(settings);
+		}
 		userBean.setUserStatic(userStatic);
 		
 		

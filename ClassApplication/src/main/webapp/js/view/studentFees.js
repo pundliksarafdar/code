@@ -27,9 +27,19 @@ $(document).ready(function(){
 		.on("click",PAY_FEE,payfee)
 		.on("click",PRINT_RECEIPT,printFeeReceipt)
 		.on("click",".sendDue",sendDue)
-		.on("click","#sendFeesDue",sendMultipleDue);
-	
+		.on("click","#sendFeesDue",sendMultipleDue)
+		.on("switchChange.bootstrapSwitch blur",STUDENT_FEES_TABLE+" input",checkAmt);
 });
+function checkAmt(){
+	var tableRow = $(this).closest('tr');
+	var row = feesDataTable.row(tableRow);
+	var data = row.data();
+	var paidFees = tableRow.find(PAY_FEE_INPUT).val();
+	if(paidFees.trim() == ""){
+		tableRow.find(PAY_FEE_INPUT).val(0);
+	}
+}
+
 function sendDue(){
 	$("#notificationSummary").hide();
 	$("#typeError").html("");
@@ -215,7 +225,10 @@ function payfee(){
 	var tableRow = $(this).closest('tr');
 	var row = feesDataTable.row(tableRow);
 	var data = row.data();
-	
+	tableRow.find(".payFeesInputError").html("");
+	if(tableRow.find(PAY_FEE_INPUT).val().trim() == ""){
+		tableRow.find(".payFeesInputError").html("Enter amount");
+	}else{
 	payFeeBean.student_id = data.student_id;
 	payFeeBean.div_id = $(DIVISION_SELECT).val();
 	payFeeBean.batch_id = $(BATCH_SELECT).val();
@@ -230,6 +243,7 @@ function payfee(){
 	}
 	handler.error = function(e){console.log("error",e)}
 	rest.post(saveStudentBatchFee,handler,JSON.stringify(payFeeBean));
+	}
 }
 
 function calculateFee(){
@@ -354,7 +368,7 @@ function loadStudentTableSuccess(data){
 				title: "Paid fee",data:"fees_paid",render:function(feePaid){return "<div class='feePaid'>"+feePaid+"</div>"}
 			},
 			{
-				title: "Paying fee",bSortable:false,data:null,render:function(){return "<input type='number' class='form-control payFeesInput'/>"}
+				title: "Paying fee",bSortable:false,data:null,render:function(){return "<input type='number' class='form-control payFeesInput' value='0'/><span class='payFeesInputError' style='color:red'></span>"}
 			},
 			{
 				title: "Remaining fee",data:"fees_due",render:function(feeDue){return "<div class='remaingFee' style='text-align:center;'>"+feeDue+" &#x20b9;</div>"}

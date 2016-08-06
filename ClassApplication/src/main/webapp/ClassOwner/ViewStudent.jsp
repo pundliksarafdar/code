@@ -542,7 +542,7 @@ var enabledEdit = false;
 		   $("#studentDetailsParentName").html(data.student.parentFname+" "+data.student.parentLname);
 		   $("#studentDetailsParentPhone").html(data.student.parentPhone);
 		   $("#studentDetailsParentEmail").html(data.student.parentEmail);
-		   if(data.studentUserBean.status == "M"){
+		   if(data.studentUserBean.status == "M" || data.studentUserBean.status == "E"){
 			 $("#generalTab").append("<div class='crendentialDetails'><div class='row'><label>Credential Information</label></div>"+
 					 	"<div class='row'><div class='col-md-2'>Username</div>"+
 				    	"<div class='col-md-1'>:</div>"+

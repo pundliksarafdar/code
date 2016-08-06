@@ -34,6 +34,7 @@
 			<result name="input" type="tiles">login</result>
 			<result name="activation" type="tiles">activation</result>
 			<result name="resetpassword" type="tiles">resetpassword</result>
+			<result name="registeremail" type="tiles">registeremail</result>
 			<result name="invalid.token" type="tiles">accessblocked</result>
 			<param name="ignoresession">true</param>
 		</action>

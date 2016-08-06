@@ -86,6 +86,7 @@
                     </span>
                 </div>
             </div>
+            <input type="text" id="endTimeError" name="endTimeError" style="border: white;width: 0px;height: 0px;">
 		</div>
 		<div>
 		<label for="repeat">Repeat</label>

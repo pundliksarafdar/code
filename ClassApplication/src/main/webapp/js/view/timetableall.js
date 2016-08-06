@@ -108,19 +108,25 @@ $(document).ready(function(){
 		  return ($(REP_SEL).find('[type="checkbox"]:checked').length == 0 || value.length > 0);
 		 }, "Recurrence is set plz select end date");
 		 
+		 $.validator.addMethod("timeValidation", function(value, element, arg){
+			 return $(START_TIME).find('input').val() < $(END_TIME).find('input').val();
+			 }, "");
+		 
 		 validatorForm = $(SCHEDULE_FORM).validate({
 		  rules: {
 		   divisionSelect: { valueNotEquals: "-1"},
 		   batchSelect:{ valueNotEquals: ["-1",null,""] },
 		   subjectSelect:{ valueNotEquals: ["-1",null,""] },
 		   teacherSelect:{ valueNotEquals: ["-1",null,""] },
-			endDate:{endDateRequired:true}
+			endDate:{endDateRequired:true},
+			endTimeError : { timeValidation : "1"}
 		  },
 		  messages: {
 		   divisionSelect: { valueNotEquals: "Please select an division!" },
 		   batchSelect: { valueNotEquals: "Please select an batch!" },
 		   subjectSelect: { valueNotEquals: "Please select an subject!" },
-		   teacherSelect: { valueNotEquals: "Please select an teacher!" }
+		   teacherSelect: { valueNotEquals: "Please select an teacher!" },
+		   endTimeError : { timeValidation : "End time should be greater than Start time"}
 		  }  
 		 });
 		 
@@ -183,6 +189,7 @@ function editSchedule(){
 		var handler = {};
 		handler.success = function(e){
 			$.notify({message: "Schedule saved successfully"},{type: 'success'});
+			$(RESET_SCHEDULE).click();
 			getTimeTableData();
 		}
 		handler.error = function(e){
@@ -195,7 +202,7 @@ function editSchedule(){
 }
 
 function resetSchedule(){
-	$(SUBJECT_SELECT).val(-1);
+	$(SUBJECT_SELECT).select2().val(-1).change();
 	$(TEACHER_SELECT).val(-1);
 	$(SAVE_SCHEDULE).removeClass('hide');
 	$(EDIT_SCHEDULE).addClass('hide');
@@ -344,7 +351,7 @@ function onEdit(event){
 			modal.modalConfirm("Timetable", "Do you want to update schedule for all upcomming event", "Current", "All",loadAllUpcommingEvent,[event]);
 		}
 		$(EDIT_SCHEDULE).attr("data-edit-roll","specific");
-		$(SUBJECT_SELECT).val(event.subId).trigger("change",[event]);
+		$(SUBJECT_SELECT).select2().val(event.subId).change().trigger("change",[event]);
 		$(START_TIME).find('input').val(startTime);
 		$(END_TIME).find('input').val(endTime);
 		

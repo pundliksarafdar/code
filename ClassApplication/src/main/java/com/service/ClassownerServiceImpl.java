@@ -5,11 +5,13 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -46,6 +48,7 @@ import com.config.Constants;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mails.AllMail;
 import com.service.beans.AddBatchBean;
 import com.service.beans.EditQuestionPaper;
 import com.service.beans.EvaluateExamBean;
@@ -563,13 +566,16 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	@POST
 	@Path("/addStudentByManually/{division}/{batch}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response addStudentByManually(StudentRegisterServiceBean serviceBean,@PathParam("division")int division,@PathParam("batch")String batch ) {
 		FeesTransaction feesTransaction = new FeesTransaction();
 		RegisterTransaction registerTransaction = new RegisterTransaction();
 		InstituteStatTransaction statTransaction = new InstituteStatTransaction();
 		boolean status  = true;
 		if(statTransaction.isIDsAvailable(getRegId(), 1)){
+		if(!"".equals(serviceBean.getRegisterBean().getEmail()) && registerTransaction.isEmailExists(serviceBean.getRegisterBean().getEmail())){
+			return Response.status(Status.OK).entity("email").build();
+		}else{
 		int student_id = registerTransaction.registerStudentManually(getRegId(),serviceBean.getRegisterBean(), serviceBean.getStudent(),division,batch);
 		statTransaction.increaseUsedStudentIds(getRegId());
 		for (Iterator iterator = serviceBean.getStudent_FeesList().iterator(); iterator
@@ -583,12 +589,15 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 			helper.sendFeesPaymentNotification(getRegId(), serviceBean.getStudent_FeesList());
 			List<Integer> list= new ArrayList<Integer>();
 			list.add(student_id);
+			if(!"".equals(serviceBean.getRegisterBean().getEmail())){
 			helper.sendManualRegistrationNotification(getRegId(), list);
+			}
+		}
 		}
 		}else{
-			status = false;
+			return Response.status(Status.OK).entity("ID").build();
 		}
-		return Response.status(Status.OK).entity(status).build();
+		return Response.status(Status.OK).entity("").build();
 	}
 	
 	@POST
@@ -762,7 +771,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		RegisterTransaction registerTransaction=new RegisterTransaction();
 		com.classapp.db.register.RegisterBean studentBean=registerTransaction.getregistereduser(student_id);
-		if(!"M".equals(studentBean.getStatus())){
+		if(!"M".equals(studentBean.getStatus()) && !"E".equals(studentBean.getStatus())){
 		studentBean.setLoginPass("");
 		}
 		StudentTransaction studentTransaction=new StudentTransaction();
@@ -944,4 +953,72 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		studentMarksTransaction.saveStudentMarks(studentMarks);
 		return Response.status(Status.OK).entity(marksObj).build();
 	}
+	
+	@GET
+	@Path("/validateEmail/{email}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response validateEmail(@PathParam("email")String email){
+		UserBean userBean = getUserBean();
+		RegisterTransaction registerTransaction = new RegisterTransaction();
+		boolean status =  false;
+		if(!"".equalsIgnoreCase(email)){
+		status = registerTransaction.isEmailExists(email);
+		if(!status){
+			String activationCode = new Date().getTime()+"";
+			AllMail allMail = new AllMail();
+			HashMap<String, String> hashMap = new  HashMap();
+			hashMap.put("HEADER", "Activation Code");
+			hashMap.put("ACTIVATION_CODE",activationCode);	
+			hashMap.put("NAME", userBean.getFirstname());
+			boolean result = allMail.sendMail(email, hashMap, "ActivationCode.html","ClassFloor - Activation");
+			registerTransaction.registerActivationCode(getRegId(), activationCode);
+		}
+		}
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	@GET
+	@Path("/resendActivation/{email}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response resendActivation(@PathParam("email")String email){
+		UserBean userBean = getUserBean();
+		RegisterTransaction registerTransaction = new RegisterTransaction();
+		boolean status =  false;
+		if(!"".equalsIgnoreCase(email)){
+		status = registerTransaction.isEmailExists(email);
+		if(!status){
+			String activationCode = new Date().getTime()+"";
+			AllMail allMail = new AllMail();
+			HashMap<String, String> hashMap = new  HashMap();
+			hashMap.put("HEADER", "Activation Code");
+			hashMap.put("ACTIVATION_CODE",activationCode);	
+			hashMap.put("NAME", userBean.getFirstname());
+			boolean result = allMail.sendMail(email, hashMap, "ActivationCode.html","ClassFloor - Activation");
+			registerTransaction.registerActivationCode(getRegId(), activationCode);
+		}
+		}
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
+	
+	@GET
+	@Path("/activation/{email}/{activationCode}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response activation(@PathParam("email")String email,@PathParam("activationCode")String code){
+		UserBean userBean = getUserBean();
+		boolean status =  false;
+		RegisterTransaction registerTransaction=new RegisterTransaction();
+		if(registerTransaction.ActivationCodeValidation(getRegId(), code)){
+			userBean.setActivationcode("");
+			userBean.setStatus("");
+			registerTransaction.removeActivationCode(getRegId());
+			registerTransaction.updateEmail(getRegId(), email);
+			return Response.status(Status.OK).entity(true).build();
+		}
+		return Response.status(Status.OK).entity(status).build();
+	}
+	
 }

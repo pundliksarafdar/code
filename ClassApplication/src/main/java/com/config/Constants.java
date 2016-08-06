@@ -62,7 +62,7 @@ public class Constants {
 	public static String DIVISION_NAMES="divisionNames";
 	public static String ACTIVATION="activation";
 	public static String RESET_PASSWORD="resetpassword";
-	
+	public static String REGISTER_EMAIL="registeremail";
 	/*Action URL*/
 	public static List<String> ALL_ACTION_URLs = new ArrayList<String>();
 	public static String ACTION_URLS="actionUrl";

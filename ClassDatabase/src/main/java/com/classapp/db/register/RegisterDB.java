@@ -842,4 +842,62 @@ public List getStudents(List StudentIDs) {
 		}	
 		return studentDataList;
 	}
+	
+	public boolean updateActivationCode(int regID,String activationCode) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> subidList = null;
+		Calendar date = Calendar.getInstance();
+	    date.setTime(new Date());
+	    date.add(Calendar.YEAR,1);
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update RegisterBean set activationcode=:activationCode where  regId = :regId");
+			query.setParameter("regId", regID);
+			query.setParameter("activationCode", activationCode);
+			query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return true;
+	}
+	
+	public boolean updateEmail(int regID,String email) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> subidList = null;
+		Calendar date = Calendar.getInstance();
+	    date.setTime(new Date());
+	    date.add(Calendar.YEAR,1);
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update RegisterBean set email=:email,status = '' where  regId = :regId");
+			query.setParameter("regId", regID);
+			query.setParameter("email", email);
+			query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return true;
+	}
 }

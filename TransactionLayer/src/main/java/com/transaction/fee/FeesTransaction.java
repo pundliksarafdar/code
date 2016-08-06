@@ -2,6 +2,7 @@ package com.transaction.fee;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -390,6 +391,10 @@ public class FeesTransaction {
 			if("per".equals(student_Fees.getDiscount_type())){
 				double finalAmt =  student_Fees.getBatch_fees() - (student_Fees.getBatch_fees()*(student_Fees.getDiscount()/100));
 				double due = finalAmt - student_Fees.getFees_paid();
+				DecimalFormat f = new DecimalFormat("##.00");
+				if(due > 0){
+				due = Double.parseDouble(f.format(due));
+				}
 				student_Fees.setFinal_fees_amt(finalAmt);
 				student_Fees.setFees_due(due);
 			}else{

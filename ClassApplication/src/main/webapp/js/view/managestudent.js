@@ -323,11 +323,15 @@ var addStudent = function(){
 		console.log(studentRegisterServiceBean);
 		var handler = {};
 		handler.success = function(e){
-			if(e == true){
+			if(e == ""){
 			$.notify({message: 'Student Added successfully'},{type: 'success'});
-			}else{
+			}else if(e == "ID"){
 				$.notify({message: "Sufficient student ID's not available"},{type: 'danger'});	
-			}};
+			}else if(e == "email"){
+				$(".studentInfoManually").find("#emailError").html("Email ID already used,please enter different email!");
+			}
+			
+		};
 		handler.error = function(e){console.log(e)};
 		rest.post(addStudentManuallyUrl+"/"+divisionId+"/"+batchIDs,handler,JSON.stringify(studentRegisterServiceBean));
 		}

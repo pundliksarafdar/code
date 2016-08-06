@@ -287,8 +287,10 @@ public class StudentExcelData {
 					}else if(feesDiscountType.equalsIgnoreCase("amt") && batchFees.get(0).getBatch_fees()< feesDiscount){
 						studentFees.setDiscount(0.0);
 						listOfErrors.add("Invalid discount amount! Discount can not be greater than batch fees. Discount set to 0. Please set it manually.");
-					}else if(isValidFeesDiscountType){
+					}else if(!isValidFeesDiscountType){
 						listOfErrors.add("Invalid input for column 'Discount in %' or 'Discount in  Rs.'");
+					}else if(feesDiscountType.equalsIgnoreCase("per")){
+						studentFees.setDiscount(feesDiscount);
 					}
 					listOfStudentFeesHistory.add(studentFees);
 				}
