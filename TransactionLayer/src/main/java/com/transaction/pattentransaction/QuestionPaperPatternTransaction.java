@@ -43,6 +43,7 @@ import com.service.beans.OnlineExam;
 import com.service.beans.OnlineExamPaper;
 import com.service.beans.OnlineExamPaperElement;
 import com.service.beans.ParaQuestionBean;
+import com.service.beans.OnlineExamPaperElementEvaluate;
 import com.service.beans.QuestionPaperData;
 import com.service.beans.GenerateQuestionPaperServicebean;
 import com.service.beans.QuestionPaperEditFileElement;
@@ -931,10 +932,24 @@ public class QuestionPaperPatternTransaction {
 		int totalMarks = 0;
 		OnlineExamPaper onlineExamPaper = this.getOnlineQuestionPaper(division,questionPaperId,regId);
 		List<OnlineExamPaperElement> examPaperElements = onlineExamPaper.getOnlineExamPaperElementList();
+		
+		List<OnlineExamPaperElementEvaluate>examPaperElementEvaluates = new ArrayList<OnlineExamPaperElementEvaluate>();
+		HashMap<Integer, Integer>alternateMap = new HashMap<Integer,Integer>();
 		for(OnlineExamPaperElement onlineExamPaperElement:examPaperElements){
+			OnlineExamPaperElementEvaluate onlineExamPaperElementEvaluate = new OnlineExamPaperElementEvaluate();
+			try {
+				BeanUtils.copyProperties(onlineExamPaperElementEvaluate, onlineExamPaperElement);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			int queNo = onlineExamPaperElement.getQues_no();
 			List<String> list = (List) examMap.get(queNo+"");
 			Questionbank questionBank = onlineExamPaperElement.getQuestionbank();
+			int alternateValue = onlineExamPaperElement.getAlternate_value();
 			//If question bank is null then its not a question
 			if(null!=questionBank){
 				totalMarks = totalMarks +questionBank.getMarks();
@@ -944,18 +959,71 @@ public class QuestionPaperPatternTransaction {
 					
 					if(questionBank.getAns_id().contains(l)){
 						System.out.println(questionBank.getQue_text()+"::::::Answer is correct");
-						marks = marks + questionBank.getMarks();
+						onlineExamPaperElementEvaluate.setObtainedMarks(questionBank.getMarks());
+						if(alternateValue!=0){
+							if(!alternateMap.containsKey(alternateValue)|| alternateMap.get(alternateValue)<questionBank.getMarks()){
+								alternateMap.put(alternateValue, questionBank.getMarks());
+							}
+							
+						}else{
+							
+							marks = marks + questionBank.getMarks();
+						}
 					}else{
 						System.out.println(questionBank.getQue_text()+":::::::Answer is wrong");
 					}
 				}
+				
 			}
+			//onlineExamPaperElementEvaluate
+			examPaperElementEvaluates.add(onlineExamPaperElementEvaluate);
 			
 		}
+		System.out.println(examPaperElementEvaluates);
+		int m = getChildMark(examPaperElementEvaluates,0);
+		System.out.println("Makrs...................."+m);
+		 
+		//Add all "OR" question marks
+		
+		Iterator it = alternateMap.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry pair = (Map.Entry)it.next();
+	        marks = marks + (Integer)pair.getValue(); 
+	        it.remove(); // avoids a ConcurrentModificationException
+	    }
+		
 		HashMap<String, Integer>marksObj = new HashMap<String, Integer>();
 		marksObj.put("marks", marks);
 		marksObj.put("totalmarks", totalMarks);
 		return marksObj;
+	}
+	
+	public int getChildMark(List<OnlineExamPaperElementEvaluate>elementEvaluates,int index){
+		int marks = 0;
+		OnlineExamPaperElementEvaluate onlineExamPaperElementEvaluate = elementEvaluates.get(index);
+		if(null != onlineExamPaperElementEvaluate.getQuestionbank()){
+			if(onlineExamPaperElementEvaluate.getAlternate_value()!=0){
+			do{
+				if(index>=elementEvaluates.size()){
+					break;
+				}
+				onlineExamPaperElementEvaluate = elementEvaluates.get(index);
+				marks =  onlineExamPaperElementEvaluate.getObtainedMarks();
+				//Break loop if you got a correct answer
+				if(marks!=0){
+					break;
+				}
+				index++;
+			}while(onlineExamPaperElementEvaluate.getAlternate_value()!=0);
+			}else{
+				marks = onlineExamPaperElementEvaluate.getObtainedMarks();
+			}
+		}else{
+			index++;
+			//if marks is not a question then its a instruction and can have children 
+			marks = getChildMark(elementEvaluates, index);
+		}
+		return marks;
 	}
 	
 	public List<String> getPrimaryImage(int regId,int questionId,String questionType){

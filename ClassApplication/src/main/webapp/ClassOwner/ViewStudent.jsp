@@ -1052,7 +1052,7 @@ var enabledEdit = false;
 <span class="error" id="batchError"></span>
 </div>
 <div class="col-md-2">
-<button class="btn btn-primary searchStudentByBatch">Search</button>
+<button class="btn btn-primary searchStudentByBatch" id="searchStudentByBatch">Search</button>
 
 </div>
 </div>

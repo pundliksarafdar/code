@@ -14,7 +14,31 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="css/hexagon.css">
-		
+        <style>
+        	.tile{
+        		border-radius:10px;
+        		padding:5px;
+        		margin:10px 0px;
+        	}
+        	
+        	.tile #imagePlaceholder{
+        		padding:15px;
+        	}
+        	
+        	#featureDetails{
+		        text-overflow: ellipsis;
+			    overflow: hidden;
+			    white-space: nowrap;
+			    cursor: pointer;
+			    color:blue;
+    		}
+    		
+        </style>
+        <script>
+			$(document).ready(function(){
+				$("#home-features-tab").makeTabs();	
+			});
+		</script>
     </head>
     <body>
 		<div class="container">
@@ -94,31 +118,6 @@
         </ul>
 		</div>
 		<div class="col-md-6" style="padding:30px;">
-			<!--
-			<form role="form">
-				<div class="form-group">
-					<h3 style="color:white;text-align:center;">Class floor</h3>
-				</div>
-				<div class="form-group">
-				<div class="input-group">
-				  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-				  <input type="text" class="form-control" placeholder="Username">
-				</div>
-				</div>
-				
-				<div class="form-group">
-				<div class="input-group">
-				  <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-				  <input type="password" class="form-control" placeholder="Password">
-				</div>
-				</div>
-				
-				<div class="form-group">
-					<input type="button" class="btn btn-success" value="Login"/>
-					<input type="button" class="btn btn-link" value="Sign in"/>
-				</div>
-			</form>
-			-->
 			<form role="form" action="login" method="post">
 							<div class="hide alert alert-danger frontenderror">
 									
@@ -217,5 +216,24 @@
                  </div>
          </section>
 		
+		<div id="home-features-tab"></div>
+		
+		<div class="modal fade" id="messageModal">
+    <div class="modal-dialog">
+    <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="myModalLabel">Small modal</h4>
+        </div>
+        <div class="modal-body" id="mymodalmessage">
+          
+        </div>
+      	<div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+      	</div>
+    </div>
+</div>
+</div>
 	</body>
 </html>

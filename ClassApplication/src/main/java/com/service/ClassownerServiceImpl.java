@@ -35,6 +35,7 @@ import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.exam.Exam;
 import com.classapp.db.exam.Exam_Paper;
+import com.classapp.db.header.Header;
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.questionPaper.QuestionPaper;
 import com.classapp.db.questionPaper.QuestionPaperDB;
@@ -525,6 +526,15 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	}
 	
 	@GET
+	@Path("/header")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllHeader(){
+		HeaderTransaction headerTransaction = new HeaderTransaction(getUserBean().getUserStatic().getHeaderPath());
+		List<Header> header = headerTransaction.getHeaderList(getRegId());
+		return Response.status(Status.OK).entity(header).build();
+	}
+	
+	@GET
 	@Path("/getHeader/{header_id}")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response getHeader(@PathParam("header_id") String header_id){
@@ -532,6 +542,14 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		HeaderTransaction headerTransaction = new HeaderTransaction(userBean.getUserStatic().getHeaderPath());
 		String header = headerTransaction.getHeader(header_id, userBean.getRegId(), userBean.getUserStatic().getHeaderPath());
 		return Response.status(Status.OK).entity(header).build();
+	}
+	
+	@DELETE
+	@Path("/header/{header_id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteHeader(@PathParam("header_id") String header_id){
+		System.out.println("Deleting....."+header_id);
+		return Response.ok().build();
 	}
 	
 	@POST

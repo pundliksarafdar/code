@@ -642,5 +642,9 @@
 			<result name="success" type="tiles">aboutUs</result>
 			<param name="ignoresession">true</param>
 		</action>
+		
+		<action name="adminStatus">
+			<result name="success" type="tiles">admin.status</result>
+		</action>
 	</package>
 </struts>

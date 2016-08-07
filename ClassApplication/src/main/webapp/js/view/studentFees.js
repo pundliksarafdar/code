@@ -215,8 +215,8 @@ function printFeesSuccess(data){
 		var receiptData = $('#printableReceipt').html(); 
 		newWin= window.open("");
 		newWin.document.write(receiptData);
-		newWin.print();
-		newWin.close();
+		//newWin.print();
+		//newWin.close();
 	  });
 }
 function payfee(){

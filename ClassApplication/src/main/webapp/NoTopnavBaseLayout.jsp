@@ -31,6 +31,7 @@ body{
  <script src="js/allAjax.js"></script>	
  <script src="js/modal/modal.js"></script>
  <script src="js/moment.min.js"></script>
+ <script src="js/customPlugin/home.js"></script>
  <!-- <script src="js/datepicker.js"></script> -->
  <script src="js/bootstrap-datetimepicker.min.js"></script>
 </head>

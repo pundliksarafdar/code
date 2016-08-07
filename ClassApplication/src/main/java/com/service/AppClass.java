@@ -23,6 +23,8 @@ public class AppClass extends Application{
 		singletons.add(new StudentService());
 		singletons.add(new NotificationServiceImpl());
 		singletons.add(new ExcelUploadServiceImpl());
+		singletons.add(new ExcelUploadServiceImpl());
+		singletons.add(new AdminStatusService());
     }
     @Override
     public Set<Object> getSingletons() {

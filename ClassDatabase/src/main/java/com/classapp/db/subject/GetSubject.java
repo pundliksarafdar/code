@@ -90,21 +90,16 @@ public class GetSubject {
 	
 	public List<Subjects> getAllClassSubjectsNames(int regID){
 		Session session = null;
-		Transaction transaction = null;
 		List<Subjects> SubList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Subjects where institute_id = :institute_id");
 			query.setParameter("institute_id", regID);
 			SubList = query.list();
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();

@@ -740,4 +740,8 @@
 		<put-attribute name="title" value="Register Email" />
 		<put-attribute name="body" value="/student/registerEmail.jsp" />
 	</definition>
+	<definition name="admin.status" extends="baseLayout">
+		<put-attribute name="title" value="About Us" />
+		<put-attribute name="body" value="/admin/status.jsp" />
+	</definition>
 </tiles-definitions>
