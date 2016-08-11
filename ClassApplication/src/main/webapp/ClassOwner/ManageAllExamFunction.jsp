@@ -4,10 +4,7 @@
         <meta charset="utf-8">
         <title>A Simple Page with CKEditor</title>
         <!-- Make sure the path to CKEditor is correct. -->
-        <link href="js/summernote/summernote.css" rel="stylesheet">
-		<script src="js/summernote/summernote.js"></script>
-		<script src="js/summernote-ext-print.js"></script>
-    	 <script>
+         <script>
                 // Replace the <textarea id="editor1"> with a CKEditor
                 // instance, using default configuration.
                 

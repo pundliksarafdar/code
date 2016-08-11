@@ -25,7 +25,11 @@ padding-right: 2px;
 padding-left: 2px;
 }
 </style>
+	<script src="js/summernote/summernote.js"></script>
+	<script src="js/summernote-ext-print.js"></script>
+    <script src="js/customPlugin/cfSummerNote.js"></script>	
 <script>
+var headerText = "";
 var division = "";
 var batch = "";
 var queationPaperList = [];
@@ -390,13 +394,25 @@ function preview(){
 		$.notify({message: "Please select question paper"},{type: 'danger'});
 		return;
 	}
-	rest.get(getQuestionPaperUrl+divisionId+"/"+paperId,handler);
-	rest.get(getHeaderUrl+headerId,handlerHeader);
+	
+	rest.get(getHeaderUrl+headerId,handlerHeader,true,false);
+	rest.get(getQuestionPaperUrl+divisionId+"/"+paperId,handler,true,false);
+	
+	setTimeout(function(){
+		$('#editQuestionPaper').summernote('insertNode',$("#pre_editQuestionPaper_view")[0]);	
+	},1000);
 	
 	$(MARKS).html(marks);
 }
 
 function previewSuccess(resp){
+	headerText = headerText.replace("{{marks}}",resp.fileObject.marks);
+	headerText = headerText.replace("{{ExamName}}",resp.fileObject.paper_description);
+
+	$('#editQuestionPaper').show();
+	$("#pre_editQuestionPaper_view").find("#header").html(headerText);
+	
+	$("#pre_editQuestionPaper_view").find("#qPaper").empty();
 	var data = resp.fileObject;
 	var questionPaperFileElementList = data.questionPaperFileElementList;
 	$(PREVIEW_PAGE_CONTENT).empty();
@@ -458,12 +474,14 @@ function previewSuccess(resp){
 				}).appendTo(parentDiv);
 					
 				if(this.parent_id!="undefined" && this.parent_id != null){
-					$(PREVIEW_PAGE_CONTENT).find('[item_id="'+this.parent_id+'"]').append(parentDiv);
+					$("#pre_editQuestionPaper_view").find("#qPaper").find('[item_id="'+this.parent_id+'"]').append(parentDiv);
 				}else{
-					$(PREVIEW_PAGE_CONTENT).append(parentDiv);
+					$("#pre_editQuestionPaper_view").find("#qPaper").append(parentDiv);
 				}
 	});
-	$("#examPreviewModal").modal("show");
+	
+	//$('#editQuestionPaper').summernote('insertNode',$(PREVIEW_PAGE_CONTENT)[0]);
+	//$("#examPreviewModal").modal("show");
 }
 
 function previewError(error){
@@ -471,8 +489,7 @@ function previewError(error){
 }
 
 function getHeaderSuccess(e){
-	console.log(e);
-	$(PREVIEW_PAGE_HEADER).html(e);
+	headerText = e;
 }
 
 function getHeaderError(e){
@@ -544,7 +561,18 @@ function getHeaderError(e){
 			<button class="btn btn-primary btn-sm" value="Save" id="saveExam">Save</button>
 		</div>
 		</div>
-	</div>	
+	</div>
+	<div id="editQuestionPaperPreviewDiv" style="display: none">
+	<button class="btn btn-primary btn-sm" id="cancelPreview">Cancel preview</button>
+		<form>
+	        	<div id="editQuestionPaper" class="summernote"></div>
+	    </form>	
+	    <div id="pre_editQuestionPaper_view" class="pre_summernote">
+	    	<div id="header"></div>
+	    	<hr/>
+	    	<div id="qPaper"></div>
+	    </div>
+    </div>
 	<div class="modal fade" id="questionPaperListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	  <div class="modal-dialog">
 		<div class="modal-content">

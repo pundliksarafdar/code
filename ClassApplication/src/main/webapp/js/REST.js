@@ -7,6 +7,7 @@ function REST(){
 			   async:async,
 			   success:handlers.success,
 			   error:handlers.error,
+			   always:handlers.always,
 			   cache:false
 			   }); 
 	}
@@ -20,7 +21,8 @@ function REST(){
 			   contentType: "application/json",
 			   global:global,
 			   success:handlers.success,
-			   error:handlers.error
+			   error:handlers.error,
+			   always:handlers.always
 			   });
 	}
 	

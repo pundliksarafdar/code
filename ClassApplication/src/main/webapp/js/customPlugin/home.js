@@ -1,19 +1,18 @@
 var homeData = [{TabName:"Class owner",TabIcon:"",active:true,
-					features:[{color:"rgba(247,247,247,0.93)",text:"feature 1",imageUrl:"/images/class.svg",featureDetails:"Details goes here"},
-					          {color:"rgba(247,247,247,0.93)",text:"feature 2",imageUrl:"/images/class.svg",featureDetails:"Details goes here"},
-					          {color:"rgba(247,247,247,0.93)",text:"feature 3",imageUrl:"/images/class.svg",featureDetails:"Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here "},
-					          {color:"rgba(247,247,247,0.93)",text:"feature 4",imageUrl:"/images/class.svg",featureDetails:"Details goes here"},
-					          {color:"rgba(247,247,247,0.93)",text:"feature 5",imageUrl:"/images/class.svg",featureDetails:"Details goes here"},
-					          {color:"rgba(247,247,247,0.93)",text:"feature 5",imageUrl:"/images/class.svg",featureDetails:"Details goes here"},
-					          {color:"rgba(247,247,247,0.93)",text:"feature 6",imageUrl:"/images/class.svg",featureDetails:"Details goes here"}]
+					features:[{color:"rgba(247,247,247,0.93)",text:"feature 1",imageUrl:"/images/class.svg",featureDetails:"Details goes here",iconHeight:"100px",iconWidth:"100px"},
+					          {color:"rgba(247,247,247,0.93)",text:"feature 2",imageUrl:"/images/class.svg",featureDetails:"Details goes here",iconHeight:"100px",iconWidth:"100px"},
+					          {color:"rgba(247,247,247,0.93)",text:"feature 3",imageUrl:"/images/class.svg",featureDetails:"Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here Details  goes here ",iconHeight:"100px",iconWidth:"100px"},
+					          {color:"rgba(247,247,247,0.93)",text:"feature 4",imageUrl:"/images/class.svg",featureDetails:"Details goes here",iconHeight:"100px",iconWidth:"100px"},
+					          {color:"rgba(247,247,247,0.93)",text:"feature 5",imageUrl:"/images/class.svg",featureDetails:"Details goes here",iconHeight:"100px",iconWidth:"100px"},
+					          {color:"rgba(247,247,247,0.93)",text:"feature 5",imageUrl:"/images/class.svg",featureDetails:"Details goes here",iconHeight:"100px",iconWidth:"100px"},
+					          {color:"rgba(247,247,247,0.93)",text:"feature 6",imageUrl:"/images/class.svg",featureDetails:"Details goes here",iconHeight:"50px"}]
 				},
                 {TabName:"Teacher",TabIcon:"",
-                	features:[{color:"rgba(247,247,247,0.93)",text:"feature 1",imageUrl:"/images/class.svg",featureDetails:"Details goes here"},
-					          {color:"rgba(247,247,247,0.93)",text:"feature 2",imageUrl:"/images/class.svg",featureDetails:"Details goes here"},
+                	features:[{color:"rgba(247,247,247,0.93)",text:"feature 1",imageUrl:"/images/class.svg",featureDetails:"Details goes here",iconHeight:"200px",iconWidth:"100px"},
+					          {color:"rgba(247,247,247,0.93)",text:"feature 2",imageUrl:"/images/class.svg",featureDetails:"Details goes here",iconHeight:"300px",iconWidth:"100px"},
 					          ]},
                 {TabName:"Student",TabIcon:""},
-                {TabName:"Parents",TabIcon:""}
-                ]
+                {TabName:"Parents",TabIcon:""}]
 
 var settings = {label:{color:"maroon",size:"24px"},detail:{color:"gray",size:"12px"}};
 
@@ -59,7 +58,7 @@ $.fn.makeTabs = function(){
 					if(feature.icons){
 						icon = $("<img/>",{src:feature.icons});
 					}else{
-						icon = $("<img/>",{src:feature.imageUrl});
+						icon = $("<img/>",{src:feature.imageUrl}).css({width:feature.iconWidth,height:feature.iconHeight});
 					}
 					
 					if(icon){

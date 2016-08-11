@@ -30,7 +30,8 @@ response.setHeader("Expires", "0");
 <link href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" rel="stylesheet">
 <link href="https://cdn.datatables.net/fixedcolumns/3.2.1/css/fixedColumns.dataTables.min.css" rel="stylesheet">
 <link href="css/select2.min.css" rel="stylesheet" />
-
+<link href="js/summernote/summernote.css" rel="stylesheet">
+    	
 <link rel="icon" 
       type="image/jpeg" 
       href="images/cxlogowhite.jpg">
@@ -185,6 +186,8 @@ a.floatButton>div{
 <!-- Doc: https://github.com/janl/mustache.js -->
 <script src="js/mustache.min.js"></script>
 <script src='js/view/<c:out value="${request.actionName}"></c:out>.js'></script>
+<script src="js/summernote/summernote.js"></script>
+		<script src="js/summernote-ext-print.js"></script>
 <script>
 var eventOccuredSience;
 $( document ).ajaxStart(function() {
