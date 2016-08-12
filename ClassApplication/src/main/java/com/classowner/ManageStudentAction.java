@@ -31,8 +31,8 @@ public class ManageStudentAction extends BaseAction{
 		List list=batchTransactions.getAllBatches(userBean.getRegId());
 		request.setAttribute("batches", list);
 			studentHelperBean.setClass_id(userBean.getRegId());
-			List<StudentDetails> studentList = studentHelperBean.getStudents();
-			request.getSession().setAttribute(Constants.STUDENT_LIST, studentList);
+			/*List<StudentDetails> studentList = studentHelperBean.getStudents();
+			request.getSession().setAttribute(Constants.STUDENT_LIST, studentList);*/
 			List<Division> divisions= divisionTransactions.getAllDivisions(userBean.getRegId());
 			List<String> divisionNames= new ArrayList<String>();
 			List<Integer> divisionId= new ArrayList<Integer>();

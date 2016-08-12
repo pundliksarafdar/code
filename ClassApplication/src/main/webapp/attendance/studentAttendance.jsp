@@ -16,7 +16,7 @@
 <jsp:include page="attendanceHeader.jsp" >
 		<jsp:param value="active" name="attendances"/>
 	</jsp:include>
-	<div class="container" style="padding: 2%;background: #eee">
+	<div class="well">
 		<div class="row">
 			<div class="col-md-3">
 				<select class="form-control" id="divisionSelect">
@@ -52,7 +52,7 @@
 	
 	</div>
 	<div class="container" style="display: none;" id="attendanceStudentListDiv">
-	<div class="row" style="padding: 2%;">
+	<div class="row" style="padding: 1%;">
 	<div class="col-md-2">
 	<button class="btn btn-primary btn-sm backtoSchedule">Back</button>
 	</div>
@@ -60,7 +60,7 @@
 	<button class="btn btn-primary btn-sm saveAttendance">Save Attendance</button>
 	</div>
 		<div class="col-md-offset-6 col-md-2">
-	<input type="text" id="myInput" class="form-control input-sm">
+	<input type="text" id="myInput" class="form-control input-sm" placeholder="Roll No">
 	</div>
 	</div>
 	<table id="attendanceStudentListTable" class="table" style="width: 100%"></table>

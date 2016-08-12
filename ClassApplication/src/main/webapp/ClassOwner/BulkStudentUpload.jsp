@@ -167,11 +167,11 @@ function getBatchesOfDivision(){
 </ul>
 
 <div id="tabBody">
-<div class="container" style="padding: 2%;background: #eee">
+<div class="well">
 <div class="row">
-<div class="col-md-4">
+<!-- <div class="col-md-4">
 <label>Select Class and Batch For Student:</label>
-</div>
+</div> -->
 <div class="col-md-3">
 	<select id="division" class="form-control">
 		<option value="-1">Select Class</option>
@@ -187,23 +187,26 @@ function getBatchesOfDivision(){
 </select>
 <span class="error" id="batchError"></span>
 </div>
-</div>
+<!-- </div>
 <div class="row">	
 			<div class="col-md-3">
 				<a href="/SampleFiles/SampleStudent.xls" class="btn" role="button">Sample Student Excel</a>
-			</div>
+			</div> -->
 			<div class="col-md-3" id="browseExcelDiv">
-			<span class="btn fileinput-button">
+			<!-- <span class="btn fileinput-button">
 							<i class="glyphicon glyphicon-folder-open"></i> 
-							<span>Browse Student Excel Sheet</span>
-							<input type="file" id="excelUploadBrowseID" class="excelUpload">							
-						</span>
+							<span>Browse Student Excel Sheet</span> -->
+							<input type="file" id="excelUploadBrowseID" class="excelUpload form-control">							
+						<!-- </span> -->
 						<span class="error" id="browseExcelErrorSpan">
 						</span>
 			</div>	
-			<div class="col-md-3">
-				<input type="btn btn-sm" class="btn btn-primary btn-sm" id="uploadStudentExcelBtn" value="Upload Excel" disabled/>
+			<div class="col-md-1">
+				<button class="btn btn-primary btn-sm" id="uploadStudentExcelBtn" value="Upload" disabled>Upload</button>
 			</div>	
+			<div class="col-md-2">
+				<a href="/SampleFiles/SampleStudent.xls" class="btn" role="button">[ Sample Student Excel ]</a>
+			</div>
  		</div>
 </div>
 </div>

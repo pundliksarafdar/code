@@ -9,10 +9,6 @@
 <html>
 <head>
 <style type="text/css">
-.dataTables_filter {
-     display: none;
-}
-
 .subjectTable .editEnabled .editable{
 	display:block;
 }
@@ -36,27 +32,29 @@
 .subjectTable .default{
 	display:show;
 }
+
 </style>
 <script type="text/javascript" src="js/AddSubject.js"></script>
 <script>
 var BUTTONS_MANAGE = '<div class="default">' +
-						'<button class="btn btn-primary btn-xs btn-manage">Manage Topics</button>'+
-						'<button class="btn btn-primary btn-xs btn-edit">Edit</button>'+
+						'<button class="btn btn-primary btn-xs btn-edit">Edit</button>&nbsp;'+
 						'<button class="btn btn-danger btn-xs btn-delete">Delete</button>'+
 					'</div>';
-					
+var BUTTONS_TOPIC = '<div class="default">' +
+					'<button class="btn btn-primary btn-xs btn-manage">Manage Topics</button></div>';
+
 var BUTTONS_COMBINESUBJECT_MANAGE = '<div class="default">' +
-					'<button class="btn btn-primary btn-xs btn-combineEdit">Edit</button>'+
+					'<button class="btn btn-primary btn-xs btn-combineEdit">Edit</button>&nbsp;'+
 					'<button class="btn btn-danger btn-xs btn-delete">Delete</button>'+
 				'</div>';
 					
 var BUTTONS_CANCEL = '<div class="editable">' +
-						'<button class="btn btn-success btn-xs btn-save">Save</button>'+
+						'<button class="btn btn-success btn-xs btn-save">Save</button>&nbsp;'+
 						'<button class="btn btn-danger btn-xs btn-cancel">Cancel</button>'+
 					'</div>';
 					
 var BUTTONS_COMBINECANCEL = '<div class="editable">' +
-					'<button class="btn btn-success btn-xs btn-combinesave">Save</button>'+
+					'<button class="btn btn-success btn-xs btn-combinesave">Save</button>&nbsp;'+
 					'<button class="btn btn-danger btn-xs btn-cancel">Cancel</button>'+
 				'</div>';
 					
@@ -71,7 +69,12 @@ function getSubject(subid){
 	$('div#ModifysubjectModal .error').hide();
 	$('#ModifysubjectModal').modal('toggle');
 }
-
+var optionSelect = {
+		onText:"Yes",
+		offText:"No",
+		onColor:"primary",
+		offColor:"default"
+	};
 /*
 New function
 */
@@ -110,11 +113,13 @@ function deleteSubject(subid){
 /*this function will prompt to delete subject*/
 function deleteSubjectPrompt(){
 	var subjectIdToEdit = $(this).closest("tr").find(".editSubjectId").val();
-	deleteConfirm(subjectIdToEdit);
+	var subjectName = $(this).closest("tr").find(".defaultsubjectName").val();
+	
+	deleteConfirm(subjectIdToEdit,subjectName);
 }
 
-function deleteConfirm(subId){
-	modal.modalConfirm("Delete","Do you want to delete","Cancel","Delete",deleteSubject,[subId]);
+function deleteConfirm(subId,subjectName){
+	modal.modalConfirm("Delete","Do you want to delete "+subjectName+"? All data related to this subject will get deleted.","Cancel","Delete",deleteSubject,[subId]);
 }
 
 function enableEdit(){
@@ -195,7 +200,7 @@ function validateInput(inputText){
 	}
 
 	$(document).ready(function(){
-
+		$("input[type=\"checkbox\"]").bootstrapSwitch(optionSelect);
 		$('body').on("click",".btn-edit",enableEdit)
 			.on("click",".btn-cancel",cancelEdit)
 			.on("click",".btn-save",saveNewSubjectName)
@@ -204,8 +209,8 @@ function validateInput(inputText){
 			
 		$('#tableSearchCustom').on("keyup click",filterGlobal);
 		
-		dataTable = $("#subjectTable").DataTable({"lengthChange": false});
-		$("#combinationSubjects").select2({data:"",placeholder:"Select Subjects"});
+		dataTable = $("#subjectTable").DataTable();
+		$("#combinationSubjects").select2({data:"",placeholder:"Select Combinational Subject"});
 		
 		$('#manageSubjectAddSubject').on('click',function(){
 			var subjectFlag = true;
@@ -234,7 +239,7 @@ function validateInput(inputText){
 		
 	});
 		
-		$("#combinationSub").click(function(e){
+		$('input[name="combinationSub"]').on('switchChange.bootstrapSwitch',function(e){
 			if($(this).is(":checked")){
 				var handlers = {};
 				handlers.success = function(data){
@@ -248,14 +253,14 @@ function validateInput(inputText){
 						subjectArray.push(data);
 						}
 					});
-					$("#combinationSubjects").select2({data:subjectArray,placeholder:"Select Subjects"});
+					$("#combinationSubjects").select2({data:subjectArray,placeholder:"Select Combinational Subject"});
 				}
 				handlers.error = function(e){}
 				rest.get("rest/classownerservice/allInstituteSubjects/",handlers);
 				
 			}else{
 				$("#combinationSubjects").select2().val("")
-				$("#combinationSubjects").select2({data:"",placeholder:"Select Subjects"});
+				$("#combinationSubjects").select2({data:"",placeholder:"Select Combinational Subject"});
 				$("#combinationSubjects").prop("disabled",true);
 			}
 		});
@@ -348,7 +353,6 @@ function validateInput(inputText){
 		dataTable = $('#subjectTable').DataTable({
 			bDestroy:true,
 			data: data.subjects,
-			lengthChange: false,
 			columns: [
 				{title:"Sr No.",data:null,render:function(data,event,row){
 					return row.index;
@@ -364,8 +368,15 @@ function validateInput(inputText){
 					modifiedObj = modifiedObj + '<span id="editSubjectSelectError" class="error"></span>';
 					}
 					return modifiedObj;
-				},sWidth:"70%"},
-				{ title: "",data:null,render:function(data,event,row){
+				},sWidth:"60%"} ,
+				{ title: "Topics",data:data,render:function(data,event,row){
+					if(row.sub_type != "1"){
+						return BUTTONS_TOPIC;
+					}else{
+						return "";
+					}
+				},sWidth:"10%"},
+				{ title: "Actions",data:null,render:function(data,event,row){
 					if(row.sub_type != "1"){
 					return BUTTONS_MANAGE+BUTTONS_CANCEL;
 					}
@@ -392,7 +403,6 @@ function validateInput(inputText){
 		dataTable = $('#subjectTable').DataTable({
 			bDestroy:true,
 			data: data,
-			lengthChange: false,
 			columns: [
 				{title:"Sr No.",data:null,sWidth:"10%"},
 				{ title: "Name",data:data,render:function(data,event,row){
@@ -406,8 +416,15 @@ function validateInput(inputText){
 					modifiedObj = modifiedObj + '<span id="editSubjectSelectError" class="error"></span>';
 					}
 					return modifiedObj;
-				},sWidth:"70%"} ,
-				{ title: "",data:data,render:function(data,event,row){
+				},sWidth:"60%"} ,
+				{ title: "Topics",data:data,render:function(data,event,row){
+					if(row.sub_type != "1"){
+						return BUTTONS_TOPIC;
+					}else{
+						return "";
+					}
+				},sWidth:"10%"},
+				{ title: "Actions",data:data,render:function(data,event,row){
 					if(row.sub_type != "1"){
 					return BUTTONS_MANAGE+BUTTONS_CANCEL;
 					}
@@ -433,18 +450,18 @@ function validateInput(inputText){
 <jsp:include page="ClassSubjectNBatchHeaders.jsp" >
 		<jsp:param value="active" name="addsubject"/>
 	</jsp:include>
- <div class="container">
- <div class="row" style="background-color:#eee;padding: 2%">
+ <div class="well">
+ <div class="row">
  <div class="col-md-3 addSubjectContainer">
       <input type="text" class="form-control" id="subjectName" maxlength="25" placeholder="Enter Subject Name">
-    <div class="error"> &nbsp;</div>
+    <div class="error"></div>
   </div><!-- /.col-lg-6 -->
    <div class="col-md-3">
   Combination Subject : <input type="checkbox" id="combinationSub" name="combinationSub">
   </div>
    <div class="col-md-3 addSubjectContainer">
       <select id="combinationSubjects" class="form-control" disabled="disabled" multiple="multiple"></select>
-      <div class="combinationSubjectserror" style="color: red"> &nbsp;</div>
+      <div class="combinationSubjectserror" style="color: red"></div>
   </div>
    <div class="col-md-3 addSubjectContainer">
         <button id="manageSubjectAddSubject" class="btn btn-primary" type="button">Add subject</button>
@@ -453,12 +470,9 @@ function validateInput(inputText){
 </div>
 
 <div class="container">
-<div class="col-md-offset-8 col-md-3" style="padding: 2%">
-	<input type="text" class="form-control" id="tableSearchCustom" placeholder="search">
- </div>
  <table class="table table-striped subjectTable" id="subjectTable" width="100%">
 	<thead>
-		<th>#</th><th>Subject name</th><th></th>
+		<th>#</th><th>Subject name</th><th>Topics</th><th>Actions</th>
 	</thead>
  <c:forEach items="${listOfSubjects}" var="subject" varStatus="counter">
  	<tr>
@@ -475,6 +489,11 @@ function validateInput(inputText){
 			</c:if>
 			
 		</td>
+		<td>
+		<c:if test="${subject.sub_type ne 1}">
+				<button class="btn btn-primary btn-xs btn-manage">Manage Topics</button>
+		</c:if>
+		</td>
  		<td width="20%">
 			<div class="default">
 				
@@ -482,7 +501,6 @@ function validateInput(inputText){
 				<button class="btn btn-primary btn-xs btn-combineEdit">Edit</button>
 				</c:if>
 				<c:if test="${subject.sub_type ne 1}">
-				<button class="btn btn-primary btn-xs btn-manage">Manage Topics</button>
 				<button class="btn btn-primary btn-xs btn-edit">Edit</button>
 				</c:if>
 				<button class="btn btn-danger btn-xs btn-delete">Delete</button>

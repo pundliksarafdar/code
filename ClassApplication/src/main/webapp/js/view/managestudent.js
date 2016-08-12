@@ -8,6 +8,7 @@ var addStudentByID = 'rest/classownerservice/addStudentByID';
 $(document).ready(function(){
 	$("body").on("change",BATCH_SELECT,selectBacth)
 		.on("click",ADD_STUDENT,addStudent);
+	showTable([]);
 });
 
 function selectBacth(){

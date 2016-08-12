@@ -272,10 +272,10 @@ function createStudentExamMarksTable(data){
 	var htmlString = "";
 	htmlString = htmlString +"<table class='table' style='width:100%'><thead><tr><th>Roll No</th><th>Student Name</th>";
 	for(i=0;i<data.examSubjectList.length;i++){
-		htmlString = htmlString + "<th>"+data.examSubjectList[i].subjectName+"<font style='color:red'>/"+data.examSubjectList[i].marks+"</font></th>"
+		htmlString = htmlString + "<th>"+data.examSubjectList[i].subjectName+"/"+data.examSubjectList[i].marks+"</th>"
 		examTotalMarks = examTotalMarks + data.examSubjectList[i].marks;
 	}
-	htmlString = htmlString + "<th>Total<font style='color:red'>/"+examTotalMarks+"</font></th><th>Percentage</th>"
+	htmlString = htmlString + "<th>Total/"+examTotalMarks+"</th><th>Percentage</th>"
 	htmlString = htmlString + "</tr></thead>";
 	htmlString = htmlString + "<tbody>";
 	for(i=0;i<data.studentDataList.length;i++){
@@ -351,7 +351,7 @@ function createStudentExamSubjectMarksTable(data){
 <jsp:include page="ExamMarksHeader.jsp" >
 		<jsp:param value="active" name="viewexamMarks"/>
 	</jsp:include>
-<div class="container" style="padding: 2%; background: #eee">
+<div class="well">
 		<div class="row">
 			<div class="col-md-3">
 				<select id="division" name="division" class="form-control">
@@ -373,7 +373,7 @@ function createStudentExamSubjectMarksTable(data){
 			</div>
 			<div class="col-md-2">
 				<select class="form-control" id="viewType" >
-					<option value="-1">Select View</option>
+					<!-- <option value="-1">Select View</option> -->
 					<option value="1">Exam View</option>
 					<option value="2">Subject View</option>
 				</select>

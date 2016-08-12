@@ -121,6 +121,7 @@ function sendDue(){
 }
 
 function sendMultipleDue(){
+	$("#selectStudentError").html("");
 	$("#notificationSummary").hide();
 	var sms = $("#actionButtons #sms").is(":checked");
 	var email = $("#actionButtons #email").is(":checked");
@@ -189,7 +190,7 @@ function sendMultipleDue(){
 	handler.error = function(e){console.log(e)};
 	rest.post(sendDueAlertURL+"/"+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+sms+"/"+email+"/"+parent+"/"+student,handler,studentIDArray.join(","));
 	}else{
-		$.notify({message: "Select students"},{type: 'success'})	
+		$("#selectStudentError").html("Select students")	
 	}
 }
 
@@ -371,18 +372,13 @@ function loadStudentTableSuccess(data){
 				title: "Paying fee",bSortable:false,data:null,render:function(){return "<input type='number' class='form-control payFeesInput' value='0'/><span class='payFeesInputError' style='color:red'></span>"}
 			},
 			{
-				title: "Remaining fee",data:"fees_due",render:function(feeDue){return "<div class='remaingFee' style='text-align:center;'>"+feeDue+" &#x20b9;</div>"}
+				title: "Due fee",data:"fees_due",render:function(feeDue){return "<div class='remaingFee' style='text-align:center;'>"+feeDue+" &#x20b9;</div>"}
 			},
 			{
-				title: "",bSortable:false,data:null,render:function(){return "<input type='button' class='btn btn-default payFees' value='Save'/>"}
-			},
-			{
-				title: "",bSortable:false,data:null,render:function(){return "<input type='button' class='btn btn-default printReceipt' value='Print'/>"}
-			}
-			,
-			{
-				title: "",bSortable:false,data:null,render:function(){return "<input type='button' class='btn btn-default sendDue' value='Send Due'/>"}
-			}
+				title: "",bSortable:false,data:null,render:function(){return "<input type='button' class='btn btn-success btn-xs payFees' value='Save'/>&nbsp;" +
+						"<input type='button' class='btn btn-primary btn-xs printReceipt' value='Print'/>&nbsp;" +
+						"<input type='button' class='btn btn-primary btn-xs sendDue' value='Send Due'/>";
+			}}
 			],
 			rowCallback:function(row, data, displayIndex, displayIndexFull){
 				$(row).find("input[class=\"percentage\"]").bootstrapSwitch(optionSelect);

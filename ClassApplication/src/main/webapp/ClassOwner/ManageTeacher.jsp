@@ -160,11 +160,13 @@ function validateInput(inputText){
 			   		var resultJson = JSON.parse(e);
 			   		var status=resultJson.status;
 			   		 if(status=="success"){
-			   		$("#teacherAddStatus").html("Teacher Added Successfully.");
+			   		$.notify({message: "Teacher Added Successfully."},{type: 'success'});
+			   		/* $("#teacherAddStatus").html("Teacher Added Successfully."); */
 			   		 }else{
-			   		$("#teacherAddStatus").html("Teacher alrady present in your institute.");
+			   		$.notify({message: "Teacher alrady present in your institute."},{type: 'info'});
+			   		/* $("#teacherAddStatus").html("Teacher alrady present in your institute."); */
 			   		 }
-			   		$("#teacherAddStatus").show();
+			   		/* $("#teacherAddStatus").show(); */
 			   	 },
 			   	 error:function(e){}
 			   		
@@ -188,17 +190,17 @@ function validateInput(inputText){
   
 <div  class = "tab-content">
  <div id="addteachertab" class = "tab-pane fade in active">
-	<div class="container">
-	<div class="row" style="background: #eee;padding-top: 1%">
+	<div class="well">
+	<div class="row" >
 		<div class="form-group col-lg-3">
-			<input type="text" id="username" class="form-control" placeholder="Username">
+			<input type="text" id="username" class="form-control" placeholder="ClassFloor ID">
 		</div>
 
 		<div class="form-group col-lg-3">
 			<input type="email" id="email" class="form-control" placeholder="Email">
 		</div>
 	
-	<div class="form-group col-lg-3" style="background: #eee">
+	<div class="form-group col-lg-3" >
 		<button type="submit" class="btn btn-primary" id="addTeacherSearch">Search</button>
 	</div>
 	
@@ -206,7 +208,7 @@ function validateInput(inputText){
 </div>
 <div class="container" id="teacherdetailsdiv" style="display: none;">
 <div class="row">
-<font size="5">Teacher Details</font>
+<font size="3"><b>Teacher Details</b></font>
 </div>
 <div class="row">
 <table>
@@ -217,7 +219,7 @@ function validateInput(inputText){
 <td><font size="3"> Last Name </font></td> <td>:</td> <td><span id="lastname"></span></td>
 </tr>
 <tr>
-<td><font size="3">User Name </font></td> <td>:</td> <td><span id="searchedusername"></span></td>
+<td><font size="3">ClassFloor ID </font></td> <td>:</td> <td><span id="searchedusername"></span></td>
 </tr>
 <tr>
 <td><font size="3">Email ID </font></td> <td>:</td><td> <span id="searchedrmailid"></span></td>

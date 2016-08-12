@@ -15,19 +15,47 @@
 .editDiv{
 display: none;
 }
+
+.topictable .editEnabled .editable{
+	display:block;
+}
+
+.topictable .editEnabled .default{
+	display:none;
+}
+
+.topictable .editable{
+	display:none;
+}
+
+.topictable .default{
+	display:show;
+}
 </style>
 <script type="text/javascript">
+var BUTTONS_MANAGE = '<div class="default">' +
+'<button class="btn btn-primary btn-xs btn-edit">Edit</button>&nbsp;'+
+'<button class="btn btn-danger btn-xs btn-delete">Delete</button>'+
+'</div>';
+
+var BUTTONS_CANCEL = '<div class="editable">' +
+'<button class="btn btn-success btn-xs btn-save">Save</button>&nbsp;'+
+'<button class="btn btn-danger btn-xs btn-cancel">Cancel</button>'+
+'</div>';
 var topicid="";
 $(document).ready(function(){
 	$("#topics_division").on("change",fetchTopic);
 	$(".deletetopic").on("click",deletetopic);
 	$("#addTopic").on("click",addTopic);
 	/* $("#saveTopic").on("click",saveedittopic); */
-	$("#topictable").on("click",".editTopic",edittopic);	
+	/* $("#topictable").on("click",".editTopic",edittopic);	
 	$("#topictable").on("click",".cancleEdit",cancleEdit);
 	$("#topictable").on("click",".saveTopic",saveedittopic);
-	$("#topictable").on("click",".deletetopic",deletetopic);
-	
+	$("#topictable").on("click",".deletetopic",deletetopic); */
+	$('body').on("click",".btn-edit",edittopic)
+	.on("click",".btn-cancel",cancelEdit)
+	.on("click",".btn-save",saveedittopic)
+	.on("click",".btn-delete",deleteclassPrompt);
 });
 
 function addTopic(){
@@ -73,32 +101,30 @@ function addTopic(){
 
 var edittopicid="";
 function edittopic(){
-	topicid = $(this).prop("id");
+	topicid = $($(this).closest("tr")).find(".topicId").val();
 	edittopicid=topicid;
 	var topicname=$("#topic"+topicid).html();
-	$($(this).closest("tr")).find(".default").hide();
-	$($(this).closest("tr")).find("input").val($($(this).closest("tr")).find(".defaultName").html());
-	$($(this).closest("tr")).find(".editDiv").show();
+	$($(this).closest("tr")).find(".editTopicName").val($($(this).closest("tr")).find(".defaultTopicName").html());
+	$(this).closest("tr").addClass("editEnabled");
 	/* $("#edittopicname").val(topicname);
 	$("#topicedit").modal('toggle'); */
 }
 
-function cancleEdit(){
-	$($(this).closest("tr")).find(".default").show();
-	$($(this).closest("tr")).find(".editDiv").hide();
+function cancelEdit(){
+	$(this).closest("tr").removeClass("editEnabled");
 }
 
 function saveedittopic(){
 	var that = this;
 	var divisionID=$("#topics_division").val();
 	var subID=$("#subjectID").val();
-	var topicname=$($(this).closest("tr")).find("#edittopicname").val();
+	var topicname=$($(this).closest("tr")).find(".editTopicName").val();
 	var CHAR_AND_NUM_VALIDATION = /^[a-zA-Z0-9-_\s]{1,}$/;
 	if(topicname.trim()==""){
-		$($(this).closest("tr")).find("#edittopicnameerror").html("Please Enter Topic Name");
+		$($(this).closest("tr")).find(".edittopicnameerror").html("Please Enter Topic Name");
 		flag=true;
 	}else if(!CHAR_AND_NUM_VALIDATION.test(topicname.trim())){
-		$($(this).closest("tr")).find("#edittopicnameerror").html("Invalid Topic Name");
+		$($(this).closest("tr")).find(".edittopicnameerror").html("Invalid Topic Name");
 	}else{
 	$.ajax({
 		 
@@ -116,7 +142,7 @@ function saveedittopic(){
 			   var status=resultJson.topicexists;
 			   if(status!=""){
 				   flag= true;
-				   $($(that).closest("tr")).find("#edittopicnameerror").html("Topic name already available!!!");
+				   $($(that).closest("tr")).find(".edittopicnameerror").html("Topic name already available!!!");
 			   }else {
 				   $.notify({message: "Topic updated successfuly "},{type: 'success'});
 				   fetchTopic();
@@ -130,10 +156,19 @@ function saveedittopic(){
 	 
 }
 
-function deletetopic(){
+function deleteclassPrompt(){
+	var topicID = $(this).closest("tr").find(".topicId").val();
+	var topicName = $(this).closest("tr").find(".defaultTopicName").html();
+	deleteConfirm(topicID,topicName);
+}
+
+function deleteConfirm(topicID,topicName){
+	modal.modalConfirm("Delete","Do you want to delete "+topicName+"?","Cancel","Delete",deletetopic,[topicID]);
+}
+
+function deletetopic(topicid){
 	var divisionID=$("#topics_division").val();
 	var subID=$("#subjectID").val();
-	var topicid = $(this).prop("id");
 	var handlers = {};
 	handlers.success=function(){
 		$.notify({message: "Topic successfuly deleted"},{type: 'success'});
@@ -147,10 +182,6 @@ function deletetopic(){
 	 
 }
 function fetchTopic(){
-	$("#topictable tbody").empty();
-	$("#topictable").hide();
-	$("#notopicdiv").hide();
-	$("#topicbasediv").hide();
 	var divisionID=$("#topics_division").val();
 	var subID=$("#subjectID").val();
 	 if(divisionID!="-1"){
@@ -171,23 +202,33 @@ function fetchTopic(){
 		   type:"POST",
 		   success:function(data){
 			   var resultJson=JSON.parse(data);
-			   var topic_names=resultJson.topic_names.split(",");
-			   var topic_ids=resultJson.topic_ids.split(",");
-			   if(topic_ids[0]!=""){
-				   for(var i=0;i<topic_ids.length;i++){
-					   $("#topictable tbody").append("<tr><td>"+(i+1)+"</td>"+
-					   "<td id='topic"+topic_ids[i]+"'><div class='default defaultName'>"+topic_names[i]+"</div>"+
-					   "<div class='editDiv'><input type='text' class='form-control' id='edittopicname' maxlength='50'><div id='edittopicnameerror' class='error'></div></div></td>"+
-					   "<td><div class='default'><button class='btn btn-primary btn-xs editTopic' id='"+topic_ids[i]+"'>Edit</button>"+
-					   "<button id="+topic_ids[i]+" class='btn btn-danger deletetopic btn-xs'>Delete</button></div>"+
-					   "<div class='editDiv'><button class='btn btn-xs btn-success saveTopic'>Save</button><button class='btn btn-xs btn-danger cancleEdit'>Cancel</button></div></td></tr>");
-				   }
-				   $("#topictable").show();
-			   }else{
-				  // $("#topictable").hide();
-					$("#notopicdiv").show();
+			   var topics=resultJson.topicJson;
+			   var status=resultJson.status;
+			   if(topics == null || topics == undefined){
+				   topics = [];
 			   }
-			   $("#topicbasediv").show();
+			  var dataTable = $('#topictable').DataTable({
+					bDestroy:true,
+					data: topics,
+					columns: [
+						{title:"#",data:null},
+						{ title: "Topic Name",data:data,render:function(data,event,row){
+							var div = '<div class="default defaultTopicName">'+row.topic_name+'</div>';
+							var input= '<input type="text" value="'+row.topic_name+'" class="form-control editable editTopicName">';
+							var topicID = '<input type="hidden" value="'+row.topic_id+'" class="topicId">';
+							var span = '<span class="editable edittopicnameerror error"></span>'
+							return div+input+topicID+span;
+						}},
+						{ title: "Actions",data:null,render:function(data){
+							return BUTTONS_MANAGE+BUTTONS_CANCEL;
+						}}
+					]
+				});
+			  dataTable.on( 'order.dt search.dt', function () {
+			        dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+			            cell.innerHTML = i+1;
+						});
+					}).draw(); 
 		   },
 		   error:function(){
 			   }
@@ -199,13 +240,13 @@ function fetchTopic(){
 </head>
 <body>
 <input type="hidden" value="<c:out value="${subid}"> </c:out>" id="subjectID">
-<div class="container" style="margin-bottom: 5px">
+<div class="container" style="margin-bottom: 5px;margin-left: 0%;padding: 0%">
 			<a type="button" class="btn btn-primary" href="managesubject"> <span class="glyphicon glyphicon-circle-arrow-left"></span> Back To Manage Subjects</a>
 </div>
-<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+<div class="well" style="margin-bottom: 5px">
 	<div align="center" style="font-size: larger;">Add Topics</div>
 			<div class="row">
-				<div class='col-sm-6 header' style="padding-bottom: 10px;color: white;">*
+				<div class='col-sm-6 header' style="padding-bottom: 10px;color: black;">*
 					<c:out value="${subjectname}"></c:out>
 				</div>
 			</div>
@@ -230,18 +271,8 @@ function fetchTopic(){
 			</div>
 			</div>
 </div>
-		<div class="container" id="topicbasediv" style="display: none;">
-  <h2><font face="cursive">Topics</font> </h2>            
-  <table class="table table-striped" id="topictable" style="display: none">
-    <thead>
-      <tr>
-        <th>Sr No.</th>
-        <th>Topic Name</th>
-        <th>Edit</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
+		<div class="container" id="topicbasediv">            
+  <table class="table table-striped topictable" id="topictable" style="width: 100%">
     </table>
     <div class="alert alert-info" align="center" id="notopicdiv" style="display: none">Topics are not available for selected criteria.</div>
     </div>	

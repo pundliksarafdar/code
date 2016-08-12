@@ -29,7 +29,7 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
 <jsp:include page="attendanceHeader.jsp" >
 		<jsp:param value="active" name="viewAttendance"/>
 	</jsp:include>
-	<div class="container" style="padding: 2%;background: #eee">
+	<div class="well">
 		<div class="row">
 			<div class="col-md-3">
 				<select class="form-control" id="divisionSelect">

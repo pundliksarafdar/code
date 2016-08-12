@@ -6,17 +6,40 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <style type="text/css">
-	.row:hover{
+.row{
+width: 100%;
+}
+	/* .row:hover{
 		background-color: rgba(10,10,10,0.1);
 	}
+	 */
+/* .toggle:after {
+  content: '';
+  text-shadow: 0 -1px 0 #bfbfbf;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  float: left;
+  margin: auto;
+  
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  border-radius: 100%;
+  
+}
+
+.toggle:checked:after {
+  background: green; /* Old browsers */
+
+} */
 </style>
 <script type="text/javascript" src="js/view/sendAlert.js"></script>
 </head>
 <body>
 	<div>
-		<div class="container">
+		<div class="container" style="width: 100%">
 		<form id="baseform">
-			<div class="row">
+			<div class="row" style="width: 100%">
 	  		<div class="col-md-3">
 		  		<div>
 		  		<select name="divisionSelect" id="divisionSelect" class="form-control" width="100px" required>
@@ -35,18 +58,46 @@
 	  			</div>
 	  		</div>
 	  		
-			<div class="col-md-3">
-			<label >Choose method</label>	
-				<div>
-					<input type="checkbox" value="sms" id="sms" name="type" required><label for="sms">SMS</label>
-					<input type="checkbox" value="email" id="email" name="type" required><label for="email">Email</label>
+			<div class="col-md-3">	
+				<div class="row">
+					<div class="col-md-6">	
+					<div class='input-group'>
+      				<span class='input-group-addon'>
+					<input type="checkbox" value="sms" id="sms" name="type" class="toggle" required>
+					</span>
+					<input type='text' class='form-control' readonly value='SMS' data-toggle='tooltip' title='SMS' style="cursor:default;">
+					</div>
+					</div>
+					<div class="col-md-6">	
+					<div class='input-group'>
+      				<span class='input-group-addon'>
+					<input type="checkbox" value="email" id="email" name="type" required>
+					</span>
+					<input type='text' class='form-control' readonly value='Email' data-toggle='tooltip' title='Email' style="cursor:default;">
+					</div>
+					</div>
+					<input type="text" name="typeError" style="border: white;width: 0px;height: 0px;">
 				</div>
 			</div>
 			<div class="col-md-3">
-			<label>Choose whome</label>
-				<div>
-					<input type="checkbox" value="parent" id="parent" name="sendTo" required/><label for="parent">Parent</label>
-					<input type="checkbox" value="student" id="student" name="sendTo" required/><label for="student">Student</label>
+				<div class="row">
+					<div class="col-md-6">	
+					<div class='input-group'>
+      				<span class='input-group-addon'>
+					<input type="checkbox" value="parent" id="parent" name="sendTo" required/>
+					</span>
+					<input type='text' class='form-control' readonly value='Parent' data-toggle='tooltip' title='Parent' style="cursor:default;">
+					</div>
+					</div>
+					<div class="col-md-6">	
+					<div class='input-group'>
+      				<span class='input-group-addon'>
+					<input type="checkbox" value="student" id="student" name="sendTo" required/>
+					</span>
+					<input type='text' class='form-control' readonly value='Student' data-toggle='tooltip' title='Student' style="cursor:default;">
+					</div>
+					</div>
+					<input type="text" name="sendToError" style="border: white;width: 0px;height: 0px;">
 				</div>	
 			</div>
 		</div>

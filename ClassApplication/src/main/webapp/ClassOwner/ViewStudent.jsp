@@ -733,14 +733,14 @@ var enabledEdit = false;
 						var span = '<span class="editable batchError error"></span>'
 						return batchNames + selectTag + span;
 						}},
-					{ title: "Action",data:null,render:function(data){
+					{ title: "Actions",data:null,render:function(data){
 						var buttons = '<div class="default">'+
-						'<input type="button" class="btn btn-xs btn-warning btn-batch-edit" value="Edit">'+
-						'<input type="button" class="btn btn-xs btn-danger btn-batch-delete" value="Delete">'+
-						'<input type="button" class="btn btn-xs btn-primary btn-student-details" value="Details">'+
+						'<input type="button" class="btn btn-xs btn-primary btn-batch-edit" value="Edit">&nbsp;'+
+						'<input type="button" class="btn btn-xs btn-danger btn-batch-delete" value="Delete">&nbsp;'+
+						'<input type="button" class="btn btn-xs btn-info btn-student-details" value="Details">'+
 					'</div>'+
 					'<div class="editable">'+
-						'<button class="btn btn-success btn-xs btn-save">Save</button>'+
+						'<button class="btn btn-success btn-xs btn-save">Save</button>&nbsp;'+
 						'<button class="btn btn-danger btn-xs btn-cancel">Cancel</button>'+
 					'</div>'
 					
@@ -811,13 +811,13 @@ var enabledEdit = false;
 					}},
 				{ title: "Action",data:null,render:function(data){
 					var buttons = '<div class="default">'+
-					'<input type="button" class="btn btn-xs btn-warning btn-batch-edit" value="Edit">'+
-					'<input type="button" class="btn btn-xs btn-danger btn-batch-delete" value="Delete">'+
-					'<input type="button" class="btn btn-xs btn-primary btn-student-details" value="Details">'+
+					'<input type="button" class="btn btn-xs btn-primary btn-batch-edit" value="Edit">&nbsp;'+
+					'<input type="button" class="btn btn-xs btn-danger btn-batch-delete" value="Delete">&nbsp;'+
+					'<input type="button" class="btn btn-xs btn-info btn-student-details" value="Details">'+
 				'</div>'+
 				'<div class="editable">'+
-					'<button class="btn btn-success btn-xs btn-save">Save</button>'+
-					'<button class="btn btn-danger btn-xs btn-cancel">Cancel</button>'+
+					'<button class="btn btn-success btn-xs btn-save">Save</button>&nbsp;'+
+					'<button class="btn btn-danger btn-xs btn-cancel">Cancel</button>&nbsp;'+
 				'</div>'
 				
 				return buttons;
@@ -1031,11 +1031,8 @@ var enabledEdit = false;
 </ul>
 
 <div id="viewstudenttab">
-<div class="container" style="padding: 2%;background: #eee">
+<div class="well">
 <div class="row searchStudent">
-<div class="col-md-4">
-<label>Search Student By Class and Batch:</label>
-</div>
 <div class="col-md-3">
 	<select id="division" class="form-control">
 		<option value="-1">Select Class</option>
@@ -1053,18 +1050,8 @@ var enabledEdit = false;
 </div>
 <div class="col-md-2">
 <button class="btn btn-primary searchStudentByBatch" id="searchStudentByBatch">Search</button>
-
 </div>
-</div>
-<div class="row">
-	<div class="col-md-5"><hr style="border-top : 1px solid black;"></div>
-	<div class="col-md-1"><span class="badge" style="padding: 18%;border-radius:20px">OR</span></div>
-	<div class="col-md-5"><hr style="border-top : 1px solid black;"></div>
-</div>
-<div class="row">
-<div class="col-md-4">
-<label>Search Student By Name:</label>
-</div>
+	<div class="col-md-1"><button class="btn btn-primary" style="border-radius:55%;background: grey;border: grey" disabled="disabled">OR</button></div>
 <div class="col-md-3">
 <form action="javascript:void(0)">
         <div class="typeahead-container">
@@ -1090,7 +1077,7 @@ var enabledEdit = false;
 </div>
 </div>
 </div>
-<div class="container containerData" style="padding-top: 1%">
+<div class="container containerData">
 <button class="btn btn-primary generateRollNumber hide">Generate Roll No</button>
 <br/><br/>
 <table class="table table-striped classTable" id="classTable" >

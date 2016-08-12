@@ -2,10 +2,6 @@
 <html>
 <head>
 <style type="text/css">
-.dataTables_filter {
-     display: none;
-}
-
 #batchTable .editEnabled .editable{
 	display:block;
 }
@@ -40,12 +36,13 @@
 	function deleteBatchPrompt(){
 		var batchIdToDelete = $(this).closest("tr").find("#batchId").val();
 		var divisionId = $(this).closest("tr").find("#divisionId").val();
+		var batchName = $(this).closest("tr").find(".defaultBatchName").html();
 		that = $(this);
-		deleteBatchConfirm(divisionId,batchIdToDelete);	
+		deleteBatchConfirm(divisionId,batchIdToDelete,batchName);	
 	}
 	
-	function deleteBatchConfirm(divisionId,batchIdToDelete){
-		modal.modalConfirm("Delete","Do you want to delete","Cancel","Delete",deleteBatch,[divisionId,batchIdToDelete]);
+	function deleteBatchConfirm(divisionId,batchIdToDelete,batchName){
+		modal.modalConfirm("Delete","Do you want to delete "+batchName+"?All data related to this batch will get deleted.","Cancel","Delete",deleteBatch,[divisionId,batchIdToDelete]);
 	}
 	
 	function deleteBatch(divisionId,batchIdToDelete){
@@ -182,7 +179,7 @@
 			bDestroy:true,
 			data: data.instituteBatches,
 			lengthChange: false,
-			columns: [
+			columns: [{title:"#",data:null},
 				{ title: "Name",data:"batch",render:function(data,event,row){
 					var div = '<div class="default defaultBatchName">'+data.batch_name+'</div>';
 					var input= '<input type="text" value="'+data.batch_name+'" class="form-control editable editBatchName">';
@@ -208,13 +205,13 @@
 					subjectsStr = '<div class="default">'+subjectsStr+'</div>';
 					return subjectsStr + selectTag;
 				},sWidth:"30%"},
-				{ title: "Manage",data:null,render:function(data,event,row){
+				{ title: "Actions",data:null,render:function(data,event,row){
 					var buttons = '<div class="default">'+
-						'<input type="button" class="btn btn-xs btn-warning btn-batch-edit" value="Edit">'+
+						'<input type="button" class="btn btn-xs btn-primary btn-batch-edit" value="Edit">&nbsp;'+
 						'<input type="button" class="btn btn-xs btn-danger btn-batch-delete" value="Delete">'+
 					'</div>'+
 					'<div class="editable">'+
-						'<button class="btn btn-success btn-xs btn-save">Save</button>'+
+						'<button class="btn btn-success btn-xs btn-save">Save</button>&nbsp;'+
 						'<button class="btn btn-danger btn-xs btn-cancel">Cancel</button>'+
 					'</div>'
 					console.log("butttons....");
@@ -228,7 +225,11 @@
 					$(row).find(".selectSubject").select2({data:subjectData}).val(subjectsPreSelected).change();
 				}
 		});
-		
+		dataTable.on( 'order.dt search.dt', function () {
+	        dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+	            cell.innerHTML = i+1;
+				});
+			}).draw(); 
 	}
 	
 	function getAllSubjects(){
@@ -343,23 +344,15 @@
 		<select id="addBatchSelectSubject" multiple="multiple" style="width:100%"></select>
 	</div>
 	<div class="col-md-2">
-		<input type="button" class="btn btn-success btn-add-batch" value="Add"/>
+		<input type="button" class="btn btn-primary btn-add-batch" value="Add"/>
 	</div>
   </div>
   </div>
-<div class="container">
- <div class="row">
-  <div class="col-lg-offset-9 col-lg-3">
-	<input type="text" class="form-control" id="batchTableSearchCustom" placeholder="search">
- </div>
- </div>
-</div>
-
 
 <div class="alert alert-danger alert-edit-batch-error hide"></div>
 
 <div>
-<table id="batchTable" class="table table-hover" width="100%"></table>
+<table id="batchTable" class="table table-striped" width="100%"></table>
 </div>
   
 </body>

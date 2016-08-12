@@ -5,14 +5,27 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-
+<style type="text/css">
+#distributionTable_length{
+display: none;
+}
+#distributionTable_filter{
+display: none;
+}
+#distributionTable_info{
+display: none;
+}
+#distributionTable_paginate{
+display: none;
+}
+</style>
 </head>
 <body>
 	<jsp:include page="FeeHeader.jsp" >
 		<jsp:param value="active" name="linkFeeStruct"/>
 	</jsp:include>
 	
-	<div class="container banner_gray_background">
+	<div class="well">
 		<div class="col-lg-12" id="linkBatchContainer" >
 		<div class="row">
 			<div class="col-lg-3">
@@ -41,7 +54,15 @@
 	<div class="container">	
 		<div class="row">
 		<div class="col-lg-12 feeDistributionWrapper">
-			<table id="distributionTable" class="table table-striped distributionTable"></table>
+			<table id="distributionTable" class="table table-striped distributionTable">
+			<thead>
+			<tr>
+			<th style="width: 70%">Distribution Item</th>
+			<th style="width: 30%">Amount</th>
+			</tr>
+			</thead>
+			<tbody></tbody>
+			</table>
 			<table id="totalDistributionTable" class="table table-striped distributionTable">
 			<tr><td style="text-align: right;width: 50%;">Total</td><td class="total" style="text-align: right;width: 50%;"></td></tr>
 			</table>

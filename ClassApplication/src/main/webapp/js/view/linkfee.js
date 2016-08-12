@@ -30,6 +30,7 @@ var updateBatch = "rest/feesservice/updateBatchFeesDistribution";
 var dataTable;
 
 $(document).ready(function(){
+	$(DISTRIBUTION_TABLE).DataTable();
 	linkFeeStructure();
 	init();
 	$("body").on("click",ADD_DISTRIBUTION,addDistribution)
@@ -46,13 +47,13 @@ function init(){
 }
 
 function loadbatchNFeeTable(){
-	$(DISTRIBUTION_TABLE).empty();
+	$(DISTRIBUTION_TABLE).find("tbody").empty();
 	var handler = {};
 	var division = $(DIVISION_SELECT).val();
 	var batch = $(BATCH_SELECT).val();
 	handler.success = function(data){
 		loadFeeStructureSuccess(data,"update");
-		$(FEE_STRUCT_SELECT).val(data.batchFees.fees_id);
+		$(FEE_STRUCT_SELECT).select2().val(data.batchFees.fees_id).trigger('change.select2');
 		loadAmmount(data);
 		calculateAmount();
 	};
@@ -82,9 +83,10 @@ function loadFeeStructList(data){
 }
 
 function loadFeeStructure(id,name){
-	$(DISTRIBUTION_TABLE).empty();
+	$(DISTRIBUTION_TABLE).find("tbody").empty();
 	$(FEE_STRUCT_NAME).val(name);
 	$(FEE_STRUCT_NAME).data("fees_id",id);
+	if(id != "-1"){
 	var handler = {};
 	handler.success = function(data){
 		loadFeeStructureSuccess(data,"save");
@@ -93,6 +95,9 @@ function loadFeeStructure(id,name){
 	}
 	handler.error = function(e){console.log(e)}
 	rest.get(getDetailsUrl+id,handler);	
+	}else{
+		$(FEE_DISTRIBUTION_WRAPPER).hide();
+	}
 	//loadFeeStructureSuccess(data);
 }
 
@@ -153,7 +158,7 @@ function addDistribution(data){
 	.data("batch_fees_id",data.batch_fees_id)
 	.appendTo(fieldTd);
 	
-	$(DISTRIBUTION_TABLE).append(tr);
+	$($(DISTRIBUTION_TABLE).find("tbody")).append(tr);
 	$(FEE_DISTRIBUTION_WRAPPER).show();
 }
 
@@ -232,7 +237,7 @@ function saveFee(){
 		saveBean.batchFees.batch_fees = $(".total").data('total');
 	}
 	
-	var tableRow = $(DISTRIBUTION_TABLE).find('tr');
+	var tableRow = $($(DISTRIBUTION_TABLE).find("tbody")).find('tr');
 	var batchFeesDistributions = [];
 	$.each(tableRow,function(){
 		var batchFeesDistribution = new BatchFeesDistribution();

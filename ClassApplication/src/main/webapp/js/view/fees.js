@@ -15,9 +15,21 @@ $("DOCUMENT").ready(function(){
 });
 
 function addDistribution(){
+	$(".error").html("");
 	var distributionName = $(this).closest('.row').find(DISTRIBUTION_NAME).val();
+	if(distributionName.trim() != ""){
 	var tr = $("<tr/>",{});
-	
+	var preDistributionItems = $(DISTRIBUTION_TABLE).find(DISTRIBUTION_ITEMS);
+	var flag = true;
+	if(preDistributionItems != undefined){
+	for(var i=0;i<preDistributionItems.length;i++){
+		if(distributionName.trim() == $($(DISTRIBUTION_TABLE).find(DISTRIBUTION_ITEMS)[i]).val().trim()){
+			$("#addDistributionError").html("Duplicate Fee Distribtion Item Description ")
+			flag = false;
+		}
+	}
+	}
+	if(flag){
 	var fieldTd = $("<td/>",{
 	}).appendTo(tr);
 	
@@ -44,6 +56,10 @@ function addDistribution(){
 	
 	
 	$(DISTRIBUTION_TABLE).append(tr);
+	}
+	}else{
+		$("#addDistributionError").html("Enter Fee Distribtion Item Description ")
+	}
 }
 
 function saveFeeStructure(){
@@ -97,17 +113,35 @@ function saveFeeStructureInDbError(e){
 }
 
 function validateFeeStructure(struct,saveFunction){
+	$(".error").html("");
 	var isValid = true;
-	if(!$(FEE_STRUCT_NAME).closest('form').valid()){
+	if($("#feeStructName").val().trim() == ""){
+		$("#feeStructureError").html("Enter Fee Description");
 		isValid = false;
-	}else if(!struct.feesStructureList || !struct.feesStructureList.length){
+	}else if(!$("#feeStructName").val().trim().match(/^[A-Za-z0-9\s-]*$/)){
+		$("#feeStructureError").html("Invalid Fee Description");
+		isValid = false;
+	}
+	var preDistributionItems = $(DISTRIBUTION_TABLE).find(DISTRIBUTION_ITEMS);
+	if(preDistributionItems != undefined){
+	for(var i=0;i<preDistributionItems.length;i++){
+		for(var j=i;j<preDistributionItems.length;j++){
+		if($($(DISTRIBUTION_TABLE).find(DISTRIBUTION_ITEMS)[j]).val().trim() == $($(DISTRIBUTION_TABLE).find(DISTRIBUTION_ITEMS)[i]).val().trim() && i!=j){
+			$("#saveDistributionError").html("Duplicate Fee Distribtion Item Description ")
+			isValid = false;
+		}
+		}
+	}
+	}
+	if(isValid){
+	if(!struct.feesStructureList || !struct.feesStructureList.length){
 		modal.modalConfirm("Error","Distribution not exist","Add Distribution","Continue anyway",function(){
 			saveFunction(struct);
 		},[]);
 	}else{
 		saveFunction(struct);
 	}
-	
+	}
 	return isValid;
 }
 

@@ -23,10 +23,10 @@ var DIVISION_SELECT = "#divisionSelect";
 var BATCH_SELECT = "#batchSelect";
 var FEE_STRUCT_SELECT = "#feeStructSelect";
 /**/
-var editIcon = "<i class='glyphicon glyphicon-edit tableIcon tableIconEdit' title='Edit'></i>";
-var deleteIcon = "<i class='glyphicon glyphicon-trash tableIcon tableIconDelete' title='Delete'></i>";
+var editIcon = "<button class='btn btn-primary btn-xs tableIcon tableIconEdit'>Edit</button>";
+var deleteIcon = "<button class='btn btn-danger btn-xs tableIcon tableIconDelete'>Delete</button>";
 var buttons = editIcon+deleteIcon;
-
+var BACKTOLIST =".backToList";
 /**/
 var getListUrl = "rest/feesservice/getAllFeeStructre";
 var getDetailsUrl = "rest/feesservice/getFeeStructre/";
@@ -42,7 +42,8 @@ $(document).ready(function(){
 		.on("click",LINK,linkFeeStructure)
 		.on('click',BUTTON_REMOVE,removeRow)
 		.on('click',LINK_FEE_STRUCT,linkFeeStruct)
-		.on("click",SAVE_FEE_STRUCTURE,saveFeeStructure);
+		.on("click",SAVE_FEE_STRUCTURE,saveFeeStructure)
+		.on("click",BACKTOLIST,backToFeeList);
 		
 });
 
@@ -137,12 +138,29 @@ function loadFeeStructureSuccess(data){
 }
 
 function addDistribution(data){
+	$(".error").html("");
 	var distributionName = "";
+	var flag = true;
 	if(data.fees_structure_desc){
 		distributionName = data.fees_structure_desc;
 	}else{
 		distributionName = $(this).closest('.row').find(DISTRIBUTION_NAME).val();
+		if(distributionName.trim() == ""){
+			$("#addDistributionError").html("Enter Fee Distribtion Item Description ")
+			flag = false;
+		}else{
+			var preDistributionItems = $(DISTRIBUTION_TABLE).find(DISTRIBUTION_ITEMS);
+			if(preDistributionItems != undefined){
+			for(var i=0;i<preDistributionItems.length;i++){
+				if(distributionName.trim() == $($(DISTRIBUTION_TABLE).find(DISTRIBUTION_ITEMS)[i]).val().trim()){
+					$("#addDistributionError").html("Duplicate Fee Distribtion Item Description ")
+					flag = false;
+				}
+			}
+			}
+		}
 	}
+	if(flag == true ){
 	var tr = $("<tr/>",{});
 	
 	var fieldTd = $("<td/>",{
@@ -171,6 +189,7 @@ function addDistribution(data){
 	.appendTo(fieldTd);
 	
 	$(DISTRIBUTION_TABLE).append(tr);
+	}
 }
 
 /*From create fee structure*/
@@ -228,17 +247,35 @@ function saveFeeStructureInDbError(e){
 }
 
 function validateFeeStructure(struct,saveFunction){
+	$(".error").html("");
 	var isValid = true;
-	if(!$(FEE_STRUCT_NAME).closest('form').valid()){
+	if($("#feeStructName").val().trim() == ""){
+		$("#feeStructureError").html("Enter Fee Description");
 		isValid = false;
-	}else if(!struct.feesStructureList || !struct.feesStructureList.length){
+	}else if(!$("#feeStructName").val().trim().match(/^[A-Za-z0-9\s-]*$/)){
+		$("#feeStructureError").html("Invalid Fee Description");
+		isValid = false;
+	}
+	var preDistributionItems = $(DISTRIBUTION_TABLE).find(DISTRIBUTION_ITEMS);
+	if(preDistributionItems != undefined){
+	for(var i=0;i<preDistributionItems.length;i++){
+		for(var j=i;j<preDistributionItems.length;j++){
+		if($($(DISTRIBUTION_TABLE).find(DISTRIBUTION_ITEMS)[j]).val().trim() == $($(DISTRIBUTION_TABLE).find(DISTRIBUTION_ITEMS)[i]).val().trim() && i!=j){
+			$("#saveDistributionError").html("Duplicate Fee Distribtion Item Description ")
+			isValid = false;
+		}
+		}
+	}
+	}
+	if(isValid){
+	if(!struct.feesStructureList || !struct.feesStructureList.length){
 		modal.modalConfirm("Error","Distribution not exist","Add Distribution","Continue anyway",function(){
 			saveFunction(struct);
 		},[]);
 	}else{
 		saveFunction(struct);
 	}
-	
+	}
 	return isValid;
 }
 
@@ -270,6 +307,11 @@ function linkFeeStruct(){
 	var batchSelect = $(BATCH_SELECT).val();
 	var feeStruct = $(FEE_STRUCT_SELECT).val();
 	console.log(batchSelect,feeStruct);
+}
+
+function backToFeeList(){
+	$(FEE_TABLE_CONTAINER).show();
+	$(EDIT_DISTRIBUTION_WRAPPER).hide();
 }
 
 /*REST objects*/

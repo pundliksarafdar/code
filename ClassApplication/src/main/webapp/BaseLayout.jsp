@@ -42,6 +42,18 @@ response.setHeader("Expires", "0");
 <link rel="stylesheet" type="text/css" href="/extensions/Editor-1.3.2/css/dataTables.editor.css">-->
  
  <style>
+ .modal-header{
+ padding: 0%;
+ padding-left: 2%;
+ padding-right: 2%
+ }
+ .modal-body{
+ padding: 2%
+ }
+ .modal-footer{
+ margin-top:0%;
+ padding: 2%
+ }
 .text-center {
 	text-align: center;
 }
@@ -75,18 +87,7 @@ color: white;
 padding-bottom: 20px;
 padding-top: 10px;
 } */
-.modal-header{
-/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#0095be+23,003442+100 */
-background: #0095be; /* Old browsers */
-background: -moz-linear-gradient(top, #0095be 23%, #003442 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(23%,#0095be), color-stop(100%,#003442)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, #0095be 23%,#003442 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #0095be 23%,#003442 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, #0095be 23%,#003442 100%); /* IE10+ */
-background: linear-gradient(to bottom, #0095be 23%,#003442 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0095be', endColorstr='#003442',GradientType=0 ); /* IE6-9 */
 
-}
 
 .nav .open .dropdown-menu{
 background: rgba(12, 12, 12, 0.71)

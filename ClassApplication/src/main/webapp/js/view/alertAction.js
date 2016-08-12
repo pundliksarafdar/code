@@ -83,80 +83,136 @@
 	}
 	
 	function sendToTeacher(){
-		if($(TEACHER_FORM).valid()){
-			var notificationObject = new NotificationObject();
-			notificationObject.message = $("[name='teacherMessage']").val();
-			//Teacher related variable
-			notificationObject.messageType = [];
-			var messageType = $(TEACHER_FORM).find('[name="messageType"]:checked');
-			$.each(messageType,function(key,val){
-				notificationObject.messageType.push($(val).val()); //Array
-			});
-			notificationObject.teacher = $('select#teachers').val();//Array
-			
-			/*notificationObject.sendTo = [];//Array
-			notificationObject.divisionSelect = "";
-			notificationObject.batchSelect = "";
-			notificationObject.messageTypeTOST = [];//Array
-			*/
-			var handler = {};
-			handler.success = function(e){
-				var message = "Notification send successfully";
-				var type = "success";
-				if(e.constructor == Array){
-					message = e.join("<Br/>");
-					type = "warning";
-				}
-				$.notify({message: message},{type: type});
+			$(".error").html("");
+			var flag = true;
+			if($('select#teachers').val() == null){
+				$("#teacherSelectError").html("Select Teachers");
+				flag = false;
 			}
-			handler.error = function(e){
-				var message = e.responseJSON.join("<Br/>");
-				
-				$.notify({message: message},{type: 'danger'});
+			if($("[name='teacherMessage']").val().trim() == ""){
+				$("#teacherMessageError").html("Message cant be empty.");
+				flag = false;
 			}
-			rest.post(postnotificationUrl,handler,JSON.stringify(notificationObject),true);
+			if($(TEACHER_FORM).find('[name="messageType"]:checked').length == 0){
+				$("#teacherMessageTypeError").html("Select Message Type");
+				flag = false;
+			}
+			if(flag){
+			if(($("[name='teacherMessage']").val().length/160)>1 && $("#sms").is(':checked')){
+			modal.modalConfirm("SMS","2 messages will be sent per teacher.Do you want to continue?","Cancel","Send",sendToTeacherConfirm);
+			}else{
+				sendToTeacherConfirm();
+			}
+			}
+	}
+	
+	function sendToTeacherConfirm(){
+		var notificationObject = new NotificationObject();
+		notificationObject.message = $("[name='teacherMessage']").val();
+		//Teacher related variable
+		notificationObject.messageType = [];
+		var messageType = $(TEACHER_FORM).find('[name="messageType"]:checked');
+		$.each(messageType,function(key,val){
+			notificationObject.messageType.push($(val).val()); //Array
+		});
+		notificationObject.teacher = $('select#teachers').val();//Array
+		
+		notificationObject.sendTo = [];//Array
+		notificationObject.divisionSelect = "";
+		notificationObject.batchSelect = "";
+		notificationObject.messageTypeTOST = [];//Array
+		
+		var handler = {};
+		handler.success = function(e){
+			var message = "Notification send successfully";
+			var type = "success";
+			if(e.constructor == Array){
+				message = e.join("<Br/>");
+				type = "warning";
+			}
+			$.notify({message: message},{type: type});
 		}
+		handler.error = function(e){
+			var message = e.responseJSON.join("<Br/>");
+			
+			$.notify({message: message},{type: 'danger'});
+		}
+		rest.post(postnotificationUrl,handler,JSON.stringify(notificationObject),true);
 	}
 	
 	function sendToStuNPar(){
-		if($(STUDENT_N_PARENT_FORM).valid()){
-			var notificationObject = new NotificationObject();
-			notificationObject.message = $("[name='stuNParMessage']").val();
-			notificationObject.messageTypeTOST = [];
-			var messageType = $(STUDENT_N_PARENT_FORM).find('[name="messageTypeTOST"]:checked');
-			$.each(messageType,function(key,val){
-				notificationObject.messageTypeTOST.push($(val).val()); //Array
-			});
-			
-			
-			notificationObject.sendTo = [];//Array
-			
-			var messageType = $(STUDENT_N_PARENT_FORM).find('[name="sendTo"]:checked');
-			$.each(messageType,function(key,val){
-				notificationObject.sendTo.push($(val).val()); //Array
-			});
-			
-			notificationObject.divisionSelect = $("#divisionSelect").val();
-			notificationObject.batchSelect = $("#batchSelect").val();
-		
-			var handler = {};
-			handler.success = function(e){
-				var message = "Notification send successfully";
-				var type = "success";
-				if(e.constructor == Array){
-					message = e.join("<Br/>");
-					type = "warning";
-				}
-				$.notify({message: message},{type: type});
-			}
-			handler.error = function(e){
-				var message = e.responseJSON.join("<Br/>");
-				
-				$.notify({message: message},{type: 'danger'});
-			}
-		
-			rest.post(postnotificationUrl,handler,JSON.stringify(notificationObject),true);
+		$(".error").html("");
+		var flag = true;
+		if($(STUDENT_N_PARENT_FORM).find('[name="sendTo"]:checked').length == 0){
+			$("#sendToStudentORParentError").html("Select recipients")
+			flag = false;
 		}
+		if($("#divisionSelect").val() == "-1"){
+			$("#sendToStudentORParentDivisionSelectError").html("Select Class");
+			flag = false;
+		}
+		
+		if($("#batchSelect").val() == "-1" || $("#batchSelect").val() == null){
+			$("#sendToStudentORParentBatchSelectError").html("Select Batch");
+			flag = false;
+		}
+		
+		if($("[name='stuNParMessage']").val().trim() == ""){
+			$("#stuNParMessageError").html("Message cant be empty.");
+			flag = false;
+		}
+		
+		if($(STUDENT_N_PARENT_FORM).find('[name="messageTypeTOST"]:checked').length == 0){
+			$("#messageTypeTOSTError").html("Select Message Type");
+			flag = false;
+		}
+		
+		if(flag){
+			if(($("[name='stuNParMessage']").val().length/160)>1 && $("#smstostdnparent").is(':checked')){
+			modal.modalConfirm("SMS","2 messages will be sent per Student/Parent.Do you want to continue?","Cancel","Send",sendTOStudentNParentConfirm);
+			}else{
+				sendTOStudentNParentConfirm();
+			}
+			}		
+	}
+	
+	function sendTOStudentNParentConfirm(){
+		var notificationObject = new NotificationObject();
+		notificationObject.message = $("[name='stuNParMessage']").val();
+		notificationObject.messageTypeTOST = [];
+		var messageType = $(STUDENT_N_PARENT_FORM).find('[name="messageTypeTOST"]:checked');
+		$.each(messageType,function(key,val){
+			notificationObject.messageTypeTOST.push($(val).val()); //Array
+		});
+		
+		
+		notificationObject.sendTo = [];//Array
+		
+		var messageType = $(STUDENT_N_PARENT_FORM).find('[name="sendTo"]:checked');
+		$.each(messageType,function(key,val){
+			notificationObject.sendTo.push($(val).val()); //Array
+		});
+		
+		notificationObject.divisionSelect = $("#divisionSelect").val();
+		notificationObject.batchSelect = $("#batchSelect").val();
+	
+		var handler = {};
+		handler.success = function(e){
+			var message = "Notification send successfully";
+			var type = "success";
+			if(e.constructor == Array){
+				message = e.join("<Br/>");
+				type = "warning";
+			}
+			$.notify({message: message},{type: type});
+		}
+		handler.error = function(e){
+			var message = e.responseJSON.join("<Br/>");
+			
+			$.notify({message: message},{type: 'danger'});
+		}
+	
+		rest.post(postnotificationUrl,handler,JSON.stringify(notificationObject),true);
 	}
 	
 	function init(){

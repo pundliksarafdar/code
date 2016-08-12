@@ -200,7 +200,6 @@ function createExamSubjectTable(data){
 	var dataTable = $('#subjectTable').DataTable({
 		bDestroy:true,
 		data: data,
-		lengthChange: false,
 		columns: [
 			{ title: "Subject",data:null,render:function(data,event,row){
 				var div = '<div class="default defaultBatchName">'+row.subjectName+'</div>';
@@ -234,7 +233,7 @@ function createStudentMarksTable(data){
 	var dataTable = $('#studentTable').DataTable({
 		bDestroy:true,
 		data: data,
-		lengthChange: false,
+		autoWidth: false,
 		columns: [
 		          { title: "Roll No",data:null,render:function(data,event,row){
 		        	  if(row.roll_no == 0){
@@ -246,7 +245,7 @@ function createStudentMarksTable(data){
 			{ title: "Student",data:null,render:function(data,event,row){
 				var div = '<div class="default defaultBatchName">'+row.fname+" "+row.lname+'</div>';
 				return div;
-			},sWidth:"50%"},
+			},sWidth:"60%"},
 			{ title: "Marks",data:null,render:function(data,event,row){
 				return "<div class='presenteeDiv'><input type='number' min='0' max='"+exam_marks+"' value='0' class='form-control Marks'><input type='hidden' value='"+row.student_id+"' id='student_id'><span class='error'></span></div>"}
 			,swidth:'30%'
@@ -261,7 +260,7 @@ function createStudentMarksTable(data){
 <jsp:include page="ExamMarksHeader.jsp" >
 		<jsp:param value="active" name="examMarks"/>
 	</jsp:include>
-<div class="container" style="padding: 2%; background: #eee">
+<div class="well">
 		<div class="row">
 			<div class="col-md-3">
 				<select id="division" name="division" class="form-control">
@@ -288,7 +287,7 @@ function createStudentMarksTable(data){
 				<span id="examError" class="validation-message"></span>
 			</div>
 			<div class="col-md-1">
-				<button class="form-control btn btn-primary btn-sm" id="searchExam">Search</button>
+				<button class=" btn btn-primary btn-sm" id="searchExam">Search</button>
 			</div>
 		</div>
 	</div>
@@ -306,7 +305,7 @@ function createStudentMarksTable(data){
 	<table class="table" id="studentTable" style="width: 100%"></table>
 	</div>
 	<div class="row">
-			<div class="col-md-offset-8 col-md-2">
+			<div class="ol-md-2">
 	<button class="btn btn-success btn-sm saveMarks">Save</button>
 	</div>
 	</div>

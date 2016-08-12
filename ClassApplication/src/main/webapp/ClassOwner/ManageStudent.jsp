@@ -10,6 +10,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <html>
 <style>
+#dataTableForFees_filter{
+display: none;
+}
 .scrollable-menu {
     height: auto;
     max-height: 200px;
@@ -538,11 +541,8 @@ var wayOfAddition="";
 </ul>
 
 <div id="addstudenttab">
-<div class="container" style="padding: 2%;background: #eee">
+<div class="well">
 <div class="row">
-<div class="col-md-4">
-<label>Select Class and Batch For Student:</label>
-</div>
 <div class="col-md-3">
 	<select id="division" class="form-control">
 		<option value="-1">Select Class</option>
@@ -558,53 +558,25 @@ var wayOfAddition="";
 </select>
 <span class="error" id="batchError"></span>
 </div>
-</div>
-<div class="row">
-	<div class="col-md-3">
-		<button id="classfloorIDAddition" class="btn btn-default">Add Student By Class Floor ID</button>
+<div class="col-md-2">
+		<button id="classfloorIDAddition" class="btn btn-primary btn-sm">Add Student By ClassFloor ID</button>
 	</div>
-	<div class="col-md-1">
-		<span class="badge" style="padding: 18%;border-radius:20px">OR</span>
+	<div class="col-md-1" align="center" style="padding-left: 3%">
+		<button class="btn btn-primary" style="border-radius:55%;background: grey;border: grey" disabled="disabled">OR</button>
 	</div>
-	<div class="col-md-3">
-		<button id="manualAddition" class="btn btn-default">Add Student Manually</button>
+	<div class="col-md-2">
+		<button id="manualAddition" class="btn btn-primary btn-sm">Add Student Manually</button>
 	</div>
 </div>
-<!-- <div class="row">
-	<div class="col-md-5">
-	</div>
-	<div class="col-md-1">
-		<span class="badge" style="padding: 18%;border-radius:30px">OR</span>
-	</div>
 </div>
- <div class="row">	
-			<div class="col-md-3">
-				<a href="/SampleFiles/SampleStudent.xls" class="btn" role="button">Sample Student Excel</a>
-			</div>
-			<div class="col-md-3" id="browseExcelDiv">
-			<span class="btn fileinput-button">
-							<i class="glyphicon glyphicon-folder-open"></i> 
-							<span>Browse Student Excel Sheet</span>
-							<input type="file" id="excelUploadBrowseID" class="excelUpload">							
-						</span>
-						<span class="error" id="browseExcelErrorSpan">
-						</span>
-			</div>	
-			<div class="col-md-3">
-				<input type="button" id="uploadStudentExcelBtn" value="Upload Excel" disabled/>
-			</div>	
- 		</div> -->
-</div> 
-<!-- <div class="row">
-<div class="col-md-5"></div>
-<div class="col-md-6 control-label" id="countDiv"></div>
-</div> -->
+
+
 
 <div class="row">
 <div id="errorMSGDiv"></div>
 </div>
 
-<div class="container studentform" style="padding-top: 2%;border: 2px solid;border-color: #1FC0C0;margin-top: 2%;border-radius: 5%;display: none;">
+<div class="well studentform" style="padding-top: 2%;border: 2px solid;border-color:  rgb(5, 116, 148);margin-top: 1%;display: none;">
 <div class="row">
 <div class="col-md-4 alert alert-success" style="padding: 0px;margin-left: 5%;display: none;" id="addsuccess"><span>Student Added Successfully!!</span></div>
 <div class="col-md-4 alert alert-danger" style="padding: 0px;margin-left: 5%;display: none;" id="addphoneError"><span>Please enter atleast one phone no!!</span></div>
@@ -617,11 +589,11 @@ var wayOfAddition="";
 </div>
 
 <div class="studentInfobyID" style="padding-left: 2%">
-<div class="row">
-<div class="col-md-2"><strong align="left">Student Information</strong></div>
+<div class="row" style="background: rgba(5, 116, 148, 0.45);padding-top: 0.3%;">
+<div class="col-md-2" ><strong align="left">Student Information</strong></div>
 </div>
 
-<div class="row">
+<div class="row" style="padding-top: 1%">
 <div class="col-md-2">First Name</div>
 <div class="col-md-1">:</div>
 <div class="col-md-3"><span id="fname"></span></div>
@@ -641,10 +613,10 @@ var wayOfAddition="";
 </div>
 
 <div class="studentInfoManually" style="padding-left: 2%">
-<div class="row">
+<div class="row" style="background: rgba(5, 116, 148, 0.45);padding-top: 0.3%;">
 <div class="col-md-2"><strong align="left">Student Information</strong></div>
 </div>
-<div class="row">
+<div class="row" style="padding-top: 1%">
 <div class="col-md-2">First Name</div>
 <div class="col-md-1">:</div>
 <div class="col-md-3"><input type="text" id="fname" class="form-control" maxlength="20"><span id="studentFnameError" class="error"></span></div>
@@ -666,7 +638,7 @@ var wayOfAddition="";
 <div class="col-md-2">Date Of Birth</div>
 <div class="col-md-1">:</div>
 <div class="col-sm-3" align="left">	
-					<div id="datetimepicker" class="input-group" style="width :250px;">
+					<div id="datetimepicker" class="input-group" style="width :270px;">
 						<input class="form-control" data-format="YYYY-MM-DD"
 							type="text"  id="dobfield" name="registerBean.dob" required="required"  readonly /> <span class="input-group-addon add-on"> <i
 							class="glyphicon glyphicon-calendar glyphicon-time"></i>
@@ -735,10 +707,10 @@ var wayOfAddition="";
 			</div>
 </div>
 <div class="parentInfo" style="padding-left: 2%">
-<div class="row">
+<div class="row" style="background: rgba(5, 116, 148, 0.45);padding-top: 0.3%;">
 <div class="col-md-2"><strong align="left">Parents Information</strong></div>
 </div>
-<div class="row">
+<div class="row" style="padding-top: 1%">
 <div class="col-md-2">First Name</div>
 <div class="col-md-1">:</div>
 <div class="col-md-3"><input type="text" id="fname" class="form-control" maxlength="20"><span id="parentFnameError" class="error"></span></div>
@@ -757,11 +729,11 @@ var wayOfAddition="";
 </div>
 </div>
 <div style="padding-left: 2%">
-<div class="row">
+<div class="row" style="background: rgba(5, 116, 148, 0.45);padding-top: 0.3%;">
 <div class="col-md-2"><strong align="left">Fees Details</strong></div>
 </div>
-<div>
-	<table id="dataTableForFees" class="table table-striped" style="width:100%"></table>
+<div style="padding-top: 1%">
+	<table id="dataTableForFees" class="table table-striped" style="width:80%"></table>
 </div>
 </div>
 <div class="row" style="padding: 2%">

@@ -28,7 +28,21 @@
     padding: 20px; 
    
 }      
+#basenotestable_paginate{
+display: none;
+}
 
+#basenotestable_info{
+display: none;
+}
+
+#basenotestable_length{
+display: none;
+}
+
+#basenotestable_filter{
+display: none;
+}
  </style>
 <script type="text/javascript">
 var allbatches="";
@@ -46,6 +60,7 @@ var file=document.getElementByID("myFile");
 }
 
 $(document).ready(function(){
+	$("#basenotestable").DataTable();
 	$("#classownerUploadexamSelectBatchName").select2({data:"",placeholder:"Select Batch"});
 	$("select").on("change",function(e){
 		$(".alert-danger").hide();
@@ -437,7 +452,7 @@ if(notes!=null){
 </ul>
 
 <div id="addnotestab">
-<div class="container" style="padding: 2%;background: #eee">
+<div class="well" >
 <div class="row">
 			<div class="col-md-3">
 				<select name="division" id="classownerUploadexamDivisionName" class="form-control" width="100px">
@@ -477,10 +492,10 @@ if(notes!=null){
 	</thead>
 	<tbody id="basenotestablebody">
 	<tr id="notesTR0">
-		<td><input type="text" name="notesname" class="form-control" id="notesname0" maxlength="50"></td>
-		<td><input type="file" name="myFile" accept=".pdf" class="form-control"  size="100px" id="myfile0"></td>
-		<td><button class="btn btn-info removenotesrow" id="notesdelete_0" disabled="disabled"><i class="glyphicon glyphicon-trash"></i></button></td>
-		<td><span class="error" id="noteserror0" name="noteserror"></span></td>
+		<td style="width: 25%"><input type="text" name="notesname" class="form-control" id="notesname0" maxlength="50"></td>
+		<td style="width: 30%"><input type="file" name="myFile" accept=".pdf" class="form-control"  size="100px" id="myfile0"></td>
+		<td style="width: 5%"><button class="btn btn-info removenotesrow" id="notesdelete_0" disabled="disabled"><i class="glyphicon glyphicon-trash"></i></button></td>
+		<td style="width: 40%"><span class="error" id="noteserror0" name="noteserror"></span></td>
 	</tr>
 	</tbody>
 	</table>
@@ -488,11 +503,11 @@ if(notes!=null){
 </div>
 <div class="container">
 <div class="row">
-	<div class="col-md-3">
-	 <button class="btn btn-info" id="addrow" style="margin-top: 22px"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Row</button>
+	<div class="col-md-2">
+	 <button class="btn btn-info btn-sm" id="addrow" style="margin-top: 22px"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Row</button>
       </div>
-      <div class="col-md-3">
-      <button type="submit" class="btn btn-info" id="submit" style="margin-top: 22px">Submit</button>
+      <div class="col-md-2">
+      <button type="submit" class="btn btn-info btn-sm" id="submit" style="margin-top: 22px">Submit</button>
   		</div>
   </div>
   </div>

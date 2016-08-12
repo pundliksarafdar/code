@@ -30,31 +30,44 @@
 	</div>
 	<div class="row">
 	  <div class="col-lg-12 editDistributionWrapper">
-		<div class="input-group">
-		  <input type="text" class="form-control" placeholder="Distribution item" id="distributionName">
-		  <span class="input-group-btn">
-			<button id="addDistribution" class="btn btn-default" type="button"><i class="glyphicon glyphicon-plus-sign"></i>&nbsp;Add</button>
-		  </span>
-		</div><!-- /input-group -->
+	  <button class="btn btn-primary btn-sm backToList">Back To Fee List</button>
 	  </div>
-	  </div>
-	  <div class="row">
-	  <div class="col-lg-12 editDistributionWrapper">
-			<table id="distributionTable" class="table table-striped distributionTable"></table>
-		</div>
-		</div>
+	</div>
 	<div class="row">
-	  <div class="col-lg-12 editDistributionWrapper" id="">
+	  <div class="col-lg-5 editDistributionWrapper" id="">
 		<form>
 		<div class="input-group">
 			<input type="text" class="form-control" placeholder="Fee name" id="feeStructName" name="feeStructName" required="required">
 		  <span class="input-group-btn">
-			<button id="saveFeeStructure" class="btn btn-default" type="button"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;Save</button>
+			<button id="saveFeeStructure" class="btn btn-success" type="button"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;Save</button>
 		  </span>
 		</div>
 		</form>	
+		<span id="feeStructureError" class="error"></span>
 	  </div>
 	  </div>
+	  <div class="row">
+	  <div class="col-lg-5 editDistributionWrapper">
+	  	<span id="saveDistributionError" class="error"></span>
+	  </div>
+	  </div>
+	<div class="row">
+	  <div class="col-lg-5 editDistributionWrapper">
+		<div class="input-group">
+		  <input type="text" class="form-control" placeholder="Distribution item" id="distributionName">
+		  <span class="input-group-btn">
+			<button id="addDistribution" class="btn btn-primary" type="button"><i class="glyphicon glyphicon-plus-sign"></i>&nbsp;Add</button>
+		  </span>
+		</div><!-- /input-group -->
+		<span id="addDistributionError" class="error"></span>
+	  </div>
+	  </div>
+	  <div class="row">
+	  <div class="col-lg-5 editDistributionWrapper">
+			<table id="distributionTable" class="table table-striped distributionTable"></table>
+		</div>
+		</div>
+	
 	  <div class="row">
 	<div class="col-lg-12" id="linkBatchContainer">
 		<div class="row">
@@ -88,7 +101,6 @@
 	</div>
 	</div>
 	</div>
-		</div>
 	
 </body>
 </html>

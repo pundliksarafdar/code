@@ -185,11 +185,11 @@ color:red;
 				},sWidth:"30%"},
 				{ title: "Manage",data:null,render:function(data,event,row){
 					var buttons = '<div class="default">'+
-						'<input type="button" class="btn btn-xs btn-warning btn-teacher-edit" value="Edit">'+
+						'<input type="button" class="btn btn-xs btn-primary btn-teacher-edit" value="Edit">&nbsp;'+
 						'<input type="button" class="btn btn-xs btn-danger btn-teacher-delete" value="Delete">'+
 					'</div>'+
 					'<div class="editable">'+
-						'<button class="btn btn-success btn-xs btn-save">Save</button>'+
+						'<button class="btn btn-success btn-xs btn-save">Save</button>&nbsp;'+
 						'<button class="btn btn-danger btn-xs btn-cancel">Cancel</button>'+
 					'</div>'
 					return buttons;

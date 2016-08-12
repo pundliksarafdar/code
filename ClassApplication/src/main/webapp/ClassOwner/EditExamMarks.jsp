@@ -189,7 +189,6 @@ function createExamSubjectTable(data){
 	var dataTable = $('#subjectTable').DataTable({
 		bDestroy:true,
 		data: data,
-		lengthChange: false,
 		columns: [
 			{ title: "Subject",data:null,render:function(data,event,row){
 				var div = '<div class="default defaultBatchName">'+row.subjectName+'</div>';
@@ -212,7 +211,7 @@ function createStudentMarksTable(data){
 	var dataTable = $('#studentTable').DataTable({
 		bDestroy:true,
 		data: data,
-		lengthChange: false,
+		autoWidth: false,
 		columns: [
 		          { title: "Roll No",data:null,render:function(data,event,row){
 		        	  if(row.roll_no == 0){
@@ -239,7 +238,7 @@ function createStudentMarksTable(data){
 <jsp:include page="ExamMarksHeader.jsp" >
 		<jsp:param value="active" name="editExamMarks"/>
 	</jsp:include>
-<div class="container" style="padding: 2%; background: #eee">
+<div class="well">
 		<div class="row">
 			<div class="col-md-3">
 				<select id="division" name="division" class="form-control">
@@ -284,7 +283,7 @@ function createStudentMarksTable(data){
 	<table class="table" id="studentTable" style="width: 100%"></table>
 	</div>
 	<div class="row">
-			<div class="col-md-offset-8 col-md-2">
+			<div class="col-md-2">
 	<button class="btn btn-success btn-sm saveMarks">Save</button>
 	</div>
 	</div>

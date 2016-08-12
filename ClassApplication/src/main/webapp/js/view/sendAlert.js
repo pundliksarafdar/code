@@ -48,20 +48,37 @@
 		$(MONTH_DATE_PICKER).datetimepicker({pickTime:false,format:"YYYY-MM",minViewMode:'months'});
 		var validator = validateInit();
 		$(EXAM_SELECT).select2({placeholder: "Select exam list"});
-		
+		$.validator.addMethod("messageTypeValidation", function(){
+			if($("[name='type']:checked").length == 0){
+			 return false;
+			}else{
+				return true;
+			}
+		}, "");
+		$.validator.addMethod("sendToValidation", function(){
+			if($("[name='sendTo']:checked").length == 0){
+			 return false;
+			}else{
+				return true;
+			}
+		}, "");
 	});
 	
 	function validateInit(){
 		var validatorForm = $(BASE_FORM).validate({
 			  rules: {
 			   divisionSelect: { valueNotEquals: "-1" },
-			   batchSelect:{ valueNotEquals: "-1" }
+			   batchSelect:{ valueNotEquals: "-1" },
+			   typeError : { messageTypeValidation : "1"},
+			   sendToError : { sendToValidation : "1"}
 			  },
 			  messages: {
-			   divisionSelect: { valueNotEquals: "Please select an division!" },
+			   divisionSelect: { valueNotEquals: "Please select  class!" },
 			   batchSelect: { valueNotEquals: "Please select an batch!" },
-			   type:{required:"Please select atleast one method"},
-			   sendTo:{required:"Please select atlease one receipent"}
+			   type:{required:""},
+			   sendTo:{required:""},
+			   typeError : { messageTypeValidation : "Select Message Type"},
+			   sendToError : { sendToValidation : "Select recipients "}
 			  } ,
 			  errorPlacement:function(err,elem){
 				  err.insertAfter(elem.parent());

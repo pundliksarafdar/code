@@ -154,7 +154,7 @@ $(document).ready(function(){
 		if(examIDs.length>0){
 		rest.get("rest/studentmarks/getStudentProgressCard/"+divisionID+"/"+batchID+"/"+examID+"/"+studentID,handler);
 		}else{
-			$("#examDivError").append("<div class='error'>Please select atleast one subject!</div>")
+			$("#examDivError").append("<div class='error'>Please select atleast one exam!</div>")
 		}
 	});
 	
@@ -187,7 +187,7 @@ $(document).ready(function(){
 		if(examIDs.length>0){
 		rest.get("rest/studentmarks/sendStudentProgressCard/"+divisionID+"/"+batchID+"/"+examID,handler);
 		}else{
-			$("#examDivError").append("<div class='error'>Please select atleast one subject!</div>")
+			$("#examDivError").append("<div class='error'>Please select atleast one exam!</div>")
 		}
 	});
 });
@@ -340,7 +340,7 @@ function createStudentTable(data){
 <jsp:include page="ExamMarksHeader.jsp" >
 		<jsp:param value="active" name="progressCard"/>
 	</jsp:include>
-<div class="container" style="padding: 2%; background: #eee">
+<div class="well">
 		<div class="row">
 			<div class="col-md-3">
 				<select id="division" name="division" class="form-control">
@@ -363,20 +363,20 @@ function createStudentTable(data){
 			<div class="col-md-1">
 				<button class="form-control btn btn-primary btn-sm" id="searchStudent">Search</button>
 			</div>
-			<div class="col-md-3">
-				<button class="form-control btn btn-success btn-sm" id="sendProgressCards" disabled="disabled">Send Progress Cards To Parents</button>
-			</div>
 		</div>
 	</div>
-	<div  class="container" style="padding: 2%;display: none;" id='examList'>
+	<div  class="container" style="padding-left: 0%;display: none;margin-left: 2%" id='examList'>
+	
+	<div class="row">
+	<div class="col-md-4">
 	<div id="examDivError">
 	</div>
-	<div>
-	Select exams to be included in progress card :
+	<b>Select exams to be included in progress card :</b>
 	</div>
-	<div id="examDiv">
+	<div class="col-md-8" id="examDiv">
 	</div>
-	<div class="container" id="studentTableDiv">
+	</div>
+	<div class="container" id="studentTableDiv" style="margin :1%">
 	<table class="table" id="studentTable" style="width: 100%"></table>
 	</div>
 	</div>

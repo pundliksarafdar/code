@@ -5,9 +5,6 @@
 <html>
 <head>
 <style type="text/css">
-.dataTables_filter {
-     display: none;
-}
 
 .classTable .editEnabled .editable{
 	display:block;
@@ -32,12 +29,12 @@
 <!-- <script type="text/javascript" src="js/Addclass.js"></script> -->
 <script>
 var BUTTONS_MANAGE = '<div class="default">' +
-						'<button class="btn btn-primary btn-xs btn-edit">Edit</button>'+
+						'<button class="btn btn-primary btn-xs btn-edit">Edit</button>&nbsp;'+
 						'<button class="btn btn-danger btn-xs btn-delete">Delete</button>'+
 					'</div>';
 					
 var BUTTONS_CANCEL = '<div class="editable">' +
-						'<button class="btn btn-success btn-xs btn-save">Save</button>'+
+						'<button class="btn btn-success btn-xs btn-save">Save</button>&nbsp;'+
 						'<button class="btn btn-danger btn-xs btn-cancel">Cancel</button>'+
 					'</div>';
 					
@@ -83,11 +80,13 @@ function deleteclass(classIdToDelete){
 /*this function will prompt to delete class*/
 function deleteclassPrompt(){
 	var classIdToDelete = $(this).closest("tr").find(".editclassId").val();
-	deleteConfirm(classIdToDelete);
+	var className = $(this).closest("tr").find(".defaultclassName").html();
+	var streamName =$(this).closest("tr").find(".defaultstreamName").html();
+	deleteConfirm(classIdToDelete,className,streamName);
 }
 
-function deleteConfirm(classIdToDelete){
-	modal.modalConfirm("Delete","Do you want to delete","Cancel","Delete",deleteclass,[classIdToDelete]);
+function deleteConfirm(classIdToDelete,className,streamName){
+	modal.modalConfirm("Delete","Do you want to delete "+className+" "+streamName+"? All data related to this class will get deleted.","Cancel","Delete",deleteclass,[classIdToDelete]);
 }
 
 function enableEdit(){
@@ -157,7 +156,7 @@ function saveNewclassName(){
 					that.closest("tr").find(".defaultstreamName").text(stream);
 					cancelEdit.apply(that);
 				}else{
-					that.closest("tr").find(".editclassnameerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Class already exists!!');
+					that.closest("tr").find(".editclassnameerror").html('Class already exists!!');
 				}
 			}else{
 				$.notify({message: 'Error'},{type: 'danger'});
@@ -189,7 +188,7 @@ function saveNewclassName(){
 			
 		$('#tableSearchCustom').on("keyup click",filterGlobal);
 		
-		dataTable = $("#classTable").DataTable({oClasses:{sFilterInput:"form-control"},"lengthChange": false,"columnDefs": [
+		dataTable = $("#classTable").DataTable({oClasses:{"lengthChange": false},"columnDefs": [
             {
                 "render": function ( data, type, row ) {
                     console.log(data);
@@ -241,7 +240,6 @@ function saveNewclassName(){
 		dataTable = $('#classTable').DataTable({
 			bDestroy:true,
 			data: data.allclasses,
-			lengthChange: false,
 			columns: [
 				{title:"#",data:null},
 				{ title: "Class Name",data:"divisionName",render:function(data,event,row){
@@ -257,7 +255,7 @@ function saveNewclassName(){
 					modifiedObj = modifiedObj.replace("{{editstreamNameValue}}",row.stream);
 					return modifiedObj;
 				}},
-				{ title: "",data:null,render:function(data){
+				{ title: "Actions",data:null,render:function(data){
 					return BUTTONS_MANAGE+BUTTONS_CANCEL;
 					}}
 			]
@@ -269,7 +267,7 @@ function saveNewclassName(){
 			});
 		}).draw(); 
 		}else{
-			that.closest('.addclassContainer').find(".addclassnameerror").html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong> Class already exists!!');
+			that.closest('.addclassContainer').find(".addclassnameerror").html('Class already exists!!');
 		}
 	}
 	
@@ -280,38 +278,27 @@ function saveNewclassName(){
 <jsp:include page="ClassSubjectNBatchHeaders.jsp" >
 		<jsp:param value="active" name="manageclass"/>
 	</jsp:include>
- <div class="container" style="background-color:#eee;padding: 2%">
- <div class="row" >
-
- <div class="col-lg-9 addclassContainer">
-	
-    <div class="input-group col-lg-4">
+ <div class="well">
+ <div class="row addclassContainer" >
+    <div class="col-md-3">
       <input type="text" class="form-control" id="className" maxlength="25" placeholder="Enter Class">
       <div class="addclassnameerror"></div>
     </div>
-    <div class="input-group  col-lg-4">
+    <div class="col-md-3">
        <input type="text" class="form-control" id="streamName" maxlength="25" placeholder="Enter Stream/Part(Optional)">
        <div class="addstreamerror"></div>
     </div>
     <!-- /input-group -->
-    <div class="input-group-btn  col-lg-3">
-        <button id="manageclassAddclass" class="btn btn-default" type="button">Add class</button>
+    <div class="col-md-3">
+        <button id="manageclassAddclass" class="btn btn-primary" type="button">Add Class</button>
       </div>
-    
-  </div><!-- /.col-lg-6 -->
-  <div class="col-lg-3"><input type="text" class="form-control" id="tableSearchCustom" placeholder="search"></div>
   </div>
-  <!-- <div class="row">
-   <div class="col-lg-4">
-	<input type="text" class="form-control" id="tableSearchCustom" placeholder="search">
- </div>
-  </div> -->
 </div>
 
 <div class="container">
  <table class="table table-striped classTable" id="classTable">
 	<thead>
-		<th>#</th><th>Class name</th><th>Stream/Part</th><th></th>
+		<th>#</th><th>Class name</th><th>Stream/Part</th><th>Actions</th>
 	</thead>
  <c:forEach items="${classes}" var="class" varStatus="counter">
  	<tr>
