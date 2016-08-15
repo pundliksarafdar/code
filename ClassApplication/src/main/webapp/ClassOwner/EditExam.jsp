@@ -347,7 +347,7 @@ $.ajax({
    				"<th width='20%'>Duration</th>"+
    				"<th width='10%'>Paper Type</th><th width='5%'>Preview</th></tr>"
 				while(i < subjectnameArray.length){
-					tableRow += "<tr class='examSubjectPapers'><td><input type='checkbox' value='"+subjectidArray[i]+"' name='subjectCheckbox' id='subjectCheckbox'></td><td>"+
+					tableRow += "<tr class='examSubjectPapers'><td><input type='checkbox' value='"+subjectidArray[i]+"' name='subjectCheckbox' id='subjectCheckbox'></td><td class='subjectName'>"+
 	   				subjectnameArray[i]+"</td><td>"+
 	   				"<button class='btn btn-primary btn-xs chooseQuestionPaper'>Choose Question Paper</button>"+
 	   				"<span class='questionPaperName'></span><input type='hidden' class='form-control selectedQuestionPaperID'></td><td><input type='text' class='form-control marks' placeholder='Marks' title='Marks of selected question paper'></td>"+
@@ -384,7 +384,8 @@ function preview(){
 	var headerId = $(HEADER_DESC).val();
 	var divisionId = $(DIVISION).val();
 	var handler = {};
-	handler.success = previewSuccess;
+	var that = this;
+	handler.success = function(data){previewSuccess(data,that)};
 	handler.error = previewError;
 	
 	var handlerHeader = {};
@@ -397,7 +398,6 @@ function preview(){
 	
 	rest.get(getHeaderUrl+headerId,handlerHeader,true,false);
 	rest.get(getQuestionPaperUrl+divisionId+"/"+paperId,handler,true,false);
-	
 	setTimeout(function(){
 		$('#editQuestionPaper').summernote('insertNode',$("#pre_editQuestionPaper_view")[0]);	
 	},1000);
@@ -405,10 +405,15 @@ function preview(){
 	$(MARKS).html(marks);
 }
 
-function previewSuccess(resp){
+function previewSuccess(resp,that){
+	var subject = $(that).closest("tr").find(".subjectName").text();
+	var className = $("#division option:selected").text();
+	
 	headerText = headerText.replace("{{marks}}",resp.fileObject.marks);
 	headerText = headerText.replace("{{ExamName}}",resp.fileObject.paper_description);
-
+	headerText = headerText.replace("{{SubjectName}}",subject);
+	headerText = headerText.replace("{{Standard}}",className);
+	
 	$('#editQuestionPaper').show();
 	$("#pre_editQuestionPaper_view").find("#header").html(headerText);
 	
@@ -419,8 +424,8 @@ function previewSuccess(resp){
 	$.each(questionPaperFileElementList,function(){
 			var parentDiv = $("<div/>",{
 					class:"row",
-					item_type:this.item_type,
-					item_id:this.item_id
+					item_type:this.item_type
+					
 				});
 			
 			$("<div/>",{
@@ -431,7 +436,7 @@ function previewSuccess(resp){
 			
 			if(this.item_type == ITEM_TYPE.SECTION){
 				var	div = $("<div/>",{
-						text:this.item_description,
+						html:"<b>"+this.item_description+"</b>",
 						style:'text-align:center;',
 						class:"col-xs-10"
 					}).appendTo(parentDiv);
@@ -439,7 +444,7 @@ function previewSuccess(resp){
 			
 			if(this.item_type == ITEM_TYPE.INSTRUCTION){
 				var	div = $("<div/>",{
-						text:this.item_description,
+						html:"<b>"+this.item_description+"</b>",
 						style:'text-align:left;',
 						class:"col-xs-10"
 					}).appendTo(parentDiv);
@@ -454,10 +459,42 @@ function previewSuccess(resp){
 					}).appendTo(parentDiv);
 				}else{
 					$("<div/>",{
-						text:this.questionbank.que_text,
+						id:"questionDiv",
+						html:"<div>"+this.questionbank.que_text+"</div>",
 						style:'text-align:left;float:left;width:80%;',
 						
 					}).appendTo(parentDiv);
+					
+					if(this.questionbank.primaryImage){
+						for(var imageSrcIndex in this.questionbank.primaryImage){
+							var imgSrc = "/rest/commonservices/image/"+this.questionbank.primaryImage[imageSrcIndex];
+							var img = $("<img/>",{
+								src:imgSrc,
+								width:"100px"
+								
+							});
+							
+							$("<div/>",{
+								style:'text-align:left;float:left;width:80%;',
+								
+							}).append(img).appendTo(parentDiv);
+									
+						}
+					}
+					//Question type 2 is Subjective
+					if(this.question_type == 2){
+						console.log(this.questionbank.que_text);
+						for(var index=1;index<10;index++){
+							if(this.questionbank["opt_"+index]){
+								$("<div/>",{
+									text: index+") "+this.questionbank["opt_"+index],
+									style:'text-align:left;float:left;width:80%;',
+									
+								}).appendTo(parentDiv.find("div#questionDiv"));
+							}
+						}	
+					}
+					
 				}
 			}if(this.item_type == ITEM_TYPE.QUESTION && this.questionbank == null){
 				$("<div/>",{
@@ -473,10 +510,13 @@ function previewSuccess(resp){
 					class:"col-xs-1"
 				}).appendTo(parentDiv);
 					
+				var containerDiv = $("<div/>",{class:"container",item_id:this.item_id});
+				containerDiv.append(parentDiv);
+				
 				if(this.parent_id!="undefined" && this.parent_id != null){
-					$("#pre_editQuestionPaper_view").find("#qPaper").find('[item_id="'+this.parent_id+'"]').append(parentDiv);
+					$("#pre_editQuestionPaper_view").find("#qPaper").find('[item_id="'+this.parent_id+'"]').append(containerDiv);
 				}else{
-					$("#pre_editQuestionPaper_view").find("#qPaper").append(parentDiv);
+					$("#pre_editQuestionPaper_view").find("#qPaper").append(containerDiv);
 				}
 	});
 	

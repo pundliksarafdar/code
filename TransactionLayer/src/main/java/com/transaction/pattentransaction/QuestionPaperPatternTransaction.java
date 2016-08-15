@@ -556,7 +556,16 @@ public class QuestionPaperPatternTransaction {
 					.hasNext();) {
 				Questionbank questionbank = (Questionbank) iterator2
 						.next();
+				
+				/************Load exam image******/
+				
 				if(editFileElement.getSubject_id() == questionbank.getSub_id() && editFileElement.getQues_no() == questionbank.getQue_id()){
+					List<String>primaryImage = getPrimaryImage(this.inst_id, questionbank.getQue_id(), questionbank.getQue_type(),div_id,questionbank.getSub_id());
+					questionbank.setPrimaryImage(primaryImage);
+					
+					HashMap<Integer, List<String>>secondaryImage = getSecondaryImage(this.inst_id, questionbank.getQue_id(), questionbank.getQue_type(),div_id,questionbank.getSub_id());
+					questionbank.setSecondaryImage(secondaryImage);
+					
 					editFileElement.setQuestionbank(questionbank);
 					if("3".equals(questionbank.getQue_type())){
 						 ParaQuestionBean paraQuestionBean = (ParaQuestionBean) readObject(new File(questionStorageURL+File.separator+"paragraph"+File.separator+div_id+File.separator+questionbank.getSub_id()+File.separator+questionbank.getQue_id()));
@@ -676,10 +685,10 @@ public class QuestionPaperPatternTransaction {
 					}
 				}
 				
-				List<String>primaryImage = getPrimaryImage(instId, questionbank.getQue_id(), questionbank.getQue_type());
+				List<String>primaryImage = getPrimaryImage(instId, questionbank.getQue_id(), questionbank.getQue_type(),div_id,questionbank.getSub_id());
 				questionbank.setPrimaryImage(primaryImage);
 				
-				HashMap<Integer, List<String>>secondaryImage = getSecondaryImage(instId, questionbank.getQue_id(), questionbank.getQue_type());
+				HashMap<Integer, List<String>>secondaryImage = getSecondaryImage(instId, questionbank.getQue_id(), questionbank.getQue_type(),div_id,questionbank.getSub_id());
 				questionbank.setSecondaryImage(secondaryImage);
 				
 			}
@@ -1026,17 +1035,17 @@ public class QuestionPaperPatternTransaction {
 		return marks;
 	}
 	
-	public List<String> getPrimaryImage(int regId,int questionId,String questionType){
+	public List<String> getPrimaryImage(int regId,int questionId,String questionType,int div_id,int sub_id){
 		List<String> primaryImages = new ArrayList<String>();
 		String primaryImageDest = "";
 		if(questionType.equals("1")){
-			primaryImageDest = Constants.STORAGE_PATH + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + SUBJECTIVE + File.separatorChar + questionId;
+			primaryImageDest = Constants.STORAGE_PATH + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + SUBJECTIVE + File.separatorChar + div_id + File.separatorChar + sub_id + File.separatorChar + questionId;
 		}else 
 		if(questionType.equals("2")){
-			primaryImageDest = Constants.STORAGE_PATH + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + questionId + File.separatorChar + QUESTION ;
+			primaryImageDest = Constants.STORAGE_PATH + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + div_id + File.separatorChar + sub_id + File.separatorChar  + questionId + File.separatorChar + QUESTION ;
 		}else 
 		if(questionType.equals("3")){
-			primaryImageDest = Constants.STORAGE_PATH + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + PARAGRAPH + File.separatorChar + questionId + PARAGRAPH;
+			primaryImageDest = Constants.STORAGE_PATH + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + PARAGRAPH + File.separatorChar + div_id + File.separatorChar + sub_id + File.separatorChar + questionId + File.separatorChar + PARAGRAPH;
 		}
 		
 		if(null!=primaryImageDest && primaryImageDest.trim().length()>0){
@@ -1054,11 +1063,11 @@ public class QuestionPaperPatternTransaction {
 			for(File image:images){
 				if(image.isFile()){
 					if(questionType.equals("1")){
-						primaryImages.add(EXAM_IMAGE_FOLDER+"_"+SUBJECTIVE+"_"+questionId+"_"+image.getName());
+						primaryImages.add(EXAM_IMAGE_FOLDER+"_"+SUBJECTIVE+"_"+div_id+"_"+sub_id+"_"+questionId+"_"+image.getName());
 					}else if(questionType.equals("2")){
-						primaryImages.add(EXAM_IMAGE_FOLDER+"_"+OBJECTIVE+"_"+questionId+"_"+QUESTION+"_"+image.getName());
+						primaryImages.add(EXAM_IMAGE_FOLDER+"_"+OBJECTIVE+"_"+div_id+"_"+sub_id+"_"+questionId+"_"+QUESTION+"_"+image.getName());
 					}else if(questionType.equals("3")){
-						primaryImages.add(EXAM_IMAGE_FOLDER+"_"+PARAGRAPH+"_"+questionId+"_"+PARAGRAPH+"_"+image.getName());
+						primaryImages.add(EXAM_IMAGE_FOLDER+"_"+PARAGRAPH+"_"+div_id+"_"+sub_id+"_"+questionId+"_"+PARAGRAPH+"_"+image.getName());
 					}
 				}
 			}
@@ -1066,14 +1075,14 @@ public class QuestionPaperPatternTransaction {
 		return primaryImages;
 	}
 	
-	public HashMap<Integer, List<String>> getSecondaryImage(int regId,int questionId,String questionType){
+	public HashMap<Integer, List<String>> getSecondaryImage(int regId,int questionId,String questionType,int div_id,int sub_id){
 		HashMap<Integer, List<String>> secImages = new HashMap<Integer, List<String>>();
 		String secImageDest = "";
 		if(questionType.equals("2")){
-			secImageDest = Constants.STORAGE_PATH + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + questionId + File.separatorChar + OPTION;
+			secImageDest = Constants.STORAGE_PATH + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + OBJECTIVE + File.separatorChar + div_id + File.separatorChar + sub_id  + File.separatorChar + questionId + File.separatorChar + OPTION;
 		}else 
 		if(questionType.equals("3")){
-			secImageDest = Constants.STORAGE_PATH + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + PARAGRAPH + File.separatorChar + questionId + PARAGRAPH;
+			secImageDest = Constants.STORAGE_PATH + File.separatorChar + regId + File.separatorChar+ EXAM_IMAGE_FOLDER + File.separatorChar + PARAGRAPH + File.separatorChar + div_id + File.separatorChar + sub_id + File.separatorChar + questionId + File.separatorChar + PARAGRAPH_QUESTION;
 		}
 		
 		if(null!=secImageDest && secImageDest.trim().length()>0){
@@ -1081,7 +1090,7 @@ public class QuestionPaperPatternTransaction {
 			if(optionsImageFolder!=null && optionsImageFolder.exists()){
 				File[] optionImageFolder = optionsImageFolder.listFiles();
 				for(int index=0;index<optionImageFolder.length;index++){
-					String optionImageFolderName = EXAM_IMAGE_FOLDER+"_"+OBJECTIVE+"_"+questionId+"_"+OPTION+"_"+ optionImageFolder[index].getName();
+					String optionImageFolderName = EXAM_IMAGE_FOLDER+"_"+OBJECTIVE+"_"+div_id+"_"+sub_id+"_"+questionId+"_"+OPTION+"_"+ optionImageFolder[index].getName();
 					File[] imageFiles = optionImageFolder[index].listFiles();
 					List<String> imageList = new ArrayList<String>();
 					for(int indexFile=0;indexFile<imageFiles.length;indexFile++){
@@ -1093,6 +1102,7 @@ public class QuestionPaperPatternTransaction {
 		}
 		return secImages;
 	}
+
 	
 	public void setStoragePath(String storagePath){
 		Constants.STORAGE_PATH = storagePath;

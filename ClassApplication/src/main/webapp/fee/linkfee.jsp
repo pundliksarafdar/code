@@ -66,6 +66,13 @@ display: none;
 			<table id="totalDistributionTable" class="table table-striped distributionTable">
 			<tr><td style="text-align: right;width: 50%;">Total</td><td class="total" style="text-align: right;width: 50%;"></td></tr>
 			</table>
+			<select class="form-control" id="divisionSelect">
+					<option value="-1">Select Header</option>
+					<c:forEach var="header" items="${headers}">
+						<option value='<c:out value="${header.header_id}"></c:out>'><c:out value="${header}"></c:out></option>
+					</c:forEach>
+				</select>
+			
 			<button id="distributionSave" value="Save" class="btn btn-success">Save</button>
 		</div>
 		</div>
