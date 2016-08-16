@@ -15,15 +15,15 @@
         <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="css/hexagon.css">
         <style>
+        	#imagePlaceholder{
+        		width: 130px;height: 130px;BORDER-RADIUS: 100%;padding: 20px;margin: auto;
+        	}
         	.tile{
         		border-radius:10px;
         		padding:5px;
         		margin:10px 0px;
         	}
         	
-        	.tile #imagePlaceholder{
-        		padding:15px;
-        	}
         	
         	#featureDetails{
 		        text-overflow: ellipsis;
@@ -41,8 +41,9 @@
 		</script>
     </head>
     <body>
-		<div class="container">
 		<jsp:include page="home_head.html"></jsp:include>
+		<div style="min-height: 80vh;" id="login">
+		<div class="container">
 		<div class="row">
 		
 		<div class="col-md-6" style="">
@@ -183,12 +184,16 @@
 		</div>
 		</div>
 		</div>
+		</div>
+		<section style="margin-top:20px;" id="features">
+			<div id="home-features-tab" class="container"></div>
+		</section>	
 		         <section id="just-intro" style="padding-top: 50px;">
              <div class="container">
               
              <div class="row text-center pad-row">
             <div class="col-md-4  col-sm-4">
-                 <i class="fa fa-desktop fa-5x"></i>
+                 <img src="images/1470441381_Customer_Support.svg" height="100px" width="100px"/>
                             <h4> <strong>Contact Us</strong> </h4>
                             <p>
                                 Email:-mycorex2015@gmail.com<br>
@@ -196,14 +201,14 @@
                             </p>    
                 </div>
              <div class="col-md-4  col-sm-4">
-                 <i class="fa fa-flask  fa-5x"></i>
+                 <img src="images/1470441476_logo_social_media_location.svg" height="100px" width="100px"/>
                             <h4> <strong>Our Location</strong> </h4>
                             <p>
                                 Kasturinagar,Banglore - 560043,Karnataka
                             </p>
                 </div>
             <div class="col-md-4  col-sm-4">
-                  <i class="fa fa-pencil  fa-5x"></i>
+                  			<img src="images/1470444730_Korawan_M_business08.svg" height="100px" width="100px"/>
                             <h4> <strong>About Company</strong> </h4>
                             <p>
                                Classfloor is a technology start-up founded in the heart of India's Silicon Valley - Bangalore by four musketeers.  Classfloor provides the excellent platform for institute management system.
@@ -216,7 +221,7 @@
                  </div>
          </section>
 		
-		<div id="home-features-tab"></div>
+		
 		
 		<div class="modal fade" id="messageModal">
     <div class="modal-dialog">
