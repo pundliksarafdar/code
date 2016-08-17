@@ -445,7 +445,26 @@ siteMapApp.controller("SiteMapController",function($scope){
             </div>
             </a>
         </div>
-
+		<div class="col-sm-2 col-xs-4">
+        	<a href="certificate">
+        	<!-- This two settings need to merge -->
+        	<!-- <a href="classownerSettings"> -->
+            <div id="tile13" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                                <img src="/images/certificate.svg">
+                            </div>
+                            <div class="icontext">
+                                Certificate
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+            </a>
+        </div>
 		<!---->
         </div>
     <%} %>

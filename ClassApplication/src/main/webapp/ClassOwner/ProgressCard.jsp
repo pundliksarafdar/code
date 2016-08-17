@@ -13,6 +13,18 @@ text-overflow: ellipsis;
 #examDiv .form-control[readonly]{
 cursor: auto;
 }
+
+@media print{	
+			.nav{
+			display: none;
+			}
+			.nonPrintable{
+			display: none;
+			}
+		    .progressCardData {
+   				 display: block;
+			}
+    }
 </style>
 <script>
 var that = "";
@@ -161,7 +173,7 @@ $(document).ready(function(){
 	$(".progressCardPrint").click(function(){
 		var data = $("#progressCardData").html();
 			newWin= window.open("");
-			newWin.document.write("<html><link href='css/bootstrap.min.css' rel='stylesheet'><body class='container'>"+data+"</body></html>");
+			newWin.document.write("<html><link href='/css/bootstrap.min.css' rel='stylesheet'><body class='container'>"+data+"</body></html>");
 			newWin.print();
 			newWin.close();
 	});
@@ -196,8 +208,8 @@ function createProgressCard(data){
 	var instituteName = $("#instituteName").val();
 	var htmlString = "";
 	htmlString = htmlString +"<div align='center' class='row'><b>"+instituteName+"</b></div>"
-	htmlString = htmlString +"<div class='row'><b>Name : </b>"+that.closest("tr").find(".studentname").val()+"</div>";
-	htmlString = htmlString +"<div class='row'><div class='col-md-3' style='padding: 0%;'><b>Class : </b>"+divisionText+"</div><div class='col-md-3'><b>Batch : </b>"+batchText+"</div></div>";
+	htmlString = htmlString +"<div class='row'><div class='col-md-12' align='left'><b>Name : </b>"+that.closest("tr").find(".studentname").val()+"</div></div>";
+	htmlString = htmlString +"<div class='row'><div class='col-md-3' align='left'><b>Class : </b>"+divisionText+"</div><div class='col-md-3' align='left'><b>Batch : </b>"+batchText+"</div></div>";
 						
 	htmlString = htmlString +"<div class='row'><table class='table table-bordered'><thead><tr><th></th>";
 	for(i =0 ; i<data.subjectList.length;i++){
@@ -340,7 +352,7 @@ function createStudentTable(data){
 <jsp:include page="ExamMarksHeader.jsp" >
 		<jsp:param value="active" name="progressCard"/>
 	</jsp:include>
-<div class="well">
+<div class="well nonPrintable">
 		<div class="row">
 			<div class="col-md-3">
 				<select id="division" name="division" class="form-control">
@@ -380,8 +392,8 @@ function createStudentTable(data){
 	<table class="table" id="studentTable" style="width: 100%"></table>
 	</div>
 	</div>
-	<div id="progressCard" style="display: none">
-	<div class="container" style="margin :1%">
+	<div id="progressCard" class="progressCardData" style="display: none">
+	<div class="container nonPrintable" style="margin :1%">
 	<div class="row">
 	<div class="col-md-3">
 	<button class="btn btn-primary btn-sm backToSubjectList">Back To Student List</button>
@@ -391,7 +403,7 @@ function createStudentTable(data){
 	</div>
 	</div>
 	</div>
-	<div id="progressCardData" class="container" style="border: 1px solid;margin: 1%;padding-left: 5%;">
+	<div id="progressCardData" class="container progressCardData" align="center" style="border: 1px solid;margin: 1%;padding-left: 5%;">
 	</div>
 	</div>
 	<input type="hidden" id="instituteName" name="instituteName" value='<c:out value="${instituteName }"></c:out>'>

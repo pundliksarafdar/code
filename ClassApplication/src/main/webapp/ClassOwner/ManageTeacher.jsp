@@ -210,8 +210,8 @@ function validateInput(inputText){
 <div class="row">
 <font size="3"><b>Teacher Details</b></font>
 </div>
-<div class="row">
-<table>
+<div class="row" style="padding: 1%">
+<table class="table table-striped">
 <tr>
 <td><font size="3">First Name</font></td><td> :</td> <td><span id="firstname"></span></td>
 </tr>

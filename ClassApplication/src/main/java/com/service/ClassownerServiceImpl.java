@@ -83,6 +83,7 @@ import com.tranaction.subject.SubjectTransaction;
 import com.transaction.attendance.AttendanceTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
+import com.transaction.certificate.CertificateTransaction;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.fee.FeesTransaction;
 import com.transaction.image.ImageTransactions;
@@ -1040,4 +1041,56 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		return Response.status(Status.OK).entity(status).build();
 	}
 	
+	
+	@POST
+	@Path("/saveCerificateTemplate/{certificateDesc}/{header_id}")
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces("application/json")
+	public Response saveCerificateTemplate(String certificateBody,@PathParam("certificateDesc")String certificateDesc,
+			@PathParam("header_id")String header_id) {
+		CertificateTransaction certificateTransaction = new CertificateTransaction(Constants.STORAGE_PATH);
+		boolean status = certificateTransaction.saveCertificate(getRegId(), certificateDesc, certificateBody, header_id);
+		return Response.status(200).entity(status).build();
+	}
+	
+	@GET
+	@Path("/getCerificateTemplate/{cert_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response getCerificateTemplate(@PathParam("cert_id")int cert_id) {
+		CertificateTransaction certificateTransaction = new CertificateTransaction(Constants.STORAGE_PATH);
+		String fileData = certificateTransaction.getCertificate(getRegId(), cert_id);
+		return Response.status(200).entity(fileData).build();
+	}
+	
+	@POST
+	@Path("/updateCerificateTemplate/{certificateDesc}/{header_id}/{cert_id}")
+	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces("application/json")
+	public Response updateCerificateTemplate(String certificateBody,@PathParam("certificateDesc")String certificateDesc,
+			@PathParam("header_id")String header_id,@PathParam("cert_id")int cert_id) {
+		CertificateTransaction certificateTransaction = new CertificateTransaction(Constants.STORAGE_PATH);
+		boolean status = certificateTransaction.updateCertificate(getRegId(), certificateDesc, certificateBody, header_id,cert_id);
+		return Response.status(200).entity(status).build();
+	}
+	
+	@GET
+	@Path("/deleteCerificateTemplate/{cert_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteCerificateTemplate(@PathParam("cert_id")int cert_id) {
+		CertificateTransaction certificateTransaction = new CertificateTransaction(Constants.STORAGE_PATH);
+	    certificateTransaction.deleteCertificate(getRegId(), cert_id);
+		return Response.status(200).entity(true).build();
+	}
+	
+	@GET
+	@Path("/getCertificateForPrint/{cert_id}/{student_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response getCertificateForPrint(@PathParam("cert_id")int cert_id,@PathParam("student_id")int student_id) {
+		CertificateTransaction certificateTransaction = new CertificateTransaction(Constants.STORAGE_PATH);
+		String fileData = certificateTransaction.getPrintCertificateData(getRegId(), cert_id,student_id);
+		return Response.status(200).entity(fileData).build();
+	}
 }

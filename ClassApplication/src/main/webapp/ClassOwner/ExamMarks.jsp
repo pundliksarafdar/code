@@ -200,7 +200,7 @@ function createExamSubjectTable(data){
 	var dataTable = $('#subjectTable').DataTable({
 		bDestroy:true,
 		data: data,
-		columns: [
+		columns: [{title:"#",data:null},
 			{ title: "Subject",data:null,render:function(data,event,row){
 				var div = '<div class="default defaultBatchName">'+row.subjectName+'</div>';
 				return div;
@@ -224,6 +224,11 @@ function createExamSubjectTable(data){
 			},sWidth:"20%"}
 		]
 	});
+	dataTable.on( 'order.dt search.dt', function () {
+        dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+			});
+		}).draw(); 
 	
 }
 

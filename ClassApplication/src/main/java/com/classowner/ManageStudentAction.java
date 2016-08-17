@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.classapp.db.batch.division.Division;
+import com.classapp.db.certificate.certificate;
 import com.classapp.db.student.StudentData;
 import com.classapp.db.student.StudentDetails;
 import com.classapp.persistence.Constants;
@@ -16,11 +17,12 @@ import com.helper.DivisionHelperBean;
 import com.helper.StudentHelperBean;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
+import com.transaction.certificate.CertificateTransaction;
 import com.user.UserBean;
 
 public class ManageStudentAction extends BaseAction{
 	int divisionSize;
-	
+	List<certificate> certificateList;
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		
@@ -29,6 +31,8 @@ public class ManageStudentAction extends BaseAction{
 		DivisionTransactions divisionTransactions = new DivisionTransactions();
 		BatchTransactions batchTransactions=new BatchTransactions();
 		List list=batchTransactions.getAllBatches(userBean.getRegId());
+		CertificateTransaction certificateTransaction = new CertificateTransaction();
+		certificateList = certificateTransaction.getCertificateTemplateList(userBean.getRegId());
 		request.setAttribute("batches", list);
 			studentHelperBean.setClass_id(userBean.getRegId());
 			/*List<StudentDetails> studentList = studentHelperBean.getStudents();
@@ -58,6 +62,14 @@ public class ManageStudentAction extends BaseAction{
 
 	public void setDivisionSize(int divisionSize) {
 		this.divisionSize = divisionSize;
+	}
+
+	public List<certificate> getCertificateList() {
+		return certificateList;
+	}
+
+	public void setCertificateList(List<certificate> certificateList) {
+		this.certificateList = certificateList;
 	}
 	
 	

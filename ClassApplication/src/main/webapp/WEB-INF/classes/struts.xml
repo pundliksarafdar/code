@@ -646,5 +646,17 @@
 		<action name="adminStatus">
 			<result name="success" type="tiles">admin.status</result>
 		</action>
+		<action name="certificate" class="com.classowner.ManageAllExamFunctionAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.certificate</result>
+		</action>
+		<action name="viewcertificate" class="com.classowner.viewCertificateAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.viewcertificate</result>
+		</action>
+		<action name="printStudentCertificate" class="com.classowner.viewCertificateAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.printStudentCertificate</result>
+		</action>
 	</package>
 </struts>

@@ -254,6 +254,31 @@ var enabledEdit = false;
 			rest.post("rest/feesservice/saveStudentBatchFeesTransaction/",handlers,JSON.stringify(serviceFees_Transaction));
 		});
 		
+		$("#classTable").on("click",".btn-certificate-print",function(){
+			$(".error").html("");
+			var flag = true;
+			var student_id = $($(this).closest("tr")).find("#studentId").val();
+			var cert_id = $("#certificate").val();
+			if(cert_id == "-1"){
+				$("#certificateSelectError").html("Select certificate template");
+				flag = false;
+			}
+			if(flag){
+			var handlers = {};
+			handlers.success=function(data){
+				var win =window.open();
+				win.document.write(data);
+				win.print();
+				win.close();
+			};   
+			handlers.error=function(){
+				$.notify({message: "Student not deleted"},{type: 'danger'});
+			};   
+			
+			rest.get("rest/classownerservice/getCertificateForPrint/"+cert_id+"/"+student_id,handlers);
+			}
+		});
+		
 	});
 	
 	function createAttenanceTab(data){
@@ -737,7 +762,8 @@ var enabledEdit = false;
 						var buttons = '<div class="default">'+
 						'<input type="button" class="btn btn-xs btn-primary btn-batch-edit" value="Edit">&nbsp;'+
 						'<input type="button" class="btn btn-xs btn-danger btn-batch-delete" value="Delete">&nbsp;'+
-						'<input type="button" class="btn btn-xs btn-info btn-student-details" value="Details">'+
+						'<input type="button" class="btn btn-xs btn-info btn-student-details" value="Details">&nbsp;'+
+						'<input type="button" class="btn btn-xs btn-primary btn-certificate-print" value="Print Certificate">&nbsp;'+
 					'</div>'+
 					'<div class="editable">'+
 						'<button class="btn btn-success btn-xs btn-save">Save</button>&nbsp;'+
@@ -813,7 +839,8 @@ var enabledEdit = false;
 					var buttons = '<div class="default">'+
 					'<input type="button" class="btn btn-xs btn-primary btn-batch-edit" value="Edit">&nbsp;'+
 					'<input type="button" class="btn btn-xs btn-danger btn-batch-delete" value="Delete">&nbsp;'+
-					'<input type="button" class="btn btn-xs btn-info btn-student-details" value="Details">'+
+					'<input type="button" class="btn btn-xs btn-info btn-student-details" value="Details">&nbsp;'+
+					'<input type="button" class="btn btn-xs btn-primary btn-certificate-print" value="Print Certificate">&nbsp;'+
 				'</div>'+
 				'<div class="editable">'+
 					'<button class="btn btn-success btn-xs btn-save">Save</button>&nbsp;'+
@@ -1078,7 +1105,21 @@ var enabledEdit = false;
 </div>
 </div>
 <div class="container containerData">
+<div class="row">
+<div class="col-md-3">
 <button class="btn btn-primary generateRollNumber hide">Generate Roll No</button>
+</div>
+<div class="col-md-3">
+<select id="certificate" class="form-control">
+					<option value="-1">Select Certificate</option>
+					<c:forEach items="${certificateList}" var="certificate" varStatus="counter">
+					<option value=<c:out value='${certificate.cert_id }'></c:out>><c:out
+								value="${certificate.cert_desc }"></c:out>
+					</c:forEach>
+				</select>
+<div id="certificateSelectError" class="error"></div>
+</div>
+</div>
 <br/><br/>
 <table class="table table-striped classTable" id="classTable" >
 	<thead>

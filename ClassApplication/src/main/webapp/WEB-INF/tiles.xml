@@ -744,4 +744,16 @@
 		<put-attribute name="title" value="About Us" />
 		<put-attribute name="body" value="/admin/status.jsp" />
 	</definition>
+	<definition name="classowner.certificate" extends="baseLayout">
+      <put-attribute name="title"  value="Create Certificate"/>
+      <put-attribute name="body"   value="/ClassOwner/CreateCertificate.jsp"/>      
+   </definition>
+   <definition name="classowner.viewcertificate" extends="baseLayout">
+      <put-attribute name="title"  value="View Certificate"/>
+      <put-attribute name="body"   value="/ClassOwner/viewCertificates.jsp"/>      
+   </definition>
+   <definition name="classowner.printStudentCertificate" extends="baseLayout">
+      <put-attribute name="title"  value="View Certificate"/>
+      <put-attribute name="body"   value="/ClassOwner/printStudentCertificate.jsp"/>      
+   </definition>
 </tiles-definitions>

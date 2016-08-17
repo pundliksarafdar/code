@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.certificate.certificate" table="certificate_templates" catalog="classdb">
+    <id name="cert_id" type="int">
+            <column name="cert_id" />
+            <generator class="identity" />
+        </id>
+        <property name="inst_id" type="int">
+            <column name="inst_id"/>
+        </property>
+        <property name="cert_desc" type="string">
+            <column name="cert_desc"/>
+        </property>
+        <property name="header_id" type="string">
+            <column name="header_id"/>
+        </property>
+    </class>
+</hibernate-mapping>
