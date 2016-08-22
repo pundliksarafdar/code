@@ -485,7 +485,7 @@ public class TeacherServiceImpl extends ServiceBase {
 	@POST
 	@Path("/addQuestionPaperPattern")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response addQuestionPaperPattern(QuestionPaperPattern examPattern){
 		Gson gson = new Gson();
 		System.out.println(gson.toJson(examPattern));

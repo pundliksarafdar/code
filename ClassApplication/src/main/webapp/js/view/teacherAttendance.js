@@ -240,7 +240,6 @@ function createAttendanceScheduleTable(data){
 	var dataTable = $('#attendanceScheduleTable').DataTable({
 		bDestroy:true,
 		data: attendanceData,
-		lengthChange: false,
 		columns: [
 			{ title: "Teacher",data:null,render:function(data,event,row){
 				var div = '<div class="default defaultBatchName">'+row.teacher+'</div>';

@@ -5,12 +5,12 @@
 ul {
     list-style-type: none;
 }
-.modal-header{
+/* .modal-header{
 background: white;
 }
 .modal-dialog{
 width: 100%;
-}
+} */
 .col-md-*{
 width: 100%;
 margin : 0%;
@@ -458,10 +458,13 @@ var generatePattern = function(){
 		return questionPaperStructure;
 	});
 	var handlers = {};
-	handlers.success = function(e){if(e==false){
-		$.notify({message: "Pattern with same name already available"},{type: 'danger'});
-	}else {
-		$("#patternSavedNotification").modal("toggle");}
+	handlers.success = function(e){
+		if(e=="name"){
+			$.notify({message: "Pattern with same name already available"},{type: 'danger'});
+		}else if(e=="memory"){
+			$.notify({message: "Memory not available, pattern not added"},{type: 'danger'});
+		}else {
+			$("#patternSavedNotification").modal("toggle");}
 	}
 	handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});}
 	var QuestionPaperPattern = {};

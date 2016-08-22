@@ -23,6 +23,7 @@ import com.user.UserBean;
 public class ManageStudentAction extends BaseAction{
 	int divisionSize;
 	List<certificate> certificateList;
+	String studentNameSearch;
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		
@@ -70,6 +71,14 @@ public class ManageStudentAction extends BaseAction{
 
 	public void setCertificateList(List<certificate> certificateList) {
 		this.certificateList = certificateList;
+	}
+
+	public String getStudentNameSearch() {
+		return studentNameSearch;
+	}
+
+	public void setStudentNameSearch(String studentNameSearch) {
+		this.studentNameSearch = studentNameSearch;
 	}
 	
 	

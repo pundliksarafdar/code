@@ -21,6 +21,9 @@
 	  <div class="tab-pane active" id="teacher">
 	  	<div class="container">
 	  	<form id="selectTeacherMessage">
+	  		<div class="row" id="teacherNotificationSummary">
+		
+			</div>
 	  		<div class="row">
 	  		<div class="col-md-6">
 		  	<Select id="teachers" multiple="multiple" name="teacher" required="required" style="width: 100%"></Select>
@@ -74,6 +77,9 @@
 	  <div class="tab-pane" id="studentNParent">
 	  <form id="selectStudentNParentMessage">
 	  <div class="container">
+		<div class="row" id="studentNotificationSummary">
+		
+		</div>
 	  		<div class="row">
 					<div class="col-md-2">
 					<div class='input-group'>

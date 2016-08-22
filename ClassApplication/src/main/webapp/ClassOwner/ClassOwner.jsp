@@ -149,9 +149,42 @@ $(document).ready(function(){
 		$("#smsLeftPanel").hide();
 		$("#noSMSAccessPanel").show();
 		}
-		
-	
+		var allNames = getNames();
+        $('#studentNameSearch').typeahead({
+            minLength: 1,
+            order: "asc",
+            hint: true,
+            offset : true,
+            template: "{{display}}",
+            source: allNames,
+            debug: true
+        });
+	$("#searchStudentByName").click(function(){
+		$(".error").html();
+		if($("#studentNameSearch").val().trim() == "" ){
+			$("#searchStudentByNameError").html("Enter Student Name")
+			return false;
+		}
+	});
 });
+function getNames(){
+	var names = {};
+	  $.ajax({
+		   url: "classOwnerServlet",
+		   data: {
+		    	 methodToCall: "fetchNamesForSuggestion"						 
+		   		},
+		   type:"POST",
+		   async : false,
+		   success:function(e){
+			   var data = JSON.parse(e);
+			   names =  data.names;
+		   },
+		   error:function(e){
+			   }
+		   });
+	return names;
+}
 </script>
 </head>
 	<%
@@ -305,6 +338,31 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
 		</div>
 		
 		<div class="col-md-6">
+		<div class="row well" style="width:100%;">
+		<div class="col-md-12">
+		<form action="viewstudent">
+        <div class="typeahead-container">
+            <div class="typeahead-field">
+
+            <span class="typeahead-query">
+                <input id="studentNameSearch"
+                       name="studentNameSearch"
+                       type="search"
+                       autofocus
+                       autocomplete="off" Placeholder="Search Student" class="form-control" style="border-radius:4px 0 0 4px">
+            </span>
+            <span class="typeahead-button">
+                <button type="submit" id="searchStudentByName" style="border-radius:0 4px 4px 0">
+                    <span class="typeahead-search-icon" ></span>
+                </button>
+            </span>
+
+            </div>
+        </div>
+    </form>
+    <span id="searchStudentByNameError" class="error"></span>
+		</div>
+		</div>
 		<div class="row" style="width:100%;">
 		<div class="col-md-12">
 			<div class="panel panel-default" id="notificationPanel">

@@ -5,12 +5,12 @@
 ul {
     list-style-type: none;
 }
-.modal-header{
+/* .modal-header{
 background: white;
 }
 .modal-dialog{
 width: 100%;
-}
+} */
 .col-md-*{
 width: 100%;
 margin : 0%;

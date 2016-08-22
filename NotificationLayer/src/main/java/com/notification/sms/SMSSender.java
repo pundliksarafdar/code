@@ -11,16 +11,17 @@ import java.net.URLEncoder;
 
 public class SMSSender {
 	public static String retval = "";
-	public static void sendSms(String msg,String number){
+	public static void sendSms(String msg,String number,String channel){
 		try {
 			msg = URLEncoder.encode(msg, "UTF-8");
 		} catch (UnsupportedEncodingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		String sendSmsApi = "https://www.smsgatewayhub.com/api/mt/SendSMS?APIKey=9jg6gJzWwEGFF8xwRisTvw&senderid=CLSFLR&channel=2&DCS=0&flashsms=0&number={{phoneNo}}&text={{textMessage}}&route=1";
+		String sendSmsApi = "https://www.smsgatewayhub.com/api/mt/SendSMS?APIKey=9jg6gJzWwEGFF8xwRisTvw&senderid=CLSFLR&channel={{channel}}&DCS=0&flashsms=0&number={{phoneNo}}&text={{textMessage}}&route=1";
 		sendSmsApi = sendSmsApi.replace("{{textMessage}}", msg);
 		sendSmsApi = sendSmsApi.replace("{{phoneNo}}", number);
+		sendSmsApi = sendSmsApi.replace("{{channel}}", channel);
 		try {
 			sendGet(sendSmsApi);
 		} catch (Exception e) {

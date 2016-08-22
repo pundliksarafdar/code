@@ -60,7 +60,8 @@ private Constants(){
 	public static String GENERAL_PARENT_MSG = "8";
 	public static String GENERAL_TEACHER_MSG = "9";
 	public static String MANUAL_PROGRESS_CARD = "10";
-	
+	public static String PRAMOTIONAL = "1";
+	public static String TRANSACTIONAL = "2";
 	//Roles
 	public static int CLASSOWNER_ROLE = 1;
 	public static int TEACHER_ROLE = 2;

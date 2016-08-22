@@ -210,6 +210,13 @@ function loadStudentTableError(){
 	
 }
 
+Date.prototype.addDays = function(days)
+{
+    var dat = new Date(this.valueOf());
+    dat.setDate(dat.getDate() + days);
+    return dat;
+}
+
 function getWeeklySchedule(){
 	var inst_id = $("#instituteSelect").val();
 	var division = $("#divisionSelect").val();
@@ -219,14 +226,15 @@ function getWeeklySchedule(){
 	handler.success = function(e){console.log("Success",e);
 	var dates = new Date(date[2],parseInt(date[1])-1,date[0]), y = dates.getFullYear(), m = dates.getMonth();
 	//var curr = new Date; // get current date
-	var first = dates.getDate() - dates.getDay(); // First day is the day of the month - the day of the week
+	var first =  dates.getDay(); // First day is the day of the month - the day of the week
 	var last = first + 6; // last day is the first day + 6
 	var weekDays = []
 	for (i=0;i<7;i++){
-		var firstday = new Date(dates.setDate(first+i));
+		var firstday = dates.addDays(i-first);
 		console.log(firstday);
 		weekDays.push(firstday);
 	}
+
 
 	createWeeklyAttendanceScheduleTable(e,weekDays);
 	
@@ -267,10 +275,10 @@ function getSchedule(){
 	rest.get("rest/teacher/getStudentsDailyAttendance/"+inst_id+"/"+division+"/"+batch+"/"+new Date(date[2],parseInt(date[1])-1,date[0]).getTime(),handler);
 }
 function createMonthlyAttendanceScheduleTable(data,start,end){
-	$('#attendanceStudentListTable').empty();
+	$('#monthlyAttendance').empty();
 	var presenteeDates = [];
 	
-	var hString = "<thead><tr><th>Student Name</th>";
+	var hString = "<table class='table-bordered' cellspacing='0' style='width:100%'><thead><tr><th>Roll No</th><th>Student Name</th>";
 	for(i=start;i<=end;i++){
 		hString = hString + "<th>"+i+"</th>";
 	}
@@ -281,12 +289,21 @@ function createMonthlyAttendanceScheduleTable(data,start,end){
 	}
 	console.log(presenteeDates);
 	for(i=0;i<data.length;i++){
-		hString = hString + "<tr><td>"+data[i].student_name+"</td>";
+		if(data[i].roll_no == 0){
+			hString = hString + "<tr><td>-</td>";
+		}else{
+			hString = hString + "<tr><td>"+data[i].roll_no+"</td>";
+		}
+		hString = hString + "<td>"+data[i].student_name+"</td>";
 		var counter = start;
 		for(j=0;j<presenteeDates.length;j++){
 			while(counter<=end){
 			if(new Date(presenteeDates[j]).getDate() == counter){
+				if(data[i].daily_presentee_percentange[j] != null){
 				hString = hString + "<td style='color:green'>"+data[i].daily_presentee_percentange[j]+"</td>";
+				}else{
+					hString = hString + "<td style='color:green'>0</td>";	
+				}
 				counter++;
 				break;
 			}else{
@@ -305,17 +322,27 @@ function createMonthlyAttendanceScheduleTable(data,start,end){
 		hString = hString + "</tr>";
 	}
 	}
-	hString = hString + "</tbody>";
-	$('#attendanceStudentListTable').append(hString);
-	$('#attendanceStudentListTable').DataTable();
+	hString = hString + "</tbody></table>";
+	$('#monthlyAttendance').append(hString);
+	$('#monthlyAttendance').find("table").DataTable({
+       
+        scrollX:        true,
+        scrollCollapse: true,
+        paging:         true,
+        "pageLength": 50,
+        fixedColumns:   {
+            leftColumns: 2,
+            rightColumns: 3
+        }
+    } );
 	
 }
 
 function createWeeklyAttendanceScheduleTable(data,weekDays){
-	$('#attendanceStudentListTable').empty();
+	$('#monthlyAttendance').empty();
 	var presenteeDates = [];
 	
-	var hString = "<thead><tr><th>Student Name</th>";
+	var hString = "<table class='table-bordered' style='width:100%'><thead><tr><th>Roll No</th><th>Student Name</th>";
 	for(i=0;i<=6;i++){
 		hString = hString + "<th>"+weekDays[i].getDate()+"</th>";
 	}
@@ -326,12 +353,21 @@ function createWeeklyAttendanceScheduleTable(data,weekDays){
 	}
 	console.log(presenteeDates);
 	for(i=0;i<data.length;i++){
-		hString = hString + "<tr><td>"+data[i].student_name+"</td>";
+		if(data[i].roll_no == 0){
+			hString = hString + "<tr><td>-</td>";
+		}else{
+			hString = hString + "<tr><td>"+data[i].roll_no+"</td>";
+		}
+		hString = hString + "<td>"+data[i].student_name+"</td>";
 		var counter = 0;
 		for(j=0;j<presenteeDates.length;j++){
 			while(counter<=6){
 			if(new Date(presenteeDates[j]).getDate() == weekDays[counter].getDate()){
+				if(data[i].daily_presentee_percentange[j] != null){
 				hString = hString + "<td style='color:green'>"+data[i].daily_presentee_percentange[j]+"</td>";
+			}else{
+				hString = hString + "<td style='color:green'>0</td>";	
+			}
 				counter++;
 				break;
 			}else{
@@ -350,9 +386,9 @@ function createWeeklyAttendanceScheduleTable(data,weekDays){
 		hString = hString + "</tr>";
 	}
 	}
-	hString = hString + "</tbody>";
-	$('#attendanceStudentListTable').append(hString);
-	$('#attendanceStudentListTable').DataTable();
+	hString = hString + "</tbody></table>";
+	$('#monthlyAttendance').append(hString);
+	$('#monthlyAttendance').find('table').DataTable();
 	
 }
 

@@ -280,7 +280,7 @@ function RenderTimer(completedTime,totalTime){
       <i class="glyphicon glyphicon-th-large"></i>
     </button>
     <a class="navbar-brand" href="login">
-	<img src="images/cxlogo.jpg" alt="cxlogo" style="height: 20px;" class="img-rounded"/>
+	<img src="images/logo.gif" alt="cxlogo" style="height: 20px;" class="img-rounded"/>
 	CoreX</a>
   </div>
 

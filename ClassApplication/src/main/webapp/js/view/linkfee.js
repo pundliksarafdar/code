@@ -193,7 +193,7 @@ function getBatchSuccess(batches){
 	}
 	
 	if(optionsNoLink && optionsNoLink.trim().length){
-		optGroupNoLink = '<optgroup label="No link" linked="no">'+optionsNoLink+'</optgroup>';
+		optGroupNoLink = '<optgroup label="Not link" linked="no">'+optionsNoLink+'</optgroup>';
 	}
 	$(BATCH_SELECT).append(optGroupHasLink+optGroupNoLink).trigger('change');	
 }

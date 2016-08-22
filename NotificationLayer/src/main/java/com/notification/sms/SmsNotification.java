@@ -17,11 +17,14 @@ public class SmsNotification implements iNotify{
 		try {
 			SMSSentMock smsSentMock = new SMSSentMock();
 			if(messageDetailBean.isSendToStudent()){
-				smsSentMock.sms(messageDetailBean.getStudentPhone(), message);
+				smsSentMock.sms(messageDetailBean.getStudentPhone(), message,messageDetailBean.getSmsType());
 			} if(messageDetailBean.isSendToParent()){
 				MessageFormatter formatter = new MessageFormatter();
 				 message = formatter.formatParentMessage(messageDetailBean, NotificationEnum.MessageType.SMS);
-				smsSentMock.sms(messageDetailBean.getParentPhone(), message);
+				smsSentMock.sms(messageDetailBean.getParentPhone(), message,messageDetailBean.getSmsType());
+			}
+			if(messageDetailBean.isSendToTeacher()){
+				smsSentMock.sms(messageDetailBean.getTeacherPhone(), message,messageDetailBean.getSmsType());
 			}
 			
 		} catch (IOException e) {

@@ -29,6 +29,7 @@ import com.mails.AllMail;
 import com.service.beans.ClassOwnerNotificationBean;
 import com.signon.LoginBean;
 import com.signon.LoginUser;
+import com.tranaction.login.login;
 import com.transaction.classownersettingtransaction.ClassownerSettingstransaction;
 import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.register.RegisterTransaction;
@@ -80,11 +81,11 @@ public class RegisterUserAction extends BaseAction{
 			LoginUser loginUser = new LoginUser();
 			String forward = "success";
 			if(null != loginBean){
-				userBean.setLoginBean(loginBean);
-			    loginUser.loadBean(userBean, loginBean,response,session);
-			    InstituteStats instituteStats=new InstituteStats();
-			    if (userBean.getRole()==1) {
-			    	instituteStats.setInst_id(userBean.getRegId());
+				login loginCheck=new login();
+				com.classapp.login.UserBean userBeanLg = loginCheck.loginck(loginBean.getLoginname(), loginBean.getLoginpass());
+				  InstituteStats instituteStats=new InstituteStats();
+				if (userBeanLg.getRole()==1) {
+			    	instituteStats.setInst_id(userBeanLg.getRegId());
 			    	instituteStats.setAlloc_ids(25);
 			    	instituteStats.setAlloc_memory(100);
 			    	instituteStats.setAvail_ids(25);
@@ -98,8 +99,12 @@ public class RegisterUserAction extends BaseAction{
 			    	
 			    	//Saving default settings
 			    	ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
-			    	settingstransaction.saveSettings(new ClassOwnerNotificationBean(), userBean.getRegId());
+			    	settingstransaction.saveSettings(new ClassOwnerNotificationBean(), userBeanLg.getRegId());
 				}
+				userBean.setLoginBean(loginBean);
+			    loginUser.loadBean(userBean, loginBean,response,session);
+			  
+			    
 			}
 			
 			return forward;

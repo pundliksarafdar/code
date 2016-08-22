@@ -77,6 +77,21 @@ var globalDivisionID = "";
 var graphData = [];
 var enabledEdit = false;
 	$(document).ready(function(){
+		if($("#studentNameSearch").val() != ""){
+			var studentName = $("#studentNameSearch").val();
+			$.ajax({
+				url:"classOwnerServlet",
+				data:{
+					methodToCall:"getStudentByName",
+					studentName:studentName
+				},
+				type:"post",
+				success:function(data){
+					successCallbackclass(data,"name");
+				},error:function(){
+					}
+			});	
+		}
 		$(".containerData").hide();
 		$(this).on("click",".btn-batch-edit",enableEdit)
 		.on("click",".btn-cancel",cancelEdit)
@@ -377,7 +392,7 @@ var enabledEdit = false;
 					htmlString = htmlString + "<div class='row'><div class='col-md-3'>Final Fees</div><div class='col-md-1'>:</div><div class='col-md-2'>&#x20B9;"+data.student_FeesList[j].final_fees_amt+"</div></div>";
 					htmlString = htmlString + "<div class='row'><div class='col-md-3'>Fees Paid</div><div class='col-md-1'>:</div><div class='col-md-2'>&#x20B9;<span class='feesPaid'>"+data.student_FeesList[j].fees_paid+"</span></div></div>";
 					htmlString = htmlString + "<div class='row'><div class='col-md-3'>Remaining Fees</div><div class='col-md-1'>:</div><div class='col-md-2'>&#x20B9;<span class='feesDue'>"+data.student_FeesList[j].fees_due+"</span></div></div>";
-					htmlString = htmlString + "<div class='row amtData'><div class='col-md-2'><input type='number' min=0 id='amt' value='0' class='form-control'></div><div class='col-md-1'><button class='btn btn-primary btn-sm payFees' id='"+batches[i].batch_id+"'>Pay</button></div></div>";
+					/* htmlString = htmlString + "<div class='row amtData'><div class='col-md-2'><input type='number' min=0 id='amt' value='0' class='form-control'></div><div class='col-md-1'><button class='btn btn-primary btn-sm payFees' id='"+batches[i].batch_id+"'>Pay</button></div></div>"; */
 					htmlString = htmlString + "</div>";
 					flag = true;
 				} 
@@ -1089,7 +1104,7 @@ var enabledEdit = false;
                        name="studentNameSearch"
                        type="search"
                        autofocus
-                       autocomplete="off" Placeholder="Search By Name" class="form-control" style="border-radius:4px 0 0 4px">
+                       autocomplete="off" Placeholder="Search By Name" class="form-control" style="border-radius:4px 0 0 4px" value="<c:out value='${studentNameSearch}'></c:out>">
             </span>
             <span class="typeahead-button">
                 <button type="submit" id="searchStudentByName" style="border-radius:0 4px 4px 0">
@@ -1107,9 +1122,6 @@ var enabledEdit = false;
 <div class="container containerData">
 <div class="row">
 <div class="col-md-3">
-<button class="btn btn-primary generateRollNumber hide">Generate Roll No</button>
-</div>
-<div class="col-md-3">
 <select id="certificate" class="form-control">
 					<option value="-1">Select Certificate</option>
 					<c:forEach items="${certificateList}" var="certificate" varStatus="counter">
@@ -1118,6 +1130,9 @@ var enabledEdit = false;
 					</c:forEach>
 				</select>
 <div id="certificateSelectError" class="error"></div>
+</div>
+<div class="col-md-3">
+<button class="btn btn-primary generateRollNumber hide">Generate Roll No</button>
 </div>
 </div>
 <br/><br/>

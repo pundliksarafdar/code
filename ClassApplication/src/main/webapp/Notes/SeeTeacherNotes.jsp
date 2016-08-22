@@ -549,7 +549,7 @@ function UploadExam(){
   <li><a href="addteachernotesoption">Add Notes</a></li>
   <li class="active"><a data-toggle = "tab">View Notes</a></li>
 </ul>
-<div class="container" style="padding: 2%;background: #eee">
+<div class="well">
 <div class="row">
 			<div class="col-md-3">
 				<select name="instituteSelect" id="instituteSelect" class="form-control" width="100px">

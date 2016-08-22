@@ -19,6 +19,10 @@ public class NotifcationAccess implements iNotificationAccess{
 	static String INVALID_PARENT_PHONE = "Parent phone number is invalid",
 			INVALID_PARENT_PHONE_ID = "Parent phone id is invalid",
 			INVALID_PARENT_EMAIL = "Parent email is invalid";
+	
+	static String INVALID_TEACHER_PHONE = "Teacher phone number is invalid",
+			INVALID_TEACHER_PHONE_ID = "Teacher phone id is invalid",
+			INVALID_TEACHER_EMAIL = "Teacher email is invalid";
 	@Override
 	public String send(List<MessageDetailBean> messageDetailBeans) {
 		HashMap<MessageDetailBean,List<String>>  invalidIdMap = validate(messageDetailBeans);
@@ -88,6 +92,28 @@ public class NotifcationAccess implements iNotificationAccess{
 						(null == messageDetailBean.getParentPhoneId() || messageDetailBean.getParentPhoneId().isEmpty() ||
 						null == messageDetailBean.getParentPhoneType() || messageDetailBean.getParentPhoneType().isEmpty())){
 					messageList.add(INVALID_PARENT_PHONE_ID);
+				}
+			}
+			
+			//Teacher messages
+			if(messageDetailBean.isSendToTeacher()){
+				//Send email to student
+				if(messageDetailBean.isMessageTypeEmail() &&
+						(null == messageDetailBean.getTeacherEmail() || messageDetailBean.getTeacherEmail().isEmpty())){
+					messageList.add(INVALID_TEACHER_EMAIL);
+				}
+				
+				//Send sms to student
+				if( messageDetailBean.isMessageTypeSms() &&
+						0 == messageDetailBean.getTeacherPhone()){
+					messageList.add(INVALID_TEACHER_PHONE);
+				}
+				
+				//Send app notification
+				if( messageDetailBean.isMessageTypePush() &&
+						(null == messageDetailBean.getTeacherPhoneId() || messageDetailBean.getParentPhoneId().isEmpty() ||
+						null == messageDetailBean.getTeacherPhoneType() || messageDetailBean.getTeacherPhoneType().isEmpty())){
+					messageList.add(INVALID_TEACHER_PHONE_ID);
 				}
 			}
 			if(!messageList.isEmpty()){

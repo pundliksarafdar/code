@@ -111,7 +111,7 @@ function setTimetable(data){
 </script>
 </head>
 <body>
-<div class="container bs-callout bs-callout-danger white-back" style="margin-bottom: 5px;">
+<div class="well" style="margin-bottom: 5px;">
 			<div align="center" style="font-size: larger;"><u>Time Table</u></div>
 <form role="form" class="form-inline">
 <div class="container">

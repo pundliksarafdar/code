@@ -310,7 +310,7 @@ function createStudentMarksTable(data){
 	<table class="table" id="studentTable" style="width: 100%"></table>
 	</div>
 	<div class="row">
-			<div class="ol-md-2">
+			<div class="col-md-2">
 	<button class="btn btn-success btn-sm saveMarks">Save</button>
 	</div>
 	</div>

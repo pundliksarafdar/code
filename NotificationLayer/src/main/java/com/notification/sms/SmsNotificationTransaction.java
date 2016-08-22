@@ -103,7 +103,7 @@ public class SmsNotificationTransaction {
 		HashMap statusMap = new HashMap();
 		statusMap.put("access", true);
 		if(settings.getInstituteStats().getSmsLeft()==0 ){
-			status = "No sms id remaining";
+			status = "You dont have SMS";
 			statusMap.put("access", false);
 			statusMap.put("status", status);
 			msgLog.setMsg_status("F");

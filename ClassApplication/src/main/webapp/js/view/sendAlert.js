@@ -66,6 +66,7 @@
 	
 	function validateInit(){
 		var validatorForm = $(BASE_FORM).validate({
+			 ignore: ".ignore",
 			  rules: {
 			   divisionSelect: { valueNotEquals: "-1" },
 			   batchSelect:{ valueNotEquals: "-1" },
@@ -198,8 +199,8 @@
 	var alertHandler = {};
 	alertHandler.success = function(response){
 		$("#notificationSummary").empty();
-		$("#notificationSummary").show();
 		if(response.status == null || response.status == ""){
+			$("#notificationSummary").show();
 			var totalSMSSent = 0;
 			if($("#sendAlert #sms").is(":checked")){
 				if($("#sendAlert #student").is(":checked")){

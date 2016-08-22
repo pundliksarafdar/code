@@ -10,6 +10,17 @@
   <script src="../js/bootstrap-datetimepicker.min.js"></script>
   <style type="text/css">
  #attendanceStudentListDiv .dataTables_filter { visibility: hidden;}
+ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after{
+ position: relative;
+ display: inline;
+ float: right;
+ bottom: 0px;
+ right: 0px;
+ }
+  .DTFC_RightWrapper{
+    right: 0% !important;
+    }
+    
  #datetimepicker .form-control{
  padding: 6px 10px;
  height: 29px
@@ -20,7 +31,7 @@
 <jsp:include page="attendanceHeader.jsp" >
 		<jsp:param value="active" name="viewAttendance"/>
 	</jsp:include>
-	<div class="container" style="padding: 2%;background: #eee">
+	<div class="well">
 		<div class="row">
 		<div class="col-md-2">
 				<select name="instituteSelect" id="instituteSelect" class="form-control" width="100px">
@@ -68,8 +79,8 @@
 	<table id="attendanceScheduleTable" class="table-bordered" style="width: 100%"></table>
 	
 	</div>
-	<div class="container" id="monthlyAttendance" style="width: 100%;display: none;overflow-x: auto">
-	<table id="attendanceStudentListTable" class="table-bordered" style="width: 100%"></table>
+	<div class="container" id="monthlyAttendance" style="width: 100%;display: none;">
+	<!-- <table id="attendanceStudentListTable" class="table-bordered" style="width: 100%"></table> -->
 	</div>
 </body>
 </html>

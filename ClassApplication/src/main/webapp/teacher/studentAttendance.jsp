@@ -20,7 +20,7 @@
 <jsp:include page="attendanceHeader.jsp" >
 		<jsp:param value="active" name="attendances"/>
 	</jsp:include>
-	<div class="container" style="padding: 2%;background: #eee">
+	<div class="well">
 		<div class="row">
 			<div class="col-md-3">
 				<select name="instituteSelect" id="instituteSelect" class="form-control" width="100px">

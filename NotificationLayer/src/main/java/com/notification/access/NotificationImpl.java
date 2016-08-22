@@ -131,6 +131,7 @@ public class NotificationImpl {
 				messageDetailBean.setSmsParentMessage(null);
 				messageDetailBean.setSmsParentObject(data);
 				messageDetailBean.setSmsParentTemplate("manualFeesDueAlertParentSMS.tmpl");
+				messageDetailBean.setSmsType(Constants.TRANSACTIONAL);
 				detailBeans.add(messageDetailBean);
 			}
 			if(detailBeans.size() > 0){
@@ -280,6 +281,7 @@ public class NotificationImpl {
 				messageDetailBean.setSmsParentMessage(null);
 				messageDetailBean.setSmsParentObject(progressCard);
 				messageDetailBean.setSmsParentTemplate("progressCardParentSMS.tmpl");
+				messageDetailBean.setSmsType(Constants.TRANSACTIONAL);
 				detailBeans.add(messageDetailBean);
 			}
 		}
@@ -418,6 +420,7 @@ public class NotificationImpl {
 				messageDetailBean.setSmsParentMessage(null);
 				messageDetailBean.setSmsParentObject(data);
 				messageDetailBean.setSmsParentTemplate("dailyAttendanceParentSMS.tmpl");
+				messageDetailBean.setSmsType(Constants.TRANSACTIONAL);
 				detailBeans.add(messageDetailBean);
 			}
 		}
@@ -431,6 +434,8 @@ public class NotificationImpl {
 		    notifcationAccess.send(detailBeans);
 		    ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
 			settingstransaction.reduceSmsCount(msgCounter, institute.getRegId());
+			}else{
+				status = (String) statusMap.get("status");
 			}
 			}else{
 			notifcationAccess.send(detailBeans);	
@@ -572,6 +577,7 @@ public class NotificationImpl {
 					messageDetailBean.setSmsParentMessage(null);
 					messageDetailBean.setSmsParentObject(data);
 					messageDetailBean.setSmsParentTemplate("weeklyAttendanceParentSMS.tmpl");
+					messageDetailBean.setSmsType(Constants.TRANSACTIONAL);
 					detailBeans.add(messageDetailBean);
 				}
 			}
@@ -585,6 +591,8 @@ public class NotificationImpl {
 				notifcationAccess.send(detailBeans);
 				ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
 				settingstransaction.reduceSmsCount(msgCounter, institute.getRegId());
+				}else{
+					status = (String) statusMap.get("status");
 				}
 				}else{
 				notifcationAccess.send(detailBeans);	
@@ -727,6 +735,7 @@ public class NotificationImpl {
 					messageDetailBean.setSmsParentMessage(null);
 					messageDetailBean.setSmsParentObject(data);
 					messageDetailBean.setSmsParentTemplate("monthlyAttendanceParentSMS.tmpl");
+					messageDetailBean.setSmsType(Constants.TRANSACTIONAL);
 					detailBeans.add(messageDetailBean);
 				}
 			}
@@ -740,6 +749,8 @@ public class NotificationImpl {
 				notifcationAccess.send(detailBeans);
 				ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
 				settingstransaction.reduceSmsCount(msgCounter, institute.getRegId());
+				}else{
+					status = (String) statusMap.get("status");
 				}
 				}else{
 				notifcationAccess.send(detailBeans);	
@@ -821,6 +832,7 @@ public class NotificationImpl {
 				messageDetailBean.setSmsParentMessage(null);
 				messageDetailBean.setSmsParentObject(data);
 				messageDetailBean.setSmsParentTemplate("feesPaymentParentAlertSMS.tmpl");
+				messageDetailBean.setSmsType(Constants.TRANSACTIONAL);
 				detailBeans.add(messageDetailBean);
 		}
 			NotifcationAccess notifcationAccess = new NotifcationAccess();
@@ -831,6 +843,8 @@ public class NotificationImpl {
 			notifcationAccess.send(detailBeans);
 			ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
 			settingstransaction.reduceSmsCount(msgCounter, institute.getRegId());
+			}else{
+				status = (String) statusMap.get("status");
 			}
 			}else{
 			notifcationAccess.send(detailBeans);
@@ -896,6 +910,7 @@ public class NotificationImpl {
 				messageDetailBean.setSmsParentMessage(null);
 				messageDetailBean.setSmsParentObject(data);
 				messageDetailBean.setSmsParentTemplate("feesPaymentParentAlertSMS.tmpl");
+				messageDetailBean.setSmsType(Constants.TRANSACTIONAL);
 				detailBeans.add(messageDetailBean);
 			}
 			NotifcationAccess notifcationAccess = new NotifcationAccess();
@@ -1048,6 +1063,7 @@ public class NotificationImpl {
 				messageDetailBean.setSmsParentMessage(null);
 				messageDetailBean.setSmsParentObject(data);
 				messageDetailBean.setSmsParentTemplate("manualFeesDueAlertParentSMS.tmpl");
+				messageDetailBean.setSmsType(Constants.TRANSACTIONAL);
 				detailBeans.add(messageDetailBean);
 			}
 			if(detailBeans.size() > 0){
@@ -1059,6 +1075,8 @@ public class NotificationImpl {
 			notifcationAccess.send(detailBeans);
 			ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
 			settingstransaction.reduceSmsCount(msgCounter, institute.getRegId());
+			}else{
+				status = (String) statusMap.get("status");
 			}
 			}else{
 			notifcationAccess.send(detailBeans);
@@ -1083,5 +1101,202 @@ public class NotificationImpl {
 		return statusMap;
 	}
 	
+	public HashMap sendText(int inst_id,int div_id,int batch_id,
+			boolean sendEmail, boolean sendSMS, boolean sendToParent, boolean sendToStudent,String msg){
+		int parentsWithoutEmail = 0;
+		int parentsWithoutPhone = 0;
+		int studentsWithoutEmail = 0;
+		int studentsWithoutPhone = 0;
+		int totalStudents = 0;
+		int criteriaStudents = 0;
+		ClassownerSettingstransaction settingsTx = new ClassownerSettingstransaction();
+ 		ClassownerSettingsNotification settings = settingsTx.getSettings(inst_id);
+		HashMap statusMap = new HashMap<>();
+		String status = "";
+		if(sendSMS == true && settings.getInstituteStats().isSmsAccess()==false){
+			status = "You don't have SMS access";
+		}
+		if(sendEmail == true && settings.getInstituteStats().isEmailAccess() == false){
+			if("".equals(status)){
+				status = "You don't have Email access";
+			}else{
+				status = status + "and Email access";
+			}
+		}
+		if("".equals(status)){
+		StudentDB studentDB = new StudentDB();
+		totalStudents = studentDB.getStudentcountrelatedtobatch(batch_id+"", inst_id, div_id);
+		RegisterDB db =new RegisterDB();
+		FeesDB feesDB = new FeesDB();
+		RegisterBean institute =db.getRegistereduser(inst_id);
+		List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
+		int msgCounter = 0;
+		StudentTransaction studentTransaction = new StudentTransaction();
+		List<StudentDetails> studentData = studentTransaction.getAllStudentsDetails(batch_id+"", div_id+"", inst_id);
+		if(totalStudents > 0){
+			for (StudentDetails studentDetails : studentData) {
+					MessageDetailBean messageDetailBean = new MessageDetailBean();
+					messageDetailBean.setFrom(institute.getClassName());
+					messageDetailBean.setEmailSubject("Alert");
+					messageDetailBean.setStudentId(studentDetails.getStudentId());
+					messageDetailBean.setStudentEmail(studentDetails.getStudentUserBean().getEmail());
+					if (!"".equals(studentDetails.getStudentUserBean().getPhone1())) {
+						messageDetailBean.setStudentPhone(Long.parseLong(studentDetails.getStudentUserBean().getPhone1()));
+					}else{
+						messageDetailBean.setStudentPhone(0l);
+					}
+					messageDetailBean.setParentEmail(studentDetails.getStudent().getParentEmail());
+					if (!"".equals(studentDetails.getStudent().getParentPhone())) {
+						messageDetailBean.setParentPhone(Long.parseLong(studentDetails.getStudent().getParentPhone()));
+					}else{
+						messageDetailBean.setParentPhone(0l);
+					}
+					messageDetailBean.setMessageTypeEmail(sendEmail);
+					messageDetailBean.setMessageTypeSms(sendSMS);
+					messageDetailBean.setSendToParent(sendToParent);
+					messageDetailBean.setSendToStudent(sendToStudent);
+					if(messageDetailBean.getStudentPhone()!= null && messageDetailBean.isSendToStudent() && messageDetailBean.getStudentPhone()!= 0){
+						msgCounter ++;
+					}
+					if(messageDetailBean.getParentPhone()!= null && messageDetailBean.isSendToParent() && messageDetailBean.getParentPhone()!= 0){
+						msgCounter ++;
+					}
+					if((messageDetailBean.getStudentPhone()== null || messageDetailBean.getStudentPhone()== 0) && messageDetailBean.isSendToStudent() ){
+						studentsWithoutPhone ++ ;
+					}
+					if((messageDetailBean.getParentPhone()== null || messageDetailBean.getParentPhone()== 0) && messageDetailBean.isSendToParent()){
+						parentsWithoutPhone ++;
+					}
+					
+					if((messageDetailBean.getStudentEmail()== null || "".equals(messageDetailBean.getStudentEmail())) && messageDetailBean.isSendToStudent() ){
+						studentsWithoutEmail ++;
+					}
+					if((messageDetailBean.getParentEmail()== null || "".equals(messageDetailBean.getParentEmail())) && messageDetailBean.isSendToParent()){
+						parentsWithoutEmail ++;
+					}
+					messageDetailBean.setEmailMessage(msg);
+					messageDetailBean.setEmailObject(null);
+					messageDetailBean.setParentEmailMessage(null);
+					messageDetailBean.setParentEmailObject(null);
+					
+					messageDetailBean.setSmsMessage(msg);
+					messageDetailBean.setSmsObject(null);
+					messageDetailBean.setSmsParentMessage(msg);
+					messageDetailBean.setSmsParentObject(null);
+					messageDetailBean.setSmsType(Constants.PRAMOTIONAL);
+					detailBeans.add(messageDetailBean);
+			}
+			NotifcationAccess notifcationAccess = new NotifcationAccess();
+			if(settings.getClassOwnerNotificationBean().isSmsPaymentDue()){
+			SmsNotificationTransaction  notificationTransaction = new SmsNotificationTransaction();
+			statusMap = notificationTransaction.validateNSendSms(msgCounter, "", inst_id,Constants.COMMON_ZERO,Constants.COMMON_ZERO,Constants.PARENT_ROLE,Constants.AUTO_DAILY_MSG);;
+			if(statusMap.containsKey("access") && (boolean)statusMap.get("access")){
+			notifcationAccess.send(detailBeans);
+			ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
+			settingstransaction.reduceSmsCount(msgCounter, institute.getRegId());
+			}else{
+				status = (String) statusMap.get("status");
+			}
+			}else{
+			notifcationAccess.send(detailBeans);
+			}
+		}else{
+			status = "Students not available in batch";	
+		}	
+		}else{
+			statusMap.put("status", status);
+		}
+		statusMap.put("status", status);
+		statusMap.put("parentsWithoutEmail", parentsWithoutEmail);
+		statusMap.put("parentsWithoutPhone", parentsWithoutPhone);
+		statusMap.put("studentsWithoutEmail", studentsWithoutEmail);
+		statusMap.put("studentsWithoutPhone", studentsWithoutPhone);
+		statusMap.put("totalStudents", totalStudents);
+		return statusMap;
+	}
+
+	public HashMap sendTextTeacher(int inst_id,
+			boolean sendEmail, boolean sendSMS, String msg,List<Integer> teacherIds){
+		int teachersWithoutEmail = 0;
+		int teachersWithoutPhone = 0;
+		int totalTeachersSelected = teacherIds.size();
+		ClassownerSettingstransaction settingsTx = new ClassownerSettingstransaction();
+ 		ClassownerSettingsNotification settings = settingsTx.getSettings(inst_id);
+		HashMap statusMap = new HashMap<>();
+		String status = "";
+		if(sendSMS == true && settings.getInstituteStats().isSmsAccess()==false){
+			status = "You don't have SMS access";
+		}
+		if(sendEmail == true && settings.getInstituteStats().isEmailAccess() == false){
+			if("".equals(status)){
+				status = "You don't have Email access";
+			}else{
+				status = status + "and Email access";
+			}
+		}
+		if("".equals(status)){
+		StudentDB studentDB = new StudentDB();
+		RegisterDB db =new RegisterDB();
+		FeesDB feesDB = new FeesDB();
+		RegisterBean institute =db.getRegistereduser(inst_id);
+		List<RegisterBean> list =  db.getTeacherName(teacherIds);
+		List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
+		int msgCounter = 0;
+			for (RegisterBean bean : list) {
+					MessageDetailBean messageDetailBean = new MessageDetailBean();
+					messageDetailBean.setFrom(institute.getClassName());
+					messageDetailBean.setEmailSubject("Alert");
+					messageDetailBean.setTeacherEmail(bean.getEmail());
+					if (!"".equals(bean.getPhone1())) {
+						messageDetailBean.setTeacherPhone(Long.parseLong(bean.getPhone1()));
+					}else{
+						messageDetailBean.setTeacherPhone(0l);
+					}
+				
+					messageDetailBean.setMessageTypeEmail(sendEmail);
+					messageDetailBean.setMessageTypeSms(sendSMS);
+					messageDetailBean.setSendToTeacher(true);
+					if(messageDetailBean.getTeacherPhone()!= null && messageDetailBean.isSendToStudent() && messageDetailBean.getTeacherPhone()!= 0){
+						msgCounter ++;
+					}
+					if((messageDetailBean.getTeacherPhone()== null || messageDetailBean.getTeacherPhone()== 0) && messageDetailBean.isSendToStudent() ){
+						teachersWithoutPhone ++ ;
+					}
+					
+					if((messageDetailBean.getParentEmail()== null || "".equals(messageDetailBean.getParentEmail())) && messageDetailBean.isSendToStudent() ){
+						teachersWithoutEmail ++;
+					}
+					messageDetailBean.setTeacherEmailMessage(msg);
+					messageDetailBean.setTeacherEmailObject(null);
+					
+					messageDetailBean.setSmsTeacherMessage(msg);
+					messageDetailBean.setSmsTeacherObject(null);
+	
+					messageDetailBean.setSmsType(Constants.PRAMOTIONAL);
+					detailBeans.add(messageDetailBean);
+			}
+			NotifcationAccess notifcationAccess = new NotifcationAccess();
+			if(settings.getClassOwnerNotificationBean().isSmsPaymentDue()){
+			SmsNotificationTransaction  notificationTransaction = new SmsNotificationTransaction();
+			statusMap = notificationTransaction.validateNSendSms(msgCounter, "", inst_id,Constants.COMMON_ZERO,Constants.COMMON_ZERO,Constants.PARENT_ROLE,Constants.AUTO_DAILY_MSG);;
+			if(statusMap.containsKey("access") && (boolean)statusMap.get("access")){
+			notifcationAccess.send(detailBeans);
+			ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
+			settingstransaction.reduceSmsCount(msgCounter, institute.getRegId());
+			}else{
+				status = (String) statusMap.get("status");
+			}
+			}else{
+			notifcationAccess.send(detailBeans);
+			}
+		}else{
+			statusMap.put("status", status);
+		}
+		statusMap.put("status", status);
+		statusMap.put("teachersWithoutEmail", teachersWithoutEmail);
+		statusMap.put("teachersWithoutPhone", teachersWithoutPhone);
+		statusMap.put("totalTeachers", totalTeachersSelected);
+		return statusMap;
+	}
 	
 }

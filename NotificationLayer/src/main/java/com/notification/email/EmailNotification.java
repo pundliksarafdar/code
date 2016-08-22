@@ -31,6 +31,10 @@ public class EmailNotification implements iNotify{
 			message = formatter.formatParentMessage(messageDetailBean, NotificationEnum.MessageType.EMAIL);
 			this.sendEmail(messageDetailBean.getParentEmail(), message, messageDetailBean.getEmailSubject(),messageDetailBean.getFrom());
 		}
+		
+		if(messageDetailBean.isSendToTeacher()){
+			this.sendEmail(messageDetailBean.getTeacherEmail(), message, messageDetailBean.getEmailSubject(),messageDetailBean.getFrom());
+		}
 		return null;
 	}
 	

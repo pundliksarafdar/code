@@ -1,9 +1,11 @@
 package com.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.ws.rs.Consumes;
@@ -74,6 +76,53 @@ public class NotificationServiceImpl extends ServiceBase{
 		        .map(Integer::parseInt)
 		        .collect(Collectors.toList());
 		HashMap statusMap = helper.sendFeesDue(getRegId(), div_id, batch_id, studntIdList,email,sms,parent,student);
+		return Response.status(Status.OK).entity(statusMap).build();
+	}
+	
+	@POST @Path("/sendText") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
+	public Response sendText(SendNotificationMesssageBean bean){
+		NotificationServiceHelper helper = new NotificationServiceHelper();
+		int div_id = Integer.parseInt(bean.getDivisionSelect());
+		int batch_id = Integer.parseInt(bean.getBatchSelect());
+		boolean sms = false;
+		boolean email = false;
+		boolean parent =  false;
+		boolean student = false;
+		for(String messageType:bean.getMessageTypeTOST()){
+			if(messageType.equals("email")){
+				email = true;
+			}
+			if(messageType.equals("sms")){
+				sms = true;
+			}
+		}
+		for(String messageType:bean.getSendTo()){
+			if(messageType.equals("parent")){
+				parent = true;
+			}
+			if(messageType.equals("student")){
+				student = true;
+			}
+		}
+		HashMap statusMap = helper.sendText(getRegId(), div_id, batch_id,email,sms,parent,student,bean.getMessage());
+		return Response.status(Status.OK).entity(statusMap).build();
+	}
+	
+	@POST @Path("/sendTextTeacher") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON)
+	public Response sendTextTeacher(SendNotificationMesssageBean bean){
+		NotificationServiceHelper helper = new NotificationServiceHelper();
+		boolean sms = false;
+		boolean email = false;
+		for(String messageType:bean.getMessageType()){
+			if(messageType.equals("email")){
+				email = true;
+			}
+			if(messageType.equals("sms")){
+				sms = true;
+			}
+		}
+		List<Integer> list =Arrays.asList(bean.getTeacher());
+		HashMap statusMap = helper.sendTextTeacher(getRegId(),email,sms,bean.getMessage(),list);
 		return Response.status(Status.OK).entity(statusMap).build();
 	}
 }

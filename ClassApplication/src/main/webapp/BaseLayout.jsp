@@ -31,7 +31,7 @@ response.setHeader("Expires", "0");
 <link href="https://cdn.datatables.net/fixedcolumns/3.2.1/css/fixedColumns.dataTables.min.css" rel="stylesheet">
 <link href="css/select2.min.css" rel="stylesheet" />
 <link href="js/summernote/summernote.css" rel="stylesheet">
-    	
+<link href="css/typeahead.css" rel="stylesheet" />  	
 <link rel="icon" 
       type="image/jpeg" 
       href="images/cxlogowhite.jpg">
@@ -188,7 +188,8 @@ a.floatButton>div{
 <script src="js/mustache.min.js"></script>
 <script src='js/view/<c:out value="${request.actionName}"></c:out>.js'></script>
 <script src="js/summernote/summernote.js"></script>
-		<script src="js/summernote-ext-print.js"></script>
+<script src="js/summernote-ext-print.js"></script>
+<script src="js/typeahead.js"></script>
 <script>
 var eventOccuredSience;
 $( document ).ajaxStart(function() {
@@ -333,7 +334,7 @@ function storeMenuSelected(){
 			</div>
 			<div id="footer" style="background-color: black;color: white;" align="center">
 				<tiles:insertAttribute name="footer" />		
-				© 2016 Corex. All rights reserved
+				© 2016 Classfloor. All rights reserved
 			</div>
 		</div>
 	</div>

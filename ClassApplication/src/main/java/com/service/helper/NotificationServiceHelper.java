@@ -218,4 +218,16 @@ public class NotificationServiceHelper {
 		NotificationImpl notificationImpl = new NotificationImpl();
 		return notificationImpl.sendFeesDueNotification(inst_id, div_id,batch_id,studentIDList,sendEmail,sendSMS,sendToParent,sendToStudent);
 	}
+	
+	public HashMap sendText(int inst_id,int div_id,int batch_id,
+			boolean sendEmail, boolean sendSMS, boolean sendToParent, boolean sendToStudent,String msg ){
+		NotificationImpl notificationImpl = new NotificationImpl();
+		return notificationImpl.sendText(inst_id, div_id,batch_id,sendEmail,sendSMS,sendToParent,sendToStudent,msg);
+	}
+	
+	public HashMap sendTextTeacher(int inst_id,
+			boolean sendEmail, boolean sendSMS, String msg,List<Integer> teacherIds){
+		NotificationImpl notificationImpl = new NotificationImpl();
+		return notificationImpl.sendTextTeacher(inst_id,sendEmail,sendSMS,msg,teacherIds);
+	}
 }

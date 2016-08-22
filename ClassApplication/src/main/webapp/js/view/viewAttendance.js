@@ -301,7 +301,11 @@ function createMonthlyAttendanceScheduleTable(data,start,end){
 		for(j=0;j<presenteeDates.length;j++){
 			while(counter<=end){
 			if(new Date(presenteeDates[j]).getDate() == counter){
+				if(data[i].daily_presentee_percentange[j] != null){
 				hString = hString + "<td style='color:green'>"+data[i].daily_presentee_percentange[j]+"</td>";
+				}else{
+					hString = hString + "<td style='color:green'>0</td>";	
+				}
 				counter++;
 				break;
 			}else{
@@ -361,7 +365,11 @@ function createWeeklyAttendanceScheduleTable(data,weekDays){
 		for(j=0;j<presenteeDates.length;j++){
 			while(counter<=6){
 			if(new Date(presenteeDates[j]).getDate() == weekDays[counter].getDate()){
+				if(data[i].daily_presentee_percentange[j] != null){
 				hString = hString + "<td style='color:green'>"+data[i].daily_presentee_percentange[j]+"</td>";
+				}else{
+					hString = hString + "<td style='color:green'>0</td>";	
+				}
 				counter++;
 				break;
 			}else{

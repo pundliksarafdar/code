@@ -1,7 +1,8 @@
 (function(){
 	var getTeacherListUrl = "/rest/classownerservice/teacher";
 	var getBatchUrl = "/rest/classownerservice/getBatches/";
-	var postnotificationUrl = "rest/notification/send";
+	var postnotificationUrl = "rest/notification/sendText";
+	var postnotificationTeacherUrl = "rest/notification/sendTextTeacher";
 	
 	var BATCH_SELECT = "#batchSelect";
 	var SEND_TO_TEACHER = "#sendMessageToTeacher";
@@ -83,6 +84,8 @@
 	}
 	
 	function sendToTeacher(){
+			$("#teacherNotificationSummary").empty();
+			$("#teacherNotificationSummary").hide();
 			$(".error").html("");
 			var flag = true;
 			if($('select#teachers').val() == null){
@@ -123,24 +126,51 @@
 		notificationObject.messageTypeTOST = [];//Array
 		
 		var handler = {};
-		handler.success = function(e){
+		handler.success = function(response){
 			var message = "Notification send successfully";
 			var type = "success";
-			if(e.constructor == Array){
+			/*if(e.constructor == Array){
 				message = e.join("<Br/>");
 				type = "warning";
 			}
-			$.notify({message: message},{type: type});
+			$.notify({message: message},{type: type});*/
+			$("#teacherNotificationSummary").empty();
+			$("#teacherNotificationSummary").show();
+			if(response.status == null || response.status == ""){
+				var totalSMSSent = 0;
+				if($("#selectTeacherMessage #sms").is(":checked")){
+						totalSMSSent = totalSMSSent + (response.totalTeachers-response.teachersWithoutPhone);			
+				}	
+				var totalEmailSent = 0;
+				if($("#selectTeacherMessage #email").is(":checked")){
+						totalEmailSent = totalEmailSent + (response.totalTeachers-response.teachersWithoutEmail);
+				}	
+				$("#teacherNotificationSummary").append("<div class='row'><div class='col-md-3'>Total teachers selected :"+response.totalTeachers+"</div>" +
+						"<div class='col-md-2'>Total SMS Sent:"+totalSMSSent+"</div>" +
+						"<div class='col-md-2'>Total Email Sent:"+totalEmailSent+"</div>" +
+						"<a data-toggle='collapse' data-target='.a' style='cursor:pointer'>[ view details ]</a></div>");
+				if($("#selectTeacherMessage #sms").is(":checked")){
+						$("#teacherNotificationSummary").append("<div class='row collapse a'><div class='col-md-4'>SMS sent :"+(response.totalTeachers-response.teachersWithoutPhone)+"</div>" +
+								"<div class='col-md-4'>Teachers without phone no :"+response.teachersWithoutPhone+"</div></div>");
+				}
+				if($("#selectTeacherMessage #email").is(":checked")){
+						$("#teacherNotificationSummary").append("<div class='row collapse a'><div class='col-md-4'>Email sent :"+(response.totalTeachers-response.teachersWithoutEmail)+"</div>" +
+								"<div class='col-md-4'>Teachers without Email ID :"+response.teachersWithoutEmail+"</div></div>");
+				}
+				/*$.notify({message: "Notification sent successfully"},{type: 'success'});*/
+			}else{
+				$.notify({message: response.status},{type: 'danger'});
+			}
 		}
 		handler.error = function(e){
-			var message = e.responseJSON.join("<Br/>");
-			
-			$.notify({message: message},{type: 'danger'});
+			$.notify({message: "Error"},{type: 'danger'});
 		}
-		rest.post(postnotificationUrl,handler,JSON.stringify(notificationObject),true);
+		rest.post(postnotificationTeacherUrl,handler,JSON.stringify(notificationObject),true);
 	}
 	
 	function sendToStuNPar(){
+		$("#studentNotificationSummary").empty();
+		$("#studentNotificationSummary").hide();
 		$(".error").html("");
 		var flag = true;
 		if($(STUDENT_N_PARENT_FORM).find('[name="sendTo"]:checked').length == 0){
@@ -197,19 +227,66 @@
 		notificationObject.batchSelect = $("#batchSelect").val();
 	
 		var handler = {};
-		handler.success = function(e){
+		handler.success = function(response){
 			var message = "Notification send successfully";
 			var type = "success";
-			if(e.constructor == Array){
+			/*if(e.constructor == Array){
 				message = e.join("<Br/>");
 				type = "warning";
 			}
-			$.notify({message: message},{type: type});
+			$.notify({message: message},{type: type});*/
+			$("#studentNotificationSummary").empty();
+			$("#studentNotificationSummary").show();
+			if(response.status == null || response.status == ""){
+				var totalSMSSent = 0;
+				if($("#smstostdnparent").is(":checked")){
+					if($("#sendToStudent").is(":checked")){
+						totalSMSSent = totalSMSSent + (response.totalStudents-response.studentsWithoutPhone);
+					}
+					if( $("#sendToParent").is(":checked")){
+						totalSMSSent = totalSMSSent + (response.totalStudents-response.parentsWithoutPhone);
+					}
+				}	
+				var totalEmailSent = 0;
+				if($("#emailtostdnparent").is(":checked")){
+					if($("#sendToStudent").is(":checked")){
+						totalEmailSent = totalEmailSent + (response.totalStudents-response.studentsWithoutEmail);
+					}
+					if( $("#sendToParent").is(":checked")){
+						totalEmailSent = totalEmailSent + (response.totalStudents-response.parentsWithoutEmail);
+					}
+				}	
+				$("#studentNotificationSummary").append("<div class='row'><div class='col-md-3'>No of students in batch :"+response.totalStudents+"</div>" +
+						"<div class='col-md-2'>Total SMS Sent:"+totalSMSSent+"</div>" +
+						"<div class='col-md-2'>Total Email Sent:"+totalEmailSent+"</div>" +
+						"<a data-toggle='collapse' data-target='.a' style='cursor:pointer'>[ view details ]</a></div>");
+				if($("#smstostdnparent").is(":checked")){
+					if($("#sendToStudent").is(":checked")){
+						$("#studentNotificationSummary").append("<div class='row collapse a'><div class='col-md-4'>SMS sent to No of students :"+(response.totalStudents-response.studentsWithoutPhone)+"</div>" +
+								"<div class='col-md-4'>Students without phone no :"+response.studentsWithoutPhone+"</div></div>")
+					}
+					if( $("#sendToParent").is(":checked")){
+						$("#studentNotificationSummary").append("<div class='row collapse a'><div class='col-md-4'>SMS sent to No of parents :"+(response.totalStudents-response.parentsWithoutPhone)+"</div>" +
+								"<div class='col-md-4'>Parents without phone no :"+response.parentsWithoutPhone+"</div></div>")
+					}
+				}
+				if($("#emailtostdnparent").is(":checked")){
+					if($("#sendToStudent").is(":checked")){
+						$("#studentNotificationSummary").append("<div class='row collapse a'><div class='col-md-4'>Email sent to No of students :"+(response.totalStudents-response.studentsWithoutEmail)+"</div>" +
+								"<div class='col-md-4'>Students without Email ID :"+response.studentsWithoutEmail+"</div></div>")
+					}
+					if( $("#sendToParent").is(":checked")){
+						$("#studentNotificationSummary").append("<div class='row collapse a'><div class='col-md-4'>Email sent to No of parents :"+(response.totalStudents-response.parentsWithoutEmail)+"</div>" +
+								"<div class='col-md-4'>Parents without Email ID :"+response.parentsWithoutEmail+"</div></div>")
+					}
+				}
+				/*$.notify({message: "Notification sent successfully"},{type: 'success'});*/
+			}else{
+				$.notify({message: response.status},{type: 'danger'});
+			}
 		}
 		handler.error = function(e){
-			var message = e.responseJSON.join("<Br/>");
-			
-			$.notify({message: message},{type: 'danger'});
+			$.notify({message: "Error"},{type: 'danger'});
 		}
 	
 		rest.post(postnotificationUrl,handler,JSON.stringify(notificationObject),true);

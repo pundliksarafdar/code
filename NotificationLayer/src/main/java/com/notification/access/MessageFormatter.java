@@ -13,7 +13,7 @@ public class MessageFormatter {
 	public String formatMessage(MessageDetailBean messageDetailBean,NotificationEnum.MessageType messageType) {
 		
 		if(NotificationEnum.MessageType.SMS.equals(messageType)){
-			if(messageDetailBean.getSmsMessage() != null && messageDetailBean.getSmsMessage().trim().length() == 0){
+			if(messageDetailBean.getSmsMessage() != null && messageDetailBean.getSmsMessage().trim().length() > 0){
 				return messageDetailBean.getSmsMessage();
 			}else{
 				String templates =  messageDetailBean.getSmsTemplate();
@@ -71,7 +71,7 @@ public class MessageFormatter {
 public String formatParentMessage(MessageDetailBean messageDetailBean,NotificationEnum.MessageType messageType) {
 		
 		if(NotificationEnum.MessageType.SMS.equals(messageType)){
-			if(messageDetailBean.getSmsMessage() != null && messageDetailBean.getSmsMessage().trim().length() == 0){
+			if(messageDetailBean.getSmsMessage() != null && messageDetailBean.getSmsMessage().trim().length() > 0){
 				return messageDetailBean.getSmsMessage();
 			}else{
 				String templates =  messageDetailBean.getSmsParentTemplate();

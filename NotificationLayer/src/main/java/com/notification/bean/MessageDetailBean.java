@@ -14,12 +14,18 @@ public class MessageDetailBean {
 	String parentPhoneId;
 	String parentPhoneType;
 	
+	String teacherEmail;
+	Long teacherPhone;
+	String teacherPhoneId;
+	String teacherPhoneType;
+	
 	boolean messageTypeSms;
 	boolean messageTypeEmail;
 	boolean messageTypePush;
 	
 	boolean sendToStudent;
 	boolean sendToParent;
+	boolean sendToTeacher;
 	
 	//if message is null parse template and object 
 	String smsMessage;
@@ -43,8 +49,15 @@ public class MessageDetailBean {
 	String pushMessage;
 	String pushTemplate;
 	Object pushObject;
+	String smsType;
 	
+	String teacherEmailMessage;
+	String teacherEmailTemplate;
+	Object teacherEmailObject;
 	
+	String smsTeacherMessage;
+	String smsTeacherTemplate;
+	Object smsTeacherObject;
 	public String getFrom() {
 		return from;
 	}
@@ -230,6 +243,78 @@ public class MessageDetailBean {
 	}
 	public void setSmsParentObject(Object smsParentObject) {
 		this.smsParentObject = smsParentObject;
+	}
+	public String getSmsType() {
+		return smsType;
+	}
+	public void setSmsType(String smsType) {
+		this.smsType = smsType;
+	}
+	public boolean isSendToTeacher() {
+		return sendToTeacher;
+	}
+	public void setSendToTeacher(boolean sendToTeacher) {
+		this.sendToTeacher = sendToTeacher;
+	}
+	public String getTeacherEmailMessage() {
+		return teacherEmailMessage;
+	}
+	public void setTeacherEmailMessage(String teacherEmailMessage) {
+		this.teacherEmailMessage = teacherEmailMessage;
+	}
+	public String getTeacherEmailTemplate() {
+		return teacherEmailTemplate;
+	}
+	public void setTeacherEmailTemplate(String teacherEmailTemplate) {
+		this.teacherEmailTemplate = teacherEmailTemplate;
+	}
+	public Object getTeacherEmailObject() {
+		return teacherEmailObject;
+	}
+	public void setTeacherEmailObject(Object teacherEmailObject) {
+		this.teacherEmailObject = teacherEmailObject;
+	}
+	public String getSmsTeacherMessage() {
+		return smsTeacherMessage;
+	}
+	public void setSmsTeacherMessage(String smsTeacherMessage) {
+		this.smsTeacherMessage = smsTeacherMessage;
+	}
+	public String getSmsTeacherTemplate() {
+		return smsTeacherTemplate;
+	}
+	public void setSmsTeacherTemplate(String smsTeacherTemplate) {
+		this.smsTeacherTemplate = smsTeacherTemplate;
+	}
+	public Object getSmsTeacherObject() {
+		return smsTeacherObject;
+	}
+	public void setSmsTeacherObject(Object smsTeacherObject) {
+		this.smsTeacherObject = smsTeacherObject;
+	}
+	public String getTeacherEmail() {
+		return teacherEmail;
+	}
+	public void setTeacherEmail(String teacherEmail) {
+		this.teacherEmail = teacherEmail;
+	}
+	public Long getTeacherPhone() {
+		return teacherPhone;
+	}
+	public void setTeacherPhone(Long teacherPhone) {
+		this.teacherPhone = teacherPhone;
+	}
+	public String getTeacherPhoneId() {
+		return teacherPhoneId;
+	}
+	public void setTeacherPhoneId(String teacherPhoneId) {
+		this.teacherPhoneId = teacherPhoneId;
+	}
+	public String getTeacherPhoneType() {
+		return teacherPhoneType;
+	}
+	public void setTeacherPhoneType(String teacherPhoneType) {
+		this.teacherPhoneType = teacherPhoneType;
 	}
 	
 	

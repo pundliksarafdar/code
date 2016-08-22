@@ -4,31 +4,38 @@
  
 <hibernate-mapping>
     <class name="com.classapp.db.Schedule.Schedule" table="schedule" catalog="classdb">	
-		<id name="schedule_id" type="java.lang.Integer">
+		<!-- <id name="schedule_id" type="java.lang.Integer">
             <column name="schedule_id" />
             <generator class="identity" />
-        </id>
-        <property name="div_id" type="java.lang.Integer">
+        </id>-->
+        <composite-id> 
+    	<key-property name="inst_id" column="inst_id"></key-property>
+		<key-property name="div_id" column="div_id"></key-property>
+		<key-property name="batch_id" column="batch_id"></key-property>
+		<key-property name="date" column="schedule_dt"></key-property>
+		<key-property name="schedule_id" column="schedule_id"></key-property>
+    	</composite-id>
+       <!--  <property name="div_id" type="java.lang.Integer">
             <column name="div_id" not-null="false" unique="false" />
         </property>  
         <property name="batch_id" type="java.lang.Integer">
             <column name="batch_id" not-null="false" unique="false" />
-        </property> 
+        </property> --> 
         <property name="teacher_id" type="java.lang.Integer">
             <column name="teacher_id" not-null="false" unique="false" />
         </property>   
         <property name="start_time" type="java.sql.Time">
             <column name="start_time" not-null="false" unique="false" />
         </property>
-         <property name="date" type="java.sql.Date">
+        <!--  <property name="date" type="java.sql.Date">
             <column name="schedule_dt" not-null="false" unique="false" />
-        </property>  
+        </property>   -->
          <property name="end_time" type="java.sql.Time">
             <column name="end_time" not-null="false" unique="false" />
         </property>  
-        <property name="inst_id" type="java.lang.Integer">
+       <!--  <property name="inst_id" type="java.lang.Integer">
             <column name="inst_id" not-null="false" unique="false" />
-        </property>
+        </property> -->
         <property name="sub_id" type="java.lang.Integer">
             <column name="sub_id" not-null="false" unique="false" />
         </property>
