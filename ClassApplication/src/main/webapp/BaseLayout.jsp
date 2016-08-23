@@ -159,6 +159,8 @@ a.floatButton>div{
 <script type="text/javascript" async
   src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_CHTML">
 </script>
+<!-- remove this -->
+<script src="js/httpsredirection.js"></script>
 <script src="js/allAjax.js"></script>
 <script src="js/main.js"></script>
 <script src="js/bootstrap.min.js"></script>
