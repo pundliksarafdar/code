@@ -68,7 +68,8 @@ padding-top: 2px;
 		});
 		
 		$("#subjectiveQuestion").addExpresssion();
-		
+		$("#objectiveQuestion").addExpresssion();
+		$("#paragraph").addExpresssion();
 		if($("#quesstatus").val() == "success"){
 			$.notify({message: "Question successfuly added"},{type: 'success'});
 			$("#subjectSelect").prop("disabled",false);

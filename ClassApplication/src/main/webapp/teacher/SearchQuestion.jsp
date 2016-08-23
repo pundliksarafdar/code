@@ -56,7 +56,7 @@ $(document).ready(function(){
 		subId = $("#editQuestionForm").find("#subject").val();
 		subject = subId;
 		questionType = $("#editQuestionForm").find("#questiontype").val();
-		$("#searchQuestionType").select2().val(questionType).change();
+		$("#searchQuestionType").select2().val(questionType).change(false);
 		topic = $("#editQuestionForm").find("#topicID").val();
 		currentPage = $("#editQuestionForm").find("#currentPage").val();
 		totalPages = $("#editQuestionForm").find("#totalPages").val();
@@ -301,7 +301,7 @@ $("#searchQuestionDivision").on("change",function(e){
 	*/
 	if(subId!=-1){
 		$("#instituteSelect").val(instId).trigger("change");
-		$("#searchQuestionType").val(questionType);
+		$("#searchQuestionType").select2().val(questionType).change();
 	}
 	
 	

@@ -97,7 +97,7 @@ public class UserStatic {
 		this.headerPath = headerPath;
 	}
 	public String getNotesPath(int sub_id,int div_id) {
-		return this.storageSpace+File.separator+"notes"+File.separator+sub_id+File.separator+div_id;
+		return this.storageSpace+File.separator+"notes"+File.separator+div_id+File.separator+sub_id;
 	}
 	public ClassownerSettingsNotification getSettings() {
 		return settings;

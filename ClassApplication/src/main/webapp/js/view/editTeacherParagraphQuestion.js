@@ -53,7 +53,7 @@ function loadParaquestion(data,queId){
 	var images = "";
 	for(var index=0;index<data.images.length;index++){
 		//images = images + "<img src=/rest/commonservices/image/"+data.primaryImage[index]+" width='200px' height='200px'>";
-		var imgTag = "<img src='/rest/teacher/image/examImage_paragraph_"+queId+"_paragraph_"+data.images[index]+"/"+inst_id+"' width='200px' height='200px' />";
+		var imgTag = "<img src='/rest/teacher/image/examImage_paragraph_"+data.classId+"_"+data.subjectId+"_"+queId+"_paragraph_"+data.images[index]+"/"+inst_id+"' width='200px' height='200px' />";
 		var hiddenTag = "<input type='hidden' name='objectQuestionImage' class='paraOptionImage' value='{{questionImage}}' />";
 		var closeButton = '<button type="button" class="answer_image_with_btn_remove close" aria-hidden="true">&times;</button>';
 		var imageColElement = "<div class='col-sm-3 image_with_btn'>"+closeButton+hiddenTag+imgTag+"</div>"
@@ -64,7 +64,7 @@ function loadParaquestion(data,queId){
 	$("#paraQuestionImage").append(images);
 	
 	/*Create paragraph questions*/
-	addParaQuestion(data.paraQuestion,queId);
+	addParaQuestion(data.paraQuestion,queId,data.classId,data.subjectId);
 }
 
 function getImageId(url){
@@ -72,7 +72,7 @@ function getImageId(url){
 	return url.slice(lastIndex+1);
 }
 
-function addParaQuestion(paraQuestion,queId){
+function addParaQuestion(paraQuestion,queId,div,sub){
 	for(var index=0;index<paraQuestion.length;index++){
 		var paraTmpl = $(PARA_QUESTION_TMPL).clone();
 		paraTmpl.find("#paraQuestion").val(paraQuestion[index].questionText);
@@ -80,7 +80,7 @@ function addParaQuestion(paraQuestion,queId){
 		var images = "";
 		for(var indexInner=0;indexInner < paraQuestion[index].queImage.length;indexInner++){
 			//images = images + "<img src=/rest/commonservices/image/"+data.primaryImage[index]+" width='200px' height='200px'>";
-			var imgTag = "<img src='/rest/teacher/image/examImage_paragraph_"+queId+"_paragraphQuestions_"+index+"_"+paraQuestion[index].queImage[indexInner]+"/"+inst_id+"' width='200px' height='200px' />";
+			var imgTag = "<img src='/rest/teacher/image/examImage_paragraph_"+div+"_"+sub+"_"+queId+"_paragraphQuestions_"+index+"_"+paraQuestion[index].queImage[indexInner]+"/"+inst_id+"' width='200px' height='200px' />";
 			var hiddenTag = "<input type='hidden' name='objectQuestionImage' class='paraQuestionImage' value='{{questionImage}}' />";
 			var closeButton = '<button type="button" class="answer_image_with_btn_remove close" aria-hidden="true">&times;</button>';
 			var imageColElement = "<div class='col-sm-3 image_with_btn'>"+closeButton+hiddenTag+imgTag+"</div>"

@@ -253,7 +253,7 @@ $("#searchQuestionType").change(function(){
 	*/
 	if(subId!=-1){
 		$("#searchQuestionDivision").val(divId).trigger("change");
-		$("#searchQuestionType").val(questionType);
+		$("#searchQuestionType").select2().val(questionType).change();
 	}
 	
 	
