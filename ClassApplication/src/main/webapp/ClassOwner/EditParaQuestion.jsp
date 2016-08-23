@@ -94,7 +94,7 @@
 	<form action="searchQuestion" method="post" id="searchQuestion">
 		<input type="hidden" value="<c:out value="${division}"></c:out>" name="classId"/>
 		<input type="hidden" value="<c:out value="${subject}"></c:out>" name="subId"/>
-		<input type="hidden" value="1" name="questionType"/>
+		<input type="hidden" value="<c:out value="${questiontype}"></c:out>" name="questionType"/>
 		
 	</form>
 </div>

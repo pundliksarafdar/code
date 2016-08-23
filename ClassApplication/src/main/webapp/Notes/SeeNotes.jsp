@@ -281,7 +281,6 @@ $(document).ready(function(){
 					autoWidth: false,
 					bDestroy:true,
 					data: data,
-					lengthChange: false,
 					columns: [
 						{title:"#",data:null,width:"10%"},
 						{ title: "Name",data:null,render:function(data,event,row){

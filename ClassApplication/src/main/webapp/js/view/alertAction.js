@@ -17,6 +17,7 @@
 		
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 			$("select").select2();
+			$("#examSelect").select2({allowClear: true,placeholder:"Select Exam"}); 
 		});
 		
 		$("#divisionSelect").on("change",function(e){
@@ -39,7 +40,8 @@
 		
 		$(SEND_TO_TEACHER).on("click",sendToTeacher);
 		$(SEND_TO_STU_PAR).on("click",sendToStuNPar);
-		$("select").select2();
+		/*$("select").select2();*/
+		/*$("#examSelect").select2({placeholder:"Select Exam"});*/
 	});
 	
 	function loadBatchOfDiv(data){

@@ -989,7 +989,7 @@ public class TeacherServiceImpl extends ServiceBase {
 		
 		if(questionbank.getQue_type().equals("3")){
 			UserBean userBean = getUserBean();
-			String questionPath=com.config.Constants.STORAGE_PATH+File.separatorChar+inst_id+File.separatorChar+"exam"+File.separatorChar+"paragraph"+File.separatorChar+questionbank.getQue_id();
+			String questionPath=com.config.Constants.STORAGE_PATH+File.separatorChar+inst_id+File.separatorChar+"exam"+File.separatorChar+"paragraph"+File.separatorChar+div_id+File.separatorChar+sub_id+File.separatorChar+questionbank.getQue_id();
 			ParaQuestionBean paraQuestionBean = (ParaQuestionBean) readObject(new File(questionPath));
 			
 			return Response.ok(paraQuestionBean).build();
