@@ -15,6 +15,10 @@
         <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="css/hexagon.css">
         <style>
+        	.blockHref{
+        		padding-top: 5%;
+        	}
+        
         	#imagePlaceholder{
         		width: 130px;height: 130px;BORDER-RADIUS: 100%;padding: 20px;margin: auto;
         	}
@@ -42,7 +46,7 @@
     </head>
     <body>
 		<jsp:include page="home_head.html"></jsp:include>
-		<div style="min-height: 80vh;" id="login">
+		<div style="min-height: 80vh;" id="login" class="blockHref">
 		<div class="container">
 		<div class="row">
 		
@@ -185,10 +189,10 @@
 		</div>
 		</div>
 		</div>
-		<section style="margin-top:20px;" id="features">
+		<section style="margin-top:20px;" id="features" class="blockHref">
 			<div id="home-features-tab" class="container"></div>
 		</section>	
-		         <section id="just-intro" style="padding-top: 50px;">
+		         <section id="just-intro" style="padding-top: 50px;" class="blockHref">
              <div class="container">
               
              <div class="row text-center pad-row">
