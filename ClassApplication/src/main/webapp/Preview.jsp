@@ -39,7 +39,7 @@
 body{
     padding-right: 5px;
     padding-left: 5px;
-    font-family: cursive;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     min-height: 525px;
    /* background-color: rgb(141,141,253);*/
      background: linear-gradient(to right, red , blue);

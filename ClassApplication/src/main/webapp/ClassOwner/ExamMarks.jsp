@@ -164,6 +164,8 @@ $(document).ready(function(){
 		 $.notify({message: "Marks Added"},{type: 'success'});
 		 $("#subjectTableDiv").show();
 		 $("#studentTableDiv").hide();
+		 $(".fillMarks[id='"+subject+"']").prop("disabled",true);
+		 $($(".fillMarks[id='"+subject+"']").closest("tr")).find(".marksFillStatus").html("Yes");
 		}
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.post("rest/classownerservice/saveStudentMarks/",handlers,JSON.stringify(dataArray));
@@ -217,9 +219,9 @@ function createExamSubjectTable(data){
 			},sWidth:"20%"},
 			{ title: "Marks Filled",data:null,render:function(data,event,row){
 				if(row.marksFlag == true){
-				return "Yes";
+				return "<div class='marksFillStatus'>Yes</div>";
 				}else{
-				return "No";	
+				return "<div class='marksFillStatus'>No</div>";	
 				}
 			},sWidth:"20%"}
 		]

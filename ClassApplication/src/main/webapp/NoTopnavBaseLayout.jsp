@@ -22,7 +22,7 @@
 body{
     padding-right: 0px;
     padding-left: 0px;
-    font-family: cursive;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
  
  </style>
