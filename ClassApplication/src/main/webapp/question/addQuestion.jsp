@@ -6,13 +6,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 	<html>
 		<style>
-		.select2-container .select2-selection--single{
+		/* .select2-container .select2-selection--single{
 height: 34px;
 }
 
 .select2-container .select2-selection--single .select2-selection__rendered{
 padding-top: 2px;
-}
+} */
 		</style>
 	<body>
 	<script>
@@ -307,7 +307,7 @@ padding-top: 2px;
 		<jsp:param value="active" name="addquestion"/>
 	</jsp:include>
 	<form method="post" action="<c:out value="${forwardAction}" ></c:out>" id="commonSelectForm">
-	<div class="container bs-callout" style="margin-bottom: 5px;background-color: #eee">
+	<div class="well">
 		
 		<div align="center" style="font-size: larger;margin-bottom: 15px"><u><c:out value="${lable}"></c:out></u></div>
 		<input type="hidden" id="quesstatus" name="quesstatus" value='<c:out value="${quesstatus}"></c:out>'>

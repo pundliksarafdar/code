@@ -203,7 +203,7 @@ function getSubjectsInDivision(division){
 		<jsp:param value="active" name="bulkQuestionupload"/>
 </jsp:include>
 <form method="post" action="<c:out value="${forwardAction}" ></c:out>" id="commonSelectForm">
-	<div class="container bs-callout" style="margin-bottom: 5px;background-color: #eee">
+	<div class="well" style="margin-bottom: 5px;background-color: #eee">
 		
 		<div align="center" style="font-size: larger;margin-bottom: 15px"><u><c:out value="${lable}"></c:out></u></div>
 		<div class="row">

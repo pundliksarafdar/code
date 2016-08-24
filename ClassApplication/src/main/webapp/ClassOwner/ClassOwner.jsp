@@ -92,8 +92,8 @@ $(document).ready(function(){
 		*/
 		
 		var remaingSpace = <c:out value="${sessionScope.user.userStatic.remainingSpace}"  default="0"></c:out>;
-		var notesSpace = <c:out value="${sessionScope.user.userStatic.notesSpace}"  default="0"></c:out>;
-		var examSpace = <c:out value="${sessionScope.user.userStatic.examSpace}"  default="0"></c:out>;
+		var usedSpace = <c:out value="${sessionScope.user.userStatic.usedSpace}"  default="0"></c:out>;
+		/* var examSpace = <c:out value="${sessionScope.user.userStatic.examSpace}"  default="0"></c:out>; */
 		var totalSpace = <c:out value="${sessionScope.user.userStatic.totalStorage}"  default="0"></c:out>;
 		
 		var avialableId = <c:out value="${requestScope.instituteStats.avail_ids}" default="0"></c:out>
@@ -107,13 +107,12 @@ $(document).ready(function(){
 					  element: 'classownerStorageGraphCtx',
 					  data: [
 					    {label: "Remaining space", value: remaingSpace.toFixed(0)},
-					    {label: "Notes space", value: notesSpace.toFixed(0)},
-					    {label: "Exam space", value: examSpace.toFixed(0)}
+					    {label: "Used space", value: usedSpace.toFixed(0)}
 					  ],
 					  colors: [
 						'#669900',
-						'#3366FF',
-						'#B2B2B2'
+						'#3366FF'/* ,
+						'#B2B2B2' */
 					  ],
 					  formatter: function (x) { return x + "MB"}
 					});
@@ -131,8 +130,8 @@ $(document).ready(function(){
 					});
 					
 		$("td#classownerStorageTotalSpace").text(totalSpace.toFixed(0)).css("background","#FFD400");
-		$("td#classownerStorageExamSpace").text(examSpace.toFixed(0)).css("background","#B2B2B2");
-		$("td#classownerStorageNotesSpace").text(notesSpace.toFixed(0)).css("background","#3366FF");
+		/* $("td#classownerStorageExamSpace").text(examSpace.toFixed(0)).css("background","#B2B2B2"); */
+		$("td#classownerStorageusedSpace").text(usedSpace.toFixed(0)).css("background","#3366FF");
 		$("td#classownerStorageSpaceLeftSpace").text(remaingSpace.toFixed(0)).css("background","#669900");
 		$("td#userIdTotal").text(allocatedId).css("background","#FFD400");
 		$("td#userIdUsed").text(usedId).css("background","#3366FF");
@@ -215,13 +214,13 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
 									<td colspan="4"> <h4>Storage</h4> </td>
 								</tr>
 								<tr>
-									<td>Total</td><td>Remaining</td><td>Notes</td><td>Exam</td>
+									<td>Total</td><td>Remaining</td><td>Used</td><!-- <td>Exam</td> -->
 								</tr>
 								<tr>
 									<td id="classownerStorageTotalSpace"></td>
 									<td id="classownerStorageSpaceLeftSpace"></td>
-									<td id="classownerStorageNotesSpace"></td>
-									<td  id="classownerStorageExamSpace"></td>
+									<td id="classownerStorageusedSpace"></td>
+									<!-- <td  id="classownerStorageExamSpace"></td> -->
 								</tr>
 							</table>
 						</div>	

@@ -26,9 +26,9 @@ padding-left: 2px;
 <jsp:include page="../ExamHeader.jsp" >
 		<jsp:param value="active" name="createExam"/>
 	</jsp:include>
-<div class="container">
+<div class="">
 <form id="examDataForm">
-		<div class="row well">
+		<div class="row well" style="margin-left: 0%">
 		<div class="row">
 		<div class="col-md-8 errorDiv error">
 		</div>
@@ -82,7 +82,7 @@ padding-left: 2px;
 		</div>
 		</div>
 		</form>
-		<div class="actionOption" style="display: none">
+		<div class="actionOption container" style="display: none">
 		<div class="subjectError error">
 		</div>
 		<div class="row subjectDiv">

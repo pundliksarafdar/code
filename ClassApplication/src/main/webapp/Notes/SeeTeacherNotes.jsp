@@ -15,6 +15,22 @@
     margin-left: 10px;
 }      
 
+#notestable .editEnabled .editable{
+	display:block;
+}
+
+#notestable .editEnabled .default{
+	display:none;
+}
+
+#notestable .editable{
+	display:none;
+}
+
+#notestable .default{
+	display:show;
+}
+
  </style>
 <script type="text/javascript">
 var divisionTempData = {};
@@ -210,7 +226,14 @@ $(document).ready(function(){
 	    $('#notestable').on('click', '.edit', function () {
 	        var tr = $(this).closest('tr');
 	        var table = $('#notestable').DataTable();
-	        var row = table.row( tr );
+	        tr.find(".error").html("");
+	        tr.find(".editBatches").select2({data:batchDataArray,placeholder:"Select Batch"});
+	        if(tr.find(".preBatches").val() != ""){
+	        	 tr.find(".editBatches").select2().val(tr.find(".preBatches").val().split(",")).change();
+	        }
+	        tr.find(".editNotesName").val(tr.find(".defaultNotesName").html());
+	       tr.addClass("editEnabled");
+	       /*  var row = table.row( tr );
 	 
 	        if ( row.child.isShown() ) {
 	            // This row is already open - close it
@@ -222,8 +245,8 @@ $(document).ready(function(){
 	            row.child( format(row.data()) ).show();
 	            tr.addClass('shown');
 	            var selectedbatch = row.data().batch.split(",");
-	            $(tr.next("tr")).find("select").select2({data:batchDataArray,placeholder:"Select Batches"}).val(selectedbatch).change();
-	        }
+	            $(tr.next("tr")).find("select").select2({data:batchDataArray,placeholder:"Select Batches"}).val(selectedbatch).change(); 
+	        }*/
 	    } );
 	$("#division").on("change",function(e){
 		$("#notesdiv").hide();
@@ -307,18 +330,39 @@ $(document).ready(function(){
 					data: data,
 					lengthChange: false,
 					columns: [
-						{title:"#",data:null},
-						{ title: "Name",data:null,render:function(data,event,row){
-							return "<div class='defaultName'>"+row.name+"</div>";
-						},sWidth:"70%"},
-						{ title: "Action",data:null,render:function(data,event,row){
-							return "<input type='hidden' class='notesname' value='"+row.name+"'>"+
+								{title:"#",data:null,width:"10%"},
+								{ title: "Name",data:null,render:function(data,event,row){
+									var defaultName = "<div class='defaultNotesName default'>"+row.name+"</div>";
+									var editName = "<div class=' editable'><input type='text' value='"+row.name+"' class='form-control editNotesName' ><span class='notesnameerror error'></span></div>";
+									return defaultName + editName ;
+								},width:"30%"},
+								{ title: "Batches",data:null,render:function(data,event,row){
+									var batchString = "";
+									var notesBatchArray = row.batch.split(",");
+									for(var i =0;i<notesBatchArray.length;i++){
+										for(var j=0;j<batchDataArray.length;j++){
+											if(notesBatchArray[i] == batchDataArray[j].id){
+												batchString = batchString + batchDataArray[j].text+",";
+											}
+										}
+									}
+									batchString = batchString.slice(0,batchString.length - 1);
+									var defaultBatches= "<div class='defaultBatches default'>"+batchString+"</div>"
+									var editBatches = "<div class='editable'><select class='form-control editBatches' style='width:100%' multiple></select><span class='batcherror error'></span></div>"
+									var preBatches = "<input type='hidden' value='"+row.batch+"' class='preBatches'>";
+									return defaultBatches+editBatches+preBatches;
+								},width:"30%"},
+								{ title: "Action",data:null,render:function(data,event,row){
+									var defaultButtons = "<div class='default'><input type='hidden' class='notesname' value='"+row.name+"'>"+
 									"<input type='hidden' class='batch' value='"+row.batch+"'>"+
-									"<button class='btn btn-primary btn-xs shownotes' id='"+row.notesid+"'>Open</button>&nbsp;"+
-									"<button class='btn btn-info btn-xs edit' id='"+row.notesid+"'>Edit</button>&nbsp;"+
-									"<button class='btn btn-danger btn-xs deletenotes' id="+row.notesid+">Delete</button>";
-							},sWidth:"20%"}
-					]
+									"<button class='btn btn-info btn-xs shownotes' id='"+row.notesid+"'>Open</button>&nbsp;"+
+									"<button class='btn btn-primary btn-xs edit' id='"+row.notesid+"'>Edit</button>&nbsp;"+
+									"<button class='btn btn-danger btn-xs deletenotes' id="+row.notesid+">Delete</button></div>";
+									var editButtons = "<div class='editable'><button class='btn btn-success btn-xs save' id='"+row.notesid+"'>Save</button>&nbsp;"+
+									"<button class='btn btn-danger btn-xs cancel' id="+row.notesid+">Cancel</button></div>";
+									return defaultButtons+ editButtons;
+									},width:"20%"}
+							]
 					
 				});
 				
@@ -336,16 +380,21 @@ $(document).ready(function(){
 		}
 	});
 	
+	$("#notestable").on("click",".cancel",function(){
+		/* $($($($(this).closest("table")).closest("tr")).prev("tr")).find(".edit").click(); */
+		$($(this).closest("tr")).removeClass("editEnabled");
+	});
+	
 	$("#notestable").on("click",".save",function(){
-		var notesid = $(this).prop("id");
 		var inst_id = $("#instituteSelect").val();
+		var notesid = $(this).prop("id");
 		/* var subject=$("#subject").val();
 		var division=$("#division").val(); */
-		var notesname=$(this.closest("table")).find("#newnotesname").val();
-		var notesnameerror=$(this.closest("table")).find("#notesnameerror");
-		var batcherror=$(this.closest("table")).find("#batcherror");
+		var notesname=$(this.closest("tr")).find(".editNotesName").val();
+		var notesnameerror=$(this.closest("tr")).find(".notesnameerror");
+		var batcherror=$(this.closest("tr")).find(".batcherror");
 		var batchidmap;
-		var batchids=$(this.closest("table")).find("#batches").val();
+		var batchids=$(this.closest("tr")).find(".editBatches").val();
 		var regex = /^[a-zA-Z0-9 ]*$/;
 		var flag=true;
 		var that = this;
@@ -363,22 +412,37 @@ $(document).ready(function(){
 			batcherror.html("Please select batch");
 			flag=false;
 		}
-		
-		if(flag==true){
+		if(inst_id == "-1"){
+			$("#instituteError").html("Select Institute");
+			flag= false;
+		}
+		 if(flag==true){
 			var notes = {};
 			notes.notesid = notesid;
 			notes.name = notesname;
 			notes.divid = division;
 			notes.subid = subject;
-			notes.inst_id = inst_id;
 			notes.batch = batchids.join(",");
+			notes.inst_id = inst_id;
 			var handlers = {};
 			handlers.success = function(data){
 				if(data == true){
 					notesnameerror.html("Notes name already exists,Please enter different names");
 				}else{
 					$.notify({message: 'Notes updated successfully'},{type: 'success'});
-					$($($(that.closest("table")).closest("tr")).prev("tr")).find(".defaultName").html(notesname);
+					$(that.closest("tr")).find(".defaultNotesName").html(notesname);
+					var batchString = "";
+					for(var i =0;i<batchids.length;i++){
+						for(var j=0;j<batchDataArray.length;j++){
+							if(batchids[i] == batchDataArray[j].id){
+								batchString = batchString + batchDataArray[j].text+",";
+							}
+						}
+					}
+					batchString = batchString.slice(0,batchString.length - 1);
+					$(that.closest("tr")).find(".defaultBatches").html(batchString);
+					$(that.closest("tr")).find(".preBatches").val(batchids.join(","));
+					$(that.closest("tr")).find(".cancel").click();
 				}
 			};
 			handlers.error = function(){};
@@ -389,8 +453,20 @@ $(document).ready(function(){
 	});
 	
 	$("#notestable").on("click",".deletenotes",function(){
-		/* var subject=$("#subject").val();
-		var division=$("#division").val(); */
+		var inst_id = $("#instituteSelect").val();
+		var notes = {};
+		notes.notesid = $(this).prop("id");
+		notes.divid = division;
+		notes.subid = subject;
+		notes.inst_id = inst_id;
+		notes.name = $($(this).closest("tr")).find(".defaultNotesName").html();
+		var that = this;
+		deleteNotesConfirm(notes,that);
+	});
+	
+	/* $("#notestable").on("click",".deletenotes",function(){
+		var subject=$("#subject").val();
+		var division=$("#division").val(); 
 		var inst_id = $("#instituteSelect").val();
 		var notes = {};
 		notes.notesid = $(this).prop("id");
@@ -413,10 +489,32 @@ $(document).ready(function(){
 			console.log("error");
 		};
 		rest.post("rest/teacher/deleteNotes",handlers,JSON.stringify(notes));
-	});
+	}); */
 	
 	
 });
+
+function deleteNotesConfirm(notes,that){
+	modal.modalConfirm("Delete","Do you want to delete "+notes.name+"?","Cancel","Delete",deleteNotes,[notes,that]);
+}
+
+function deleteNotes(notes,that){
+	var handlers = {};
+	handlers.success = function(data){
+		var table = $("#notestable").DataTable();
+		var editTable = $($(that.closest("tr")).next("tr")).find(".editTable")
+		if(editTable.length > 0){
+			$($(that.closest("tr")).next("tr")).addClass('removeRow');
+		}
+		$(that.closest("tr")).addClass('removeRow');
+		table.row('.removeRow').remove().draw( false );
+		$.notify({message: "Notes successfuly deleted"},{type: 'success'});
+	};
+	handlers.error = function(){
+		console.log("error");
+	};
+	rest.post("rest/teacher/deleteNotes",handlers,JSON.stringify(notes));
+}
 
 function UploadExam(){
 	
@@ -584,7 +682,7 @@ function UploadExam(){
 		</div>
 
    <div id="notesdiv" class="container" style="width: 100%">
-   <table id="notestable" class="table table-bordered table-hover" style="background-color: white;width: 100%">
+   <table id="notestable" class="table table-striped" style="background-color: white;width: 100%">
   
    </table>
  

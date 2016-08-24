@@ -229,7 +229,7 @@ function getBatchesOfDivision(){
 <jsp:include page="../ExamHeader.jsp" >
 		<jsp:param value="active" name="onlineExamList"/>
 	</jsp:include>
-<div class="container" style="padding: 2%; background: #eee">
+<div class="well">
 <div class="row">
 <div class="col-md-3">
 	<select id="division" class="form-control">

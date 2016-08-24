@@ -78,7 +78,11 @@
 			console.log(subjectiveExamBean);
 			var handler = {};
 			handler.success = function(e){
-				$.notify({message: 'Question saved'},{type: 'success'});
+				if(e == ""){
+					$.notify({message: 'Question saved'},{type: 'success'});
+					}else{
+						$.notify({message: 'Institute doesn\'t have enough memory,question not saved'},{type: 'danger'});	
+					}
 			}
 			handler.error = function(e){console.log(e)}
 			rest.post(saveSubjectiveExamUrl,handler,JSON.stringify(subjectiveExamBean),true);

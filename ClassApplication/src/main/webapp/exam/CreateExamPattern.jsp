@@ -702,7 +702,7 @@ function ExamPatternObject(){
 	<jsp:include page="../ExamHeader.jsp" >
 		<jsp:param value="active" name="createExamPatten"/>
 	</jsp:include>
-	<div class="container" style="padding: 2%; background: #eee">
+	<div class="well" style="padding: 1%;">
 		<div class="row">
 			<div class="col-md-3">
 				<select id="division" name="division" class="form-control">

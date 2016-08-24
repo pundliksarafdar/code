@@ -82,7 +82,7 @@ font-size: 12px;
 <jsp:include page="TeacherExamHeader.jsp" >
 		<jsp:param value="active" name="generateQuestionPaper"/>
 	</jsp:include>
-<div class="container" style="padding: 2%; background: #eee">
+<div class="well" style="padding: 1%;">
 		<div class="row">
 			<div class="col-md-3">
 				<select name="instituteSelect" id="instituteSelect" class="form-control" width="100px">
@@ -99,7 +99,7 @@ font-size: 12px;
 				</select>
 				<span id="divisionError" class="patternError"></span>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-2">
 				<select id="subject" name="subject" class="form-control">
 					<option value="-1">Select Subject</option>
 				</select>

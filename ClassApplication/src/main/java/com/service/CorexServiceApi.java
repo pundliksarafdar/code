@@ -391,7 +391,7 @@ public class CorexServiceApi extends ServiceBase{
 		/*jsonObject.addProperty("fileid", fileName);*/
 		//jsonObject.
 		InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
-		instituteStatTransaction.updateStorageSpace(getRegId(), Constants.STORAGE_PATH);
+		instituteStatTransaction.updateStorageSpace(getRegId(), Constants.STORAGE_PATH+File.separatorChar+getRegId());
 		return Response.status(200).entity(jsonObject.toString()).type(MediaType.APPLICATION_JSON).build();
 	}
 	
@@ -462,7 +462,7 @@ public class CorexServiceApi extends ServiceBase{
 		    	 NotesTransaction notesTransaction=new NotesTransaction();
 		    	 notesTransaction.addNotes(notes);
 		    	 InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
-		    	 instituteStatTransaction.increaseUsedMemory(inst_id, fileSize);
+		 		instituteStatTransaction.updateStorageSpace(inst_id, Constants.STORAGE_PATH+File.separatorChar+inst_id);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

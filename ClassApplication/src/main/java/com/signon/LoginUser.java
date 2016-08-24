@@ -457,22 +457,22 @@ public class LoginUser extends BaseAction{
 		}
 		
 		double totalStorage = 100; //set to default
-		double examSize = getFolderSize(new File(storagePath+File.separator+"exam"))/(1024.0*1024.0);
-		double noteSize = getFolderSize(new File(storagePath+File.separator+"notes"))/(1024.0*1024.0);
+		/*double examSize = getFolderSize(new File(storagePath+File.separator+"exam"))/(1024.0*1024.0);
+		double noteSize = getFolderSize(new File(storagePath+File.separator+"notes"))/(1024.0*1024.0);*/
 		double usedSize = getFolderSize(new File(storagePath))/(1024.0*1024.0);
+		/*userStatic.setExamSpace(examSize);
 		
-		userStatic.setTotalStorage(totalStorage);
-		userStatic.setUsedSpace(usedSize);
-		userStatic.setRemainingSpace(totalStorage-usedSize);
-		userStatic.setExamSpace(examSize);
-		
-		userStatic.setNotesSpace(noteSize);
+		userStatic.setNotesSpace(noteSize);*/
 		//session.put(Constants.USER_STATIC, userStatic);
 		if(userBean.getRole()== 1){
 		ClassownerSettingstransaction settingstransaction = new ClassownerSettingstransaction();
 		ClassownerSettingsNotification settings = settingstransaction.getSettings(userBean.getRegId());
 		userStatic.setSettings(settings);
+		totalStorage = settings.getInstituteStats().getAlloc_memory();
 		}
+		userStatic.setTotalStorage(totalStorage);
+		userStatic.setUsedSpace(usedSize);
+		userStatic.setRemainingSpace(totalStorage-usedSize);
 		userBean.setUserStatic(userStatic);
 		
 		

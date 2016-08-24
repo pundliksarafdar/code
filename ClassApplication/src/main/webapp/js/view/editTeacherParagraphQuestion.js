@@ -42,6 +42,7 @@ function cancelEdit(){
 
 function addMoreParaQuestion(){
 	var paraTmpl = $(PARA_QUESTION_TMPL).clone();
+	paraTmpl.find('[type="text"]').addExpresssion(true);
 	$(PARA_QUESTION).append(paraTmpl);
 }
 
@@ -89,6 +90,7 @@ function addParaQuestion(paraQuestion,queId,div,sub){
 			images += imageColElement;
 		}	
 		paraTmpl.find("#paraQuestionImage").append(images);
+		paraTmpl.find('[type="text"]').addExpresssion(true);
 		$(PARA_QUESTION).append(paraTmpl);	
 	}	
 }
@@ -128,7 +130,11 @@ function updateParagraphQuestion(){
 		
 		var handler={};
 		handler.success = function(e){
-			$.notify({message: "Question updated successfuly"},{type: 'success'});
+			if(e == ""){
+				$.notify({message: "Question updated successfuly"},{type: 'success'});
+				}else{
+					$.notify({message: 'Institute doesn\'t have enough memory,question not saved'},{type: 'danger'});	
+			}
 		}
 		handler.error = function(e){}
 		

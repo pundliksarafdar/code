@@ -37,6 +37,7 @@
 	
 	function addParaQuestion(){
 		var paraTmpl = $(PARA_QUESTION_TMPL).clone();
+		paraTmpl.find('[type="text"]').addExpresssion(true);
 		$(PARA_QUESTION).append(paraTmpl);
 	}
 	
@@ -113,7 +114,13 @@
 			});
 			console.log(paraQuestionBean);
 			var handler={};
-			handler.success = function(e){}
+			handler.success = function(e){
+				if(e == ""){
+					$.notify({message: 'Question saved'},{type: 'success'});
+					}else{
+						$.notify({message: 'Institute doesn\'t have enough memory,question not saved'},{type: 'danger'});	
+					}
+			}
 			handler.error = function(e){}
 			rest.post(saveParaQuestionUrl,handler,JSON.stringify(paraQuestionBean),true);
 		}
