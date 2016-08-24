@@ -39,6 +39,7 @@
 	<th><input type="text" class="form-control" id="alllogin_lastname" class="form-control"></th>
 	<th><input type="text" class="form-control" id="alllogin_loginname" class="form-control"></th>
 	<th><input type="text" class="form-control" id="alllogin_password" class="form-control"></th>
+	<th><input type="text" class="form-control" id="alllogin_phone" class="form-control"></th>
 	<th><input type="text" class="form-control" id="alllogin_role" class="form-control"></th>
 	</tr>
 	<c:forEach items="${registerBeans}" var="registerBean">
@@ -48,6 +49,7 @@
 		<td class="alllogin_lastname"><c:out value="${registerBean.lname}"></c:out></td>
 		<td class="alllogin_loginname"><c:out value="${registerBean.loginName}"></c:out></td>
 		<td class="alllogin_password"><c:out value="${registerBean.loginPass}"></c:out></td>
+		<td class="alllogin_phone"><c:out value="${registerBean.phone1}"></c:out></td>
 		<td class="alllogin_role">
 		<c:choose>
 			<c:when test="${registerBean.role eq 0}">

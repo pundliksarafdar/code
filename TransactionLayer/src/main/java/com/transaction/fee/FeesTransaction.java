@@ -1,5 +1,7 @@
 package com.transaction.fee;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.text.DecimalFormat;
@@ -18,15 +20,21 @@ import com.classapp.db.fees.FeesDB;
 import com.classapp.db.fees.FeesStructure;
 import com.classapp.db.fees.Student_Fees;
 import com.classapp.db.fees.Student_Fees_Transaction;
+import com.classapp.db.printFees.PrintFees;
+import com.classapp.db.printFees.PrintFeesDb;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.register.RegisterDB;
 import com.classapp.db.student.Student;
 import com.classapp.utils.Constants;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.service.beans.BatchFees;
 import com.service.beans.BatchFeesDistributionServiceBean;
 import com.service.beans.BatchServiceBean;
 import com.service.beans.BatchStudentFees;
 import com.service.beans.FeeStructure;
+import com.service.beans.PrintDetailResponce;
 import com.service.beans.StudentFeesServiceBean;
 import com.service.beans.StudentFessNotificationData;
 import com.transaction.batch.BatchTransactions;
@@ -450,6 +458,7 @@ public class FeesTransaction {
 				fees_Transaction.getBatch_id(), fees_Transaction.getStudent_id(), 
 				fees_Transaction.getAmt_paid(),bathcFee,
 				serviceFees_Transaction.getDisType(),serviceFees_Transaction.getDiscount());
+		
 		return success;
 	}
 	
@@ -604,5 +613,36 @@ public class FeesTransaction {
 		feesDB.updateStudentFeesRelatedToBatch(inst_id, div_id, batch_id);
 		feesDB.updateStudentFeesTransactionRelatedToBatch(inst_id, div_id, batch_id);
 		return true;
+	}
+	
+	public PrintDetailResponce saveFees(com.service.beans.Student_Fees_Transaction transaction,String feeReceiptPath,String feesType){
+		String header = "Hello";//getHeaderForReceipt
+		
+		PrintFeesDb printFeesDb = new PrintFeesDb();
+		PrintFees printFees = new PrintFees();
+		printFees.setInst_id(transaction.getInst_id());
+		printFees.setStudent_id(transaction.getStudent_id());
+		printFees.setFees_transaction_id(transaction.getFees_transaction_id());
+		printFees.setFee_type(feesType);
+		printFeesDb.savePrintFeesMeta(printFees);
+		
+		PrintDetailResponce responce = new PrintDetailResponce();
+		
+		FeesTransaction feesTransaction = new FeesTransaction();
+		FeeStructure feeStructureList = feesTransaction.getFeeStructurelist(transaction.getInst_id(), 1);
+		responce.setFeeStructure(feeStructureList);
+		
+		BatchStudentFees batchStudentFees  = feesTransaction.getStudentsTransactionForPrint(transaction.getInst_id(), transaction.getDiv_id(), 
+				transaction.getBatch_id(), transaction.getStudent_id());
+		responce.setBatchStudentFees(batchStudentFees);
+		
+		PrintFees fees = getLastFeesDetail(transaction.getStudent_id(), transaction.getInst_id());
+		responce.setFeeReceiptNumber(fees.getReceipt_id());
+		return responce;
+	}
+	
+	public PrintFees getLastFeesDetail(int studentId,int instId){
+		PrintFeesDb printFeesDb = new PrintFeesDb();
+		return printFeesDb.getLastFeesDetail(studentId, instId);
 	}
 }

@@ -77,6 +77,7 @@
  		<mapping resource="com/classapp/db/questionbbank/question_bank.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/notification/institute_msglog.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/certificate/certificate.hbmmap.xml"></mapping>
+ 		<mapping resource="com/classapp/db/printFees/print_fees.hbmmap.xml"></mapping>
        <!--  <mapping resource="com/classapp/db/classwithsubjects/ClassWithSubjects.hbmmap.xml"></mapping> --> 
     </session-factory>
 </hibernate-configuration>

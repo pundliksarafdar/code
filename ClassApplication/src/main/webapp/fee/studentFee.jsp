@@ -85,7 +85,7 @@
 		<div class="container" id="studentFeesTableDiv" style="width: 100%">
 				<table id="studentFeesTable" class="table table-striped" style="width: 100%"></table>
 		</div>
-	<div id="printableReceipt" class="hide">
+	<div id="printableReceipt" style="display:none">
 	
 	</div>
 </body>

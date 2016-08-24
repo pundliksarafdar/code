@@ -6,6 +6,10 @@ public class PrintDetailResponce {
 	String contactNo;
 	BatchStudentFees batchStudentFees;
 	FeeStructure feeStructure;
+	int feeReceiptNumber;
+	String todaysDate;
+	String ammountInWords;
+	double feesPayingNow;
 	
 	public String getInstituteName() {
 		return instituteName;
@@ -37,8 +41,29 @@ public class PrintDetailResponce {
 	public void setFeeStructure(FeeStructure feeStructure) {
 		this.feeStructure = feeStructure;
 	}
-	
-	
-	
+	public int getFeeReceiptNumber() {
+		return feeReceiptNumber;
+	}
+	public void setFeeReceiptNumber(int feeReceiptNumber) {
+		this.feeReceiptNumber = feeReceiptNumber;
+	}
+	public String getTodaysDate() {
+		return todaysDate;
+	}
+	public void setTodaysDate(String todaysDate) {
+		this.todaysDate = todaysDate;
+	}
+	public String getAmmountInWords() {
+		return ammountInWords;
+	}
+	public void setAmmountInWords(String ammountInWords) {
+		this.ammountInWords = ammountInWords;
+	}
+	public double getFeesPayingNow() {
+		return feesPayingNow;
+	}
+	public void setFeesPayingNow(double feesPayingNow) {
+		this.feesPayingNow = feesPayingNow;
+	}
 	
 }

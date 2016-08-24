@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.printFees.PrintFees" table="print_fees" catalog="classdb">
+	<composite-id>
+		<key-property name="receipt_id" column="receipt_id"  />
+		<key-property name="inst_id" column="inst_id" />
+	</composite-id>
+	
+	 <property name="student_id" type="java.lang.Integer">
+            <column name="student_id" default="false"/>
+     </property>
+    
+     <property name="fees_transaction_id" type="java.lang.Double">
+         <column name="fees_transaction_id" default="false"/>
+     </property>
+    
+     <property name="fee_type" type="text">
+         <column name="fee_type" default="false"/>
+     </property>
+       
+    </class>
+</hibernate-mapping>

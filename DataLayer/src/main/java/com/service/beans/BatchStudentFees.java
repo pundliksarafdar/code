@@ -14,6 +14,7 @@ public class BatchStudentFees {
 	double fees_due;
 	Date paidOn;
 	
+	
 	public int getStudent_id() {
 		return student_id;
 	}
@@ -45,7 +46,7 @@ public class BatchStudentFees {
 		this.discount = discount;
 	}
 	public String getDiscount_type() {
-		return discount_type;
+		return !discount_type.equals("amt")?" %":" Rs";
 	}
 	public void setDiscount_type(String discount_type) {
 		this.discount_type = discount_type;

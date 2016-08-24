@@ -1,7 +1,20 @@
 package com.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -19,6 +32,12 @@ import com.classapp.db.fees.BatchFees;
 import com.classapp.db.fees.BatchFeesDistribution;
 import com.classapp.db.fees.Fees;
 import com.classapp.db.fees.Student_Fees;
+import com.classapp.db.printFees.PrintFees;
+import com.classapp.db.printFees.PrintFeesDb;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+import com.miscfunction.MiscFunction;
 import com.notification.access.NotifcationAccess;
 import com.service.beans.BatchFeesDistributionServiceBean;
 import com.service.beans.BatchServiceBean;
@@ -31,6 +50,9 @@ import com.service.helper.NotificationServiceHelper;
 import com.transaction.exams.ExamTransaction;
 import com.transaction.fee.FeesTransaction;
 import com.user.UserBean;
+import com.util.ClassAppUtil;
+import com.util.CryptoException;
+import com.util.CryptoUtils;
 
 @Path("/feesservice")
 public class FeeServiceImpl  extends ServiceBase {
@@ -155,13 +177,51 @@ public class FeeServiceImpl  extends ServiceBase {
 	@Path("/saveStudentBatchFeesTransaction")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response saveStudentBatchFeesTransaction(Student_Fees_Transaction serviceFees_Transaction){
+	public Response saveStudentBatchFeesTransaction(Student_Fees_Transaction serviceFees_Transaction) throws IOException{
 		FeesTransaction feesTransaction = new FeesTransaction();
+		
 		boolean status = feesTransaction.saveStudentBatchFeesTransaction(getRegId(), serviceFees_Transaction);
 		if(status){
 			NotificationServiceHelper helper = new NotificationServiceHelper();
 			helper.sendFeesPaymentNotification(getRegId(), serviceFees_Transaction);
 			
+			PrintDetailResponce printDetailResponce = feesTransaction.saveFees(serviceFees_Transaction, "path", "type");
+			printDetailResponce.setInstituteName(getUserBean().getClassName());
+			printDetailResponce.setAddress(getUserBean().getAddr1()+","+getUserBean().getCity());
+			printDetailResponce.setFeesPayingNow(serviceFees_Transaction.getAmt_paid());
+			DateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		    
+	    	sdf.setTimeZone(TimeZone.getTimeZone("IST"));
+	    	Date date = new Date();
+	    	printDetailResponce.setTodaysDate(sdf.format(date));
+		    
+	    	/***********Amount paid in *******/
+	    	String amountInWords = ClassAppUtil.convert((long)serviceFees_Transaction.getAmt_paid());
+	    	printDetailResponce.setAmmountInWords(amountInWords+" rupees only");
+			MustacheFactory mf = new DefaultMustacheFactory();
+			ServletContext context = MiscFunction.getServletContext();
+			String fullPath = context.getRealPath("/WEB-INF/classes/htmlfile/feereceipt.tmpl");
+			File f = new File(fullPath);
+			if(!f.exists()){
+				f.mkdirs();
+			}
+			String receiptPath = getUserBean().getUserStatic().getFeesReceiptPath();
+			File receiptFile = new File(receiptPath);
+			if(!receiptFile.exists()){
+				receiptFile.mkdirs();
+			}
+			String fileName = receiptPath+File.separator+printDetailResponce.getFeeReceiptNumber()+".html";
+			Mustache mustache = mf.compile(new InputStreamReader(new FileInputStream(f),Charset.forName("UTF-8")),f.getName());
+			FileWriter fileWriter = new FileWriter(fileName);
+			mustache.execute(fileWriter, printDetailResponce).flush();
+			fileWriter.close();
+			/*******************Encrypt file*******************/
+			try {
+				CryptoUtils.encrypt(fileName);
+	        } catch (CryptoException ex) {
+	            ex.printStackTrace();
+	        }
+	        
 		}
 		return Response.status(Status.OK).entity(status).build();
 	}
@@ -225,6 +285,37 @@ public class FeeServiceImpl  extends ServiceBase {
 		BatchStudentFees batchStudentFees  = feesTransaction.getStudentsTransactionForPrint(regId, div_id, batchId, studentId);
 		responce.setBatchStudentFees(batchStudentFees);
 		return Response.status(Status.OK).entity(responce).build();
+	}
+	
+	@GET
+	@Path("/feeReceipt/{divId}/{batchId}/{studentId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllFeeReceiptsData(@PathParam("divId")int div_id,
+			@PathParam("batchId")int batchId,
+			@PathParam("studentId")int studentId){
+		PrintFeesDb printFeesDb = new PrintFeesDb();
+		List<PrintFees> printFees = printFeesDb.getFeesDetails(studentId, getRegId());
+		return Response.accepted(printFees).build();
+	}
+	
+	@GET
+	@Path("/feeReceipt/{receiptId}")
+	@Produces(MediaType.TEXT_HTML)
+	public Response getReceipt(@PathParam("receiptId")int receiptId){
+		String receiptPath = getUserBean().getUserStatic().getFeesReceiptPath();
+		String feeReceipt = receiptPath+File.separator+receiptId+".html";
+		File receipts = new File(feeReceipt);
+		String printFees = null;
+		
+		try {
+			printFees = ClassAppUtil.getFileDecryptResponce(feeReceipt);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if(null!=printFees){
+			return Response.ok(printFees).build();
+		}
+		return Response.ok("<div style='color:red'><h3>Receipt not found</h3></div>").build();
 	}
 		
 }

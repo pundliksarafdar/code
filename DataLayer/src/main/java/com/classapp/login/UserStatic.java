@@ -18,6 +18,8 @@ public class UserStatic {
 	private String patternPath;
 	private String questionPaperPath;
 	private String headerPath;
+	private String feesReceiptPath;
+	
 	private Set<String> alarms;
 	private ClassownerSettingsNotification settings;
 	
@@ -104,6 +106,12 @@ public class UserStatic {
 	}
 	public void setSettings(ClassownerSettingsNotification settings) {
 		this.settings = settings;
+	}
+	public String getFeesReceiptPath() {
+		return this.storageSpace+File.separator+"feesReceipt";
+	}
+	public void setFeesReceiptPath(String feesReceiptPath) {
+		this.feesReceiptPath = feesReceiptPath;
 	}
 	
 	

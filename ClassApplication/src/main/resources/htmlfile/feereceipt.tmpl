@@ -1,0 +1,117 @@
+<html>
+<head>
+<style>
+	table#outertable{
+		border-collapse: collapse;
+		min-width:500px;
+	}
+	table#outertable>tbody>tr>td{
+		padding-bottom:3px;
+	}
+	table#distribution {
+		border-collapse: collapse;
+	}
+	table#distribution tr:nth-child(even) {
+		background: beige;
+	}
+	table#distribution td:not(:first-child),th:not(:first-child) {
+		border-left: 1px solid #000;
+	}
+</style>
+</head>
+<body>
+	<table border=1 collpsed="collapsed" id="outertable"> 
+	<tr>
+	<td align="center">
+	<div id="printReceipt" class="bottomBorder">
+		<span id="printReceiptHeader">
+			<div><b field="instituteName">{{instituteName}}</b></div>
+			<div field="address">{{address}}</div>
+			<div field="contactNo">{{contactNo}}</div>
+			<b><u style="font-size: 18px;">Receipt</u></b>
+			<table width="100%">
+				<tr  class="bottomBorder">
+					<td align="left">
+						Date:{{todaysDate}}
+					</td>
+					<td align="right">
+						Receipt number : <span style='color:red;'>{{feeReceiptNumber}}</span>
+					</td>
+				</tr>
+			</table>
+		</span>
+	</td>
+	</tr>	
+	<tr>
+	<td>
+		<table>
+		<tr  class="bottomBorder">
+			<td>
+				Received from : {{batchStudentFees.fname}},{{batchStudentFees.lname}}
+			</td>
+		</tr>
+		</table>
+	</td>
+	</tr>	
+	<tr>
+	<td>	
+	<table id="distribution" class="table" width="100%">
+			<thead>
+			<tr>
+				<th>Distribution</th>
+				<th>Amount</th>				
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td id="printReceiptDistribution"></td>
+				<td id="printReceiptAmount"></td>				
+			</tr>
+			<tr>
+				<td>Total fee</td>
+				<td>{{batchStudentFees.batch_fees}}</td>				
+			</tr>
+			<tr>
+				<td>Discount</td>
+				<td>{{batchStudentFees.discount}} {{batchStudentFees.discount_type}}</td>				
+			</tr>
+			<!--<tr>
+				<td>Final fees</td>
+				<td>{{batchStudentFees.final_fees_amt}}</td>				
+			</tr>-->
+			<tr>
+				<td>Payment received</td>
+				<td>{{feesPayingNow}}</td>				
+			</tr>
+			<tr>
+				<td>Fee paid on {{batchStudentFees.paidOn}}</td>
+				<td>{{batchStudentFees.fees_paid}}</td>				
+			</tr>
+			<tr>
+				<td>Remaining fees</td>
+				<td>{{batchStudentFees.fees_due}}</td>				
+			</tr>
+			</tbody>
+		</table>
+	</td>
+	</tr>
+	<tr>
+	<td>
+		<table width="100%">
+			<tr>
+				<td>
+					<b>Amount in rupees</b> : {{ammountInWords}}
+				</td>
+			</tr>
+			<tr>
+				<td align="right">
+					Signature:______________
+				</td>
+			</tr>
+		<table>			
+	</td>
+	</tr>
+	
+	</table>
+	</body>
+	</html>

@@ -4,7 +4,8 @@ var getAllBatchStudentsFeesUrl = "rest/feesservice/getAllBatchStudentsFees/";
 var saveStudentBatchFee = "rest/feesservice/saveStudentBatchFeesTransaction/";
 var updateStudentFeesAmt = "rest/feesservice/updateStudentFeesAmt/";
 var printReceiptUrl = "rest/feesservice/getPrintDetail/";
-var sendDueAlertURL ="rest/notification/sendFeesDue"
+var sendDueAlertURL ="rest/notification/sendFeesDue";
+var feeReceiptUrl = "rest/feesservice/feeReceipt/";	
 /*************/
 var DIVISION_SELECT = "#divisionSelect";
 var BATCH_SELECT = "#batchSelect";
@@ -195,6 +196,7 @@ function sendMultipleDue(){
 }
 
 function printFeeReceipt(){
+	/*
 	$("#notificationSummary").hide();
 	var tableRow = $(this).closest('tr');
 	var row = feesDataTable.row(tableRow);
@@ -204,12 +206,64 @@ function printFeeReceipt(){
 	handler.success = printFeesSuccess;//function(e){console.log(e)};
 	handler.error = function(e){console.log(e)};
 	rest.get(printReceiptUrl+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+data.student_id+"/"+1,handler);
+	*/
+	var tr = $(this).closest('tr');
+	var row = feesDataTable.row( tr );
+	var data = row.data();
+    if ( row.child.isShown() ) {
+        // This row is already open - close it
+        row.child.hide();
+        tr.removeClass('shown');
+    }
+    else {
+        // Open this row
+    	var table = $("<table/>",{class:"table",width:"80%"});
+    	var handler = {};
+    	handler.success = function(data){renderFeeTable(table,data);};//function(e){console.log(e)};
+    	handler.error = function(e){console.log(e)};
+    	rest.get(feeReceiptUrl+$(DIVISION_SELECT).val()+"/"+$(BATCH_SELECT).val()+"/"+data.student_id,handler);
+    	row.child( table ).show();
+        tr.addClass('shown');
+    }
+}
+
+function renderFeeTable(table,data){
+	table.DataTable( {
+			bDestroy:true,
+			data: data,
+			lengthChange: false,
+			columns:[
+			{
+				title: "Receipt id",data:"receipt_id",sDefault:'&mdash;'
+			},
+			{
+				title: "Receipt type",data:"fee_type",sDefault:'&mdash;'
+			},
+			{
+				title: "",bSortable:false,data:null,render:function(){return "<input type='button' class='btn btn-success btn-xs showPrintFee' value='Print'/>&nbsp;" +
+						"<input type='button' class='btn btn-primary btn-xs deleteReceipt' value='Delete'/>&nbsp;"
+			}}
+			],
+			rowCallback:function(row, data, displayIndex, displayIndexFull){
+				$(row).find(".showPrintFee").on("click",function(){
+					console.log("Printing...");
+					printReceiptResponse(data.receipt_id);
+				});
+			}} );
+}
+
+function printReceiptResponse(receiptId){
+	console.log(receiptId);
+	var url = "rest/feesservice/feeReceipt/"+receiptId;
+	function printPage()
+	   {
+	      var div = $('#printableReceipt');
+	      div.html('<iframe src="'+url+'" onload="this.contentWindow.print();"></iframe>');
+	   }
+	printPage();
 }
 
 function printFeesSuccess(data){
-	
-	console.log(data);
-	
 	$.get('tmpl/feereceipt.tmpl', function(template){
 		var rendered = Mustache.render(template, data);
 		$('#printableReceipt').html(rendered);
@@ -376,7 +430,7 @@ function loadStudentTableSuccess(data){
 			},
 			{
 				title: "",bSortable:false,data:null,render:function(){return "<input type='button' class='btn btn-success btn-xs payFees' value='Save'/>&nbsp;" +
-						"<input type='button' class='btn btn-primary btn-xs printReceipt' value='Print'/>&nbsp;" +
+						"<input type='button' class='btn btn-primary btn-xs printReceipt' value='Receipts'/>&nbsp;" +
 						"<input type='button' class='btn btn-primary btn-xs sendDue' value='Send Due'/>";
 			}}
 			],
