@@ -960,9 +960,6 @@ public class QuestionPaperPatternTransaction {
 			Questionbank questionBank = onlineExamPaperElement.getQuestionbank();
 			int alternateValue = onlineExamPaperElement.getAlternate_value();
 			//If question bank is null then its not a question
-			if(null!=questionBank){
-				totalMarks = totalMarks +questionBank.getMarks();
-			}
 			if(null!=list && null!=questionBank){
 				for(String l:list){
 					
@@ -972,6 +969,7 @@ public class QuestionPaperPatternTransaction {
 						if(alternateValue!=0){
 							if(!alternateMap.containsKey(alternateValue)|| alternateMap.get(alternateValue)<questionBank.getMarks()){
 								alternateMap.put(alternateValue, questionBank.getMarks());
+								totalMarks = totalMarks +questionBank.getMarks();
 							}
 							
 						}else{
