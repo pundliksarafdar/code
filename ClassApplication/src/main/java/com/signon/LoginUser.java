@@ -126,6 +126,10 @@ public class LoginUser extends BaseAction{
 		    LoginCheck loginCheck = new LoginCheck();
     		loginCheck.setLastLogin(userBean.getRegId(), formDate);
 	    }
+		
+		//Need to check login
+		
+		isValid = true;
 		return isValid;
 	}
 	public String loadBean(UserBean userBean,LoginBean loginBean,HttpServletResponse response,Map<String, Object> session){
