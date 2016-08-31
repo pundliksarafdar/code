@@ -943,7 +943,10 @@ public class QuestionPaperPatternTransaction {
 		List<OnlineExamPaperElement> examPaperElements = onlineExamPaper.getOnlineExamPaperElementList();
 		
 		List<OnlineExamPaperElementEvaluate>examPaperElementEvaluates = new ArrayList<OnlineExamPaperElementEvaluate>();
+		//AlternateMap to store alternate question marks
+		//alternateTotalMarksMap to store total marks
 		HashMap<Integer, Integer>alternateMap = new HashMap<Integer,Integer>();
+		HashMap<Integer, Integer>alternateTotalMarksMap = new HashMap<Integer,Integer>();
 		for(OnlineExamPaperElement onlineExamPaperElement:examPaperElements){
 			OnlineExamPaperElementEvaluate onlineExamPaperElementEvaluate = new OnlineExamPaperElementEvaluate();
 			try {
@@ -961,6 +964,11 @@ public class QuestionPaperPatternTransaction {
 			int alternateValue = onlineExamPaperElement.getAlternate_value();
 			//If question bank is null then its not a question
 			if(null!=list && null!=questionBank){
+				if(alternateValue!=0 && !alternateTotalMarksMap.containsKey(alternateValue)){
+					alternateTotalMarksMap.put(alternateValue, questionBank.getMarks());
+				}else{
+					totalMarks = totalMarks +questionBank.getMarks();
+				}
 				for(String l:list){
 					
 					if(questionBank.getAns_id().contains(l)){
@@ -969,15 +977,15 @@ public class QuestionPaperPatternTransaction {
 						if(alternateValue!=0){
 							if(!alternateMap.containsKey(alternateValue)|| alternateMap.get(alternateValue)<questionBank.getMarks()){
 								alternateMap.put(alternateValue, questionBank.getMarks());
-								totalMarks = totalMarks +questionBank.getMarks();
+								//alternateTotalMarksMap.put(alternateValue, questionBank.getMarks());
 							}
 							
 						}else{
-							
 							marks = marks + questionBank.getMarks();
 						}
 					}else{
 						System.out.println(questionBank.getQue_text()+":::::::Answer is wrong");
+						
 					}
 				}
 				
@@ -998,6 +1006,15 @@ public class QuestionPaperPatternTransaction {
 	        marks = marks + (Integer)pair.getValue(); 
 	        it.remove(); // avoids a ConcurrentModificationException
 	    }
+	    
+	    /*
+	    Iterator itTotalMarks = alternateTotalMarksMap.entrySet().iterator();
+	    while (itTotalMarks.hasNext()) {
+	        Map.Entry pair = (Map.Entry)itTotalMarks.next();
+	        totalMarks = totalMarks + (Integer)pair.getValue(); 
+	        itTotalMarks.remove(); // avoids a ConcurrentModificationException
+	    }
+	    */
 		
 		HashMap<String, Integer>marksObj = new HashMap<String, Integer>();
 		marksObj.put("marks", marks);
