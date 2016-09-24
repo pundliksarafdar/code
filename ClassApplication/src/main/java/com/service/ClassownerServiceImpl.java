@@ -39,6 +39,7 @@ import com.classapp.db.header.Header;
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.questionPaper.QuestionPaper;
 import com.classapp.db.questionPaper.QuestionPaperDB;
+import com.classapp.db.register.AdditionalStudentInfoBean;
 import com.classapp.db.student.StudentDetails;
 import com.classapp.db.student.StudentMarks;
 import com.classapp.db.subject.Subject;
@@ -630,12 +631,15 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		InstituteStatTransaction statTransaction = new InstituteStatTransaction();
 		boolean status  = true;
 		if(statTransaction.isIDsAvailable(getRegId(), 1)){
-		studentTransaction.addStudentByID(getRegId(),serviceBean.getStudent());
+		status = studentTransaction.addStudentByID(getRegId(),serviceBean.getStudent());
+		if(status){
+			studentTransaction.saveStudentAdditionalInfo(serviceBean);
+		}
 		statTransaction.increaseUsedStudentIds(getRegId());
 		status = feesTransaction.saveStudentBatchFees(getRegId(), serviceBean.getStudent_FeesList());
 		if(status){
 			NotificationServiceHelper helper = new NotificationServiceHelper();
-			helper.sendFeesPaymentNotification(getRegId(), serviceBean.getStudent_FeesList());
+			//helper.sendFeesPaymentNotification(getRegId(), serviceBean.getStudent_FeesList());
 		}
 		}else{
 			status = false;
@@ -825,6 +829,9 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		FeesTransaction feesTransaction = new FeesTransaction();
 		StudentFeesServiceBean feesServiceBean = feesTransaction.getStudentFees(getRegId(), student_id);
 		studentDetails.setFeesServiceBean(feesServiceBean);
+		
+		HashMap<String, String> additionalStudentInfoBean= studentTransaction.getAdditionalStudentInfoBean(student_id, getRegId());
+		studentDetails.setAdditionalStudentInfoBean(additionalStudentInfoBean);
 		return Response.status(Status.OK).entity(studentDetails).build();
 	}
 	

@@ -607,6 +607,20 @@ var enabledEdit = false;
 		},5000);
 		 */
 		$(".studentList").hide();
+		 
+		 /****Show additional information********/
+		 if(data.additionalStudentInfoBean){
+			 $("#generalTabAdditionalInfo").empty();
+			 $.each(data.additionalStudentInfoBean,function(key,val){
+				 var additionalData = $("#additionalData").html();
+				 var $additionalData = $(additionalData);
+				 $additionalData.find("#label").html(key);
+				 $additionalData.find("#data").html(val);
+				 $("#generalTabAdditionalInfo").append($additionalData);
+			 });
+			 
+		 }
+		 
 		}
 		handlers.error = function(e){console.log("Error",e)}
 		rest.get("rest/classownerservice/getStudentDetails/"+studentId,handlers);
@@ -1203,6 +1217,11 @@ var enabledEdit = false;
     	<div class="col-md-1">:</div>
     	<div class="col-md-3"><span id="studentDetailsParentEmail"></span></div>
     </div>
+    
+    <div class="row"><label>Additional Information</label></div>
+    <div id="generalTabAdditionalInfo">
+    
+    </div>
   </div>
   <div id="marksTab" class="tab-pane fade marksTab">
     <div id="marksTabData"></div>
@@ -1215,6 +1234,15 @@ var enabledEdit = false;
   </div>
 </div>
 </div>
+</div>
+
+<!-- This template is used to set data -->
+<div class="hide" id="additionalData">
+<div class="row">
+    	<div class="col-md-2" id="label"></div>
+    	<div class="col-md-1">:</div>
+    	<div class="col-md-3"><span id="data">13/02/1990</span></div>
+    </div>
 </div>
 </body>
 </html>

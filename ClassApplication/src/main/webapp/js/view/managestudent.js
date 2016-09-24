@@ -1,15 +1,45 @@
 var BATCH_SELECT = "#batches"; 
 var DIV_SELECT = "#division";
 var ADD_STUDENT = "#addStudent";
+var ADDITIONAL_FORM_FIELD = "#additionalFormFields";
+var ADDITIONAL_FORM_FIELD_TO_SAVE = "#additionalFormFieldsToSave";
+
 var selectedBatchData = "";
 var getBatchFeesUrl = "rest/feesservice/getBatchFees/";
 var addStudentManuallyUrl = 'rest/classownerservice/addStudentByManually';
 var addStudentByID = 'rest/classownerservice/addStudentByID';
+var formFieldUrl = "rest/ClassownerSettings/formField";
+
 $(document).ready(function(){
 	$("body").on("change",BATCH_SELECT,selectBacth)
 		.on("click",ADD_STUDENT,addStudent);
 	showTable([]);
+	loadFormField();
 });
+
+function loadFormField(){
+	var handler = {};
+	handler.success = loadFormFieldSuccess;
+	handler.error = loadFormFieldError;
+	rest.get(formFieldUrl,handler);
+}
+
+function loadFormFieldSuccess(e){
+	console.log(e);
+	var formField = JSON.parse(e.formField);
+	$.each(formField,function(key,val){
+		console.log(val);
+		var additionFormField = $(ADDITIONAL_FORM_FIELD).html();
+		var $additionFormField = $(additionFormField);
+		$additionFormField.find("#formFieldLabel").text(val);
+		$additionFormField.find("#formFieldValue").attr("fieldId",key);
+		$(ADDITIONAL_FORM_FIELD_TO_SAVE).append($additionFormField);
+	});
+}
+
+function loadFormFieldError(){
+	
+}
 
 function selectBacth(){
 	var batch = $(this).val();
@@ -156,6 +186,13 @@ var addStudent = function(){
 				$.notify({message: "Sufficient student ID's not available"},{type: 'danger'});	
 			}};
 			handler.error = function(e){console.log(e)};
+			var additionalValData = {};
+			$(ADDITIONAL_FORM_FIELD_TO_SAVE).find("input").each(function(key,val){
+				var fieldValue = $(val).val();
+				var fieldId = $(val).attr("fieldId");
+				additionalValData[fieldId] = fieldValue;
+			});
+			studentRegisterServiceBean.additionalFormFields = additionalValData;
 			rest.post(addStudentByID,handler,JSON.stringify(studentRegisterServiceBean));
 		}
 	}else{
@@ -376,4 +413,5 @@ function StudentRegisterServiceBean(){
 	this.registerBean;
 	this.student;
 	this.student_FeesList = [];
+	this.additionalFormFields;
 }

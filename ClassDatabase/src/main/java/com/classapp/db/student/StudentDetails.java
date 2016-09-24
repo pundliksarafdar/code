@@ -25,6 +25,7 @@ public class StudentDetails {
 	ExamWiseStudentDetails examWiseStudentDetails;
 	StudentFeesServiceBean feesServiceBean;
 	StudentDetailAttendanceData attendanceData;  
+	HashMap<String, String>additionalStudentInfoBean;
 	
 	public int getRollNo() {
 		return rollNo;
@@ -99,7 +100,11 @@ public class StudentDetails {
 	public void setFeesServiceBean(StudentFeesServiceBean feesServiceBean) {
 		this.feesServiceBean = feesServiceBean;
 	}
-	
-	
+	public HashMap<String, String> getAdditionalStudentInfoBean() {
+		return additionalStudentInfoBean;
+	}
+	public void setAdditionalStudentInfoBean(HashMap<String, String> additionalStudentInfoBean) {
+		this.additionalStudentInfoBean = additionalStudentInfoBean;
+	}
 	
 }

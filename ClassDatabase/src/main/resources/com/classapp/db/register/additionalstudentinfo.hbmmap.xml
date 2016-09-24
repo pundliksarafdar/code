@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.register.AdditionalStudentInfoBean" table="additionalStudentInfo" catalog="classdb">
+    	<id name="instId" type="int">
+            <column name="inst_id" />
+        </id>
+        <property name="studentId" type="int">
+            <column name="student_id"/>
+        </property>
+        <property name="instStudentId" type="int">
+            <column name="inst_student_id"/>
+        </property>
+        <property name="studentData" type="text">
+            <column name="studentData"/>
+        </property>
+    </class>
+</hibernate-mapping>

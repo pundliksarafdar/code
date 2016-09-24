@@ -540,6 +540,10 @@
       <put-attribute name="title"  value="Manage Exam"/>
       <put-attribute name="body"   value="/ClassOwner/ManageAllExamFunction.jsp"/>      
    </definition>
+   <definition name="classowner.HeaderSettingsAction" extends="baseLayout">
+      <put-attribute name="title"  value="Manage Exam"/>
+      <put-attribute name="body"   value="/ClassOwner/HeaderSettings.jsp"/>      
+   </definition>
    <definition name="classowner.startcreatingpattern" extends="baseLayout">
       <put-attribute name="title"  value="Manage Exam"/>
       <put-attribute name="body"   value="/exam/CreateExamPattern.jsp"/>      
@@ -755,5 +759,9 @@
    <definition name="classowner.printStudentCertificate" extends="baseLayout">
       <put-attribute name="title"  value="View Certificate"/>
       <put-attribute name="body"   value="/ClassOwner/printStudentCertificate.jsp"/>      
+   </definition>
+   <definition name="classowner.StudentFormFieldAction" extends="baseLayout">
+      <put-attribute name="title"  value="Student Form field"/>
+      <put-attribute name="body"   value="/ClassOwner/studentFormField.jsp"/>      
    </definition>
 </tiles-definitions>

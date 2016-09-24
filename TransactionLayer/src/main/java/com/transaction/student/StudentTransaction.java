@@ -1,6 +1,7 @@
 package com.transaction.student;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,6 +20,8 @@ import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.BatchDB;
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.fees.FeesDB;
+import com.classapp.db.register.AdditionalStudentInfoBean;
+import com.classapp.db.register.AdditionalStudentInfoDb;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentDB;
@@ -31,8 +34,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.service.beans.AttendanceScheduleServiceBean;
 import com.service.beans.StudentListForAttendance;
+import com.service.beans.StudentRegisterServiceBean;
 import com.transaction.attendance.AttendanceTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
@@ -73,6 +78,26 @@ public class StudentTransaction {
 			return true;
 		}	
 		return status;
+	}
+	
+	public boolean saveStudentAdditionalInfo(StudentRegisterServiceBean bean){
+		AdditionalStudentInfoBean additionalStudentInfoBean = new AdditionalStudentInfoBean();
+		additionalStudentInfoBean.setInstId(bean.getStudent().getClass_id());
+		additionalStudentInfoBean.setStudentId(bean.getStudent().getStudent_id());
+		Gson gson = new Gson();
+		String jsonStr = gson.toJson(bean.getAdditionalFormFields());
+		additionalStudentInfoBean.setStudentData(jsonStr);
+		AdditionalStudentInfoDb db = new AdditionalStudentInfoDb();
+		db.saveAdditionalStudentInfo(additionalStudentInfoBean);
+		return true;
+	}
+	
+	public HashMap<String, String> getAdditionalStudentInfoBean(int studentId,int instId){
+		AdditionalStudentInfoDb db = new AdditionalStudentInfoDb();
+		AdditionalStudentInfoBean bean = db.getAdditionalStudetnInfoBean(studentId,instId);
+		Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+		Map<String, String> retMap = new Gson().fromJson(bean.getStudentData(),type);
+		return (HashMap<String, String>) retMap;
 	}
 	
 	public RegisterBean getStudentDetailsFromID(Student student){		

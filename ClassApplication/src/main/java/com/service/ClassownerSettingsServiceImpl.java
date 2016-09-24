@@ -11,9 +11,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.classapp.db.register.AdditionalFormFieldBeanDl;
+import com.google.gson.JsonObject;
 import com.service.beans.ClassOwnerNotificationBean;
 import com.service.beans.ClassownerSettingsNotification;
 import com.transaction.classownersettingtransaction.ClassownerSettingstransaction;
+import com.transaction.register.AdditionalFormFieldTransaction;
 
 @Path("ClassownerSettings")
 public class ClassownerSettingsServiceImpl extends ServiceBase{
@@ -50,5 +53,24 @@ public class ClassownerSettingsServiceImpl extends ServiceBase{
 		}
 		
 		
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/formField")
+	public Response getClassownerSettings(){
+		AdditionalFormFieldTransaction transaction = new AdditionalFormFieldTransaction();
+		AdditionalFormFieldBeanDl bean = transaction.getAdditionalFormFieldBean(getRegId());
+		return Response.accepted(bean).build();
+	}
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/formField")
+	public Response saveClassowner(HashMap<String, String> formFields){
+		AdditionalFormFieldTransaction transaction = new AdditionalFormFieldTransaction();
+		transaction.saveAdditionalFormField(formFields, getRegId());
+		return Response.accepted(formFields).build();
 	}
 }

@@ -25,5 +25,10 @@ public class Header implements Serializable{
 		this.header_name = header_name;
 	}
 	
+	@Override
+	public String toString() {
+		return this.header_name;
+	}
+	
 	
 }
