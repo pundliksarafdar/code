@@ -39,6 +39,7 @@ import com.classapp.db.header.Header;
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.questionPaper.QuestionPaper;
 import com.classapp.db.questionPaper.QuestionPaperDB;
+import com.classapp.db.register.AdditionalFormFieldBeanDl;
 import com.classapp.db.register.AdditionalStudentInfoBean;
 import com.classapp.db.student.StudentDetails;
 import com.classapp.db.student.StudentMarks;
@@ -91,6 +92,7 @@ import com.transaction.image.ImageTransactions;
 import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.notes.NotesTransaction;
 import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
+import com.transaction.register.AdditionalFormFieldTransaction;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.student.StudentTransaction;
 import com.transaction.studentmarks.StudentMarksTransaction;
@@ -832,6 +834,10 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		
 		HashMap<String, String> additionalStudentInfoBean= studentTransaction.getAdditionalStudentInfoBean(student_id, getRegId());
 		studentDetails.setAdditionalStudentInfoBean(additionalStudentInfoBean);
+		
+		AdditionalFormFieldTransaction transaction = new AdditionalFormFieldTransaction();
+		AdditionalFormFieldBeanDl bean = transaction.getAdditionalFormFieldBean(getRegId());
+		studentDetails.setAdditionalFormFieldBeanDl(bean);
 		return Response.status(Status.OK).entity(studentDetails).build();
 	}
 	

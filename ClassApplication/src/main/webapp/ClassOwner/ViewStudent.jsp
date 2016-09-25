@@ -609,14 +609,18 @@ var enabledEdit = false;
 		$(".studentList").hide();
 		 
 		 /****Show additional information********/
-		 if(data.additionalStudentInfoBean){
+		 if(data.additionalStudentInfoBean && data.additionalFormFieldBeanDl){
 			 $("#generalTabAdditionalInfo").empty();
+			 var formFieldJSON = JSON.parse(data.additionalFormFieldBeanDl.formField);
 			 $.each(data.additionalStudentInfoBean,function(key,val){
 				 var additionalData = $("#additionalData").html();
 				 var $additionalData = $(additionalData);
-				 $additionalData.find("#label").html(key);
-				 $additionalData.find("#data").html(val);
-				 $("#generalTabAdditionalInfo").append($additionalData);
+				 if(formFieldJSON[key]){
+					 $additionalData.find("#label").html(formFieldJSON[key]);
+					 $additionalData.find("#data").html(val);
+					 $("#generalTabAdditionalInfo").append($additionalData);	 
+				 }
+				 
 			 });
 			 
 		 }

@@ -11,17 +11,24 @@
 		<jsp:param value="active" name="studentFormFieldAction"/>
 	</jsp:include>
 	<section>
+	<form role="form">
 	<div id="formField">
 	
 	</div>
-	<input type="button" value="Add" class="btn btn-success" id="addField"/>
-	<input type="button" value="Save" class="btn btn-success" id="saveField"/>
+	</form>
+	<div>
+		<input type="button" value="Add" class="btn btn-success" id="addField"/>
+		<input type="button" value="Save" class="btn btn-success" id="saveField"/>
+	
+	</div>
 	</section>
 	
 	<section class="hide" id="fieldGroup">
+		<div class="form-group">
 		<div class="input-group">
 		  <span class="input-group-addon"><i class="glyphicon glyphicon-minus-sign removeItem" style="color:red;"></i></span>
 		  <input type="text" class="form-control" placeholder="Enter new field">
+		</div>
 		</div>
 	</section>
 </body>

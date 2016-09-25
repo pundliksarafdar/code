@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.classapp.db.batch.Batch;
 import com.classapp.db.batch.division.Division;
+import com.classapp.db.register.AdditionalFormFieldBeanDl;
 import com.classapp.db.register.RegisterBean;
 import com.service.beans.ExamWiseStudentDetails;
 import com.service.beans.ProgressCardServiceBean;
@@ -26,6 +27,7 @@ public class StudentDetails {
 	StudentFeesServiceBean feesServiceBean;
 	StudentDetailAttendanceData attendanceData;  
 	HashMap<String, String>additionalStudentInfoBean;
+	AdditionalFormFieldBeanDl additionalFormFieldBeanDl;
 	
 	public int getRollNo() {
 		return rollNo;
@@ -105,6 +107,12 @@ public class StudentDetails {
 	}
 	public void setAdditionalStudentInfoBean(HashMap<String, String> additionalStudentInfoBean) {
 		this.additionalStudentInfoBean = additionalStudentInfoBean;
+	}
+	public AdditionalFormFieldBeanDl getAdditionalFormFieldBeanDl() {
+		return additionalFormFieldBeanDl;
+	}
+	public void setAdditionalFormFieldBeanDl(AdditionalFormFieldBeanDl additionalFormFieldBeanDl) {
+		this.additionalFormFieldBeanDl = additionalFormFieldBeanDl;
 	}
 	
 }
