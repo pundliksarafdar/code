@@ -38,8 +38,13 @@ public class AdditionalFormFieldDb {
 		Criterion criterion = Restrictions.eq("instId", instId);
 		criteria.add(criterion);
 		List<AdditionalFormFieldBean> beans = criteria.list();
-		AdditionalFormFieldBean additionalFormFieldBean = beans.get(0);
+		AdditionalFormFieldBean additionalFormFieldBean = new AdditionalFormFieldBean();
+		if(beans.size()>0){
+			additionalFormFieldBean = beans.get(0);
+		}
 		return additionalFormFieldBean;
+			
+		
 	}
 	
 	public static void main(String[] args) {

@@ -25,16 +25,18 @@ function loadFormField(){
 }
 
 function loadFormFieldSuccess(e){
-	console.log(e);
 	var formField = JSON.parse(e.formField);
-	$.each(formField,function(key,val){
-		console.log(val);
-		var additionFormField = $(ADDITIONAL_FORM_FIELD).html();
-		var $additionFormField = $(additionFormField);
-		$additionFormField.find("#formFieldLabel").text(val);
-		$additionFormField.find("#formFieldValue").attr("fieldId",key);
-		$(ADDITIONAL_FORM_FIELD_TO_SAVE).append($additionFormField);
-	});
+	if(formField){
+		$.each(formField,function(key,val){
+			var additionFormField = $(ADDITIONAL_FORM_FIELD).html();
+			var $additionFormField = $(additionFormField);
+			$additionFormField.find("#formFieldLabel").text(val);
+			$additionFormField.find("#formFieldValue").attr("fieldId",key);
+			$(ADDITIONAL_FORM_FIELD_TO_SAVE).append($additionFormField);
+		});
+	}else{
+		$(ADDITIONAL_FORM_FIELD_TO_SAVE).html("<div class='alert alert-warning'>No additional field to save please add additional formfield from setting if applicable or <a href='studentFormFieldAction'>click here</a> to go to page</div>")
+	}
 }
 
 function loadFormFieldError(){
@@ -52,7 +54,6 @@ function selectBacth(){
 }
 
 var getBatchFeesSuccess = function(data){
-	console.log(data);
 	showTable(data);
 }
 
@@ -358,7 +359,6 @@ var addStudent = function(){
 		studentRegisterServiceBean.registerBean = registerBean;
 		studentRegisterServiceBean.student = student;
 		studentRegisterServiceBean.student_FeesList = feesArray;
-		console.log(studentRegisterServiceBean);
 		var handler = {};
 		handler.success = function(e){
 			if(e == ""){
@@ -370,6 +370,14 @@ var addStudent = function(){
 			}
 			
 		};
+		
+		var additionalValData = {};
+		$(ADDITIONAL_FORM_FIELD_TO_SAVE).find("input").each(function(key,val){
+			var fieldValue = $(val).val();
+			var fieldId = $(val).attr("fieldId");
+			additionalValData[fieldId] = fieldValue;
+		});
+		studentRegisterServiceBean.additionalFormFields = additionalValData;
 		handler.error = function(e){console.log(e)};
 		rest.post(addStudentManuallyUrl+"/"+divisionId+"/"+batchIDs,handler,JSON.stringify(studentRegisterServiceBean));
 		}

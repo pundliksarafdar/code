@@ -12,6 +12,7 @@ $(document).ready(function(){
 });
 
 function addField(fieldValue){
+	$(FORM_FIELD).find(".alert").remove();
 	var fieldItem = $(FIELD_GROUP).html();
 	var f = $(fieldItem); 
 	if(typeof fieldValue != 'object'){
@@ -47,10 +48,11 @@ function loadFormValue(){
 function loadFormValueSuccess(e){
 	
 	var formField = JSON.parse(e.formField);
-	$.each(formField,function(key,val){
-		addField(val);
-	});
-	
+	if(formField){
+		$.each(formField,function(key,val){
+			addField(val);
+		});
+	}
 }
 
 function loadFormValueError(e){
