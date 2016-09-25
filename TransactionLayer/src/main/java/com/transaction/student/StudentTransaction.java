@@ -87,6 +87,7 @@ public class StudentTransaction {
 		Gson gson = new Gson();
 		String jsonStr = gson.toJson(bean.getAdditionalFormFields());
 		additionalStudentInfoBean.setStudentData(jsonStr);
+		additionalStudentInfoBean.setInstStudentId(bean.getStudentClassId());
 		AdditionalStudentInfoDb db = new AdditionalStudentInfoDb();
 		db.saveAdditionalStudentInfo(additionalStudentInfoBean);
 		return true;
@@ -98,6 +99,12 @@ public class StudentTransaction {
 		Type type = new TypeToken<HashMap<String, String>>(){}.getType();
 		Map<String, String> retMap = new Gson().fromJson(bean.getStudentData(),type);
 		return (HashMap<String, String>) retMap;
+	}
+	
+	public AdditionalStudentInfoBean getAdditionalStudentInfoBean_(int studentId,int instId){
+		AdditionalStudentInfoDb db = new AdditionalStudentInfoDb();
+		AdditionalStudentInfoBean bean = db.getAdditionalStudetnInfoBean(studentId,instId);
+		return bean;
 	}
 	
 	public RegisterBean getStudentDetailsFromID(Student student){		

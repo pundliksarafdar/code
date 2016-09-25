@@ -3,6 +3,7 @@ package com.service;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -51,6 +52,7 @@ import com.config.Constants;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.mails.AllMail;
 import com.service.beans.AddBatchBean;
 import com.service.beans.EditQuestionPaper;
@@ -615,6 +617,10 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 			if(!"".equals(serviceBean.getRegisterBean().getEmail())){
 			helper.sendManualRegistrationNotification(getRegId(), list);
 			}
+			
+			StudentTransaction studentTransaction = new StudentTransaction();
+			studentTransaction.saveStudentAdditionalInfo(serviceBean);
+			
 		}
 		}
 		}else{
@@ -832,8 +838,11 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		StudentFeesServiceBean feesServiceBean = feesTransaction.getStudentFees(getRegId(), student_id);
 		studentDetails.setFeesServiceBean(feesServiceBean);
 		
-		HashMap<String, String> additionalStudentInfoBean= studentTransaction.getAdditionalStudentInfoBean(student_id, getRegId());
-		studentDetails.setAdditionalStudentInfoBean(additionalStudentInfoBean);
+		AdditionalStudentInfoBean bean1= studentTransaction.getAdditionalStudentInfoBean_(student_id, getRegId());
+		Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+		Map<String, String> retMap = new Gson().fromJson(bean1.getStudentData(),type);
+		studentDetails.setAdditionalStudentInfoBean((HashMap<String, String>)retMap);
+		studentDetails.setInstStudentId(bean1.getInstStudentId());
 		
 		AdditionalFormFieldTransaction transaction = new AdditionalFormFieldTransaction();
 		AdditionalFormFieldBeanDl bean = transaction.getAdditionalFormFieldBean(getRegId());

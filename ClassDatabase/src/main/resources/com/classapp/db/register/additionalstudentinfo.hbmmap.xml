@@ -4,13 +4,13 @@
 <!-- Generated 10 Jul, 2014 1:55:28 AM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.classapp.db.register.AdditionalStudentInfoBean" table="additionalStudentInfo" catalog="classdb">
-    	<id name="instId" type="int">
-            <column name="inst_id" />
+    	<id name="studentId" type="int">
+            <column name="student_id" />
         </id>
-        <property name="studentId" type="int">
-            <column name="student_id"/>
+        <property name="instId" type="int">
+            <column name="inst_id"/>
         </property>
-        <property name="instStudentId" type="int">
+        <property name="instStudentId" type="text">
             <column name="inst_student_id"/>
         </property>
         <property name="studentData" type="text">

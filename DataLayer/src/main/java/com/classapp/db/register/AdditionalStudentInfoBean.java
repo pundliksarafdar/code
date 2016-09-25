@@ -3,7 +3,7 @@ package com.classapp.db.register;
 public class AdditionalStudentInfoBean {
 	int instId;
 	int studentId;
-	int instStudentId;
+	String instStudentId;
 	String studentData;
 	
 	public int getInstId() {
@@ -18,10 +18,10 @@ public class AdditionalStudentInfoBean {
 	public void setStudentId(int studentId) {
 		this.studentId = studentId;
 	}
-	public int getInstStudentId() {
+	public String getInstStudentId() {
 		return instStudentId;
 	}
-	public void setInstStudentId(int instStudentId) {
+	public void setInstStudentId(String instStudentId) {
 		this.instStudentId = instStudentId;
 	}
 	public String getStudentData() {

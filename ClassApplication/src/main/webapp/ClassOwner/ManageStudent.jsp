@@ -610,6 +610,12 @@ var wayOfAddition="";
 <div class="col-md-1">:</div>
 <div class="col-md-3"><span id="email"></span></div>
 </div>
+
+<div class="row" style="padding-top: 1%">
+	<div class="col-md-2">Student number</div>
+	<div class="col-md-1">:</div>
+	<div class="col-md-3"><input type="text" id="studentIdById" class="form-control" maxlength="20"></div>
+</div>
 </div>
 
 <div class="studentInfoManually" style="padding-left: 2%">
@@ -705,7 +711,14 @@ var wayOfAddition="";
 			<span id="stateError" class="error"></span>
 			</div>
 			</div>
+	<div class="row" style="padding-top: 1%">
+		<div class="col-md-2">Student number</div>
+		<div class="col-md-1">:</div>
+		<div class="col-md-3"><input type="text" id="studentIdByManual" class="form-control" maxlength="20"></div>
+	</div>
 </div>
+
+
 <div class="parentInfo" style="padding-left: 2%">
 <div class="row" style="background: rgba(5, 116, 148, 0.45);padding-top: 0.3%;">
 <div class="col-md-2"><strong align="left">Parents Information</strong></div>

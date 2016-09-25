@@ -39,7 +39,7 @@ public class AdditionalStudentInfoDb {
 	public static void main(String[] args) {
 		AdditionalStudentInfoBean formFieldBean = new AdditionalStudentInfoBean();
 		formFieldBean.setInstId(189);
-		formFieldBean.setInstStudentId(100);
+		//formFieldBean.setInstStudentId(100);
 		formFieldBean.setStudentData("studentData");
 		formFieldBean.setStudentId(100);
 		AdditionalStudentInfoDb db = new AdditionalStudentInfoDb();

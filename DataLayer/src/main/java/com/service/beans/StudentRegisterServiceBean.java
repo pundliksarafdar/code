@@ -10,6 +10,7 @@ public class StudentRegisterServiceBean {
 	List<Student_Fees> student_FeesList;
 	Student student;
 	HashMap<String, String>additionalFormFields;
+	String studentClassId;
 	
 	public RegisterBean getRegisterBean() {
 		return registerBean;
@@ -34,6 +35,12 @@ public class StudentRegisterServiceBean {
 	}
 	public void setAdditionalFormFields(HashMap<String, String> additionalFormFields) {
 		this.additionalFormFields = additionalFormFields;
+	}
+	public String getStudentClassId() {
+		return studentClassId;
+	}
+	public void setStudentClassId(String studentClassId) {
+		this.studentClassId = studentClassId;
 	}
 	
 	

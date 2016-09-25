@@ -193,7 +193,9 @@ var addStudent = function(){
 				var fieldId = $(val).attr("fieldId");
 				additionalValData[fieldId] = fieldValue;
 			});
+			studentRegisterServiceBean.studentClassId = $("#studentIdById").val();
 			studentRegisterServiceBean.additionalFormFields = additionalValData;
+			
 			rest.post(addStudentByID,handler,JSON.stringify(studentRegisterServiceBean));
 		}
 	}else{
@@ -378,6 +380,7 @@ var addStudent = function(){
 			additionalValData[fieldId] = fieldValue;
 		});
 		studentRegisterServiceBean.additionalFormFields = additionalValData;
+		studentRegisterServiceBean.studentClassId = $("#studentIdByManual").val();
 		handler.error = function(e){console.log(e)};
 		rest.post(addStudentManuallyUrl+"/"+divisionId+"/"+batchIDs,handler,JSON.stringify(studentRegisterServiceBean));
 		}
@@ -422,4 +425,5 @@ function StudentRegisterServiceBean(){
 	this.student;
 	this.student_FeesList = [];
 	this.additionalFormFields;
+	this.studentClassId;
 }

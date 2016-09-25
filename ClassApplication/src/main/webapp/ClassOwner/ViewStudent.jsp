@@ -567,6 +567,7 @@ var enabledEdit = false;
 		var handlers = {};
 
 		handlers.success = function(data){console.log("Success",data);
+		
 		$("#studentDetailsBday").html(data.studentUserBean.dob.substring(6)+"/"+data.studentUserBean.dob.substring(4,6)+"/"+data.studentUserBean.dob.substring(0,4));
 		   $("#studentDetailsName").html(data.studentUserBean.fname+" "+data.studentUserBean.lname);
 		   var batchNames = "";
@@ -574,6 +575,7 @@ var enabledEdit = false;
 				batchNames =  batchNames + ","+ val.batch_name;
 			});
 		   batchNames = batchNames.replace(",","");
+		   $("#studentInstId").html(data.instStudentId);
 		   $("#studentDetailsClass").html(data.division.divisionName);
 		   $("#studentDetailsBatch").html(batchNames);
 		   $("#studentDetailsStudentPhone").html(data.studentUserBean.phone1);
@@ -1191,6 +1193,11 @@ var enabledEdit = false;
 <div class="tab-content" style="padding-top: 1%">
   <div id="generalTab" class="tab-pane fade in active">
    <div class="row"><label>Student Information</label></div>
+    <div class="row">
+    	<div class="col-md-2">Student id</div>
+    	<div class="col-md-1">:</div>
+    	<div class="col-md-3"><span id="studentInstId"></span></div>
+    </div>
     <div class="row">
     	<div class="col-md-2">Birth Date</div>
     	<div class="col-md-1">:</div>

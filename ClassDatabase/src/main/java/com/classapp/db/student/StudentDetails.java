@@ -28,7 +28,15 @@ public class StudentDetails {
 	StudentDetailAttendanceData attendanceData;  
 	HashMap<String, String>additionalStudentInfoBean;
 	AdditionalFormFieldBeanDl additionalFormFieldBeanDl;
+	String instStudentId;
 	
+	
+	public String getInstStudentId() {
+		return instStudentId;
+	}
+	public void setInstStudentId(String instStudentId) {
+		this.instStudentId = instStudentId;
+	}
 	public int getRollNo() {
 		return rollNo;
 	}
