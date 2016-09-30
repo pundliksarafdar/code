@@ -130,4 +130,26 @@ public class AttendanceImlp extends ServiceBase{
 		List studentList = attendanceTransaction.getStudentsWeeklyAttendance(batch, getRegId(), division, new Date(date));
 		return Response.status(Response.Status.OK).entity(studentList).build();
 	}
+	
+	@POST
+	@Path("/saveCommonDayStudentAttendance")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveCommonDayStudentAttendance(List<Attendance> attendanceList) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		boolean status = attendanceTransaction.saveCommonDayAttendance(getRegId(), attendanceList);
+		return Response.status(Response.Status.OK).entity(status).build();
+	}
+	
+	@POST
+	@Path("/updateCommonDayStudentAttendance")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateCommonDayStudentAttendance(List<Attendance> attendanceList) {
+		// TODO Auto-generated method stub
+		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
+		boolean status = attendanceTransaction.updateCommonDayAttendance(getRegId(), attendanceList);
+		return Response.status(Response.Status.OK).entity(status).build();
+	}
 }

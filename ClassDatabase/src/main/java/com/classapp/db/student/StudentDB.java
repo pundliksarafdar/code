@@ -945,7 +945,7 @@ public class StudentDB {
 		boolean status=false;
 		Transaction transaction = null;
 		List list=null;
-		String queryString="Select reg.fname,reg.lname, reg.regId  from Student std,RegisterBean reg " +
+		String queryString="Select reg.fname,reg.lname, reg.regId,std.batchIdNRoll  from Student std,RegisterBean reg " +
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
 				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id order by std.student_id";
 		try{

@@ -15,7 +15,7 @@
 <link href="css/common.css" rel="stylesheet">
 <link rel="icon" 
       type="image/jpeg" 
-      href="images/cxlogowhite.jpg">
+      href="images/bluelogo.gif">
  
  <style>
  	

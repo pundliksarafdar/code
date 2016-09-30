@@ -319,7 +319,7 @@ function createStudentTable(data){
 		data: data,
 		lengthChange: true,
 		columns: [
-			{title:"Roll no",data:"rollNo",render:function(data,event,row){
+			{title:"Roll no",data:"roll_no",render:function(data,event,row){
 				if(!data){
 					data = '&mdash;'
 				}
@@ -339,11 +339,11 @@ function createStudentTable(data){
 		]
 	});
 	
-	dataTable.on( 'order.dt search.dt', function () {
+/* 	dataTable.on( 'order.dt search.dt', function () {
     dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
         cell.innerHTML = i+1;
 		});
-	}).draw();
+	}).draw(); */
 }
 
 </script>

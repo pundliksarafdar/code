@@ -957,6 +957,76 @@ public class AttendanceTransaction {
 		return monthlyAttendanceList;
 	}
 	
+	public boolean saveCommonDayAttendance(int inst_id,List<Attendance> attendanceList) {
+		int batchid = -1;
+		int div_id = -1;
+		Date date = null;
+		if(attendanceList != null){
+			if(attendanceList.size() > 0){
+				batchid = attendanceList.get(0).getBatch_id();
+				date = attendanceList.get(0).getAtt_date();
+				div_id = attendanceList.get(0).getDiv_id();
+			}
+		}
+		ScheduleDB db = new ScheduleDB();
+		List<AttendanceScheduleServiceBean> attendanceScheduleServiceBeanList = new ArrayList<AttendanceScheduleServiceBean>(); 
+		List list =  db.getScheduleForAttendance(batchid, date, inst_id, div_id);
+		AttendanceDB attendanceDB = new AttendanceDB();
+	    attendanceDB.deleteDaysBatchAttendance(inst_id, div_id, batchid, date);
+	    if(list != null){
+			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+				Object[] object = (Object[]) iterator.next();
+				int sub_id = ((Number) object[3]).intValue();
+				int schedule_id = ((Number) object[4]).intValue();
+				for (Iterator innerIterator = attendanceList.iterator(); innerIterator.hasNext();) {
+					Attendance attendance = (Attendance) innerIterator.next();
+					attendance.setInst_id(inst_id);
+					attendance.setSub_id(sub_id);
+					attendance.setSchedule_id(schedule_id);
+					attendanceDB.save(attendance);
+				}
+			}
+		}
+	    
+		return true;
+	}
+	
+	public boolean updateCommonDayAttendance(int inst_id,List<Attendance> attendanceList) {
+		int batchid = -1;
+		int div_id = -1;
+		Date date = null;
+		if(attendanceList != null){
+			if(attendanceList.size() > 0){
+				batchid = attendanceList.get(0).getBatch_id();
+				date = attendanceList.get(0).getAtt_date();
+				div_id = attendanceList.get(0).getDiv_id();
+			}
+		}
+		ScheduleDB db = new ScheduleDB();
+		List<AttendanceScheduleServiceBean> attendanceScheduleServiceBeanList = new ArrayList<AttendanceScheduleServiceBean>(); 
+		List list =  db.getScheduleForAttendance(batchid, date, inst_id, div_id);
+		AttendanceDB attendanceDB = new AttendanceDB();
+	    List<Integer> scheduleIds = attendanceDB.getDailyDistinctAttendance(inst_id, div_id, batchid, date);
+	    attendanceDB.deleteDaysBatchAttendance(inst_id, div_id, batchid, date);
+	    if(list != null){
+			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+				Object[] object = (Object[]) iterator.next();
+				int sub_id = ((Number) object[3]).intValue();
+				int schedule_id = ((Number) object[4]).intValue();
+				if(scheduleIds.contains(schedule_id)){
+				for (Iterator innerIterator = attendanceList.iterator(); innerIterator.hasNext();) {
+					Attendance attendance = (Attendance) innerIterator.next();
+					attendance.setInst_id(inst_id);
+					attendance.setSub_id(sub_id);
+					attendance.setSchedule_id(schedule_id);
+					attendanceDB.save(attendance);
+				}
+				}
+			}
+		}
+	    
+		return true;
+	}
 	
 	
 	class ArrayListOverride<E> extends ArrayList<E>{

@@ -40,6 +40,8 @@ public class RegisterBean implements Serializable{
 	private String status;
 	private String inst_status;
 	private Date nextRenewalDate;
+	private int inst_roll;
+	private int inst_id;
 	public String getStatus() {
 		return status;
 	}
@@ -213,6 +215,18 @@ public class RegisterBean implements Serializable{
 	}
 	public void setNextRenewalDate(Date nextRenewalDate) {
 		this.nextRenewalDate = nextRenewalDate;
+	}
+	public int getInst_roll() {
+		return inst_roll;
+	}
+	public void setInst_roll(int inst_roll) {
+		this.inst_roll = inst_roll;
+	}
+	public int getInst_id() {
+		return inst_id;
+	}
+	public void setInst_id(int inst_id) {
+		this.inst_id = inst_id;
 	}
 	
 	

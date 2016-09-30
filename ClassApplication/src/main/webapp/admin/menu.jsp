@@ -465,6 +465,26 @@ siteMapApp.controller("SiteMapController",function($scope){
             </div>
             </a>
         </div>
+        <div class="col-sm-2 col-xs-4">
+        	<a href="createrole">
+        	<!-- This two settings need to merge -->
+        	<!-- <a href="classownerSettings"> -->
+            <div id="tile13" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div class="markGlyphicon">
+                                <i class="glyphicon glyphicon-user bigicon"></i>
+                            </div>
+                            <div class="icontext">
+                                Role
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+            </a>
+        </div>
 		<!---->
         </div>
     <%} %>

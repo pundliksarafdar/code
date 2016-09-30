@@ -32,9 +32,9 @@ response.setHeader("Expires", "0");
 <link href="css/select2.min.css" rel="stylesheet" />
 <link href="js/summernote/summernote.css" rel="stylesheet">
 <link href="css/typeahead.css" rel="stylesheet" />  	
-<link rel="icon" 
-      type="image/jpeg" 
-      href="images/cxlogowhite.jpg">
+<link rel="shortcut icon " 
+      type="image/gif" 
+      href="images/bluelogo.gif">
  
 <!-- DataTables, TableTools and Editor CSS 
 <link rel="stylesheet" type="text/css" href="/media/css/jquery.dataTables.css">

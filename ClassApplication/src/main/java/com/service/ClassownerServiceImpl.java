@@ -19,6 +19,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -42,6 +43,7 @@ import com.classapp.db.questionPaper.QuestionPaper;
 import com.classapp.db.questionPaper.QuestionPaperDB;
 import com.classapp.db.register.AdditionalFormFieldBeanDl;
 import com.classapp.db.register.AdditionalStudentInfoBean;
+import com.classapp.db.roll.Inst_roll;
 import com.classapp.db.student.StudentDetails;
 import com.classapp.db.student.StudentMarks;
 import com.classapp.db.subject.Subject;
@@ -92,6 +94,7 @@ import com.transaction.exams.ExamTransaction;
 import com.transaction.fee.FeesTransaction;
 import com.transaction.image.ImageTransactions;
 import com.transaction.institutestats.InstituteStatTransaction;
+import com.transaction.instroll.InstRollTransaction;
 import com.transaction.notes.NotesTransaction;
 import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
 import com.transaction.register.AdditionalFormFieldTransaction;
@@ -1114,5 +1117,48 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		CertificateTransaction certificateTransaction = new CertificateTransaction(Constants.STORAGE_PATH);
 		String fileData = certificateTransaction.getPrintCertificateData(getRegId(), cert_id,student_id);
 		return Response.status(200).entity(fileData).build();
+	}
+	
+	@POST
+	@Path("/saveinstroll")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveInstRoll(Inst_roll inst_roll){
+		inst_roll.setInst_id(getRegId());
+		InstRollTransaction transaction = new InstRollTransaction();
+		boolean valid = transaction.saveInstRoll(inst_roll);
+		return Response.status(200).entity(valid).build();
+	}
+	
+	@GET
+	@Path("/getroll/{roll_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getRoll(@PathParam("roll_id")int roll_id){
+		InstRollTransaction transaction = new InstRollTransaction();
+		Inst_roll inst_roll = transaction.getRole(getRegId(),roll_id);
+		return Response.status(200).entity(inst_roll).build();
+	}
+	
+	@PUT
+	@Path("/updateinstroll")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateInstRoll(Inst_roll inst_roll){
+		inst_roll.setInst_id(getRegId());
+		InstRollTransaction transaction = new InstRollTransaction();
+		boolean valid = transaction.updateInstRoll(inst_roll);
+		return Response.status(200).entity(valid).build();
+	}
+	
+	@POST
+	@Path("/createUser")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response createUser(com.classapp.db.register.RegisterBean registerBean){
+		registerBean.setInst_id(getRegId());
+		RegisterTransaction transaction = new RegisterTransaction();
+		transaction.registerInstituteUser(registerBean);
+		return Response.status(200).entity(true).build();
 	}
 }

@@ -556,7 +556,14 @@ public class StudentTransaction {
 				bean.setFname((String) object[0]);
 				bean.setLname((String) object[1]);
 				bean.setStudent_id(((Number) object[2]).intValue());	
-				bean.setRoll_no(i++);
+				try{
+					JsonParser parser = new JsonParser();
+					JsonObject json = (JsonObject) parser.parse((String) object[3]);
+					int roll_no = json.get(batchid).getAsInt();
+					bean.setRoll_no(roll_no);
+					}catch(Exception e){
+						bean.setRoll_no(0);
+					}
 				studentDatas.add(bean);
 			}
 		}

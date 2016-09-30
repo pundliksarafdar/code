@@ -664,5 +664,17 @@
 		<action name="studentFormFieldAction"  class="com.classowner.StudentFormFieldAction">
 			<result name="success" type="tiles">classowner.StudentFormFieldAction</result>
 		</action>
+		<action name="createrole" class="com.classowner.RoleAction">
+			<result name="success" type="tiles">classowner.createrole</result>
+		</action>
+		<action name="viewrole" class="com.classowner.ViewRoleAction">
+			<result name="success" type="tiles">classowner.viewrole</result>
+		</action>
+		<action name="createuser" class="com.classowner.CreateUserAction">
+			<result name="success" type="tiles">classowner.createuser</result>
+		</action>
+		<action name="viewuser" class="com.classowner.ViewUserAction">
+			<result name="success" type="tiles">classowner.viewuser</result>
+		</action>
 	</package>
 </struts>

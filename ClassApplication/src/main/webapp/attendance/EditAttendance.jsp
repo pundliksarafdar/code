@@ -47,6 +47,16 @@
 			</div>
 		</div>
 	</div>
+	<div class="container" id="commonAttendanceDiv" style="display: none;">
+	<div class="row" style="padding: 1%;">
+	<div class="col-md-4">
+	Update whole day attendance
+	</div>
+	<div class="col-md-2">
+	<button class="btn btn-primary btn-sm comonMarkAttendance">Update Attendance</button>
+	</div>
+	</div>
+	</div>
 	<div class="container" id="attendanceScheduleDiv" style="padding: 1%;">
 	<table id="attendanceScheduleTable" class="table" style="width: 100%"></table>
 	

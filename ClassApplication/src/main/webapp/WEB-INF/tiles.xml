@@ -764,4 +764,20 @@
       <put-attribute name="title"  value="Student Form field"/>
       <put-attribute name="body"   value="/ClassOwner/studentFormField.jsp"/>      
    </definition>
+   <definition name="classowner.createrole" extends="baseLayout">
+      <put-attribute name="title"  value="Create Role"/>
+      <put-attribute name="body"   value="/Roles/CreateRole.jsp"/>      
+   </definition>
+   <definition name="classowner.viewrole" extends="baseLayout">
+      <put-attribute name="title"  value="View Role"/>
+      <put-attribute name="body"   value="/Roles/EditRole.jsp"/>      
+   </definition>
+   <definition name="classowner.createuser" extends="baseLayout">
+      <put-attribute name="title"  value="Create User"/>
+      <put-attribute name="body"   value="/Roles/CreateUser.jsp"/>      
+   </definition>
+    <definition name="classowner.viewuser" extends="baseLayout">
+      <put-attribute name="title"  value="View User"/>
+      <put-attribute name="body"   value="/Roles/ViewUser.jsp"/>      
+   </definition>
 </tiles-definitions>

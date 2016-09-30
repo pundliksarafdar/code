@@ -86,6 +86,12 @@
         </property>
          <property name="nextRenewalDate" type="java.util.Date">
             <column name="nextRenewalDate" length="1" not-null="false" unique="false" />
-        </property>      
+        </property>  
+        <property name="inst_roll" type="java.lang.Integer">
+            <column name="inst_roll" not-null="false" unique="false" />
+        </property>
+        <property name="inst_id" type="java.lang.Integer">
+            <column name="inst_id" not-null="false" unique="false" />
+        </property>    
         </class>
 </hibernate-mapping>

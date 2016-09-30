@@ -32,7 +32,16 @@ $(document).ready(function(){
 		 getStudents();
 	 });
 	 
+	 $(".comonMarkAttendance").click(function(){
+		 //modal.modalConfirm("Attendance","If you have added attendace of this batch for this date,then it will get overwrite.Do you want to continue?","Cancel","Delete",deleteBatch,[divisionId,batchIdToDelete]);
+		 $("#commonAttendanceDiv").hide();
+		 subject_id = -1;
+		 schedule_id = -1;
+		 getStudents();
+	 });
+	 
 	 $(".backtoSchedule").click(function(){
+		 $("#commonAttendanceDiv").show();
 		 $("#attendanceStudentListDiv").hide();
 			$("#attendanceScheduleDiv").show();
 	 });
@@ -73,7 +82,24 @@ $(document).ready(function(){
 			handler.error = function(e){
 				$.notify({message: "Attendanced not saved successfully"},{type: 'danger'});
 				}
+			var commonHandler = {};
+			commonHandler.success = function(e){
+				$(".markAttendance").prop("disabled",true);
+				$(".comonMarkAttendance").prop("disabled",true);
+				$("#attendanceStudentListDiv").hide();
+				$("#attendanceScheduleDiv").show();
+				$("#commonAttendanceDiv").show();
+				$.notify({message: "Attendanced saved successfully"},{type: 'success'});
+			
+			}
+			commonHandler.error = function(e){
+				$.notify({message: "Attendanced not saved successfully"},{type: 'danger'});
+				}
+			if(schedule_id == -1){
+			rest.post("rest/attendance/saveCommonDayStudentAttendance",commonHandler,JSON.stringify(attendanceArr));	
+			}else{
 			rest.post("rest/attendance/saveStudentAttendance",handler,JSON.stringify(attendanceArr));
+			}
 	 });
 	 
 	 $('#myInput').on( 'keyup', function () {
@@ -88,6 +114,7 @@ function getBatches(){
 	var divisionId = $('#divisionSelect').val();
 	$("#batchSelect").val("-1")
 	$("#batchSelect").find('option:gt(0)').remove();
+	 $("#commonAttendanceDiv").hide();
 	$("#attendanceScheduleDiv").hide();
 	$("#attendanceStudentListDiv").hide();
 	if(divisionId != "-1"){		
@@ -146,6 +173,7 @@ function loadStudentTable(data){
 	var batchId = $(BATCH_SELECT).val();
 	$("#attendanceScheduleDiv").hide();
 	$("#attendanceStudentListDiv").hide();
+	 $("#commonAttendanceDiv").hide();
 	if(batchId != "-1"){
 		$("#batchError").html("");
 	}
@@ -193,6 +221,7 @@ function getSchedule(){
 }
 function createAttendanceScheduleTable(data){
 	//data = JSON.parse(data);
+	var counterFlag = 0;
 	var i=0;
 	var dataTable = $('#attendanceScheduleTable').DataTable({
 		bDestroy:true,
@@ -213,6 +242,7 @@ function createAttendanceScheduleTable(data){
 				if(row.attendanceStatus == true){
 				return "<div><input type='button' class='btn btn-primary btn-sm markAttendance' value='Mark Attendance' disabled></div>";
 				}else{
+					counterFlag ++;
 					return "<div><input type='button' class='btn btn-primary btn-sm markAttendance' value='Mark Attendance'><input type='hidden' id='sub_id' value='"+row.sub_id+"'><input type='hidden' id='schedule_id' value='"+row.schedule_id+"'></div>";	
 				}	
 			},sWidth:"20%"},
@@ -231,6 +261,12 @@ function createAttendanceScheduleTable(data){
 			});
 		}).draw(); 
 	$("#attendanceScheduleDiv").show();
+	$("#commonAttendanceDiv").show();
+	if(counterFlag > 0){
+		$(".comonMarkAttendance").prop("disabled",false);
+	}else{
+		$(".comonMarkAttendance").prop("disabled",true);
+	}
 }
 function getStudents(){
 	var division = $("#divisionSelect").val();

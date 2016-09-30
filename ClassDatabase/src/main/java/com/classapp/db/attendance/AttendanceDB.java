@@ -1025,4 +1025,32 @@ public class AttendanceDB {
 
 		return null;
 }
+	
+	public boolean deleteDaysBatchAttendance(int inst_id,int div_id,int batch_id,Date date) {
+		Transaction transaction=null;
+		Session session=null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("delete Attendance where  inst_id = :inst_id and div_id = :div_id and batch_id = :batch_id and att_date =:att_date");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("div_id", div_id);
+		query.setParameter("batch_id", batch_id);
+		query.setParameter("att_date", date);
+		query.executeUpdate();
+		transaction.commit();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  true;
+
+	}
 }

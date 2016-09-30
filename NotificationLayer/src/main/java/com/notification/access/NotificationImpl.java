@@ -1256,16 +1256,17 @@ public class NotificationImpl {
 					messageDetailBean.setMessageTypeEmail(sendEmail);
 					messageDetailBean.setMessageTypeSms(sendSMS);
 					messageDetailBean.setSendToTeacher(true);
-					if(messageDetailBean.getTeacherPhone()!= null && messageDetailBean.isSendToStudent() && messageDetailBean.getTeacherPhone()!= 0){
+					if(messageDetailBean.getTeacherPhone()!= null && sendSMS && messageDetailBean.getTeacherPhone()!= 0){
 						msgCounter ++;
 					}
-					if((messageDetailBean.getTeacherPhone()== null || messageDetailBean.getTeacherPhone()== 0) && messageDetailBean.isSendToStudent() ){
+					if((messageDetailBean.getTeacherPhone()== null || messageDetailBean.getTeacherPhone()== 0) && sendSMS ){
 						teachersWithoutPhone ++ ;
 					}
 					
-					if((messageDetailBean.getParentEmail()== null || "".equals(messageDetailBean.getParentEmail())) && messageDetailBean.isSendToStudent() ){
+					if((messageDetailBean.getTeacherEmail()== null || "".equals(messageDetailBean.getTeacherEmail())) && sendEmail ){
 						teachersWithoutEmail ++;
 					}
+					messageDetailBean.setSmsMessage(msg);
 					messageDetailBean.setTeacherEmailMessage(msg);
 					messageDetailBean.setTeacherEmailObject(null);
 					

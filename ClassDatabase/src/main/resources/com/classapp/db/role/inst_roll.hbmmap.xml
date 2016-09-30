@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 18 Jul, 2014 11:15:40 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.roll.Inst_roll" table="inst_roll" catalog="classdb">
+    <composite-id>
+    	<key-property name="inst_id" column="inst_id"></key-property>
+    	<key-property name="roll_id" column="roll_id"></key-property>
+	</composite-id>
+        <property name="roll_desc" type="java.lang.String">
+            <column name="roll_desc" length="50" />
+        </property>
+        <property name="parent_mod_access" type="java.lang.String">
+            <column name="parent_mod_access" length="50" />
+        </property>
+        <property name="child_mod_access" type="java.lang.String">
+            <column name="child_mod_access" length="200"/>
+        </property>
+        <property name="teacher" type="boolean">
+            <column name="teacher" />
+        </property>
+    </class>
+</hibernate-mapping>

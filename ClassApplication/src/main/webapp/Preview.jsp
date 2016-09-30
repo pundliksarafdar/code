@@ -14,7 +14,7 @@
 <link href="assets/css/font-awesome.min.css" rel="stylesheet" />
 <link rel="icon" 
       type="image/jpeg" 
-      href="images/cxlogowhite.jpg">
+      href="images/bluelogo.gif">
  
 <!-- DataTables, TableTools and Editor CSS 
 <link rel="stylesheet" type="text/css" href="/media/css/jquery.dataTables.css">

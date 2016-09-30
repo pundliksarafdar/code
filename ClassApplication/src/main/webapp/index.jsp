@@ -58,7 +58,7 @@ ul{
 			<!--<s:property value="getText('global.name')" />-->			
 			<div class="row">
 				<div class="col-md-4">
-					<img src="images/cxlogowhite.jpg" alt="cxlogo" style="height: 100%;width: 100%" class="img-rounded"/>
+					<img src="images/bluelogo.gif" alt="cxlogo" style="height: 100%;width: 100%" class="img-rounded"/>
 				</div>
 
 				<div class="col-md-8">

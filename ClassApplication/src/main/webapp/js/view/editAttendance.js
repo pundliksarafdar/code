@@ -24,14 +24,22 @@ $(document).ready(function(){
 		 getSchedule();
 	 });
 	 $('#attendanceScheduleTable').on("click",".markAttendance",function(){
+		 $("#commonAttendanceDiv").hide();
 		 subject_id = $(this).closest("div").find("#sub_id").val();
 		 var schedule_id = $(this).closest("div").find("#schedule_id").val();
 		 getStudents(schedule_id);
+	 });
+	 $(".comonMarkAttendance").click(function(){
+		 $("#commonAttendanceDiv").hide();
+		 subject_id = -1;
+		 schedule_id = -1;
+		 getStudentsForCommonUpdate();
 	 });
 	 
 	 $(".backtoSchedule").click(function(){
 		 $("#attendanceStudentListDiv").hide();
 			$("#attendanceScheduleDiv").show();
+			$("#commonAttendanceDiv").show();
 	 });
 	 $(".saveAttendance").click(function(){
 		 //$("#attendanceStudentListDiv").hide();
@@ -66,7 +74,23 @@ $(document).ready(function(){
 			
 			}
 			handler.error = function(e){$.notify({message: "Attendanced not updated successfully"},{type: 'danger'});}
-			rest.post("rest/attendance/updateStudentAttendance",handler,JSON.stringify(attendanceArr));
+			var commonHandler = {};
+			commonHandler.success = function(e){
+				$("#attendanceStudentListDiv").hide();
+				$("#attendanceScheduleDiv").show();
+				$("#commonAttendanceDiv").show();
+				$.notify({message: "Attendanced updated successfully"},{type: 'success'});
+			
+			}
+			commonHandler.error = function(e){
+				$.notify({message: "Attendanced not updated successfully"},{type: 'danger'});
+				}
+			
+			if(schedule_id == -1){
+				rest.post("rest/attendance/updateCommonDayStudentAttendance",commonHandler,JSON.stringify(attendanceArr));	
+				}else{
+					rest.post("rest/attendance/updateStudentAttendance",handler,JSON.stringify(attendanceArr));
+				}
 	 });
 	 
 	 $('#myInput').on( 'keyup', function () {
@@ -83,6 +107,7 @@ function getBatches(){
 	$("#batchSelect").find('option:gt(0)').remove();
 	$("#attendanceScheduleDiv").hide();
 	$("#attendanceStudentListDiv").hide();
+	 $("#commonAttendanceDiv").hide();
 	if(divisionId != "-1"){		
 	$("#divisionError").html("");
 	  $.ajax({
@@ -139,6 +164,7 @@ function loadStudentTable(data){
 	var batchId = $(BATCH_SELECT).val();
 	$("#attendanceScheduleDiv").hide();
 	$("#attendanceStudentListDiv").hide();
+	 $("#commonAttendanceDiv").hide();
 	if(batchId != "-1"){
 		$("#batchError").html("");
 	}
@@ -213,6 +239,7 @@ function createAttendanceScheduleTable(data){
 			});
 		}).draw(); 
 	$("#attendanceScheduleDiv").show();
+	$("#commonAttendanceDiv").show();
 }
 function getStudents(schedule_id){
 	var division = $("#divisionSelect").val();
@@ -226,6 +253,48 @@ function getStudents(schedule_id){
 	}
 	handler.error = function(e){console.log("Error",e)}
 	rest.get("rest/attendance/getStudentsForAttendanceUpdate/"+division+"/"+batch+"/"+subject_id+"/"+schedule_id+"/"+new Date(date[2],parseInt(date[1])-1,date[0]).getTime(),handler);
+}
+
+function getStudentsForCommonUpdate(){
+	var division = $("#divisionSelect").val();
+	var batch = $("#batchSelect").val();
+	var handler = {};
+	handler.success = function(e){console.log("Success",e);	
+	createCommonStudentAttendanceTable(e);
+	$("#attendanceStudentListDiv").show();
+	$("#attendanceScheduleDiv").hide();
+	}
+	handler.error = function(e){console.log("Error",e)}
+	rest.get("rest/attendance/getStudentsForAttendance/"+division+"/"+batch,handler);
+}
+
+function createCommonStudentAttendanceTable(data){
+	//data = JSON.parse(data);
+	var i=0;
+	var dataTable = $('#attendanceStudentListTable').DataTable({
+		bDestroy:true,
+		data: data,
+		paging: false,
+		lengthChange: false,
+		columns: [
+		          { title: "Roll No",data:null,render:function(data,event,row){
+		        	  if(row.roll_no == 0){
+		        		  return "-";  
+		        	  }else{
+		        	  return row.roll_no;
+		        	  }
+		          },sWidth:"10%"},
+			{ title: "Student",data:null,render:function(data,event,row){
+				var div = '<div class="default defaultBatchName">'+row.fname+" "+row.lname+'</div>';
+				return div;
+			},sWidth:"50%"},
+			{ title: "Attendance",data:null,render:function(data,event,row){
+				return "<div class='presenteeDiv'><input type='checkbox' data-size=\"mini\"/ class='presentee' checked><input type='hidden' value='"+row.student_id+"' id='student_id'></div>"}
+			,swidth:'30%'
+			}
+		]
+	});
+	$("#attendanceStudentListTable input[type=\"checkbox\"]").bootstrapSwitch(optionSelect);
 }
 
 function createStudentAttendanceTable(data){

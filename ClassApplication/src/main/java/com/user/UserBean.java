@@ -31,7 +31,8 @@ public class UserBean{
 	private String inst_status;
 	private Date lastlogin;
 	private UserStatic userStatic;
-	
+	private int inst_roll;
+	private int inst_id;
 	public String getEmail() {
 		return email;
 	}
@@ -186,6 +187,18 @@ public class UserBean{
 	}
 	public void setLastlogin(Date lastlogin) {
 		this.lastlogin = lastlogin;
+	}
+	public int getInst_roll() {
+		return inst_roll;
+	}
+	public void setInst_roll(int inst_roll) {
+		this.inst_roll = inst_roll;
+	}
+	public int getInst_id() {
+		return inst_id;
+	}
+	public void setInst_id(int inst_id) {
+		this.inst_id = inst_id;
 	}
 	
 	

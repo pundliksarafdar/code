@@ -297,6 +297,29 @@ public class RegisterTransaction {
 		registerDB.updateEmail(regID, email);
 		return true;
 	}
+	
+	public boolean registerInstituteUser(RegisterBean registerBean){
+		RegisterUser registerUser = new RegisterUser();
+		boolean flag = true;
+		String username = "";
+		while(flag){
+			UUID id = UUID.randomUUID();
+			username = (registerBean.getFname().charAt(0))+""+(registerBean.getLname().charAt(0))+""+id.toString().substring(id.toString().length() -5);
+			if(!isUserExits(username)){
+				flag = false;
+			}
+		}
+		registerBean.setDob(registerBean.getDob().replace("-", ""));
+		registerBean.setMname("");
+		registerBean.setLoginName(username);
+		registerBean.setLoginPass(new java.util.Date().getTime()+"");
+		registerBean.setActivationcode("");
+		registerBean.setClassName("");
+		registerBean.setCountry("INDIA");
+		registerBean.setRole(5);	//Role = 5 for custom users added for respective institute
+		registerUser.registerUser(registerBean);
+		return true;
+	}
 	}
 	
 
