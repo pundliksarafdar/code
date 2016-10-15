@@ -58,6 +58,21 @@ public class SubjectTransaction {
 		return status;
 	}
 	
+	public boolean addSubjectToDb(Subject subject){
+		boolean status = false;
+		AddSubject addSubject = new AddSubject();
+		GetSubject getSubject = new GetSubject();	
+		String result =getSubject.isSubjectExists(subject.getSubjectName(),subject.getInstitute_id());
+		if(result=="false"){
+		int sub_id = addSubject.addSubject(subject,subject.getInstitute_id());
+		status = true;
+		}
+		else{
+			status = false;
+		}
+		return status;
+	}
+	
 	public List<Subjects> getAllClassSubjects(int regId){
 		GetSubject getSubject = new GetSubject();
 		return getSubject.getAllClassSubjectsNames(regId);

@@ -36,6 +36,7 @@ public class Constants {
 	public static String CLASSSTUDENT = "success_student";
 	public static String UNACCEPTED = "unaccepted";
 	public static String ACCESSBLOCKED = "accessblocked";
+	public static String CUSTOMUSER = "custom_user";
 	
 	public static String BATCH_LIST = "batchList";
 	public static String SUBJECT_LIST = "subjectList";

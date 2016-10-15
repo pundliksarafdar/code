@@ -230,4 +230,9 @@ public class NotificationServiceHelper {
 		NotificationImpl notificationImpl = new NotificationImpl();
 		return notificationImpl.sendTextTeacher(inst_id,sendEmail,sendSMS,msg,teacherIds);
 	}
+	
+	public void sendManualRegistrationNotificationOfInstituteuser(int inst_id,int regID){
+		NotificationImpl notificationImpl = new NotificationImpl();
+		notificationImpl.sendManualRegistrationNotificationOfInstituteUser(inst_id, regID);
+	}
 }

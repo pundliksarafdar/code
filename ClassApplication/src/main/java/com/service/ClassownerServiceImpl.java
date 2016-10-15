@@ -4,6 +4,9 @@ package com.service;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -43,6 +46,7 @@ import com.classapp.db.questionPaper.QuestionPaper;
 import com.classapp.db.questionPaper.QuestionPaperDB;
 import com.classapp.db.register.AdditionalFormFieldBeanDl;
 import com.classapp.db.register.AdditionalStudentInfoBean;
+import com.classapp.db.roll.EditInstUserObject;
 import com.classapp.db.roll.Inst_roll;
 import com.classapp.db.student.StudentDetails;
 import com.classapp.db.student.StudentMarks;
@@ -887,7 +891,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	public Response updateNotes(Notes notes){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 	    UserStatic userStatic = userBean.getUserStatic();
-	    String destPath=  userStatic.getNotesPath()+File.separator+notes.getSubid()+File.separator+notes.getDivid();
+	    String destPath=  userStatic.getNotesPath()+File.separator+notes.getDivid()+File.separator+notes.getSubid();
 		NotesTransaction notesTransaction=new NotesTransaction();
 		Notes oldNotes = notesTransaction.getNotesById(notes.getNotesid(), userBean.getRegId(), notes.getSubid(), notes.getDivid());
 		int extentionStart = oldNotes.getNotespath().lastIndexOf(".");
@@ -907,7 +911,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	public Response deleteNotes(Notes notes){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		UserStatic userStatic = userBean.getUserStatic();
-	    String notesPath=  userStatic.getNotesPath()+File.separator+notes.getSubid()+File.separator+notes.getDivid();
+	    String notesPath=  userStatic.getNotesPath()+File.separator+notes.getDivid()+File.separator+notes.getSubid();
 		NotesTransaction notesTransaction=new NotesTransaction();
 		notesTransaction.deleteNotes( notes.getNotesid(), userBean.getRegId(), notes.getDivid(), notes.getSubid(),notesPath);
 		return Response.status(Status.OK).entity(true).build();
@@ -1152,13 +1156,54 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	}
 	
 	@POST
-	@Path("/createUser")
+	@Path("/createUser/{joiningDate}/{education}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createUser(com.classapp.db.register.RegisterBean registerBean){
+	public Response createUser(com.classapp.db.register.RegisterBean registerBean,@PathParam("joiningDate")String joiningDate,
+			@PathParam("education")String education){
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		try {
+			date = (Date)format.parse(joiningDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		registerBean.setInst_id(getRegId());
 		RegisterTransaction transaction = new RegisterTransaction();
-		transaction.registerInstituteUser(registerBean);
+		int regID = transaction.registerInstituteUser(registerBean,education,new java.sql.Date(date.getTime()));
+		NotificationServiceHelper helper = new NotificationServiceHelper();
+		helper.sendManualRegistrationNotificationOfInstituteuser(getRegId(), regID);
+		return Response.status(200).entity(true).build();
+	}
+	
+	@GET
+	@Path("/getinstuser/{user_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getInstUser(@PathParam("user_id")int user_id){
+		InstRollTransaction transaction = new InstRollTransaction();
+		EditInstUserObject object =  transaction.getInstUsers(getRegId(), user_id);
+		return Response.status(200).entity(object).build();
+	}
+	
+	@PUT
+	@Path("/updateUser/{joiningDate}/{education}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateUser(com.classapp.db.register.RegisterBean registerBean,@PathParam("joiningDate")String joiningDate,
+			@PathParam("education")String education){
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		try {
+			date = (Date)format.parse(joiningDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		registerBean.setInst_id(getRegId());
+		InstRollTransaction transaction = new InstRollTransaction();
+		transaction.updateInstituteUser(registerBean,education,new java.sql.Date(date.getTime()));
 		return Response.status(200).entity(true).build();
 	}
 }

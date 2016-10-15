@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.ws.ServiceMode;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -38,6 +39,8 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 	Map<String, String> params;
 	String forward;
 	String sessionMessageError;
+	String moduleAccess;
+	String accessType;
 	private static final Logger logger = Logger.getLogger(BaseAction.class);
 	public abstract String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session);
 	@Override
@@ -67,13 +70,23 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 			userBean = new UserBean();
 		}
 			forward = performBaseAction(userBean,request,response,session);
-		
+		   
 			Integer role = userBean.getRole();
 			Integer roleInt;
 			if(null==role){
 				roleInt = -1;
 			}else{
 				roleInt = role;
+			}
+			if(roleInt == 5 &&  !"custom_user".equals(forward)){
+				String[] child_mod_access = (String[])session.get("child_mod_access");
+				String[] parent_mod_access = (String[])session.get("parent_mod_access");
+				if(!ArrayUtils.contains(child_mod_access,moduleAccess) && "C".equals(accessType)){
+					return "UNAUTHRISED";
+				}else if(!ArrayUtils.contains(parent_mod_access,moduleAccess) && "P".equals(accessType)){
+					return "UNAUTHRISED";
+				}
+				
 			}
 			List<SiteMapData> siteMapDatas = SiteMap.getSiteMapList(roleInt.toString());
 			Gson gson = new Gson();
@@ -85,9 +98,9 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 		String actionName = mapping.getName();
 		request.setAttribute("actionName", actionName);
 		
-		if(isHavingAccess(mapping.getName(), roleInt) && !params.containsKey("ignoresession")){
+		if(isHavingAccess(mapping.getName(), roleInt) && !params.containsKey("ignoresession") && roleInt != 5){
 			return "UNAUTHRISED";
-		}
+		} 
 		if("logout".equals(mapping.getName())){
 			ActionContext.getContext().getSession().remove("user");
 			ActionContext.getContext().setSession(null);
@@ -134,5 +147,17 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 		boolean allowed = false;
 		URLTransaction urlTransaction = new URLTransaction();
 		return urlTransaction.isAcessible(action, role);
+	}
+	public String getModuleAccess() {
+		return moduleAccess;
+	}
+	public void setModuleAccess(String moduleAccess) {
+		this.moduleAccess = moduleAccess;
+	}
+	public String getAccessType() {
+		return accessType;
+	}
+	public void setAccessType(String accessType) {
+		this.accessType = accessType;
 	}
 }

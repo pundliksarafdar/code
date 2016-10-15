@@ -16,11 +16,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import com.classapp.db.institutestats.InstituteStats;
 import com.classapp.db.login.LoginCheck;
 import com.classapp.db.notificationpkg.Notification;
 import com.classapp.db.register.RegisterBean;
+import com.classapp.db.roll.InstRollDB;
+import com.classapp.db.roll.Inst_roll;
 import com.classapp.db.student.Student;
 import com.classapp.login.UserStatic;
 import com.classapp.schedule.Scheduledata;
@@ -278,7 +281,20 @@ public class LoginUser extends BaseAction{
 						session.put("classes", beans);
 						session.put("todayslect", map);
 						return Constants.CLASSSTUDENT;
-					} else {
+					}else if ((null != userBean.getRole())
+							&& 5 == userBean.getRole()) { 
+						InstRollDB rollDB = new  InstRollDB();
+						Inst_roll inst_roll = rollDB.getRole(userBean.getInst_id(), userBean.getInst_roll());
+						String accessArray[] = inst_roll.getParent_mod_access().split(",");
+						String childAccessArray[] = inst_roll.getChild_mod_access().split(",");
+						session.put("inst_id", userBean.getInst_id());
+						session.put("parent_mod_access", accessArray);
+						session.put("child_mod_access", childAccessArray);
+						UserStatic userStatic = userBean.getUserStatic();
+					    String storagePath = Constants.STORAGE_PATH+File.separator+userBean.getInst_id();
+						userStatic.setStorageSpace(storagePath);
+						return Constants.CUSTOMUSER;
+					}else {
 						return ERROR;
 					}
 				/*} else {

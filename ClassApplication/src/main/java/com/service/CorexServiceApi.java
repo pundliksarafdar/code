@@ -92,6 +92,23 @@ public class CorexServiceApi extends ServiceBase{
 		return null;
 	}
 	
+	@GET
+	@Path("/customUserimage/{folderPath}")
+	@Produces("image/jpeg")
+	public byte[] showCustomUserimage(@PathParam("folderPath")String folderPath){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		String folderActualPath = folderPath.replaceAll("_", "\\"+File.separatorChar); 
+		String imagefileName = Constants.STORAGE_PATH + File.separatorChar+ userBean.getInst_id() + File.separatorChar + folderActualPath;
+		try {
+			FileInputStream stream = new FileInputStream(imagefileName);
+			InputStream resourceStream = new BufferedInputStream(stream);
+			return IOUtils.toByteArray(resourceStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	@POST
 	@Path("/uploadImage")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -185,6 +202,56 @@ public class CorexServiceApi extends ServiceBase{
 		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
 		List<InputPart> inputParts = uploadForm.get("uploadedFile");
 		
+		for (InputPart inputPart : inputParts) {
+
+			 try {
+				 	
+				MultivaluedMap<String, String> header = inputPart.getHeaders();
+				fileName = getFileName(header);
+				
+				//Extract file extention and replace filename with fileid
+				int extentionStart = fileName.lastIndexOf(".");
+				String fileId = UUID.randomUUID().toString()+getRegId();
+				fileName = fileId+fileName.substring(extentionStart);
+				//convert the uploaded file to inputstream
+				InputStream inputStream = inputPart.getBody(InputStream.class,null);
+
+				byte [] bytes = IOUtils.toByteArray(inputStream);
+					
+				//constructs upload file path
+				
+				//create image tempfolder if not exist
+				String imgTempFolder = Constants.STORAGE_PATH + File.separatorChar+ "imageTemp";
+				File file = new File(imgTempFolder);
+				if(!file.exists()){
+					file.mkdirs();
+				}
+				
+				//Above generated folder will be used to save the image temparirily on successfull call files will be moved to main folder and old files will be deleted
+				String filePath = Constants.STORAGE_PATH + File.separatorChar+ "imageTemp" + File.separatorChar + inst_id + fileName ;
+					
+				writeFile(bytes,filePath);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			}
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("fileid", fileName);
+		//jsonObject.
+		return Response.status(200).entity(jsonObject.toString()).type(MediaType.APPLICATION_JSON).build();
+	}
+	
+	@POST
+	@Path("/uploadCustomUserImageFile")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.MULTIPART_FORM_DATA)
+	public Response uploadCustomUserImageFile(MultipartFormDataInput input){
+		String fileName="";
+		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+		List<InputPart> inputParts = uploadForm.get("uploadedFile");
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		int inst_id = userBean.getInst_id();
 		for (InputPart inputPart : inputParts) {
 
 			 try {
@@ -407,6 +474,88 @@ public class CorexServiceApi extends ServiceBase{
 	     userStatic.setStorageSpace(storagePath);
 	    String destPath=  userStatic.getNotesPath(subject,division);
 		for(int i=0;i<notescount;i++){
+		String fileName="";
+		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+		List<InputPart> inputParts = uploadForm.get("uploadedFile"+i);
+		List<InputPart> notesDesc = uploadForm.get("notesname"+i);
+				String fileDesc = "";
+		for (InputPart inputPart : notesDesc) {
+			try {
+		 fileDesc = inputPart.getBody(String.class,null);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		for (InputPart inputPart : inputParts) {
+
+			 try {
+				 	
+				MultivaluedMap<String, String> header = inputPart.getHeaders();
+				fileName = getFileName(header);
+				
+				//Extract file extention and replace filename with fileid
+				int extentionStart = fileName.lastIndexOf(".");
+				String fileId = UUID.randomUUID().toString()+getRegId();
+				fileName = fileDesc+fileName.substring(extentionStart);
+				//convert the uploaded file to inputstream
+				InputStream inputStream = inputPart.getBody(InputStream.class,null);
+
+				byte [] bytes = IOUtils.toByteArray(inputStream);
+					
+				//constructs upload file path
+				
+				//create image tempfolder if not exist
+				String imgTempFolder = destPath+ File.separatorChar+ "imageTemp";
+				File file = new File(destPath);
+				if(!file.exists()){
+					file.mkdirs();
+				}
+				
+				//Above generated folder will be used to save the image temparirily on successfull call files will be moved to main folder and old files will be deleted
+				String filePath = destPath + File.separatorChar + fileName ;
+					
+				double fileSize = writeFile(bytes,filePath);
+				System.out.println(fileSize);
+				 Notes notes=new Notes();
+				 notes.setInst_id(inst_id);
+				 notes.setDivid(division);
+		    	 notes.setNotespath(fileName);
+		    	 notes.setSubid(subject);
+		    	 notes.setName(fileDesc);
+		    	 notes.setAddedby(userBean.getRegId());
+		    	 notes.setBatch(batch);
+		    	 notes.setTime(new Timestamp(new Date().getTime()));
+		    	 NotesTransaction notesTransaction=new NotesTransaction();
+		    	 notesTransaction.addNotes(notes);
+		    	 InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
+		 		instituteStatTransaction.updateStorageSpace(inst_id, Constants.STORAGE_PATH+File.separatorChar+inst_id);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			}
+		}
+		JsonObject jsonObject = new JsonObject();
+		/*jsonObject.addProperty("fileid", fileName);*/
+		//jsonObject.
+		
+		return Response.status(200).entity(jsonObject.toString()).type(MediaType.APPLICATION_JSON).build();
+	}
+	
+	@POST
+	@Path("/customUseruploadNotes/{notescount}/{division}/{subject}/{batch}")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.MULTIPART_FORM_DATA)
+	public Response customUseruploadNotes(MultipartFormDataInput input,@PathParam("notescount") int notescount,
+			@PathParam("division") int division,@PathParam("subject") int subject,@PathParam("batch") String batch){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		int inst_id = userBean.getInst_id();
+	      UserStatic userStatic = userBean.getUserStatic();
+	      String storagePath = Constants.STORAGE_PATH+File.separator+inst_id;
+	     userStatic.setStorageSpace(storagePath);
+	    String destPath=  userStatic.getNotesPath(subject,division);
+		for(int i=0;i<=notescount;i++){
 		String fileName="";
 		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
 		List<InputPart> inputParts = uploadForm.get("uploadedFile"+i);

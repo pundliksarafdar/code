@@ -37,6 +37,7 @@
 			<result name="registeremail" type="tiles">registeremail</result>
 			<result name="invalid.token" type="tiles">accessblocked</result>
 			<param name="ignoresession">true</param>
+			<result name="custom_user" type="tiles">customuser.loginsuccess</result>
 		</action>
 
 		<action name="logout" class="com.signon.Logout" method="execute">
@@ -675,6 +676,255 @@
 		</action>
 		<action name="viewuser" class="com.classowner.ViewUserAction">
 			<result name="success" type="tiles">classowner.viewuser</result>
+		</action>
+		
+		<!-- Custome Role -->
+		<action name="customeUserManageclass" class="com.customrole.ManageClassAction"
+			method="execute">
+			<param name="moduleAccess">1</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.manageclass</result>
+		</action>
+		<action name="customUserManagesubject" class="com.customrole.AddSubjectAction"
+			method="execute">
+			<param name="moduleAccess">2</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.addsubject</result>
+		</action>
+		<action name="customUserAddtopics" class="com.customrole.ManageTopicAction"
+			method="execute">
+			<result name="success" type="tiles">customeuser.customUserAddtopics</result>
+		</action>
+		<action name="customUserManageBatch" class="com.customrole.ManageBatchAction"
+			method="execute">
+			<param name="moduleAccess">3</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customUserManageBatch</result>
+		</action>
+		<action name="customUserManageStudent" class="com.customrole.ManageStudentAction"
+			method="execute">
+			<param name="moduleAccess">10</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.customUserManageStudent</result>
+		</action>
+		<action name="customUserBulkStudentUpload" class="com.customrole.ManageStudentAction"
+			method="execute">
+			<param name="moduleAccess">10</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.customUserBulkStudentUpload</result>
+		</action>
+		<action name="customUserViewStudent" class="com.customrole.ManageStudentAction"
+			method="execute">
+			<param name="moduleAccess">4</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customUserViewStudent</result>
+		</action>
+		<action name="customUserManageTeacher" class="com.customrole.ManageTeacherAction"
+			method="execute">
+			<param name="moduleAccess">13</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.customUserManageTeacher</result>
+		</action>
+		<action name="customUserViewTeacher" class="com.customrole.ManageTeacherAction"
+			method="execute">
+			<param name="moduleAccess">5</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customUserViewTeacher</result>
+		</action>
+		<action name="customUserAddNotes" class="com.customrole.AddNotesOptionAction"
+			method="execute">
+			<param name="moduleAccess">16</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.addnotes</result>
+		</action>
+		<action name="customeUserSeeNotes" class="com.customrole.SeeNotesAction"
+			method="execute">
+			<param name="moduleAccess">6</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customeUserSeeNotes</result>
+		</action>
+		<action name="customeUserShowNotes" class="com.customrole.DisplayNotesAction"
+			method="execute">
+			<result name="displaynotes">/CustomUser/DisplayNotes.jsp</result>
+		</action>
+		<action name="customeUserCreateExamPatten" class="com.customrole.CreateExamPatternAction"
+			method="execute">
+			<param name="moduleAccess">25</param>
+			<param name="accessType">C</param>
+			<result name="startcreatingpattern" type="tiles">customeuser.customeUserCreateExamPatten</result>
+		</action>
+		<action name="customeUserViewnEditPattern" class="com.customrole.ViewNEditPatternAction"
+			method="execute">
+			<param name="moduleAccess">9</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customeUserViewnEditPattern</result>
+		</action>
+		<action name="customeUserGenerateQuestionPaper" class="com.customrole.GenerateQuestionPaper"
+			method="execute">
+			<param name="moduleAccess">28</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.customeUserGenerateQuestionPaper</result>
+		</action>
+		<action name="customeUserEditQuestionPaper" class="com.customrole.EditQuestionPaperAction"
+			method="execute">
+			<param name="moduleAccess">9</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customeUserEditQuestionPaper</result>
+		</action>
+		<action name="customeUserCreateExam" class="com.customrole.CreateExamAction"
+			method="execute">
+			<param name="moduleAccess">31</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.customeUserCreateExam</result>
+		</action>
+		<action name="customeUserEditExam" class="com.customrole.EditExamAction"
+			method="execute">
+			<param name="moduleAccess">9</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customeUserEditExam</result>
+		</action>
+		<action name="customeUserOnlineExamList" class="com.customrole.AttemptExamList"
+			method="execute">
+			<result name="success" type="tiles">customeuser.customeUserOnlineExamList</result>
+		</action>
+		<action name="customeUserAttemptExam" class="com.exam.AttemptExamAction"
+			method="execute">
+			<result name="success" type="tiles">customeuser.customeUserAttemptExam</result>
+			<result name="solved" type="tiles">customeuser.solvedexam</result>
+			<result name="examresult" type="tiles">customeuser.examresult</result>
+		</action>
+		<action name="customeUserExamMarks" class="com.customrole.ExamMarksAction"
+			method="execute">
+			<param name="moduleAccess">35</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.customeUserExamMarks</result>
+		</action>
+		<action name="customeUserEditExamMarks" class="com.customrole.ExamMarksAction"
+			method="execute">
+			<param name="moduleAccess">36</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.customeUserEditExamMarks</result>
+		</action>
+		<action name="customeUserViewexamMarks" class="com.customrole.ExamMarksAction"
+			method="execute">
+			<param name="moduleAccess">10</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customeUserViewexamMarks</result>
+		</action>
+		<action name="customeUserProgressCard" class="com.customrole.ProgressCardAction"
+			method="execute">
+			<param name="moduleAccess">38</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.customeUserProgressCard</result>
+		</action>
+		<action name="customeUserAttendances" class="com.customrole.AttendanceAction"
+			method="execute">
+			<param name="moduleAccess">39</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.customeUserAttendances</result>
+		</action>
+		<action name="customeUserEditAttendance" class="com.customrole.AttendanceAction"
+			method="execute">
+			<param name="moduleAccess">40</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.customeUserEditAttendance</result>
+		</action>
+		<action name="customeUserViewAttendance" class="com.customrole.AttendanceAction"
+			method="execute">
+			<param name="moduleAccess">11</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customeUserViewAttendance</result>
+		</action>
+		<action name="customeUserFees" class="com.customrole.FeeAction"
+			method="execute">
+			<param name="moduleAccess">42</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.customeUserFees</result>
+		</action>
+		<action name="customeUserViewNEditFee" class="com.customrole.ViewnEditfeeAction"
+			method="execute">
+			<param name="moduleAccess">12</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customeUserViewNEditFee</result>
+		</action>
+		<action name="customeUserLinkfee" class="com.customrole.LinkFeeAction"
+			method="execute">
+			<param name="moduleAccess">45</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.customeUserLinkfee</result>
+		</action>
+		<action name="customeUserStudentFees" class="com.customrole.StudentFeesAction"
+			method="execute">
+			<param name="moduleAccess">12</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customeUserStudentFees</result>
+		</action>
+		<action name="customeUserAlertAction" class="com.customrole.AlertAction"
+			method="execute">
+			<param name="moduleAccess">13</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customeUserAlertAction</result>
+		</action>
+		<action name="customeUserClassOwnerSettings" class="com.customrole.ClassownerSettingsAction"
+			method="execute">
+			<param name="moduleAccess">15</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customeUserClassOwnerSettings</result>
+		</action>
+		<action name="customeUserManageSettings" class="com.customrole.ManageAllExamFunctionAction"
+			method="execute">
+			<param name="moduleAccess">15</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customeUserManageSettings</result>
+		</action>
+		<action name="customeUserStudentFormFieldAction"  class="com.customrole.StudentFormFieldAction">
+			<param name="moduleAccess">15</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customeUserStudentFormFieldAction</result>
+		</action>
+		<action name="customeUserTimeTableAll" class="com.customrole.TimeTableAllAction"
+			method="execute">
+			<param name="moduleAccess">8</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customeUserTimeTableAll</result>
+		</action>
+		<action name="customeUserCertificate" class="com.customrole.ManageAllExamFunctionAction"
+			method="execute">
+			<param name="moduleAccess">48</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.customeUserCertificate</result>
+		</action>
+		<action name="customeUserViewCertificate" class="com.customrole.viewCertificateAction"
+			method="execute" >
+			<param name="moduleAccess">14</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customeUserViewCertificate</result>
+		</action>
+		<action name="customeUserPrintStudentCertificate" class="com.customrole.viewCertificateAction"
+			method="execute">
+			<param name="moduleAccess">51</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.customeUserPrintStudentCertificate</result>
+		</action>
+		<action name="customeUserAddquestion" class="com.customrole.AddQuestionAction"
+			method="execute">
+			<param name="moduleAccess">19</param>
+			<param name="accessType">C</param>
+			<result name="success" type="tiles">customeuser.customeUserAddquestion</result>
+		</action>
+		<action name="customeUserSearchQuestion" class="com.customrole.SearchQuestionAction" method="execute">
+		   <param name="moduleAccess">7</param>
+			<param name="accessType">P</param>
+			<result name="success" type="tiles">customeuser.customeUserSearchQuestion</result>
+		</action>
+		<action name="customeUserEditquestionnew" class="com.customrole.EditQuestionNewAction"
+			method="execute">
+			<param name="moduleAccess">20</param>
+			<param name="accessType">C</param>
+			<result name="subjective" type="tiles">customeuser.customeUserEditquestionnew</result>
+			<result name="objective" type="tiles">customeuser.editObjectiveQuestion</result>
+			<result name="paragraph" type="tiles">customeuser.editParaQuestion</result>
+			<!-- <result name="starteditingquestion" type="tiles">classowner.starteditingquestion</result> -->
 		</action>
 	</package>
 </struts>

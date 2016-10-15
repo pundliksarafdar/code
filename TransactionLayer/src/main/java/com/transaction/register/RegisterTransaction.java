@@ -1,6 +1,7 @@
 package com.transaction.register;
 
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,6 +13,8 @@ import org.apache.commons.beanutils.BeanUtils;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.register.RegisterDB;
 import com.classapp.db.register.RegisterUser;
+import com.classapp.db.roll.InstRollDB;
+import com.classapp.db.roll.Inst_user;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.student.Student;
 import com.classapp.persistence.Constants;
@@ -298,7 +301,7 @@ public class RegisterTransaction {
 		return true;
 	}
 	
-	public boolean registerInstituteUser(RegisterBean registerBean){
+	public int registerInstituteUser(RegisterBean registerBean,String education,Date date){
 		RegisterUser registerUser = new RegisterUser();
 		boolean flag = true;
 		String username = "";
@@ -318,7 +321,15 @@ public class RegisterTransaction {
 		registerBean.setCountry("INDIA");
 		registerBean.setRole(5);	//Role = 5 for custom users added for respective institute
 		registerUser.registerUser(registerBean);
-		return true;
+		Inst_user user = new Inst_user();
+		user.setEducation(education);
+		user.setInst_id(registerBean.getInst_id());
+		user.setJoining_date(date);
+		user.setRole_id(registerBean.getInst_roll());
+		user.setUser_id(registerBean.getRegId());
+		InstRollDB db = new InstRollDB();
+		db.saveInstUser(user);
+		return registerBean.getRegId();
 	}
 	}
 	

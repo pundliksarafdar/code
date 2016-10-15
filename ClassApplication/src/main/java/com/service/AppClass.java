@@ -25,6 +25,7 @@ public class AppClass extends Application{
 		singletons.add(new ExcelUploadServiceImpl());
 		singletons.add(new ExcelUploadServiceImpl());
 		singletons.add(new AdminStatusService());
+		singletons.add(new CustomUserService());
     }
     @Override
     public Set<Object> getSingletons() {

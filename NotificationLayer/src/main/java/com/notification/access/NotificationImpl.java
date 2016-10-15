@@ -1300,4 +1300,39 @@ public class NotificationImpl {
 		return statusMap;
 	}
 	
+	public void sendManualRegistrationNotificationOfInstituteUser(int inst_id,int regID) {
+		Date date =new Date(new java.util.Date().getTime());
+		RegisterDB db =new RegisterDB();
+		ClassownerSettingstransaction settingsTx = new ClassownerSettingstransaction();
+		ClassownerSettingsNotification settings = settingsTx.getSettings(inst_id);
+		RegisterBean institute =db.getRegistereduser(inst_id);
+		RegisterBean bean = db.getRegistereduser(regID);
+		int msgCounter = 0;
+		List<MessageDetailBean> detailBeans = new ArrayList<MessageDetailBean>();
+		if(settings.getInstituteStats().isEmailAccess()){
+				MessageDetailBean messageDetailBean = new MessageDetailBean();
+				messageDetailBean.setFrom(institute.getClassName());
+				messageDetailBean.setEmailSubject("Registered!!");
+				messageDetailBean.setStudentId(bean.getRegId());
+				messageDetailBean.setStudentEmail(bean.getEmail());
+				messageDetailBean.setMessageTypeEmail(true);
+				messageDetailBean.setMessageTypeSms(false);
+				if(messageDetailBean.getStudentEmail() != null && !"".equals(messageDetailBean.getStudentEmail())){
+				messageDetailBean.setSendToStudent(true);
+				messageDetailBean.setSendToParent(false);
+				}
+				ManualRegisteredStudentNotificationData data = new ManualRegisteredStudentNotificationData(); 
+				data.setStudent_name(bean.getFname()+" "+bean.getLname());
+				data.setUser_name(bean.getLoginName());
+				data.setPassword(bean.getLoginPass());
+				messageDetailBean.setEmailMessage(null);
+				messageDetailBean.setEmailObject(data);
+				messageDetailBean.setEmailTemplate("manualRegisteredStudentEmail.tmpl");
+				detailBeans.add(messageDetailBean);
+			   NotifcationAccess notifcationAccess = new NotifcationAccess();
+				notifcationAccess.send(detailBeans);
+			}
+		
+	}
+	
 }

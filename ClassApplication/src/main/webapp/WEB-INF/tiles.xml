@@ -12,6 +12,13 @@
 		<put-attribute name="body" value="/index.jsp" />
 		<put-attribute name="footer" value="" />
 	</definition>
+	<definition name="customeBaseLayout" template="/BaseLayout.jsp">
+		<put-attribute name="title" value="Template" />
+		<put-attribute name="header" value="/header.jsp" />
+		<put-attribute name="topnav" value="/CustomUser/menu.jsp" />
+		<put-attribute name="body" value="/index.jsp" />
+		<put-attribute name="footer" value="" />
+	</definition>
 	<definition name="activationbaseLayout" template="/ActivationBaseLayout.jsp">
 		<put-attribute name="title" value="" />
 		<put-attribute name="topnav" value="/admin/Activationmenu.jsp" />
@@ -549,7 +556,7 @@
       <put-attribute name="body"   value="/exam/CreateExamPattern.jsp"/>      
    </definition>
    <definition name="classowner.generateQuestionPaper" extends="baseLayout">
-      <put-attribute name="title"  value="Generate quuestion paper"/>
+      <put-attribute name="title"  value="Generate question paper"/>
       <put-attribute name="body"   value="/exam/generateQuestionPaper.jsp"/>      
    </definition>
    <definition name="classowner.viewneditpattern" extends="baseLayout">
@@ -779,5 +786,178 @@
     <definition name="classowner.viewuser" extends="baseLayout">
       <put-attribute name="title"  value="View User"/>
       <put-attribute name="body"   value="/Roles/ViewUser.jsp"/>      
+   </definition>
+   <!-- Custom User -->
+   <definition name="customuser.loginsuccess" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Welcome"/>
+      <put-attribute name="body"   value="/CustomUser/loginSuccess.jsp"/>      
+   </definition>
+    <definition name="customeuser.manageclass" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Manage Class"/>
+      <put-attribute name="body"   value="/CustomUser/ManageClass.jsp"/>      
+   </definition>
+    <definition name="customeuser.addsubject" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Manage Subject"/>
+      <put-attribute name="body"   value="/CustomUser/AddSubject.jsp"/>      
+   </definition>
+   <definition name="customeuser.customUserAddtopics" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Manage Topic"/>
+      <put-attribute name="body"   value="/CustomUser/AddTopics.jsp"/>      
+   </definition>
+   <definition name="customeuser.customUserManageBatch" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Manage Batch"/>
+      <put-attribute name="body"   value="/CustomUser/ManageBatch.jsp"/>      
+   </definition>
+   <definition name="customeuser.customUserManageStudent" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Manage Student"/>
+      <put-attribute name="body"   value="/CustomUser/ManageStudent.jsp"/>      
+   </definition>
+    <definition name="customeuser.customUserBulkStudentUpload" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Manage Student"/>
+      <put-attribute name="body"   value="/CustomUser/BulkStudentUpload.jsp"/>      
+   </definition>
+    <definition name="customeuser.customUserViewStudent" extends="customeBaseLayout">
+      <put-attribute name="title"  value="View Student"/>
+      <put-attribute name="body"   value="/CustomUser/ViewStudent.jsp"/>      
+   </definition>
+   <definition name="customeuser.customUserManageTeacher" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Manage Teacher"/>
+      <put-attribute name="body"   value="/CustomUser/ManageTeacher.jsp"/>      
+   </definition>
+    <definition name="customeuser.customUserViewTeacher" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Manage Teacher"/>
+      <put-attribute name="body"   value="/CustomUser/ViewTeachers.jsp"/>      
+   </definition>
+   <definition name="customeuser.addnotes" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Add Notes"/>
+      <put-attribute name="body"   value="/CustomUser/AddNotes.jsp"/>      
+   </definition>
+    <definition name="customeuser.customeUserSeeNotes" extends="customeBaseLayout">
+      <put-attribute name="title"  value="See Notes"/>
+      <put-attribute name="body"   value="/CustomUser/SeeNotes.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserCreateExamPatten" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Create Exam Pattern"/>
+      <put-attribute name="body"   value="/CustomUser/CreateExamPattern.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserViewnEditPattern" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Create Exam Pattern"/>
+      <put-attribute name="body"   value="/CustomUser/ViewNEditPattern.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserGenerateQuestionPaper" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Generate question paper"/>
+      <put-attribute name="body"   value="/CustomUser/generateQuestionPaper.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserEditQuestionPaper" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Edit Question Paper"/>
+      <put-attribute name="body"   value="/CustomUser/editQuestionPaper.jsp"/>      
+   </definition>
+    <definition name="customeuser.customeUserCreateExam" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Create Exam"/>
+      <put-attribute name="body"   value="/CustomUser/CreateExam.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserEditExam" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Edit Exam"/>
+      <put-attribute name="body"   value="/CustomUser/EditExam.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserOnlineExamList" extends="customeBaseLayout">
+		<put-attribute name="title" value="Online Exam" />
+		<put-attribute name="body" value="/CustomUser/AttemptExamList.jsp" />
+	</definition>
+	<definition name="customeuser.customeUserExamMarks" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Exam Marks"/>
+      <put-attribute name="body"   value="/CustomUser/ExamMarks.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserEditExamMarks" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Exam Marks"/>
+      <put-attribute name="body"   value="/CustomUser/EditExamMarks.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserViewexamMarks" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Exam Marks"/>
+      <put-attribute name="body"   value="/CustomUser/ViewMarks.jsp"/>      
+   </definition>
+    <definition name="customeuser.customeUserProgressCard" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Progress Card"/>
+      <put-attribute name="body"   value="/CustomUser/ProgressCard.jsp"/>      
+   </definition>
+    <definition name="customeuser.customeUserAttendances" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Student Attendance"/>
+      <put-attribute name="body"   value="/CustomUser/studentAttendance.jsp"/>      
+   </definition>
+    <definition name="customeuser.customeUserEditAttendance" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Student Attendance"/>
+      <put-attribute name="body"   value="/CustomUser/EditAttendance.jsp"/>      
+   </definition>
+    <definition name="customeuser.customeUserViewAttendance" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Student Attendance"/>
+      <put-attribute name="body"   value="/CustomUser/ViewAttendance.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserFees" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Manage Fee"/>
+      <put-attribute name="body"   value="/CustomUser/fee.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserViewNEditFee" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Manage Fee"/>
+      <put-attribute name="body"   value="/CustomUser/viewneditfee.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserLinkfee" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Link Fee"/>
+      <put-attribute name="body"   value="/CustomUser/linkfee.jsp"/>      
+   </definition>
+    <definition name="customeuser.customeUserStudentFees" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Student Fee"/>
+      <put-attribute name="body"   value="/CustomUser/studentFee.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserAlertAction" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Alert"/>
+        <put-attribute name="body"   value="/CustomUser/alert.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserClassOwnerSettings" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Setting"/>
+      <put-attribute name="body"   value="/CustomUser/ClassownerSettings.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserManageSettings" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Manage Headers"/>
+      <put-attribute name="body"   value="/CustomUser/ManageAllExamFunction.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserStudentFormFieldAction" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Student Form field"/>
+      <put-attribute name="body"   value="/CustomUser/studentFormField.jsp"/>      
+   </definition>
+    <definition name="customeuser.customeUserTimeTableAll" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Timetable"/>
+      <put-attribute name="body"   value="/CustomUser/timetable.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserCertificate" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Create Certificate"/>
+      <put-attribute name="body"   value="/CustomUser/CreateCertificate.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserViewCertificate" extends="customeBaseLayout">
+      <put-attribute name="title"  value="View Certificate"/>
+      <put-attribute name="body"   value="/CustomUser/viewCertificates.jsp"/>      
+   </definition>
+    <definition name="customeuser.customeUserPrintStudentCertificate" extends="customeBaseLayout">
+      <put-attribute name="title"  value="View Certificate"/>
+      <put-attribute name="body"   value="/CustomUser/printStudentCertificate.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserAddquestion" extends="customeBaseLayout">
+		<put-attribute name="title" value="Add Question" />
+		<put-attribute name="body" value="/CustomUser/addQuestion.jsp" />
+	</definition>
+	<definition name="customeuser.customeUserSearchQuestion" extends="customeBaseLayout">
+      <put-attribute name="title"  value="View Question"/>
+      <put-attribute name="body"   value="/CustomUser/QuestionbankQuestionList.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserEditquestionnew" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Edit question"/>
+      <put-attribute name="body"   value="/CustomUser/EditSubjectiveQuestion.jsp"/>      
+   </definition>
+    <definition name="customeuser.editObjectiveQuestion" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Edit question"/>
+      <put-attribute name="body"   value="/CustomUser/EditObjectiveQuestion.jsp"/>      
+   </definition>
+   <definition name="customeuser.editParaQuestion" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Edit question"/>
+      <put-attribute name="body"   value="/CustomUser/EditParaQuestion.jsp"/>      
    </definition>
 </tiles-definitions>

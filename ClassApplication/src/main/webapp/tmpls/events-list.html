@@ -29,8 +29,12 @@
 				<td><@= moment(event.end).format("HH:mm") @></td>
 				<td><@= event.subjectname @></td>
 				<td><@= event.teacher @></td>
-				<td><a class="corex-edit btn btn-default" data-event-id='<@= event.id @>'>Edit</a></td>
+				<@ if(cal.options.canEdit){@>
+				<td><a class="corex-edit btn btn-default" data-event-id='<@= event.id @>'>Edit </a></td>
+				<@}@>
+				<@ if(cal.options.canDelete){@>
 				<td><a class="corex-delete btn btn-danger" data-event-id='<@= event.id @>'>Delete</a></td>
+				<@}@>
 			</tr>
 		<@ }) @>
 		</table>

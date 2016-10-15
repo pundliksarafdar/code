@@ -6,6 +6,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.classapp.db.register.RegisterBean;
 import com.classapp.persistence.HibernateUtil;
 
 public class InstRollDB {
@@ -161,6 +162,173 @@ public class InstRollDB {
 		}
 		}
 		return  true;
+
+	}
+	
+	public boolean saveInstUser(Inst_user inst_user) {
+		Transaction transaction=null;
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		session.saveOrUpdate(inst_user);
+		transaction.commit();
+		if(session!=null){
+			session.close();
+		}
+		return  true;
+
+	}
+	
+	public List getInstUsers(int inst_id) {
+		Transaction transaction=null;
+		Session session=null;
+		List list = null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("select reg.regId,reg.fname,reg.lname,role.roll_desc from RegisterBean reg,"
+				+ "Inst_roll role where  reg.inst_id = :inst_id and reg.inst_id = role.inst_id  and "
+				+ "reg.inst_roll = role.roll_id");
+		query.setParameter("inst_id", inst_id);
+		list = query.list();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  list;
+
+	}
+	
+	public RegisterBean getInstUserRegisterBean(int inst_id,int user_id) {
+		Transaction transaction=null;
+		Session session=null;
+		List<RegisterBean> list = null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("from RegisterBean  where  inst_id = :inst_id and regId = :regId");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("regId", user_id);
+		list = query.list();
+		if(list.size() > 0){
+			return list.get(0);
+		}
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  null;
+
+	}
+	
+	public Inst_user getInstUser(int inst_id,int user_id) {
+		Transaction transaction=null;
+		Session session=null;
+		List<Inst_user> list = null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("from Inst_user  where  inst_id = :inst_id and user_id = :user_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("user_id", user_id);
+		list = query.list();
+		if(list.size() > 0){
+			return list.get(0);
+		}
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  null;
+
+	}
+	
+	public boolean updateInstUserRegisterBean(RegisterBean registerBean) {
+		Transaction transaction=null;
+		Session session=null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("update RegisterBean set  fname = :fname,lname = :lname,addr1 =:addr1,city = :city ,"
+				+ " state =:state,phone1=:phone1,inst_roll = :inst_roll,email = :email"
+				+ " where  regId = :regId ");
+		//query.setParameter("inst_id", registerBean.getInst_id());
+		query.setParameter("fname", registerBean.getFname());
+		query.setParameter("lname", registerBean.getLname());
+		query.setParameter("addr1", registerBean.getAddr1());
+		query.setParameter("phone1", registerBean.getPhone1());
+		query.setParameter("city", registerBean.getCity());
+		query.setParameter("state", registerBean.getState());
+		query.setParameter("inst_roll", registerBean.getInst_roll());
+		query.setParameter("regId", registerBean.getRegId());
+		query.setParameter("email", registerBean.getEmail());
+		query.executeUpdate();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  true;
+
+	}
+	
+	public Inst_user updateInstUser(Inst_user user) {
+		Transaction transaction=null;
+		Session session=null;
+		List<Inst_user> list = null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("update Inst_user set role_id= :role_id,education=:education,joining_date=:joining_date"
+				+ "  where  inst_id = :inst_id and user_id = :user_id");
+		query.setParameter("inst_id", user.getInst_id());
+		query.setParameter("user_id", user.getUser_id());
+		query.setParameter("role_id", user.getRole_id());
+		query.setParameter("education", user.getEducation());
+		query.setParameter("joining_date", user.getJoining_date());
+		list = query.list();
+		if(list.size() > 0){
+			return list.get(0);
+		}
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  null;
 
 	}
 }

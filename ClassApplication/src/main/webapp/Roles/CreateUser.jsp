@@ -20,14 +20,21 @@ function validateEmail(sEmail) {
 	}
 	}
 $(document).ready(function(){
-	$('#datetimepicker').datetimepicker({
+	$('.datetimepicker').datetimepicker({
 		format : 'YYYY-MM-DD',
 		pickTime : false
 	});
 	
+	$(".joiningdatetimepicker").datetimepicker({
+		pickTime: false,
+		format:"YYYY-MM-DD"
+	}).data("DateTimePicker").setDate(new Date());
+	
 	$("#submit").click(function(){
 		$(".error").html("");
 		var validFlag = true;
+		var education = $("#education").val().trim();
+		var joiningDate = $("#joiningDate").val();
 		var register = {};
 		register.fname = $("#fname").val().trim();
 		register.lname = $("#lname").val().trim();
@@ -42,6 +49,9 @@ $(document).ready(function(){
 		var regStringExpr = /^[a-zA-Z]+$/;
 		var regAddressExpr = /^[a-zA-Z0-9 ]+$/;
 		var regcityExpr = /^[a-zA-Z ]+$/;
+		if(education == ""){
+			education = "NA";
+		}
 		if(register.fname == ""){
 			$("#fnameError").html("Enter first name")
 			validFlag = false;
@@ -99,10 +109,11 @@ $(document).ready(function(){
 		if(validFlag){
 		var handlers = {};
 		handlers.success = function(resp){
+			 $.notify({message: "User added successfuly"},{type: 'success'});
 		}
 		handlers.error = function(){
 		}
-		rest.post("rest/classownerservice/createUser/",handlers,JSON.stringify(register));
+		rest.post("rest/classownerservice/createUser/"+joiningDate+"/"+education,handlers,JSON.stringify(register));
 		}
 	});
 });
@@ -138,7 +149,7 @@ $(document).ready(function(){
 <div class="row">
 			<label for="dob" class="col-sm-3 control-label" >*Date of Birth</label>
 			<div class="col-sm-3">					
-					<div id="datetimepicker" class="input-group" style="width :250px;">
+					<div class="input-group datetimepicker" style="width :250px;">
 						<input class="form-control" data-format="YYYY-MM-DD"
 							type="text"  id="dobfield" name="registerBean.dob" required="required"  readonly/> <span class="input-group-addon add-on"> <i
 							class="glyphicon glyphicon-calendar glyphicon-time"></i>
@@ -146,6 +157,23 @@ $(document).ready(function(){
 					</div>
 					<span id="dobError" class="error"></span>
 				</div>
+</div>
+<div class="row">
+			<label for="dob" class="col-sm-3 control-label" >*Institute joining date</label>
+			<div class="col-sm-3">					
+					<div class="input-group joiningdatetimepicker" style="width :250px;">
+						<input class="form-control" data-format="YYYY-MM-DD"
+							type="text"  id="joiningDate" name="registerBean.dob" required="required"  readonly/> <span class="input-group-addon add-on"> <i
+							class="glyphicon glyphicon-calendar glyphicon-time"></i>
+						</span>
+					</div>
+					<span id="joiningDateError" class="error"></span>
+				</div>
+</div>
+<div class="row">
+	<div class="col-md-3"><label for="mobile"  class="control-label">Education</label></div>
+	<div class="col-md-3"><input type="text" class="form-control" id="education">
+	<span id="educationError" class="error"></span></div>
 </div>
 <div class="row">
 	<div class="col-md-3"><label for="address"  class="control-label">*Address</label></div>

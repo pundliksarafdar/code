@@ -134,6 +134,22 @@ function REST(){
 			   error:handlers.error
 			   });
 	}
+	
+	this.uploadCustomUserImageFile = function(file,handlers,global){
+		var formData = new FormData();
+		formData.append("uploadedFile",file.files[0]);
+		var uri = "rest/commonservices/uploadCustomUserImageFile";
+		$.ajax({
+			   url: uri,
+			   type:"POST",
+			   data:formData,
+			   global:global,
+			   processData: false,
+			   contentType: false,
+			   success:handlers.success,
+			   error:handlers.error
+			   });
+	}
 }
 
 var rest = new REST(); 

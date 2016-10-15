@@ -3549,6 +3549,227 @@ public class ClassOwnerServlet extends HttpServlet{
 				boolean updateStatus=questionBankTransaction.updateDeleteQuestionStatus(questionNumber, inst_id,Integer.parseInt(subject), Integer.parseInt(division));
 		
 			}
+	}else if("customUserValidateNotesName".equals(methodToCall)){
+		String[] notes=req.getParameter("notes").split(",");
+		String[] notesrowid=req.getParameter("notesrowid").split(",");
+		String filesize=req.getParameter("filesize");
+		InstituteStatTransaction instituteStatTransaction=new InstituteStatTransaction();
+		String overlappedIds="";
+		for (int i = 0; i < notesrowid.length; i++) {
+			for (int j = i+1; j < notesrowid.length; j++) {
+				if(notes[i].trim().equalsIgnoreCase(notes[j])){
+					if("".equals(overlappedIds)){
+						overlappedIds=notesrowid[i]+","+notesrowid[j];
+					}else{
+						overlappedIds=overlappedIds+"/"+notesrowid[i]+","+notesrowid[j];
+					}
+				}
+			}
+			
+		}
+		String notesnamestatus="";
+		if("".equals(overlappedIds)){
+		String institute=req.getParameter("institute");
+		int division=Integer.parseInt(req.getParameter("division"));
+		int subject=Integer.parseInt(req.getParameter("subject"));
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		NotesTransaction notesTransaction=new NotesTransaction();
+		int inst_id=userBean.getInst_id();
+		if(institute!="" && institute !=null){
+			inst_id=Integer.parseInt(institute);
+		}
+		InstituteStats instituteStats=instituteStatTransaction.getStats(inst_id);
+		if(instituteStats.getAvail_memory()>0 && (instituteStats.getUsed_memory()+Double.parseDouble(filesize))<=instituteStats.getAlloc_memory())
+		{
+			for (int i = 0; i < notes.length; i++) {
+			
+		
+		boolean flag=notesTransaction.validatenotesname(notes[i].trim(), inst_id,division,subject);
+		if(flag){
+			if("".equals(notesnamestatus)){
+			notesnamestatus=notesrowid[i];
+			}else{
+				notesnamestatus=notesnamestatus+","+notesrowid[i];
+				
+			}
+		}
+		}
+			respObject.addProperty("allocmemory", "");
+		}else{
+			respObject.addProperty("allocmemory", "exceeded");
+		}
+		}
+		respObject.addProperty("notesnamestatus", notesnamestatus);
+			respObject.addProperty("overlappedIds", overlappedIds);
+		
+		respObject.addProperty(STATUS, "success");
+		
+	}else if("customUsergetDivisionsTopics".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		Integer regId=userBean.getRegId();;
+		String divisionId = req.getParameter("divisionID");
+		String subjectid = req.getParameter("subID");
+		SubjectTransaction subjectTransaction=new SubjectTransaction();
+		List<Topics> topics=subjectTransaction.getTopics(userBean.getInst_id(), Integer.parseInt(subjectid), Integer.parseInt(divisionId));
+		String topic_names="";
+		String topic_ids="";
+		if(topics!=null){
+		for (int i = 0; i < topics.size(); i++) {
+			if(i==0){
+				topic_names=topics.get(i).getTopic_name();
+				topic_ids=topics.get(i).getTopic_id()+"";
+			}else{
+				topic_names=topic_names+","+topics.get(i).getTopic_name();
+				topic_ids=topic_ids+","+topics.get(i).getTopic_id();
+			}
+		}
+		}
+		
+		respObject.addProperty("topic_ids",topic_ids);
+		respObject.addProperty("topic_names", topic_names);
+		respObject.addProperty(STATUS, "success");
+		if(topics !=null){
+			if(topics.size()>0){
+			Gson gson = new Gson();
+			JsonElement jsonElement = gson.toJsonTree(topics);
+			respObject.add("topicJson",jsonElement);
+		}else{
+			respObject.addProperty(STATUS, "error");
+		}
+		}
+	}else if("customUserFetchSubjectTeacher".equals(methodToCall)){
+		Integer regId = null;
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		regId = userBean.getInst_id();
+		String subname=req.getParameter("subname");
+		TeaherTransaction teaherTransaction=new TeaherTransaction();
+		List<Teacher> list=teaherTransaction.getSubjectTeacher(subname,regId);
+		List teacheridlist=new ArrayList();
+		int index=0;
+		while (list.size()>index) {
+			
+			teacheridlist.add(list.get(index).getUser_id());
+			index++;	
+		}
+		String firstname="";
+		String lastname="";
+		String teacherid="";
+		String suffixs="";
+		if(list!=null && list.size()>0)
+		{
+		RegisterTransaction registerTransaction=new RegisterTransaction();
+		List<RegisterBean> teacherNames=registerTransaction.getTeacherName(teacheridlist);
+		int i=0;
+		for ( i = 0; i < list.size(); i++) {
+			if(i==0){
+				if(list.get(i).getSuffix()==null){
+					suffixs="";
+				}else{
+				suffixs=list.get(i).getSuffix();
+				}
+			}else{
+				if(list.get(i).getSuffix()==null){
+					suffixs=suffixs+","+"";
+				}else{
+				suffixs=suffixs+","+list.get(i).getSuffix();
+				}
+			}
+			
+		}
+		
+		for(i=0;i<teacherNames.size();i++)
+		{
+			if(i==0)
+			{
+			firstname=teacherNames.get(i).getFname();
+			}else{
+				firstname=firstname+","+teacherNames.get(i).getFname();
+			}
+		}
+		
+		for(i=0;i<teacherNames.size();i++)
+		{
+			if(i==0)
+			{
+				lastname=teacherNames.get(i).getLname();
+			}else{
+			lastname=lastname+","+teacherNames.get(i).getLname();
+			}
+		}
+		
+		for(i=0;i<teacherNames.size();i++)
+		{
+			if(i==0)
+			{
+				teacherid=teacherNames.get(i).getRegId()+"";
+			}else{
+			teacherid=teacherid+","+teacherNames.get(i).getRegId();
+			}
+		}
+	}
+		respObject.addProperty("firstname", firstname);
+		respObject.addProperty("lastname", lastname);
+		respObject.addProperty("teacherid", teacherid);
+		respObject.addProperty("suffix", suffixs);
+		respObject.addProperty(STATUS, "success");
+		
+		
+	}else if("getCustomUserSearchedQuestions".equalsIgnoreCase(methodToCall)){
+		UserBean userBean = (UserBean) req.getSession().getAttribute("user");
+		int inst_id = userBean.getInst_id();
+		String division = req.getParameter("division");
+		String subject = req.getParameter("subject");
+		String questionType = req.getParameter("questionType");
+		int currentPage = Integer.parseInt(req.getParameter("currentPage"));
+		int marks = Integer.parseInt(req.getParameter("marks"));
+		int topic = Integer.parseInt(req.getParameter("topic"));
+		String institute = req.getParameter("inst_id");
+		String deleteStatus = req.getParameter("deleteStatus");
+		if(!"".equals(institute) && institute!=null){
+			inst_id = Integer.parseInt(institute);
+		}
+		int totalPages=0;
+		QuestionBankTransaction bankTransaction = new QuestionBankTransaction();
+		int totalCount=bankTransaction.getTotalSearchedQuestionCount(marks, Integer.parseInt(subject), inst_id, Integer.parseInt(division),topic,questionType);
+		if(currentPage==0 || "Y".equals(deleteStatus)){
+		if(totalCount>0){
+			int remainder=totalCount%50;
+			totalPages=totalCount/50;
+			if(remainder>0){
+				totalPages++;
+			}	
+		}
+		if(currentPage == 0){
+		currentPage=1;
+		}
+		
+		if(currentPage > totalPages){
+			currentPage=totalPages;
+			}
+		}
+		List<Questionbank> questionbanks=bankTransaction.getSearchedQuestions(marks, Integer.parseInt(subject), inst_id, Integer.parseInt(division),currentPage,topic,questionType);
+		List<Integer> marksList=bankTransaction.getDistinctQuestionMarks(Integer.parseInt(subject), Integer.parseInt(division), inst_id,questionType);
+		List<ParaQuestionBean> paragraphQuestionList=new ArrayList<ParaQuestionBean>();
+		if("3".equals(questionType)){
+			UserStatic userStatic = userBean.getUserStatic();
+			for (int i = 0; i < questionbanks.size(); i++) {
+				//String questionPath=userStatic.getExamPath()+File.separator+subject+File.separator+division+File.separator+questionbanks.get(i).getQue_id();
+				String questionPath=com.config.Constants.STORAGE_PATH+File.separatorChar+inst_id+File.separatorChar+"exam"+File.separatorChar+"paragraph"+File.separatorChar+ division +File.separatorChar + subject +File.separatorChar+questionbanks.get(i).getQue_id();
+				ParaQuestionBean paraQuestionBean=(ParaQuestionBean) readObject(new File(questionPath));
+				paragraphQuestionList.add(paraQuestionBean);
+			}
+		}
+		
+		Gson gson=new Gson();
+		 JsonElement jsonElement = gson.toJsonTree(questionbanks);
+		 JsonElement jsonMarksElement = gson.toJsonTree(marksList);
+		 JsonElement jsonParagraphQuestion = gson.toJsonTree(paragraphQuestionList);
+		 respObject.add("questionList", jsonElement);
+		 respObject.addProperty("totalPages",totalPages);
+		 respObject.addProperty("currentPage",currentPage);
+		 respObject.add("marks", jsonMarksElement);
+		 respObject.add("paragraphQuestion", jsonParagraphQuestion);
+		respObject.addProperty(STATUS,"success");
 	}
 		printWriter.write(respObject.toString());
 	}

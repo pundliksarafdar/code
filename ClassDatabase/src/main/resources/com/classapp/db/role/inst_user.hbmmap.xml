@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 18 Jul, 2014 11:15:40 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.classapp.db.roll.Inst_user" table="inst_user" catalog="classdb">
+     <composite-id>
+       	<key-property name="inst_id" column="inst_id"></key-property>
+    	<key-property name="user_id" column="user_id"></key-property>
+    </composite-id>
+        <property name="role_id" type="java.lang.Integer">
+            <column name="role_id" />
+        </property>
+        <property name="education" type="java.lang.String">
+            <column name="education" length="50" />
+        </property>
+        <property name="joining_date" type="date">
+            <column name="joining_date"/>
+        </property>
+    </class>
+</hibernate-mapping>

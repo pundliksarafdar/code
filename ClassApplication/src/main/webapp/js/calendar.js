@@ -166,7 +166,9 @@ if(!String.prototype.formatNum) {
 			week: '',
 			day: ''
 		},
-		stop_cycling: false
+		stop_cycling: false,
+		canEdit:true,
+		canDelete:true
 	};
 
 	var defaults_extended = {

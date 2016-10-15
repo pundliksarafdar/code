@@ -330,7 +330,9 @@ function setTimetable(data){
 			months: {
 				general: 'label'
 			}
-		}
+		},
+		canEdit:true,
+		canDelete:true
 	};
 
 	calendar = $('#calendar').calendar(options);

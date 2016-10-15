@@ -1,4 +1,4 @@
-package com.service.beans;
+package com.classapp.db.roll;
 
 public class CustomUser {
 	int inst_id;
