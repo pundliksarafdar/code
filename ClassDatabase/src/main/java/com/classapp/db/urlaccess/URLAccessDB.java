@@ -64,19 +64,15 @@ public class URLAccessDB {
 	public boolean setURLAccessBatch(List<PathAccess> listPathAccesses){
 		boolean result = false;
 		Session session = HibernateUtil.getSessionfactory().openSession();
-		Transaction tx = session.beginTransaction();
+		
 		
 		int count = 0;
 		for(PathAccess pathAccess:listPathAccesses) {
+			Transaction tx = session.beginTransaction();
 			session.saveOrUpdate(pathAccess);
-			/*
-			if( ++count % 50 == 0 ) { // Same as the JDBC batch size
-		        //flush a batch of inserts and release memory:
-		        session.flush();
-		        session.clear();
-		    }*/
+			tx.commit();
 		}
-		tx.commit();
+		
 		session.close();
 		return result;
 	}
