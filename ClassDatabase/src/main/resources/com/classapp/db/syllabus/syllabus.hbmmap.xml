@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="com.service.beans.SyllabusBean" table="syllabusTable" catalog="classdb">
+        <id name="id" type="java.lang.Long">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="instId" type="java.lang.Integer">
+            <column name="instId" length="100" not-null="true" unique="false" />
+        </property>
+         <property name="classId" type="java.lang.Integer">
+            <column name="classId"/>
+        </property> 
+        <property name="subjectId" type="java.lang.Integer">
+            <column name="subjectId"/>
+        </property>
+         <property name="batchId" type="string">
+            <column name="batchId"/>
+        </property>
+        <property name="teacherId" type="java.lang.Integer">
+            <column name="teacherId"/>
+        </property>
+        <property name="date" type="java.util.Date">
+            <column name="date"/>
+        </property>
+        <property name="syllabus" type="string">
+            <column name="syllabus"/>
+        </property>
+		<property name="status" type="string">
+            <column name="status"/>
+        </property>
+     </class>
+</hibernate-mapping>
