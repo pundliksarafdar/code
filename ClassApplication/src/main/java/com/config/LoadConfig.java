@@ -35,6 +35,7 @@ import com.classapp.logger.TracingErrorPrintStream;
 import com.classapp.logger.TracingPrintStream;
 import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;
+import com.transaction.urlaccess.URLTransaction;
 
 public class LoadConfig extends HttpServlet{
 	/**
@@ -92,6 +93,9 @@ public class LoadConfig extends HttpServlet{
 		}
 		
 		}
+		
+		URLTransaction urlTransaction = new URLTransaction();
+		com.classapp.utils.Constants.PATH_ACCESS_LIST = urlTransaction.getPathsFromDb();
 		String level=ServiceMap.getSystemParam(Constants.SERVICE_LOGGER, "level");
 		if("INFO".equals(level)){
 		Logger.getLogger(AppLogger.class).setLevel(Level.INFO);

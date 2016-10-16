@@ -82,6 +82,7 @@
  		<mapping resource="com/classapp/db/register/additionalstudentinfo.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/role/inst_roll.hbmmap.xml"></mapping>
  		<mapping resource="com/classapp/db/role/inst_user.hbmmap.xml"></mapping>
+ 		<mapping resource="com/classapp/db/syllabus/syllabus.hbmmap.xml"></mapping>
        <!--  <mapping resource="com/classapp/db/classwithsubjects/ClassWithSubjects.hbmmap.xml"></mapping> --> 
     </session-factory>
 </hibernate-configuration>

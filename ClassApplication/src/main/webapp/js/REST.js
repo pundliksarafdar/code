@@ -49,6 +49,19 @@ function REST(){
 			   }); 
 	}
 	
+	this.deleteItemData =function(uri,handlers,data,global){
+		$.ajax({
+			   url: uri,
+			   type:"DELETE",
+			   global:global,
+			   data:data,
+			   processData: false,
+			   contentType: "application/json",
+			   success:handlers.success,
+			   error:handlers.error
+			   }); 
+	}
+	
 	this.put =function(uri,handlers,data,global){
 		$.ajax({
 			   url: uri,

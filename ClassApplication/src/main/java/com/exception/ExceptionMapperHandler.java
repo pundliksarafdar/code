@@ -28,6 +28,7 @@ public class ExceptionMapperHandler implements ExceptionMapper<Exception>{
 		ExceptionBean exceptionBean = new ExceptionBean();
 		exceptionBean.setCode(exception.getMessage());
 		exceptionBean.setMessage(EXCEPTION_MAP.getProperty(exception.getMessage()));
+		exception.printStackTrace();
 		return Response.status(Status.BAD_REQUEST).entity(exceptionBean).type(MediaType.APPLICATION_JSON).build();
 	}
 	

@@ -25,6 +25,27 @@ public class URLTransaction {
 		return pathAccesses; 
 	}
 	
+	public List<PathAccess> getPathsFromDb(){
+		URLAccessDB accessDB = new URLAccessDB();
+		List<com.classapp.db.urlaccess.PathAccess> pathAccessesDb = accessDB.getURLAndAccess();
+		List<PathAccess>accesses = new ArrayList<PathAccess>();
+		for (com.classapp.db.urlaccess.PathAccess pathAccess:pathAccessesDb) {
+			PathAccess pathAccessNew = new PathAccess();	
+			try {
+				BeanUtils.copyProperties(pathAccessNew, pathAccess);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			accesses.add(pathAccessNew);
+		}
+		
+		return accesses;
+	}
+	
 	public boolean setURLAndAccess(PathAccess pathAccess){
 		URLAccessDB accessDB = new URLAccessDB();
 		com.classapp.db.urlaccess.PathAccess pathAccessDb = new com.classapp.db.urlaccess.PathAccess();

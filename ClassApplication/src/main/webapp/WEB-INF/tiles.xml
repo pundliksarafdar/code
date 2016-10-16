@@ -787,6 +787,15 @@
       <put-attribute name="title"  value="View User"/>
       <put-attribute name="body"   value="/Roles/ViewUser.jsp"/>      
    </definition>
+   <definition name="teacher.teacherSetSyllabusAction" extends="baseLayout">
+      <put-attribute name="title"  value="Teacher Syllabus Planner"/>
+      <put-attribute name="topnav" value="/teacher/menu.jsp" />
+      <put-attribute name="body"   value="/teacher/TeacherSyllabusPlanner.jsp"/>      
+   </definition>
+   <definition name="classowner.ViewPlannedSyllabusAction" extends="baseLayout">
+      <put-attribute name="title"  value="Syllabus Planner"/>
+      <put-attribute name="body"   value="/ClassOwner/ViewPlannedSyllabusAction.jsp"/>      
+   </definition>
    <!-- Custom User -->
    <definition name="customuser.loginsuccess" extends="customeBaseLayout">
       <put-attribute name="title"  value="Welcome"/>

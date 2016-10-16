@@ -17,5 +17,13 @@ public class PathAccess {
 		this.access = access;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		return this.paths.equals(((PathAccess)obj).getPaths());
+	}
 	
+	@Override
+	public int hashCode() {
+		return this.paths.hashCode();
+	}
 }

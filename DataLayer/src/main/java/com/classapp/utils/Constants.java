@@ -1,9 +1,14 @@
 package com.classapp.utils;
 
+import java.util.List;
+
+import com.classapp.urlaccess.PathAccess;
+
 public class Constants {
 	public enum IMAGE_TYPE{
 		L //Logo image
 	}
+	public static List<PathAccess> PATH_ACCESS_LIST;
 	public static String LOGO_IMAGE_PATH = "imageLogo";
 	
 	public static enum LAST_FEE_PARAM{
@@ -16,5 +21,10 @@ public class Constants {
 		public int getOrdinalvalue(){
 			return this.ordinalvalue;
 		}
-	}; 
+	}
+	
+	public static enum SYLLABUS_STATE {
+		COMPLETE,INCOMPLETE,EDITABLE
+	}
+	
 }

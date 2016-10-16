@@ -25,6 +25,8 @@ public class AppClass extends Application{
 		singletons.add(new ExcelUploadServiceImpl());
 		singletons.add(new ExcelUploadServiceImpl());
 		singletons.add(new AdminStatusService());
+		singletons.add(new SyllabusRestImpl());
+		singletons.add(new FilterServiceImpl());
 		singletons.add(new CustomUserService());
     }
     @Override

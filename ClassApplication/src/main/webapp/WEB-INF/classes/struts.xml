@@ -677,6 +677,12 @@
 		<action name="viewuser" class="com.classowner.ViewUserAction">
 			<result name="success" type="tiles">classowner.viewuser</result>
 		</action>
+		<action name="teacherSetSyllabusAction"  class="com.teacher.TeacherSetSyllabusAction">
+			<result name="success" type="tiles">teacher.teacherSetSyllabusAction</result>
+		</action>
+	 	<action name="viewPlannedSyllabusAction"  class="com.classowner.ViewPlannedSyllabusAction">
+			<result name="success" type="tiles">classowner.ViewPlannedSyllabusAction</result>
+		</action>
 		
 		<!-- Custome Role -->
 		<action name="customeUserManageclass" class="com.customrole.ManageClassAction"

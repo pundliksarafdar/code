@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
+import com.classapp.db.urlaccess.PathAccess;
 import com.classapp.logger.AppLogger;
 import com.classapp.persistence.Constants;
 import com.classapp.servicetable.ServiceMap;
@@ -98,7 +99,9 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 		String actionName = mapping.getName();
 		request.setAttribute("actionName", actionName);
 		
-		if(isHavingAccess(mapping.getName(), roleInt) && !params.containsKey("ignoresession") && roleInt != 5){
+		com.classapp.urlaccess.PathAccess pathAccess = new com.classapp.urlaccess.PathAccess();
+		pathAccess.setPaths(mapping.getName());
+		if(com.classapp.utils.Constants.PATH_ACCESS_LIST.contains(pathAccess) && isHavingAccess(mapping.getName(), roleInt) && !params.containsKey("ignoresession")  && roleInt != 5){
 			return "UNAUTHRISED";
 		} 
 		if("logout".equals(mapping.getName())){
