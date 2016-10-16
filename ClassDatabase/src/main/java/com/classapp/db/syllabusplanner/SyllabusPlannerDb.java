@@ -225,7 +225,7 @@ public class SyllabusPlannerDb {
 	}
 	
 	public List<SyllabusFilterBean> getSyllabusDb(int instituteId){
-		String mysqlStr = "select distinct 'teacher' as type,rTable.reg_id as id,concat(rTable.fname,\" \",rTable.lname) as name from regTable rTable,syllabustable sTable "
+		String mysqlStr = "select distinct 'teacher' as type,rTable.reg_id as id,concat(rTable.fname,\" \",rTable.lname) as name from regtable rTable,syllabustable sTable "
 				+"where rTable.reg_id = sTable.teacherId and sTable.instId=:instituteId "
 				+"union select 'division',d.div_id,concat(d.div_name,\" \",d.stream) from division d,syllabustable sTable "
 		+"where d.div_id=sTable.classId  and institute_Id=:instituteId "
@@ -239,6 +239,7 @@ public class SyllabusPlannerDb {
 		Query query = session.createSQLQuery(mysqlStr);
 		query.setParameter("instituteId", instituteId).setResultTransformer(Transformers.aliasToBean(SyllabusFilterBean.class));
 		List list = query.list();
+		if(session!=null){session.close();}
 		return list;
 	}
 	
