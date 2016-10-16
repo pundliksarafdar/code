@@ -402,7 +402,7 @@ function UploadExam(){
 	
 		var handlers = {};
 		handlers.success=function(data){
-			 $("#classownerUploadexamSubjectNameSelect").removeAttr('disabled');
+			 $("#subject").removeAttr('disabled');
 			   displaySubjectDropDown(data);
 		};   
 		handlers.error=function(){
@@ -484,10 +484,9 @@ function UploadExam(){
 </script>
 </head>
 <body>
-<ul class="nav nav-tabs" style="border-radius:10px">
-  <li class="active"><a data-toggle = "tab">View Notes</a></li>
-  <li><a href="customUserAddNotes">Add Notes</a></li>
-</ul>
+<jsp:include page="notesHeader.jsp" >
+		<jsp:param value="active" name="customeUserSeeNotes"/>
+	</jsp:include>
 <% String[] child_mod_access = (String[])session.getAttribute("child_mod_access"); %>
 <div class="well">
 <div class="row">

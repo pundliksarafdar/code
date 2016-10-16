@@ -11,6 +11,8 @@ import com.classapp.db.Teacher.TeacherDB;
 import com.classapp.db.Teacher.TeacherDetails;
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.register.RegisterBean;
+import com.classapp.db.roll.InstRollDB;
+import com.classapp.db.roll.Inst_user;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.subject.Subject;
@@ -83,6 +85,11 @@ public class TeacherTransaction {
 	public boolean deleteTeacher(int teacher_id, int inst_id) {
 		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
 		scheduleTransaction.updateScheduleOfTeacher(teacher_id, inst_id);
+		InstRollDB rollDB = new  InstRollDB();
+		Inst_user inst_user = rollDB.getInstUser(inst_id, teacher_id);
+		if(inst_user != null){
+			rollDB.updateInstUser(inst_id, teacher_id, false);
+		}
 		return teacherDB.deleteTeacher(teacher_id, inst_id);
 	}
 

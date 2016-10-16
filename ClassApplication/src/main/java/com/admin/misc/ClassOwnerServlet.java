@@ -3215,7 +3215,7 @@ public class ClassOwnerServlet extends HttpServlet{
 		String username=req.getParameter("username");
 		String email=req.getParameter("email");
 		RegisterTransaction registerTransaction=new RegisterTransaction();
-		RegisterBean registerBean=registerTransaction.getRegisteredTeacher(username, email);
+		RegisterBean registerBean=registerTransaction.getRegisteredTeacher(username, email,userBean.getRegId());
 		if (registerBean!=null) {
 			respObject.addProperty("firstname",registerBean.getFname());
 			respObject.addProperty("lastname",registerBean.getLname());

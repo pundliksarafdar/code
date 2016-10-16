@@ -61,6 +61,8 @@ import com.classapp.db.questionPaper.QuestionPaper;
 import com.classapp.db.register.AdditionalFormFieldBeanDl;
 import com.classapp.db.register.AdditionalStudentInfoBean;
 import com.classapp.db.register.RegisterBean;
+import com.classapp.db.roll.InstRollDB;
+import com.classapp.db.roll.Inst_user;
 import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentDetails;
 import com.classapp.db.subject.Subject;
@@ -132,6 +134,7 @@ import com.transaction.exams.ExamTransaction;
 import com.transaction.fee.FeesTransaction;
 import com.transaction.image.ImageTransactions;
 import com.transaction.institutestats.InstituteStatTransaction;
+import com.transaction.instroll.InstRollTransaction;
 import com.transaction.notes.NotesTransaction;
 import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
 import com.transaction.questionbank.ExcelFileTransaction;
@@ -833,7 +836,7 @@ public class CustomUserService extends ServiceBase {
 	public Response searchTeacher(@PathParam("username")String username,@PathParam("email")String email){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		RegisterTransaction registerTransaction=new RegisterTransaction();
-		RegisterBean registerBean=registerTransaction.getRegisteredTeacher(username, email);
+		RegisterBean registerBean=registerTransaction.getRegisteredTeacher(username, email,userBean.getInst_id());
 		if(registerBean != null){
 		registerBean.setLoginPass("");
 		}
@@ -902,11 +905,34 @@ public class CustomUserService extends ServiceBase {
 	@Path("/getSubjectOfDivision/{division}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSubjectOfDivision(@PathParam("division") Integer division) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub 
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		boolean isCustomeUserTeacher = (boolean) request.getSession().getAttribute("isCustomeUserTeacher");
 		SubjectTransaction subjectTransaction = new SubjectTransaction();
 		List<Subject> subjects = subjectTransaction.getSubjectRelatedToDiv(division, userBean.getInst_id());
-		return Response.status(Status.OK).entity(subjects).build();
+		if(isCustomeUserTeacher){
+			TeacherTransaction teacherTransaction=new TeacherTransaction();
+			List<Subject> list=new ArrayList<Subject>();
+			list= teacherTransaction.getTeacherSubject(getRegId(), userBean.getInst_id());
+			List<Subject> subjectList=new ArrayList<Subject>();
+			if(subjects  != null){
+			for (Iterator iterator = subjects.iterator(); iterator.hasNext();) {
+				Subject subject = (Subject) iterator.next();
+				for (Iterator iterator2 = list.iterator(); iterator2.hasNext();) {
+					Subject teacherSubject = (Subject) iterator2.next();
+					if(subject.getSubjectId() == teacherSubject.getSubjectId()){
+						subjectList.add(subject);
+						break;
+					}
+				}
+				
+			}
+			}
+			return Response.status(Status.OK).entity(subjectList).build();
+		}else{
+			return Response.status(Status.OK).entity(subjects).build();
+		}
+		
 	}
 	
 	@GET
@@ -1082,9 +1108,31 @@ public class CustomUserService extends ServiceBase {
 	public Response getSubjectOfDivisionForExam(@PathParam("division") Integer division) {
 		// TODO Auto-generated method stub
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		boolean isCustomeUserTeacher = (boolean) request.getSession().getAttribute("isCustomeUserTeacher");
 		SubjectTransaction subjectTransaction = new SubjectTransaction();
-		List<Subject> subjects = subjectTransaction.getSubjectRelatedToDivForExam(division, userBean.getInst_id());
-		return Response.status(Status.OK).entity(subjects).build();
+		List<Subject> subjects = subjectTransaction.getSubjectRelatedToDiv(division, userBean.getInst_id());
+		if(isCustomeUserTeacher){
+			TeacherTransaction teacherTransaction=new TeacherTransaction();
+			List<Subject> list=new ArrayList<Subject>();
+			list= teacherTransaction.getTeacherSubject(getRegId(), userBean.getInst_id());
+			List<Subject> subjectList=new ArrayList<Subject>();
+			if(subjects  != null){
+			for (Iterator iterator = subjects.iterator(); iterator.hasNext();) {
+				Subject subject = (Subject) iterator.next();
+				for (Iterator iterator2 = list.iterator(); iterator2.hasNext();) {
+					Subject teacherSubject = (Subject) iterator2.next();
+					if(subject.getSubjectId() == teacherSubject.getSubjectId()){
+						subjectList.add(subject);
+						break;
+					}
+				}
+				
+			}
+			}
+			return Response.status(Status.OK).entity(subjectList).build();
+		}else{
+			return Response.status(Status.OK).entity(subjects).build();
+		}
 	}
 	
 	@POST
@@ -1394,10 +1442,32 @@ public class CustomUserService extends ServiceBase {
 			@PathParam("divId")int div_id,
 			@PathParam("batchId")int batch_id,@PathParam("exam_id")int exam_id){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		boolean isCustomeUserTeacher = (boolean) request.getSession().getAttribute("isCustomeUserTeacher");
 		ExamTransaction examTransaction = new ExamTransaction();
-		List<ExamSubject> subjectList = new ArrayList<ExamSubject>();
-		subjectList = examTransaction.getExamSubjects(userBean.getInst_id(), div_id, batch_id, exam_id);
-		return Response.status(Status.OK).entity(subjectList).build();
+		List<ExamSubject> examSubjectList = new ArrayList<ExamSubject>();
+		examSubjectList = examTransaction.getExamSubjects(userBean.getInst_id(), div_id, batch_id, exam_id);
+		if(isCustomeUserTeacher){
+			TeacherTransaction teacherTransaction=new TeacherTransaction();
+			List<Subject> list=new ArrayList<Subject>();
+			list= teacherTransaction.getTeacherSubject(getRegId(), userBean.getInst_id());
+			List<ExamSubject> subjectList=new ArrayList<ExamSubject>();
+			if(examSubjectList  != null){
+			for (Iterator iterator = examSubjectList.iterator(); iterator.hasNext();) {
+				ExamSubject subject = (ExamSubject) iterator.next();
+				for (Iterator iterator2 = list.iterator(); iterator2.hasNext();) {
+					Subject teacherSubject = (Subject) iterator2.next();
+					if(subject.getSubjectId() == teacherSubject.getSubjectId()){
+						subjectList.add(subject);
+						break;
+					}
+				}
+				
+			}
+			}
+			return Response.status(Status.OK).entity(subjectList).build();
+		}else{
+			return Response.status(Status.OK).entity(examSubjectList).build();
+		}
 	}
 	
 	@POST
@@ -1486,8 +1556,29 @@ public class CustomUserService extends ServiceBase {
 			@PathParam("division") Integer division,@PathParam("date")long date) {
 		// TODO Auto-generated method stub
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		boolean isCustomeUserTeacher = (boolean) request.getSession().getAttribute("isCustomeUserTeacher");
 		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
 		List<AttendanceScheduleServiceBean> scheduleList = attendanceTransaction.getScheduleForAttendance(batch, new Date(date), userBean.getInst_id(), division);
+		if(isCustomeUserTeacher){
+			TeacherTransaction teacherTransaction=new TeacherTransaction();
+			List<Subject> list=new ArrayList<Subject>();
+			list= teacherTransaction.getTeacherSubject(getRegId(), userBean.getInst_id());
+			List<AttendanceScheduleServiceBean> serviceBeanList = new ArrayList<AttendanceScheduleServiceBean>();
+			if(scheduleList != null){
+				for (Iterator iterator = scheduleList.iterator(); iterator.hasNext();) {
+					AttendanceScheduleServiceBean attendanceScheduleServiceBean = (AttendanceScheduleServiceBean) iterator.next();
+					for (Iterator iterator2 = list.iterator(); iterator2.hasNext();) {
+						Subject subject = (Subject) iterator2.next();
+						if(subject.getSubjectId() == attendanceScheduleServiceBean.getSub_id()){
+							serviceBeanList.add(attendanceScheduleServiceBean);
+							break;
+						}
+					}
+					
+				}
+			}
+			return Response.status(Response.Status.OK).entity(serviceBeanList).build();
+		}
 		return Response.status(Response.Status.OK).entity(scheduleList).build();
 	}
 	
@@ -1534,8 +1625,29 @@ public class CustomUserService extends ServiceBase {
 			@PathParam("division") Integer division,@PathParam("date")long date) {
 		// TODO Auto-generated method stub
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		boolean isCustomeUserTeacher = (boolean) request.getSession().getAttribute("isCustomeUserTeacher");
 		AttendanceTransaction attendanceTransaction = new AttendanceTransaction();
 		List<AttendanceScheduleServiceBean> scheduleList = attendanceTransaction.getScheduleForUpdateAttendance(batch, new Date(date), userBean.getInst_id(), division);
+		if(isCustomeUserTeacher){
+			TeacherTransaction teacherTransaction=new TeacherTransaction();
+			List<Subject> list=new ArrayList<Subject>();
+			list= teacherTransaction.getTeacherSubject(getRegId(), userBean.getInst_id());
+			List<AttendanceScheduleServiceBean> serviceBeanList = new ArrayList<AttendanceScheduleServiceBean>();
+			if(scheduleList != null){
+				for (Iterator iterator = scheduleList.iterator(); iterator.hasNext();) {
+					AttendanceScheduleServiceBean attendanceScheduleServiceBean = (AttendanceScheduleServiceBean) iterator.next();
+					for (Iterator iterator2 = list.iterator(); iterator2.hasNext();) {
+						Subject subject = (Subject) iterator2.next();
+						if(subject.getSubjectId() == attendanceScheduleServiceBean.getSub_id()){
+							serviceBeanList.add(attendanceScheduleServiceBean);
+							break;
+						}
+					}
+					
+				}
+			}
+			return Response.status(Response.Status.OK).entity(serviceBeanList).build();
+		}
 		return Response.status(Response.Status.OK).entity(scheduleList).build();
 	}
 	

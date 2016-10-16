@@ -187,10 +187,9 @@ function validateInput(inputText){
 	
 </script>
 <body>
-<ul class="nav nav-tabs" style="border-radius:10px">
-  <li><a href="customUserViewTeacher">View Teachers</a></li>
-  <li class="active"><a href="#addteachertab" data-toggle = "tab">Add Teacher</a></li>
-</ul>
+<jsp:include page="ManageTeacherHeader.jsp" >
+		<jsp:param value="active" name="customUserManageTeacher"/>
+	</jsp:include>
   
 <div  class = "tab-content">
  <div id="addteachertab" class = "tab-pane fade in active">

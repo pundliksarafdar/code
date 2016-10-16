@@ -253,10 +253,9 @@ color:red;
 </script>
 </head>
 <body>
-<ul class="nav nav-tabs" style="border-radius:10px">
-  <li class="active"><a href="viewteacherstab"  data-toggle = "tab">View Teachers</a></li>
-  <li><a href="customUserManageTeacher">Add Teacher</a></li>
-</ul>
+<jsp:include page="ManageTeacherHeader.jsp" >
+		<jsp:param value="active" name="customUserViewTeacher"/>
+	</jsp:include>
   
 <div class = "tab-content" style="padding: 2%">
  <div id="viewteacherstab" class = "tab-pane fade in active">

@@ -444,10 +444,9 @@ if(notes!=null){
 
 </div>
 <%} %>
-<ul class="nav nav-tabs" style="border-radius:10px">
-   <li><a href="customeUserSeeNotes">View Notes</a></li>
-  <li class="active"><a href="#addnotestab" data-toggle = "tab">Add Notes</a></li>
-</ul>
+<jsp:include page="notesHeader.jsp" >
+		<jsp:param value="active" name="customUserAddNotes"/>
+	</jsp:include>
 
 <div id="addnotestab">
 <div class="well" >

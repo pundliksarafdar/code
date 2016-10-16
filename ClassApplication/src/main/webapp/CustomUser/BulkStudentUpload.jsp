@@ -149,11 +149,9 @@ function getBatchesOfDivision(){
 </script>
 </head>
 <body>
-<ul class="nav nav-tabs" style="border-radius:10px">
-    <li><a href="customUserViewStudent">View Student</a></li>
-  <li><a href="customUserManageStudent">Add Student</a></li>
-   <li class="active"><a href="#tabBody" data-toggle = "tab">Add Student Through File</a></li>
-</ul>
+<jsp:include page="ManageStudentHeader.jsp" >
+		<jsp:param value="active" name="customUserBulkStudentUpload"/>
+	</jsp:include>
 
 <div id="tabBody">
 <div class="well">

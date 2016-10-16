@@ -17,5 +17,8 @@
         <property name="joining_date" type="date">
             <column name="joining_date"/>
         </property>
+        <property name="teacher" type="boolean">
+            <column name="teacher"/>
+        </property>
     </class>
 </hibernate-mapping>

@@ -190,9 +190,9 @@ public class RegisterTransaction {
 		return registerDB.updateRenewalDates(regId);
 	}
 	
-	public RegisterBean getRegisteredTeacher(String username,String email) {
+	public RegisterBean getRegisteredTeacher(String username,String email,int inst_id) {
 		RegisterDB registerDB=new RegisterDB();
-		return registerDB.getRegisteredTeacher(username, email);
+		return registerDB.getRegisteredTeacher(username, email,inst_id);
 	}
 	
 	public RegisterBean getRegisteredUserByLoginID(String username) {

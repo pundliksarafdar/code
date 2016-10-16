@@ -1000,11 +1000,9 @@ var enabledEdit = false;
 
 <body>
 <div class="studentList">
-<ul class="nav nav-tabs" style="border-radius:10px">
-  <li class="active"><a href="#viewstudenttab" data-toggle = "tab">View Student</a></li>
-  <li><a href="customUserManageStudent">Add Student</a></li>
-   <li><a href="customUserBulkStudentUpload">Add Student Through File</a></li>
-</ul>
+<jsp:include page="ManageStudentHeader.jsp" >
+		<jsp:param value="active" name="customUserViewStudent"/>
+	</jsp:include>
 <% String[] child_mod_access = (String[])session.getAttribute("child_mod_access"); %>
 <div id="viewstudenttab">
 <div class="well">

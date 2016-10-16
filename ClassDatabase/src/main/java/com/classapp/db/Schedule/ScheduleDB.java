@@ -757,9 +757,9 @@ public class ScheduleDB {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session
-					.createQuery("update Schedule set teacher_id = 0  where teacher_id = :teacher_id and class_id =:class_id");
+					.createQuery("update Schedule set teacher_id = 0  where teacher_id = :teacher_id and inst_id =:inst_id");
 			query.setParameter("teacher_id", teacherid);
-			query.setParameter("class_id", classid);
+			query.setParameter("inst_id", classid);
 			count = query.executeUpdate();
 			transaction.commit();
 		} catch (Exception e) {

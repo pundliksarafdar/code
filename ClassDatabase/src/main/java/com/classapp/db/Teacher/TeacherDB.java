@@ -30,7 +30,7 @@ public class TeacherDB {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session
-					.createQuery("from RegisterBean where regId=:teacherID and role=:role");
+					.createQuery("from RegisterBean where regId=:teacherID and (role=:role or role = 5)");
 			query.setParameter("teacherID", teacherID);
 			query.setParameter("role", 2);
 			list = query.list();

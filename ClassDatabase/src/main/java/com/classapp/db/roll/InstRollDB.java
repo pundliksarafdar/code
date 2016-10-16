@@ -331,4 +331,32 @@ public class InstRollDB {
 		return  null;
 
 	}
+	
+	public boolean updateInstUser(int inst_id,int user_id,boolean teacher) {
+		Transaction transaction=null;
+		Session session=null;
+		List<Inst_user> list = null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("update Inst_user set teacher= :teacher"
+				+ "  where  inst_id = :inst_id and user_id = :user_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("user_id", user_id);
+		query.setParameter("teacher", teacher);
+		 query.executeUpdate();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  true;
+
+	}
 }

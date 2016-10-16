@@ -8,6 +8,7 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import com.classapp.db.Teacher.TeacherDB;
 import com.classapp.db.register.RegisterBean;
+import com.classapp.db.roll.InstRollDB;
 import com.classapp.db.Schedule.Schedule;
 import com.datalayer.teacher.Teacher;
 import com.transaction.register.RegisterTransaction;
@@ -22,6 +23,8 @@ public class TeaherTransaction {
 				if(!teacherDB.isTeacherExists(teacherID,regID))
 				{
 					teacherDB.add(teacherID,regID,subjects,suffix);
+					InstRollDB db = new InstRollDB();
+					db.updateInstUser(regID, teacherID, true);
 					return "added";
 				}else{
 					return "exists";

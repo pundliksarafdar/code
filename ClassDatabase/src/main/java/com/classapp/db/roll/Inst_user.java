@@ -9,6 +9,7 @@ public class Inst_user implements Serializable {
 	int role_id;
 	String education;
 	Date joining_date;
+	boolean teacher;
 	public int getInst_id() {
 		return inst_id;
 	}
@@ -38,6 +39,12 @@ public class Inst_user implements Serializable {
 	}
 	public void setJoining_date(Date joining_date) {
 		this.joining_date = joining_date;
+	}
+	public boolean isTeacher() {
+		return teacher;
+	}
+	public void setTeacher(boolean teacher) {
+		this.teacher = teacher;
 	}
 	
 }

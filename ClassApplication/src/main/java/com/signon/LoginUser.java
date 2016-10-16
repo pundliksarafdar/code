@@ -24,6 +24,7 @@ import com.classapp.db.notificationpkg.Notification;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.roll.InstRollDB;
 import com.classapp.db.roll.Inst_roll;
+import com.classapp.db.roll.Inst_user;
 import com.classapp.db.student.Student;
 import com.classapp.login.UserStatic;
 import com.classapp.schedule.Scheduledata;
@@ -285,11 +286,13 @@ public class LoginUser extends BaseAction{
 							&& 5 == userBean.getRole()) { 
 						InstRollDB rollDB = new  InstRollDB();
 						Inst_roll inst_roll = rollDB.getRole(userBean.getInst_id(), userBean.getInst_roll());
+						Inst_user inst_user = rollDB.getInstUser(userBean.getInst_id(), userBean.getRegId());
 						String accessArray[] = inst_roll.getParent_mod_access().split(",");
 						String childAccessArray[] = inst_roll.getChild_mod_access().split(",");
 						session.put("inst_id", userBean.getInst_id());
 						session.put("parent_mod_access", accessArray);
 						session.put("child_mod_access", childAccessArray);
+						session.put("isCustomeUserTeacher", inst_user.isTeacher());
 						UserStatic userStatic = userBean.getUserStatic();
 					    String storagePath = Constants.STORAGE_PATH+File.separator+userBean.getInst_id();
 						userStatic.setStorageSpace(storagePath);

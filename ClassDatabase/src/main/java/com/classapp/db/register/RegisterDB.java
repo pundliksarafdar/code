@@ -705,7 +705,7 @@ public List getStudents(List StudentIDs) {
 		return true;
 	}
 	
-	public RegisterBean getRegisteredTeacher(String username,String email) {
+	public RegisterBean getRegisteredTeacher(String username,String email,int inst_id) {
 		Session session = null;
 		Transaction transaction = null;
 		List<RegisterBean> subidList = null;
@@ -713,9 +713,10 @@ public List getStudents(List StudentIDs) {
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("from RegisterBean where  loginName = :loginName and email = :email and role=2");
+			Query query = session.createQuery("from RegisterBean where  loginName = :loginName and email = :email and (role=2 or ( inst_id = :inst_id and role = 5))");
 			query.setParameter("loginName", username);
 			query.setParameter("email", email);
+			query.setParameter("inst_id", inst_id);
 			subidList = query.list();
 			if(subidList!=null)
 			{
