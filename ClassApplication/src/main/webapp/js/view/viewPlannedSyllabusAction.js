@@ -53,19 +53,25 @@ function PlannedSyllabus(){
 	
 	function formatFilterData(data){
 		var divisionData = {}
-		$.each(data.division,function(index,val){
-			divisionData[val.id] = val.name;
-		});
+		if(data.division){
+			$.each(data.division,function(index,val){
+				divisionData[val.id] = val.name;
+			});
+		}
 		
 		var subjectData = {}
-		$.each(data.subject,function(index,val){
-			subjectData[val.id] = val.name;
-		});
+		if(data.subject){
+			$.each(data.subject,function(index,val){
+				subjectData[val.id] = val.name;
+			});
+		}
 		
 		var teacherData = {}
-		$.each(data.teacher,function(index,val){
-			teacherData[val.id] = val.name;
-		});
+		if(data.teacher){
+			$.each(data.teacher,function(index,val){
+				teacherData[val.id] = val.name;
+			});
+		}
 		
 		var allData = {};
 		allData.division = divisionData;
@@ -135,31 +141,34 @@ function PlannedSyllabus(){
 	function populateFilter(data){
 		syllabusData = formatFilterData(data);
 		var divisions = data.division;
+		if(divisions){
 		$.each(divisions,function(index,val){
 			var listItem = $(TEMPL);
 			listItem.find("label").text(val.name).attr("for","division"+index);
 			listItem.find("input").val(val.id).attr("id","division"+index).attr("name","division");
 			$('[data-filter="division"]').append(listItem);
 		});
-		
+		}
 		
 		var subjects = data.subject;
+		if(subjects){
 		$.each(subjects,function(index,val){
 			var listItem = $(TEMPL);
 			listItem.find("label").text(val.name).attr("for","subjects"+index);
 			listItem.find("input").val(val.id).attr("id","subjects"+index).attr("name","subject");
 			$('[data-filter="subject"]').append(listItem);
 		});
-		
+		}
 		
 		var teachers = data.teacher;
+		if(teachers){
 		$.each(teachers,function(index,val){
 			var listItem = $(TEMPL);
 			listItem.find("label").text(val.name).attr("for","teacher"+index);
 			listItem.find("input").val(val.id).attr("id","teacher"+index).attr("name","teacher");
 			$('[data-filter="teacher"]').append(listItem);
 		});
-		
+		}
 	}
 	
 	this.getPlannedSyllabusFilter = getPlannedSyllabusFilter;
