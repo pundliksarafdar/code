@@ -60,7 +60,9 @@ public class SyllabusRestImpl  extends ServiceBase implements SyllabusRestApi{
 	@PUT
 	public Response editPlannedSyllabus(SyllabusBean syllabusBean) {
 		SyllabusPlannerTransaction transaction = new SyllabusPlannerTransaction();
-		transaction.editSyllabus(syllabusBean.getId(),syllabusBean.getInstId(), syllabusBean.getClassId(), syllabusBean.getSubjectId(), getRegId(), syllabusBean.getSyllabus(), syllabusBean.getDate());
+		transaction.editSyllabus(syllabusBean.getId(),syllabusBean.getInstId(), syllabusBean.getClassId(), 
+				syllabusBean.getSubjectId(), getRegId(), syllabusBean.getSyllabus(), 
+				syllabusBean.getDate(),syllabusBean.getTeacherStatus());
 		return null;
 	}
 

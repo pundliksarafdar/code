@@ -114,6 +114,11 @@ function PlannedSyllabus(){
 				title: "Syllabus",data:"syllabus",sDefault:'&mdash;'
 			},
 			{
+				title: "Teacher remark",data:"teacherStatus",sDefault:'&mdash;',render:function(data){
+					return data?data:"&mdash;";
+				}
+			},
+			{
 				title: "Status",data:"status",render:function(data){
 					var optionComplete = $("<option/>",{value:"Complete",text:"Complete",selected:data!=null && data.toLowerCase()=="complete"});
 					var optionInComplete = $("<option/>",{value:"Incomplete",text:"Incomplete",selected:data==null || data.toLowerCase()=="incomplete"});

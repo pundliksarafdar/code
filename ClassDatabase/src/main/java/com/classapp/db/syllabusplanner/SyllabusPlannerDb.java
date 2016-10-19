@@ -119,7 +119,7 @@ public class SyllabusPlannerDb {
 		if(session!=null){session.close();}
 		return syllabusBeans;
 	}
-	public boolean updateSyllabus(long id,int instId,int classId,int subId,int regId,String syllabus,Date date){
+	public boolean updateSyllabus(long id,int instId,int classId,int subId,int regId,String syllabus,Date date,String teacherStatus){
 		SyllabusPlannerDb syllabusPlannerDb = new SyllabusPlannerDb();
 		List<SyllabusBean> syllabusBeans = syllabusPlannerDb.getSyllabus(id, instId, classId, subId, regId);
 		if(syllabusBeans.size()<1){
@@ -129,6 +129,7 @@ public class SyllabusPlannerDb {
 			syllabusBean = syllabusBeans.get(0);
 			syllabusBean.setSyllabus(syllabus);
 			syllabusBean.setDate(date);
+			syllabusBean.setTeacherStatus(teacherStatus);
 			syllabusPlannerDb.saveSyllabusPlanner(syllabusBean);
 		}
 		return true;

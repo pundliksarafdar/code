@@ -13,6 +13,7 @@ public class SyllabusBean implements Serializable{
 	Date date;
 	String syllabus;
 	String status;
+	String teacherStatus;
 	boolean isEditable;
 	
 	public Long getId() {
@@ -75,5 +76,12 @@ public class SyllabusBean implements Serializable{
 	public void setEditable(boolean isEditable) {
 		this.isEditable = isEditable;
 	}
+	public String getTeacherStatus() {
+		return teacherStatus;
+	}
+	public void setTeacherStatus(String teacherStatus) {
+		this.teacherStatus = teacherStatus;
+	}
+	
 		
 }

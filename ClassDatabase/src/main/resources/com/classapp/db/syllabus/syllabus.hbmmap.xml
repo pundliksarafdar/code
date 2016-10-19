@@ -23,6 +23,9 @@
         <property name="teacherId" type="java.lang.Integer">
             <column name="teacherId"/>
         </property>
+        <property name="teacherStatus" type="string">
+            <column name="teacherStatus"/>
+        </property>
         <property name="date" type="java.util.Date">
             <column name="date"/>
         </property>

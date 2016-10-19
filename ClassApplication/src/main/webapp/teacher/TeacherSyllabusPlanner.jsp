@@ -41,8 +41,8 @@
 		</div>
 		</div>
 		
-		<div class="container">
-		<div class="row">
+		<div class="container"  style="width: 100%;">
+		<div class="row"  style="width: 100%;">
 		<div class="col-md-4">
 		<div>
 	  	       <div class='input-group date form-group' id='syllabusSetTime' >
@@ -61,7 +61,7 @@
 		</div>
 		
 		<div class="col-md-8">
-			<div id="searches" class="row">
+			<div id="searches" class="row" style="width: 100%;">
 				<div class="col-md-1"></div>
 				<div class="col-md-5">
 					<div class='input-group date' id='syllabusSearchMonth' >

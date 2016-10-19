@@ -34,9 +34,9 @@ public class SyllabusPlannerTransaction {
 		return syllabusBeans;
 	}
 	
-	public boolean editSyllabus(long id,int instId,int classId,int subId,int regId,String syllabus,Date date){
+	public boolean editSyllabus(long id,int instId,int classId,int subId,int regId,String syllabus,Date date,String teacherStatus){
 		SyllabusPlannerDb syllabusPlannerDb = new SyllabusPlannerDb();
-		return syllabusPlannerDb.updateSyllabus(id, instId, classId, subId, regId, syllabus, date);
+		return syllabusPlannerDb.updateSyllabus(id, instId, classId, subId, regId, syllabus, date,teacherStatus);
 	}
 	
 	public boolean deleteSyllabus(long id,int instId,int classId,int subId,int regId){

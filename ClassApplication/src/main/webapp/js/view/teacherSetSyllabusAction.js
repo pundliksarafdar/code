@@ -292,13 +292,16 @@ function UploadExam(){
 			columns:[
 			
 			{
-				title: "Date",data:"date",sDefault:'&mdash;',render:function(data){return moment(data).format("YYYY-MM-DD");}
+				title: "Date",data:"date",sDefault:'&mdash;',render:function(data){return moment(data).format("YYYY-MM-DD");},sWidth:"15%"
 			},
 			{
-				title: "Syllabus",data:"syllabus",sDefault:'&mdash;'
+				title: "Syllabus",data:"syllabus",sDefault:'&mdash;',sWidth:"50%"
 			},
 			{
-				title: "Status",data:"status",render:function(data){console.log(data); return data==null?"&mdash;":data;}
+				title: "Principle remark",data:"status",render:function(data){console.log(data); return data==null?"&mdash;":data;}
+			},
+			{
+				title: "Teacher remark",data:"teacherStatus",render:function(data){console.log(data); return data==null?"&mdash;":data;}
 			},
 			{
 				title: "",bSortable:false,data:null,render:function(data){if(data.editable){return "<input type='button' class='btn btn-success btn-xs edit' value='Edit'/>&nbsp;" +
@@ -332,9 +335,10 @@ function UploadExam(){
 	        }
 	    });
 		
-		function editSyllabus(data,syllabusText,date){
+		function editSyllabus(data,syllabusText,date,teacherStatus){
 			data.syllabus = syllabusText;
 			data.date = date;
+			data.teacherStatus = teacherStatus;
 			console.log(data);
 			var handler = {};
 			handler.success = function(){
@@ -350,7 +354,7 @@ function UploadExam(){
             '<input type="text" class="form-control" name="syllabusEditTime" required placeholder="Date"/>'+
                 '<span class="input-group-addon">'+
                     '<span class="glyphicon glyphicon-calendar"></span>'+
-                '</span>'+
+                '</span>'
             '</div>';
 			
 			var dP = $(datePicker).datetimepicker({
@@ -362,12 +366,14 @@ function UploadExam(){
 			
 			var syllabusText = $("<textarea/>",{text:data.syllabus}).addClass("form-control form-group");
 			//var saveButton = "<input type='button' class='btn btn-success btn-xs form-group' value='Save'/>"
+			var selectStatus = $("<select/>").append("<option value='Incomplete'>Incomplete</option><option value='Complete'>Complete</option>").val(data.teacherStatus?data.teacherStatus:"Incomplete").addClass("btn btn-default form-group");
 			var saveButton = $("<input/>",{value:"Save"}).addClass("btn btn-success btn-xs form-group").on("click",function(){
 				var syllabus = syllabusText.val();
 				var date = dP.find('input').val(); 
-				editSyllabus(data,syllabus,date);
+				var teacherStatus = selectStatus.val();
+				editSyllabus(data,syllabus,date,teacherStatus);
 			});
-			var div = $("<form/>",{role:"form"}).append(dP).append(syllabusText).append(saveButton);
+			var div = $("<form/>",{role:"form"}).append(dP).append(syllabusText).append(selectStatus).append("<br/><br/>").append(saveButton);
 			return div;
 		}
 		
