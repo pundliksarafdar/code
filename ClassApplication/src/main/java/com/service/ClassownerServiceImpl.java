@@ -625,9 +625,6 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 			helper.sendManualRegistrationNotification(getRegId(), list);
 			}
 			
-			StudentTransaction studentTransaction = new StudentTransaction();
-			studentTransaction.saveStudentAdditionalInfo(serviceBean);
-			
 		}
 		}
 		}else{
@@ -647,9 +644,6 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		boolean status  = true;
 		if(statTransaction.isIDsAvailable(getRegId(), 1)){
 		status = studentTransaction.addStudentByID(getRegId(),serviceBean.getStudent());
-		if(status){
-			studentTransaction.saveStudentAdditionalInfo(serviceBean);
-		}
 		statTransaction.increaseUsedStudentIds(getRegId());
 		status = feesTransaction.saveStudentBatchFees(getRegId(), serviceBean.getStudent_FeesList());
 		if(status){
