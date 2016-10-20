@@ -1,10 +1,15 @@
 package com.tranaction.syllabusplanner;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import org.apache.poi.ss.usermodel.DateUtil;
+
 import com.classapp.db.syllabusplanner.SyllabusPlannerDb;
 import com.classapp.utils.Constants.SYLLABUS_STATE;
 import com.service.beans.SyllabusBean;
@@ -13,6 +18,9 @@ import com.service.beans.SyllabusFilterBean;
 public class SyllabusPlannerTransaction {
 	public boolean saveSyallabus(SyllabusBean syllabusBean){
 		SyllabusPlannerDb syllabusPlannerDb = new SyllabusPlannerDb();
+		if(syllabusBean.getDate().before(new Date())){
+			return false;
+		}
 		return syllabusPlannerDb.saveSyllabusPlanner(syllabusBean);
 	}
 	
@@ -23,9 +31,13 @@ public class SyllabusPlannerTransaction {
 		System.out.println(year+":"+month);
 		SyllabusPlannerDb syllabusPlannerDb = new SyllabusPlannerDb();
 		List<String>batchIds = Arrays.asList(batchId.split(","));
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-mm-dd");
+		Date todayDateOnly = getTodaysDate();
+		
 		List<SyllabusBean> syllabusBeans = syllabusPlannerDb.getSyllabus(Integer.parseInt(year), Integer.parseInt(month),instId,classId,subId,batchIds,regId);
 		syllabusBeans.stream().forEach(bean -> {
-			if (bean.getDate().compareTo(new Date()) > -1 || SYLLABUS_STATE.EDITABLE.toString().equals(bean.getStatus())) {
+			if (bean.getDate().compareTo(todayDateOnly)>-1 || SYLLABUS_STATE.EDITABLE.toString().equalsIgnoreCase(bean.getStatus())) {
 				bean.setEditable(true);
 			} else {
 				bean.setEditable(false);
@@ -34,8 +46,22 @@ public class SyllabusPlannerTransaction {
 		return syllabusBeans;
 	}
 	
+	public Date getTodaysDate(){
+		Date date = new Date();
+		Calendar calendar = Calendar.getInstance();
+	    calendar.setTime( date );
+	    calendar.set(Calendar.HOUR_OF_DAY, 0);
+	    calendar.set(Calendar.MINUTE, 0);
+	    calendar.set(Calendar.SECOND, 0);
+	    calendar.set(Calendar.MILLISECOND, 0);
+	    return calendar.getTime();
+	}
+	
 	public boolean editSyllabus(long id,int instId,int classId,int subId,int regId,String syllabus,Date date,String teacherStatus){
 		SyllabusPlannerDb syllabusPlannerDb = new SyllabusPlannerDb();
+		if(date.before(new Date())){
+			return false;
+		}
 		return syllabusPlannerDb.updateSyllabus(id, instId, classId, subId, regId, syllabus, date,teacherStatus);
 	}
 	

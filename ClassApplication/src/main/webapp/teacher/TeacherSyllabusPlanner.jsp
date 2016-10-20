@@ -12,7 +12,7 @@
 	<div class="well">
 <div class="row">
 			<div class="col-md-3">
-				<select name="instituteSelect" id="instituteSelect" class="form-control" width="100px">
+				<select name="instituteSelect" id="instituteSelect" class="form-control filterSelect" width="100px">
 					<option value="-1">Select Institute</option>
 					<c:forEach items="${requestScope.registerBeanList}" var="institute">
 						<option value="<c:out value="${institute.regId}"></c:out>"><c:out value="${institute.className}"></c:out></option>
@@ -21,19 +21,19 @@
 				<span id="instituteError" class="error"></span>
 			</div>
 			<div class="col-md-3">
-				<select name="division" id="divisionSelect" class="form-control" width="100px">
+				<select name="division" id="divisionSelect" class="form-control filterSelect" width="100px">
 					<option value="-1">Select Class</option>						
 				</select>
 				<span id="divisionError" class="error"></span>
 			</div>
 			<div class="col-md-3 subjectDropDown">
-				<select name="subject" id="subjectSelect" class="form-control" width="100px">
+				<select name="subject" id="subjectSelect" class="form-control filterSelect" width="100px">
 					<option value="-1">Select Subject</option>
 				</select>
 				<span id="subjectError" class="error"></span>
 			</div>
 			<div class="col-md-3 batchDropDown">
-				<select name="batch" id="batch" class="form-control" width="100px">
+				<select name="batch" id="batch" class="form-control filterSelect" width="100px">
 					<option value="-1">Select Batch</option>
 				</select>
 				<span id="batchError" class="error"></span>
@@ -41,9 +41,10 @@
 		</div>
 		</div>
 		
-		<div class="container"  style="width: 100%;">
+		<div class="container" id="addSyllabusContainer" style="width: 100%;">
 		<div class="row"  style="width: 100%;">
 		<div class="col-md-4">
+		<h4>Add syllabus</h4>
 		<div>
 	  	       <div class='input-group date form-group' id='syllabusSetTime' >
                    <input type='text' class="form-control" name="syllabusSetTime" required placeholder="Date"/>
@@ -61,11 +62,12 @@
 		</div>
 		
 		<div class="col-md-8">
+		<h4>View syllabus</h4>
 			<div id="searches" class="row" style="width: 100%;">
 				<div class="col-md-1"></div>
 				<div class="col-md-5">
 					<div class='input-group date' id='syllabusSearchMonth' >
-	                   <input type='text' class="form-control" name="syllabusSearchMonth" required placeholder="Date"/>
+	                   <input type='text' class="form-control" name="syllabusSearchMonth" required placeholder="Month"/>
 	                   <span class="input-group-addon">
 	                       <span class="glyphicon glyphicon-calendar"></span>
 	                   </span>

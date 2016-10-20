@@ -21,11 +21,17 @@ var TEACHER_SYLLABUS_TABLE = "#teacher-syllabus-planner-table";
 var TEACHER_SYLLABUS_TABLE_HEADING = TEACHER_SYLLABUS_TABLE+"-heading";
 var SAVE = "#saveNewSyllabus";
 var SYLLABUS_SEARCH_MONTH = "#syllabusSearchMonth";
+var FILTER_SELECT = ".filterSelect";
+var SYLLABUS_CONTAINER = "#addSyllabusContainer";
 
 var saveSyllabusUrl = "rest/syllabus";
 $(document).ready(function(){
+	$(SYLLABUS_CONTAINER).hide();
 	var uploadExam = new UploadExam();
 	$(SAVE).on("click",uploadExam.saveSyllabus);
+	$(FILTER_SELECT).on("change",uploadExam.checkFilters);
+	$(TEACHER_SYLLABUS_TABLE).on('click', 'input.edit', uploadExam.onEditClick);
+	
 	$("#instituteSelect").change(function(){
 		var divisionArray = [];
 		var subjectArray = [];
@@ -111,13 +117,14 @@ $(document).ready(function(){
 	$(CALENDAR_DATE).datetimepicker({
 		pickTime: false,
 		minViewMode:'days',
-		format:"YYYY-MM-DD"
+		format:"YYYY-MM-DD",
+		minDate:new Date()
 	});
 	
 	$(SYLLABUS_SEARCH_MONTH).datetimepicker({
 		pickTime: false,
 		minViewMode:'months',
-		format:"YYYY-MM"
+		format:"MMMM-YYYY"
 	}).on("dp.change",uploadExam.onDateChange);
 	
 	
@@ -125,13 +132,47 @@ $(document).ready(function(){
 
 
 function UploadExam(){
+	var onEditClick = function () {
+        var tr = $(this).closest('tr');
+        var row = oTable.row( tr );
+ 
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+            $(this).val("Edit");
+        }
+        else {
+            // Open this row
+            row.child( format(row.data()) ).show();
+            tr.addClass('shown');
+            $(this).val("Cancel");
+        }
+    };
+    
+	var checkFilters = function(){
+		var status = true;
+		$.each($(FILTER_SELECT),function(){
+			console.log($(this).val());
+			if($(this).val()==-1 || $(this).val()==null){
+				status = false;
+				return false;
+			}
+		});
+		if(!status){
+			$(SYLLABUS_CONTAINER).hide();
+		}else{
+			$(SYLLABUS_CONTAINER).show();
+			$(SYLLABUS_SEARCH_MONTH).data("DateTimePicker").setDate(new Date());
+		}
+	}
 	
 	var saveSyllabus = function(){
 		var sBean = new SyllabusBean();
 		sBean.instId = $("#instituteSelect").val();
 		sBean.classId = $("#divisionSelect").val();
 		sBean.subjectId = $("#subjectSelect").val();
-		sBean.batchId = $("#batch").val().join?$("#batch").val().join(","):$("#batch").val();
+		sBean.batchId = $("#batch").val();
 		sBean.date = $("[name='syllabusSetTime']").val();
 		sBean.syllabus = $("#syllabusToSet").val();
 		var handler = {};
@@ -145,8 +186,8 @@ function UploadExam(){
 		sBean.instId = $("#instituteSelect").val();
 		sBean.classId = $("#divisionSelect").val();
 		sBean.subjectId = $("#subjectSelect").val();
-		sBean.batchId = $("#batch").val().join?$("#batch").val().join(","):$("#batch").val();
-		var date = $(SYLLABUS_SEARCH_MONTH).find('input').val();
+		sBean.batchId = $("#batch").val();
+		var date = new moment($(SYLLABUS_SEARCH_MONTH).data("DateTimePicker").getDate()).format("YYYY-MM");
 		var handler = {};
 		handler.success = function(data){loadTable(data);};
 		handler.error = function(e){console.log(e)};
@@ -208,7 +249,7 @@ function UploadExam(){
 		   		},
 		   type:"POST",
 		   success:function(data){
-			   console.log(data);
+			   
 			   displayBatchFromSubjectNDivision(data);
 		   },
 			error:function(){
@@ -268,12 +309,13 @@ function UploadExam(){
 			batchDataArray.push(batchDataObject);
 		});
 		$("#batch").empty();
-		$("#batch").select2({data:batchDataArray,placeholder:"type batch name",multiple: true});
+		$("#batch").select2({data:batchDataArray,placeholder:"type batch name"});
 		$("#batch").prop("disabled",false);
 		}else{
 			$("#batch").prop("disabled",true);
 			$(".alert-danger").text("Subjects for selected batch are not added.").show();
 		}
+		$("#batch").trigger("change");
 	}
 	
 	function deleteRecord(data){
@@ -283,8 +325,12 @@ function UploadExam(){
 		rest.deleteItemData(saveSyllabusUrl,handler,JSON.stringify(data));
 	}
 	
+	var oTable;
 	var loadTable = function(data){
-		var oTable  = $(TEACHER_SYLLABUS_TABLE).DataTable( {
+		if(oTable){
+			oTable.clear().draw();
+		}
+		oTable  = $(TEACHER_SYLLABUS_TABLE).DataTable( {
 			bDestroy:true,
 			data: data,
 			lengthChange: false,
@@ -298,10 +344,10 @@ function UploadExam(){
 				title: "Syllabus",data:"syllabus",sDefault:'&mdash;',sWidth:"50%"
 			},
 			{
-				title: "Principle remark",data:"status",render:function(data){console.log(data); return data==null?"&mdash;":data;}
+				title: "Principle remark",data:"status",render:function(data){ return data==null?"&mdash;":data;}
 			},
 			{
-				title: "Teacher remark",data:"teacherStatus",render:function(data){console.log(data); return data==null?"&mdash;":data;}
+				title: "Teacher remark",data:"teacherStatus",render:function(data){ return data==null?"&mdash;":data;}
 			},
 			{
 				title: "",bSortable:false,data:null,render:function(data){if(data.editable){return "<input type='button' class='btn btn-success btn-xs edit' value='Edit'/>&nbsp;" +
@@ -317,29 +363,11 @@ function UploadExam(){
 				});
 			}} );
 		
-		$(TEACHER_SYLLABUS_TABLE+' tbody').on('click', 'input.edit', function () {
-	        var tr = $(this).closest('tr');
-	        var row = oTable.row( tr );
-	 
-	        if ( row.child.isShown() ) {
-	            // This row is already open - close it
-	            row.child.hide();
-	            tr.removeClass('shown');
-	            $(this).val("Edit");
-	        }
-	        else {
-	            // Open this row
-	            row.child( format(row.data()) ).show();
-	            tr.addClass('shown');
-	            $(this).val("Cancel");
-	        }
-	    });
-		
 		function editSyllabus(data,syllabusText,date,teacherStatus){
 			data.syllabus = syllabusText;
 			data.date = date;
 			data.teacherStatus = teacherStatus;
-			console.log(data);
+			
 			var handler = {};
 			handler.success = function(){
 				$.notify({message: "Syllabus saved successfully"},{type: 'success'});
@@ -347,34 +375,6 @@ function UploadExam(){
 			};
 			handler.error = function(){$.notify({message: "Syllabus not saved successfully"},{type: 'danger'});};
 			rest.put(saveSyllabusUrl,handler,JSON.stringify(data));
-		}
-		
-		function format(data){
-			var datePicker = '<div class="input-group form-group date" id="syllabusEditTime" >'+
-            '<input type="text" class="form-control" name="syllabusEditTime" required placeholder="Date"/>'+
-                '<span class="input-group-addon">'+
-                    '<span class="glyphicon glyphicon-calendar"></span>'+
-                '</span>'
-            '</div>';
-			
-			var dP = $(datePicker).datetimepicker({
-				pickTime: false,
-				minViewMode:'days',
-				format:"YYYY-MM-DD"
-			});
-			dP.data("DateTimePicker").setDate(new Date(data.date));
-			
-			var syllabusText = $("<textarea/>",{text:data.syllabus}).addClass("form-control form-group");
-			//var saveButton = "<input type='button' class='btn btn-success btn-xs form-group' value='Save'/>"
-			var selectStatus = $("<select/>").append("<option value='Incomplete'>Incomplete</option><option value='Complete'>Complete</option>").val(data.teacherStatus?data.teacherStatus:"Incomplete").addClass("btn btn-default form-group");
-			var saveButton = $("<input/>",{value:"Save"}).addClass("btn btn-success btn-xs form-group").on("click",function(){
-				var syllabus = syllabusText.val();
-				var date = dP.find('input').val(); 
-				var teacherStatus = selectStatus.val();
-				editSyllabus(data,syllabus,date,teacherStatus);
-			});
-			var div = $("<form/>",{role:"form"}).append(dP).append(syllabusText).append(selectStatus).append("<br/><br/>").append(saveButton);
-			return div;
 		}
 		
 		
@@ -392,6 +392,35 @@ function UploadExam(){
 	    } );
 	}
 	
+	function format(data){
+		var datePicker = '<div class="input-group form-group date" id="syllabusEditTime" >'+
+        '<input type="text" class="form-control" name="syllabusEditTime" required placeholder="Date"/>'+
+            '<span class="input-group-addon">'+
+                '<span class="glyphicon glyphicon-calendar"></span>'+
+            '</span>'
+        '</div>';
+		
+		var dP = $(datePicker).datetimepicker({
+			pickTime: false,
+			minViewMode:'days',
+			format:"YYYY-MM-DD",
+			minDate:new Date()
+		});
+		dP.data("DateTimePicker").setDate(new Date(data.date));
+		
+		var syllabusText = $("<textarea/>",{text:data.syllabus}).addClass("form-control form-group");
+		//var saveButton = "<input type='button' class='btn btn-success btn-xs form-group' value='Save'/>"
+		var selectStatus = $("<select/>").append("<option value='Incomplete'>Incomplete</option><option value='Complete'>Complete</option>").val(data.teacherStatus?data.teacherStatus:"Incomplete").addClass("btn btn-default form-group");
+		var saveButton = $("<input/>",{value:"Save"}).addClass("btn btn-success btn-xs form-group").on("click",function(){
+			var syllabus = syllabusText.val();
+			var date = dP.find('input').val(); 
+			var teacherStatus = selectStatus.val();
+			editSyllabus(data,syllabus,date,teacherStatus);
+		});
+		var div = $("<form/>",{role:"form"}).append(dP).append(syllabusText).append(selectStatus).append("<br/><br/>").append(saveButton);
+		return div;
+	}
+	
 	this.getSubjectsInDivision = getSubjectsInDivision;
 	this.displaySubjectDropDown = displaySubjectDropDown;
 	this.getBatchFromDivisonNSubject = getBatchFromDivisonNSubject;
@@ -399,6 +428,8 @@ function UploadExam(){
 	this.loadTable = loadTable;
 	this.saveSyllabus = saveSyllabus;
 	this.onDateChange = onDateChange;
+	this.checkFilters = checkFilters;
+	this.onEditClick = onEditClick;
 	}
 
 function SyllabusBean(){
