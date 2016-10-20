@@ -318,6 +318,20 @@ function UploadExam(){
 		$("#batch").trigger("change");
 	}
 	
+	function editSyllabus(data,syllabusText,date,teacherStatus){
+		data.syllabus = syllabusText;
+		data.date = date;
+		data.teacherStatus = teacherStatus;
+		
+		var handler = {};
+		handler.success = function(){
+			$.notify({message: "Syllabus saved successfully"},{type: 'success'});
+			onDateChange();
+		};
+		handler.error = function(){$.notify({message: "Syllabus not saved successfully"},{type: 'danger'});};
+		rest.put(saveSyllabusUrl,handler,JSON.stringify(data));
+	}
+	
 	function deleteRecord(data){
 		var handler = {};
 		handler.success = function(){$.notify({message: "Syllabus deleted successfully"},{type: 'success'});onDateChange();};
@@ -363,19 +377,7 @@ function UploadExam(){
 				});
 			}} );
 		
-		function editSyllabus(data,syllabusText,date,teacherStatus){
-			data.syllabus = syllabusText;
-			data.date = date;
-			data.teacherStatus = teacherStatus;
-			
-			var handler = {};
-			handler.success = function(){
-				$.notify({message: "Syllabus saved successfully"},{type: 'success'});
-				onDateChange();
-			};
-			handler.error = function(){$.notify({message: "Syllabus not saved successfully"},{type: 'danger'});};
-			rest.put(saveSyllabusUrl,handler,JSON.stringify(data));
-		}
+		
 		
 		
 		// Apply the search
@@ -411,7 +413,7 @@ function UploadExam(){
 		var syllabusText = $("<textarea/>",{text:data.syllabus}).addClass("form-control form-group");
 		//var saveButton = "<input type='button' class='btn btn-success btn-xs form-group' value='Save'/>"
 		var selectStatus = $("<select/>").append("<option value='Incomplete'>Incomplete</option><option value='Complete'>Complete</option>").val(data.teacherStatus?data.teacherStatus:"Incomplete").addClass("btn btn-default form-group");
-		var saveButton = $("<input/>",{value:"Save"}).addClass("btn btn-success btn-xs form-group").on("click",function(){
+		var saveButton = $("<input/>",{value:"Save",type:"button"}).addClass("btn btn-success btn-sm form-group").on("click",function(){
 			var syllabus = syllabusText.val();
 			var date = dP.find('input').val(); 
 			var teacherStatus = selectStatus.val();

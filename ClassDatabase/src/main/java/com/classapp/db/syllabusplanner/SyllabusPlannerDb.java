@@ -22,6 +22,7 @@ import org.hibernate.type.IntegerType;
 
 import com.classapp.db.fees.Fees;
 import com.classapp.persistence.HibernateUtil;
+import com.classapp.utils.Constants.SYLLABUS_STATE;
 import com.service.beans.SyllabusBean;
 import com.service.beans.SyllabusFilterBean;
 
@@ -127,6 +128,10 @@ public class SyllabusPlannerDb {
 		}else{
 			SyllabusBean syllabusBean = new SyllabusBean();
 			syllabusBean = syllabusBeans.get(0);
+			Date todayDateOnly = getTodaysDate();
+			if(syllabusBean.getDate().compareTo(todayDateOnly)<0 && !SYLLABUS_STATE.EDITABLE.toString().equalsIgnoreCase(syllabusBean.getStatus())){
+				return false;
+			}
 			syllabusBean.setSyllabus(syllabus);
 			syllabusBean.setDate(date);
 			syllabusBean.setTeacherStatus(teacherStatus);
@@ -136,6 +141,16 @@ public class SyllabusPlannerDb {
 		
 	}
 	
+	public Date getTodaysDate(){
+		Date date = new Date();
+		Calendar calendar = Calendar.getInstance();
+	    calendar.setTime( date );
+	    calendar.set(Calendar.HOUR_OF_DAY, 0);
+	    calendar.set(Calendar.MINUTE, 0);
+	    calendar.set(Calendar.SECOND, 0);
+	    calendar.set(Calendar.MILLISECOND, 0);
+	    return calendar.getTime();
+	}
 	
 	public boolean deleteSyllabus(long id,int instId,int classId,int subId,int teacherId){
 		Transaction transaction=null;

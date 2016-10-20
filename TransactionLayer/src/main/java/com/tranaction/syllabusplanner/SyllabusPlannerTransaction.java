@@ -59,9 +59,6 @@ public class SyllabusPlannerTransaction {
 	
 	public boolean editSyllabus(long id,int instId,int classId,int subId,int regId,String syllabus,Date date,String teacherStatus){
 		SyllabusPlannerDb syllabusPlannerDb = new SyllabusPlannerDb();
-		if(date.before(new Date())){
-			return false;
-		}
 		return syllabusPlannerDb.updateSyllabus(id, instId, classId, subId, regId, syllabus, date,teacherStatus);
 	}
 	
