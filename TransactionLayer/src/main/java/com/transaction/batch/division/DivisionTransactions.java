@@ -10,6 +10,7 @@ import com.classapp.db.batch.division.DivisionData;
 import com.classapp.db.exam.ExamPaperDB;
 import com.classapp.db.fees.FeesDB;
 import com.classapp.db.questionPaper.QuestionPaperDB;
+import com.classapp.db.syllabusplanner.SyllabusPlannerDb;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.attendance.AttendanceTransaction;
 import com.transaction.batch.BatchTransactions;
@@ -112,6 +113,9 @@ public class DivisionTransactions {
 		 batchTransactions.deletebatchrelatdtoclass(inst_id,classid);
 		 DivisionDB db=new DivisionDB();
 		 db.deletedivision(classid); 
+		 
+		 SyllabusPlannerDb plannerDb = new SyllabusPlannerDb();
+		 plannerDb.deleteSyllabus(null, null, classid, null, inst_id);
 		 return true;
 	}
 	 

@@ -16,6 +16,7 @@ import com.classapp.db.roll.Inst_user;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.subject.Subject;
+import com.classapp.db.syllabusplanner.SyllabusPlannerDb;
 import com.service.beans.TeacherDivisionsAndSubjects;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.register.RegisterTransaction;
@@ -90,6 +91,8 @@ public class TeacherTransaction {
 		if(inst_user != null){
 			rollDB.updateInstUser(inst_id, teacher_id, false);
 		}
+		SyllabusPlannerDb plannerDb = new SyllabusPlannerDb();
+		plannerDb.deleteSyllabus(teacher_id, null, null, null, inst_id);
 		return teacherDB.deleteTeacher(teacher_id, inst_id);
 	}
 

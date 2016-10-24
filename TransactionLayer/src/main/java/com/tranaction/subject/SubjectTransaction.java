@@ -23,6 +23,7 @@ import com.classapp.db.subject.SubjectDb;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.Subjects;
 import com.classapp.db.subject.Topics;
+import com.classapp.db.syllabusplanner.SyllabusPlannerDb;
 import com.classapp.logger.AppLogger;
 import com.transaction.attendance.AttendanceTransaction;
 import com.transaction.batch.BatchTransactions;
@@ -143,6 +144,10 @@ public class SubjectTransaction {
 		paperDB.deleteQuestionPaperRelatedToSubject(inst_id, sub_id);
 		SubjectDb subjectDb=new SubjectDb();
 		subjectDb.deleteSubject(sub_id);
+		 
+		SyllabusPlannerDb plannerDb = new SyllabusPlannerDb();
+		plannerDb.deleteSyllabus(null, sub_id, null, null, inst_id);
+	
 		return true;
 	}
 	

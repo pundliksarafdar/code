@@ -170,6 +170,21 @@ public class SyllabusPlannerDb {
 		return true;
 	}
 	
+	public void deleteSyllabus(Integer teacherId,Integer subjectId,Integer division,Integer batch,Integer instId){
+		String mysqlStr = "delete from SyllabusBean where instId =:instituteId  and teacherId=:teacherId or teacherId=null "
+				+ "and classId=:division or classId=null "
+				+ "and subjectId=:subjectId or subjectId=null";
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		Query query = session.createQuery(mysqlStr);
+		query.setParameter("instituteId", instId);
+		query.setParameter("subjectId", division);
+		query.setParameter("teacherId", teacherId);
+		query.setParameter("division", division);
+		query.executeUpdate();
+		
+	}
+	
 	public boolean deleteSyllabus(SyllabusBean syllabusBean){
 		Transaction transaction=null;
 		Session session=null;
@@ -274,6 +289,6 @@ public class SyllabusPlannerDb {
 	
 	public static void main(String[] args) {
 		SyllabusPlannerDb db = new SyllabusPlannerDb();
-	
+		db.deleteSyllabus(210, null, null, null, 190);
 	}
 }

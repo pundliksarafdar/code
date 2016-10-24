@@ -487,13 +487,13 @@ public class ClassOwnerServlet extends HttpServlet{
 				
 				int deletTeacherId=Integer.parseInt(req.getParameter("teacherId"));										
 				
-					/*if(teacherTransaction.deleteTeacher(deletTeacherId, regId)){
+					if(teacherTransaction.deleteTeacher(deletTeacherId, regId)){
 						respObject.addProperty(STATUS, "success");
 						respObject.addProperty(MESSAGE, "Teacher Successfully deleted .");
 					}else{
 						respObject.addProperty(STATUS, "error");
 						respObject.addProperty(MESSAGE, "Teacher does not exists in class!");
-					}*/
+					}
 					
 					//printWriter.write(respObject.toString());
 				}else if(Constants.SEARCH_TEACHER.equals(methodToCall)){
