@@ -6,7 +6,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-
 </head>
 <body>
 	<div class="well">
@@ -40,13 +39,11 @@
 			</div>
 		</div>
 		</div>
-		
 		<div class="container" id="addSyllabusContainer" style="width: 100%;">
-		<div class="row"  style="width: 100%;">
-		<div class="col-md-4">
+		<div>
 		<h4>Add syllabus</h4>
 		<div>
-	  	       <div class='input-group date form-group' id='syllabusSetTime' >
+	  	       <div class='input-group date form-group' id='syllabusSetTime' style="width: 500px;">
                    <input type='text' class="form-control" name="syllabusSetTime" required placeholder="Date"/>
                    <span class="input-group-addon">
                        <span class="glyphicon glyphicon-calendar"></span>
@@ -58,13 +55,13 @@
 		  </div>
 		  <div>
 		  	<button type="button" class="btn btn-success form-group" id="saveNewSyllabus">Save</button>
-		  </div>	
-		</div>
-		
-		<div class="col-md-8">
-		<h4>View syllabus</h4>
+		  </div>
+		   </div>
+		   <hr/>
+		    <div>	
+				<h4>View syllabus</h4>
 			<div id="searches" class="row" style="width: 100%;">
-				<div class="col-md-1"></div>
+				
 				<div class="col-md-5">
 					<div class='input-group date' id='syllabusSearchMonth' >
 	                   <input type='text' class="form-control" name="syllabusSearchMonth" required placeholder="Month"/>
@@ -84,6 +81,6 @@
 			</div>
 		</div>
 		</div>
-		</div>		
+		
 </body>
 </html>
