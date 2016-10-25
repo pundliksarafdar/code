@@ -1,5 +1,6 @@
 package com.schedule.quartz;
 
+import java.io.File;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,6 +33,32 @@ public class DailyScheduler implements Job  {
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		// TODO Auto-generated method stub
 		sendDailyAttendanceNotification();
+		String excelpath = com.config.Constants.STORAGE_PATH + File.separatorChar +"excelTemp";
+		clearTempFolders(2, excelpath);
+		String imageTemp = com.config.Constants.STORAGE_PATH + File.separatorChar +"imageTemp";
+		clearTempFolders(2, imageTemp);
+	}
+	
+	public static void main(String[] args) {
+		DailyScheduler dailyScheduler = new DailyScheduler();
+		com.config.Constants.STORAGE_PATH = "E:\\Software\\office\\apache-tomcat-8.0.32\\storage";
+		String excelpath = com.config.Constants.STORAGE_PATH + File.separatorChar +"excelTemp";
+		dailyScheduler.clearTempFolders(2, excelpath);
+	}
+	
+	public void clearTempFolders(int daysBack,String directory){
+		File file = new File(directory);
+		if(file.exists()){
+			File[] listFiles = file.listFiles();           
+		    long purgeTime = System.currentTimeMillis() - (daysBack * 24 * 60 * 60 * 1000);
+		    for(File listFile : listFiles) {
+		        if(listFile.lastModified() < purgeTime) {
+		            if(!listFile.delete()) {
+		                System.err.println("Unable to delete file: " + listFile);
+		            }
+		         }
+		      }
+		}
 	}
 
 	public void sendDailyAttendanceNotification(){
