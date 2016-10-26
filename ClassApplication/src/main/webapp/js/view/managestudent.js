@@ -107,6 +107,7 @@ var addStudent = function(){
 		var parentLname=$(".parentInfo").find("#lname").val().trim();
 		var parentPhone=$(".parentInfo").find("#phone").val().trim();
 		var parentEmail=$(".parentInfo").find("#email").val().trim();
+		var joiningDate = $(".studentInfobyID").find("#joiningDate").val().trim();
 		if($("#classfloorID").val() === ""){
 			flag=true;
 			$("#classfloorIDerror").html("Enter Classfloor ID");
@@ -151,6 +152,11 @@ var addStudent = function(){
 			}
 		}
 		
+		if( $("#studentIdById").val().trim() == ""){
+			flag=true;
+			$("#studentIdByIdError").html("Enter Registration no");
+		}
+		
 		if(flag == false){
 			var student = new Student();
 			student.parentFname = parentFname;
@@ -160,6 +166,8 @@ var addStudent = function(){
 			student.student_id = studentID;
 			student.div_id = divisionId;
 			student.batch_id = batchIDs;
+			student.joiningDate = joiningDate;
+			student.studentInstRegNo = $("#studentIdById").val();
 			var tRow = $('#dataTableForFees tbody').find('tr');
 			var tData = feesDataTable.rows().data();
 			var feesArray = [];
@@ -176,23 +184,28 @@ var addStudent = function(){
 					feesArray.push(student_Fees);
 				}	
 			}
-			
-			var studentRegisterServiceBean = new StudentRegisterServiceBean ();
-			studentRegisterServiceBean.student = student;
-			studentRegisterServiceBean.student_FeesList = feesArray;
-			var handler = {};
-			handler.success = function(e){if(e == true){
-			$.notify({message: 'Student Added successfully'},{type: 'success'});
-			}else{
-				$.notify({message: "Sufficient student ID's not available"},{type: 'danger'});	
-			}};
-			handler.error = function(e){console.log(e)};
 			var additionalValData = {};
 			$(ADDITIONAL_FORM_FIELD_TO_SAVE).find("input").each(function(key,val){
 				var fieldValue = $(val).val();
 				var fieldId = $(val).attr("fieldId");
 				additionalValData[fieldId] = fieldValue;
 			});
+			student.studentAdditionalInfo = JSON.stringify(additionalValData);
+			var studentRegisterServiceBean = new StudentRegisterServiceBean ();
+			studentRegisterServiceBean.student = student;
+			studentRegisterServiceBean.student_FeesList = feesArray;
+			var handler = {};
+			handler.success = function(e){
+			if(e == true){
+			$.notify({message: 'Student Added successfully'},{type: 'success'});
+			}else{
+				if(e==false){
+				$.notify({message: "Sufficient student ID's not available"},{type: 'danger'});
+				}else if(e[0] == "regno"){
+					$("#studentIdByIdError").html("Duplicate Registration no");		
+				}
+			}};
+			handler.error = function(e){console.log(e)};
 			studentRegisterServiceBean.studentClassId = $("#studentIdById").val();
 			studentRegisterServiceBean.additionalFormFields = additionalValData;
 			
@@ -221,6 +234,7 @@ var addStudent = function(){
 		var address = $(".studentInfoManually").find("#address").val().trim();
 		var state = $(".studentInfoManually").find("#state").val();
 		var city = $(".studentInfoManually").find("#city").val().trim();
+		var joiningDate = $(".studentInfoManually").find("#joiningDate").val().trim();
 		if(divisionId=="-1"){
 			flag=true;
 			$("#divisionError").html("Please select class");
@@ -322,7 +336,10 @@ var addStudent = function(){
 			$("#addemailError").show();
 			flag=true;
 		}
-		
+		if( $("#studentIdByManual").val().trim() == ""){
+			flag=true;
+			$("#studentIdByManualError").html("Enter Registration no");
+		}
 		if(flag == false){
 		var registerBean = new RegisterBean();
 		registerBean.fname = studentFname;
@@ -339,7 +356,16 @@ var addStudent = function(){
 		student.parentLname = parentLname;
 		student.parentPhone = parentPhone;
 		student.parentEmail = parentEmail;
-		
+		student.fname = studentFname;
+		student.lname = studentLname;
+		student.phone = studentPhone;
+		student.email = studentEmail;
+		student.dob = dob;
+		student.addr = address;
+		student.city = city;
+		student.state = state;
+		student.studentInstRegNo = $("#studentIdByManual").val();
+		student.joiningDate = joiningDate;
 		var tRow = $('#dataTableForFees tbody').find('tr');
 		var tData = feesDataTable.rows().data();
 		var feesArray = [];
@@ -356,6 +382,13 @@ var addStudent = function(){
 				feesArray.push(student_Fees);
 			}	
 		}
+		var additionalValData = {};
+		$(ADDITIONAL_FORM_FIELD_TO_SAVE).find("input").each(function(key,val){
+			var fieldValue = $(val).val();
+			var fieldId = $(val).attr("fieldId");
+			additionalValData[fieldId] = fieldValue;
+		});
+		student.studentAdditionalInfo = JSON.stringify(additionalValData);
 		
 		var studentRegisterServiceBean = new StudentRegisterServiceBean ();
 		studentRegisterServiceBean.registerBean = registerBean;
@@ -363,22 +396,22 @@ var addStudent = function(){
 		studentRegisterServiceBean.student_FeesList = feesArray;
 		var handler = {};
 		handler.success = function(e){
-			if(e == ""){
+			if(e[0] == ""){
 			$.notify({message: 'Student Added successfully'},{type: 'success'});
-			}else if(e == "ID"){
+			}else if(e[0] == "ID"){
 				$.notify({message: "Sufficient student ID's not available"},{type: 'danger'});	
-			}else if(e == "email"){
-				$(".studentInfoManually").find("#emailError").html("Email ID already used,please enter different email!");
+			}else if(e.length > 0){
+				for(i=0;i<e.length;i++){
+					if(e[i] == "email"){
+					$(".studentInfoManually").find("#emailError").html("Email ID already used,please enter different email!");
+					}
+					if(e[i] == "regno"){
+						$("#studentIdByManualError").html("Duplicate Registration no");	
+					}
+				}
 			}
 			
 		};
-		
-		var additionalValData = {};
-		$(ADDITIONAL_FORM_FIELD_TO_SAVE).find("input").each(function(key,val){
-			var fieldValue = $(val).val();
-			var fieldId = $(val).attr("fieldId");
-			additionalValData[fieldId] = fieldValue;
-		});
 		studentRegisterServiceBean.additionalFormFields = additionalValData;
 		studentRegisterServiceBean.studentClassId = $("#studentIdByManual").val();
 		handler.error = function(e){console.log(e)};

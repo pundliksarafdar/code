@@ -7,6 +7,6 @@
 		<li class="<c:out value="${param.customeUserAddquestion}"></c:out>"><a href="customeUserAddquestion">Add Question</a></li>
 		<%} %>
 		<% if(ArrayUtils.contains(child_mod_access,"19")){ %>
-		<li class="<c:out value="${param.bulkQuestionupload}"></c:out>"><a href="bulkQuestionupload">Add Questions Through File</a></li>
+		<li class="<c:out value="${param.customeUserBulkQuestionupload}"></c:out>"><a href="customeUserBulkQuestionupload">Add Questions Through File</a></li>
 		<%} %>
 	</ul>

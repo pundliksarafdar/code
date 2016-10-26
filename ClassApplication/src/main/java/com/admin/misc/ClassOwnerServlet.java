@@ -1711,7 +1711,7 @@ public class ClassOwnerServlet extends HttpServlet{
 			studentIDsList.add(students.get(i).getStudent_id());
 		}
 		RegisterTransaction registerTransaction=new RegisterTransaction();
-		List<RegisterBean> registerBeans= registerTransaction.getStudentsInfo(studentIDsList);
+		//List<RegisterBean> registerBeans= registerTransaction.getStudentsInfo(studentIDsList);
 		BatchTransactions batchTransactions=new BatchTransactions();
 		List<Batch> batchList = batchTransactions.getBatchRelatedtoDivision(Integer.parseInt(batchdivision));
 		List<StudentDetails> studentDetailsList = new ArrayList<StudentDetails>();
@@ -1720,8 +1720,9 @@ public class ClassOwnerServlet extends HttpServlet{
 		if(students != null){
 			for (int i = 0; i < students.size(); i++) {
 				StudentDetails studentDetails=new StudentDetails();
-				registerBeans.get(i).setLoginPass("");
-				studentDetails.setStudentUserBean(registerBeans.get(i));
+				/*registerBeans.get(i).setLoginPass("");
+				studentDetails.setStudentUserBean(registerBeans.get(i));*/
+				studentDetails.setStudent(students.get(i));
 				studentDetails.setDivision(division);
 				
 				String rollnBatch = students.get(i).getBatchIdNRoll();
@@ -3391,16 +3392,16 @@ public class ClassOwnerServlet extends HttpServlet{
 		if(nameArray.length > 1){
 			lname = nameArray[1];
 		}
-		RegisterTransaction registerTransaction = new RegisterTransaction();
+		/*RegisterTransaction registerTransaction = new RegisterTransaction();
 		List<RegisterBean> namesList = registerTransaction.getStudentByName(userBean.getRegId(), fname, lname);
 		List<Integer> studentIDList = new ArrayList<Integer>();
 		if (namesList != null) {
 			for (int i = 0; i < namesList.size(); i++) {
 				studentIDList.add(namesList.get(i).getRegId());
 			}
-		}
+		}*/
 		StudentTransaction studentTransaction = new StudentTransaction();
-		List<Student> studentsList = studentTransaction.getStudentByStudentIDs(studentIDList, userBean.getRegId());
+		List<Student> studentsList = studentTransaction.getStudentByStudentIDs(userBean.getRegId(),fname, lname);
 		BatchTransactions batchTransactions=new BatchTransactions();
 		List<Batch> batchList = batchTransactions.getAllBatches(userBean.getRegId());
 		List<StudentDetails> studentDetailsList = new ArrayList<StudentDetails>();
@@ -3409,8 +3410,9 @@ public class ClassOwnerServlet extends HttpServlet{
 		if(studentsList != null){
 			for (int i = 0; i < studentsList.size(); i++) {
 				StudentDetails studentDetails=new StudentDetails();
-				namesList.get(i).setLoginPass("");
-				studentDetails.setStudentUserBean(namesList.get(i));
+				/*namesList.get(i).setLoginPass("");
+				studentDetails.setStudentUserBean(namesList.get(i));*/
+				studentDetails.setStudent(studentsList.get(i));
 				boolean flag = false;
 				for (int j = 0; j < division.size(); j++) {
 					if(studentsList.get(i).getDiv_id() == division.get(j).getDivId())

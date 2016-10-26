@@ -197,8 +197,10 @@ public class ExcelUploadServiceImpl extends ServiceBase{
 			        }
 			        ArrayList<String> suuccessCountList = new ArrayList<String>();
 			        suuccessCountList.add("" + successCount + " students added successfully.");
+			      /*  suuccessCountList.add("" + 0 + " students added successfully.");*/
 			        invalidStudentResponseMap.put("SUCCESS", suuccessCountList);
 			        invalidStudentResponseMap.put("addedStudentsResponse", addedStudentResponseList);
+			        /*invalidStudentResponseMap.put("addedStudentsResponse", new ArrayList<>());*/
 			        invalidStudentResponseMap.put("IDERROR", null);
 			        }else{
 			        	invalidStudentResponseMap = new HashMap<String, ArrayList<String>>();

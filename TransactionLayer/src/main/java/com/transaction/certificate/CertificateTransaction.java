@@ -9,7 +9,9 @@ import org.apache.commons.io.FileUtils;
 import com.classapp.db.certificate.CertificateDB;
 import com.classapp.db.certificate.certificate;
 import com.classapp.db.register.RegisterBean;
+import com.classapp.db.student.Student;
 import com.transaction.register.RegisterTransaction;
+import com.transaction.student.StudentTransaction;
 
 public class CertificateTransaction {
 	String storageURL;
@@ -104,10 +106,10 @@ public class CertificateTransaction {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		RegisterTransaction registerTransaction = new RegisterTransaction();
-		RegisterBean registerBean= registerTransaction.getregistereduser(student_id);
-		fileData = fileData.replace("{{StudentName}}", registerBean.getFname()+" "+registerBean.getLname());
-		fileData = fileData.replace("{{StudentAddress}}", registerBean.getAddr1()+","+registerBean.getCity()+","+registerBean.getState());
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student= studentTransaction.getclassStudent(student_id,inst_id);
+		fileData = fileData.replace("{{StudentName}}", student.getFname()+" "+student.getLname());
+		fileData = fileData.replace("{{StudentAddress}}", student.getAddr()+","+student.getCity()+","+student.getState());
 		return fileData;
 	}
 	

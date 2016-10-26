@@ -1,6 +1,7 @@
 package com.classapp.db.student;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.Map;
 
 public class Student implements Serializable{
@@ -18,7 +19,17 @@ public class Student implements Serializable{
 	private String parentEmail;
 	private String batchIdNRoll;
 	private String studentAdditionalInfo;
-	
+	private String studentInstRegNo;
+	private String fname;
+	private String mname;
+	private String lname;
+	private Date dob;
+	private String addr;
+	private String city;
+	private String state;
+	private String phone;
+	private String email;
+	private Date joiningDate;
 	public int getStudent_id() {
 		return student_id;
 	}
@@ -79,6 +90,73 @@ public class Student implements Serializable{
 	}
 	public void setStudentAdditionalInfo(String studentAdditionalInfo) {
 		this.studentAdditionalInfo = studentAdditionalInfo;
+	}
+	
+	public String getStudentInstRegNo() {
+		return studentInstRegNo;
+	}
+	public void setStudentInstRegNo(String studentInstRegNo) {
+		this.studentInstRegNo = studentInstRegNo;
+	}
+	public String getFname() {
+		return fname;
+	}
+	public void setFname(String fname) {
+		this.fname = fname;
+	}
+	public String getMname() {
+		return mname;
+	}
+	public void setMname(String mname) {
+		this.mname = mname;
+	}
+	public String getLname() {
+		return lname;
+	}
+	public void setLname(String lname) {
+		this.lname = lname;
+	}
+	public Date getDob() {
+		return dob;
+	}
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+	public String getAddr() {
+		return addr;
+	}
+	public void setAddr(String addr) {
+		this.addr = addr;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public Date getJoiningDate() {
+		return joiningDate;
+	}
+	public void setJoiningDate(Date joiningDate) {
+		this.joiningDate = joiningDate;
 	}
 	@Override
 	public boolean equals(Object arg0) {

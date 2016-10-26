@@ -1,5 +1,6 @@
 package com.classowner;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +25,10 @@ public class ManageStudentAction extends BaseAction{
 	int divisionSize;
 	List<certificate> certificateList;
 	String studentNameSearch;
+	String sampleFilePath;
 	@Override
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
-		
+		sampleFilePath = userBean.getUserStatic().getStorageSpace()+File.separator+"SampleFiles"+File.separator+"SampleStudent.xls";
 		StudentHelperBean studentHelperBean= new StudentHelperBean();	
 		DivisionHelperBean divisionHelperBean = new DivisionHelperBean();
 		DivisionTransactions divisionTransactions = new DivisionTransactions();
@@ -79,6 +81,14 @@ public class ManageStudentAction extends BaseAction{
 
 	public void setStudentNameSearch(String studentNameSearch) {
 		this.studentNameSearch = studentNameSearch;
+	}
+
+	public String getSampleFilePath() {
+		return sampleFilePath;
+	}
+
+	public void setSampleFilePath(String sampleFilePath) {
+		this.sampleFilePath = sampleFilePath;
 	}
 	
 	

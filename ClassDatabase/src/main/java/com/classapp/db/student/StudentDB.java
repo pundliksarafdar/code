@@ -747,17 +747,18 @@ public class StudentDB {
 		return list;
 	}
 	
-	public List<Student> getStudentByStudentIDs(List<Integer> studentID,int class_id) {
+	public List<Student> getStudentByStudentIDs(int class_id,String fname,String lname) {
 		Session session = null;
 		boolean status=false;
 		Transaction transaction = null;
 		List<Student> list=new ArrayList<Student>();
-		String queryString=" from Student where student_id in :studentID and class_id=:class_id order by student_id asc";
+		String queryString=" from Student where class_id=:class_id and fname like :fname and lname like :lname order by student_id asc";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
-			query.setParameterList("studentID", studentID);
+			query.setParameter("fname", fname+"%");
+			query.setParameter("lname", lname+"%");
 			query.setParameter("class_id", class_id);
 				list= query.list();
 		}catch(Exception e){
@@ -775,7 +776,7 @@ public class StudentDB {
 		boolean status=false;
 		Transaction transaction = null;
 		List list=null;
-		String queryString="Select reg.fname,reg.lname, reg.regId,std.batchIdNRoll from Student std,RegisterBean reg " +
+		String queryString="Select std.fname,std.lname, reg.regId,std.batchIdNRoll from Student std,RegisterBean reg " +
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
 				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id";
 		try{
@@ -810,7 +811,7 @@ public class StudentDB {
 		boolean status=false;
 		Transaction transaction = null;
 		List list=null;
-		String queryString="Select reg.fname,reg.lname, reg.regId,att.presentee,att.att_id,std.batchIdNRoll from Student std,RegisterBean reg, Attendance att " +
+		String queryString="Select std.fname,std.lname, reg.regId,att.presentee,att.att_id,std.batchIdNRoll from Student std,RegisterBean reg, Attendance att " +
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
 				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id and att.student_id = reg.regId and " +
 				"att.div_id = std.div_id and att.batch_id = :attbatch_id and att.att_date = :date and att.sub_id = :sub_id and att.schedule_id = :schedule_id";
@@ -849,7 +850,7 @@ public class StudentDB {
 		boolean status=false;
 		Transaction transaction = null;
 		List list=null;
-		String queryString="Select reg.fname,reg.lname, reg.regId,std.batchIdNRoll from Student std,RegisterBean reg " +
+		String queryString="Select std.fname,std.lname, reg.regId,std.batchIdNRoll from Student std,RegisterBean reg " +
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
 				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id order by std.student_id";
 		try{
@@ -945,7 +946,7 @@ public class StudentDB {
 		boolean status=false;
 		Transaction transaction = null;
 		List list=null;
-		String queryString="Select reg.fname,reg.lname, reg.regId,std.batchIdNRoll  from Student std,RegisterBean reg " +
+		String queryString="Select std.fname,std.lname, reg.regId,std.batchIdNRoll  from Student std,RegisterBean reg " +
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
 				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id order by std.student_id";
 		try{
@@ -972,6 +973,38 @@ public class StudentDB {
 		}
 		
 		return null;
+	}
+	
+	public boolean validateStudentRegistrationNo(String regNo,int inst_id) {
+		Session session = null;
+		boolean status=false;
+		Transaction transaction = null;
+		List list=null;
+		String queryString="from Student std where std.class_id=:class_id and studentInstRegNo=:regNo";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(queryString);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("regNo", regNo);
+				list=query.list();
+			if(list!=null)
+			{
+				if(list.size() > 0){
+				return true;
+				}else{
+				return false;
+				}
+			}
+			
+			transaction.commit();
+		}catch(Exception e){
+			AppLogger.logError(e);
+		}finally{
+			session.close();
+		}
+		
+		return false;
 	}
 	
 	

@@ -36,5 +36,38 @@
         <property name="studentAdditionalInfo" type="string">
             <column name="studentAdditionalInfo"/>
         </property>
+        <property name="studentInstRegNo" type="string">
+            <column name="studentInstRegNo" length="100" not-null="false" unique="false" />
+        </property> 
+        <property name="fname" type="string">
+            <column name="FNAME" length="20" not-null="true" unique="false" />
+        </property>
+        <property name="mname" type="string">
+            <column name="MNAME" length="20" unique="false" />
+        </property>
+        <property name="lname" type="string">
+            <column name="LNAME" length="20" not-null="true" unique="false" />
+        </property>
+        <property name="dob" type="java.sql.Date">
+            <column name="DOB" not-null="true" unique="false" />
+        </property>
+        <property name="addr" type="string">
+            <column name="ADDR"  length="50" not-null="true" unique="false" />
+        </property>
+        <property name="city" type="string">
+            <column name="CITY"  length="20" not-null="true" unique="false"  />
+        </property>
+        <property name="state" type="string">
+            <column name="STATE"  length="20" not-null="true" unique="false" />
+        </property>
+        <property name="phone" type="string">
+            <column name="PHONE" length="10" not-null="true" unique="true" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="100" not-null="false" unique="false" />
+        </property> 
+        <property name="joiningDate" type="java.sql.Date">
+            <column name="joiningDate" not-null="true" unique="false" />
+        </property>
     </class>
 </hibernate-mapping>

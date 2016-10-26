@@ -932,5 +932,23 @@
 			<result name="paragraph" type="tiles">customeuser.editParaQuestion</result>
 			<!-- <result name="starteditingquestion" type="tiles">classowner.starteditingquestion</result> -->
 		</action>
+		<action name="customeUserBulkQuestionupload" class="com.customrole.AddQuestionAction"
+			method="execute">
+			<result name="success" type="tiles">customeuser.customeUserBulkQuestionupload</result>
+		</action>
+		<action name="DownloadPage" 	class="com.classowner.DownloadFileAction">
+		</action>
+		<action name="customeUserCreaterole" class="com.customrole.RoleAction">
+			<result name="success" type="tiles">customeuser.customeUserCreaterole</result>
+		</action>
+		<action name="customeUserViewRole" class="com.customrole.ViewRoleAction">
+			<result name="success" type="tiles">customeuser.customeUserViewRole</result>
+		</action>
+		<action name="customeUserCreateUser" class="com.customrole.CreateUserAction">
+			<result name="success" type="tiles">customeuser.customeUserCreateUser</result>
+		</action>
+		<action name="customeUserViewUser" class="com.customrole.ViewUserAction">
+			<result name="success" type="tiles">customeuser.customeUserViewUser</result>
+		</action>
 	</package>
 </struts>

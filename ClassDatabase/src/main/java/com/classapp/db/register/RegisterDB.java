@@ -773,7 +773,7 @@ public List getStudents(List StudentIDs) {
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("select CONCAT(fname,' ',lname) from RegisterBean where  regId in (select student_id from Student where class_id=:inst_id)");
+			Query query = session.createQuery("select CONCAT(fname,' ',lname) from Student where class_id=:inst_id");
 			query.setParameter("inst_id", inst_id);
 			namesList = query.list();
 		}catch(Exception e){
