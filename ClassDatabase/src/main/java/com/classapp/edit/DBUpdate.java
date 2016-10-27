@@ -38,7 +38,6 @@ public class DBUpdate {
 			int result = updateQuery.executeUpdate();
 			transaction.commit();
 			query = "Select endDate from RegisterBean WHERE regId = :regId"; 
-			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			updateQuery = session.createQuery(query);
 			updateQuery.setParameter("regId", Integer.parseInt(regId));

@@ -30,11 +30,10 @@ public class QuestionPaperPatternDB {
 	
 	public int updateQuestionPaperPattern(QuestionPaperPattern questionPaperPattern) {
 		Transaction transaction=null;
-		Session session=null;
-		session=HibernateUtil.getSessionfactory().openSession();
+		Session session=HibernateUtil.getSessionfactory().openSession();;
+		
 		transaction=session.beginTransaction();
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("update QuestionPaperPattern set marks = :marks,pattern_name =:pattern_name,modifiedby=:modifiedby where inst_id = :inst_id and div_id = :div_id and pattern_id = :pattern_id");
 			query.setParameter("inst_id", questionPaperPattern.getInst_id());
@@ -143,7 +142,7 @@ public class QuestionPaperPatternDB {
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
+			
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("delete from QuestionPaperPattern where inst_id = :inst_id and div_id = :div_id and pattern_id = :pattern_id");
 			query.setParameter("inst_id", inst_id);
@@ -171,7 +170,7 @@ public class QuestionPaperPatternDB {
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
+			
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("delete from QuestionPaperPattern where inst_id = :inst_id and div_id = :div_id");
 			query.setParameter("inst_id", inst_id);
