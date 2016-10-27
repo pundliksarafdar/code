@@ -42,6 +42,7 @@ public class AdditionalFormFieldDb {
 		if(beans.size()>0){
 			additionalFormFieldBean = beans.get(0);
 		}
+		if(session != null){session.close();}
 		return additionalFormFieldBean;
 			
 		

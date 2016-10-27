@@ -68,7 +68,6 @@ public class ExamDB {
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("delete from Exam where inst_id = :inst_id and exam_id = :exam_id ");
 			query.setParameter("inst_id", inst_id);
@@ -96,7 +95,6 @@ public class ExamDB {
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("select exam_name from Exam where inst_id = :inst_id and exam_name = :exam_name ");
 			query.setParameter("inst_id", inst_id);

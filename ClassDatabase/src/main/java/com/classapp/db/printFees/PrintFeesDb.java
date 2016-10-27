@@ -38,6 +38,7 @@ public class PrintFeesDb {
 		if(!feesList.isEmpty()){
 			return feesList.get(feesList.size()-1);
 		}
+		if(session != null){session.close();}
 		return printFees;
 	}
 	
@@ -53,6 +54,7 @@ public class PrintFeesDb {
 		criterion = Restrictions.eq("student_id", studentId);
 		criteria.add(criterion);
 		List<PrintFees> feesList = criteria.list();
+		if(session != null){session.close();}
 		return feesList;
 	}
 }

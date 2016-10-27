@@ -198,13 +198,11 @@ public class DivisionDB {
 
 	public List<Division> getAllDivision(Integer regId) {
 		Session session = null;
-		Transaction transaction = null;
 		List<Integer> queryResult=null;
 		List<Division> divisions = new ArrayList<Division>();
 		String queryString="from Division where institute_id=:institute_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setInteger("institute_id", regId);
 			divisions = query.list();
@@ -216,10 +214,7 @@ public class DivisionDB {
 				session.close();
 			}
 		}
-			
-		
-		return divisions;
-		
+		return divisions;		
 	}
 	
 	

@@ -34,7 +34,6 @@ public class ExamPaperDB {
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("delete from Exam_Paper where inst_id = :inst_id and div_id = :div_id and exam_id = :exam_id and exam_paper_id = :exam_paper_id ");
 			query.setParameter("inst_id", exam_Paper.getInst_id());
@@ -63,7 +62,7 @@ public class ExamPaperDB {
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
+			
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("select exam_paper_id from Exam_Paper where inst_id = :inst_id and div_id = :div_id and exam_id = :exam_id and batch_id = :batch_id ");
 			query.setParameter("inst_id", inst_id);
@@ -95,7 +94,6 @@ public class ExamPaperDB {
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("update Exam_Paper set marks = :marks , duration = :duration," +
 					"header_id = :header_id, question_paper_id = :question_paper_id,modified_by = :modified_by," +
@@ -173,7 +171,7 @@ public class ExamPaperDB {
 		transaction=session.beginTransaction();
 		List<Subject> list = null;
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
+			
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("Select sub.subjectName,sub.subjectId,examPaper.marks from Exam_Paper examPaper , Subject sub where sub.institute_id = examPaper.inst_id and" +
 					" sub.subjectId = examPaper.sub_id and examPaper.inst_id =:inst_id and examPaper.div_id = :div_id and examPaper.batch_id = :batch_id" +
@@ -205,7 +203,7 @@ public class ExamPaperDB {
 		transaction=session.beginTransaction();
 		List<Subject> list = null;
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
+			
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("Select distinct examPaper.exam_id,exm.exam_name  from Exam_Paper examPaper , Exam exm "
 					+ "where exm.inst_id = examPaper.inst_id and exm.exam_id = examPaper.exam_id and examPaper.sub_id =:sub_id and  examPaper.inst_id =:inst_id "
@@ -237,7 +235,7 @@ public class ExamPaperDB {
 		transaction=session.beginTransaction();
 		List list = null;
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
+			
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("Select distinct sub.subjectId,sub.subjectName from Exam_Paper examPaper , Subject sub where sub.institute_id = examPaper.inst_id and" +
 					" sub.subjectId = examPaper.sub_id and examPaper.inst_id =:inst_id and examPaper.div_id = :div_id and examPaper.batch_id = :batch_id" +
@@ -269,7 +267,7 @@ public class ExamPaperDB {
 		transaction=session.beginTransaction();
 		List list = null;
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
+			
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("Select distinct sub.subjectId,sub.subjectName,examPaper.batch_id from Exam_Paper examPaper , Subject sub where sub.institute_id = examPaper.inst_id and" +
 					" sub.subjectId = examPaper.sub_id and examPaper.inst_id =:inst_id and examPaper.div_id = :div_id and examPaper.batch_id in :batch_id" +
@@ -301,7 +299,7 @@ public class ExamPaperDB {
 		transaction=session.beginTransaction();
 		List<Subject> list = null;
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
+			
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("Select examPaper.exam_id,sub.subjectId,examPaper.marks from Exam_Paper examPaper , Subject sub where sub.institute_id = examPaper.inst_id and" +
 					" sub.subjectId = examPaper.sub_id and examPaper.inst_id =:inst_id and examPaper.div_id = :div_id and examPaper.batch_id = :batch_id" +
@@ -333,7 +331,7 @@ public class ExamPaperDB {
 		transaction=session.beginTransaction();
 		List<Subject> list = null;
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
+			
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("Select examPaper.exam_id,sub.subjectId,examPaper.marks,examPaper.batch_id from Exam_Paper examPaper , Subject sub where sub.institute_id = examPaper.inst_id and" +
 					" sub.subjectId = examPaper.sub_id and examPaper.inst_id =:inst_id and examPaper.div_id = :div_id and examPaper.batch_id in :batch_id" +
@@ -365,7 +363,7 @@ public class ExamPaperDB {
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
+			
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("delete from Exam_Paper where inst_id = :inst_id "
 											+ "and div_id = :div_id");
@@ -394,7 +392,7 @@ public class ExamPaperDB {
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
+			
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("delete from Exam_Paper where inst_id = :inst_id "
 											+ "and sub_id = :sub_id");
@@ -423,7 +421,7 @@ public class ExamPaperDB {
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
+			
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("delete from Exam_Paper where inst_id = :inst_id and exam_id = :exam_id");
 			query.setParameter("inst_id", inst_id);
@@ -452,7 +450,7 @@ public class ExamPaperDB {
 		transaction=session.beginTransaction();
 		List<Exam> examList =null;
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
+			
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("select distinct ex from Exam ex,Exam_Paper ep "
 					+ "where ex.inst_id = :inst_id and ex.exam_id = ep.exam_id and "
@@ -484,7 +482,7 @@ public class ExamPaperDB {
 		transaction=session.beginTransaction();
 		List examList =null;
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
+			
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("select ep.question_paper_id,ep.sub_id,sub.subjectName from Exam ex,Exam_Paper ep,Subject sub "
 					+ "where ex.inst_id = :inst_id and ex.exam_id = ep.exam_id and "
@@ -519,7 +517,7 @@ public class ExamPaperDB {
 		transaction=session.beginTransaction();
 		List examList =null;
 		try{
-			session = HibernateUtil.getSessionfactory().openSession();
+			
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("select distinct ep.exam_id,ep.batch_id,ex.exam_name from Exam_Paper ep,Exam ex "
 					+ " where ep.inst_id = :inst_id and ep.div_id = :div_id and ep.batch_id in :batch_id and ex.inst_id = ep.inst_id and ex.exam_id = ep.exam_id");

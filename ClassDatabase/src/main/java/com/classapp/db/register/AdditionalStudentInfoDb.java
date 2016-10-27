@@ -32,6 +32,7 @@ public class AdditionalStudentInfoDb {
 		criterion = Restrictions.eq("studentId", studentId);
 		criteria.add(criterion);
 		List<AdditionalStudentInfoBean> beans = criteria.list();
+		if(session != null){session.close();}
 		return beans.size()>0?beans.get(0):new AdditionalStudentInfoBean();
 		
 	}

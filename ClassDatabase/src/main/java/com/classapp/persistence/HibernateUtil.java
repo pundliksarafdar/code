@@ -31,11 +31,6 @@ public class HibernateUtil {
 		return SESSION_FACTORY;
 	}
 	
-	public Session getSession(){
-		Session session = null;
-		return session;
-	}
-	
 	public static void shutdown(){
 		getSessionfactory().close();
 	}

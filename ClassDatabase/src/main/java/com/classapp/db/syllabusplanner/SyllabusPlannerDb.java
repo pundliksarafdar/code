@@ -182,6 +182,7 @@ public class SyllabusPlannerDb {
 		query.setParameter("teacherId", teacherId);
 		query.setParameter("division", division);
 		query.executeUpdate();
+		if(session!=null){session.close();}
 		
 	}
 	

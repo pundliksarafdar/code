@@ -237,7 +237,6 @@ public Questionbank getQuestion(int que_id,int inst_id,int sub_id,int div_id) {
 	session=HibernateUtil.getSessionfactory().openSession();
 	transaction=session.beginTransaction();
 	try{
-		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		Query query = session.createQuery("from Questionbank where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id = :que_id");
 		query.setParameter("inst_id", inst_id);

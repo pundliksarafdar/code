@@ -109,22 +109,17 @@ public class BatchDB {
 	
 	public List<BatchDetails> getAllBatchesOfClass(int class_id){
 		Session session = null;
-		Transaction transaction = null;
 		List<Batch> batchList = null;
 		List<BatchDetails> batchDetailsList = new ArrayList<BatchDetails>();
 		BatchDetails batchDetails = null;
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Batch where class_id =:class_id");
 			query.setInteger("class_id", class_id);
 			batchList = query.list();
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();
@@ -186,13 +181,11 @@ public class BatchDB {
 	
 	public List<Batch> retriveAllBatches(int class_id){
 		Session session = null;
-		Transaction transaction = null;
 		List<Batch> batchList = null;
 		List<Batch> batches = new ArrayList<Batch>();
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Batch where class_id =:class_id");
 			query.setInteger("class_id", class_id);
 			
@@ -200,9 +193,6 @@ public class BatchDB {
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();

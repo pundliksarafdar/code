@@ -258,7 +258,9 @@ public String getschedulesubject(int subjectid) {
 				e.printStackTrace();
 			}
 			finally{
-				
+			if(null!=session){
+				session.close();
+			}	
 			}
 		return query.list();
 	}*/
@@ -288,16 +290,13 @@ public String getschedulesubject(int subjectid) {
 	public Subject retrive(int sub_id){
 		
 			Session session = null;
-			Transaction transaction = null;
 			Object queryResult=null;
 			String queryString="from Subject where sub_id = :sub_id";
 			try{
 				session = HibernateUtil.getSessionfactory().openSession();
-				transaction = session.beginTransaction();
 				Query query = session.createQuery(queryString);
 				query.setInteger("sub_id", sub_id);  
 				queryResult = query.uniqueResult();
-				transaction.commit();
 			}catch(Exception e){
 				e.printStackTrace();
 			}finally{
@@ -312,16 +311,13 @@ public String getschedulesubject(int subjectid) {
 	public List<Subject> retrivesublist(int institute_id){
 		
 		Session session = null;
-		Transaction transaction = null;
 		List<Subject> queryResult=null;
 		String queryString="from Subject where institute_id in :institute_id order by subjectName asc";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("institute_id", institute_id);  
 			queryResult = query.list();
-			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
