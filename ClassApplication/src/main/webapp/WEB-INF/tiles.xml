@@ -969,4 +969,24 @@
       <put-attribute name="title"  value="Edit question"/>
       <put-attribute name="body"   value="/CustomUser/EditParaQuestion.jsp"/>      
    </definition>
+   <definition name="customeuser.customeUserBulkQuestionupload" extends="customeBaseLayout">
+		<put-attribute name="title" value="Add Question" />
+		<put-attribute name="body" value="/CustomUser/BulkQuestionUpload.jsp" />
+	</definition>
+	<definition name="customeuser.customeUserCreaterole" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Create Role"/>
+      <put-attribute name="body"   value="/CustomUser/CreateRole.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserViewRole" extends="customeBaseLayout">
+      <put-attribute name="title"  value="View Role"/>
+      <put-attribute name="body"   value="/CustomUser/EditRole.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserCreateUser" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Create User"/>
+      <put-attribute name="body"   value="/CustomUser/CreateUser.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserViewUser" extends="customeBaseLayout">
+      <put-attribute name="title"  value="View User"/>
+      <put-attribute name="body"   value="/CustomUser/ViewUser.jsp"/>      
+   </definition>
 </tiles-definitions>

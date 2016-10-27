@@ -77,7 +77,7 @@
 			}
 			handlers.error = function(){
 			}
-			rest.post("rest/classownerservice/saveinstroll/",handlers,JSON.stringify(inst_roll));
+			rest.post("rest/customuserservice/saveinstroll/",handlers,JSON.stringify(inst_roll));
 			}
 		});
 	});
@@ -85,7 +85,7 @@
 	</head>
 	<body>
 	<jsp:include page="RoleHeaders.jsp" >
-		<jsp:param value="active" name="createrole"/>
+		<jsp:param value="active" name="customeUserCreaterole"/>
 	</jsp:include>
 	<div class="container" style="margin-top: 2%">
 		<div class="row">

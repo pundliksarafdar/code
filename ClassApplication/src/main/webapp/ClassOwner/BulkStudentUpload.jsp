@@ -205,7 +205,7 @@ function getBatchesOfDivision(){
 				<button class="btn btn-primary btn-sm" id="uploadStudentExcelBtn" value="Upload" disabled>Upload</button>
 			</div>	
 			<div class="col-md-2">
-				<a href="/SampleFiles/SampleStudent.xls" class="btn" role="button"><b>[ <span class="glyphicon glyphicon-download"></span> Sample Student Excel ]</b></a>
+				<a href="DownloadPage" class="btn"><b>[ <span class="glyphicon glyphicon-download"></span> Sample Student Excel ]</b></a>
 			</div>
  		</div>
 </div>

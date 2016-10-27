@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.lang3.ArrayUtils"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -13,8 +14,10 @@ var optionSelect = {
 		onColor:"success",
 		offColor:"danger"
 	};
+var child_mod_access  = [];
 var inst_roll = {};
 $(document).ready(function(){
+	child_mod_access  = $("#accessRights").val().split(",");
 	$("input[type=\"checkbox\"]").bootstrapSwitch(optionSelect);
 	$("#lectureCheckbox").bootstrapSwitch("destroy");
 	$('input[class="parentModule"]').on('switchChange.bootstrapSwitch',function(e){
@@ -51,7 +54,7 @@ $(document).ready(function(){
 		}
 		handlers.error = function(){
 		}
-		rest.get("rest/classownerservice/getroll/"+$(this).prop("id"),handlers);
+		rest.get("rest/customuserservice/getroll/"+$(this).prop("id"),handlers);
 	});
 	
 	$("#editBack").click(function(){
@@ -87,7 +90,7 @@ $(document).ready(function(){
 		}
 		handlers.error = function(){
 		}
-		rest.get("rest/classownerservice/getroll/"+$(this).prop("id"),handlers);
+		rest.get("rest/customuserservice/getroll/"+$(this).prop("id"),handlers);
 	});
 	
 	$("#viewBack").click(function(){
@@ -138,7 +141,7 @@ $(document).ready(function(){
 		}
 		handlers.error = function(){
 		}
-		rest.put("rest/classownerservice/updateinstroll/",handlers,JSON.stringify(inst_roll));
+		rest.put("rest/customuserservice/updateinstroll/",handlers,JSON.stringify(inst_roll));
 		}
 	});
 });
@@ -146,8 +149,9 @@ $(document).ready(function(){
 </head>
 <body>
 <jsp:include page="RoleHeaders.jsp" >
-		<jsp:param value="active" name="viewrole"/>
+		<jsp:param value="active" name="customeUserViewRole"/>
 </jsp:include>
+<% String[] child_mod_access = (String[])session.getAttribute("child_mod_access"); %>
 <div class="container" style="margin-top: 2%" id="roleTableDiv">
 <table class="table table-striped" id="roleTable">
 <thead>
@@ -164,14 +168,16 @@ $(document).ready(function(){
 		<td><div class="tableRoleDesc"><c:out value="${role.roll_desc}"></c:out></div></td>
 		<td>
 			<button class="btn btn-xs btn-info view" id="<c:out value="${role.roll_id}"></c:out>">View</button>
+			<% if(ArrayUtils.contains(child_mod_access,"53")){ %>
 			<button class="btn btn-xs btn-primary edit" id="<c:out value="${role.roll_id}"></c:out>">Edit</button>
+			<%} %>
 		</td>
 	</tr>
 	</c:forEach>
 </tbody>
 </table>
 </div>
-
+<input type="hidden" class="form-control" id="accessRights" value='<%=String.join(",",child_mod_access)%>'>
 <div class="container" style="margin-top: 2%;display: none;" id="editRoleDiv">
 	<div class="row">
 	<button class="btn btn-xs btn-primary back" id="editBack">Back</button>

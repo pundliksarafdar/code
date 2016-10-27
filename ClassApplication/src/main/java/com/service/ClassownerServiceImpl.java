@@ -598,15 +598,23 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	@POST
 	@Path("/addStudentByManually/{division}/{batch}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response addStudentByManually(StudentRegisterServiceBean serviceBean,@PathParam("division")int division,@PathParam("batch")String batch ) {
 		FeesTransaction feesTransaction = new FeesTransaction();
 		RegisterTransaction registerTransaction = new RegisterTransaction();
 		InstituteStatTransaction statTransaction = new InstituteStatTransaction();
 		boolean status  = true;
+		List<String> errorMsg = new ArrayList<String>();
 		if(statTransaction.isIDsAvailable(getRegId(), 1)){
 		if(!"".equals(serviceBean.getRegisterBean().getEmail()) && registerTransaction.isEmailExists(serviceBean.getRegisterBean().getEmail())){
-			return Response.status(Status.OK).entity("email").build();
+			errorMsg.add("email");
+		}
+		StudentTransaction studentTransaction = new StudentTransaction();
+		if(studentTransaction.validateStudentRegistrationNo(serviceBean.getStudent().getStudentInstRegNo(), getRegId())){
+			errorMsg.add("regno");
+		}
+		if(errorMsg.size() > 0){
+			return Response.status(Status.OK).entity(errorMsg).build();
 		}else{
 		int student_id = registerTransaction.registerStudentManually(getRegId(),serviceBean.getRegisterBean(), serviceBean.getStudent(),division,batch);
 		statTransaction.increaseUsedStudentIds(getRegId());
@@ -628,9 +636,11 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		}
 		}
 		}else{
-			return Response.status(Status.OK).entity("ID").build();
+			errorMsg.add("ID");
+			return Response.status(Status.OK).entity(errorMsg).build();
 		}
-		return Response.status(Status.OK).entity("").build();
+		errorMsg.add("");
+		return Response.status(Status.OK).entity(errorMsg).build();
 	}
 	
 	@POST
@@ -643,12 +653,20 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		InstituteStatTransaction statTransaction = new InstituteStatTransaction();
 		boolean status  = true;
 		if(statTransaction.isIDsAvailable(getRegId(), 1)){
+			List<String> errorMsg = new ArrayList<String>();
+			if(studentTransaction.validateStudentRegistrationNo(serviceBean.getStudent().getStudentInstRegNo(), getRegId())){
+				errorMsg.add("regno");
+			}
+			if(errorMsg.size()>0){
+				return Response.status(Status.OK).entity(errorMsg).build();	
+			}else{
 		status = studentTransaction.addStudentByID(getRegId(),serviceBean.getStudent());
 		statTransaction.increaseUsedStudentIds(getRegId());
 		status = feesTransaction.saveStudentBatchFees(getRegId(), serviceBean.getStudent_FeesList());
 		if(status){
 			NotificationServiceHelper helper = new NotificationServiceHelper();
 			//helper.sendFeesPaymentNotification(getRegId(), serviceBean.getStudent_FeesList());
+		}
 		}
 		}else{
 			status = false;
@@ -841,7 +859,7 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		
 		AdditionalStudentInfoBean bean1= studentTransaction.getAdditionalStudentInfoBean_(student_id, getRegId());
 		Type type = new TypeToken<HashMap<String, String>>(){}.getType();
-		Map<String, String> retMap = new Gson().fromJson(bean1.getStudentData(),type);
+		Map<String, String> retMap = new Gson().fromJson(student.getStudentAdditionalInfo(),type);
 		studentDetails.setAdditionalStudentInfoBean((HashMap<String, String>)retMap);
 		studentDetails.setInstStudentId(bean1.getInstStudentId());
 		
@@ -1198,6 +1216,16 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		registerBean.setInst_id(getRegId());
 		InstRollTransaction transaction = new InstRollTransaction();
 		transaction.updateInstituteUser(registerBean,education,new java.sql.Date(date.getTime()));
+		return Response.status(200).entity(true).build();
+	}
+	
+	@PUT
+	@Path("/updateStudentDetails")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateStudentDetails(com.classapp.db.student.Student student){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		studentTransaction.updateStudent(student);
 		return Response.status(200).entity(true).build();
 	}
 }

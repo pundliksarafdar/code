@@ -539,13 +539,13 @@ public class FeesTransaction {
 			batchStudentFeesList.add(batchStudentFees);
 		}
 		
-		List studentIds = new ArrayList();
+		/*List studentIds = new ArrayList();
 		for(Student student:students){
 			studentIds.add(student.getStudent_id());
 		}
 		
 		RegisterTransaction registerTransaction = new RegisterTransaction();
-		List<RegisterBean> registerBeans = registerTransaction.getStudentsInfo(studentIds);
+		List<RegisterBean> registerBeans = registerTransaction.getStudentsInfo(studentIds);*/
 		
 		for(Student student:students){
 			boolean flag = false;
@@ -556,19 +556,15 @@ public class FeesTransaction {
 				}
 			}
 			if(flag == false){
-			for(RegisterBean registerBean:registerBeans){
 				BatchStudentFees batchStudentFees = new BatchStudentFees();
 				batchStudentFees.setStudent_id(student.getStudent_id());
-				if(registerBean.getRegId() == student.getStudent_id()){
-					batchStudentFees.setFname(registerBean.getFname());
-					batchStudentFees.setLname(registerBean.getLname());
+					batchStudentFees.setFname(student.getFname());
+					batchStudentFees.setLname(student.getLname());
 					batchStudentFees.setBatch_fees(batchFee);
 					batchStudentFeesList.add(batchStudentFees);
 					break;
-				}
 			}
 			}
-		}
 		return batchStudentFeesList;
 		
 	}

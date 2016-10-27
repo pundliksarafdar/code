@@ -2,10 +2,12 @@ package com.transaction.student;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -305,13 +307,24 @@ public class StudentTransaction {
 		return studentDB.getStudentByStudentID(studentID,class_id);
 	}
 	
-	public List<Student> getStudentByStudentIDs(List<Integer> studentID,int class_id) {
+	public List<Student> getStudentByStudentIDs(int class_id,String fname,String lname) {
 		StudentDB studentDB=new StudentDB();
-		return studentDB.getStudentByStudentIDs(studentID,class_id);
+		return studentDB.getStudentByStudentIDs(class_id,fname, lname);
 	}
 	
 	public boolean addStudentByID(int inst_id,com.service.beans.Student serviceStudent) {
 		serviceStudent.setClass_id(inst_id);
+		RegisterTransaction registerTransaction = new RegisterTransaction();
+		RegisterBean registerBean = registerTransaction.getregistereduser(serviceStudent.getStudent_id());
+		serviceStudent.setFname(registerBean.getFname());
+		serviceStudent.setLname(registerBean.getLname());
+		Date date = new Date((new GregorianCalendar(Integer.parseInt(registerBean.getDob().substring(0, 4)),Integer.parseInt(registerBean.getDob().substring(4,6))-1,Integer.parseInt(registerBean.getDob().substring(6))).getTime()).getTime());
+		serviceStudent.setDob(date);
+		serviceStudent.setAddr(registerBean.getAddr1());
+		serviceStudent.setCity(registerBean.getCity());
+		serviceStudent.setState(registerBean.getState());
+		serviceStudent.setPhone(registerBean.getPhone1());
+		serviceStudent.setEmail(registerBean.getEmail());
 		Student student = new Student();
 		try {
 			BeanUtils.copyProperties(student, serviceStudent);
@@ -573,6 +586,17 @@ public class StudentTransaction {
 	public boolean updateStudentRelatedToClass(int inst_id,int div_id) {
 		StudentDB studentDB = new StudentDB();
 		return studentDB.updatestudentrelatedtoclass(div_id, inst_id);
+	}
+	
+	public boolean updateStudent(Student student) {
+		StudentDB studentDB = new StudentDB();
+		studentDB.updateDb(student);
+		return true;
+	}
+	
+	public boolean validateStudentRegistrationNo(String regNo,int inst_id) {
+		StudentDB studentDB = new StudentDB();
+		return studentDB.validateStudentRegistrationNo(regNo, inst_id);
 	}
 	
 }

@@ -12,6 +12,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.sql.Date;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +62,9 @@ import com.classapp.db.questionPaper.QuestionPaper;
 import com.classapp.db.register.AdditionalFormFieldBeanDl;
 import com.classapp.db.register.AdditionalStudentInfoBean;
 import com.classapp.db.register.RegisterBean;
+import com.classapp.db.roll.EditInstUserObject;
 import com.classapp.db.roll.InstRollDB;
+import com.classapp.db.roll.Inst_roll;
 import com.classapp.db.roll.Inst_user;
 import com.classapp.db.student.Student;
 import com.classapp.db.student.StudentDetails;
@@ -687,7 +690,7 @@ public class CustomUserService extends ServiceBase {
 			}
 		}
 		StudentTransaction studentTransaction = new StudentTransaction();
-		List<Student> studentsList = studentTransaction.getStudentByStudentIDs(studentIDList, userBean.getInst_id());
+		List<Student> studentsList = studentTransaction.getStudentByStudentIDs(userBean.getInst_id(),fname, lname);
 		BatchTransactions batchTransactions=new BatchTransactions();
 		List<Batch> batchList = batchTransactions.getAllBatches(userBean.getInst_id());
 		DivisionTransactions divisionTransactions=new DivisionTransactions();
@@ -2561,6 +2564,97 @@ public class CustomUserService extends ServiceBase {
 		
 		return Response.ok(true).build();
 	}
+	
+	@POST
+	@Path("/saveinstroll")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveInstRoll(Inst_roll inst_roll){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		inst_roll.setInst_id(userBean.getInst_id());
+		InstRollTransaction transaction = new InstRollTransaction();
+		boolean valid = transaction.saveInstRoll(inst_roll);
+		return Response.status(200).entity(valid).build();
+	}
+	
+	@GET
+	@Path("/getroll/{roll_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getRoll(@PathParam("roll_id")int roll_id){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		InstRollTransaction transaction = new InstRollTransaction();
+		Inst_roll inst_roll = transaction.getRole(userBean.getInst_id(),roll_id);
+		return Response.status(200).entity(inst_roll).build();
+	}
+	
+	@PUT
+	@Path("/updateinstroll")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateInstRoll(Inst_roll inst_roll){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		inst_roll.setInst_id(userBean.getInst_id());
+		InstRollTransaction transaction = new InstRollTransaction();
+		boolean valid = transaction.updateInstRoll(inst_roll);
+		return Response.status(200).entity(valid).build();
+	}
+	
+	@POST
+	@Path("/createUser/{joiningDate}/{education}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response createUser(com.classapp.db.register.RegisterBean registerBean,@PathParam("joiningDate")String joiningDate,
+			@PathParam("education")String education){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date date = new java.util.Date();
+		try {
+			date = (java.util.Date)format.parse(joiningDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		registerBean.setInst_id(userBean.getInst_id());
+		RegisterTransaction transaction = new RegisterTransaction();
+		int regID = transaction.registerInstituteUser(registerBean,education,new java.sql.Date(date.getTime()));
+		NotificationServiceHelper helper = new NotificationServiceHelper();
+		helper.sendManualRegistrationNotificationOfInstituteuser(userBean.getInst_id(), regID);
+		return Response.status(200).entity(true).build();
+	}
+	
+	@GET
+	@Path("/getinstuser/{user_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getInstUser(@PathParam("user_id")int user_id){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		InstRollTransaction transaction = new InstRollTransaction();
+		EditInstUserObject object =  transaction.getInstUsers(userBean.getInst_id(), user_id);
+		return Response.status(200).entity(object).build();
+	}
+	
+	@PUT
+	@Path("/updateUser/{joiningDate}/{education}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateUser(com.classapp.db.register.RegisterBean registerBean,@PathParam("joiningDate")String joiningDate,
+			@PathParam("education")String education){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date date = new java.util.Date();
+		try {
+			date = (java.util.Date)format.parse(joiningDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		registerBean.setInst_id(userBean.getInst_id());
+		InstRollTransaction transaction = new InstRollTransaction();
+		transaction.updateInstituteUser(registerBean,education,new java.sql.Date(date.getTime()));
+		return Response.status(200).entity(true).build();
+	}
+
 	
 	
 	private Object readObject(File file) {

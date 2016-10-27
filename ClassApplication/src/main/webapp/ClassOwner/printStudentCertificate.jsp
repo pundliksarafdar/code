@@ -89,8 +89,8 @@
 								return data;
 								}
 							}},
-							{ title: "Student Name",data:"studentUserBean",render:function(data,event,row){
-								var input = "<input type='hidden' id='studentId' value='"+data.regId +"'>";
+							{ title: "Student Name",data:"student",render:function(data,event,row){
+								var input = "<input type='hidden' id='studentId' value='"+data.student_id +"'>";
 								var modifiedObj = data.fname+" "+data.lname;
 								return modifiedObj+input;
 							}},

@@ -10,7 +10,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,11 +24,17 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.NumberToTextConverter;
 
+import com.classapp.db.register.AdditionalFormFieldBeanDl;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.service.beans.RegisterBean;
 import com.service.beans.StudentRegisterServiceBean;
 import com.service.beans.Student_Fees;
 import com.transaction.fee.FeesTransaction;
+import com.transaction.register.AdditionalFormFieldTransaction;
 import com.transaction.register.RegisterTransaction;
+import com.transaction.student.StudentTransaction;
 
 public class StudentExcelData {
 	private String fileName;
@@ -67,7 +75,12 @@ public class StudentExcelData {
 		System.out.println("Inst id:"+instId+" divId:"+divId);
 		File myFile = new File(this.fileName);
 		org.apache.poi.ss.usermodel.Workbook workbook = null;
-
+		 AdditionalFormFieldTransaction transaction = new AdditionalFormFieldTransaction();
+		AdditionalFormFieldBeanDl bean = transaction.getAdditionalFormFieldBean(instId);
+		String str = bean.getFormField();
+		 JsonParser parser = new JsonParser();
+		 Object obj = parser.parse(str);
+        JsonObject object = (JsonObject)obj;
 		try {
 
 			workbook = WorkbookFactory.create(myFile);
@@ -118,22 +131,62 @@ public class StudentExcelData {
 				String parentFirstName="";
 				String parentLastName="";
 				String parentEmailID ="";
+				String registrationNo = "";
 				double feePaid = 0;
 				if(row.getCell(1)!=null){
-			    firstName=row.getCell(1).getStringCellValue().trim();
-				}
+					if(row.getCell(1).getCellType() == Cell.CELL_TYPE_NUMERIC){
+					registrationNo= NumberToTextConverter.toText(row.getCell(1).getNumericCellValue()).trim();
+					}else{
+						registrationNo = row.getCell(1).getStringCellValue().trim();
+					}
+					if(!"".equals(registrationNo)){
+					Iterator<Row> innerRowIterator = sheet.iterator();
+					List<Integer> duplicateRegNo  = new ArrayList<Integer>();
+					while (innerRowIterator.hasNext()){
+						Row innerRow = innerRowIterator.next();
+						String innerRegNo = "";
+						if(innerRow.getCell(1)!=null){
+						if(innerRow.getCell(1).getCellType() == Cell.CELL_TYPE_NUMERIC){
+							innerRegNo= NumberToTextConverter.toText(innerRow.getCell(1).getNumericCellValue()).trim();
+							}else{
+								innerRegNo = innerRow.getCell(1).getStringCellValue().trim();
+							}
+						if(!"".equals(innerRegNo)){
+						if(row.getRowNum() != innerRow.getRowNum()){
+							if(registrationNo.equals(innerRegNo)){
+								duplicateRegNo.add(innerRow.getRowNum()+1);
+							}
+						}
+						}
+					}
+					}	
+					if(duplicateRegNo.size() > 0){
+						listOfErrors.add("Duplicate Student Registration No in row "+duplicateRegNo.toString());	
+						isValidData = false;
+					}
+					}else{
+						listOfErrors.add("Student Registration No cannot be blank ");
+						isValidData = false;
+					}
+					}else{
+						listOfErrors.add("Student Registration No cannot be blank ");
+						isValidData = false;
+					}
 				if(row.getCell(2)!=null){
-				middleName=row.getCell(2).getStringCellValue().trim();
+			    firstName=row.getCell(2).getStringCellValue().trim();
 				}
 				if(row.getCell(3)!=null){
-				lastName= row.getCell(3).getStringCellValue().trim();
+				middleName=row.getCell(3).getStringCellValue().trim();
+				}
+				if(row.getCell(4)!=null){
+				lastName= row.getCell(4).getStringCellValue().trim();
 				}
 				String phoneNumberStr ="";
 				Long phoneNumber= 0l;
 				try{
-					if(row.getCell(4) != null){
-					if(row.getCell(4).getCellType() == Cell.CELL_TYPE_NUMERIC){
-					phoneNumberStr = NumberToTextConverter.toText(row.getCell(4).getNumericCellValue()).trim();
+					if(row.getCell(5) != null){
+					if(row.getCell(5).getCellType() == Cell.CELL_TYPE_NUMERIC){
+					phoneNumberStr = NumberToTextConverter.toText(row.getCell(5).getNumericCellValue()).trim();
 					phoneNumber=Long.parseLong(phoneNumberStr);
 					}else{
 						listOfErrors.add("Invalid student's phone number.");
@@ -145,15 +198,34 @@ public class StudentExcelData {
 					listOfErrors.add("Invalid student's phone number."+e.getMessage());
 				}						
 				
-				if(row.getCell(5)!=null){
-				emailId=row.getCell(5).getStringCellValue().trim();
+				if(row.getCell(6)!=null){
+				emailId=row.getCell(6).getStringCellValue().trim();
+				if(!"".equals(emailId)){
+				Iterator<Row> innerRowIterator = sheet.iterator();
+				List<Integer> duplicateEmail  = new ArrayList<Integer>();
+				while (innerRowIterator.hasNext()){
+					Row innerRow = innerRowIterator.next();
+					if(innerRow.getCell(6)!=null){
+					if(row.getRowNum() != innerRow.getRowNum()){
+						if(emailId.equals(innerRow.getCell(6).getStringCellValue().trim())){
+							duplicateEmail.add(innerRow.getRowNum()+1);
+						}
+					}
+					}
+				}
+				if(duplicateEmail.size() > 0){
+					listOfErrors.add("Duplicate Student Email in row "+duplicateEmail.toString());	
+					isValidData = false;
+				}
+				}
 				}
 				Date dob=null;
+				Date joiningDate = null;
 				SimpleDateFormat formatter1= new SimpleDateFormat("MM/dd/yyyy");
-				if(row.getCell(6) != null){
-					if(row.getCell(6).getCellType() == Cell.CELL_TYPE_NUMERIC){
-				if(HSSFDateUtil.isCellDateFormatted(row.getCell(6)) && isValidDate(formatter1.format(row.getCell(6).getDateCellValue()))){
-						dob=row.getCell(6).getDateCellValue();
+				if(row.getCell(7) != null){
+					if(row.getCell(7).getCellType() == Cell.CELL_TYPE_NUMERIC){
+				if(HSSFDateUtil.isCellDateFormatted(row.getCell(7)) && isValidDate(formatter1.format(row.getCell(7).getDateCellValue()))){
+						dob=row.getCell(7).getDateCellValue();
 						isValidDateOfBirth=true;										
 				}else{
 					listOfErrors.add("Invalid Date of Birth!");		
@@ -164,26 +236,41 @@ public class StudentExcelData {
 					isValidDateOfBirth=false;
 				}
 				}
-				if(row.getCell(7)!=null){
-				address=row.getCell(7).getStringCellValue().trim();
+				
+				if(row.getCell(18) != null){
+					if(row.getCell(18).getCellType() == Cell.CELL_TYPE_NUMERIC){
+				if(HSSFDateUtil.isCellDateFormatted(row.getCell(18)) && isValidDate(formatter1.format(row.getCell(18).getDateCellValue()))){
+						joiningDate=row.getCell(18).getDateCellValue();
+						isValidDateOfBirth=true;										
+				}else{
+					listOfErrors.add("Invalid Joining Date");		
+					isValidDateOfBirth=false;
 				}
-				if(row.getCell(9)!=null){
-				city=row.getCell(9).getStringCellValue().trim();
+				}else{
+					listOfErrors.add("Invalid Joining Date");		
+					isValidDateOfBirth=false;
+				}
 				}
 				if(row.getCell(8)!=null){
-				state=row.getCell(8).getStringCellValue().trim();
+				address=row.getCell(8).getStringCellValue().trim();
 				}
 				if(row.getCell(10)!=null){
-				parentFirstName=row.getCell(10).getStringCellValue().trim();
+				city=row.getCell(10).getStringCellValue().trim();
+				}
+				if(row.getCell(9)!=null){
+				state=row.getCell(9).getStringCellValue().trim();
 				}
 				if(row.getCell(11)!=null){
-				parentLastName=row.getCell(11).getStringCellValue().trim();
+				parentFirstName=row.getCell(11).getStringCellValue().trim();
+				}
+				if(row.getCell(12)!=null){
+				parentLastName=row.getCell(12).getStringCellValue().trim();
 				}
 				String parentPhoneNumberStr="";
 				Long parentPhoneNo=0l;
 				try
 				{
-					parentPhoneNumberStr=NumberToTextConverter.toText(row.getCell(12).getNumericCellValue());
+					parentPhoneNumberStr=NumberToTextConverter.toText(row.getCell(13).getNumericCellValue());
 					parentPhoneNo= 
 							Long.parseLong(parentPhoneNumberStr);
 				}catch(IllegalStateException e){
@@ -191,12 +278,12 @@ public class StudentExcelData {
 				}catch(NullPointerException e){
 					listOfErrors.add("Invalid Parent's phone number."+e.getMessage());
 				}
-				if(row.getCell(13)!=null){
-				 parentEmailID=row.getCell(13).getStringCellValue().trim();
-				}
 				if(row.getCell(14)!=null){
-				if(row.getCell(14).getCellType() == Cell.CELL_TYPE_NUMERIC){
-				feePaid=row.getCell(14).getNumericCellValue();
+				 parentEmailID=row.getCell(14).getStringCellValue().trim();
+				}
+				if(row.getCell(15)!=null){
+				if(row.getCell(15).getCellType() == Cell.CELL_TYPE_NUMERIC){
+				feePaid=row.getCell(15).getNumericCellValue();
 				}else{
 					listOfErrors.add("Invalid fee amount.");
 					isValidFeesDiscountType=false;
@@ -211,11 +298,11 @@ public class StudentExcelData {
 				double feesDiscount=0.0;
 				String feesDiscountType="";
 				try{
-					if(row.getCell(15) != null){
-					if(row.getCell(15).getCellType() == Cell.CELL_TYPE_NUMERIC){
-						if(row.getCell(15).getNumericCellValue()<=100.0){
+					if(row.getCell(16) != null){
+					if(row.getCell(16).getCellType() == Cell.CELL_TYPE_NUMERIC){
+						if(row.getCell(16).getNumericCellValue()<=100.0){
 						feesDiscountType="per";
-						feesDiscount=row.getCell(15).getNumericCellValue();
+						feesDiscount=row.getCell(16).getNumericCellValue();
 						isValidFeesDiscountType=true;
 					}
 					}else{
@@ -229,11 +316,11 @@ public class StudentExcelData {
 					isValidData = false;
 				}
 				try{
-					if(row.getCell(16) != null){
-						if(row.getCell(16).getCellType() == Cell.CELL_TYPE_NUMERIC){
-					if(row.getCell(16).getNumericCellValue()!=0.0 && row.getCell(15).getNumericCellValue()==0.0){
+					if(row.getCell(17) != null){
+						if(row.getCell(17).getCellType() == Cell.CELL_TYPE_NUMERIC){
+					if(row.getCell(17).getNumericCellValue()!=0.0 && row.getCell(16).getNumericCellValue()==0.0){
 						feesDiscountType="amt";
-						feesDiscount=row.getCell(16).getNumericCellValue();
+						feesDiscount=row.getCell(17).getNumericCellValue();
 						isValidFeesDiscountType=true;
 					}
 					}else{
@@ -245,8 +332,23 @@ public class StudentExcelData {
 				}catch(NullPointerException e){
 					isValidFeesDiscountType=false;	
 					isValidData = false;
-				}				
-				
+				}
+				Set<Entry<String, JsonElement>> ens = object.entrySet();
+				JsonObject additionalInfo = new JsonObject();
+				int i = 19;
+				if (ens != null) {
+	                // Iterate JSON Elements with Key values
+	                for (Entry<String, JsonElement> en : ens) {
+	                	Cell cell = row.getCell(i);
+	                	if(cell != null){
+	        			additionalInfo.addProperty(en.getKey().toString(),cell.getStringCellValue().trim());
+	                	}else{
+	                		additionalInfo.addProperty(en.getKey().toString(),"");	
+	                	}
+	        			i++;
+	                }
+	            }
+				String additinalInfoStr = additionalInfo.toString();
 				RegisterBean registerBean = new RegisterBean();
 				registerBean.setFname(firstName);
 				registerBean.setMname(middleName);
@@ -262,11 +364,26 @@ public class StudentExcelData {
 				registerBean.setState(state);
 								
 				com.service.beans.Student student=new com.service.beans.Student();
+				student.setFname(firstName);
+				student.setMname(middleName);
+				student.setLname( lastName);
+				student.setPhone(Long.toString(phoneNumber));
+				student.setEmail(emailId);
+				if(isValidDateOfBirth){	
+					student.setDob(new java.sql.Date(dob.getTime()));
+				}
+				student.setAddr(address);
+				student.setCity(city);
+				student.setState(state);
+				if(joiningDate != null){
+				student.setJoiningDate(new java.sql.Date(joiningDate.getTime()));
+				}
+				student.setStudentInstRegNo(registrationNo);
 				student.setParentEmail(parentEmailID);
 				student.setParentFname(parentFirstName);
 				student.setParentLname(parentLastName);
 				student.setParentPhone(Long.toString(parentPhoneNo));
-				
+				student.setStudentAdditionalInfo(additinalInfoStr);
 				Student_Fees studentFees=new Student_Fees();
 				
 				studentFees.setBatch_id(batchId);
@@ -304,7 +421,25 @@ public class StudentExcelData {
 				
 				//System.out.println(studentBean.toString()+" isValidData:"+isValidData+" isValidDateOfBirth:"+isValidDateOfBirth);
 				if(isValidData && isValidDateOfBirth){
+					boolean emailFlag  = false;
+					if(!"".equals(emailId)){
+					RegisterTransaction registerTransaction = new RegisterTransaction();
+					emailFlag = registerTransaction.isEmailExists(emailId);
+					if(emailFlag){
+						listOfErrors.add("Email already registed.Use different.");
+					}
+					}
+					StudentTransaction studentTransaction = new StudentTransaction();
+					boolean regNoFlag = false;
+					if(!"".equals(registrationNo)){
+					regNoFlag =	studentTransaction.validateStudentRegistrationNo(registrationNo, instId);
+					if(regNoFlag){
+						listOfErrors.add("Registration No already used.Use different.");
+					}
+					}
+					if(!emailFlag && !regNoFlag){
 					students.add(studentBean);
+					}
 					//System.out.println("Student added successfully!");
 				}
 				//System.out.println(this.invalidStudentResponseMap);
@@ -313,7 +448,7 @@ public class StudentExcelData {
 			}catch(NullPointerException e){
 				listOfErrors.add("Found Null value."+e.getMessage());
 			}
-			String errorResponseString=convertToStringResponse(listOfErrors, row.getRowNum());
+			String errorResponseString=convertToStringResponse(listOfErrors, row.getRowNum()+1);
 			ArrayList<String> resultStringList=invalidStudentResponseMap.get("ERROR");
 			if(!errorResponseString.equals("")){
 				resultStringList.add(errorResponseString);
@@ -385,12 +520,12 @@ public class StudentExcelData {
 					 listOfErrors.add("Invalid characters in column address.");
 				}*/
 				//validate email address
-				if(null==emailId || emailId.equals("")){
-					listOfErrors.add("EMail Address column can not be blank or empty");
-				}else if(emailId.length()>150){
+				if(null!=emailId && !emailId.equals("")){
+				if(emailId.length()>150){
 					listOfErrors.add("Email Address value is too long.");
 				}else if(!validateEmailID(emailId)){
 					 listOfErrors.add("Invalid email address.");
+				}
 				}
 				
 				// city validation

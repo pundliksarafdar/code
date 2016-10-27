@@ -484,9 +484,9 @@ siteMapApp.controller("SiteMapController",function($scope){
             </a>
         </div>
          <%} %>
-        <%--  <% if(ArrayUtils.contains(parent_mod_access,"5")){ %>
+         <% if(ArrayUtils.contains(parent_mod_access,"16")){ %>
         <div class="col-sm-2 col-xs-4">
-        	<a href="createrole">
+        	<a href="customeUserViewRole">
         	<!-- This two settings need to merge -->
         	<!-- <a href="classownerSettings"> -->
             <div id="tile13" class="tile">
@@ -504,7 +504,8 @@ siteMapApp.controller("SiteMapController",function($scope){
                     </div>
             </div>
             </a>
-        </div> --%>
+        </div>
+        <%} %>
 		<!---->
         </div>
     
