@@ -339,7 +339,7 @@ function UploadExam(){
 		displayBatchFromSubjectNDivision(data);
 	};   
 	handlers.error=function(){
-		$.notify({message: "Student not deleted"},{type: 'danger'});
+		$.notify({message: "Error"},{type: 'danger'});
 	};   
 	
 	rest.get("rest/customuserservice/getBatchesByDivisionNSubject/"+divisionId+"/"+subjectId,handlers);

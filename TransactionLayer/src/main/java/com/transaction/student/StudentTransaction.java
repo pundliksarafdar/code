@@ -318,7 +318,7 @@ public class StudentTransaction {
 		RegisterBean registerBean = registerTransaction.getregistereduser(serviceStudent.getStudent_id());
 		serviceStudent.setFname(registerBean.getFname());
 		serviceStudent.setLname(registerBean.getLname());
-		Date date = new Date((new GregorianCalendar(Integer.parseInt(registerBean.getDob().substring(0, 4)),Integer.parseInt(registerBean.getDob().substring(4,6))-1,Integer.parseInt(registerBean.getDob().substring(6))).getTime()).getTime());
+		Date date = new Date((new GregorianCalendar(Integer.parseInt(registerBean.getDob().substring(4)),Integer.parseInt(registerBean.getDob().substring(2,4))-1,Integer.parseInt(registerBean.getDob().substring(0,2))).getTime()).getTime());
 		serviceStudent.setDob(date);
 		serviceStudent.setAddr(registerBean.getAddr1());
 		serviceStudent.setCity(registerBean.getCity());

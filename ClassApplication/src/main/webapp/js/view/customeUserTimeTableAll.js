@@ -79,13 +79,13 @@ $(document).ready(function(){
 		
 		$(START_DATE).datetimepicker({
 			pickTime: false,
-			format:"YYYY-MM-DD"
+			format:"DD-MM-YYYY"
 		}).data("DateTimePicker").setDate(getNextDate());
 		
 		$(END_DATE).datetimepicker({
 			pickTime: false,
 			useCurrent:true,
-			format:"YYYY-MM-DD"
+			format:"DD-MM-YYYY"
 		}).data("DateTimePicker").setDate(getNextDate($(START_DATE).data("DateTimePicker").getDate().toDate()));
 		
 		$(START_TIME).datetimepicker({
@@ -181,8 +181,8 @@ function editSchedule(){
 		scheduleBean.teacher_id = $(TEACHER_SELECT).val();
 		scheduleBean.start_time = $(START_TIME).find('input').val().length<=5?$(START_TIME).find('input').val()+":00":$(START_TIME).find('input').val();
 		scheduleBean.end_time = $(END_TIME).find('input').val().length<=5?$(END_TIME).find('input').val()+":00":$(END_TIME).find('input').val();
-		scheduleBean.date = $(START_DATE).find('input').val();
-		scheduleBean.old_date = old_date;
+		scheduleBean.date = $(START_DATE).find('input').val().split("-").reverse().join("-");
+		scheduleBean.old_date = old_date.split("-").reverse().join("-");
 		var repeatation = $(REPETITION_SELECT).find('input[type="checkbox"]:checked');
 		var repetations = [];
 		for(var index=0;index<repeatation.length;index++){
@@ -192,8 +192,8 @@ function editSchedule(){
 		if(state){
 			scheduleBean.rep_days = repetations.join(",");
 		}
-		scheduleBean.start_date  = $(START_DATE).find('input').val();
-		scheduleBean.end_date = $(END_DATE).find('input').val();
+		scheduleBean.start_date  = $(START_DATE).find('input').val().split("-").reverse().join("-");
+		scheduleBean.end_date = $(END_DATE).find('input').val().split("-").reverse().join("-");
 		
 		var handler = {};
 		handler.success = function(e){
@@ -357,8 +357,8 @@ function onEdit(event){
 		$(EDIT_SCHEDULE).data("eventData",event);
 		var startTime = moment(event.start).format("HH:mm:ss");
 		var endTime = moment(event.end).format("HH:mm:ss");
-		$(START_DATE).find('input').val( moment(event.date).format("YYYY-MM-DD"));
-		old_date = moment(event.date).format("YYYY-MM-DD");
+		$(START_DATE).find('input').val( moment(event.date).format("DD-MM-YYYY"));
+		old_date = moment(event.date).format("DD-MM-YYYY");
 		if(event.grp_id){
 			modal.modalConfirm("Timetable", "Do you want to update schedule for all upcomming event", "Current", "All",loadAllUpcommingEvent,[event]);
 		}
@@ -383,10 +383,10 @@ function loadAllUpcommingEvent(event){
 				}
 			}
 		}
-		var startDate = moment(event.start_date).format("YYYY-MM-DD");
+		var startDate = moment(event.start_date).format("DD-MM-YYYY");
 		var startTime = moment(event.start_date).format("HH:mm:ss");
 		var endTime = moment(event.end).format("HH:mm:ss");
-		var endDate = moment(event.end_date).format("YYYY-MM-DD");
+		var endDate = moment(event.end_date).format("DD-MM-YYYY");
 		$(SUBJECT_SELECT).val(event.subId);
 		$(START_DATE).find('input').val(startDate);
 		$(START_TIME).find('input').val(startTime);
@@ -503,7 +503,7 @@ function subjectSelectChange(e,eventSelected)
 		scheduleBean.teacher_id = $(TEACHER_SELECT).val();
 		scheduleBean.start_time = $(START_TIME).find('input').val()+":00";
 		scheduleBean.end_time = $(END_TIME).find('input').val()+":00";
-		scheduleBean.date = $(START_DATE).find('input').val();
+		scheduleBean.date = $(START_DATE).find('input').val().split("-").reverse().join("-");
 		var repeatation = $(REPETITION_SELECT).find('input[type="checkbox"]:checked');
 		
 		/*
@@ -520,8 +520,8 @@ function subjectSelectChange(e,eventSelected)
 			repetations.push($(repeatation[index]).val());
 		}
 		scheduleBean.rep_days = repetations.join(",");
-		scheduleBean.start_date  = $(START_DATE).find('input').val();
-		scheduleBean.end_date = $(END_DATE).find('input').val();
+		scheduleBean.start_date  = $(START_DATE).find('input').val().split("-").reverse().join("-");
+		scheduleBean.end_date = $(END_DATE).find('input').val().split("-").reverse().join("-");
 		
 		var handler = {};
 		handler.success = function(e){

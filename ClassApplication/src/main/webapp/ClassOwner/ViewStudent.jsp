@@ -287,7 +287,7 @@ var enabledEdit = false;
 				win.close();
 			};   
 			handlers.error=function(){
-				$.notify({message: "Student not deleted"},{type: 'danger'});
+				$.notify({message: "Error"},{type: 'danger'});
 			};   
 			
 			rest.get("rest/classownerservice/getCertificateForPrint/"+cert_id+"/"+student_id,handlers);
@@ -402,7 +402,7 @@ var enabledEdit = false;
 				$.notify({message: "Student Details update"},{type: 'success'});
 			};   
 			handlers.error=function(){
-				$.notify({message: "Student not deleted"},{type: 'danger'});
+				$.notify({message: "Error"},{type: 'danger'});
 			};   
 			
 			rest.put("rest/classownerservice/updateStudentDetails/",handlers,JSON.stringify(editStudent));

@@ -43,7 +43,7 @@
 				win.close();
 			};   
 			handlers.error=function(){
-				$.notify({message: "Student not deleted"},{type: 'danger'});
+				$.notify({message: "Error"},{type: 'danger'});
 			};   
 			
 			rest.get("rest/classownerservice/getCertificateForPrint/"+cert_id+"/"+student_id,handlers);

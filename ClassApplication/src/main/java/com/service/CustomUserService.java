@@ -443,16 +443,24 @@ public class CustomUserService extends ServiceBase {
 	@POST
 	@Path("/addStudentByManually/{division}/{batch}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response addStudentByManually(StudentRegisterServiceBean serviceBean,@PathParam("division")int division,@PathParam("batch")String batch ) {
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		FeesTransaction feesTransaction = new FeesTransaction();
 		RegisterTransaction registerTransaction = new RegisterTransaction();
 		InstituteStatTransaction statTransaction = new InstituteStatTransaction();
 		boolean status  = true;
+		List<String> errorMsg = new ArrayList<String>();
 		if(statTransaction.isIDsAvailable(userBean.getInst_id(), 1)){
 		if(!"".equals(serviceBean.getRegisterBean().getEmail()) && registerTransaction.isEmailExists(serviceBean.getRegisterBean().getEmail())){
-			return Response.status(Status.OK).entity("email").build();
+			errorMsg.add("email");
+		}
+		StudentTransaction studentTransaction = new StudentTransaction();
+		if(studentTransaction.validateStudentRegistrationNo(serviceBean.getStudent().getStudentInstRegNo(), userBean.getInst_id())){
+			errorMsg.add("regno");
+		}
+		if(errorMsg.size() > 0){
+			return Response.status(Status.OK).entity(errorMsg).build();
 		}else{
 		int student_id = registerTransaction.registerStudentManually(userBean.getInst_id(),serviceBean.getRegisterBean(), serviceBean.getStudent(),division,batch);
 		statTransaction.increaseUsedStudentIds(userBean.getInst_id());
@@ -471,15 +479,14 @@ public class CustomUserService extends ServiceBase {
 			helper.sendManualRegistrationNotification(userBean.getInst_id(), list);
 			}
 			
-			StudentTransaction studentTransaction = new StudentTransaction();
-			studentTransaction.saveStudentAdditionalInfo(serviceBean);
-			
 		}
 		}
 		}else{
-			return Response.status(Status.OK).entity("ID").build();
+			errorMsg.add("ID");
+			return Response.status(Status.OK).entity(errorMsg).build();
 		}
-		return Response.status(Status.OK).entity("").build();
+		errorMsg.add("");
+		return Response.status(Status.OK).entity(errorMsg).build();
 	}
 	
 	@POST
@@ -493,15 +500,20 @@ public class CustomUserService extends ServiceBase {
 		InstituteStatTransaction statTransaction = new InstituteStatTransaction();
 		boolean status  = true;
 		if(statTransaction.isIDsAvailable(userBean.getInst_id(), 1)){
+			List<String> errorMsg = new ArrayList<String>();
+			if(studentTransaction.validateStudentRegistrationNo(serviceBean.getStudent().getStudentInstRegNo(), userBean.getInst_id())){
+				errorMsg.add("regno");
+			}
+			if(errorMsg.size()>0){
+				return Response.status(Status.OK).entity(errorMsg).build();	
+			}else{
 		status = studentTransaction.addStudentByID(userBean.getInst_id(),serviceBean.getStudent());
-		if(status){
-			studentTransaction.saveStudentAdditionalInfo(serviceBean);
-		}
 		statTransaction.increaseUsedStudentIds(userBean.getInst_id());
 		status = feesTransaction.saveStudentBatchFees(userBean.getInst_id(), serviceBean.getStudent_FeesList());
 		if(status){
 			NotificationServiceHelper helper = new NotificationServiceHelper();
-			//helper.sendFeesPaymentNotification(userBean.getInst_id(), serviceBean.getStudent_FeesList());
+			//helper.sendFeesPaymentNotification(getRegId(), serviceBean.getStudent_FeesList());
+		}
 		}
 		}else{
 			status = false;
@@ -615,8 +627,8 @@ public class CustomUserService extends ServiceBase {
 			for (int i = 0; i < students.size(); i++) {
 				studentIDsList.add(students.get(i).getStudent_id());
 			}
-			RegisterTransaction registerTransaction=new RegisterTransaction();
-			List<RegisterBean> registerBeans= registerTransaction.getStudentsInfo(studentIDsList);
+			/*RegisterTransaction registerTransaction=new RegisterTransaction();
+			List<RegisterBean> registerBeans= registerTransaction.getStudentsInfo(studentIDsList);*/
 			BatchTransactions batchTransactions=new BatchTransactions();
 			List<Batch> batchList = batchTransactions.getBatchRelatedtoDivision(div_id);
 			
@@ -625,10 +637,10 @@ public class CustomUserService extends ServiceBase {
 			if(students != null){
 				for (int i = 0; i < students.size(); i++) {
 					StudentDetails studentDetails=new StudentDetails();
-					registerBeans.get(i).setLoginPass("");
-					studentDetails.setStudentUserBean(registerBeans.get(i));
+					/*registerBeans.get(i).setLoginPass("");
+					studentDetails.setStudentUserBean(registerBeans.get(i));*/
 					studentDetails.setDivision(division);
-					
+					studentDetails.setStudent(students.get(i));
 					String rollnBatch = students.get(i).getBatchIdNRoll();
 					if(null!=rollnBatch){
 						try{
@@ -681,14 +693,14 @@ public class CustomUserService extends ServiceBase {
 		if(nameArray.length > 1){
 			lname = nameArray[1];
 		}
-		RegisterTransaction registerTransaction = new RegisterTransaction();
+		/*RegisterTransaction registerTransaction = new RegisterTransaction();
 		List<RegisterBean> namesList = registerTransaction.getStudentByName(userBean.getInst_id(), fname, lname);
 		List<Integer> studentIDList = new ArrayList<Integer>();
 		if (namesList != null) {
 			for (int i = 0; i < namesList.size(); i++) {
 				studentIDList.add(namesList.get(i).getRegId());
 			}
-		}
+		}*/
 		StudentTransaction studentTransaction = new StudentTransaction();
 		List<Student> studentsList = studentTransaction.getStudentByStudentIDs(userBean.getInst_id(),fname, lname);
 		BatchTransactions batchTransactions=new BatchTransactions();
@@ -698,8 +710,9 @@ public class CustomUserService extends ServiceBase {
 		if(studentsList != null){
 			for (int i = 0; i < studentsList.size(); i++) {
 				StudentDetails studentDetails=new StudentDetails();
-				namesList.get(i).setLoginPass("");
-				studentDetails.setStudentUserBean(namesList.get(i));
+				/*namesList.get(i).setLoginPass("");
+				studentDetails.setStudentUserBean(namesList.get(i));*/
+				studentDetails.setStudent(studentsList.get(i));
 				boolean flag = false;
 				for (int j = 0; j < division.size(); j++) {
 					if(studentsList.get(i).getDiv_id() == division.get(j).getDivId())
@@ -2652,6 +2665,16 @@ public class CustomUserService extends ServiceBase {
 		registerBean.setInst_id(userBean.getInst_id());
 		InstRollTransaction transaction = new InstRollTransaction();
 		transaction.updateInstituteUser(registerBean,education,new java.sql.Date(date.getTime()));
+		return Response.status(200).entity(true).build();
+	}
+	
+	@PUT
+	@Path("/updateStudentDetails")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateStudentDetails(com.classapp.db.student.Student student){
+		StudentTransaction studentTransaction = new StudentTransaction();
+		studentTransaction.updateStudent(student);
 		return Response.status(200).entity(true).build();
 	}
 

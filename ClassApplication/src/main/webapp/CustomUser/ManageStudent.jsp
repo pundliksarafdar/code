@@ -67,10 +67,22 @@ var wayOfAddition="";
 		});
 		
 		$('#datetimepicker').datetimepicker({
-			format : 'YYYY-MM-DD',
+			format : 'DD-MM-YYYY',
 			pickTime : false,
 			maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 		});
+		
+		
+		$('#joiningDatePicker').datetimepicker({
+			format : 'DD-MM-YYYY',
+			pickTime : false,
+			maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
+		}).data("DateTimePicker").setDate(new Date());
+		$('#manualljoiningDatePicker').datetimepicker({
+			format : 'DD-MM-YYYY',
+			pickTime : false,
+			maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
+		}).data("DateTimePicker").setDate(new Date());
 		
 		$("#batches").select2({data:'',placeholder:"type batch name"});
 		
@@ -617,9 +629,17 @@ var wayOfAddition="";
 </div>
 
 <div class="row" style="padding-top: 1%">
-	<div class="col-md-2">Student number</div>
+	<div class="col-md-2">Registration number</div>
 	<div class="col-md-1">:</div>
-	<div class="col-md-3"><input type="text" id="studentIdById" class="form-control" maxlength="20"></div>
+	<div class="col-md-3"><input type="text" id="studentIdById" class="form-control" maxlength="20"><span id="studentIdByIdError" class="error"></span></div>
+	<div class="col-md-2">Institute Joining Date</div>
+	<div class="col-md-1">:</div>
+	<div class="col-md-3"><div id="joiningDatePicker" class="input-group" style="width :270px;">
+						<input class="form-control" data-format="YYYY-MM-DD"
+							type="text"  id="joiningDate" name="registerBean.dob" required="required"  readonly /> <span class="input-group-addon add-on"> <i
+							class="glyphicon glyphicon-calendar glyphicon-time"></i>
+						</span>
+					</div></div>
 </div>
 </div>
 
@@ -717,9 +737,17 @@ var wayOfAddition="";
 			</div>
 			</div>
 	<div class="row" style="padding-top: 1%">
-		<div class="col-md-2">Student number</div>
+		<div class="col-md-2">Registration number</div>
 		<div class="col-md-1">:</div>
-		<div class="col-md-3"><input type="text" id="studentIdByManual" class="form-control" maxlength="20"></div>
+		<div class="col-md-3"><input type="text" id="studentIdByManual" class="form-control" maxlength="20"><span id="studentIdByManualError" class="error"></span></div>
+		<div class="col-md-2">Institute Joining Date</div>
+		<div class="col-md-1">:</div>
+		<div class="col-md-3"><div id="manualljoiningDatePicker" class="input-group" style="width :270px;">
+						<input class="form-control" data-format="YYYY-MM-DD"
+							type="text"  id="joiningDate" name="registerBean.dob" required="required"  readonly /> <span class="input-group-addon add-on"> <i
+							class="glyphicon glyphicon-calendar glyphicon-time"></i>
+						</span>
+					</div></div>
 	</div>
 </div>
 

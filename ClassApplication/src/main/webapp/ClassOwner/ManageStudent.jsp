@@ -67,19 +67,19 @@ var wayOfAddition="";
 		});
 		
 		$('#datetimepicker').datetimepicker({
-			format : 'YYYY-MM-DD',
+			format : 'DD-MM-YYYY',
 			pickTime : false,
 			maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 		});
 		
 		
 		$('#joiningDatePicker').datetimepicker({
-			format : 'YYYY-MM-DD',
+			format : 'DD-MM-YYYY',
 			pickTime : false,
 			maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 		}).data("DateTimePicker").setDate(new Date());
 		$('#manualljoiningDatePicker').datetimepicker({
-			format : 'YYYY-MM-DD',
+			format : 'DD-MM-YYYY',
 			pickTime : false,
 			maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 		}).data("DateTimePicker").setDate(new Date());

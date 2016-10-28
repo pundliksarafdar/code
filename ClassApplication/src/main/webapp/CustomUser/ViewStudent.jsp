@@ -75,6 +75,7 @@ var wayOfAddition="";
 var globalBatchID = "";
 var globalDivisionID = "";
 var graphData = [];
+var editStudent = {};
 var enabledEdit = false;
 	$(document).ready(function(){
 		child_mod_access  = $("#accessRights").val().split(",");
@@ -252,15 +253,138 @@ var enabledEdit = false;
 				win.close();
 			};   
 			handlers.error=function(){
-				$.notify({message: "Student not deleted"},{type: 'danger'});
+				$.notify({message: "Error"},{type: 'danger'});
 			};   
 			
 			rest.get("rest/customuserservice/getCertificateForPrint/"+cert_id+"/"+student_id,handlers);
 			}
 		});
 		
+		$("#editStudentPersonalRecord").click(function(){
+			$(".studentDetailsDiv").hide();
+			$("#editPersonalDetailsDiv").show();
+			$("#editPersonalDetailsStudentFName").val(editStudent.fname);
+			$("#editPersonalDetailsStudentLName").val(editStudent.lname);
+			$("#editPersonalDetailsStudentMobile").val(editStudent.phone);
+			$("#editPersonalDetailsStudentEmail").val(editStudent.email);
+			$("#editPersonalDetailsParentFName").val(editStudent.parentFname);
+			$("#editPersonalDetailsParentLName").val(editStudent.parentLname);
+			$("#editPersonalDetailsParentMobile").val(editStudent.parentPhone);
+			$("#editPersonalDetailsParentEmail").val(editStudent.parentEmail);
+			$("#editPersonalDetailsStudentDOB").val(editStudent.dob);
+			$("#editPersonalDetailsStudentAddress").val(editStudent.addr);
+			$("#editPersonalDetailsStudentCity").val(editStudent.city);
+			$("#editPersonalDetailsStudentState").val(editStudent.state);
+			$('#statebtn').html(editStudent.state+'&nbsp;<span class="caret"></span>');
+		});
+		
+		$("#statebtn").parents(".btn-group").find("li").on("mouseup",function(){
+			$("#statebtn").parents(".form-group").find('.danger').remove();
+			$('#statebtn').html($(this).text()+'&nbsp;<span class="caret"></span>');
+			$('#editPersonalDetailsStudentState').val($(this).text());
+			$("#statebtn").focus();
+		});
+		
+		$("#editPersonalDetailsEditCancel").click(function(){
+			$(".studentDetailsDiv").show();
+			$("#editPersonalDetailsDiv").hide();
+		});
+		
+		$("#editPersonalDetailsSave").click(function(){
+			$(".error").html("");
+			var regPhoneNumber = /^[0-9]+$/;
+			var regStringExpr = /^[a-zA-Z]+$/;
+			var regAddressExpr = /^[a-zA-Z0-9#, ]+$/;
+			var textonly=/^[a-zA-Z]+$/;
+			
+			if($("#editPersonalDetailsStudentFName").val().trim() == ""){
+				$("#editPersonalDetailsStudentFNameError").html("Enter first name")
+			}else if(!$("#editPersonalDetailsStudentFName").val().trim().match(regStringExpr)){
+				$("#editPersonalDetailsStudentFNameError").html("First Name is invalid. Only A-Z characters are allowed.")
+			}
+			if($("#editPersonalDetailsStudentLName").val().trim() == ""){
+				$("#editPersonalDetailsStudentLNameError").html("Enter last name")
+			}else if(!$("#editPersonalDetailsStudentLName").val().trim().match(regStringExpr)){
+				$("#editPersonalDetailsStudentLNameError").html("Last Name is invalid. Only A-Z characters are allowed.")
+			}
+			if(!$("#editPersonalDetailsStudentMobile").val().match(regPhoneNumber) || $("#editPersonalDetailsStudentMobile").val().trim().length != 10){
+				$("#editPersonalDetailsStudentMobileError").html("Invalid phone no.")
+			}
+			if($("#editPersonalDetailsStudentEmail").val().trim() != ""){
+			if(!validateEmail($("#editPersonalDetailsStudentEmail").val().trim())){
+				$("#editPersonalDetailsStudentEmailError").html("Invalid Email ID")
+			}
+			}
+			
+			if($("#editPersonalDetailsStudentState").val()=="-1" ){
+				$("#editPersonalDetailsStudentStateError").html("Select State")
+			}
+			if($("#editPersonalDetailsStudentCity").val().trim() == ""){
+				$("#editPersonalDetailsStudentCityError").html("Enter city.")	
+			}else if(!$("#editPersonalDetailsStudentCity").val().match(textonly)){
+				$("#editPersonalDetailsStudentCityError").html("Invalid City. Only A-Z characters are allowed.")
+			}
+			
+			if($("#editPersonalDetailsParentFName").val().trim() == ""){
+				$("#editPersonalDetailsParentFNameError").html("Enter first name")
+			}else if(!$("#editPersonalDetailsParentFName").val().trim().match(regStringExpr)){
+				$("#editPersonalDetailsParentFNameError").html("First Name is invalid. Only A-Z characters are allowed.")
+			}
+			if($("#editPersonalDetailsParentLName").val().trim() == ""){
+				$("#editPersonalDetailsParentLNameError").html("Enter last name")
+			}else if(!$("#editPersonalDetailsParentLName").val().trim().match(regStringExpr)){
+				$("#editPersonalDetailsParentLNameError").html("Last Name is invalid. Only A-Z characters are allowed.")
+			}
+			if(!$("#editPersonalDetailsParentMobile").val().match(regPhoneNumber) || $("#editPersonalDetailsParentMobile").val().trim().length != 10){
+				$("#editPersonalDetailsParentMobileError").html("Invalid phone no.")
+			}
+			if($("#editPersonalDetailsParentEmail").val().trim() != ""){
+			if(!validateEmail($("#editPersonalDetailsParentEmail").val().trim())){
+				$("#editPersonalDetailsParentEmailError").html("Invalid Email ID")
+			}
+			}
+			
+			if($("#editPersonalDetailsStudentAddress").val().trim() == ""){
+				$("#editPersonalDetailsStudentAddressError").html("Enter address")
+			}else if(!$("#editPersonalDetailsStudentAddress").val().trim().match(regAddressExpr)){
+				$("#editPersonalDetailsStudentAddressError").html("Invalid Address")
+			}
+			editStudent.fname = $("#editPersonalDetailsStudentFName").val();
+			editStudent.lname = $("#editPersonalDetailsStudentLName").val();
+			editStudent.phone = $("#editPersonalDetailsStudentMobile").val();
+			editStudent.email = $("#editPersonalDetailsStudentEmail").val();
+			editStudent.parentFname = $("#editPersonalDetailsParentFName").val();
+			editStudent.parentLname = $("#editPersonalDetailsParentLName").val();
+			editStudent.parentPhone = $("#editPersonalDetailsParentMobile").val();
+			editStudent.parentEmail = $("#editPersonalDetailsParentEmail").val();
+			editStudent.dob = $("#editPersonalDetailsStudentDOB").val();
+			editStudent.addr = $("#editPersonalDetailsStudentAddress").val();
+			editStudent.city = $("#editPersonalDetailsStudentCity").val();
+			editStudent.state = $("#editPersonalDetailsStudentState").val();
+			var handlers = {};
+			handlers.success=function(data){
+				$(".studentDetailsDiv").show();
+				$("#editPersonalDetailsDiv").hide();
+				$.notify({message: "Student Details update"},{type: 'success'});
+			};   
+			handlers.error=function(){
+				$.notify({message: "Error"},{type: 'danger'});
+			};   
+			
+			rest.put("rest/customuserservice/updateStudentDetails/",handlers,JSON.stringify(editStudent));
+		});
+		
 	});
 	
+	function validateEmail(sEmail) {
+		var filter = /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+		if (filter.test(sEmail)) {
+		return true;
+		}
+		else {
+		return false;
+		}
+		}
 	function createAttenanceTab(data){
 		$("#attendanceTab").empty();
 		var monthNames = {
@@ -534,13 +658,14 @@ var enabledEdit = false;
 		handlers.success = function(data){console.log("Success",data);
 		
 		$("#studentDetailsBday").html(data.studentUserBean.dob.substring(6)+"/"+data.studentUserBean.dob.substring(4,6)+"/"+data.studentUserBean.dob.substring(0,4));
-		   $("#studentDetailsName").html(data.studentUserBean.fname+" "+data.studentUserBean.lname);
+		   $("#studentDetailsName").html(data.student.fname+" "+data.student.lname);
 		   var batchNames = "";
 		   $.each(data.batches,function(key,val){
 				batchNames =  batchNames + ","+ val.batch_name;
 			});
+		   editStudent = data.student;
 		   batchNames = batchNames.replace(",","");
-		   $("#studentInstId").html(data.instStudentId);
+		   $("#studentInstId").html(data.student.studentInstRegNo);
 		   $("#studentDetailsClass").html(data.division.divisionName);
 		   $("#studentDetailsBatch").html(batchNames);
 		   $("#studentDetailsStudentPhone").html(data.studentUserBean.phone1);
@@ -698,8 +823,8 @@ var enabledEdit = false;
 				lengthChange: true,
 				columns: [
 					{title:"#",data:null},
-					{ title: "Student Name",data:"studentUserBean",render:function(data,event,row){
-						var input = "<input type='hidden' id='studentId' value='"+data.regId +"'>";
+					{ title: "Student Name",data:"student",render:function(data,event,row){
+						var input = "<input type='hidden' id='studentId' value='"+data.student_id +"'>";
 						var modifiedObj = data.fname+" "+data.lname;
 						return modifiedObj+input;
 					}},
@@ -782,8 +907,8 @@ var enabledEdit = false;
 					return data;
 					}
 				}},
-				{ title: "Student Name",data:"studentUserBean",render:function(data,event,row){
-					var input = "<input type='hidden' id='studentId' value='"+data.regId +"'>";
+				{ title: "Student Name",data:"student",render:function(data,event,row){
+					var input = "<input type='hidden' id='studentId' value='"+data.student_id +"'>";
 					var modifiedObj = data.fname+" "+data.lname;
 					return modifiedObj+input;
 				}},
@@ -1094,6 +1219,7 @@ var enabledEdit = false;
 	<div class="col-md-4">Name : <span id="studentDetailsName"></span></div>
 	<div class="col-md-3">Class : <span id="studentDetailsClass"></span></div>
 	<div class="col-md-3">Batch : <span id="studentDetailsBatch"></span></div>
+	<div class="col-md-2"><button id="editStudentPersonalRecord" class="btn btn-primary">Edit Details</button></div>
 </div>
 <div class="row" style="padding-top: 1%">
 <ul class="nav nav-tabs" style="border-radius:10px">
@@ -1160,6 +1286,116 @@ var enabledEdit = false;
 </div>
 </div>
 
+
+<div class="container" style="display: none" id="editPersonalDetailsDiv">
+<div class="row"><b>Student Details</b></div>
+<div class="row">
+	<div class="col-md-2"><b>First Name:</b></div> 
+	<div class="col-md-3"><input type="text" id="editPersonalDetailsStudentFName" class="form-control">
+						  <span id="editPersonalDetailsStudentFNameError" class="error"></span>	
+	</div> 
+	<div class="col-md-2"><b>Last Name:</b></div> 
+	<div class="col-md-3"><input type="text" id="editPersonalDetailsStudentLName" class="form-control">
+						  <span id="editPersonalDetailsStudentLNameError" class="error"></span>		
+	</div> 
+</div>
+<div class="row">
+	<div class="col-md-2"><b>Mobile:</b></div> 
+	<div class="col-md-3"><input type="text" id="editPersonalDetailsStudentMobile" class="form-control">
+						  <span id="editPersonalDetailsStudentMobileError" class="error"></span>		
+	</div> 
+	<div class="col-md-2"><b>Email:</b></div> 
+	<div class="col-md-3"><input type="text" id="editPersonalDetailsStudentEmail" class="form-control">
+						  <span id="editPersonalDetailsStudentEmailError" class="error"></span>	
+	</div> 
+</div>
+<div class="row">
+	<div class="col-md-2"><b>DOB:</b></div> 
+	<div class="col-md-3"><div id="datetimepicker" class="input-group" style="width :250px;">
+						<input class="form-control" data-format="YYYY-MM-DD"
+							type="text"  id="editPersonalDetailsStudentDOB" name="editPersonalDetailsStudentDOB" required="required"  readonly/> <span class="input-group-addon add-on"> <i
+							class="glyphicon glyphicon-calendar glyphicon-time"></i>
+						</span>
+					</div>
+					<span id="editPersonalDetailsStudentDOBError" class="error"></span>	
+					</div> 
+	<div class="col-md-2"><b>Address:</b></div> 
+	<div class="col-md-3"><input type="text" id="editPersonalDetailsStudentAddress" class="form-control">
+						  <span id="editPersonalDetailsStudentAddressError" class="error"></span>		
+	</div> 
+</div>
+<div class="row">
+	<div class="col-md-2"><b>City:</b></div> 
+	<div class="col-md-3"><input type="text" id="editPersonalDetailsStudentCity" class="form-control">
+						  <span id="editPersonalDetailsStudentCityError" class="error"></span>	
+	</div> 
+	<div class="col-md-2"><b>State:</b></div> 
+	<div class="col-md-3">
+	<input type="hidden" class="form-control" name="editPersonalDetailsStudentState" id="editPersonalDetailsStudentState" required="required" value="-1"'/>
+	<div class="btn-group">
+					<button type="button" class="btn btn-default dropdown-toggle"
+						data-toggle="dropdown" id="statebtn">
+						State <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu scrollable-menu" role="menu" >
+						<li value="Andhra Pradesh"><a href="javascript:void(0)">Andhra Pradesh</a></li>
+						<li value="Arunachal Pradesh"><a href="javascript:void(0)">Arunachal Pradesh</a><li>
+						<li value="Assam"><a href="javascript:void(0)">Assam</a></li>
+						<li value="Bihar"><a href="javascript:void(0)">Bihar</a></li>
+						<li value="Chhattisgarh"><a href="javascript:void(0)">Chhattisgarh</a></li>
+						<li value="Goa"><a href="javascript:void(0)">Goa</a></li>
+						<li value="Gujarat"><a href="javascript:void(0)">Gujarat</a></li>
+						<li value="Haryana"><a href="javascript:void(0)">Haryana</a></li>
+						<li value="Himachal Pradesh"><a href="javascript:void(0)">Himachal Pradesh</a></li>
+						<li value="Jammu and Kashmir"><a href="javascript:void(0)">Jammu and Kashmir</a></li>
+						<li value="Jharkhand"><a href="javascript:void(0)">Jharkhand</a></li>
+						<li value="Karnataka"><a href="javascript:void(0)">Karnataka</a></li>
+						<li value="Kerala"><a href="javascript:void(0)">Kerala</a></li>
+						<li><a href="javascript:void(0)">Madhya Pradesh</a></li>
+						<li><a href="javascript:void(0)">Maharashtra</a></li>
+						<li><a href="javascript:void(0)">Manipur</a></li>
+						<li><a href="javascript:void(0)">Meghalaya</a></li>
+						<li><a href="javascript:void(0)">Mizoram</a></li>
+						<li><a href="javascript:void(0)">Nagaland</a></li>
+						<li><a href="javascript:void(0)">Orissa</a></li>
+						<li><a href="javascript:void(0)">Punjab</a></li>
+						<li><a href="javascript:void(0)">Rajasthan</a></li>
+						<li><a href="javascript:void(0)">Sikkim</a></li>
+						<li><a href="javascript:void(0)">Tamil Nadu</a></li>
+						<li><a href="javascript:void(0)">Telangana</a></li>
+						<li><a href="javascript:void(0)">Tripura</a></li>
+						<li><a href="javascript:void(0)">Uttar Pradesh</a></li>
+						<li><a href="javascript:void(0)">Uttarakhand</a></li>
+						<li><a href="javascript:void(0)">West Bengal</a></li>
+					</ul>
+			</div></div> 
+</div>
+<div class="row"><b>Parent Details</b></div>
+<div class="row">
+	<div class="col-md-2"><b>First Name:</b></div> 
+	<div class="col-md-3"><input type="text" id="editPersonalDetailsParentFName" class="form-control">
+						  <span id="editPersonalDetailsParentFNameError" class="error"></span>	
+	</div> 
+	<div class="col-md-2"><b>Last Name:</b></div> 
+	<div class="col-md-3"><input type="text" id="editPersonalDetailsParentLName" class="form-control">
+						   <span id="editPersonalDetailsParentLNameError" class="error"></span>
+	</div> 
+</div>
+<div class="row">
+	<div class="col-md-2"><b>Mobile:</b></div> 
+	<div class="col-md-3"><input type="text" id="editPersonalDetailsParentMobile" class="form-control">
+						   <span id="editPersonalDetailsParentMobileError" class="error"></span>	
+	</div> 
+	<div class="col-md-2"><b>Email:</b></div> 
+	<div class="col-md-3"><input type="text" id="editPersonalDetailsParentEmail" class="form-control">
+						   <span id="editPersonalDetailsParentEmailError" class="error"></span>
+	</div> 
+</div>
+<div class="row">
+	<div class="col-md-1"><button class="btn btn-success btn-sm" id="editPersonalDetailsSave">Save</button></div> 
+	<div class="col-md-1"><button class="btn btn-danger btn-sm" id="editPersonalDetailsEditCancel">Cancel</button></div>
+</div>
+</div>
 <!-- This template is used to set data -->
 <div class="hide" id="additionalData">
 <div class="row">

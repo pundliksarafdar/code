@@ -22,7 +22,7 @@
 	var passwordCriteria = "Password should be greater than 5 and less than 20 in length <br> Should contain atleast one special character [!@#$%], one lowercase letter, one uppercase letter and one digit<br> "
 	$(document).ready(function(){
 		$('#datetimepicker').datetimepicker({
-			format : 'YYYY-MM-DD',
+			format : 'DD-MM-YYYY',
 			pickTime : false,
 			maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 		});

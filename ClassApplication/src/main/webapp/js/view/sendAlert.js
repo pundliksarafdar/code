@@ -22,7 +22,6 @@
 	var BASE_FORM = "#baseform";
 	
 	$(document).ready(function(){
-		
 		$("body").on("change",DIVISION_SELECT,function(e){
 			$("#notificationSummary").hide();
 			var handler = {};
@@ -43,11 +42,10 @@
 		on("click",SEND_FEE_DUE,sendFeeDue).
 		on("click",SEND_ATTENDANCE,sendAttendance).
 		on("click",SEND_PROGRESS_CARD,sendProgressCard);
-		$(DAY_DATE_PICKER).datetimepicker({pickTime: false,format:"YYYY-MM-DD"});
-		$(WEEK_DATE_PICKER).datetimepicker({pickTime:false,format:"YYYY-MM-DD"});
-		$(MONTH_DATE_PICKER).datetimepicker({pickTime:false,format:"YYYY-MM",minViewMode:'months'});
+		$(DAY_DATE_PICKER).datetimepicker({pickTime: false,format:"DD-MM-YYYY"});
+		$(WEEK_DATE_PICKER).datetimepicker({pickTime:false,format:"DD-MM-YYYY"});
+		$(MONTH_DATE_PICKER).datetimepicker({pickTime:false,format:"MM-YYYY",minViewMode:'months'});
 		var validator = validateInit();
-		$(EXAM_SELECT).select2({placeholder: "Select exam list"});
 		$.validator.addMethod("messageTypeValidation", function(){
 			if($("[name='type']:checked").length == 0){
 			 return false;
@@ -62,6 +60,7 @@
 				return true;
 			}
 		}, "");
+		/*$(EXAM_SELECT).select2({placeholder: "Select exam list"});*/
 	});
 	
 	function validateInit(){
