@@ -27,4 +27,8 @@ public class Constants {
 		COMPLETE,INCOMPLETE,EDITABLE
 	}
 	
+	public static enum CALENDER_VIEW{
+		DAY,MONTH,YEAR
+	}
+	
 }

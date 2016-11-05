@@ -1,5 +1,12 @@
 package com.service;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,9 +18,17 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.google.gson.JsonObject;
 import com.service.beans.SyllabusBean;
 import com.service.beans.SyllabusFilterBean;
 import com.serviceinterface.SyllabusRestApi;
@@ -86,9 +101,10 @@ public class SyllabusRestImpl  extends ServiceBase implements SyllabusRestApi{
 			@QueryParam("division")List<Integer> classId,
 			@QueryParam("subject")List<Integer> subId,
 			@QueryParam("batchId")List<Integer> batchId,
-			@QueryParam("teacher")List<Integer> teacherId) {
+			@QueryParam("teacher")List<Integer> teacherId,
+			@QueryParam("view")String view) {
 		SyllabusPlannerTransaction transaction = new SyllabusPlannerTransaction();
-		List<SyllabusBean> syllabusBeans = transaction.getAllPlannedSyllabus(yyyymmdd, getRegId(), classId, subId, batchId, teacherId);
+		List<SyllabusBean> syllabusBeans = transaction.getAllPlannedSyllabus(yyyymmdd, getRegId(), classId, subId, batchId, teacherId,view);
 		return Response.ok(syllabusBeans).build();
 	}
 	
@@ -112,5 +128,31 @@ public class SyllabusRestImpl  extends ServiceBase implements SyllabusRestApi{
 		SyllabusPlannerTransaction syllabusPlannerTransaction = new SyllabusPlannerTransaction();
 		HashMap<String, List<SyllabusFilterBean>> resultMap = syllabusPlannerTransaction.getSyllabusFilter(getRegId());
 		return Response.ok(resultMap).build();
+	}
+	
+	@GET
+	@Path("print/{yyyymmdd}")
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	public Response printSyllabus(@PathParam("yyyymmdd") String yyyymmdd,
+			@QueryParam("division")List<Integer> classId,
+			@QueryParam("subject")List<Integer> subId,
+			@QueryParam("batchId")List<Integer> batchId,
+			@QueryParam("teacher")List<Integer> teacherId,
+			@QueryParam("view")String view) throws IOException {
+		SyllabusPlannerTransaction syllabusPlannerTransaction = new SyllabusPlannerTransaction();
+		XSSFWorkbook workbook = syllabusPlannerTransaction.getPrintXSSFWorkbook(yyyymmdd, getRegId(), classId, subId, batchId, teacherId,view);
+		StreamingOutput fileDownload = new StreamingOutput(){
+		    @Override
+		        public void write(OutputStream arg0) throws IOException, WebApplicationException {
+		    	BufferedOutputStream bus = new BufferedOutputStream(arg0);
+		            try {
+		                workbook.write(bus);
+		            } catch (Exception e) {
+		            // TODO Auto-generated catch block
+		            e.printStackTrace();
+		            }
+		        }
+		    };
+	   return Response.ok(fileDownload).header("Content-Disposition", "attachment; filename=\"" + "syllabus.xlsx" + "\"" ).build();
 	}
 }

@@ -22,6 +22,7 @@ import org.hibernate.type.IntegerType;
 
 import com.classapp.db.fees.Fees;
 import com.classapp.persistence.HibernateUtil;
+import com.classapp.utils.Constants.CALENDER_VIEW;
 import com.classapp.utils.Constants.SYLLABUS_STATE;
 import com.service.beans.SyllabusBean;
 import com.service.beans.SyllabusFilterBean;
@@ -68,7 +69,7 @@ public class SyllabusPlannerDb {
 		return syllabusBeans;
 	}
 	
-	public List<SyllabusBean> getSyllabus(int year,int month,int day,int instId,List<Integer> classId,List<Integer> subId,List<Integer> batchId,List<Integer> teacherId){
+	public List<SyllabusBean> getSyllabus(int year,int month,int day,int instId,List<Integer> classId,List<Integer> subId,List<Integer> batchId,List<Integer> teacherId,String view){
 		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
@@ -76,10 +77,14 @@ public class SyllabusPlannerDb {
 		Criteria criteria = session.createCriteria(SyllabusBean.class);
 		Criterion criterion = Restrictions.sqlRestriction("YEAR(date) = ?",year,IntegerType.INSTANCE);
 		criteria.add(criterion);
-		criterion = Restrictions.sqlRestriction("MONTH(date) = ?",month,IntegerType.INSTANCE);
-		criteria.add(criterion);
-		criterion = Restrictions.sqlRestriction("DAY(date) = ?",day,IntegerType.INSTANCE);
-		criteria.add(criterion);
+		if(view.equalsIgnoreCase(CALENDER_VIEW.MONTH.toString()) || view.equalsIgnoreCase(CALENDER_VIEW.DAY.toString())){
+			criterion = Restrictions.sqlRestriction("MONTH(date) = ?",month,IntegerType.INSTANCE);
+			criteria.add(criterion);
+		}
+		if(view.equalsIgnoreCase(CALENDER_VIEW.DAY.toString())){
+			criterion = Restrictions.sqlRestriction("DAY(date) = ?",day,IntegerType.INSTANCE);
+			criteria.add(criterion);
+		}
 		criterion = Restrictions.eq("instId", instId);
 		criteria.add(criterion);
 		

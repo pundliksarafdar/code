@@ -32,12 +32,31 @@
 				</div> -->
 			</div>
 			<div class="col-md-9">
-				<div class='input-group date form-group' id='syllabusSearchTime' >
+			<div>
+				<div class='input-group date form-group' id='syllabusSearchTime' style="width: 40%;float: left;">
                    <input type='text' class="form-control" name="syllabusSetTime" required placeholder="Date"/>
                    <span class="input-group-addon">
                        <span class="glyphicon glyphicon-calendar"></span>
                    </span>
                </div>
+               
+               <div style="width: 10%;float: right;">
+					<input type="button" class="btn btn-default" value="Print" id="printSyllabusPlanner">
+				</div>
+				
+               <div class="btn-group" data-toggle="buttons"  style="width: 40%;float: right;" id="dateTimeRangeButton">
+				  <label class="btn btn-primary active">
+				    <input type="radio" name="options" id="day" checked="checked" value="day"> Day
+				  </label>
+				  <label class="btn btn-primary">
+				    <input type="radio" name="options" id="month" value="month"> Month
+				  </label>
+				  <label class="btn btn-primary">
+				    <input type="radio" name="options" id="year" value="year"> Year
+				  </label>
+				</div>
+				
+				</div>
                <table id="syllabusTable" class="table"/>
 			</div>
 		</div>

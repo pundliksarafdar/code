@@ -1,9 +1,12 @@
 var filterUrl = "rest/syllabus/getFilterResult";
 var viewFilterUrl = "rest/syllabus/view/";
+var printPlannerUrl = "rest/syllabus/print/";
 var changeStatus = "/rest/syllabus/changeStatus/";
 
 var SYLLABUS_SEARCH_MONTH = "#syllabusSearchTime";
 var SYLLABUS_TABLE = "#syllabusTable";
+var DATETIME_RANGE = "#dateTimeRangeButton";
+var PRINT = "#printSyllabusPlanner";
 
 var TEMPL = '<li class="list-group-item"><span><input type="checkbox" value=""></span><label></label></li>';
 
@@ -15,10 +18,15 @@ $(document).ready(function(){
 	$(SYLLABUS_SEARCH_MONTH).datetimepicker({
 		pickTime: false,
 		format:"YYYY-MM-DD",
-		useCurrent:true,
-	}).on("dp.change",pSyllabus.onDateChange);
+		useCurrent:true
+		
+	}).on("dp.change",pSyllabus.onFilterChange);
+	
 	$(SYLLABUS_SEARCH_MONTH).data("DateTimePicker").setDate(new Date());
-	$("ul[data-filter]").on("change","input",pSyllabus.onFilterChange)
+	$("ul[data-filter]").on("change","input",pSyllabus.onFilterChange);
+	$(DATETIME_RANGE).find("input[type='radio']").on("change",pSyllabus.onFilterChange);
+	$(PRINT).on("click",pSyllabus.printSyllabus);
+	
 });
 
 function PlannedSyllabus(){
@@ -39,16 +47,20 @@ function PlannedSyllabus(){
 		rest.get(filterUrl,filterHandler);
 	}
 	
-	var onDateChange = function(){
-		getFilteredResult("");
-	}
-	
 	function getFilteredResult(filter){
 		var date = $(SYLLABUS_SEARCH_MONTH).find("input").val();
 		var handler = {};
 		handler.success = populateDataTable;
 		handler.error = function(e){console.log(e)};
-		rest.get(viewFilterUrl+date+"?"+filter,handler);
+		rest.get(viewFilterUrl+date+"?"+filter+"&view="+$("#dateTimeRangeButton").find("[type='radio']:checked").val(),handler);
+	}
+	
+	function printFilteredResult(filter){
+		var date = $(SYLLABUS_SEARCH_MONTH).find("input").val();
+		var handler = {};
+		handler.success = populateDataTable;
+		handler.error = function(e){console.log(e)};
+		window.open(printPlannerUrl+date+"?"+filter+"&view="+$("#dateTimeRangeButton").find("[type='radio']:checked").val(),target="_blank");
 	}
 	
 	function formatFilterData(data){
@@ -87,6 +99,13 @@ function PlannedSyllabus(){
 			data: data,
 			lengthChange: false,
 			bFilter: false,
+			buttons: [
+			          {
+			              extend: 'print',
+			              text: 'Print current page',
+			              autoPrint: false
+			          }
+			      ],
 			columns:[
 			
 			{
@@ -176,7 +195,16 @@ function PlannedSyllabus(){
 		}
 	}
 	
+	function printSyllabus(){
+		var queryParam = "";
+		$("ul[data-filter]").find("input:checked").each(function(){
+			queryParam = queryParam +$(this).attr("name")+"="+$(this).val()+"&";
+		});
+		if(queryParam.length){queryParam = queryParam.substring(0,queryParam.length-1)}
+		printFilteredResult(queryParam);
+	}
+	
 	this.getPlannedSyllabusFilter = getPlannedSyllabusFilter;
-	this.onDateChange = onDateChange;
 	this.onFilterChange = onFilterChange;
+	this.printSyllabus = printSyllabus;
 }
