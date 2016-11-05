@@ -169,7 +169,7 @@ public class SyllabusPlannerTransaction {
 	    row.createCell(0).setCellValue("Date");
     	row.createCell(1).setCellValue("Teacher");
     	row.createCell(2).setCellValue("Subject");
-    	row.createCell(3).setCellValue("Division");
+    	row.createCell(3).setCellValue("Class");
     	row.createCell(4).setCellValue("Batch");
     	row.createCell(5).setCellValue("Syllabus");
     	row.createCell(6).setCellValue("Teacher remark");
@@ -187,7 +187,7 @@ public class SyllabusPlannerTransaction {
 	    	row.createCell(4).setCellValue(batchName.get(syllabusBean.getBatchId()));
 	    	row.createCell(5).setCellValue(syllabusBean.getSyllabus());
 	    	row.createCell(6).setCellValue(syllabusBean.getTeacherStatus());
-	    	row.createCell(7).setCellValue(syllabusBean.getStatus());
+	    	row.createCell(7).setCellValue(syllabusBean.getStatus()==null||syllabusBean.getStatus().equals("")?"Incomplete":syllabusBean.getStatus());
 	    }
 	    return workbook;
 	}
