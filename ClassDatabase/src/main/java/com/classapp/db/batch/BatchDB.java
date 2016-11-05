@@ -1,6 +1,7 @@
 package com.classapp.db.batch;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -136,12 +137,12 @@ public class BatchDB {
 				List<Subject> subjectList= new ArrayList<Subject>();
 				String subjectIds= batchList.get(i).getSub_id();
 				if(!subjectIds.equals("")){
-				for (String  subjectId: subjectIds.split(",")) {
-					Subject subject= subjectDb.retrive(Integer.parseInt(subjectId));
-					if(subject!=null){
-						subjectList.add(subject);
+					List<String> subjects = Arrays.asList(subjectIds.split(","));
+					List<Integer> subIdInInt = new ArrayList<Integer>(); 
+					for(String subId:subjects){
+						subIdInInt.add(Integer.parseInt(subId));
 					}
-				}
+					subjectList= subjectDb.retrive(subIdInInt);
 				}
 				batchDetails.setSubjects(subjectList);
 				batchDetailsList.add(batchDetails);

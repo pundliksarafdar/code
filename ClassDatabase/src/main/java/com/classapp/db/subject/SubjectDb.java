@@ -15,6 +15,7 @@ import org.hibernate.criterion.Restrictions;
 
 import com.classapp.db.batch.Batch;
 import com.classapp.db.exam.Exam;
+import com.classapp.db.fees.Fees;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.persistence.HibernateUtil;
 
@@ -784,5 +785,24 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 			}
 		}
 		return subjectList;
+	}
+
+	public List<Subject> retrive(List<Integer> split) {
+		Session session = null;
+		List<Subject> subjects = new ArrayList<Subject>();
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			Criteria criteria = session.createCriteria(Subject.class);
+			Criterion criterion = Restrictions.in("subjectId",split);
+			criteria.add(criterion);
+			subjects = criteria.list();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}
+		return subjects;
 	}
 }
