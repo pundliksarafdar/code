@@ -848,6 +848,39 @@ public class ScheduleTransaction {
 		return serviceBeanList;
 	}
 	
+	public List<Scheduledata> getCustomUserTodaysSchedule(int inst_id,int teachersid){
+		List<Scheduledata> scheduledatas=new ArrayList<Scheduledata>();
+		SubjectTransaction subjectTransaction=new SubjectTransaction();
+			ScheduleDB scheduleDB=new ScheduleDB();
+			List<List<Schedule>> list=new ArrayList<List<Schedule>>();
+				List<Schedule> schedules=scheduleDB.getTeachersSchedule(inst_id, teachersid, new Date(new java.util.Date().getTime()));
+				list.add(schedules);
+			if(list.size()>0){
+				BatchTransactions batchTransactions=new BatchTransactions();
+				RegisterDB db=new RegisterDB();
+				for (int i = 0; i < list.size(); i++) {
+					for (int j = 0; j < list.get(i).size(); j++) {
+						Batch batch=batchTransactions.getBatch(list.get(i).get(j).getBatch_id(), list.get(i).get(j).getInst_id(), list.get(i).get(j).getDiv_id());
+						Subject subject=subjectTransaction.getSubject(list.get(i).get(j).getSub_id());
+						DivisionTransactions divisionTransactions=new DivisionTransactions();
+						Division division=new Division();
+						division=divisionTransactions.getDidvisionByID(list.get(i).get(j).getDiv_id());
+						Scheduledata scheduledata=new Scheduledata();
+						scheduledata.setBatch_name(batch.getBatch_name());
+						scheduledata.setStart_time(list.get(i).get(j).getStart_time());
+						scheduledata.setEnd_time(list.get(i).get(j).getEnd_time());
+						scheduledata.setInst_id(list.get(i).get(j).getInst_id());
+						scheduledata.setSubject_name(subject.getSubjectName());
+						scheduledata.setDivision_name(division.getDivisionName()+" "+division.getStream());
+						RegisterBean bean=db.getRegisterclass(list.get(i).get(j).getInst_id());
+						scheduledata.setInst_name(bean.getClassName());
+						scheduledatas.add(scheduledata);
+					}
+				}
+			}
+		return scheduledatas;
+	}
+	
 	private List<Date> getScheduleDates(Date start_date,Date end_date,String[] days) {
 		Calendar calendar = Calendar.getInstance();
 		List<Date> dateList = new ArrayList<Date>();

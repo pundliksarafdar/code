@@ -80,4 +80,9 @@ public class InstRollTransaction {
 		db.saveInstUser(user);
 		return true;
 	}
+	
+	public boolean isCustomUserTeacher(int inst_id,int user_id) {
+		InstRollDB db = new InstRollDB();
+		return db.isCustomUserTeacher(inst_id,user_id);
+	}
 }

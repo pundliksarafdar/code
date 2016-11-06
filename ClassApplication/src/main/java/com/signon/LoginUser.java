@@ -288,10 +288,19 @@ public class LoginUser extends BaseAction{
 					}else if ((null != userBean.getRole())
 							&& 5 == userBean.getRole()) { 
 						InstRollDB rollDB = new  InstRollDB();
+						boolean isTeacher = rollDB.isCustomUserTeacher(userBean.getInst_id(), userBean.getRegId());
+						ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
+						if(isTeacher){
+							List<Scheduledata> scheduledatas=scheduleTransaction.getCustomUserTodaysSchedule(userBean.getInst_id(), userBean.getRegId());
+							session.put("todayslect", scheduledatas);
+						}
+						NoticeTransaction noticeTransaction = new NoticeTransaction();
+						List<StaffNotice> staffNoticeList = noticeTransaction.getStaffNotice(userBean.getInst_id(), new java.sql.Date(new Date().getTime()), userBean.getInst_roll()+"c");
 						Inst_roll inst_roll = rollDB.getRole(userBean.getInst_id(), userBean.getInst_roll());
 						Inst_user inst_user = rollDB.getInstUser(userBean.getInst_id(), userBean.getRegId());
 						String accessArray[] = inst_roll.getParent_mod_access().split(",");
 						String childAccessArray[] = inst_roll.getChild_mod_access().split(",");
+						session.put("noticeList", staffNoticeList);
 						session.put("inst_id", userBean.getInst_id());
 						session.put("parent_mod_access", accessArray);
 						session.put("child_mod_access", childAccessArray);

@@ -6,6 +6,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.classapp.db.Teacher.Teacher;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.persistence.HibernateUtil;
 
@@ -357,6 +358,38 @@ public class InstRollDB {
 		}
 		}
 		return  true;
+
+	}
+	
+	public boolean isCustomUserTeacher(int inst_id,int user_id) {
+		Transaction transaction=null;
+		Session session=null;
+		List<Teacher> list = null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("from Teacher"
+				+ "  where  class_id = :inst_id and user_id = :user_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("user_id", user_id);
+		 list = query.list();
+		 if(list != null){
+			 if(list.size() > 0){
+				 return true;
+			 }
+		 }
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  false;
 
 	}
 }
