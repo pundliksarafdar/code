@@ -373,45 +373,28 @@ String[] monthName = { "January", "February", "March", "April", "May", "June", "
 				</span>
 				</div>	
 				<div class="panel-body">
-					<%
-					if(notifications!=null){
-						if(notifications.size()>0){
-							boolean flag=false;
-							%>
-							
-							<ul class="list-group">
-									<%
-								for(int j=0;j<notifications.size();j++){
-							
-								%>
-									
-											<span>
-												<%if(notifications.get(j).getBatch_name().equalsIgnoreCase("Teachers")) {%>
-												<li class="list-group-item techerNotification">
-												<%}else{ %>
-												<li class="list-group-item studentNotification">
-												<%} %>
-												<%= notifications.get(j).getMessage() %>
-												<%= notifications.get(j).getBatch_name() %>
-											</span>
-											<span class="badge pull-right">
-												<%= monthName[notifications.get(j).getMsg_date().getMonth()]%>
-												<%= notifications.get(j).getMsg_date().getDate() %>
-											</span>
-											
-											
-									</li>
-									
-									<%}%>
-								</ul>
-							<%
-							}else{
-							%>
-							<div class="alert alert-info">Notifications not available</div>
-							<%
-						}
-					}
-					%>
+				<h5><strong><u>Student Notice</u></strong></h5>
+					<c:if test="${not empty studentNoticeList}">
+					<ul>
+					<c:forEach items="${studentNoticeList}" var="notice" varStatus="counter">
+						<li><c:out value="${notice.notice }"></c:out></li>
+					</c:forEach>
+					</ul>
+					</c:if>
+					<c:if test="${empty studentNoticeList}">
+					NA
+					</c:if>
+					<h5><strong><u>Staff Notice</u></strong></h5>
+					<c:if test="${not empty staffNoticeList}">
+					<ul>
+					<c:forEach items="${staffNoticeList}" var="notice" varStatus="counter">
+						<li><c:out value="${notice.notice }"></c:out></li>
+					</c:forEach>
+					</ul>
+					</c:if>
+					<c:if test="${empty staffNoticeList}">
+					NA
+					</c:if>
 				</div>
 		</div>
 		</div>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="com.classapp.db.notice.StudentNotice" table="studentNotice" catalog="classdb">
+	 <composite-id>
+    	<key-property name="inst_id" column="inst_id" type="int"></key-property>
+		<key-property name="notice_id" column="notice_id" type="int"></key-property>
+    </composite-id>
+     <property name="div_id" type="int">
+            <column name="div_id"/>
+        </property>
+         <property name="batch_id" type="string" length="50">
+            <column name="batch_id"/>
+        </property>
+         <property name="notice" type="string" length="500">
+            <column name="notice"/>
+        </property>
+         <property name="start_date" type="date">
+            <column name="start_date"/>
+        </property>
+          <property name="end_date" type="date">
+            <column name="end_date"/>
+        </property>
+     </class>
+</hibernate-mapping>

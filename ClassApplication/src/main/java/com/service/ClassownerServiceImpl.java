@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -41,6 +42,8 @@ import com.classapp.db.batch.division.Division;
 import com.classapp.db.exam.Exam;
 import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.header.Header;
+import com.classapp.db.notice.StaffNotice;
+import com.classapp.db.notice.StudentNotice;
 import com.classapp.db.question.Questionbank;
 import com.classapp.db.questionPaper.QuestionPaper;
 import com.classapp.db.questionPaper.QuestionPaperDB;
@@ -100,6 +103,7 @@ import com.transaction.image.ImageTransactions;
 import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.instroll.InstRollTransaction;
 import com.transaction.notes.NotesTransaction;
+import com.transaction.notice.NoticeTransaction;
 import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
 import com.transaction.register.AdditionalFormFieldTransaction;
 import com.transaction.register.RegisterTransaction;
@@ -1226,6 +1230,95 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	public Response updateStudentDetails(com.classapp.db.student.Student student){
 		StudentTransaction studentTransaction = new StudentTransaction();
 		studentTransaction.updateStudent(student);
+		return Response.status(200).entity(true).build();
+	}
+	
+	@POST
+	@Path("/saveStudentNotice")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveStudentNotice(StudentNotice notice){
+		notice.setInst_id(getRegId());
+		NoticeTransaction noticeTransaction = new NoticeTransaction();
+		noticeTransaction.saveStudentNotice(notice);
+		return Response.status(200).entity(true).build();
+	}
+	
+	@POST
+	@Path("/saveStaffNotice")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveStaffNotice(StaffNotice notice){
+		notice.setInst_id(getRegId());
+		NoticeTransaction noticeTransaction = new NoticeTransaction();
+		noticeTransaction.saveStaffNotice(notice);
+		return Response.status(200).entity(true).build();
+	}
+	
+	@GET
+	@Path("/getStaffNotice")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStaffNotice(){
+		NoticeTransaction noticeTransaction = new NoticeTransaction();
+		List<StaffNotice> staffNoticeList =  noticeTransaction.getStaffNotice(getRegId());
+		InstRollTransaction rollTransaction = new InstRollTransaction();
+		List<Inst_roll> roleList = rollTransaction.getInstituteRoles(getRegId());
+		List<com.datalayer.notice.StaffNotice> list = new ArrayList<com.datalayer.notice.StaffNotice>(); 
+		if(staffNoticeList != null){
+			for (StaffNotice staffNotice : staffNoticeList) {
+				com.datalayer.notice.StaffNotice notice = new com.datalayer.notice.StaffNotice();
+				try {
+					BeanUtils.copyProperties(notice, staffNotice);
+				} catch (IllegalAccessException | InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(!"0".equals(notice.getRole())){
+					String [] roleArray = notice.getRole().split(",");
+					String roleString = "";
+					for (String string : roleArray) {
+						if("2s".equalsIgnoreCase(string)){
+							roleString = roleString + "Teacher,";
+						}else{
+						List<Inst_roll> roles = roleList.stream().filter(Inst_roll -> (Inst_roll.getRoll_id()+"c").equalsIgnoreCase(string.trim())).collect(Collectors.toList());
+						if(roles != null){
+							if(roles.size() >0){
+								roleString = roleString + roles.get(0).getRoll_desc()+",";
+							}
+						}
+					}
+					}
+					if(roleString.length()>0){
+						roleString = roleString.substring(0, roleString.length()-1);
+					}
+					notice.setRole_Desc(roleString);
+				}else{
+					notice.setRole_Desc("All");
+				}
+				list.add(notice);
+			}
+		}
+		return Response.status(200).entity(list).build();
+	}
+	
+	@DELETE
+	@Path("/deleteStudentNotice/{notice_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteStudentNotice(@PathParam("notice_id")int notice_id){
+		NoticeTransaction noticeTransaction = new NoticeTransaction();
+		noticeTransaction.deleteStudentNotice(getRegId(), notice_id);
+		return Response.status(200).entity(true).build();
+	}
+	
+	@DELETE
+	@Path("/deleteStaffNotice/{notice_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteStaffNotice(@PathParam("notice_id")int notice_id){
+		NoticeTransaction noticeTransaction = new NoticeTransaction();
+		noticeTransaction.deleteStaffNotice(getRegId(), notice_id);
 		return Response.status(200).entity(true).build();
 	}
 }

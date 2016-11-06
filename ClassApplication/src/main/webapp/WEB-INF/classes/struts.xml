@@ -683,6 +683,16 @@
 	 	<action name="viewPlannedSyllabusAction"  class="com.classowner.ViewPlannedSyllabusAction">
 			<result name="success" type="tiles">classowner.ViewPlannedSyllabusAction</result>
 		</action>
+		<action name="noticeBoard"  class="com.classowner.NoticeBoardAction">
+			<result name="success" type="tiles">classowner.noticeBoard</result>
+		</action>
+		<action name="staffNoticeBoard"  class="com.classowner.NoticeBoardAction">
+			<result name="success" type="tiles">classowner.staffNoticeBoard</result>
+		</action>
+		<action name="viewNoticeBoard"  class="com.classowner.ViewNoticeAction">
+			<result name="success" type="tiles">classowner.viewNoticeBoard</result>
+		</action>
+		
 		
 		<!-- Custome Role -->
 		<action name="customeUserManageclass" class="com.customrole.ManageClassAction"

@@ -12,6 +12,7 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -101,30 +102,21 @@ while (it.hasNext()) {
       <div class="panel-heading">
       	<strong>Notice Board</strong>
       </div>
-      <%if(notifications.size()>0){ %>
+    
       <div class="panel-body">
-		<ul class="list-group">
-		<%
-		for(int j=0;j<registerBean.size();j++){
-			boolean flag= false;
-			for(int i=0;i<notifications.size();i++){
-				if(registerBean.get(j).getRegId()==notifications.get(i).getInstitute_id()){
-				%>
-					<li class="list-group-item">
-						<span class="badge"><%=registerBean.get(j).getClassName() %> </span><%=notifications.get(i).getMessage() %>
-					</li>
-				<%
-				}
-			}
-		}%>
-		</ul>
-	  </div>
-	  <%
-		
-		} else{%>
-	  <div class="panel-body" style="background-color:black;height: 200px;"></div>
-	  <%} %>
-	  
+	  <c:forEach  items="${noticeMap}" var="entry">
+ 		 <h5><strong><u><c:out value="${entry.key}"/></strong></u> </h5>
+ 		 <c:if test="${not empty entry.value}">
+ 		 <ul>
+ 		 <c:forEach  items="${entry.value}" var="arr">
+ 		 <li> <c:out value="${arr.notice}"/></li>
+ 		 </c:forEach>
+ 		 </ul>
+ 		 </c:if>
+ 		 <c:if test="${empty entry.value}">
+ 		 NA
+ 		 </c:if>
+		</c:forEach>
 	</div>
   </div>
 </div>

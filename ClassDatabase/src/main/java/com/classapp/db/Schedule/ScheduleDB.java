@@ -456,7 +456,7 @@ public class ScheduleDB {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			Query query = session.createQuery(
-					"from Schedule where batch_id=:batch_id  and class_id=:class_id and div_id=:div_id order by start_time");
+					"from Schedule where batch_id=:batch_id  and inst_id=:class_id and div_id=:div_id order by start_time");
 			query.setParameter("batch_id", batchid);
 		//	query.setParameter("date", date);
 			query.setParameter("class_id", inst_id);

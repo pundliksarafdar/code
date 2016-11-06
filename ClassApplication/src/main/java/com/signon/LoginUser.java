@@ -20,6 +20,8 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import com.classapp.db.institutestats.InstituteStats;
 import com.classapp.db.login.LoginCheck;
+import com.classapp.db.notice.StaffNotice;
+import com.classapp.db.notice.StudentNotice;
 import com.classapp.db.notificationpkg.Notification;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.roll.InstRollDB;
@@ -38,6 +40,7 @@ import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.classownersettingtransaction.ClassownerSettingstransaction;
 import com.transaction.institutestats.InstituteStatTransaction;
+import com.transaction.notice.NoticeTransaction;
 import com.transaction.notification.Data;
 import com.transaction.notification.NotificationTransaction;
 import com.transaction.register.RegisterTransaction;
@@ -194,7 +197,11 @@ public class LoginUser extends BaseAction{
 						int batchcount=batchTransactions.getBatchCount(userBean.getRegId());
 						NotificationTransaction notificationTransaction=new NotificationTransaction();
 						List<Notification> notifications=notificationTransaction.getMessageforOwner(userBean.getRegId());
-						session.put("notifications", notifications);
+						NoticeTransaction noticeTransaction = new NoticeTransaction();
+						List<StaffNotice> staffNoticeList = noticeTransaction.getStaffNotice(userBean.getRegId(),new java.sql.Date(new Date().getTime()));
+						List<StudentNotice> studentNoticeList = noticeTransaction.getStudentNotice(userBean.getRegId(),new java.sql.Date(new Date().getTime()));
+						session.put("staffNoticeList", staffNoticeList);
+						session.put("studentNoticeList", studentNoticeList);
 						session.put(Constants.BATCHCOUNT, batchcount);
 						session.put(Constants.TEACHERCOUNT, teachercount);
 						session.put(Constants.STUDENTCOUNT, studentcount);
@@ -206,6 +213,7 @@ public class LoginUser extends BaseAction{
 						List<Notification> notifications = new ArrayList<Notification>();
 						List<RegisterBean> classbeanes = new ArrayList<RegisterBean>();
 						Map<String, List<Scheduledata>> map=new HashMap<String, List<Scheduledata>>();
+						Map<String, List<StaffNotice>> noticeMap = new HashMap<String, List<StaffNotice>>();
 						if(classids.size()>0){
 						RegisterTransaction registerTransaction=new RegisterTransaction();
 						classbeanes =registerTransaction.getTeachersInstitutes(classids);
@@ -228,17 +236,14 @@ public class LoginUser extends BaseAction{
 							}
 							}
 						}
-						
-						NotificationTransaction notificationTransaction=new NotificationTransaction();
+						NoticeTransaction noticeTransaction=new NoticeTransaction();
 						for (int i = 0; i < classids.size(); i++) {
-							List<Notification> notificationsList=  notificationTransaction.getMessageforTeacher(classids.get(i));
-							if(notificationsList!=null){
-								for (int j = 0; j < notificationsList.size(); j++) {
-									notifications.add(notificationsList.get(j));
-								}
-							}
+							List<StaffNotice> staffNoticeList =  noticeTransaction.getStaffNotice(classids.get(i), new java.sql.Date(new Date().getTime()), "2s");
+							noticeMap.put(registerTransaction.getregistereduser(classids.get(i)).getClassName(),staffNoticeList);
 						}
+						
 						}
+						session.put("noticeMap", noticeMap);
 						session.put("notifications", notifications);
 						session.put("classes", classbeanes);
 						session.put("todayslect", map);
@@ -249,15 +254,12 @@ public class LoginUser extends BaseAction{
 						List<Student> list=studentTransaction.getStudent(userBean.getRegId());
 						RegisterTransaction registerTransaction=new RegisterTransaction();
 						List<RegisterBean> beans= registerTransaction.getclassNames(list);
-						NotificationTransaction notificationTransaction=new NotificationTransaction();
+						Map<String, List<StudentNotice>> noticeMap = new HashMap<String, List<StudentNotice>>();
 						List<Notification> notifications=new ArrayList<Notification>();
+						NoticeTransaction noticeTransaction=new NoticeTransaction();
 						for (int i = 0; i < list.size(); i++) {
-							List<Notification> notificationsList=  notificationTransaction.getMessageforStudent(list.get(i));
-							if(notificationsList!=null){
-								for (int j = 0; j < notificationsList.size(); j++) {
-									notifications.add(notificationsList.get(j));
-								}
-							}
+							List<StudentNotice> staffNoticeList =  noticeTransaction.getStudentNotice(list.get(i).getClass_id(), new java.sql.Date(new Date().getTime()), list.get(i).getDiv_id(),list.get(i).getBatch_id());
+							noticeMap.put(registerTransaction.getregistereduser(list.get(i).getClass_id()).getClassName(),staffNoticeList);
 						}
 						ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
 						List<Scheduledata> scheduledatas=scheduleTransaction.gettodaysSchedule(list);
@@ -278,6 +280,7 @@ public class LoginUser extends BaseAction{
 							}
 							}
 						}
+						session.put("noticeMap", noticeMap);
 						session.put("notifications", notifications);
 						session.put("classes", beans);
 						session.put("todayslect", map);
