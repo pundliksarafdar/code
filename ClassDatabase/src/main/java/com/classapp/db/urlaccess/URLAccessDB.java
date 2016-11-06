@@ -21,12 +21,10 @@ import com.classapp.persistence.HibernateUtil;
 public class URLAccessDB {
 
 	public List<PathAccess> getURLAndAccess() {
-		Transaction transaction = null;
 		Session session = null;
 		List<PathAccess> list = null;
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session
 					.createQuery("from PathAccess");
 			list = query.list();
@@ -49,7 +47,7 @@ public class URLAccessDB {
 			session = HibernateUtil.getSessionfactory().openSession();
 			transaction = session.beginTransaction();
 			session.save(pathAccess);
-			
+			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -93,12 +91,10 @@ public class URLAccessDB {
 	
 	public boolean isAcessible(String action,int role){
 		boolean result = false;
-		Transaction transaction = null;
 		Session session = null;
 		List<PathAccess> list = null;
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session
 					.createQuery("from PathAccess where paths =:action and access like :role");
 			query.setString("action", action);

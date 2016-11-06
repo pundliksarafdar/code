@@ -27,7 +27,6 @@ public class LoginCheck implements Serializable{
 	public UserBean loadUserObject(String username,String password){
 		Gson gson = new Gson();
 		Session session = HibernateUtil.getSessionfactory().openSession();
-		session.beginTransaction();
 		Query query = session.createQuery("from RegisterBean where loginName = :lname and loginPass = :lpass");
 		query.setParameter("lname", username);
 		query.setParameter("lpass", password);
@@ -84,7 +83,6 @@ public class LoginCheck implements Serializable{
 	public UserBean loadUpdatedUserObject(String username){
 		Gson gson = new Gson();
 		Session session = HibernateUtil.getSessionfactory().openSession();
-		session.beginTransaction();
 		Query query = session.createQuery("from RegisterBean where loginName = :lname");
 		query.setParameter("lname", username);
 		/*query.setParameter("lpass", password);*/

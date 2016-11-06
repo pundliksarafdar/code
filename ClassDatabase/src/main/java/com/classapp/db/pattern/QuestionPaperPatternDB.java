@@ -34,7 +34,6 @@ public class QuestionPaperPatternDB {
 		
 		transaction=session.beginTransaction();
 		try{
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("update QuestionPaperPattern set marks = :marks,pattern_name =:pattern_name,modifiedby=:modifiedby where inst_id = :inst_id and div_id = :div_id and pattern_id = :pattern_id");
 			query.setParameter("inst_id", questionPaperPattern.getInst_id());
 			query.setParameter("div_id", questionPaperPattern.getDiv_id());
@@ -60,10 +59,8 @@ public class QuestionPaperPatternDB {
 	}
 	
 	public boolean verifyPatterName(int inst_id,int div_id,String pattern_name) {
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(QuestionPaperPattern.class);
 		Criterion criterion = Restrictions.eq("inst_id", inst_id);
 		criteria.add(criterion);
@@ -85,10 +82,8 @@ public class QuestionPaperPatternDB {
 	}
 	
 	public boolean verifyUpdatePatterName(int inst_id,int div_id,String pattern_name,int pattern_id) {
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(QuestionPaperPattern.class);
 		Criterion criterion = Restrictions.eq("inst_id", inst_id);
 		criteria.add(criterion);
@@ -113,10 +108,8 @@ public class QuestionPaperPatternDB {
 	
 	
 	public List<QuestionPaperPattern> getQuestionPaperPatternList(int inst_id,int div_id,int sub_id,String pattern_type) {
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(QuestionPaperPattern.class);
 		Criterion criterion = Restrictions.eq("inst_id", inst_id);
 		criteria.add(criterion);
@@ -142,13 +135,12 @@ public class QuestionPaperPatternDB {
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		try{
-			
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("delete from QuestionPaperPattern where inst_id = :inst_id and div_id = :div_id and pattern_id = :pattern_id");
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("div_id", div_id);
 			query.setParameter("pattern_id", pattern_id);
 			query.executeUpdate();
+			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(null!=transaction){
@@ -171,7 +163,6 @@ public class QuestionPaperPatternDB {
 		transaction=session.beginTransaction();
 		try{
 			
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("delete from QuestionPaperPattern where inst_id = :inst_id and div_id = :div_id");
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("div_id", div_id);

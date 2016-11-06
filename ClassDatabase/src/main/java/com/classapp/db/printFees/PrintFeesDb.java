@@ -25,10 +25,8 @@ public class PrintFeesDb {
 	
 	public PrintFees getLastFeesDetail(int studentId,int instId){
 		PrintFees printFees = new PrintFees();
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(PrintFees.class);
 		Criterion criterion = Restrictions.eq("inst_id", instId);
 		criteria.add(criterion);
@@ -44,10 +42,8 @@ public class PrintFeesDb {
 	
 	public List<PrintFees> getFeesDetails(int studentId,int instId){
 		PrintFees printFees = new PrintFees();
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(PrintFees.class);
 		Criterion criterion = Restrictions.eq("inst_id", instId);
 		criteria.add(criterion);

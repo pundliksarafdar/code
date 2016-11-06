@@ -33,15 +33,12 @@ public class ExamDB {
 	}
 	
 	public List<Exam> getExamList(int inst_id) {
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(Exam.class);
 		Criterion criterion = Restrictions.eq("inst_id", inst_id);
 		criteria.add(criterion);
 		List<Exam> examList = criteria.list();
-		transaction.commit();
 		session.close();
 		return  examList;	
 	}
@@ -50,14 +47,12 @@ public class ExamDB {
 		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(Exam.class);
 		Criterion criterion = Restrictions.eq("inst_id", inst_id);
 		criteria.add(criterion);
 		criterion = Restrictions.in("exam_id", examIds);
 		criteria.add(criterion);
 		List<Exam> examList = criteria.list();
-		transaction.commit();
 		session.close();
 		return  examList;	
 	}
@@ -68,7 +63,6 @@ public class ExamDB {
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		try{
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("delete from Exam where inst_id = :inst_id and exam_id = :exam_id ");
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("exam_id", exam_id);
@@ -90,12 +84,9 @@ public class ExamDB {
 	}
 	
 	public boolean validateExam(int inst_id,String exam_name) {
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		try{
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("select exam_name from Exam where inst_id = :inst_id and exam_name = :exam_name ");
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("exam_name", exam_name);
@@ -103,13 +94,8 @@ public class ExamDB {
 			if(list.size()>0){
 				return true;
 			}
-			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();

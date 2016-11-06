@@ -17,22 +17,16 @@ public class RegisterDB {
 	public List getTeacherName(List TeacherIDs) {
 		
 		Session session = null;
-		Transaction transaction = null;
 		List subidList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean where  regId in :teacherids");
 			query.setParameterList("teacherids", TeacherIDs);
 			subidList = query.list();
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -45,22 +39,16 @@ public class RegisterDB {
 public List getTeachersInstitutes(List inst_IDs) {
 		
 		Session session = null;
-		Transaction transaction = null;
 		List list = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("select regId,className from RegisterBean where  regId in :inst_ids");
 			query.setParameterList("inst_ids", inst_IDs);
 			list = query.list();
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -72,12 +60,10 @@ public List getTeachersInstitutes(List inst_IDs) {
 	
 	public RegisterBean getscheduleTeacher(int TeacherId) {
 		Session session = null;
-		Transaction transaction = null;
 		List<RegisterBean> subidList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean where  regId in :teacherids");
 			query.setParameter("teacherids", TeacherId);
 			subidList = query.list();
@@ -87,10 +73,6 @@ public List getTeachersInstitutes(List inst_IDs) {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -102,12 +84,10 @@ public List getTeachersInstitutes(List inst_IDs) {
 	
 	public RegisterBean getRegisterclass(int regId) {
 		Session session = null;
-		Transaction transaction = null;
 		List<RegisterBean> subidList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean where  regId in :teacherids");
 			query.setParameter("teacherids", regId);
 			subidList = query.list();
@@ -117,10 +97,6 @@ public List getTeachersInstitutes(List inst_IDs) {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -133,12 +109,10 @@ public List getTeachersInstitutes(List inst_IDs) {
 	/*Pundlik*/
 	public boolean isMobileExists(String mobileNo){
 		Session session = null;
-		Transaction transaction = null;
 		List<RegisterBean> list = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean where  phone1 in :mobileno");
 			query.setParameter("mobileno", mobileNo);
 			list = query.list();
@@ -152,9 +126,6 @@ public List getTeachersInstitutes(List inst_IDs) {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();
@@ -167,12 +138,10 @@ public List getTeachersInstitutes(List inst_IDs) {
 	/*Pundlik*/
 	public boolean isUserExits(String loginName) {
 		Session session = null;
-		Transaction transaction = null;
 		List<RegisterBean> list = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean where  loginName in :loginName");
 			query.setParameter("loginName", loginName);
 			list = query.list();
@@ -186,9 +155,6 @@ public List getTeachersInstitutes(List inst_IDs) {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();
@@ -261,12 +227,10 @@ public List getTeachersInstitutes(List inst_IDs) {
 public List getStudentInfo(List StudentIDs) {
 		
 		Session session = null;
-		Transaction transaction = null;
 		List subidList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			//Query query = session.createQuery("SELECT  reg.fname,reg.lname,reg.loginName FROM SELECT  :rownum := :rownum + 1 RowNumber, t.fname,t.lname,t.loginName FROM RegisterBean t, (SELECT :rownum := 0) s where regId=:studentids  ORDER BY t.regId reg where reg.RowNumber>:lowerlimit and reg.RowNumber<:upperlimit");
 			
 			Query query = session.createQuery("from RegisterBean where  regId in :studentids order by regId asc");
@@ -277,10 +241,6 @@ public List getStudentInfo(List StudentIDs) {
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -293,12 +253,10 @@ public List getStudentInfo(List StudentIDs) {
 public List getStudents(List StudentIDs) {
 	
 	Session session = null;
-	Transaction transaction = null;
 	List students = null;
 	
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		//Query query = session.createQuery("SELECT  reg.fname,reg.lname,reg.loginName FROM SELECT  :rownum := :rownum + 1 RowNumber, t.fname,t.lname,t.loginName FROM RegisterBean t, (SELECT :rownum := 0) s where regId=:studentids  ORDER BY t.regId reg where reg.RowNumber>:lowerlimit and reg.RowNumber<:upperlimit");
 		
 		Query query = session.createQuery("from RegisterBean where  regId in :studentids order by regId");
@@ -307,10 +265,6 @@ public List getStudents(List StudentIDs) {
 		
 	}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 	}finally{
 		if(null!=session){
 			session.close();
@@ -322,12 +276,10 @@ public List getStudents(List StudentIDs) {
 
 	public boolean isEmailAndMobileValid(String email,String phone) {
 		Session session = null;
-		Transaction transaction = null;
 		List subidList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean where  email = :email and phone1=:phone");
 			query.setParameter("email", email);
 			query.setParameter("phone", phone);
@@ -338,10 +290,6 @@ public List getStudents(List StudentIDs) {
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -352,12 +300,10 @@ public List getStudents(List StudentIDs) {
 	
 	public boolean ActivationCodeValidation(int regID,String code) {
 		Session session = null;
-		Transaction transaction = null;
 		List subidList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean where  regId = :regId and activationcode=:activationcode");
 			query.setParameter("regId", regID);
 			query.setParameter("activationcode", code);
@@ -368,10 +314,6 @@ public List getStudents(List StudentIDs) {
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -472,12 +414,10 @@ public List getStudents(List StudentIDs) {
 	
 	public boolean isEmailExists(String email) {
 		Session session = null;
-		Transaction transaction = null;
 		List<RegisterBean> list = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean where  email in :email");
 			query.setParameter("email", email);
 			list = query.list();
@@ -491,9 +431,6 @@ public List getStudents(List StudentIDs) {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();
@@ -504,7 +441,6 @@ public List getStudents(List StudentIDs) {
 	
 	public List<RegisterBean> getAllRegisters(){
 		Session session = null;
-		Transaction transaction = null;
 		List<RegisterBean> list = null;
 		
 		String show = ServiceMap.getSystemParam("7", "show");
@@ -513,7 +449,6 @@ public List getStudents(List StudentIDs) {
 		}else{
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean");
 			list = query.list();
 		}catch(Exception e){
@@ -529,12 +464,10 @@ public List getStudents(List StudentIDs) {
 	
 	public RegisterBean getRegistereduser(int regID) {
 		Session session = null;
-		Transaction transaction = null;
 		List<RegisterBean> subidList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean where  regId = :regID");
 			query.setParameter("regID", regID);
 			subidList = query.list();
@@ -544,10 +477,6 @@ public List getStudents(List StudentIDs) {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -559,12 +488,10 @@ public List getStudents(List StudentIDs) {
 	
 	public RegisterBean getInstitute(String loginName) {
 		Session session = null;
-		Transaction transaction = null;
 		List<RegisterBean> subidList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean where  loginName = :loginName and role=1");
 			query.setParameter("loginName", loginName);
 			subidList = query.list();
@@ -574,10 +501,6 @@ public List getStudents(List StudentIDs) {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -589,12 +512,10 @@ public List getStudents(List StudentIDs) {
 	
 	public RegisterBean getInstitute(int inst_id) {
 		Session session = null;
-		Transaction transaction = null;
 		List<RegisterBean> subidList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean where  regId = :inst_id and role=1");
 			query.setParameter("inst_id", inst_id);
 			subidList = query.list();
@@ -604,10 +525,6 @@ public List getStudents(List StudentIDs) {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -707,12 +624,10 @@ public List getStudents(List StudentIDs) {
 	
 	public RegisterBean getRegisteredTeacher(String username,String email,int inst_id) {
 		Session session = null;
-		Transaction transaction = null;
 		List<RegisterBean> subidList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean where  loginName = :loginName and email = :email and (role=2 or ( inst_id = :inst_id and role = 5))");
 			query.setParameter("loginName", username);
 			query.setParameter("email", email);
@@ -724,10 +639,6 @@ public List getStudents(List StudentIDs) {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -738,12 +649,10 @@ public List getStudents(List StudentIDs) {
 	
 	public RegisterBean getRegisteredUserByLoginID(String username) {
 		Session session = null;
-		Transaction transaction = null;
 		List<RegisterBean> subidList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean where  loginName = :loginName and role=3");
 			query.setParameter("loginName", username);
 			subidList = query.list();
@@ -753,10 +662,6 @@ public List getStudents(List StudentIDs) {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -767,21 +672,15 @@ public List getStudents(List StudentIDs) {
 	
 	public List<String> getNamesForSuggestion(int inst_id) {
 		Session session = null;
-		Transaction transaction = null;
 		List<String> namesList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("select CONCAT(fname,' ',lname) from Student where class_id=:inst_id");
 			query.setParameter("inst_id", inst_id);
 			namesList = query.list();
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -792,12 +691,10 @@ public List getStudents(List StudentIDs) {
 	
 	public List<RegisterBean> getStudentByNames(int inst_id,String fname,String lname) {
 		Session session = null;
-		Transaction transaction = null;
 		List<RegisterBean> namesList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from RegisterBean where  regId in (select student_id from Student where class_id=:inst_id) and fname like :fname and lname like :lname order by regId asc");
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("fname", fname+"%");
@@ -805,10 +702,6 @@ public List getStudents(List StudentIDs) {
 			namesList = query.list();
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -819,12 +712,10 @@ public List getStudents(List StudentIDs) {
 	
 	public List getManuallyRegisteredStudentData(int inst_id,List<Integer> studentIDs) {
 		Session session = null;
-		Transaction transaction = null;
 		List studentDataList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("select reg.regId,reg.loginName,reg.loginPass,reg.fname,reg.lname, reg.email,std.parentFname,std.parentLname,std.parentEmail from RegisterBean reg,Student std where  reg.regId in :list and std.class_id = :inst_id and "
 											+ "std.student_id = reg.regId");
 			query.setParameter("inst_id", inst_id);
@@ -832,10 +723,6 @@ public List getStudents(List StudentIDs) {
 			studentDataList = query.list();
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();

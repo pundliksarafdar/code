@@ -26,9 +26,10 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
 <body>
 
 	<div class="container" style="padding: 2%;background: #eee">
+	<form id="filterForm" onsubmit="return false;">
 		<div class="row">
 			<div class="col-md-3">
-				<select name="instituteSelect" id="instituteSelect" class="form-control" width="100px">
+				<select name="selectBox" id="instituteSelect" class="form-control" width="100px">
 					<option value="-1">Select Institute</option>
 					<c:forEach items="${requestScope.registerBeanList}" var="institute">
 						<option value="<c:out value="${institute.regId}"></c:out>"><c:out value="${institute.className}"></c:out></option>
@@ -37,7 +38,7 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
 				<span id="instituteError" class="validation-message"></span>
 			</div>
 			<div class="col-md-3">
-				<select class="form-control" id="batchSelect">
+				<select name="selectBox" class="form-control" id="batchSelect">
 					<option value="-1">Select Batch</option>
 				</select>
 				<span id="batchError" class="validation-message"></span>
@@ -62,6 +63,7 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
 				<button class="btn btn-primary btn-sm" id="viewAttendance">View</button>
 			</div>
 		</div>
+	</form>
 	</div>
 	<div class="container" id="dailyAttendance" style="width: 100%;display: none;overflow-x: auto">
 	<table id="attendanceScheduleTable" class="table-bordered" style="width: 100%"></table>

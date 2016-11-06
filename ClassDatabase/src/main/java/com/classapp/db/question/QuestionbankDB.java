@@ -213,8 +213,8 @@ public boolean deleteQuestion(int que_id,int inst_id,int sub_id,int div_id) {
 	query.setParameter("div_id", div_id);
 	query.setParameter("sub_id", sub_id);
 	query.setParameter("que_id", que_id);
-	transaction.commit();
 	query.executeUpdate();
+	transaction.commit();
 	}catch(Exception e){
 	e.printStackTrace();
 	if(null!=transaction){
@@ -232,25 +232,17 @@ public boolean deleteQuestion(int que_id,int inst_id,int sub_id,int div_id) {
 
 public Questionbank getQuestion(int que_id,int inst_id,int sub_id,int div_id) {
 	Questionbank questionbank=new Questionbank();
-	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
-	transaction=session.beginTransaction();
 	try{
-		transaction=session.beginTransaction();
 		Query query = session.createQuery("from Questionbank where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id = :que_id");
 		query.setParameter("inst_id", inst_id);
 		query.setParameter("div_id", div_id);
 		query.setParameter("sub_id", sub_id);
 		query.setParameter("que_id", que_id);
-		transaction.commit();
 		questionbank=(Questionbank) query.uniqueResult();
 		}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 		}finally{
 		if(session!=null){
 			session.close();
@@ -260,14 +252,12 @@ public Questionbank getQuestion(int que_id,int inst_id,int sub_id,int div_id) {
 }
 
 public HashMap<Integer, Integer> getQuestionIds(int inst_id,int sub_id,int div_id,int repeat,List<Integer> marks) {
-	Transaction transaction=null;
 	Session session=null;
 	List<Questionbank> list = null;
 	marks.add(1);
 	HashMap<Integer, Integer> quesids=new HashMap<Integer, Integer>();
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		Query query = session.createQuery("from Questionbank where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and rep <= :rep and marks in :marks");
 		if(repeat==-1){
 			query = session.createQuery("from Questionbank where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and marks in :marks");
@@ -289,10 +279,6 @@ public HashMap<Integer, Integer> getQuestionIds(int inst_id,int sub_id,int div_i
 		
 	}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 	}finally{
 		if(null!=session){
 			session.close();
@@ -303,12 +289,10 @@ return quesids;
 }
 
 public List<Integer> getQuestionMarks(int inst_id,int sub_id,int div_id,List<Integer> que_id) {
-	Transaction transaction=null;
 	Session session=null;
 	List<Integer> list = null;
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		Query query = session.createQuery("select marks from Questionbank where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id in :que_id");
 		query.setParameter("inst_id", inst_id);
 		query.setParameter("div_id", div_id);
@@ -317,10 +301,6 @@ public List<Integer> getQuestionMarks(int inst_id,int sub_id,int div_id,List<Int
 		list = query.list();
 	}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 	}finally{
 		if(null!=session){
 			session.close();
@@ -331,12 +311,10 @@ return list;
 }
 
 public int getNextQuestionID(int inst_id,int div_id,int sub_id) {
-	Transaction transaction=null;
 	Session session=null;
 	List<Integer> list = null;
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		Query query = session.createQuery("select max(que_id)+1 from Questionbank where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id");
 		query.setParameter("inst_id", inst_id);
 		query.setParameter("div_id", div_id);
@@ -347,10 +325,6 @@ public int getNextQuestionID(int inst_id,int div_id,int sub_id) {
 		}
 	}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 	}finally{
 		if(null!=session){
 			session.close();
@@ -362,10 +336,8 @@ return 1;
 
 public List<Questionbank> getSearchedQuestion(int marks,int sub_id,int inst_id,int div_id,int currentPage,int topic_id,String quesType) {
 	Exam exam=new Exam();
-	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
-	transaction=session.beginTransaction();
 	Criteria criteria = session.createCriteria(Questionbank.class);
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
 	criteria.add(criterion);
@@ -394,17 +366,15 @@ public List<Questionbank> getSearchedQuestion(int marks,int sub_id,int inst_id,i
 	criteria.setMaxResults(50);
 	criteria.addOrder(Order.asc("que_id"));
 	List<Questionbank> questionList = criteria.list();
-	transaction.commit();
+	
 	session.close();
 	return  questionList;	
 }
 
 public int getSearchedQuestionCount(int marks,int sub_id,int inst_id,int div_id,int topic_id,String quesType) {
 	Exam exam=new Exam();
-	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
-	transaction=session.beginTransaction();
 	Criteria criteria = session.createCriteria(Questionbank.class);
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
 	criteria.add(criterion);
@@ -426,7 +396,6 @@ public int getSearchedQuestionCount(int marks,int sub_id,int inst_id,int div_id,
 	criteria.add(criterion);
 	//criteria.setMaxResults(10);
 	List<Questionbank> questionList = criteria.list();
-	transaction.commit();
 	session.close();
 	if(questionList!=null){
 		return questionList.size();
@@ -435,10 +404,8 @@ public int getSearchedQuestionCount(int marks,int sub_id,int inst_id,int div_id,
 }
 
 public List<Integer> getdistinctQuestionMarks(int sub_id,int inst_id,int div_id,String ques_type) {
-	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
-	transaction=session.beginTransaction();
 	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.distinct(Projections.property("marks"))).addOrder(Order.asc("marks"));;
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
 	criteria.add(criterion);
@@ -450,15 +417,12 @@ public List<Integer> getdistinctQuestionMarks(int sub_id,int inst_id,int div_id,
 	criteria.add(criterion);
 	
 	List<Integer> questionList = criteria.list();
-	transaction.commit();
 	session.close();
 	return  questionList;	
 }
 public List<Integer> getdistinctQuestionRep(int sub_id,int inst_id,int div_id) {
-	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
-	transaction=session.beginTransaction();
 	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.distinct(Projections.property("rep")));;
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
 	criteria.add(criterion);
@@ -468,16 +432,13 @@ public List<Integer> getdistinctQuestionRep(int sub_id,int inst_id,int div_id) {
 	criteria.add(criterion);
 	
 	List<Integer> questionList = criteria.list();
-	transaction.commit();
 	session.close();
 	return  questionList;	
 }
 
 public List<QuestionSearchRequest> getCriteriaQuestionCount(int sub_id,int inst_id,int div_id,List<QuestionSearchRequest> list) {
-	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
-	transaction=session.beginTransaction();
 	for (int i = 0; i < list.size(); i++) {
 	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.rowCount());;
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
@@ -495,18 +456,13 @@ public List<QuestionSearchRequest> getCriteriaQuestionCount(int sub_id,int inst_
 		}
 		list.get(i).setAvailiblityCount((Long) criteria.uniqueResult());
 	}
-
-	//List<Integer> questionList = criteria.list();
-	transaction.commit();
 	session.close();
 return list;
 }
 
 public List<QuestionSearchRequest> getCriteriaQuestion(int sub_id,int inst_id,int div_id,List<QuestionSearchRequest> list) {
-	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
-	transaction=session.beginTransaction();
 	for (int i = 0; i < list.size(); i++) {
 	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.property("que_id")).addOrder(Order.asc("created_dt"));
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
@@ -525,16 +481,13 @@ public List<QuestionSearchRequest> getCriteriaQuestion(int sub_id,int inst_id,in
 		List<Integer> questionList = criteria.list();
 	list.get(i).setQuestionId(questionList);
 	}
-	transaction.commit();
 	session.close();
 return list;
 }
 
 public List<GenerateQuestionPaperServicebean> getQuestionsForGenerateExam(int inst_id,int div_id,List<GenerateQuestionPaperServicebean> list) {
-	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
-	transaction=session.beginTransaction();
 	for (int i = 0; i < list.size(); i++) {
 	List<Integer> idList = new ArrayList<Integer>();
 	for(int j=0;j<i;j++){
@@ -567,16 +520,13 @@ public List<GenerateQuestionPaperServicebean> getQuestionsForGenerateExam(int in
 		List<Integer> questionList = criteria.list();
 	list.get(i).setQuestion_ids(generateRandomQuestionId(questionList, list.get(i).getCount()));
 	}
-	transaction.commit();
 	session.close();
 return list;
 }
 
 public List<Integer> getQuestionsForGenerateExam(int inst_id,int div_id,GenerateQuestionPaperServicebean questionPaperServicebean) {
-	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
-	transaction=session.beginTransaction();
 	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.property("que_id")).addOrder(Order.asc("created_dt"));
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
 	criteria.add(criterion);
@@ -600,17 +550,14 @@ public List<Integer> getQuestionsForGenerateExam(int inst_id,int div_id,Generate
 				  ));
 		}
 		List<Integer> questionList = criteria.list();
-	transaction.commit();
 	session.close();
 return questionList;
 }
 
 public List<String> getQuestionAnsIds(int sub_id,int inst_id,int div_id,List<Integer> que_ids) {
 	Exam exam=new Exam();
-	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
-	transaction=session.beginTransaction();
 	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.property("ans_id")).addOrder(Order.asc("que_id"));
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
 	criteria.add(criterion);
@@ -621,16 +568,13 @@ public List<String> getQuestionAnsIds(int sub_id,int inst_id,int div_id,List<Int
 	criterion=Restrictions.in("que_id", que_ids);
 	criteria.add(criterion);
 	List questionAnsList = criteria.list();
-	transaction.commit();
 	session.close();
 	return  questionAnsList;	
 }
 
 public List<Integer> getQuestionrelatedtoTopics(int sub_id,int inst_id,int div_id,int topic_id) {
-	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
-	transaction=session.beginTransaction();
 	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.distinct(Projections.property("que_id"))).addOrder(Order.asc("que_id"));;
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
 	criteria.add(criterion);
@@ -641,7 +585,6 @@ public List<Integer> getQuestionrelatedtoTopics(int sub_id,int inst_id,int div_i
 	criterion = Restrictions.eq("topic_id", topic_id);
 	criteria.add(criterion);
 	List<Integer> questionList = criteria.list();
-	transaction.commit();
 	session.close();
 	return  questionList;	
 }
@@ -661,7 +604,7 @@ public boolean deleteQuestionList(List<Integer> que_id,int inst_id,int sub_id,in
 		query.setParameter("sub_id", sub_id);
 		query.setParameterList("que_id", que_id);
 		 query.executeUpdate();
-		
+		 transaction.commit();
 	}catch(Exception e){
 		e.printStackTrace();
 		if(null!=transaction){
@@ -693,7 +636,7 @@ public boolean ExamQuestionStatus(List<Integer> que_id,int inst_id,int sub_id,in
 		query.setParameter("sub_id", sub_id);
 		query.setParameterList("que_id", que_id);
 		 query.executeUpdate();
-		
+		transaction.commit();
 	}catch(Exception e){
 		e.printStackTrace();
 		if(null!=transaction){
@@ -711,12 +654,10 @@ return true;
 }
 
 public List<Integer> getDisabledQuestions(List<Integer> que_id,int inst_id,int sub_id,int div_id) {
-	Transaction transaction=null;
 	Session session=null;
 	List<Integer> list = null;
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		String queryString="select que_id from Questionbank where ques_status ='N' and inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and que_id in :que_id";
 		
 		Query query = session.createQuery(queryString);
@@ -728,10 +669,6 @@ public List<Integer> getDisabledQuestions(List<Integer> que_id,int inst_id,int s
 		
 	}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 	}finally{
 		if(null!=session){
 			session.close();
@@ -743,33 +680,27 @@ return list;
 }
 
 public List<Integer> getQuestionrelatedtoSubject(int sub_id,int inst_id) {
-	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
-	transaction=session.beginTransaction();
 	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.distinct(Projections.property("que_id"))).addOrder(Order.asc("que_id"));;
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
 	criteria.add(criterion);
 	criterion = Restrictions.eq("sub_id", sub_id);
 	criteria.add(criterion);
 	List<Integer> questionList = criteria.list();
-	transaction.commit();
 	session.close();
 	return  questionList;	
 }
 
 public List<Integer> getQuestionrelatedtoClass(int inst_id,int div_id) {
-	Transaction transaction=null;
 	Session session=null;
 	session=HibernateUtil.getSessionfactory().openSession();
-	transaction=session.beginTransaction();
 	Criteria criteria = session.createCriteria(Questionbank.class).setProjection(Projections.distinct(Projections.property("que_id"))).addOrder(Order.asc("que_id"));;
 	Criterion criterion = Restrictions.eq("inst_id", inst_id);
 	criteria.add(criterion);
 	criterion = Restrictions.eq("div_id", div_id);
 	criteria.add(criterion);
 	List<Integer> questionList = criteria.list();
-	transaction.commit();
 	session.close();
 	return  questionList;	
 }

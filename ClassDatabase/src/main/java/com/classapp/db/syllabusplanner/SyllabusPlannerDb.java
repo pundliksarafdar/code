@@ -45,10 +45,8 @@ public class SyllabusPlannerDb {
 	}
 	
 	public List<SyllabusBean> getSyllabus(int year,int month,int instId,int classId,int subId,List<String> batchId,int regId){
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(SyllabusBean.class);
 		Criterion criterion = Restrictions.sqlRestriction("YEAR(date) = ?",year,IntegerType.INSTANCE);
 		criteria.add(criterion);
@@ -70,10 +68,8 @@ public class SyllabusPlannerDb {
 	}
 	
 	public List<SyllabusBean> getSyllabus(int year,int month,int day,int instId,List<Integer> classId,List<Integer> subId,List<Integer> batchId,List<Integer> teacherId,String view){
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(SyllabusBean.class);
 		Criterion criterion = Restrictions.sqlRestriction("YEAR(date) = ?",year,IntegerType.INSTANCE);
 		criteria.add(criterion);
@@ -106,10 +102,8 @@ public class SyllabusPlannerDb {
 		return syllabusBeans;
 	}
 	public List<SyllabusBean> getSyllabus(long id,int instId,int classId,int subId,int teacherId){
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(SyllabusBean.class);
 		Criterion criterion = Restrictions.eq("instId", instId);
 		criteria.add(criterion);
@@ -213,10 +207,8 @@ public class SyllabusPlannerDb {
 	}
 	
 	public List<SyllabusBean> getSyllabusFilter(int instId,List<Integer> classId,List<Integer> subId,List<Integer> teacherId){
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(SyllabusBean.class);
 		Criterion criterion = Restrictions.eq("instId", instId);
 		criteria.add(criterion);

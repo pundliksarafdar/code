@@ -92,22 +92,16 @@ public class SubjectDb {
 public List getSubjects(List subids) {
 		
 		Session session = null;
-		Transaction transaction = null;
 		List subjectList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Subjects where subjectId in :subids");
 			query.setParameterList("subids", subids);
 			subjectList = query.list();
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -119,22 +113,16 @@ public List getSubjects(List subids) {
 public List<Subject> getSubjectList(List subids) {
 	
 	Session session = null;
-	Transaction transaction = null;
 	List subjectList = null;
 	
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		Query query = session.createQuery("from Subject where subjectId in :subids");
 		query.setParameterList("subids", subids);
 		subjectList = query.list();
 		
 	}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 	}finally{
 		if(null!=session){
 			session.close();
@@ -147,22 +135,16 @@ public List<Subject> getSubjectList(List subids) {
 public List getSubjectID(String subname) {
 	
 	Session session = null;
-	Transaction transaction = null;
 	List subidList = null;
 	
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		Query query = session.createQuery("select subjectId from Subjects where  subjectName = :subname");
 		query.setParameter("subname", subname);
 		subidList = query.list();
 		
 	}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 	}finally{
 		if(null!=session){
 			session.close();
@@ -173,22 +155,16 @@ public List getSubjectID(String subname) {
 	
 public String getschedulesubject(int subjectid) {
 	Session session = null;
-	Transaction transaction = null;
 	List<String> subidList = null;
 	
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		Query query = session.createQuery("select subjectName from Subjects where  subjectId = :subjectCode");
 		query.setParameter("subjectCode", subjectid);
 		subidList = query.list();
 		
 	}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 	}finally{
 		if(null!=session){
 			session.close();
@@ -202,7 +178,6 @@ public String getschedulesubject(int subjectid) {
 		Session session =null;
 		try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		session.beginTransaction();
 		query = session.createQuery(queryStr);
 		
 		//Get all subject of regId
@@ -219,58 +194,11 @@ public String getschedulesubject(int subjectid) {
 		return query.list();
 	}
 	
-	/*public List<ClassSubjects> getAllClassSubjectcodes(int queryType,String queryStr,String[] params,String[] paramValues){
-		Query query =null;
-		Session session =null;
-		try{
-		session = HibernateUtil.getSessionfactory().openSession();
-		session.beginTransaction();
-		query = session.createQuery(queryStr);
-		
-		//Get all subject of regId
-		if(0==queryType){
-			query.setParameter(params[0],Integer.parseInt(paramValues[0]));
-		}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		finally{
-			if(null!=session){
-				session.close();
-			}
-		}
-		return query.list();
-	}
-	
-	public List<ClassSubjects> getClassSubject(int queryType,String queryStr,String[] params,String[] paramValues){
-		Query query =null;
-		Session session =null;
-		try{
-				session = HibernateUtil.getSessionfactory().openSession();
-				session.beginTransaction();
-				query = session.createQuery(queryStr);
-				
-				//Get all subject of regId
-				if(0==queryType){
-					query.setParameter(params[0],Integer.parseInt(paramValues[0]));
-					query.setParameter(params[1],Integer.parseInt(paramValues[1]));
-				}
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			finally{
-			if(null!=session){
-				session.close();
-			}	
-			}
-		return query.list();
-	}*/
 	public List<Subject> getSubject(int queryType,String queryStr,String[] params,String[] paramValues){
 		Query query =null;
 		Session session =null;
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			session.beginTransaction();
 			query = session.createQuery(queryStr);
 			
 			//Get all subject of regId
@@ -333,12 +261,10 @@ public String getschedulesubject(int subjectid) {
 public Subject getSubject(int institute_id,int sub_id){
 		
 		Session session = null;
-		Transaction transaction = null;
 		List<Subject> queryResult=null;
 		String queryString="from Subject where institute_id = :institute_id and subjectId = :subjectId";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("institute_id", institute_id);  
 			query.setParameter("subjectId", sub_id); 
@@ -348,7 +274,6 @@ public Subject getSubject(int institute_id,int sub_id){
 					return queryResult.get(0);
 				}
 			}
-			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
@@ -363,16 +288,13 @@ public Subject getSubject(int institute_id,int sub_id){
 public List<Subject> recentlyaddedsubfirst(int institute_id){
 		
 		Session session = null;
-		Transaction transaction = null;
 		List<Subject> queryResult=null;
 		String queryString="from Subject where institute_id in :institute_id order by subjectId desc";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("institute_id", institute_id);  
 			queryResult = query.list();
-			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
@@ -487,6 +409,7 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 				subjectlist=getSubjectList(subjectIds);
 			}
 		}
+		transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
@@ -541,6 +464,7 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 			subjectlist=getSubjectList(subjectIds);
 			}
 		}
+		transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
@@ -553,10 +477,8 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 	}
 	
 	public List<Topics> GetSubjectTopics(int inst_id,int sub_id,int div_id) {
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(Topics.class);
 		Criterion criterion = Restrictions.eq("inst_id", inst_id);
 		criteria.add(criterion);
@@ -570,7 +492,6 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 	
 		
 		List<Topics> topicList = criteria.list();
-		transaction.commit();
 		session.close();
 		return  topicList;
 	}
@@ -663,12 +584,10 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 	}
 	
 	public int getNextTopicID(int inst_id,int div_id,int sub_id) {
-		Transaction transaction=null;
 		Session session=null;
 		List<Integer> list = null;
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("select max(topic_id)+1 from Topics where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id");
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("div_id", div_id);
@@ -679,10 +598,6 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -692,12 +607,10 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 	}
 	
 	public boolean isTopicExists(int inst_id,int div_id,int sub_id,String topic_name) {
-		Transaction transaction=null;
 		Session session=null;
 		List<Integer> list = null;
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Topics where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and topic_name=:topic_name");
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("div_id", div_id);
@@ -711,10 +624,6 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -724,12 +633,10 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 	}
 	
 	public boolean isEditTopicExists(int inst_id,int div_id,int sub_id,String topic_name,int topicid) {
-		Transaction transaction=null;
 		Session session=null;
 		List<Integer> list = null;
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Topics where  inst_id = :inst_id and div_id=:div_id and sub_id=:sub_id and topic_name=:topic_name and topic_id != :topic_id");
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("div_id", div_id);
@@ -745,10 +652,6 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -759,11 +662,9 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 	
 	public List<Subject> getCompositeSubjectrelatedtoSubject(int inst_id,String subjectid) {
 		Session session = null;
-		Transaction transaction = null;
 		List<Subject> subjectList = null;
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Subject where (com_subjects LIKE :sub_id1 OR "
 											+ "com_subjects LIKE :sub_id2 OR com_subjects LIKE :sub_id3 OR "
 											+ "com_subjects = :sub_id4) and institute_id = :class_id");
@@ -776,9 +677,6 @@ public List<Subject> recentlyaddedsubfirst(int institute_id){
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();

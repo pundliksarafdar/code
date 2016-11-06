@@ -30,6 +30,9 @@ $(document).ready(function(){
 		});
 	
 	 $(VIEW_BTN).click(function(){
+		 if(!$("#filterForm").valid()){
+			return false; 
+		 }
 		 if($("#attendanceType").val()== "1"){
 			 $("#dailyAttendance").show();
 			 $("#monthlyAttendance").hide();
@@ -44,6 +47,18 @@ $(document).ready(function(){
 			 getMonthlyAttendance();
 		 }
 	 });
+	 
+	 $('#filterForm').validate({ // initialize the plugin
+	        rules: {
+	            selectBox: {
+	                selectcheck: true
+	            }
+	        }
+	    });
+
+	    jQuery.validator.addMethod('selectcheck', function (value) {
+	        return (value != -1);
+	    }, "This field is required");
 		
 	
 });

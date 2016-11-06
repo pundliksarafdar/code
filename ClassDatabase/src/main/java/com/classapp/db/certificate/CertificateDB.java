@@ -37,10 +37,8 @@ public int saveCertificate(certificate certificate) {
 
 	public boolean validateCertificateName(String cert_desc,int inst_id) {
 		Session session = null;
-		Transaction transaction = null;
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("select cert_id from certificate where"
 					+ " cert_desc = :cert_desc and inst_id = :inst_id ");
 			query.setParameter("inst_id", inst_id);
@@ -53,9 +51,6 @@ public int saveCertificate(certificate certificate) {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();
@@ -66,20 +61,15 @@ public int saveCertificate(certificate certificate) {
 	
 	public List<certificate> getCertificateList(int inst_id) {
 		Session session = null;
-		Transaction transaction = null;
 		List<certificate> certificateList = null;
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Criteria criteria = session.createCriteria(certificate.class);
 			Criterion criterion = Restrictions.eq("inst_id", inst_id);
 			criteria.add(criterion);
 			certificateList = criteria.list();
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();
@@ -90,10 +80,8 @@ public int saveCertificate(certificate certificate) {
 	
 	public boolean validateUpdateCertificateName(String cert_desc,int inst_id,int cert_id) {
 		Session session = null;
-		Transaction transaction = null;
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("select cert_id from certificate where"
 					+ " cert_desc = :cert_desc and inst_id = :inst_id and cert_id != :cert_id");
 			query.setParameter("inst_id", inst_id);
@@ -107,9 +95,6 @@ public int saveCertificate(certificate certificate) {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();
@@ -131,6 +116,7 @@ public int saveCertificate(certificate certificate) {
 			query.setParameter("cert_id",certificate.getCert_id());
 			query.setParameter("header_id",certificate.getHeader_id());
 			query.executeUpdate();
+			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(null!=transaction){
@@ -154,6 +140,7 @@ public int saveCertificate(certificate certificate) {
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("cert_id",cert_id);
 			query.executeUpdate();
+			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
 			if(null!=transaction){

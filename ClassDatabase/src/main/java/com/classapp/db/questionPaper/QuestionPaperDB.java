@@ -69,10 +69,8 @@ public class QuestionPaperDB {
 	}
 	
 	public List<QuestionPaper> getQuestionPaperList(int div_id,int inst_id,int subject) {
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(QuestionPaper.class);
 		Criterion criterion = Restrictions.eq("inst_id", inst_id);
 		criteria.add(criterion);
@@ -115,10 +113,8 @@ public class QuestionPaperDB {
 	}
 	
 	public boolean verifyPaperName(int div_id,int inst_id,String paper_description) {
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(QuestionPaper.class);
 		Criterion criterion = Restrictions.eq("inst_id", inst_id);
 		criteria.add(criterion);
@@ -137,10 +133,8 @@ public class QuestionPaperDB {
 	}
 	
 	public boolean verifyUpdatePaperName(int div_id,int inst_id,String paper_description,int paper_id) {
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(QuestionPaper.class);
 		Criterion criterion = Restrictions.eq("inst_id", inst_id);
 		criteria.add(criterion);
@@ -187,12 +181,10 @@ public class QuestionPaperDB {
 	}
 	
 	public List<QuestionPaper> getQuestionPaperListRelatedToExam(int paper_id,int inst_id,int div_id) {
-		Transaction transaction=null;
 		Session session=null;
 		List<QuestionPaper> questionPaperList = null;
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Query query = session.createQuery("select qp  from QuestionPaper qp,Exam_Paper ep "
 				+ "where  qp.inst_id = :inst_id and qp.div_id=:div_id  and qp.inst_id = ep.inst_id "
 				+ "and qp.div_id = ep.div_id and qp.paper_id = ep.question_paper_id and ep.exam_id = :paper_id");
@@ -202,10 +194,6 @@ public class QuestionPaperDB {
 		questionPaperList = query.list();
 		}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 		}finally{
 		if(session!=null){
 			session.close();
@@ -248,12 +236,10 @@ public class QuestionPaperDB {
 	}
 	
 	public boolean checkQuestionPaperAvailability(int paper_id,int inst_id,int div_id,int sub_id) {
-		Transaction transaction=null;
 		Session session=null;
 		List<QuestionPaper> questionPaperList = null;
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Query query = session.createQuery("from QuestionPaper "
 				+ "where  inst_id = :inst_id and div_id=:div_id "
 				+ " and paper_id = :paper_id and sub_id = :sub_id");
@@ -269,10 +255,6 @@ public class QuestionPaperDB {
 		}
 		}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 		}finally{
 		if(session!=null){
 			session.close();

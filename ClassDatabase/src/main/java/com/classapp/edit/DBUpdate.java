@@ -36,14 +36,14 @@ public class DBUpdate {
 			updateQuery.setParameter("endDt", dateConverted);
 			updateQuery.setParameter("regId", Integer.parseInt(regId));
 			int result = updateQuery.executeUpdate();
-			transaction.commit();
 			query = "Select endDate from RegisterBean WHERE regId = :regId"; 
-			transaction = session.beginTransaction();
 			updateQuery = session.createQuery(query);
 			updateQuery.setParameter("regId", Integer.parseInt(regId));
 			List resList = updateQuery.list();
 			errorMessage = (String) resList.get(0);
 			AppLogger.logger("Result "+result);
+			transaction.commit();
+			
 		}catch(Exception e){
 			transaction.rollback();
 			errorMessage = "error";

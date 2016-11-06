@@ -26,13 +26,11 @@ public class NotificationDB {
 	}
 	
 	public List<Notification> getMessageforStudent(int instituteid,List<String> batchids,int div_id) {
-		Transaction transaction=null;
 		Session session=null;
 		List<Notification> notifications = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Notification where  institute_id = :institute_id and ((batch in :batch and div_id=:div_id) or batch='ALL')");
 			query.setParameter("institute_id", instituteid);
 			query.setParameterList("batch", batchids);
@@ -41,10 +39,6 @@ public class NotificationDB {
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -55,23 +49,17 @@ public class NotificationDB {
 	}
 	
 	public List<Notification> getMessageforTeachers(int instituteid) {
-		Transaction transaction=null;
 		Session session=null;
 		List<Notification> notifications = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Notification where  institute_id = :institute_id and role=2");
 			query.setParameter("institute_id", instituteid);
 			notifications = query.list();
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -82,23 +70,17 @@ public class NotificationDB {
 	}
 	
 	public List<Notification> getMessageforOwner(int instituteid) {
-		Transaction transaction=null;
 		Session session=null;
 		List<Notification> notifications = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Notification where  institute_id = :institute_id");
 			query.setParameter("institute_id", instituteid);
 			notifications = query.list();
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -118,6 +100,7 @@ public class NotificationDB {
 			transaction = session.beginTransaction();
 			Query query = session.createQuery("delete from Notification where  msg_date < CURRENT_DATE-7");
 			int noofrowsdeleted=query.executeUpdate();
+			transaction.commit();
 			AppLogger.logger("No of notifications deleted="+noofrowsdeleted);
 		}catch(Exception e){
 			e.printStackTrace();

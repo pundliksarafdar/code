@@ -20,7 +20,6 @@ public class SearchClassDb {
 		ClassSearchForm classSearchForm = gson.fromJson(searchData, ClassSearchForm.class);
 		String queryStr = formQuery(classSearchForm);
 		session = HibernateUtil.getSessionfactory().openSession();
-		Transaction transaction = session.beginTransaction();
 		query = session.createQuery(queryStr);
 		
 		if(queryStr.contains("cname"))

@@ -35,10 +35,8 @@ public class StudentMarksDB {
 	
 	public List<StudentMarks> getStudentMarks(int inst_id,int student_id) {
 		StudentMarks studentMarks=new StudentMarks();
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(StudentMarks.class);
 		Criterion criterion = Restrictions.eq("student_id", student_id);
 		criteria.add(criterion);
@@ -47,7 +45,6 @@ public class StudentMarksDB {
 		criteria.add(criterion);
 		}
 		List<StudentMarks> marks = criteria.list();
-		transaction.commit();
 		session.close();
 		return  marks;
 	}
@@ -60,12 +57,9 @@ public class StudentMarksDB {
 		studentMarks.setDiv_id(div_id);
 		studentMarks.setSub_id(sub_id);
 		studentMarks.setStudent_id(student_id);
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		studentMarks=(StudentMarks) session.get(StudentMarks.class,studentMarks);
-		transaction.commit();
 		session.close();
 		if(studentMarks==null){
 		return false;
@@ -76,10 +70,8 @@ public class StudentMarksDB {
 	
 	public List<StudentMarks> getStudentMarksList(int inst_id,int student_id,int sub_id,int div_id) {
 		StudentMarks studentMarks=new StudentMarks();
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(StudentMarks.class);
 		Criterion criterion = Restrictions.eq("student_id", student_id);
 		criteria.add(criterion);
@@ -97,17 +89,14 @@ public class StudentMarksDB {
 			}
 		
 		List<StudentMarks> marks = criteria.list();
-		transaction.commit();
 		session.close();
 		return  marks;
 	}
 	
 	public List<StudentMarks> getStudentMarks(int inst_id,List<Integer> student_id,int sub_id,int div_id,int currentPage,int examID) {
 		StudentMarks studentMarks=new StudentMarks();
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(StudentMarks.class).addOrder(Order.desc("marks"));
 		Criterion criterion = Restrictions.in("student_id", student_id);
 		criteria.add(criterion);
@@ -130,17 +119,14 @@ public class StudentMarksDB {
 		}
 		criteria.setMaxResults(100);
 		List<StudentMarks> marks = criteria.list();
-		transaction.commit();
 		session.close();
 		return  marks;
 	}
 	
 	public int getStudentMarksCount(int inst_id,List<Integer> student_id,int sub_id,int div_id,int examID) {
 		StudentMarks studentMarks=new StudentMarks();
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(StudentMarks.class).setProjection(Projections.rowCount());
 		Criterion criterion = Restrictions.in("student_id", student_id);
 		criteria.add(criterion);
@@ -160,7 +146,6 @@ public class StudentMarksDB {
 			}
 		
 		Long count = (Long) criteria.uniqueResult();
-		transaction.commit();
 		session.close();
 		return  count.intValue();
 	}
@@ -294,10 +279,8 @@ public class StudentMarksDB {
 	
 	public StudentMarks getStudentExamMark(int inst_id,int student_id,int sub_id,int div_id,int examID) {
 		StudentMarks studentMarks=new StudentMarks();
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Criteria criteria = session.createCriteria(StudentMarks.class).addOrder(Order.desc("marks"));
 		Criterion criterion = Restrictions.eq("student_id", student_id);
 		criteria.add(criterion);
@@ -317,7 +300,6 @@ public class StudentMarksDB {
 			}
 		
 		List<StudentMarks> marks = criteria.list();
-		transaction.commit();
 		session.close();
 		if(marks!=null){
 			return marks.get(0);
@@ -328,7 +310,6 @@ public class StudentMarksDB {
 	public List getStudentExamMarks(int inst_id, int div_id,int batch_id, int exam_id) {
 		Session session = null;
 		boolean status = false;
-		Transaction transaction = null;
 		List list = null;
 		String queryString = "select reg.fname,reg.lname,std.marks,sub.subjectName,sub.subjectId,reg.regId from StudentMarks std,RegisterBean reg,Subject sub"
 							+ " where reg.regId=std.student_id and sub.subjectId = std.sub_id and sub.institute_id = std.inst_id and "
@@ -336,15 +317,12 @@ public class StudentMarksDB {
 							+ " order by reg.regId,sub.subjectId";
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("div_id", div_id);
 			query.setParameter("batch_id", batch_id);
 			query.setParameter("exam_id", exam_id);
 			list = query.list();
-		
-			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -357,7 +335,6 @@ public class StudentMarksDB {
 	public List getStudentExamSubjectMarks(int inst_id, int div_id,int batch_id, int sub_id) {
 		Session session = null;
 		boolean status = false;
-		Transaction transaction = null;
 		List list = null;
 		String queryString = "select reg.fname,reg.lname,std.marks,sub.subjectId,exm.exam_id,reg.regId from StudentMarks std,RegisterBean reg,Subject sub,Exam exm"
 							+ " where reg.regId=std.student_id and sub.subjectId = std.sub_id and sub.institute_id = std.inst_id and "
@@ -365,15 +342,12 @@ public class StudentMarksDB {
 							+ "exm.inst_id = std.inst_id order by reg.regId,sub.subjectId";
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("div_id", div_id);
 			query.setParameter("batch_id", batch_id);
 			query.setParameter("sub_id", sub_id);
 			list = query.list();
-		
-			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -386,7 +360,6 @@ public class StudentMarksDB {
 	public List getStudentExamMarks(int inst_id, int div_id,int batch_id, List<Integer> exam_id,int student_id) {
 		Session session = null;
 		boolean status = false;
-		Transaction transaction = null;
 		List list = null;
 		String queryString = "select reg.regId,reg.fname,reg.lname,std.marks,sub.subjectId,std.exam_id from StudentMarks std,RegisterBean reg,Subject sub"
 							+ " where reg.regId=std.student_id and sub.subjectId = std.sub_id and sub.institute_id = std.inst_id and "
@@ -394,7 +367,6 @@ public class StudentMarksDB {
 							+ " and std.student_id = :student_id order by reg.regId,std.exam_id,sub.subjectId";
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("div_id", div_id);
@@ -402,8 +374,6 @@ public class StudentMarksDB {
 			query.setParameterList("exam_id", exam_id);
 			query.setParameter("student_id", student_id);
 			list = query.list();
-		
-			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -416,7 +386,6 @@ public class StudentMarksDB {
 	public List getStudentBatchExamMarks(int inst_id, int div_id,List<Integer> batch_id, List<Integer> exam_id,int student_id) {
 		Session session = null;
 		boolean status = false;
-		Transaction transaction = null;
 		List list = null;
 		String queryString = "select std.marks,sub.subjectId,std.exam_id,std.batch_id from StudentMarks std,Subject sub"
 							+ " where  sub.subjectId = std.sub_id and sub.institute_id = std.inst_id and "
@@ -424,7 +393,6 @@ public class StudentMarksDB {
 							+ " and std.student_id = :student_id order by std.exam_id,sub.subjectId";
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("div_id", div_id);
@@ -433,7 +401,6 @@ public class StudentMarksDB {
 			query.setParameter("student_id", student_id);
 			list = query.list();
 		
-			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -446,22 +413,18 @@ public class StudentMarksDB {
 	public List getBatchAvgExamMarks(int inst_id, int div_id,List<Integer> batch_id, List<Integer> exam_id) {
 		Session session = null;
 		boolean status = false;
-		Transaction transaction = null;
 		List list = null;
 		String queryString = "select sub_id,exam_id,batch_id,avg(marks),max(marks) from StudentMarks"
 							+ " where inst_id = :inst_id and div_id = :div_id and batch_id in :batch_id and exam_id in :exam_id"
 							+ "  group by sub_id,exam_id";
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("div_id", div_id);
 			query.setParameterList("batch_id", batch_id);
 			query.setParameterList("exam_id", exam_id);
 			list = query.list();
-		
-			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -474,7 +437,6 @@ public class StudentMarksDB {
 	public List<StudentMarks> getStudentsExamMarks(int inst_id, int div_id,int batch_id, List<Integer> exam_id) {
 		Session session = null;
 		boolean status = false;
-		Transaction transaction = null;
 		List<StudentMarks> list = null;
 		String queryString = "select std from StudentMarks std,RegisterBean reg,Subject sub"
 							+ " where reg.regId=std.student_id and sub.subjectId = std.sub_id and sub.institute_id = std.inst_id and "
@@ -482,15 +444,12 @@ public class StudentMarksDB {
 							+ " order by std.student_id,std.exam_id,std.sub_id";
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("div_id", div_id);
 			query.setParameter("batch_id", batch_id);
 			query.setParameterList("exam_id", exam_id);
 			list = query.list();
-		
-			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -503,21 +462,17 @@ public class StudentMarksDB {
 	public List getDistinctMarksSubject(int inst_id, int div_id,int batch_id, int exam_id) {
 		Session session = null;
 		boolean status = false;
-		Transaction transaction = null;
 		List list = null;
 		String queryString = "select distinct sub_id from StudentMarks where inst_id = :inst_id and div_id = :div_id and batch_id = :batch_id and "
 				+ "exam_id = :exam_id";
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("inst_id", inst_id);
 			query.setParameter("div_id", div_id);
 			query.setParameter("batch_id", batch_id);
 			query.setParameter("exam_id", exam_id);
 			list = query.list();
-		
-			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -536,7 +491,6 @@ public class StudentMarksDB {
 		List<StudentExamMarksDao> examMarksDaos = null;		
 		try {
 				Session session = HibernateUtil.getSessionfactory().openSession();
-				Transaction transaction = session.beginTransaction();
 				Query query = session.createSQLQuery(queryString)
 						.setResultTransformer(Transformers.aliasToBean(StudentExamMarksDao.class));
 				
@@ -563,7 +517,6 @@ public class StudentMarksDB {
 		List<StudentExamMarksByExamDao> examMarksDaos = null;		
 		try {
 				Session session = HibernateUtil.getSessionfactory().openSession();
-				Transaction transaction = session.beginTransaction();
 				Query query = session.createSQLQuery(queryString)
 						.setResultTransformer(Transformers.aliasToBean(StudentExamMarksByExamDao.class));
 								

@@ -26,11 +26,9 @@ public class InstRollDB {
 	}
 	
 	public boolean validateRoll(Inst_roll inst_roll) {
-		Transaction transaction=null;
 		Session session=null;
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Query query = session.createQuery("from Inst_roll where  inst_id = :inst_id and roll_desc=:roll_desc");
 		query.setParameter("inst_id", inst_roll.getInst_id());
 		query.setParameter("roll_desc", inst_roll.getRoll_desc());
@@ -40,10 +38,6 @@ public class InstRollDB {
 		}
 		}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 		}finally{
 		if(session!=null){
 			session.close();
@@ -54,21 +48,15 @@ public class InstRollDB {
 	}
 	
 	public List<Inst_roll> getInstituteRoles(int inst_id) {
-		Transaction transaction=null;
 		Session session=null;
 		List list = null;
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Query query = session.createQuery("from Inst_roll where  inst_id = :inst_id");
 		query.setParameter("inst_id", inst_id);
 		 list = query.list();
 		}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 		}finally{
 		if(session!=null){
 			session.close();
@@ -79,12 +67,10 @@ public class InstRollDB {
 	}
 	
 	public Inst_roll getRole(int inst_id,int roll_id) {
-		Transaction transaction=null;
 		Session session=null;
 		List<Inst_roll> list = null;
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Query query = session.createQuery("from Inst_roll where  inst_id = :inst_id and roll_id = :roll_id");
 		query.setParameter("inst_id", inst_id);
 		query.setParameter("roll_id", roll_id);
@@ -94,10 +80,6 @@ public class InstRollDB {
 		 }
 		}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 		}finally{
 		if(session!=null){
 			session.close();
@@ -122,6 +104,7 @@ public class InstRollDB {
 		query.setParameter("teacher", inst_roll.isTeacher());
 		query.setParameter("roll_id", inst_roll.getRoll_id());
 		query.executeUpdate();
+		transaction.commit();
 		}catch(Exception e){
 		e.printStackTrace();
 		if(null!=transaction){
@@ -138,11 +121,9 @@ public class InstRollDB {
 	}
 	
 	public boolean validateUpdateRoll(Inst_roll inst_roll) {
-		Transaction transaction=null;
 		Session session=null;
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Query query = session.createQuery("from Inst_roll where  inst_id = :inst_id and roll_desc=:roll_desc and roll_id != :roll_id");
 		query.setParameter("inst_id", inst_roll.getInst_id());
 		query.setParameter("roll_desc", inst_roll.getRoll_desc());
@@ -153,10 +134,6 @@ public class InstRollDB {
 		}
 		}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 		}finally{
 		if(session!=null){
 			session.close();
@@ -181,12 +158,10 @@ public class InstRollDB {
 	}
 	
 	public List getInstUsers(int inst_id) {
-		Transaction transaction=null;
 		Session session=null;
 		List list = null;
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Query query = session.createQuery("select reg.regId,reg.fname,reg.lname,role.roll_desc from RegisterBean reg,"
 				+ "Inst_roll role where  reg.inst_id = :inst_id and reg.inst_id = role.inst_id  and "
 				+ "reg.inst_roll = role.roll_id");
@@ -194,9 +169,6 @@ public class InstRollDB {
 		list = query.list();
 		}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
 		
 		}finally{
 		if(session!=null){
@@ -208,12 +180,10 @@ public class InstRollDB {
 	}
 	
 	public RegisterBean getInstUserRegisterBean(int inst_id,int user_id) {
-		Transaction transaction=null;
 		Session session=null;
 		List<RegisterBean> list = null;
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Query query = session.createQuery("from RegisterBean  where  inst_id = :inst_id and regId = :regId");
 		query.setParameter("inst_id", inst_id);
 		query.setParameter("regId", user_id);
@@ -223,10 +193,6 @@ public class InstRollDB {
 		}
 		}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 		}finally{
 		if(session!=null){
 			session.close();
@@ -237,12 +203,10 @@ public class InstRollDB {
 	}
 	
 	public Inst_user getInstUser(int inst_id,int user_id) {
-		Transaction transaction=null;
 		Session session=null;
 		List<Inst_user> list = null;
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Query query = session.createQuery("from Inst_user  where  inst_id = :inst_id and user_id = :user_id");
 		query.setParameter("inst_id", inst_id);
 		query.setParameter("user_id", user_id);
@@ -252,10 +216,6 @@ public class InstRollDB {
 		}
 		}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 		}finally{
 		if(session!=null){
 			session.close();
@@ -285,6 +245,7 @@ public class InstRollDB {
 		query.setParameter("regId", registerBean.getRegId());
 		query.setParameter("email", registerBean.getEmail());
 		query.executeUpdate();
+		transaction.commit();
 		}catch(Exception e){
 		e.printStackTrace();
 		if(null!=transaction){
@@ -315,6 +276,7 @@ public class InstRollDB {
 		query.setParameter("education", user.getEducation());
 		query.setParameter("joining_date", user.getJoining_date());
 		list = query.list();
+		transaction.commit();
 		if(list.size() > 0){
 			return list.get(0);
 		}
@@ -346,6 +308,7 @@ public class InstRollDB {
 		query.setParameter("user_id", user_id);
 		query.setParameter("teacher", teacher);
 		 query.executeUpdate();
+		 transaction.commit();
 		}catch(Exception e){
 		e.printStackTrace();
 		if(null!=transaction){

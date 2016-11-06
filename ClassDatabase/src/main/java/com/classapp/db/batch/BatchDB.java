@@ -43,17 +43,15 @@ public class BatchDB {
 	
 	public int getNextBatchID(int inst_id,int div_id){
 		Session session = null;
-		Transaction transaction = null;
+		
 		List<Integer> batchID=null;		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("select max(batch_id)+1 from Batch where class_id=:class_id and div_id=:div_id");
 			
 			query.setInteger("class_id", inst_id);
 			query.setInteger("div_id", div_id);
 			batchID =  query.list();
-			transaction.commit();
 			if (batchID!=null) {
 				if(batchID.get(0)!=null){
 				return batchID.get(0);
@@ -61,9 +59,6 @@ public class BatchDB {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();
@@ -75,22 +70,17 @@ public class BatchDB {
 	
 	public List<BatchDataClass> getBatchData(int class_id){
 		Session session = null;
-		Transaction transaction = null;
 		List<Batch> batchList = null;
 		List<BatchDataClass> batchDataClasses = new ArrayList<BatchDataClass>();
 		BatchDataClass batchDataClass = new BatchDataClass();
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Batch where class_id =:class_id");
 			query.setInteger("class_id", class_id);
 			batchList = query.list();
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();
@@ -153,13 +143,11 @@ public class BatchDB {
 
 	public JsonArray getBatch(Integer regId){
 		Session session = null;
-		Transaction transaction = null;
 		List<Batch> batchList = null;
 		String batch = null;
 		JsonArray jsonArray = null;
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Batch where regId =:regId");
 			query.setParameter("regId", regId);
 			batchList = query.list();
@@ -168,9 +156,6 @@ public class BatchDB {
 			jsonArray = jsonParser.parse(batch).getAsJsonArray();
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 			jsonArray = null;
 		}finally{
 			if(null!=session){
@@ -209,23 +194,17 @@ public class BatchDB {
 
 	public boolean isBatchExist(int class_id,String batch_name,int div_id){
 		Session session = null;
-		Transaction transaction = null;
 		List<Batch> batchList = null;
 				
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Batch where class_id =:class_id and batch_name =:batch_name and div_id=:div_id");
 			query.setInteger("class_id", class_id);
 			query.setString("batch_name", batch_name);
 			query.setParameter("div_id", div_id);
 			batchList = query.list();
-			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();
@@ -239,24 +218,18 @@ public class BatchDB {
 	
 	public boolean isUpdatedBatchExist(int batch_id,int class_id,String batch_name,int div_id){
 		Session session = null;
-		Transaction transaction = null;
 		List<Batch> batchList = null;
 				
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Batch where class_id =:class_id and batch_name =:batch_name and div_id=:div_id and batch_id != :batch_id");
 			query.setInteger("class_id", class_id);
 			query.setString("batch_name", batch_name);
 			query.setParameter("div_id", div_id);
 			query.setParameter("batch_id", batch_id);
 			batchList = query.list();
-			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();
@@ -270,22 +243,16 @@ public class BatchDB {
 	
 	public Batch getBatchFromID(int batchId,int inst_id,int div_id){
 		Session session = null;
-		Transaction transaction = null;
 		Batch batch=null;		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Batch where batch_id =:batch_id and class_id=:class_id and div_id=:div_id");
 			query.setInteger("batch_id", batchId);
 			query.setInteger("class_id", inst_id);
 			query.setInteger("div_id", div_id);
 			batch = (Batch) query.uniqueResult();
-			transaction.commit();
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();
@@ -323,22 +290,16 @@ public class BatchDB {
 	public List getAllBatches(int regID) {
 		
 		Session session = null;
-		Transaction transaction = null;
 		List batchList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Batch where class_id =:regId");
 			query.setParameter("regId", regID);
 			batchList = query.list();
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -350,12 +311,10 @@ public class BatchDB {
 public List getBatchSubjects(String batchID,int inst_id,int div_id) {
 		
 		Session session = null;
-		Transaction transaction = null;
 		List batchList = null;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("select sub_id from Batch where batch_id =:batchID and class_id=:class_id and div_id=:div_id");
 			query.setParameter("batchID", Integer.parseInt(batchID));
 			query.setParameter("class_id",inst_id);
@@ -364,10 +323,6 @@ public List getBatchSubjects(String batchID,int inst_id,int div_id) {
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -378,22 +333,16 @@ public List getBatchSubjects(String batchID,int inst_id,int div_id) {
 
 public List<Batch> retriveAllBatches(List<String> class_id) {
 	Session session = null;
-	Transaction transaction = null;
 	List batchList = null;
 	
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		Query query = session.createQuery("select sub_id from Batch where batch_id in (:batchID)");
 		query.setParameterList("batchID", class_id);
 		batchList = query.list();
 		
 	}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
-		
 	}finally{
 		if(null!=session){
 			session.close();
@@ -405,13 +354,11 @@ public List<Batch> retriveAllBatches(List<String> class_id) {
 }
 	public List<Batch> retriveAllBatchesOfDivision(int divisionId, int class_id){
 	Session session = null;
-	Transaction transaction = null;
 	List<Batch> batchList = null;
 	List<Batch> batches = new ArrayList<Batch>();
 	
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		DivisionDB divisionDB= new DivisionDB();
  		//Division division=divisionDB.retrive(divisionId);
 		Division division=divisionDB.retriveByDivisionId(divisionId);
@@ -423,9 +370,6 @@ public List<Batch> retriveAllBatches(List<String> class_id) {
 		
 	}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
 	}finally{
 		if(null!=session){
 			session.close();
@@ -441,13 +385,11 @@ public List<Batch> retriveAllBatches(List<String> class_id) {
 
 public List<Batch> retriveAllRelatedBatches(int class_id, int div_id){
 		Session session = null;
-		Transaction transaction = null;
 		List<Batch> batchList = null;
 		List<Batch> batches = new ArrayList<Batch>();
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Batch where class_id =:class_id and div_id =:div_id");
 			query.setInteger("class_id", class_id);
 			query.setInteger("div_id", div_id);
@@ -455,9 +397,6 @@ public List<Batch> retriveAllRelatedBatches(int class_id, int div_id){
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 		}finally{
 			if(null!=session){
 				session.close();
@@ -473,12 +412,10 @@ public List<Batch> retriveAllRelatedBatches(int class_id, int div_id){
 
 public List<Batch> getbachesrelatedtosubject(int inst_id,String subjectid) {
 	Session session = null;
-	Transaction transaction = null;
 	List<Batch> batchList = null;
 	List<Batch> batches = new ArrayList<Batch>();
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		Query query = session.createQuery("from Batch where (sub_id LIKE :sub_id1 OR "
 										+ "sub_id LIKE :sub_id2 OR sub_id LIKE :sub_id3 OR "
 										+ "sub_id = :sub_id4) and class_id = :class_id");
@@ -491,9 +428,6 @@ public List<Batch> getbachesrelatedtosubject(int inst_id,String subjectid) {
 		
 	}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
 	}finally{
 		if(null!=session){
 			session.close();
@@ -504,21 +438,16 @@ public List<Batch> getbachesrelatedtosubject(int inst_id,String subjectid) {
 
 public List<Batch> getbachesrelatedtoclass(int classid) {
 	Session session = null;
-	Transaction transaction = null;
 	List<Batch> batchList = null;
 	List<Batch> batches = new ArrayList<Batch>();
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		Query query = session.createQuery("from Batch where div_id=:div_id ");
 		query.setParameter("div_id", classid);		
 		batchList = query.list();
 		
 	}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
 	}finally{
 		if(null!=session){
 			session.close();
@@ -555,20 +484,15 @@ public boolean deletebatchrelatedtoclass(int classid) {
 public Integer getBatchCount(int class_id){
 	
 	Session session = null;
-	Transaction transaction = null;
 	List<Batch> batchList = null;
 	List<Long> batches = new ArrayList<Long>();
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		Query query = session.createQuery("select count(*) from Batch where class_id=:class_id");
 		query.setParameter("class_id", class_id);
 	batches=query.list();
 	}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
 	}finally{
 		if(null!=session){
 			session.close();
@@ -579,12 +503,10 @@ public Integer getBatchCount(int class_id){
 
 public List<Batch> getbachesrelatedtodivandsubject(String subjectid,int divId,int class_id) {
 	Session session = null;
-	Transaction transaction = null;
 	List<Batch> batchList = null;
 	List<Batch> batches = new ArrayList<Batch>();
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		Query query = session.createQuery("from Batch where div_id=:div_id and class_id=:class_id and (sub_id LIKE :sub_id1 OR sub_id LIKE :sub_id2 OR sub_id LIKE :sub_id3 OR sub_id = :sub_id4)");
 		query.setParameter("sub_id1", subjectid+",%");
 		query.setParameter("sub_id2", "%,"+subjectid);
@@ -597,9 +519,6 @@ public List<Batch> getbachesrelatedtodivandsubject(String subjectid,int divId,in
 		
 	}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
 	}finally{
 		if(null!=session){
 			session.close();
@@ -638,22 +557,16 @@ public boolean deleteBatch(int inst_id,int div_id,int batch_id) {
 
 public List<Batch> getStudentBatches(int inst_id,int div_id,List<Integer> batchIds) {
 	Session session = null;
-	Transaction transaction = null;
 	List<Batch> batchList = null;
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		Query query = session.createQuery("from Batch where class_id =:class_id and div_id=:div_id and batch_id in :list");
 		query.setParameter("div_id", div_id);
 		query.setParameter("class_id", inst_id);
 		query.setParameterList("list", batchIds);
 		batchList = query.list();
-		transaction.commit();
 		}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
 	}finally{
 		if(null!=session){
 			session.close();
@@ -725,11 +638,9 @@ public int getNextRollNo(int inst_id,int div_id,int batchId) {
 
 public String getBatchRollNoStstatus(int inst_id,int div_id,int batchId) {
 	Session session = null;
-	Transaction transaction = null;
 	List<String> status = null;
 	try{
 		session = HibernateUtil.getSessionfactory().openSession();
-		transaction = session.beginTransaction();
 		Query query = session.createQuery("select status from Batch  where class_id =:class_id and div_id=:div_id and batch_id = :batchID");
 		query.setParameter("div_id", div_id);
 		query.setParameter("class_id", inst_id);
@@ -740,9 +651,6 @@ public String getBatchRollNoStstatus(int inst_id,int div_id,int batchId) {
 		}
 		}catch(Exception e){
 		e.printStackTrace();
-		if(null!=transaction){
-			transaction.rollback();
-		}
 	}finally{
 		if(null!=session){
 			session.close();

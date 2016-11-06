@@ -271,7 +271,7 @@ public class ScheduleDB {
 				}
 
 			}
-
+			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			if (null != transaction) {
@@ -351,7 +351,7 @@ public class ScheduleDB {
 				}
 
 			}
-
+			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			if (null != transaction) {
@@ -429,7 +429,7 @@ public class ScheduleDB {
 				}
 
 			}
-
+			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			if (null != transaction) {
@@ -447,18 +447,15 @@ public class ScheduleDB {
 	}
 
 	public List<Schedule> getSchedule(int batchid, Date date, int inst_id, int div_id) {
-
 		Session session = null;
-		Transaction transaction = null;
 		List<Schedule> scheduleList = null;
 
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(
-					"from Schedule where batch_id=:batch_id  and inst_id=:class_id and div_id=:div_id order by start_time");
+					"from Schedule where batch_id=:batch_id  and inst_id=:class_id and div_id=:div_id and date=:date order by start_time");
 			query.setParameter("batch_id", batchid);
-		//	query.setParameter("date", date);
+			query.setParameter("date", date);
 			query.setParameter("class_id", inst_id);
 			query.setParameter("div_id", div_id);
 			scheduleList = query.list();
@@ -476,7 +473,6 @@ public class ScheduleDB {
 	public List<Schedule> getWeeklySchedule(int batchid, Date date, int inst_id, int div_id) {
 
 		Session session = null;
-		Transaction transaction = null;
 		List<Schedule> scheduleList = null;
 		Calendar cal = Calendar.getInstance();
 		cal.set(date.getYear() + 1900, date.getMonth(), date.getDate());
@@ -484,7 +480,6 @@ public class ScheduleDB {
 		Date enddate = new Date(cal.getTimeInMillis());
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(
 					"from Schedule where batch_id=:batch_id and date>=:startdate and date<:enddate and class_id=:class_id and div_id=:div_id order by date,start_time");
 			query.setParameter("batch_id", batchid);
@@ -507,7 +502,6 @@ public class ScheduleDB {
 	public List<Schedule> getWeeklySchedule(Date date, int inst_id, int div_id) {
 
 		Session session = null;
-		Transaction transaction = null;
 		List<Schedule> scheduleList = null;
 		Calendar cal = Calendar.getInstance();
 		cal.set(date.getYear() + 1900, date.getMonth(), date.getDate());
@@ -515,7 +509,6 @@ public class ScheduleDB {
 		Date enddate = new Date(cal.getTimeInMillis());
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(
 					"from Schedule where date>=:startdate and date<:enddate and class_id=:class_id and div_id=:div_id order by date,start_time");
 			query.setParameter("startdate", date);
@@ -537,12 +530,10 @@ public class ScheduleDB {
 	public List<Schedule> getTeachersSchedule(int classid, int teacherid, Date scheduledate) {
 
 		Session session = null;
-		Transaction transaction = null;
 		List<Schedule> scheduleList = null;
 
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(
 					"from Schedule where inst_id=:inst_id and teacher_id=:teacher_id and date=:date order by start_time");
 			query.setParameter("inst_id", classid);
@@ -563,12 +554,10 @@ public class ScheduleDB {
 	public List<Schedule> getTeachersSchedule(int inst_id, int teacherid, int month , int year) {
 
 		Session session = null;
-		Transaction transaction = null;
 		List<Schedule> scheduleList = null;
 
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(
 					"Select  div.divId , div.divisionName, div.stream,sub.subjectId,sub.subjectName,batch.batch_id,batch.batch_name,schedule.schedule_id," +
 					"  schedule.date, schedule.start_time,schedule.end_time,reg.fname,reg.lname,schedule.teacher_id,schedule.grp_id,schedule.rep_days" +
@@ -678,14 +667,12 @@ public class ScheduleDB {
 	public List<Schedule> getScheduleForDate(Integer studentId, String date) {
 
 		Session session = null;
-		Transaction transaction = null;
 		List<Schedule> scheduleList = null;
 		Object object = new Object();
 		try {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 			java.util.Date date2 = formatter.parse(date);
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(
 					"FROM Schedule where date = :date and class_id in(select class_id from Student where student_id=:studentId)");
 			// Query query = session.createQuery("FROM Schedule where date =
@@ -707,7 +694,6 @@ public class ScheduleDB {
 	/* Pundlik Sarafdar */
 	public HashMap<String, List> getStudentData(Integer studentId) {
 		Session session = null;
-		Transaction transaction = null;
 		List batchList = null;
 		List divisionList = null;
 		List subjectList = null;
@@ -717,7 +703,6 @@ public class ScheduleDB {
 		Object object = new Object();
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query queryBatch = session.createQuery(
 					"Select batch_name,batch_id from Batch where batch_id in(select batch_id from Student where student_id = :studentId )");
 			queryBatch.setParameter("studentId", studentId);
@@ -954,7 +939,6 @@ public class ScheduleDB {
 	public List<Schedule> getTeachersWeeklySchedule(int classid, int teacherid, Date scheduledate) {
 
 		Session session = null;
-		Transaction transaction = null;
 		List<Schedule> scheduleList = null;
 		Calendar cal = Calendar.getInstance();
 		cal.set(scheduledate.getYear() + 1900, scheduledate.getMonth(), scheduledate.getDate());
@@ -962,7 +946,6 @@ public class ScheduleDB {
 		Date enddate = new Date(cal.getTimeInMillis());
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(
 					"from Schedule where class_id=:class_id and teacher_id=:teacher_id and date>=:startdate and date <:enddate order by date,start_time");
 			query.setParameter("class_id", classid);
@@ -1004,12 +987,10 @@ public class ScheduleDB {
 	public List getScheduleForAttendance(int batchid, Date date, int inst_id, int div_id) {
 
 		Session session = null;
-		Transaction transaction = null;
 		List<Schedule> scheduleList = null;
 
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(
 					"select reg.fname, reg.lname ,sub.subjectName,sub.subjectId,schedule.schedule_id,schedule.start_time,schedule.end_time from Schedule schedule,Teacher teacher,Subject sub,RegisterBean reg " +
 					"where schedule.inst_id=teacher.class_id and schedule.teacher_id = teacher.user_id and " +
@@ -1033,7 +1014,6 @@ public class ScheduleDB {
 	public List getMonthSchedule(int batchid, Date date, int inst_id, int div_id) {
 
 		Session session = null;
-		Transaction transaction = null;
 		List scheduleList = null;
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
@@ -1045,7 +1025,6 @@ public class ScheduleDB {
 		Date endDate =  new Date(calendar.getTime().getTime());
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(
 					"Select  div.divId , div.divisionName, div.stream,sub.subjectId,sub.subjectName,batch.batch_id,batch.batch_name,schedule.schedule_id," +
 					"  schedule.date, schedule.start_time,schedule.end_time,reg.fname,reg.lname,schedule.teacher_id,schedule.grp_id,schedule.rep_days" +
@@ -1074,11 +1053,9 @@ public class ScheduleDB {
 	public List<Groups> getGroups(int batchid, int inst_id, int div_id) {
 
 		Session session = null;
-		Transaction transaction = null;
 		List<Groups> scheduleList = null;
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery("from Groups where inst_id=:inst_id and div_id=:div_id and batch_id = :batch_id");
 			query.setParameter("batch_id", batchid);
 			query.setParameter("inst_id", inst_id);
@@ -1098,11 +1075,9 @@ public class ScheduleDB {
 	public List getMonthSchedule(int batchid, Date startDate,Date endDate, int inst_id, int div_id) {
 
 		Session session = null;
-		Transaction transaction = null;
 		List scheduleList = null;
 		try {
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(
 					"Select div.divId , div.divisionName, div.stream,sub.subjectId,sub.subjectName,batch.batch_id,batch.batch_name,schedule.schedule_id," +
 					"  schedule.date, schedule.start_time,schedule.end_time,reg.fname,reg.lname,schedule.teacher_id,schedule.grp_id,schedule.rep_days from Schedule schedule,Division div,Subject sub,Batch batch,RegisterBean reg " +

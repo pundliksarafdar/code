@@ -75,18 +75,15 @@ public class StudentDB {
 	
 	public List<Student> getStudents(int class_id){
 		Session session = null;
-		Transaction transaction = null;
 		List queryResultList=null;
 		String queryString="from Student where class_id = : class_id";
 		
 		List<Student> listOfStudent=new ArrayList<Student>();
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setInteger("class_id", class_id);  
 			queryResultList = query.list();
-			transaction.commit();
 			Iterator itr= queryResultList.iterator();
 			
 			while(itr.hasNext()){
@@ -106,18 +103,15 @@ public class StudentDB {
 	
 	public List<StudentDetails> getAllStudentsDetails(int class_id){
 		Session session = null;
-		Transaction transaction = null;
 		List queryResultList=null;
 		String queryString="from Student where class_id = :class_id";
 		
 		List<StudentDetails> listOfStudent=new ArrayList<StudentDetails>();
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setInteger("class_id", class_id);  
 			queryResultList = query.list();
-			transaction.commit();
 			Iterator itr= queryResultList.iterator();
 			DivisionDB divisionDB=new DivisionDB();
 			BatchDB batchDB= new BatchDB();
@@ -158,7 +152,6 @@ public class StudentDB {
 	
 	public boolean isStudentExistsInClass(int student_id, int class_id){
 		Session session = null;
-		Transaction transaction = null;
 		List queryResultList=null;
 		boolean isExists=false;
 		String queryString="from Student where student_id = :student_id and class_id = :class_id";
@@ -166,12 +159,10 @@ public class StudentDB {
 		List<Student> listOfStudent=new ArrayList<Student>();
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setInteger("student_id", student_id);
 			query.setInteger("class_id", class_id);  
 			queryResultList = query.list();
-			transaction.commit();
 			if(queryResultList.size()>0){
 				isExists=true;
 			}
@@ -188,18 +179,15 @@ public class StudentDB {
 	
 	public Student getStudentDetailsFromClass(int student_id, int class_id){
 		Session session = null;
-		Transaction transaction = null;
 		List queryResultList=null;
 		String queryString="from Student where student_id = :student_id and class_id = :class_id";
 		Student student=null;
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setInteger("student_id", student_id);
 			query.setInteger("class_id", class_id);  
 			queryResultList = query.list();
-			transaction.commit();
 			if(queryResultList.size()>0){
 				student=(Student) queryResultList.get(0);
 			}
@@ -216,7 +204,6 @@ public class StudentDB {
 	
 	public boolean isStudentExists(String studentLoginName){
 		Session session = null;
-		Transaction transaction = null;
 		List queryResultList=null;
 		boolean isExists=false;
 		String queryString="from RegisterBean where loginName = :loginName";
@@ -224,11 +211,9 @@ public class StudentDB {
 		List<Student> listOfStudent=new ArrayList<Student>();
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setString("loginName", studentLoginName);
 			queryResultList = query.list();
-			transaction.commit();
 			if(queryResultList.size()>0){
 				isExists=true;
 			}
@@ -245,7 +230,6 @@ public class StudentDB {
 	
 	public RegisterBean getStudent(String studentLoginName){
 		Session session = null;
-		Transaction transaction = null;
 		List queryResultList=null;
 		boolean isExists=false;
 		String queryString="from RegisterBean where loginName = :loginName";
@@ -253,11 +237,9 @@ public class StudentDB {
 		List<RegisterBean> listOfStudent=new ArrayList<RegisterBean>();
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setString("loginName", studentLoginName);
 			queryResultList = query.list();
-			transaction.commit();
 			if(queryResultList.size()==1){
 				return (RegisterBean) queryResultList.get(0);
 			}
@@ -276,7 +258,6 @@ public class StudentDB {
 	
 	public RegisterBean getStudentDetailsFromID(int student_id){
 		Session session = null;
-		Transaction transaction = null;
 		List queryResultList=null;
 		boolean isExists=false;
 		String queryString="from RegisterBean where regId = :regId";
@@ -284,11 +265,9 @@ public class StudentDB {
 		List<RegisterBean> listOfStudent=new ArrayList<RegisterBean>();
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setInteger("regId", student_id);
 			queryResultList = query.list();
-			transaction.commit();
 			if(queryResultList.size()==1){
 				return (RegisterBean) queryResultList.get(0);
 			}
@@ -306,14 +285,12 @@ public class StudentDB {
 	
 	public String[] getAssignedBatcheIds(String studentLoginName){
 		Session session = null;
-		Transaction transaction = null;
 		List queryResultList=null;
 		String queryString="regId from RegisterBean where loginName = :loginName";
 		int student_id=0;
 		
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setString("loginName", studentLoginName);
 			queryResultList = query.list();
@@ -326,7 +303,6 @@ public class StudentDB {
 			query.setInteger("student_id", student_id);
 			
 			queryResultList = query.list();
-			transaction.commit();
 			if(queryResultList.size()==1){
 				 Student student=(Student)queryResultList.get(0);
 				 String[]batch_ids= student.getBatch_id().split(",");
@@ -378,19 +354,15 @@ public class StudentDB {
 
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List<Student> list=null;
 		String queryString="from Student where student_id = :student_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setInteger("student_id", regID);
 								
 				list=query.list();
 			
-			
-			transaction.commit();
 		}catch(Exception e){
 			AppLogger.logError(e);
 		}finally{
@@ -404,12 +376,10 @@ public class StudentDB {
 
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List<Student> list=null;
 		String queryString="from Student where student_id = :student_id and class_id=:class_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setInteger("student_id", studentID);
 			query.setInteger("class_id", classID);
@@ -420,7 +390,6 @@ public class StudentDB {
 				return list.get(0);
 			}
 			
-			transaction.commit();
 		}catch(Exception e){
 			AppLogger.logError(e);
 		}finally{
@@ -433,12 +402,10 @@ public class StudentDB {
 	public List getStudentrelatedtoBatch(String batchname,int inst_id,int div_id) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List list=null;
 		String queryString="from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4) and class_id=:class_id and div_id=:div_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("batch_id1", batchname+",%");
 			query.setParameter("batch_id2","%,"+batchname+",%");	
@@ -451,8 +418,6 @@ public class StudentDB {
 			{
 				return list;
 			}
-			
-			transaction.commit();
 		}catch(Exception e){
 			AppLogger.logError(e);
 		}finally{
@@ -465,12 +430,10 @@ public class StudentDB {
 	public void removebatchfromstudentlist(Student student) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List<Student> list=null;
 		String queryString="from Student where student_id=:student_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("student_id", student.getStudent_id());
 			list=query.list();
@@ -479,7 +442,6 @@ public class StudentDB {
 				return list;
 			}
 			*/
-			transaction.commit();
 		}catch(Exception e){
 			AppLogger.logError(e);
 		}finally{
@@ -490,12 +452,10 @@ public class StudentDB {
 	public Integer getStudentcountrelatedtobatch(String batchname,int inst_id,int div_id) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List<Long> list=null;
 		String queryString="select count(student_id) from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4) and class_id=:class_id and div_id=:div_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("batch_id1", batchname+",%");
 			query.setParameter("batch_id2","%,"+batchname+",%");	
@@ -508,7 +468,6 @@ public class StudentDB {
 			{
 				return list.get(0).intValue();
 			}
-			transaction.commit();
 		}catch(Exception e){
 			AppLogger.logError(e);
 		}finally{
@@ -521,12 +480,10 @@ public class StudentDB {
 	public Integer getunallocatedStudentcount(int inst_id) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List<Long> list=null;
 		String queryString="select count(student_id) from Student where batch_id=:batch_id  and class_id=:class_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("batch_id", "");
 			query.setParameter("class_id", inst_id);
@@ -535,7 +492,6 @@ public class StudentDB {
 			{
 				return list.get(0).intValue();
 			}
-			transaction.commit();
 		}catch(Exception e){
 			AppLogger.logError(e);
 		}finally{
@@ -547,12 +503,10 @@ public class StudentDB {
 	public List<Student> getStudentIDSrelatedtoBatch(String batchname,int inst_id,int div_id) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List<Student> list=null;
 		String queryString="from Student where (batch_id like :batch_id1 or batch_id like :batch_id2 or batch_id like :batch_id3 or batch_id = :batch_id4) and class_id=:class_id and div_id=:div_id order by student_id asc";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("batch_id1", batchname+",%");
 			query.setParameter("batch_id2","%,"+batchname+",%");	
@@ -566,7 +520,6 @@ public class StudentDB {
 				return list;
 			}
 			
-			transaction.commit();
 		}catch(Exception e){
 			AppLogger.logError(e);
 		}finally{
@@ -579,12 +532,10 @@ public class StudentDB {
 	public List getUnallocatedStudentIDs(int inst_id) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List list=null;
 		String queryString="select student_id from Student where (batch_id =:batch_id) and class_id=:class_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("batch_id", "");
 			query.setParameter("class_id", inst_id);
@@ -593,8 +544,6 @@ public class StudentDB {
 			{
 				return list;
 			}
-			
-			transaction.commit();
 		}catch(Exception e){
 			AppLogger.logError(e);
 		}finally{
@@ -629,12 +578,10 @@ public class StudentDB {
 	public Integer getStudentCount(int regID) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List<Long> list=new ArrayList<Long>();
 		String queryString="select count(*) from Student where class_id=:class_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("class_id", regID);
 			
@@ -644,7 +591,6 @@ public class StudentDB {
 				return list.get(0).intValue();
 			}
 			
-			transaction.commit();
 		}catch(Exception e){
 			AppLogger.logError(e);
 		}finally{
@@ -657,12 +603,10 @@ public class StudentDB {
 	public Student getStudentByStudentID(String studentID,int class_id) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List<Student> list=new ArrayList<Student>();
 		String queryString=" from Student where student_id=(select regId from RegisterBean where loginName=:studentID) and class_id=:class_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("studentID", studentID);
 			query.setParameter("class_id", class_id);
@@ -682,12 +626,10 @@ public class StudentDB {
 	public Student getStudentByStudentID(int studentID,int class_id) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List<Student> list=new ArrayList<Student>();
 		String queryString=" from Student where student_id=:studentID and class_id=:class_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("studentID", studentID);
 			query.setParameter("class_id", class_id);
@@ -707,7 +649,6 @@ public class StudentDB {
 	public List<Integer>  getStudentsFromBatches(int class_id,int div_id,String batchids) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List<Integer> list=new ArrayList<Integer>();
 		String queryString=" select student_id from Student where class_id=:class_id and div_id=:div_id";
 		if(!"-1".equals(batchids) && !"".equals(batchids)){
@@ -723,7 +664,6 @@ public class StudentDB {
 		}
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("div_id", div_id);
 			query.setParameter("class_id", class_id);
@@ -750,12 +690,10 @@ public class StudentDB {
 	public List<Student> getStudentByStudentIDs(int class_id,String fname,String lname) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List<Student> list=new ArrayList<Student>();
 		String queryString=" from Student where class_id=:class_id and fname like :fname and lname like :lname order by student_id asc";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("fname", fname+"%");
 			query.setParameter("lname", lname+"%");
@@ -774,14 +712,12 @@ public class StudentDB {
 	public List getStudentrelatedtoBatchForAttendance(String batchname,int inst_id,int div_id) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List list=null;
 		String queryString="Select std.fname,std.lname, reg.regId,std.batchIdNRoll from Student std,RegisterBean reg " +
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
 				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("batch_id1", batchname+",%");
 			query.setParameter("batch_id2","%,"+batchname+",%");	
@@ -795,7 +731,6 @@ public class StudentDB {
 				return list;
 			}
 			
-			transaction.commit();
 		}catch(Exception e){
 			AppLogger.logError(e);
 		}finally{
@@ -809,7 +744,6 @@ public class StudentDB {
 															Date date) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List list=null;
 		String queryString="Select std.fname,std.lname, reg.regId,att.presentee,att.att_id,std.batchIdNRoll from Student std,RegisterBean reg, Attendance att " +
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
@@ -817,7 +751,6 @@ public class StudentDB {
 				"att.div_id = std.div_id and att.batch_id = :attbatch_id and att.att_date = :date and att.sub_id = :sub_id and att.schedule_id = :schedule_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("batch_id1", batchname+",%");
 			query.setParameter("batch_id2","%,"+batchname+",%");	
@@ -835,7 +768,6 @@ public class StudentDB {
 				return list;
 			}
 			
-			transaction.commit();
 		}catch(Exception e){
 			AppLogger.logError(e);
 		}finally{
@@ -848,14 +780,12 @@ public class StudentDB {
 	public List getStudentrelatedtoBatchForExamMarks(String batchname,int inst_id,int div_id) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List list=null;
 		String queryString="Select std.fname,std.lname, reg.regId,std.batchIdNRoll from Student std,RegisterBean reg " +
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
 				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id order by std.student_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("batch_id1", batchname+",%");
 			query.setParameter("batch_id2","%,"+batchname+",%");	
@@ -868,8 +798,6 @@ public class StudentDB {
 			{
 				return list;
 			}
-			
-			transaction.commit();
 		}catch(Exception e){
 			AppLogger.logError(e);
 		}finally{
@@ -882,7 +810,6 @@ public class StudentDB {
 	public List getStudentrelatedtoBatchForExamMarksUpdate(String batchname,int inst_id,int div_id,int exam_id,int sub_id) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List list=null;
 		String queryString="Select reg.fname,reg.lname, reg.regId,stdMarks.marks from Student std,RegisterBean reg,StudentMarks stdMarks " +
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
@@ -891,7 +818,6 @@ public class StudentDB {
 				" stdMarks.exam_id = :exam_id and stdMarks.sub_id = :sub_id order by std.student_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("batch_id1", batchname+",%");
 			query.setParameter("batch_id2","%,"+batchname+",%");	
@@ -907,8 +833,6 @@ public class StudentDB {
 			{
 				return list;
 			}
-			
-			transaction.commit();
 		}catch(Exception e){
 			AppLogger.logError(e);
 		}finally{
@@ -944,14 +868,12 @@ public class StudentDB {
 	public List getStudentrelatedtoBatchForProgressCard(String batchname,int inst_id,int div_id) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List list=null;
 		String queryString="Select std.fname,std.lname, reg.regId,std.batchIdNRoll  from Student std,RegisterBean reg " +
 				"where (std.batch_id like :batch_id1 or std.batch_id like :batch_id2 or std.batch_id like :batch_id3 or std.batch_id = :batch_id4) " +
 				"and std.class_id=:class_id and std.div_id=:div_id and reg.regId = std.student_id order by std.student_id";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("batch_id1", batchname+",%");
 			query.setParameter("batch_id2","%,"+batchname+",%");	
@@ -964,8 +886,6 @@ public class StudentDB {
 			{
 				return list;
 			}
-			
-			transaction.commit();
 		}catch(Exception e){
 			AppLogger.logError(e);
 		}finally{
@@ -978,12 +898,10 @@ public class StudentDB {
 	public boolean validateStudentRegistrationNo(String regNo,int inst_id) {
 		Session session = null;
 		boolean status=false;
-		Transaction transaction = null;
 		List list=null;
 		String queryString="from Student std where std.class_id=:class_id and studentInstRegNo=:regNo";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			Query query = session.createQuery(queryString);
 			query.setParameter("class_id", inst_id);
 			query.setParameter("regNo", regNo);
@@ -996,8 +914,6 @@ public class StudentDB {
 				return false;
 				}
 			}
-			
-			transaction.commit();
 		}catch(Exception e){
 			AppLogger.logError(e);
 		}finally{

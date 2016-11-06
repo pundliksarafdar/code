@@ -39,10 +39,8 @@ public class ClassOwnerNotificationDb {
 	
 	public ClassOwnerNotificationBean getClassOwnerNotification(int inst_id){
 		ClassOwnerNotificationBean classOwnerNotificationBean = new ClassOwnerNotificationBean();
-		Transaction transaction=null;
 		Session session=null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		classOwnerNotificationBean =(ClassOwnerNotificationBean) session.get(ClassOwnerNotificationBean.class,inst_id);
 		if(null!=session){session.close();}
 		return classOwnerNotificationBean;
@@ -52,10 +50,8 @@ public class ClassOwnerNotificationDb {
 		List<ContactDetailBean> contacts=new ArrayList<ContactDetailBean>();
 		ListCustomToString listCustomToString = new ListCustomToString();
 		listCustomToString.addAll(studentId);
-		Transaction transaction=null;
 		Session session = null;
 		session=HibernateUtil.getSessionfactory().openSession();
-		transaction=session.beginTransaction();
 		Query query = session.createQuery("select s.parentPhone,s.parentEmail,r.phone1,r.email,r.regId from Student s,RegisterBean r where s.student_id=r.regId and (s.student_id) in :studentIds and s.class_id = :classId");
 		
 		query.setParameterList("studentIds", listCustomToString);
@@ -78,19 +74,16 @@ public class ClassOwnerNotificationDb {
 		}
 		
 		System.out.println(contacts);
-		transaction.commit();
 		session.close();
 		return  contacts;
 	}
 	
 	public List<ClassOwnerNotificationBean> getInstitutesForDailyAttendance(String day){
-		Transaction transaction=null;
 		Session session=null;
 		List resultList = null;
 		day = "\""+day.substring(0,3)+"\":true";
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			String queryString="from ClassOwnerNotificationBean "
 					+ "where weeklyRecurrence like :day and (smsAttendanceDaily = true or emailAttendanceDaily = true)";
 			Query query = session.createQuery(queryString);
@@ -98,9 +91,7 @@ public class ClassOwnerNotificationDb {
 			resultList =query.list();
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
+			
 			
 		}finally{
 			if(null!=session){
@@ -111,21 +102,15 @@ public class ClassOwnerNotificationDb {
 	}
 	
 	public List<ClassOwnerNotificationBean> getInstitutesForWeeklyAttendance(){
-		Transaction transaction=null;
 		Session session=null;
 		List resultList = null;
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			String queryString="from ClassOwnerNotificationBean where  smsAttendanceWeekly = true or emailAttendanceWeekly = true";
 			Query query = session.createQuery(queryString);
 			resultList =query.list();
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
-			
 		}finally{
 			if(null!=session){
 				session.close();
@@ -135,20 +120,15 @@ public class ClassOwnerNotificationDb {
 	}
 	
 	public List<ClassOwnerNotificationBean> getInstitutesForMonthlyAttendance(){
-		Transaction transaction=null;
 		Session session=null;
 		List resultList = null;
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			String queryString="from ClassOwnerNotificationBean where  smsAttendanceMonthly = true or emailAttendanceMonthly = true";
 			Query query = session.createQuery(queryString);
 			resultList =query.list();
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 			
 		}finally{
 			if(null!=session){
@@ -159,12 +139,10 @@ public class ClassOwnerNotificationDb {
 	}
 	
 	public List<ClassOwnerNotificationBean> getInstitutesForFeesDueNotifications(Date date){
-		Transaction transaction=null;
 		Session session=null;
 		List resultList = null;
 		try{
 			session = HibernateUtil.getSessionfactory().openSession();
-			transaction = session.beginTransaction();
 			String queryString="from ClassOwnerNotificationBean "
 					+ "where paymentDueDate like :date and (smsPaymentDue = true or emailPaymentDue = true)";
 			Query query = session.createQuery(queryString);
@@ -172,9 +150,6 @@ public class ClassOwnerNotificationDb {
 			resultList =query.list();
 		}catch(Exception e){
 			e.printStackTrace();
-			if(null!=transaction){
-				transaction.rollback();
-			}
 			
 		}finally{
 			if(null!=session){

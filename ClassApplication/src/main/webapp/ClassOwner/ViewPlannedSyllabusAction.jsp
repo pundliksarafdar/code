@@ -41,7 +41,7 @@
                </div>
                
                <div style="width: 10%;float: right;">
-					<input type="button" class="btn btn-default" value="Print" id="printSyllabusPlanner">
+					<input type="button" class="btn btn-default" value="Export" id="printSyllabusPlanner">
 				</div>
 				
                <div class="btn-group" data-toggle="buttons"  style="width: 40%;float: right;" id="dateTimeRangeButton">

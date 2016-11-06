@@ -49,7 +49,7 @@ public class RegisterTransaction {
 		registerDB.updateScheduler();
 		int counter=0;
 		List<RegisterBean> registerBeans=new ArrayList<RegisterBean>();
-		while(list.size()>counter)
+		while(list!=null && list.size()>counter)
 		{
 			RegisterBean bean=registerDB.getRegisterclass(list.get(counter).getClass_id());
 			if(bean!=null){
