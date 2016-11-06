@@ -1,4 +1,3 @@
-var VIEW_BTN = "#view";
 var CLASS = "#classSelect";
 var DIVISION = "#divisionSelect";
 var BATCH = "#batchSelect";
@@ -21,7 +20,7 @@ $(document).ready(function(){
 	
 	$("body").on("change",CLASS,loadBatch)
 		.on("change",DIVISION,loadBatch)
-		.on("click",VIEW_BTN,getExamList)
+		.on("change",BATCH,getExamList)
 		.on("change",'select',function(){
 			$(NOTES_CONTAINER).hide();
 			$(NOTES_MESSAGE_CONTAINER).show()
@@ -80,7 +79,11 @@ function getExamList(){
 	$("#examMarksByExamTableWrap").hide();
 	var classId = $(CLASS).val();
 	var batchId = $(BATCH).val();
-	var subjectId = $(SUBJECT).val()
+	
+	if(classId==-1 || batchId==-1){
+		return false;
+	}
+	
 	var handler = {};
 	handler.success = function(e){
 		if(e.length){

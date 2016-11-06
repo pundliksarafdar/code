@@ -24,8 +24,8 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
   </style>
 </head>
 <body>
-
-	<div class="container" style="padding: 2%;background: #eee">
+<h4>Marks</h4>
+	<div class="well">
 	<form id="filterForm" onsubmit="return false;">
 		<div class="row">
 			<div class="col-md-3">

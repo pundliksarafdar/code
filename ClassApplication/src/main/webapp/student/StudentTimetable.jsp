@@ -30,13 +30,14 @@
 	<link rel="stylesheet" href="css/calendar.css">
 </head>
 <body>
+
 <div class="container">
+<h4>Timetable</h4>
 	<div class="row">
 	<div class="col-md-3" id="addModifyTimetableForm">
 		<form id="scheduleForm" onsubmit="return false;">
 		
 		<div style="margin-top: 1%">
-		<label for="classSelect">Class select</label><br>
 			<select class="btn btn-default" id="classSelect" style="width:100%;" name="classSelect">
 				<option value="-1">Select Class</option>
 			</select>
@@ -49,7 +50,6 @@
 			</select>
 		</div> -->
 		<div style="margin-top: 2%">
-		<label for="batchSelect">Select batch</label><br>
 			<select class="btn btn-default" id="batchSelect" style="width:100%;" name="batchSelect">
 				<option value="-1">Select batch</option>
 			</select>

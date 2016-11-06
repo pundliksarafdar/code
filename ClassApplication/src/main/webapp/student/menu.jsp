@@ -119,7 +119,6 @@
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
-<li><a href="#">Students</a></li>
 		<li><a href="#" id="menu_dashboard"><i class="glyphicon glyphicon-list"></i> Dashboard</a></li>    
     </ul>
     <ul class="nav navbar-nav navbar-right">

@@ -1,4 +1,3 @@
-var VIEW_BTN = "#view";
 var CLASS = "#classSelect";
 var DIVISION = "#divisionSelect";
 var BATCH = "#batchSelect";
@@ -20,7 +19,7 @@ $(document).ready(function(){
 	$("body").on("change",CLASS,loadBatch)
 		.on("change",DIVISION,loadBatch)
 		.on("change",BATCH,loadSubject)
-		.on("click",VIEW_BTN,getTimeTableData)
+		.on("change",SUBJECT,getTimeTableData)
 		.on("change",'select',function(){
 			$(NOTES_CONTAINER).hide();
 			$(NOTES_MESSAGE_CONTAINER).show()
@@ -29,8 +28,8 @@ $(document).ready(function(){
 	
 });
 
-	var loadSelect = function(select,classData){
-		var optionStr = "<option value='-1'>Select Subject</option>";
+	var loadSelect = function(select,classData,type){
+		var optionStr = "<option value='-1'>Select "+type+"</option>";
 		for(classId in classData){
 			if(classData.hasOwnProperty(classId)){
 				optionStr = optionStr + "<option value='"+classId+"'>"+classData[classId]+"</option>";
@@ -54,7 +53,7 @@ $(document).ready(function(){
 
 function loadClassList(){
 	var handler = {};
-	handler.success = function(data){loadSelect(CLASS,data)};
+	handler.success = function(data){loadSelect(CLASS,data,"Institute")};
 	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 	rest.get(getClassUrl,handler);
 }
@@ -88,6 +87,10 @@ function getTimeTableData(){
 	var classId = $(CLASS).val();
 	var batchId = $(BATCH).val();
 	var subjectId = $(SUBJECT).val()
+	
+	if(classId==-1 || batchId==-1 || subjectId==-1 ){
+		return false;
+	}
 	var handler = {};
 	handler.success = function(e){
 		$(NOTES_CONTAINER).show();
@@ -107,7 +110,7 @@ function loadSubject(){
 	var batchId = $(BATCH).val();
 	if(batchId != "-1"){
 	var handler = {};
-	handler.success = function(data){loadSelect(SUBJECT,data)};
+	handler.success = function(data){loadSelect(SUBJECT,data,"Subject")};
 	handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 	rest.get(getSubjectUrl+batchId+"/"+classId,handler);
 	}else{
@@ -123,7 +126,7 @@ function showNotesList(data){
 		bDestroy:true,
 		data: data,
 		lengthChange: false,
-		columns: [{title:"#",data:null},
+		columns: [{title:"#",data:null,sWidth:"30px"},
 			{ title: "Notes",data:null,render:function(data,event,row){
 				var div = '<a noteid='+row.notesid+'>'+row.name+'</a>';
 				return div;
