@@ -30,7 +30,7 @@ $(document).ready(function(){
 		$(CALENDAR_DATE).datetimepicker({
 			pickTime: false,
 			minViewMode:'months',
-			format:"YYYY-MM",
+			format:"MMM-YYYY",
 			date:'now'
 		});
 	
@@ -45,7 +45,7 @@ $(document).ready(function(){
 			$(CALENDAR_DATE).datetimepicker({
 				pickTime: false,
 				minViewMode:'days',
-				format:"YYYY-MM-DD"
+				format:"DD-MM-YYYY"
 			});
 		}else if(viewCalendar=="month"){
 			$(CALENDAR_DATE).find('input').val("");
@@ -53,7 +53,7 @@ $(document).ready(function(){
 			$(CALENDAR_DATE).datetimepicker({
 				pickTime: false,
 				minViewMode:'months',
-				format:"YYYY-MM"
+				format:"MMM-YYYY"
 			});
 		}
 		
@@ -121,7 +121,7 @@ function getTimeTableData(){
 	var classId = $(CLASS).val();
 	var batchId = $(BATCH).val();
 	if(batchId != "-1"){
-	var dateNow = new Date($(CALENDAR_DATE).find('input').val()).getTime();
+	var dateNow = new Date($(CALENDAR_DATE).data("DateTimePicker").getDate()).getTime();
 	if(isNaN(dateNow)){
 		dateNow = new Date().getTime();
 	}
@@ -153,12 +153,15 @@ function loadSubject(){
 }
 
 function setTimetable(data){
-	var dateTime = $(CALENDAR_DATE).find('input').val();
+	var dateTimeDate = new Date($(CALENDAR_DATE).data("DateTimePicker").getDate());
+	var dateTime = new moment(dateTimeDate).format("YYYY-MM-DD");
+	/*
 	if(dateTime.trim().length == 0){
 		dateTime = "now";
 	}else if(dateTime.trim().length<=7){
 		dateTime = dateTime+"-01";
 	}
+	*/
 	$(CALENDAR_CONTAINER).show();
 	var view = $('.btn-group button[data-calendar-view].active').data('calendar-view');
 	timtableData = data;

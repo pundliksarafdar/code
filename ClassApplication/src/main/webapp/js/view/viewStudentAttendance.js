@@ -20,7 +20,7 @@ $(document).ready(function(){
 	loadClassList();
 	$( "#datetimepicker" ).datetimepicker({
 		  pickTime: false,
-		  format: 'DD/MM/YYYY'
+		  format: 'DD-MM-YYYY'
 	  }).data("DateTimePicker");
 	
 	$("body").on("change",INSTITUTE,loadBatch)
@@ -128,7 +128,7 @@ function getDailyAttendance(){
 	createAttendanceScheduleTable(e);
 	}
 	handler.error = function(e){console.log("Error",e)}
-	rest.get(getDailyAttendanceURL+inst_id+"/"+batch+"/"+new Date(date[2],parseInt(date[1])-1,date[0]).getTime(),handler);
+	rest.get(getDailyAttendanceURL+inst_id+"/"+batch+"/"+new Date($("#datetimepicker").data("DateTimePicker").getDate()).getTime(),handler);
 	}
 	
 	function createAttendanceScheduleTable(data){
