@@ -1707,8 +1707,10 @@ public class ClassOwnerServlet extends HttpServlet{
 			students=studentTransaction.getStudentsrelatedtobatch(batchID,userBean.getRegId(),Integer.parseInt(batchdivision));
 		}
 		List<Integer> studentIDsList = new ArrayList<Integer>();
-		for (int i = 0; i < students.size(); i++) {
-			studentIDsList.add(students.get(i).getStudent_id());
+		if(students!=null){
+			for (int i = 0; i < students.size(); i++) {
+				studentIDsList.add(students.get(i).getStudent_id());
+			}
 		}
 		RegisterTransaction registerTransaction=new RegisterTransaction();
 		//List<RegisterBean> registerBeans= registerTransaction.getStudentsInfo(studentIDsList);
