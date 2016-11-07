@@ -340,18 +340,12 @@ public class CustomUserService extends ServiceBase {
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		BatchTransactions batchTransactions = new BatchTransactions();
 		batch.setClass_id(userBean.getInst_id());
-		int batchId=batchTransactions.getNextBatchID(batch.getClass_id(), batch.getDiv_id());
-		batch.setBatch_id(batchId);
-		if(batchTransactions.isBatchExist(batch)){
-			return Response.status(Response.Status.OK).entity(false).build();		
-		}else{
 		batchTransactions.addUpdateDb(batch);
 		BatchHelperBean batchHelperBean= new BatchHelperBean(userBean.getInst_id());
 		batchHelperBean.setBatchDetailsList();
 		List<BatchDetails> batchList = new ArrayList<BatchDetails>();
 		batchList = batchHelperBean.getBatchDetailsList();
 		return Response.status(Response.Status.OK).entity(batchList).build();	
-		}
 		
 	}
 	
