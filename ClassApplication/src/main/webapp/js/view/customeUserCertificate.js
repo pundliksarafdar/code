@@ -340,7 +340,7 @@ var manageSettings = function(){
 		var handler = {};
 		handler.success = function(e){
 			$(".certificateHeader").remove();
-			$( ".panel-body" ).prepend( "<div contenteditable='false' class='certificateHeader'>"+e+"</div>" );
+			$('.summernote').summernote('insertNode', $("<div contenteditable='false' class='certificateHeader'>"+e+"</div>")[0]);
 			/*$(".certificateHeader").html(e)*/
 		};
 		handler.error = function(){}
