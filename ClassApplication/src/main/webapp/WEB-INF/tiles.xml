@@ -808,6 +808,10 @@
       <put-attribute name="title"  value="Notice Board"/>
       <put-attribute name="body"   value="/ClassOwner/ViewNotice.jsp"/>      
    </definition>
+   <definition name="classowner.printTimetable" extends="baseLayout">
+      <put-attribute name="title"  value="Timetable"/>
+      <put-attribute name="body"   value="/Timetable/PrintTimetable.jsp"/>      
+   </definition>
    
    <!-- Custom User -->
    <definition name="customuser.loginsuccess" extends="customeBaseLayout">
@@ -1001,5 +1005,25 @@
    <definition name="customeuser.customeUserViewUser" extends="customeBaseLayout">
       <put-attribute name="title"  value="View User"/>
       <put-attribute name="body"   value="/CustomUser/ViewUser.jsp"/>      
+   </definition>
+    <definition name="customeuser.customeUserViewPlannedSyllabusAction" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Syllabus Planner"/>
+      <put-attribute name="body"   value="/CustomUser/ViewPlannedSyllabusAction.jsp"/>      
+   </definition>
+   <definition name="customeuser.customeUserTeacherSetSyllabusAction" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Syllabus Planner"/>
+      <put-attribute name="body"   value="/CustomUser/TeacherSyllabusPlanner.jsp"/>      
+   </definition>
+   <definition name="customeuser.customUserNoticeBoard" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Notice Board"/>
+      <put-attribute name="body"   value="/CustomUser/StudentNotice.jsp"/>      
+   </definition>
+   <definition name="customeuser.customUserStaffNoticeBoard" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Notice Board"/>
+      <put-attribute name="body"   value="/CustomUser/StaffNotice.jsp"/>      
+   </definition>
+   <definition name="customeuser.customUserViewNoticeBoard" extends="baseLayout">
+      <put-attribute name="title"  value="Notice Board"/>
+      <put-attribute name="body"   value="/CustomUser/ViewNotice.jsp"/>      
    </definition>
 </tiles-definitions>

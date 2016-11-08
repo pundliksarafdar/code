@@ -692,6 +692,10 @@
 		<action name="viewNoticeBoard"  class="com.classowner.ViewNoticeAction">
 			<result name="success" type="tiles">classowner.viewNoticeBoard</result>
 		</action>
+		<action name="printTimetable" class="com.timetable.TimeTableAllAction"
+			method="execute">
+			<result name="success" type="tiles">classowner.printTimetable</result>
+		</action>
 		
 		
 		<!-- Custome Role -->
@@ -959,6 +963,21 @@
 		</action>
 		<action name="customeUserViewUser" class="com.customrole.ViewUserAction">
 			<result name="success" type="tiles">customeuser.customeUserViewUser</result>
+		</action>
+		<action name="customeUserViewPlannedSyllabusAction"  class="com.customrole.ViewPlannedSyllabusAction">
+			<result name="success" type="tiles">customeuser.customeUserViewPlannedSyllabusAction</result>
+		</action>
+		<action name="customeUserTeacherSetSyllabusAction"  class="com.customrole.TeacherSetSyllabusAction">
+			<result name="success" type="tiles">customeuser.customeUserTeacherSetSyllabusAction</result>
+		</action>
+		<action name="customUserNoticeBoard"  class="com.customrole.NoticeBoardAction">
+			<result name="success" type="tiles">customeuser.customUserNoticeBoard</result>
+		</action>
+		<action name="customUserStaffNoticeBoard"  class="com.customrole.NoticeBoardAction">
+			<result name="success" type="tiles">customeuser.customUserStaffNoticeBoard</result>
+		</action>
+		<action name="customUserViewNoticeBoard"  class="com.customrole.ViewNoticeAction">
+			<result name="success" type="tiles">customeuser.customUserViewNoticeBoard</result>
 		</action>
 	</package>
 </struts>

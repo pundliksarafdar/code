@@ -881,6 +881,61 @@ public class ScheduleTransaction {
 		return scheduledatas;
 	}
 	
+	public List getWeeklyScheduleForPrint(int batchid, Date date, int inst_id, int div_id) {
+		ScheduleDB db = new ScheduleDB();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+		List list =  db.getWeeklyScheduleForPrint(batchid, date, inst_id, div_id);
+		List<MonthlyScheduleServiceBean> serviceBeanList = new ArrayList<MonthlyScheduleServiceBean>();
+		List<Groups> groupList = db.getGroups(batchid, inst_id, div_id);
+		if(list!=null){
+			for (Iterator iterator = list.iterator(); iterator
+					.hasNext();) {
+				Object[] object = (Object[]) iterator
+						.next();
+				MonthlyScheduleServiceBean bean = new MonthlyScheduleServiceBean();
+				bean.setDivId(((Number) object[0]).intValue());
+				bean.setDivname((String) object[1]+" "+object[2]);
+				bean.setSubId(((Number) object[3]).intValue());
+				bean.setSubjectname((String) object[4]);
+				bean.setBatchId(((Number) object[5]).intValue());
+				bean.setBatchName((String) object[6]);
+				bean.setId(((Number) object[7]).intValue()+"/"+((Date) object[8]).getDate());
+				bean.setDate((Date) object[8]);
+				Timestamp timestamp = new Timestamp(((Date) object[8]).getYear(), ((Date) object[8]).getMonth(), ((Date) object[8]).getDate(), ((Time) object[9]).getHours(), ((Time) object[9]).getMinutes(), ((Time) object[9]).getSeconds(), ((Time) object[9]).getSeconds());
+				bean.setStart(timestamp.getTime());
+				timestamp = new Timestamp(((Date) object[8]).getYear(), ((Date) object[8]).getMonth(), ((Date) object[8]).getDate(), ((Time) object[10]).getHours(), ((Time) object[10]).getMinutes(), ((Time) object[10]).getSeconds(), ((Time) object[10]).getSeconds());
+				bean.setEnd(timestamp.getTime());
+				bean.setTeacher(object[11]+" "+object[12]);
+				bean.setTeacher_id(((Number) object[13]).intValue());
+				bean.setGrp_id(((Number) object[14]).intValue());
+				if(bean.getGrp_id() != 0){
+					bean.setDataClass("event-success");
+				}else{
+					bean.setDataClass("event-warning");
+				}
+				bean.setWeekTitle(bean.getSubjectname()+"<br/>"+dateFormat.format(new Date(bean.getStart()))+" - "+dateFormat.format(new Date(bean.getEnd())));
+				bean.setTitle("Subject : "+bean.getSubjectname()+"<br/>"+
+						"Start time : "+dateFormat.format(new Date(bean.getStart()))+"<br/>"+
+						"End time : "+dateFormat.format(new Date(bean.getEnd()))+"<br/>");
+				bean.setRep_days((String) object[15]);
+				if(((Number) object[14]).intValue() != 0 ){
+				for (Iterator iterator2 = groupList.iterator(); iterator2
+						.hasNext();) {
+					Groups groups = (Groups) iterator2.next();
+					if(groups.getGrp_id() == ((Number) object[14]).intValue()){
+						bean.setStart_date(groups.getStart_date());
+						bean.setEnd_date(groups.getEnd_date());
+						break;
+					}
+				}
+				}
+				serviceBeanList.add(bean);
+			}
+		}
+		
+		return serviceBeanList;
+	}
+	
 	private List<Date> getScheduleDates(Date start_date,Date end_date,String[] days) {
 		Calendar calendar = Calendar.getInstance();
 		List<Date> dateList = new ArrayList<Date>();

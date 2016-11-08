@@ -448,6 +448,34 @@ $(document).ready(function(){
 		</div>
 		</div>
 		
+		<div class="well module">
+		<div class="row">
+			<div class="col-md-3">Notice | <input type="checkbox" id="parentModule" name="parentModule" data-size="mini" class="parentModule" value="18"/></div>
+		</div>
+		<div class="row">
+		<div class="col-md-12"><hr></div>
+		</div>
+		<div class="row childModuleDiv">
+		<div class="col-md-3">Notice</div> 
+		<div class="col-md-3">Create <input type="checkbox" id="childModule" name="childModule" data-size="mini" disabled="disabled" value="58"/></div>
+		<div class="col-md-3">Delete <input type="checkbox" id="childModule" name="childModule" data-size="mini" disabled="disabled" value="59"/></div>
+		</div>
+		</div>
+		
+		<div class="well module">
+		<div class="row">
+			<div class="col-md-3">Syllabus Planner | <input type="checkbox" id="parentModule" name="parentModule" data-size="mini" class="parentModule" value="17"/></div>
+		</div>
+		<div class="row">
+		<div class="col-md-12"><hr></div>
+		</div>
+		<div class="row childModuleDiv">
+		<div class="col-md-3">Syllabus Planner</div> 
+		<div class="col-md-3">Plan<input type="checkbox" id="childModule" name="childModule" data-size="mini" disabled="disabled" value="56"/></div>
+		<div class="col-md-3">Approve <input type="checkbox" id="childModule" name="childModule" data-size="mini" disabled="disabled" value="57"/></div>
+		</div>
+		</div>
+		
 		<div class="row">
 		<input type="checkbox" id="lectureCheckbox" name="lectureCheckbox" /> Lecturer
 		</div>
@@ -728,6 +756,34 @@ $(document).ready(function(){
 		<div class="col-md-2">Edit <span class="viewChildModule"  value="55"><span class="glyphicon  glyphicon-record"></span></span></div>
 		</div>
 		</div>
+		<div class="well module">
+		<div class="row">
+			<div class="col-md-3">Notice | <span class="viewParentModule"  value="18"><span class="glyphicon  glyphicon-record"></span></span></div>
+		</div>
+		<div class="row">
+		<div class="col-md-12"><hr></div>
+		</div>
+		<div class="row childModuleDiv">
+		<div class="col-md-3">Notice</div> 
+		<div class="col-md-3">Create <span class="viewChildModule"  value="58"><span class="glyphicon  glyphicon-record"></span></span></div>
+		<div class="col-md-3">Delete <span class="viewChildModule"  value="59"><span class="glyphicon  glyphicon-record"></span></span></div>
+		</div>
+		</div>
+		
+		<div class="well module">
+		<div class="row">
+			<div class="col-md-3">Syllabus Planner | <span class="viewParentModule"  value="17"><span class="glyphicon  glyphicon-record"></span></span></div>
+		</div>
+		<div class="row">
+		<div class="col-md-12"><hr></div>
+		</div>
+		<div class="row childModuleDiv">
+		<div class="col-md-3">Syllabus Planner</div> 
+		<div class="col-md-3">Plan<span class="viewChildModule"  value="56"><span class="glyphicon  glyphicon-record"></span></span></div>
+		<div class="col-md-3">Approve<span class="viewChildModule"  value="57"><span class="glyphicon  glyphicon-record"></span></span></div>
+		</div>
+		</div>
+		
 		<div class="row">
 		<span class="viewLecturer"><span class="glyphicon  glyphicon-record"></span></span> Lecturer
 		</div>

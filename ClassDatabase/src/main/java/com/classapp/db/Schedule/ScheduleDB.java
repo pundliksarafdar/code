@@ -1176,6 +1176,41 @@ public class ScheduleDB {
 		return true;
 	}
 	
+	public List getWeeklyScheduleForPrint(int batchid, Date date, int inst_id, int div_id) {
+
+		Session session = null;
+		List scheduleList = null;
+		Calendar cal = Calendar.getInstance();
+		cal.set(date.getYear() + 1900, date.getMonth(), date.getDate());
+		cal.add(Calendar.DATE, 7);
+		Date enddate = new Date(cal.getTimeInMillis());
+		try {
+			session = HibernateUtil.getSessionfactory().openSession();
+			Query query = session.createQuery(
+					"Select  div.divId , div.divisionName, div.stream,sub.subjectId,sub.subjectName,batch.batch_id,batch.batch_name,schedule.schedule_id," +
+					"  schedule.date, schedule.start_time,schedule.end_time,reg.fname,reg.lname,schedule.teacher_id,schedule.grp_id,schedule.rep_days" +
+					" from Schedule schedule,Division div,Subject sub,Batch batch,RegisterBean reg " +
+					"where div.divId=schedule.div_id and div.institute_id = schedule.inst_id and sub.subjectId = schedule.sub_id and " +
+					" sub.institute_id = schedule.inst_id and batch.div_id = schedule.div_id and batch.class_id = schedule.inst_id and " +
+					"batch.batch_id = schedule.batch_id and schedule.batch_id=:batch_id  and schedule.inst_id=:class_id and schedule.div_id=:div_id and " +
+					" schedule.teacher_id=reg.regId and schedule.date >= :startDate and schedule.date <= :endDate order by schedule.date,schedule.start_time");
+			query.setParameter("batch_id", batchid);
+			query.setParameter("startDate", date);
+			query.setParameter("endDate", enddate);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
+			scheduleList = query.list();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != session) {
+				session.close();
+			}
+		}
+		return scheduleList;
+	}
+	
 	public static void main(String[] args) {
 		ScheduleDB db = new ScheduleDB();
 		// db.getScheduleForDate(68, "2014-09-09");

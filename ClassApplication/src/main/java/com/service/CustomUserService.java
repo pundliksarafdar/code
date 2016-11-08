@@ -1,11 +1,13 @@
 package com.service;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -36,12 +38,17 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.classapp.db.Notes.Notes;
 import com.classapp.db.Teacher.Teacher;
@@ -55,6 +62,8 @@ import com.classapp.db.exam.Exam_Paper;
 import com.classapp.db.fees.BatchFees;
 import com.classapp.db.fees.Fees;
 import com.classapp.db.header.Header;
+import com.classapp.db.notice.StaffNotice;
+import com.classapp.db.notice.StudentNotice;
 import com.classapp.db.printFees.PrintFees;
 import com.classapp.db.printFees.PrintFeesDb;
 import com.classapp.db.question.Questionbank;
@@ -125,9 +134,12 @@ import com.service.beans.Student_Fees;
 import com.service.beans.Student_Fees_Transaction;
 import com.service.beans.SubjectiveExamBean;
 import com.service.beans.SubjectsWithTopics;
+import com.service.beans.SyllabusBean;
+import com.service.beans.SyllabusFilterBean;
 import com.service.helper.NotificationServiceHelper;
 import com.tranaction.header.HeaderTransaction;
 import com.tranaction.subject.SubjectTransaction;
+import com.tranaction.syllabusplanner.SyllabusPlannerTransaction;
 import com.transaction.attendance.AttendanceTransaction;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.batch.division.DivisionTransactions;
@@ -139,6 +151,7 @@ import com.transaction.image.ImageTransactions;
 import com.transaction.institutestats.InstituteStatTransaction;
 import com.transaction.instroll.InstRollTransaction;
 import com.transaction.notes.NotesTransaction;
+import com.transaction.notice.NoticeTransaction;
 import com.transaction.pattentransaction.QuestionPaperPatternTransaction;
 import com.transaction.questionbank.ExcelFileTransaction;
 import com.transaction.questionbank.QuestionBankTransaction;
@@ -2671,8 +2684,227 @@ public class CustomUserService extends ServiceBase {
 		studentTransaction.updateStudent(student);
 		return Response.status(200).entity(true).build();
 	}
-
 	
+	@GET
+	@Path("getSyllabusForMonth/{yyyymm}/{divId}/{subjectId}/{batchId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPlannedSyllabusForMonth(@PathParam("yyyymm") String yyyymm,
+			@PathParam("divId")int classId,
+			@PathParam("subjectId")int subId,
+			@PathParam("batchId")String batchId) {
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		SyllabusPlannerTransaction transaction = new SyllabusPlannerTransaction();
+		List<SyllabusBean> syllabusBeans = transaction.getSyllabus(yyyymm,userBean.getInst_id(),classId,subId,batchId,getRegId());
+		return Response.ok(syllabusBeans).build();
+	}
+	
+	@POST
+	@Path("/savePlannedSyllabus")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response savePlannedSyllabus(SyllabusBean syllabusBean) {
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		SyllabusPlannerTransaction transaction = new SyllabusPlannerTransaction();
+		syllabusBean.setInstId(userBean.getInst_id());
+		syllabusBean.setTeacherId(getRegId());
+		boolean status = transaction.saveSyallabus(syllabusBean);
+		if(status){
+			return Response.ok().build();
+		}else{
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		}
+		
+	}
+	
+	@PUT
+	@Path("/savePlannedSyllabus")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response editPlannedSyllabus(SyllabusBean syllabusBean) {
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		SyllabusPlannerTransaction transaction = new SyllabusPlannerTransaction();
+		boolean status = transaction.editSyllabus(syllabusBean.getId(),syllabusBean.getInstId(), syllabusBean.getClassId(), 
+				syllabusBean.getSubjectId(), getRegId(), syllabusBean.getSyllabus(), 
+				syllabusBean.getDate(),syllabusBean.getTeacherStatus());
+		if(status){
+			return Response.ok().build();
+		}else{
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		}
+	}
+	
+	@GET
+	@Path("view/{yyyymmdd}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllPlannedSyllabusForMonth(@PathParam("yyyymmdd") String yyyymmdd,
+			@QueryParam("division")List<Integer> classId,
+			@QueryParam("subject")List<Integer> subId,
+			@QueryParam("batchId")List<Integer> batchId,
+			@QueryParam("teacher")List<Integer> teacherId,
+			@QueryParam("view")String view) {
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		SyllabusPlannerTransaction transaction = new SyllabusPlannerTransaction();
+		List<SyllabusBean> syllabusBeans = transaction.getAllPlannedSyllabus(yyyymmdd, userBean.getInst_id(), classId, subId, batchId, teacherId,view);
+		return Response.ok(syllabusBeans).build();
+	}
+	
+	@GET
+	@Path("getFilterResult")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFilteredResult(){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		SyllabusPlannerTransaction syllabusPlannerTransaction = new SyllabusPlannerTransaction();
+		HashMap<String, List<SyllabusFilterBean>> resultMap = syllabusPlannerTransaction.getSyllabusFilter(userBean.getInst_id());
+		return Response.ok(resultMap).build();
+	}
+	
+	@GET
+	@Path("changeStatus/{yyyymmdd}")
+	public Response setPlannedSyallbusStatus(@PathParam("yyyymmdd") String yyyymmdd,
+			@QueryParam("id")Long id,
+			@QueryParam("classId")int classId,
+			@QueryParam("subjectId")int subId,
+			@QueryParam("batchId")int batchId,
+			@QueryParam("teacherId")int teacherId,
+			@QueryParam("status")String status) {
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		SyllabusPlannerTransaction transaction = new SyllabusPlannerTransaction();
+		boolean res = transaction.setPlannedSyllabusStatus(yyyymmdd, id, userBean.getInst_id(), classId, subId, batchId, teacherId, status);
+		return Response.ok(res).build();
+	}
+	
+	@GET
+	@Path("print/{yyyymmdd}")
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	public Response printSyllabus(@PathParam("yyyymmdd") String yyyymmdd,
+			@QueryParam("division")List<Integer> classId,
+			@QueryParam("subject")List<Integer> subId,
+			@QueryParam("batchId")List<Integer> batchId,
+			@QueryParam("teacher")List<Integer> teacherId,
+			@QueryParam("view")String view) throws IOException {
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		SyllabusPlannerTransaction syllabusPlannerTransaction = new SyllabusPlannerTransaction();
+		XSSFWorkbook workbook = syllabusPlannerTransaction.getPrintXSSFWorkbook(yyyymmdd, userBean.getInst_id(), classId, subId, batchId, teacherId,view);
+		StreamingOutput fileDownload = new StreamingOutput(){
+		    @Override
+		        public void write(OutputStream arg0) throws IOException, WebApplicationException {
+		    	BufferedOutputStream bus = new BufferedOutputStream(arg0);
+		            try {
+		                workbook.write(bus);
+		            } catch (Exception e) {
+		            // TODO Auto-generated catch block
+		            e.printStackTrace();
+		            }
+		        }
+		    };
+	   return Response.ok(fileDownload).header("Content-Disposition", "attachment; filename=\"" + "syllabus.xlsx" + "\"" ).build();
+	}
+	
+
+	@DELETE
+	@Path("/deletePlannedSyllabus")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response deletePlannedSyllabus(SyllabusBean syllabusBean) {
+		SyllabusPlannerTransaction transaction = new SyllabusPlannerTransaction();
+		transaction.deleteSyllabus(syllabusBean);
+		return null;
+	}
+	
+	@POST
+	@Path("/saveStudentNotice")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveStudentNotice(StudentNotice notice){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		notice.setInst_id(userBean.getInst_id());
+		NoticeTransaction noticeTransaction = new NoticeTransaction();
+		noticeTransaction.saveStudentNotice(notice);
+		return Response.status(200).entity(true).build();
+	}
+	
+	@POST
+	@Path("/saveStaffNotice")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveStaffNotice(StaffNotice notice){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		notice.setInst_id(userBean.getInst_id());
+		NoticeTransaction noticeTransaction = new NoticeTransaction();
+		noticeTransaction.saveStaffNotice(notice);
+		return Response.status(200).entity(true).build();
+	}
+	
+	@GET
+	@Path("/getStaffNotice")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getStaffNotice(){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		NoticeTransaction noticeTransaction = new NoticeTransaction();
+		List<StaffNotice> staffNoticeList =  noticeTransaction.getStaffNotice(userBean.getInst_id());
+		InstRollTransaction rollTransaction = new InstRollTransaction();
+		List<Inst_roll> roleList = rollTransaction.getInstituteRoles(userBean.getInst_id());
+		List<com.datalayer.notice.StaffNotice> list = new ArrayList<com.datalayer.notice.StaffNotice>(); 
+		if(staffNoticeList != null){
+			for (StaffNotice staffNotice : staffNoticeList) {
+				com.datalayer.notice.StaffNotice notice = new com.datalayer.notice.StaffNotice();
+				try {
+					BeanUtils.copyProperties(notice, staffNotice);
+				} catch (IllegalAccessException | InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(!"0".equals(notice.getRole())){
+					String [] roleArray = notice.getRole().split(",");
+					String roleString = "";
+					for (String string : roleArray) {
+						if("2s".equalsIgnoreCase(string)){
+							roleString = roleString + "Teacher,";
+						}else{
+						List<Inst_roll> roles = roleList.stream().filter(Inst_roll -> (Inst_roll.getRoll_id()+"c").equalsIgnoreCase(string.trim())).collect(Collectors.toList());
+						if(roles != null){
+							if(roles.size() >0){
+								roleString = roleString + roles.get(0).getRoll_desc()+",";
+							}
+						}
+					}
+					}
+					if(roleString.length()>0){
+						roleString = roleString.substring(0, roleString.length()-1);
+					}
+					notice.setRole_Desc(roleString);
+				}else{
+					notice.setRole_Desc("All");
+				}
+				list.add(notice);
+			}
+		}
+		return Response.status(200).entity(list).build();
+	}
+	
+	@DELETE
+	@Path("/deleteStudentNotice/{notice_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteStudentNotice(@PathParam("notice_id")int notice_id){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		NoticeTransaction noticeTransaction = new NoticeTransaction();
+		noticeTransaction.deleteStudentNotice(userBean.getInst_id(), notice_id);
+		return Response.status(200).entity(true).build();
+	}
+	
+	@DELETE
+	@Path("/deleteStaffNotice/{notice_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteStaffNotice(@PathParam("notice_id")int notice_id){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		NoticeTransaction noticeTransaction = new NoticeTransaction();
+		noticeTransaction.deleteStaffNotice(userBean.getInst_id(), notice_id);
+		return Response.status(200).entity(true).build();
+	}
 	
 	private Object readObject(File file) {
 		Object object = null;

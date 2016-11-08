@@ -393,8 +393,26 @@ siteMapApp.controller("SiteMapController",function($scope){
             </div>
         </a>
         </div>
-         <%} %>
-         <% if(ArrayUtils.contains(parent_mod_access,"8")){ %>
+         <%} if(ArrayUtils.contains(parent_mod_access,"18")){ %>
+         <div class="col-sm-2 col-xs-4">
+		<a href="customUserNoticeBoard">
+            <div id="tile10" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div>
+                            	<img src="/images/Alert.svg">
+                            </div>
+                            <div class="icontext">
+                                Notice Board
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+        </a>
+        </div>
+         <%} if(ArrayUtils.contains(parent_mod_access,"8")){ %>
 		<div class="col-sm-2 col-xs-4">
 		<a href="customeUserTimeTableAll">
             <div id="tile11" class="tile">
@@ -505,10 +523,28 @@ siteMapApp.controller("SiteMapController",function($scope){
             </div>
             </a>
         </div>
-        <%} %>
+        <%} if(ArrayUtils.contains(parent_mod_access,"17")){%>
+         <div class="col-sm-2 col-xs-4">
+        	<a href="customeUserViewPlannedSyllabusAction">
+            <div id="tile13" class="tile">
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active text-center">
+                            <div class="markGlyphicon">
+                                <i class="glyphicon glyphicon-user bigicon"></i>
+                            </div>
+                            <div class="icontext">
+                                Syllabus
+                            </div>
+                            
+                        </div>
+                    </div>
+            </div>
+            </a>
+        </div>
 		<!---->
         </div>
-    
+    <%} %>
     <% if(userBean.getRole() == 0 ){ %>
 	<div class="row">
         <div class="col-sm-2 col-xs-4">

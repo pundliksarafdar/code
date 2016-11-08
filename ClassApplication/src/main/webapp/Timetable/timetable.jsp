@@ -20,6 +20,9 @@
 	<link rel="stylesheet" href="css/calendar.css">
 </head>
 <body>
+<jsp:include page="TimetableHeader.jsp" >
+		<jsp:param value="active" name="timetableall"/>
+</jsp:include>
 <div class="container">
 	<div class="row">
 	<div class="col-md-3" id="addModifyTimetableForm" data-toggle="tooltip" title="You can edit timetable here" data-trigger="manual" >

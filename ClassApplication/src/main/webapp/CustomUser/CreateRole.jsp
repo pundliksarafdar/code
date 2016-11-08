@@ -352,6 +352,35 @@
 		<div class="col-md-2">Edit <input type="checkbox" id="childModule" name="childModule" data-size="mini" disabled="disabled" value="55"/></div>
 		</div>
 		</div>
+		
+		<div class="well module">
+		<div class="row">
+			<div class="col-md-3">Notice | <input type="checkbox" id="parentModule" name="parentModule" data-size="mini" class="parentModule" value="18"/></div>
+		</div>
+		<div class="row">
+		<div class="col-md-12"><hr></div>
+		</div>
+		<div class="row childModuleDiv">
+		<div class="col-md-3">Notice</div> 
+		<div class="col-md-3">Create <input type="checkbox" id="childModule" name="childModule" data-size="mini" disabled="disabled" value="58"/></div>
+		<div class="col-md-3">Delete <input type="checkbox" id="childModule" name="childModule" data-size="mini" disabled="disabled" value="59"/></div>
+		</div>
+		</div>
+		
+		<div class="well module">
+		<div class="row">
+			<div class="col-md-3">Syllabus Planner | <input type="checkbox" id="parentModule" name="parentModule" data-size="mini" class="parentModule" value="17"/></div>
+		</div>
+		<div class="row">
+		<div class="col-md-12"><hr></div>
+		</div>
+		<div class="row childModuleDiv">
+		<div class="col-md-3">Syllabus Planner</div> 
+		<div class="col-md-3">Plan<input type="checkbox" id="childModule" name="childModule" data-size="mini" disabled="disabled" value="56"/></div>
+		<div class="col-md-3">Approve <input type="checkbox" id="childModule" name="childModule" data-size="mini" disabled="disabled" value="57"/></div>
+		</div>
+		</div>
+		
 		<div class="row">
 		<input type="checkbox" id="lectureCheckbox" name="lectureCheckbox" /> Lecturer
 		</div>

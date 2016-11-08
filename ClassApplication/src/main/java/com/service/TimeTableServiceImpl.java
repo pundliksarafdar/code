@@ -3,9 +3,14 @@ package com.service;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -16,6 +21,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -119,6 +125,44 @@ public class TimeTableServiceImpl extends ServiceBase{
 		return Response.status(Response.Status.OK).entity(count).build();
 	}
 	
+	@GET
+	@Path("/getWeeklyScheduleForPrint/{batch}/{division}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getWeeklyScheduleForPrint(@PathParam("batch") int batch,
+			@PathParam("division") int division,@QueryParam("startDate") Date startDate) {
+		// TODO Auto-generated method stub
+		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
+		List<MonthlyScheduleServiceBean> scheduleList = new ArrayList<MonthlyScheduleServiceBean>();
+		scheduleList = scheduleTransaction.getWeeklyScheduleForPrint(batch, startDate, getRegId(), division);
+		Map<Date, List<MonthlyScheduleServiceBean>> result =
+				scheduleList.stream().collect(Collectors.groupingBy(MonthlyScheduleServiceBean::getDate));
+		//result = TreeMap <Date, List<MonthlyScheduleServiceBean>>(result);
+		 Map<Date, List<MonthlyScheduleServiceBean>> map = new TreeMap<Date, List<MonthlyScheduleServiceBean>>(result); 
+		 int i = 0;
+		 if(map.size() > 0){
+		 while(i < 7){	 
+		 boolean flag = false;
+		 Calendar cal = Calendar.getInstance();
+		 cal.set(startDate.getYear() + 1900, startDate.getMonth(), startDate.getDate());
+		 cal.add(Calendar.DATE, i);
+		 Date enddate = new Date(cal.getTimeInMillis());
+		 Iterator it = map.entrySet().iterator();
+		 while (it.hasNext()) {
+		        Map.Entry pair = (Map.Entry)it.next();
+		   System.out.println(((Date)pair.getKey()).getTime()+" : "+enddate.getTime());
+		 if(enddate.getDate()==((Date)pair.getKey()).getDate()){
+		 flag = true;
+		 break;
+		 }
+		 }
+		 if (!flag) {
+			 map.put(enddate, new ArrayList<MonthlyScheduleServiceBean>());	 
+		}
+		 i++;
+		 }
+		 }
+		return Response.status(Response.Status.OK).entity(map).build();
+	}
 
 	/*@POST
 	@Path("/addScheduleObject/{scheduleBean}/")
