@@ -21,7 +21,7 @@ $(document).ready(function(){
 	  }).data("DateTimePicker");
 	 
 	 $("#print").click(function(){
-			newWin= window.open("");
+			var newWin= window.open("");
 			newWin.document.write("<html><link href='/css/bootstrap.min.css' rel='stylesheet'><body class='container'>"+$("#printData").html()+"</body></html>");
 			newWin.print();
 			newWin.close();
