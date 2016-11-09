@@ -279,7 +279,9 @@ public class StudentExcelData {
 					listOfErrors.add("Invalid Parent's phone number."+e.getMessage());
 				}
 				if(row.getCell(14)!=null){
+				if(row.getCell(14)!=null){
 				 parentEmailID=row.getCell(14).getStringCellValue().trim();
+				}
 				}
 				if(row.getCell(15)!=null){
 				if(row.getCell(15).getCellType() == Cell.CELL_TYPE_NUMERIC){
@@ -573,14 +575,13 @@ public class StudentExcelData {
 					 listOfErrors.add("Invalid value in column Parent's Phone Number.");
 				 }
 				//validate parent's email address
-				if(null==parentEmailID || parentEmailID.equals("")){
-					listOfErrors.add("Parent's Email Address column can not be blank or empty");
-				}else if(parentEmailID.length()>150){
+				if(! parentEmailID.equals("")){
+				if(parentEmailID.length()>150){
 					listOfErrors.add("Parent's Email Address value is too long.");
 				}else if(!validateEmailID(parentEmailID)){
 					 listOfErrors.add("Invalid parent's email address.");
 				}
-				
+				}
 				//this.invalidStudentResponseMap.put(emailId, listOfErrors);
 				if(listOfErrors.size()>0){					
 					return false;

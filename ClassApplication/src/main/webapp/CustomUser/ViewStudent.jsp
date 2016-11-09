@@ -653,7 +653,7 @@ var enabledEdit = false;
 		   editStudent = data.student;
 		   batchNames = batchNames.replace(",","");
 		   $("#studentInstId").html(data.student.studentInstRegNo);
-		   $("#studentDetailsClass").html(data.division.divisionName);
+		   $("#studentDetailsClass").html(data.division.divisionName+" "+data.division.stream);
 		   $("#studentDetailsBatch").html(batchNames);
 		   $("#studentDetailsStudentPhone").html(data.studentUserBean.phone1);
 		   $("#studentDetailsStudentEmail").html(data.studentUserBean.email);
