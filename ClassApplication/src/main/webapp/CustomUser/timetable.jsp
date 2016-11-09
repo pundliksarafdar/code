@@ -21,6 +21,9 @@
 	<link rel="stylesheet" href="css/calendar.css">
 </head>
 <body>
+<jsp:include page="TimetableHeader.jsp" >
+		<jsp:param value="active" name="customeUserTimeTableAll"/>
+</jsp:include>
 <% String[] child_mod_access = (String[])session.getAttribute("child_mod_access"); %>
 <div class="container">
 	<div class="row">

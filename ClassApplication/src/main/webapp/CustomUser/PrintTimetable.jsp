@@ -9,7 +9,8 @@
 <script type="text/javascript">
 var DIVISION_SELECT = "#divisionSelect";
 var BATCH_SELECT = "#batchSelect";
-var getTimetable = "rest/schedule/getWeeklyScheduleForPrint/";
+var getTimetable = "rest/customuserservice/getWeeklyScheduleForPrint/";
+var getBatchListUrl = "rest/customuserservice/getInstituteBatch/";
 $(document).ready(function(){
 	$("body").on("change",DIVISION_SELECT,getBatches);
 	$("#search").click(function(){
@@ -29,51 +30,32 @@ $(document).ready(function(){
 });
 
 function getBatches(){
-	var divisionId = $('#divisionSelect').val();
-	$("#batchSelect").val("-1")
-	$("#batchSelect").find('option:gt(0)').remove();
-	 $("#commonAttendanceDiv").hide();
-	$("#attendanceScheduleDiv").hide();
-	$("#attendanceStudentListDiv").hide();
-	if(divisionId != "-1"){		
-	$("#divisionError").html("");
-	  $.ajax({
-	   url: "classOwnerServlet",
-	   data: {
-	    	 methodToCall: "fetchBatchesForDivision",
-			 regId:'',
-			 divisionId:divisionId,						 
-	   		},
-	   type:"POST",
-	   success:function(e){
-		   $('#batchSelect').empty();
-		   var batchDataArray = [];
-		    var data = JSON.parse(e);
-		    if(data.status != "error"){
-		    $("#batchSelect").append("<option value='-1'>Select Batch</option>");
-		    $("#batchSelect").select2().val("-1").change();
-		    if(data.batches != null){
-		    	$.each(data.batches,function(key,val){
-		    		 $("#batchSelect").append("<option value='"+val.batch_id+"'>"+val.batch_name+"</option>");
+	$(BATCH_SELECT).empty();
+	var handler = {}
+	var division = $(this).val();
+	if(division>-1){
+		handler.success = function(batches){
+			if(batches.length >0){
+				var options = "<option value='-1'>Select Batch</option>";
+				$.each(batches,function(index,val){
+						options = options + "<option value='"+val.batch.batch_id+"'>"+val.batch.batch_name+"</option>";		
 				});
-		    }}else{
-		    	$("#batchSelect").empty();
-				 $("#batchSelect").select2().val("").change();
-				 $("#batchSelect").select2({data:"",placeholder:"Batch not available"});
-		    }
-	   	},
-	   error:function(e){
-		   $('div#addStudentModal .error').html('<i class="glyphicon glyphicon-warning-sign"></i> <strong>Error!</strong>Error while fetching batches for division');
-			$('div#addStudentModal .error').show();
-	   }
-	   
-});
-	
-}else{
-	$("#batchSelect").empty();
-	 $("#batchSelect").select2().val("").change();
-	 $("#batchSelect").select2({data:"",placeholder:"Select Batch"});
-}
+				$(BATCH_SELECT).append(options);
+				$(BATCH_SELECT).select2().val("-1").change();
+				}else{
+					$(BATCH_SELECT).empty();
+					$(BATCH_SELECT).select2().val("").change();
+					$(BATCH_SELECT).select2({data:"",placeholder:"Batch not available"});
+				}
+		};
+		handler.error = function(){};
+		rest.get(getBatchListUrl+division,handler);
+	}else{
+		var options = "<option value='-1'>Select Batch</option>";
+		$(BATCH_SELECT).append(options);	
+		$(BATCH_SELECT).select2().val("-1").change();
+		$(CALENDAR_CONTAINER).hide();
+	}
 }
 
 function getTimeTableData(){
@@ -101,11 +83,11 @@ function getTimeTableData(){
 		});
 		stringData = stringData +"</tr>";
 		if(maxSize > 0){
+		var i = 0;
+		while(i<maxSize){
 		$("#printData").show();
 		$("#divName").html($("#divisionSelect option:selected").text());
 		$("#batchName").html($("#batchSelect option:selected").text());
-		var i = 0;
-		while(i<maxSize){
 		$("#printButton").show();
 		stringData = stringData +"<tr>";	
 		$.each(data, function(key, val) {
@@ -145,7 +127,7 @@ function getTimeTableData(){
 </head>
 <body>
 <jsp:include page="TimetableHeader.jsp" >
-		<jsp:param value="active" name="printTimetable"/>
+		<jsp:param value="active" name="customUserPrintTimetable"/>
 </jsp:include>
 <div class="well">
 		<div class="row">
@@ -185,7 +167,7 @@ function getTimeTableData(){
 			</div>
 </div>
 </div>	
-<div id="printData" style="display:none">
+<div id="printData" style="display: none">
 	<div class="container row">
 	<div class="col-md-3">Class : <span id="divName"></span></div>
 	<div class="col-md-3">Batch : <span id="batchName"></span></div>

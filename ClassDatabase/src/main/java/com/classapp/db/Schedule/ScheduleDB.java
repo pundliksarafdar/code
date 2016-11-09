@@ -1193,7 +1193,7 @@ public class ScheduleDB {
 					"where div.divId=schedule.div_id and div.institute_id = schedule.inst_id and sub.subjectId = schedule.sub_id and " +
 					" sub.institute_id = schedule.inst_id and batch.div_id = schedule.div_id and batch.class_id = schedule.inst_id and " +
 					"batch.batch_id = schedule.batch_id and schedule.batch_id=:batch_id  and schedule.inst_id=:class_id and schedule.div_id=:div_id and " +
-					" schedule.teacher_id=reg.regId and schedule.date >= :startDate and schedule.date <= :endDate order by schedule.date,schedule.start_time");
+					" schedule.teacher_id=reg.regId and schedule.date >= :startDate and schedule.date < :endDate order by schedule.date,schedule.start_time");
 			query.setParameter("batch_id", batchid);
 			query.setParameter("startDate", date);
 			query.setParameter("endDate", enddate);

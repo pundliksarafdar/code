@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
+<% String[] child_mod_access = (String[])session.getAttribute("child_mod_access"); %>
 <jsp:include page="SyllabusHeaders.jsp" >
 		<jsp:param value="active" name="customeUserViewPlannedSyllabusAction"/>
 	</jsp:include>
@@ -64,5 +65,6 @@
 			</div>
 		</div>
 	</div>
+	<input type="hidden" class="form-control" id="accessRights" value='<%=String.join(",",child_mod_access)%>'>
 </body>
 </html>

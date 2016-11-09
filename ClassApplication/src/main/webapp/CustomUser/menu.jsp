@@ -395,7 +395,7 @@ siteMapApp.controller("SiteMapController",function($scope){
         </div>
          <%} if(ArrayUtils.contains(parent_mod_access,"18")){ %>
          <div class="col-sm-2 col-xs-4">
-		<a href="customUserNoticeBoard">
+		<a href="customUserViewNoticeBoard">
             <div id="tile10" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">

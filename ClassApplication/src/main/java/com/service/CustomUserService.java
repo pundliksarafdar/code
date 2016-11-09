@@ -18,12 +18,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.TreeMap;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -2904,6 +2906,46 @@ public class CustomUserService extends ServiceBase {
 		NoticeTransaction noticeTransaction = new NoticeTransaction();
 		noticeTransaction.deleteStaffNotice(userBean.getInst_id(), notice_id);
 		return Response.status(200).entity(true).build();
+	}
+	
+	@GET
+	@Path("/getWeeklyScheduleForPrint/{batch}/{division}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getWeeklyScheduleForPrint(@PathParam("batch") int batch,
+			@PathParam("division") int division,@QueryParam("startDate") Date startDate) {
+		// TODO Auto-generated method stub
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
+		List<MonthlyScheduleServiceBean> scheduleList = new ArrayList<MonthlyScheduleServiceBean>();
+		scheduleList = scheduleTransaction.getWeeklyScheduleForPrint(batch, startDate, userBean.getInst_id(), division);
+		Map<Date, List<MonthlyScheduleServiceBean>> result =
+				scheduleList.stream().collect(Collectors.groupingBy(MonthlyScheduleServiceBean::getDate));
+		//result = TreeMap <Date, List<MonthlyScheduleServiceBean>>(result);
+		 Map<Date, List<MonthlyScheduleServiceBean>> map = new TreeMap<Date, List<MonthlyScheduleServiceBean>>(result); 
+		 int i = 0;
+		 if(map.size() > 0){
+		 while(i < 7){	 
+		 boolean flag = false;
+		 Calendar cal = Calendar.getInstance();
+		 cal.set(startDate.getYear() + 1900, startDate.getMonth(), startDate.getDate());
+		 cal.add(Calendar.DATE, i);
+		 Date enddate = new Date(cal.getTimeInMillis());
+		 Iterator it = map.entrySet().iterator();
+		 while (it.hasNext()) {
+		        Map.Entry pair = (Map.Entry)it.next();
+		   System.out.println(((Date)pair.getKey()).getTime()+" : "+enddate.getTime());
+		 if(enddate.getDate()==((Date)pair.getKey()).getDate()){
+		 flag = true;
+		 break;
+		 }
+		 }
+		 if (!flag) {
+			 map.put(enddate, new ArrayList<MonthlyScheduleServiceBean>());	 
+		}
+		 i++;
+		 }
+		 }
+		return Response.status(Response.Status.OK).entity(map).build();
 	}
 	
 	private Object readObject(File file) {

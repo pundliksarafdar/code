@@ -7,11 +7,12 @@ var SYLLABUS_SEARCH_MONTH = "#syllabusSearchTime";
 var SYLLABUS_TABLE = "#syllabusTable";
 var DATETIME_RANGE = "#dateTimeRangeButton";
 var PRINT = "#printSyllabusPlanner";
-
+var child_mod_access  = [];
 var TEMPL = '<li class="list-group-item"><span><input type="checkbox" value=""></span><label></label></li>';
 
 var syllabusData;
 $(document).ready(function(){
+	child_mod_access  = $("#accessRights").val().split(",");
 	var pSyllabus = new PlannedSyllabus();
 	pSyllabus.getPlannedSyllabusFilter();
 	
@@ -139,12 +140,16 @@ function PlannedSyllabus(){
 			},
 			{
 				title: "Status",data:"status",render:function(data){
+					if($.inArray( "57", child_mod_access) != "-1"){
 					var optionComplete = $("<option/>",{value:"Complete",text:"Complete",selected:data!=null && data.toLowerCase()=="complete"});
 					var optionInComplete = $("<option/>",{value:"Incomplete",text:"Incomplete",selected:data==null || data.toLowerCase()=="incomplete"});
 					var optionEditable = $("<option/>",{value:"Editable",text:"Editable",selected:data!=null && data.toLowerCase()=="editable"});
 					var select = $("<select/>").append(optionComplete).append(optionInComplete).append(optionEditable).attr("class","btn btn-default btn-xs");
 					var div = $("<div/>").append(select);
 					return div.html();
+					}else{
+					return "-";	
+					}
 				}
 			}
 			],

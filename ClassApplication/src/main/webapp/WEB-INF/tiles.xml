@@ -1022,8 +1022,12 @@
       <put-attribute name="title"  value="Notice Board"/>
       <put-attribute name="body"   value="/CustomUser/StaffNotice.jsp"/>      
    </definition>
-   <definition name="customeuser.customUserViewNoticeBoard" extends="baseLayout">
+   <definition name="customeuser.customUserViewNoticeBoard" extends="customeBaseLayout">
       <put-attribute name="title"  value="Notice Board"/>
       <put-attribute name="body"   value="/CustomUser/ViewNotice.jsp"/>      
+   </definition>
+   <definition name="customeuser.customUserPrintTimetable" extends="customeBaseLayout">
+      <put-attribute name="title"  value="Timetable"/>
+      <put-attribute name="body"   value="/CustomUser/PrintTimetable.jsp"/>      
    </definition>
 </tiles-definitions>

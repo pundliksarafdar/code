@@ -953,31 +953,53 @@
 		<action name="DownloadPage" 	class="com.classowner.DownloadFileAction">
 		</action>
 		<action name="customeUserCreaterole" class="com.customrole.RoleAction">
+			<param name="moduleAccess">52</param>
+			<param name="accessType">C</param>
 			<result name="success" type="tiles">customeuser.customeUserCreaterole</result>
 		</action>
 		<action name="customeUserViewRole" class="com.customrole.ViewRoleAction">
+			<param name="moduleAccess">16</param>
+			<param name="accessType">P</param>
 			<result name="success" type="tiles">customeuser.customeUserViewRole</result>
 		</action>
 		<action name="customeUserCreateUser" class="com.customrole.CreateUserAction">
+			<param name="moduleAccess">54</param>
+			<param name="accessType">C</param>
 			<result name="success" type="tiles">customeuser.customeUserCreateUser</result>
 		</action>
 		<action name="customeUserViewUser" class="com.customrole.ViewUserAction">
+			<param name="moduleAccess">16</param>
+			<param name="accessType">P</param>
 			<result name="success" type="tiles">customeuser.customeUserViewUser</result>
 		</action>
 		<action name="customeUserViewPlannedSyllabusAction"  class="com.customrole.ViewPlannedSyllabusAction">
+			<param name="moduleAccess">17</param>
+			<param name="accessType">P</param>
 			<result name="success" type="tiles">customeuser.customeUserViewPlannedSyllabusAction</result>
 		</action>
 		<action name="customeUserTeacherSetSyllabusAction"  class="com.customrole.TeacherSetSyllabusAction">
+			<param name="moduleAccess">56</param>
+			<param name="accessType">C</param>
 			<result name="success" type="tiles">customeuser.customeUserTeacherSetSyllabusAction</result>
 		</action>
 		<action name="customUserNoticeBoard"  class="com.customrole.NoticeBoardAction">
+			<param name="moduleAccess">58</param>
+			<param name="accessType">C</param>
 			<result name="success" type="tiles">customeuser.customUserNoticeBoard</result>
 		</action>
 		<action name="customUserStaffNoticeBoard"  class="com.customrole.NoticeBoardAction">
+			<param name="moduleAccess">58</param>
+			<param name="accessType">C</param>
 			<result name="success" type="tiles">customeuser.customUserStaffNoticeBoard</result>
 		</action>
 		<action name="customUserViewNoticeBoard"  class="com.customrole.ViewNoticeAction">
+			<param name="moduleAccess">18</param>
+			<param name="accessType">P</param>
 			<result name="success" type="tiles">customeuser.customUserViewNoticeBoard</result>
+		</action>
+		<action name="customUserPrintTimetable" class="com.customrole.TimeTableAllAction"
+			method="execute">
+			<result name="success" type="tiles">customeuser.customUserPrintTimetable</result>
 		</action>
 	</package>
 </struts>

@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.lang3.ArrayUtils"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
@@ -9,14 +10,15 @@
 <title>Insert title here</title>
 <script type="text/javascript">
 var loadFlag = false;
+var child_mod_access  = [];
 $(document).ready(function(){
 	var dataTable = $("#studentNoticeTable").DataTable();
-	 dataTable.on( 'order.dt search.dt', function () {
+	  dataTable.on( 'order.dt search.dt', function () {
 	        dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
 	            cell.innerHTML = i+1;
 				});
-			}).draw(); 
-	 
+			}).draw();  
+	 child_mod_access  = $("#accessRights").val().split(",");
 	 $("#noticeType").change(function(){
 		 if($("#noticeType").val()== 1){
 			 $("#studentNoticeDiv").show();
@@ -47,7 +49,11 @@ $(document).ready(function(){
 							return row.end_date;
 							},sWidth:"10%"},
 						{ title: "Action",data:null,render:function(data,event,row){
+							if($.inArray( "59", child_mod_access) != "-1"){
 								return '<button class="btn btn-xs btn-danger staffNotice" id="'+row.notice_id+'">Delete</button>';
+							}else{
+								return "-";
+							}
 								},sWidth:"10%"}
 					]
 				});
@@ -105,6 +111,7 @@ function deleteStaffNotice(id,that){
 </script>
 </head>
 <body>
+<% String[] child_mod_access = (String[])session.getAttribute("child_mod_access"); %>
 <jsp:include page="NoticeBoardHeader.jsp" >
 		<jsp:param value="active" name="customUserViewNoticeBoard"/>
 	</jsp:include>
@@ -151,13 +158,19 @@ function deleteStaffNotice(id,that){
 	<td><c:out value="${notice.batch_names}"></c:out></td>
 	<td><c:out value="${start_date}"></c:out></td>
 	<td><c:out value="${end_date}"></c:out></td>
-	<td><button class="btn btn-xs btn-danger studentNotice" id="<c:out value="${notice.notice_id}"></c:out>">Delete</button></td>
+	<td>
+	<% if(ArrayUtils.contains(child_mod_access,"59")){ %>
+	<button class="btn btn-xs btn-danger studentNotice" id="<c:out value="${notice.notice_id}"></c:out>">Delete</button>
+	<%}else{ %>
+	-
+	<%} %>
+	</td>
 	</tr>
 	</c:forEach>
 </tbody>
 </table>
 </div>
-
+<input type="hidden" class="form-control" id="accessRights" value='<%=String.join(",",child_mod_access)%>'>
 <div class="container" style="padding: 1%;display: none;" id="staffNoticeDiv">
 <table class="table table-striped" id="staffNoticeTable"></table>
 </div>
