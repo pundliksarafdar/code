@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -92,7 +93,7 @@ public class ClassownerSettingsServiceImpl extends ServiceBase{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/formField")
-	public Response saveClassowner(HashMap<String, String> formFields){
+	public Response saveClassowner(LinkedHashMap<String, String> formFields){
 		AdditionalFormFieldTransaction transaction = new AdditionalFormFieldTransaction();
 		transaction.saveAdditionalFormField(formFields, getRegId());
 		try {
