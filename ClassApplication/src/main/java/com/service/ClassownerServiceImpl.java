@@ -1229,8 +1229,11 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateStudentDetails(com.classapp.db.student.Student student){
 		StudentTransaction studentTransaction = new StudentTransaction();
+		if(!studentTransaction.validateUpdateStudentRegistrationNo(student.getStudentInstRegNo(), getRegId(),student.getStudent_id())){
 		studentTransaction.updateStudent(student);
 		return Response.status(200).entity(true).build();
+		}
+		return Response.status(200).entity(false).build();
 	}
 	
 	@POST

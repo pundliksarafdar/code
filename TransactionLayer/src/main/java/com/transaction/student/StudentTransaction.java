@@ -599,4 +599,9 @@ public class StudentTransaction {
 		return studentDB.validateStudentRegistrationNo(regNo, inst_id);
 	}
 	
+	public boolean validateUpdateStudentRegistrationNo(String regNo,int inst_id,int student_id) {
+		StudentDB studentDB = new StudentDB();
+		return studentDB.validateUpdateStudentRegistrationNo(regNo, inst_id,student_id);
+	}
+	
 }

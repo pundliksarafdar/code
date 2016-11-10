@@ -66,7 +66,7 @@ padding-top: 2px;
  * @version 2.3.0 (2015-12-25)
  * @link http://www.runningcoder.org/jquerytypeahead/
 */
-
+var formFieldJSON = [];
 var editStudent = {};
 var generateRollNoUrl = "rest/classownerservice/setRollNumber/";
 var studentId="";
@@ -308,6 +308,28 @@ var enabledEdit = false;
 			$("#editPersonalDetailsStudentAddress").val(editStudent.addr);
 			$("#editPersonalDetailsStudentCity").val(editStudent.city);
 			$("#editPersonalDetailsStudentState").val(editStudent.state);
+			$("#editPersonalDetailsRegNo").val(editStudent.studentInstRegNo);
+			$(".addtionaEditFields").remove();
+			var additionalFieldStudentInfo = JSON.parse(editStudent.studentAdditionalInfo);
+			var additionalFieldHtml = "";
+			additionalFieldHtml = additionalFieldHtml + '<div class="row addtionaEditFields"><b>Additional Details</b></div>';
+			var i =0;
+			 $.each(formFieldJSON,function(key,val){
+				if(i%2 == 0){
+				additionalFieldHtml = additionalFieldHtml + "<div class='row addtionaEditFields'>";
+				}
+				additionalFieldHtml = additionalFieldHtml + "<div class='col-md-2'><b>"+val+"</b></div>";
+				if(additionalFieldStudentInfo[key] != undefined){
+				additionalFieldHtml = additionalFieldHtml + '<div class="col-md-3"><input type="text" id="'+key+'" class="form-control" value="'+additionalFieldStudentInfo[key]+'"></div>';
+				}else{
+					additionalFieldHtml = additionalFieldHtml + '<div class="col-md-3"><input type="text" id="'+key+'" class="form-control"></div>';	
+				}
+				if((i+1)%2 == 0 || i == (formFieldJSON.length-1)){
+				additionalFieldHtml = additionalFieldHtml + "</div>";
+				}
+				i++;
+			});
+			$(".updateAction").before(additionalFieldHtml);
 			$('#statebtn').html(editStudent.state+'&nbsp;<span class="caret"></span>');
 		});
 		
@@ -329,59 +351,89 @@ var enabledEdit = false;
 			var regStringExpr = /^[a-zA-Z]+$/;
 			var regAddressExpr = /^[a-zA-Z0-9#, ]+$/;
 			var textonly=/^[a-zA-Z]+$/;
-			
+			var flag = true;
 			if($("#editPersonalDetailsStudentFName").val().trim() == ""){
 				$("#editPersonalDetailsStudentFNameError").html("Enter first name")
+				flag = false;
 			}else if(!$("#editPersonalDetailsStudentFName").val().trim().match(regStringExpr)){
 				$("#editPersonalDetailsStudentFNameError").html("First Name is invalid. Only A-Z characters are allowed.")
+				flag = false;
 			}
 			if($("#editPersonalDetailsStudentLName").val().trim() == ""){
 				$("#editPersonalDetailsStudentLNameError").html("Enter last name")
+				flag = false;
 			}else if(!$("#editPersonalDetailsStudentLName").val().trim().match(regStringExpr)){
 				$("#editPersonalDetailsStudentLNameError").html("Last Name is invalid. Only A-Z characters are allowed.")
+				flag = false;
 			}
 			if(!$("#editPersonalDetailsStudentMobile").val().match(regPhoneNumber) || $("#editPersonalDetailsStudentMobile").val().trim().length != 10){
 				$("#editPersonalDetailsStudentMobileError").html("Invalid phone no.")
+				flag = false;
 			}
 			if($("#editPersonalDetailsStudentEmail").val().trim() != ""){
 			if(!validateEmail($("#editPersonalDetailsStudentEmail").val().trim())){
 				$("#editPersonalDetailsStudentEmailError").html("Invalid Email ID")
+				flag = false;
 			}
 			}
 			
 			if($("#editPersonalDetailsStudentState").val()=="-1" ){
 				$("#editPersonalDetailsStudentStateError").html("Select State")
+				flag = false;
 			}
 			if($("#editPersonalDetailsStudentCity").val().trim() == ""){
 				$("#editPersonalDetailsStudentCityError").html("Enter city.")	
+				flag = false;
 			}else if(!$("#editPersonalDetailsStudentCity").val().match(textonly)){
 				$("#editPersonalDetailsStudentCityError").html("Invalid City. Only A-Z characters are allowed.")
+				flag = false;
 			}
 			
 			if($("#editPersonalDetailsParentFName").val().trim() == ""){
 				$("#editPersonalDetailsParentFNameError").html("Enter first name")
+				flag = false;
 			}else if(!$("#editPersonalDetailsParentFName").val().trim().match(regStringExpr)){
 				$("#editPersonalDetailsParentFNameError").html("First Name is invalid. Only A-Z characters are allowed.")
+				flag = false;
 			}
 			if($("#editPersonalDetailsParentLName").val().trim() == ""){
 				$("#editPersonalDetailsParentLNameError").html("Enter last name")
+				flag = false;
 			}else if(!$("#editPersonalDetailsParentLName").val().trim().match(regStringExpr)){
 				$("#editPersonalDetailsParentLNameError").html("Last Name is invalid. Only A-Z characters are allowed.")
+				flag = false;
 			}
 			if(!$("#editPersonalDetailsParentMobile").val().match(regPhoneNumber) || $("#editPersonalDetailsParentMobile").val().trim().length != 10){
 				$("#editPersonalDetailsParentMobileError").html("Invalid phone no.")
+				flag = false;
 			}
 			if($("#editPersonalDetailsParentEmail").val().trim() != ""){
 			if(!validateEmail($("#editPersonalDetailsParentEmail").val().trim())){
 				$("#editPersonalDetailsParentEmailError").html("Invalid Email ID")
+				flag = false;
 			}
 			}
 			
 			if($("#editPersonalDetailsStudentAddress").val().trim() == ""){
 				$("#editPersonalDetailsStudentAddressError").html("Enter address")
+				flag = false;
 			}else if(!$("#editPersonalDetailsStudentAddress").val().trim().match(regAddressExpr)){
 				$("#editPersonalDetailsStudentAddressError").html("Invalid Address")
+				flag = false;
 			}
+			
+			if($("#editPersonalDetailsRegNo").val().trim() == ""){
+				$("#editPersonalDetailsRegNoError").html("Enter Registration No")
+				flag = false;
+			}
+			
+			if(flag){
+			var additionalValData = {};
+			$.each(formFieldJSON,function(key,val){
+				var fieldValue = $("#"+key+"").val();
+				additionalValData[key] = fieldValue;
+			});
+			editStudent.studentAdditionalInfo = JSON.stringify(additionalValData);
 			editStudent.fname = $("#editPersonalDetailsStudentFName").val();
 			editStudent.lname = $("#editPersonalDetailsStudentLName").val();
 			editStudent.phone = $("#editPersonalDetailsStudentMobile").val();
@@ -394,17 +446,24 @@ var enabledEdit = false;
 			editStudent.addr = $("#editPersonalDetailsStudentAddress").val();
 			editStudent.city = $("#editPersonalDetailsStudentCity").val();
 			editStudent.state = $("#editPersonalDetailsStudentState").val();
+			editStudent.studentInstRegNo = $("#editPersonalDetailsRegNo").val();
 			var handlers = {};
 			handlers.success=function(data){
+				if(data){
 				$(".studentDetailsDiv").show();
 				$("#editPersonalDetailsDiv").hide();
 				$.notify({message: "Student Details update"},{type: 'success'});
+				studentDetailsAfterUpdate(editStudent.student_id)
+				}else{
+					$("#editPersonalDetailsRegNoError").html("Duplicate Registration No")	
+				}
 			};   
 			handlers.error=function(){
 				$.notify({message: "Error"},{type: 'danger'});
 			};   
-			
+			console.log(editStudent)
 			rest.put("rest/classownerservice/updateStudentDetails/",handlers,JSON.stringify(editStudent));
+			}
 		});
 	});
 	
@@ -646,46 +705,14 @@ var enabledEdit = false;
 		}
 	}
 	
-	function studentDetails(){
+	function studentDetailsAfterUpdate(studentId){
 		$(".studentDetails").find("#batchID").val(globalBatchID);
 		$(".studentDetails").find("#divisionID").val(globalDivisionID);
 		$(".studentDetails").find("#studentID").val($(this).closest("tr").find("#studentId").val());
 		$(".studentDetails").find("#currentPage").val($(".paginate_button current").text());
 		 $("#generalTab").find(".crendentialDetails").empty();
 		var formdata=$(".studentDetails").serialize();
-		 studentId = $(this).closest("tr").find("#studentId").val();
-		/* $.ajax({
-			 url: "classOwnerServlet",
-			   data: {
-			    	 methodToCall: "getStudentDetails",
-					 regId:'',
-					 studentId:studentId
-			   		},
-			   type:"POST",
-			   success:function(e){					  
-				   var data = JSON.parse(e);
-				   var json = data.studentDetails;
-				   $("#studentDetailsBday").html(json.studentUserBean.dob.substring(6)+"/"+json.studentUserBean.dob.substring(4,6)+"/"+json.studentUserBean.dob.substring(0,4));
-				   $("#studentDetailsName").html(json.studentUserBean.fname+" "+json.studentUserBean.lname);
-				   var batchNames = "";
-				   $.each(json.batches,function(key,val){
-						batchNames =  batchNames + ","+ val.batch_name;
-					});
-				   batchNames = batchNames.replace(",","");
-				   $("#studentDetailsClass").html(json.division.divisionName);
-				   $("#studentDetailsBatch").html(batchNames);
-				   $("#studentDetailsStudentPhone").html(json.studentUserBean.phone1);
-				   $("#studentDetailsStudentEmail").html(json.studentUserBean.email);
-				   $("#studentDetailsAddress").html(json.studentUserBean.addr1+","+json.studentUserBean.city+","+json.studentUserBean.state);
-				   $("#studentDetailsParentName").html(json.student.parentFname+" "+json.student.parentLname);
-				   $("#studentDetailsParentPhone").html(json.student.parentPhone);
-				   $("#studentDetailsParentEmail").html(json.student.parentEmail);
-			   	},
-			   error:function(e){
-			   
-			   }
-		}); */
-		
+		// studentId = $(this).closest("tr").find("#studentId").val();
 		var handlers = {};
 
 		handlers.success = function(data){console.log("Success",data);
@@ -736,7 +763,85 @@ var enabledEdit = false;
 		 /****Show additional information********/
 		 if(data.additionalStudentInfoBean && data.additionalFormFieldBeanDl){
 			 $("#generalTabAdditionalInfo").empty();
-			 var formFieldJSON = JSON.parse(data.additionalFormFieldBeanDl.formField);
+			  formFieldJSON = JSON.parse(data.additionalFormFieldBeanDl.formField);
+			 $.each(data.additionalStudentInfoBean,function(key,val){
+				 var additionalData = $("#additionalData").html();
+				 var $additionalData = $(additionalData);
+				 if(formFieldJSON[key]){
+					 $additionalData.find("#label").html(formFieldJSON[key]);
+					 $additionalData.find("#data").html(val);
+					 $("#generalTabAdditionalInfo").append($additionalData);	 
+				 }
+				 
+			 });
+			 
+		 }
+		 
+		}
+		handlers.error = function(e){console.log("Error",e)}
+		rest.get("rest/classownerservice/getStudentDetails/"+studentId,handlers);
+	}
+	
+	
+	function studentDetails(){
+		$(".studentDetails").find("#batchID").val(globalBatchID);
+		$(".studentDetails").find("#divisionID").val(globalDivisionID);
+		$(".studentDetails").find("#studentID").val($(this).closest("tr").find("#studentId").val());
+		$(".studentDetails").find("#currentPage").val($(".paginate_button current").text());
+		 $("#generalTab").find(".crendentialDetails").empty();
+		var formdata=$(".studentDetails").serialize();
+		 studentId = $(this).closest("tr").find("#studentId").val();
+		var handlers = {};
+
+		handlers.success = function(data){console.log("Success",data);
+		
+		$("#studentDetailsBday").html(data.student.dob.substring(8)+"/"+data.student.dob.substring(5,7)+"/"+data.student.dob.substring(0,4));
+		   $("#studentDetailsName").html(data.student.fname+" "+data.student.lname);
+		   var batchNames = "";
+		   $.each(data.batches,function(key,val){
+				batchNames =  batchNames + ","+ val.batch_name;
+			});
+		   editStudent = data.student;
+		   batchNames = batchNames.replace(",","");
+		   $("#studentInstId").html(data.student.studentInstRegNo);
+		   $("#studentDetailsClass").html(data.division.divisionName+" "+data.division.stream);
+		   $("#studentDetailsBatch").html(batchNames);
+		   $("#studentDetailsStudentPhone").html(data.student.phone);
+		   $("#studentDetailsStudentEmail").html(data.student.email);
+		   $("#studentDetailsAddress").html(data.student.addr+","+data.student.city+","+data.student.state);
+		   $("#studentDetailsParentName").html(data.student.parentFname+" "+data.student.parentLname);
+		   $("#studentDetailsParentPhone").html(data.student.parentPhone);
+		   $("#studentDetailsParentEmail").html(data.student.parentEmail);
+		   if(data.studentUserBean.status == "M" || data.studentUserBean.status == "E"){
+			 $("#generalTab").append("<div class='crendentialDetails'><div class='row'><label>Credential Information</label></div>"+
+					 	"<div class='row'><div class='col-md-2'>Username</div>"+
+				    	"<div class='col-md-1'>:</div>"+
+				    	"<div class='col-md-3'>"+data.studentUserBean.loginName+"</div>"+
+				    	"<div class='col-md-2'>Password</div>"+
+				    	"<div class='col-md-1'>:</div>"+
+				    	"<div class='col-md-3'>"+data.studentUserBean.loginPass+"</div></div>");  
+		   }
+		   createProgressCard(data.examWiseStudentDetails,data.batches);
+		   createAttenanceTab(data.attendanceData);
+		   createFeesTab(data.feesServiceBean,data.batches);
+		$(".studentDetailsDiv").show();
+		$("#marksGraphData").empty();
+		if(graphData.length > 0){
+		
+			for (i =0; i <graphData.length;i++){
+		if(graphData[i].length>0){
+			$("#marksGraphData").append("<div id='graph"+i+"' style='border:outset;margin:1%'><div align='center' style='border-bottom:outset;font-weight:bold'>"+graphData[i][0].exam_name+"</div><div id='graphData"+i+"'></div></div>");
+		}}}
+		/* setTimeout(function(){
+			
+		},5000);
+		 */
+		$(".studentList").hide();
+		 
+		 /****Show additional information********/
+		 if(data.additionalStudentInfoBean && data.additionalFormFieldBeanDl){
+			 $("#generalTabAdditionalInfo").empty();
+			  formFieldJSON = JSON.parse(data.additionalFormFieldBeanDl.formField);
 			 $.each(data.additionalStudentInfoBean,function(key,val){
 				 var additionalData = $("#additionalData").html();
 				 var $additionalData = $(additionalData);
@@ -1374,6 +1479,12 @@ var enabledEdit = false;
 <div class="container" style="display: none" id="editPersonalDetailsDiv">
 <div class="row"><b>Student Details</b></div>
 <div class="row">
+	<div class="col-md-2"><b>Registration number:</b></div> 
+	<div class="col-md-3"><input type="text" id="editPersonalDetailsRegNo" class="form-control">
+						  <span id="editPersonalDetailsRegNoError" class="error"></span>	
+	</div> 
+</div>	
+<div class="row">
 	<div class="col-md-2"><b>First Name:</b></div> 
 	<div class="col-md-3"><input type="text" id="editPersonalDetailsStudentFName" class="form-control">
 						  <span id="editPersonalDetailsStudentFNameError" class="error"></span>	
@@ -1475,7 +1586,7 @@ var enabledEdit = false;
 						   <span id="editPersonalDetailsParentEmailError" class="error"></span>
 	</div> 
 </div>
-<div class="row">
+<div class="row updateAction">
 	<div class="col-md-1"><button class="btn btn-success btn-sm" id="editPersonalDetailsSave">Save</button></div> 
 	<div class="col-md-1"><button class="btn btn-danger btn-sm" id="editPersonalDetailsEditCancel">Cancel</button></div>
 </div>

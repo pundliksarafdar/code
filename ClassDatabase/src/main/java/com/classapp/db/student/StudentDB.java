@@ -923,5 +923,34 @@ public class StudentDB {
 		return false;
 	}
 	
+	public boolean validateUpdateStudentRegistrationNo(String regNo,int inst_id,int student_id) {
+		Session session = null;
+		boolean status=false;
+		List list=null;
+		String queryString="from Student std where std.class_id=:class_id and studentInstRegNo=:regNo and student_id != :student_id";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			Query query = session.createQuery(queryString);
+			query.setParameter("class_id", inst_id);
+			query.setParameter("regNo", regNo);
+			query.setParameter("student_id", student_id);
+				list=query.list();
+			if(list!=null)
+			{
+				if(list.size() > 0){
+				return true;
+				}else{
+				return false;
+				}
+			}
+		}catch(Exception e){
+			AppLogger.logError(e);
+		}finally{
+			session.close();
+		}
+		
+		return false;
+	}
+	
 	
 }

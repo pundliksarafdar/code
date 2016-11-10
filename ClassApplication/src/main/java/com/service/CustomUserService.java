@@ -3,6 +3,8 @@ package com.service;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,6 +23,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,6 +53,11 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.classapp.db.Notes.Notes;
@@ -834,7 +842,7 @@ public class CustomUserService extends ServiceBase {
 		
 		AdditionalStudentInfoBean bean1= studentTransaction.getAdditionalStudentInfoBean_(student_id, userBean.getInst_id());
 		Type type = new TypeToken<HashMap<String, String>>(){}.getType();
-		Map<String, String> retMap = new Gson().fromJson(bean1.getStudentData(),type);
+		Map<String, String> retMap = new Gson().fromJson(student.getStudentAdditionalInfo(),type);
 		studentDetails.setAdditionalStudentInfoBean((HashMap<String, String>)retMap);
 		studentDetails.setInstStudentId(bean1.getInstStudentId());
 		
@@ -2072,10 +2080,16 @@ public class CustomUserService extends ServiceBase {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/formField")
-	public Response saveClassowner(HashMap<String, String> formFields){
+	public Response saveClassowner(LinkedHashMap<String, String> formFields){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		AdditionalFormFieldTransaction transaction = new AdditionalFormFieldTransaction();
 		transaction.saveAdditionalFormField(formFields, userBean.getInst_id());
+		try {
+			updateExcel();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return Response.accepted(formFields).build();
 	}
 	
@@ -2682,9 +2696,13 @@ public class CustomUserService extends ServiceBase {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateStudentDetails(com.classapp.db.student.Student student){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		StudentTransaction studentTransaction = new StudentTransaction();
-		studentTransaction.updateStudent(student);
-		return Response.status(200).entity(true).build();
+		if(!studentTransaction.validateUpdateStudentRegistrationNo(student.getStudentInstRegNo(), userBean.getInst_id(),student.getStudent_id())){
+			studentTransaction.updateStudent(student);
+			return Response.status(200).entity(true).build();
+			}
+			return Response.status(200).entity(false).build();
 	}
 	
 	@GET
@@ -3004,4 +3022,74 @@ public class CustomUserService extends ServiceBase {
 	    		AppLogger.logger("File is deleted : " + file.getAbsolutePath());
 	    	}
 	    }
+	
+	public  void updateExcel() throws FileNotFoundException {
+		 UserBean userBean = getUserBean();
+		 AdditionalFormFieldTransaction transaction = new AdditionalFormFieldTransaction();
+			AdditionalFormFieldBeanDl bean = transaction.getAdditionalFormFieldBean(userBean.getInst_id());
+			if(bean != null){
+		 File file = new File(Constants.STORAGE_PATH+"/SampleStudent.xls");
+		FileInputStream myFile = new FileInputStream(file);
+		org.apache.poi.ss.usermodel.Workbook workbook = null;
+
+		try {
+
+			workbook = WorkbookFactory.create(myFile);
+
+		} catch (FileNotFoundException e) {
+			AppLogger.logError(e);
+		} catch (IOException e) {
+			AppLogger.logError(e);
+		}catch (EncryptedDocumentException e) {
+			AppLogger.logError(e);
+		} catch (InvalidFormatException e) {
+			AppLogger.logError(e);
+		}
+		org.apache.poi.ss.usermodel.Sheet sheet = workbook.getSheetAt(0);
+		// Get iterator to all the rows in current sheet
+		Iterator<Row> rowIterator = sheet.iterator();
+		if (rowIterator.hasNext()) {
+			Row rowHeader = rowIterator.next();
+			String str = bean.getFormField();
+			 JsonParser parser = new JsonParser();
+			 Object obj = parser.parse(str);
+	         JsonObject object = (JsonObject)obj;
+			
+			/*Gson gson = new Gson();
+			JsonElement jsonObj = gson.toJsonTree(str);
+			JsonObject object = jsonObj.getAsJsonObject();*/
+			Set<Entry<String, JsonElement>> ens = object.entrySet();
+			int i = 19;
+			if (ens != null) {
+               // Iterate JSON Elements with Key values
+               for (Entry<String, JsonElement> en : ens) {
+               	Cell cell = rowHeader.getCell(i);
+       			if(cell == null){
+                       cell = rowHeader.createCell(i);
+                   }
+       			cell.setCellValue(en.getValue().toString().replace("\"", ""));
+       			i++;
+                  /* System.out.println(en.getKey() + " : ");
+                   System.out.println(en.getValue());*/
+               }
+           }
+			
+			try {
+				myFile.close();
+				File f = new File(userBean.getUserStatic().getStorageSpace()+"/SampleFiles");
+				if(!f.exists()){
+					f.mkdir();
+				}
+				File oFile = new File(userBean.getUserStatic().getStorageSpace()+"/SampleFiles/SampleStudent.xls");
+				
+	            FileOutputStream outFile =new FileOutputStream(oFile);
+				workbook.write(outFile);
+				outFile.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+			}
+	}
 }
