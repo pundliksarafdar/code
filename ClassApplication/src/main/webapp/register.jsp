@@ -15,6 +15,7 @@
 </style>
 
 <script type="text/javascript">
+	var validator;
 	$(function () {
 		$('[data-toggle="tooltip"]').attr("title",passwordCriteria); 
 		$('[data-toggle="tooltip"]').tooltip({"html":true});
@@ -23,7 +24,23 @@
 	$(document).ready(function(){
 		
 		/******************************************/
-		$('#regform').validate({
+		jQuery.validator.addMethod("lettersonly", function(value, element) {
+			return this.optional(element) || /^[a-z\s]+$/i.test(value);
+		}, "Only alphabetical characters");
+		
+		validator = $('#regform').validate({
+			ignore: ":hidden",
+			rules: {
+				"registerBean.fname": {
+	                lettersonly: true
+	            },
+	            "registerBean.mname": {
+	                lettersonly: true
+	            },
+	            "registerBean.lname": {
+	                lettersonly: true
+	            }
+	        },
         highlight: function(element) {
             $(element).closest('.form-group').addClass('has-error');
         },
@@ -42,6 +59,14 @@
     });
 		
 		/*******************************************/
+		$("#role").on("change",function(){
+			var role = $(this).val();
+			if(role == 1){
+				$("#divClassname").show();	
+			}else{
+				$("#divClassname").hide();
+			}
+		});
 		$('#datetimepicker').datetimepicker({
 			format : 'DD-MM-YYYY',
 			pickTime : false,
@@ -53,7 +78,6 @@
 			$(this).val(string.charAt(0).toUpperCase() + string.slice(1));
 		});
 		
-		$('#roleValidation').val("");
 		$('#phone1,#phone2').keydown(function(e){
 		    console.log("loggin :"+e.keyCode+":"+e.which);
 		    if(((e.keyCode < 47 || e.keyCode > 57)) && !(e.keyCode == 8 || e.keyCode == 9 || e.keyCode == 46 || e.keyCode ==37 || e.keyCode ==39)){
@@ -73,7 +97,9 @@
 			allAjax.checkNumberExist($(this).val().trim(),function(e){
 				var resultJson = JSON.parse(e);
 				   if(resultJson.exists == true){
-					   $("#phoneError").show();
+					   validator.showErrors({
+							  "registerBean.phone1": "This Phone number is already registered"
+							});
 				   	}else{
 				   		
 				   	}				
@@ -86,7 +112,9 @@
 			allAjax.checkUserNameExist($(this).val().trim(),function(e){
 				var resultJson = JSON.parse(e);
 				   if(resultJson.exists == true){
-					   $("#lgnameError").show();						   					   	
+					   validator.showErrors({
+							  "registerBean.loginName": "This login name is already registered"
+							});						   					   	
 				   	}else{
 				   		
 				   	}				
@@ -99,7 +127,9 @@
 			allAjax.checkEmailExist($(this).val().trim(),function(e){
 				var resultJson = JSON.parse(e);
 				   if(resultJson.exists == true){
-					   $("#emailError").show();						   					   	
+					   validator.showErrors({
+							  "registerBean.email": "This email is already registered"
+							});					   					   	
 				   	}else{
 				   		
 				   	}				
@@ -108,27 +138,18 @@
 			   $("#emailError").hide();
 		});
 		
-		$("input").keyup(function(){
-			$(this).parents(".form-group").find('.danger').remove();
-			$(this).parents(".form-group").removeClass("has-error");
-		});
 		
-		$("#statebtn").parents(".btn-group").find("li").on("mouseup",function(){
-			$("#statebtn").parents(".form-group").find('.danger').remove();
-			$('#statebtn').html($(this).text()+'&nbsp;<span class="caret"></span>');
-			$('#state').val($(this).text());
-			$("#statebtn").focus();
-		});
-		
-		var stateName = $("#state").val();
-		if(stateName != "-1"){
-			$('#statebtn').html(stateName+'&nbsp;<span class="caret"></span>');
-		}
 	});
 	
 	function go(){
 		$("input").parents(".form-group").find('.danger').remove();
 		if($("#regform").valid()){
+			var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
+			if(!$("#loginname").val().match(regloginname)){
+				validator.showErrors({
+					  "registerBean.loginName": "Login should contain only character and number"
+					});
+			}
 			$('#regform').submit();
 		}else{
 			$(document).scrollTop();
@@ -158,37 +179,31 @@
 			
 			<label for="role"  class="col-sm-4 control-label">*Select your role</label>
 			<div class="col-sm-5" align="left">
-			<select name="registerBean.role" required="required" class="btn btn-default">
+			<select name="registerBean.role" required="required" class="btn btn-default" id="role" value='<s:property value="registerBean.role" />'>
 				<option value="1">Class owner</option>
 				<option value="2">Class Teacher</option>
 				<option value="3">Student</option>
 			</select>
 			</div>
-				<!--<select name="ROLE" id="role">
-				  <option value="0">Admin</option>
-				  <option value="1">Class Owner</option>
-				  <option value="2">Class Teacher</option>
-				  <option value="3">Student</option>
-				</select>
-				-->
+			
 		</div>
 		
 		<div class="form-group">
 	    	<label for="fname" class="col-sm-4 control-label">*First Name</label>
 	    	<div class="col-sm-5">
-	    		<input type="text" pattern="[A-Za-z]{4,20}" class="form-control" name="registerBean.fname" id="fname" required="required" value='<s:property value="registerBean.fname" />'/>
+	    		<input type="text" class="form-control" name="registerBean.fname" id="fname" required="required" value='<s:property value="registerBean.fname" />' minlength=4 maxlength=20/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="mname" class="col-sm-4 control-label">Middle Name</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" maxlength="20" name="registerBean.mname" id="mname"  value='<s:property value="registerBean.mname" />'/>
+				<input type="text" class="form-control" maxlength="20" name="registerBean.mname" id="mname"  value='<s:property value="registerBean.mname" />'  minlength=4/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="lname" class="col-sm-4 control-label">*Last Name</label>
 			<div class="col-sm-5">
-				<input type="text" class="form-control" maxlength="20" name="registerBean.lname" id="lname" required="required"  value='<s:property value="registerBean.lname" />'/>
+				<input type="text" class="form-control" maxlength="20" name="registerBean.lname" id="lname" required="required"  value='<s:property value="registerBean.lname" />' minlength=4/>
 			</div>
 		</div>
 		<div class="form-group">
@@ -240,48 +255,43 @@
 		<div class="form-group">
 			
 			<label for="state"  class="col-sm-4 control-label">*State</label>
-			<div class="col-sm-5" align="left">
-			
+			<!-- 
 			<input type="hidden" class="form-control" name="registerBean.state" id="state" required="required" value='<s:property value="registerBean.state" default="-1"/>'/>
 			<input type="hidden"  value='<s:property value="registerBean.state" default="-1"/>' />
-			<div class="btn-group">
-					<button type="button" class="btn btn-default dropdown-toggle"
-						data-toggle="dropdown" id="statebtn">
-						State <span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu scrollable-menu" role="menu" >
-						<li value="Andhra Pradesh">Andhra Pradesh</li>
-						<li value="Arunachal Pradesh">Arunachal Pradesh<li>
-						<li value="Assam">Assam</li>
-						<li value="Bihar">Bihar</li>
-						<li value="Chhattisgarh">Chhattisgarh</li>
-						<li value="Goa">Goa</li>
-						<li value="Gujarat">Gujarat</li>
-						<li value="Haryana">Haryana</li>
-						<li value="Himachal Pradesh">Himachal Pradesh</li>
-						<li value="Jammu and Kashmir">Jammu and Kashmir</li>
-						<li value="Jharkhand">Jharkhand</li>
-						<li value="Karnataka">Karnataka</li>
-						<li value="Kerala">Kerala</li>
-						<li>Madhya Pradesh</li>
-						<li>Maharashtra</li>
-						<li>Manipur</li>
-						<li>Meghalaya</li>
-						<li>Mizoram</li>
-						<li>Nagaland</li>
-						<li>Orissa</li>
-						<li>Punjab</li>
-						<li>Rajasthan</li>
-						<li>Sikkim</li>
-						<li>Tamil Nadu</li>
-						<li>Telangana</li>
-						<li>Tripura</li>
-						<li>Uttar Pradesh</li>
-						<li>Uttarakhand</li>
-						<li>West Bengal</li>
-					</ul>
-			</div>
-			</div>
+			 -->
+			
+			
+			<select class="btn btn-default" name="registerBean.state" value='<s:property value="registerBean.state" />'>
+						<option value="Andhra Pradesh">Andhra Pradesh</option>
+						<option value="Arunachal Pradesh">Arunachal Pradesh</option>
+						<option value="Assam">Assam</option>
+						<option value="Bihar">Bihar</option>
+						<option value="Chhattisgarh">Chhattisgarh</option>
+						<option value="Goa">Goa</option>
+						<option value="Gujarat">Gujarat</option>
+						<option value="Haryana">Haryana</option>
+						<option value="Himachal Pradesh">Himachal Pradesh</option>
+						<option value="Jammu and Kashmir">Jammu and Kashmir</option>
+						<option value="Jharkhand">Jharkhand</option>
+						<option value="Karnataka">Karnataka</option>
+						<option value="Kerala">Kerala</option>
+						<option>Madhya Pradesh</option>
+						<option>Maharashtra</option>
+						<option>Manipur</option>
+						<option>Meghalaya</option>
+						<option>Mizoram</option>
+						<option>Nagaland</option>
+						<option>Orissa</option>
+						<option>Punjab</option>
+						<option>Rajasthan</option>
+						<option>Sikkim</option>
+						<option>Tamil Nadu</option>
+						<option>Telangana</option>
+						<option>Tripura</option>
+						<option>Uttar Pradesh</option>
+						<option>Uttarakhand</option>
+						<option>West Bengal</option>
+			</select>
 		</div>
 		<div class="form-group">
 			<label for="country" class="col-sm-4 control-label">*Country</label>
@@ -290,7 +300,6 @@
 			</div>
 		</div>
 		
-		<div id="phoneError" style="display: none;color: red;">This Phone number is already registered</div>
 		<div class="form-group">
 			<label for="phone1" class="col-sm-4 control-label">*Phone 1</label>
 			<div class="col-sm-5">
@@ -322,7 +331,7 @@
 		<div class="form-group">
 			<label for="loginname" class="col-sm-4 control-label">*Desired Login Name</label>
 			<div class="col-sm-5">
-				<input type="text" maxlength="20" class="form-control" name="registerBean.loginName" id="loginname" required="required"  value='<s:property value="registerBean.loginName" />'/>
+				<input type="text" maxlength="20" class="form-control" name="registerBean.loginName" id="loginname" required="required"  value='<s:property value="registerBean.loginName" />'  minlength="5"/>
 			</div>
 		</div>
 		<div class="form-group">
@@ -331,7 +340,7 @@
 			<i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="bottom" title="" style="color: red;"></i>*Password</label>
 			<div class="col-sm-5">
 				<div>
-					<input type="password" maxlength="20" class="form-control" name="registerBean.loginPass" id="loginpass" required="required" />
+					<input type="password" maxlength="20" class="form-control" name="registerBean.loginPass" id="loginpass" required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%]).{5,20}"/>
 				</div>	
 				</div>
 			</div>
