@@ -17,7 +17,7 @@
     <module>NotificationLayer</module>
 	<module>TransactionLayer</module>
 	<module>ClassApplication</module>
-	<!--<module>CorexWebService</module>-->
+	<module>CorexWebService</module>
   </modules> 
 <build>
 <plugins>

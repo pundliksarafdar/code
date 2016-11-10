@@ -13,13 +13,14 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.classapp.login.LoginBeanMobile;
 import com.classapp.schedule.Scheduledata;
 import com.corex.requestbean.NotesFileRequest;
 import com.corex.requestbean.NotesListRequest;
 import com.corex.requestbean.StudentBatchRequest;
 import com.corex.requestbean.WeeklyScheduleRequest;
 import com.corex.responsebean.WeeklyScheduleResponse;
-
+import com.corex.annotation.AuthorizeRole;
 import com.corex.requestbean.IRequest;
 import com.corex.responsebean.IResponse;
 import com.corex.responsebean.LoginResponse;
@@ -37,9 +38,10 @@ public interface IService {
 	
 	@POST
 	@Path("/login")
+	@AuthorizeRole
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response login(IRequest request);
+	public Response login(LoginBeanMobile request);
 
 	@POST
 	@Path("/getscheduledate")

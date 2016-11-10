@@ -76,26 +76,9 @@ public class Service implements IService {
 	@Override
 	@POST
 	@Path("/login")
-	public Response login(IRequest request) {
+	public Response login(LoginBeanMobile loginBeanMobile) {
 		
-		LoginResponse loginResponse = new LoginResponse();
-		loginResponse.setCode("000", "success");
-		com.tranaction.login.login login = new login();
-		LoginBeanMobile beanMobile = request.getLoginBeanMobile();
-		UserBean userBean = new UserBean();
-		login.loadBean(userBean, beanMobile);
-		if(null == userBean.getUsername()){
-			loginResponse.setCode("401", "unauthorised");
-		}else{
-		loginResponse.setUserBean(userBean);
-		
-		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
-		HashMap<String, List> studentData = scheduleTransaction.getStudentData(userBean
-				.getRegId());
-		
-		loginResponse.setStudentScheduleData(studentData);
-		}
-		return Response.ok().entity(loginResponse).build();
+		return Response.ok().entity(loginBeanMobile).build();
 	}
 
 	@Override
@@ -231,7 +214,7 @@ public class Service implements IService {
 				for (int i = 0; i < noteList.size(); i++) {
 					NotesListResponse notesListResponse=new NotesListResponse();
 					notesListResponse.setDiv_id(noteList.get(i).getDivid());
-					notesListResponse.setInst_id(noteList.get(i).getClassid());
+					//notesListResponse.setInst_id(noteList.get(i).getClassid());
 					notesListResponse.setNotes_id(noteList.get(i).getNotesid());
 					notesListResponse.setNotes_name(noteList.get(i).getName());
 					notesListResponse.setSub_id(noteList.get(i).getSubid());

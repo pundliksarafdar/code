@@ -36,6 +36,8 @@ body{
  <script src="js/customPlugin/home.js"></script>
  <!-- <script src="js/datepicker.js"></script> -->
  <script src="js/bootstrap-datetimepicker.min.js"></script>
+ <script src="js/jquery.validate.min.js"></script>
+ <script src="js/additional-methods.js"></script>
 </head>
 <body>
 	<div class="modal fade" id="loaderModal">
