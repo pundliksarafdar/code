@@ -383,12 +383,28 @@ public class ClassOwnerServlet extends HttpServlet{
 			}
 			int studentId=Integer.parseInt(req.getParameter("studentId"));
 			int div=Integer.parseInt(req.getParameter("div"));
+			String batchIds=req.getParameter("batchIds");
+			String currentBatch=req.getParameter("currentBatch");
+			int rollNo=Integer.parseInt("".equals(req.getParameter("rollNo")) ? "0" :req.getParameter("rollNo"));
+			boolean validationFlag = true;
+			if(rollNo != 0){
+				validationFlag = studentTransaction.validateRollNo(currentBatch, regId, div, rollNo, studentId);
+			}
+			if (validationFlag) {
 			Student student=studentData.getStudentDetailsFromClass(studentId, regId);			
-			String batchIds=req.getParameter("batchIds");			
 			student.setBatch_id(batchIds);
 			student.setDiv_id(div);
 //			boolean validStudent=validateStudentBatch(student,batchIds,regId, printWriter);
-			
+			if(rollNo != 0){
+			String batchIDNRoll = student.getBatchIdNRoll();
+			JsonParser jsonParser = new JsonParser();
+			JsonObject object = new JsonObject();
+			if(null!=batchIDNRoll){
+				JsonElement element = jsonParser.parse(batchIDNRoll);
+				object = element.getAsJsonObject();
+			}object.addProperty(currentBatch, rollNo);
+			student.setBatchIdNRoll(object.toString());
+			}
 				student.setBatch_id(batchIds);
 				if(studentTransaction.updateStudentDb(student)){
 					respObject.addProperty(STATUS, "success");
@@ -396,7 +412,10 @@ public class ClassOwnerServlet extends HttpServlet{
 				}else{
 					respObject.addProperty(STATUS, "error");
 					respObject.addProperty(MESSAGE, "Error while updating the student with Id="+studentId+"!");
-				}			
+				}
+			}else{
+				respObject.addProperty(STATUS, "roll");	
+			}	
 				//printWriter.write(respObject.toString());
 			
 		}else if("deleteStudent".equals(methodToCall)){

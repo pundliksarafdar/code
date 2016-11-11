@@ -604,4 +604,9 @@ public class StudentTransaction {
 		return studentDB.validateUpdateStudentRegistrationNo(regNo, inst_id,student_id);
 	}
 	
+	public boolean validateRollNo(String batchname,int inst_id,int div_id,int roll_no,int student_id) {
+		StudentDB studentDB = new StudentDB();
+		return studentDB.validateRollNo(batchname, inst_id, div_id, roll_no, student_id);
+	}
+	
 }
