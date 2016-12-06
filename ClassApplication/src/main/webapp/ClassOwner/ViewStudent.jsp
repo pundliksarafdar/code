@@ -693,7 +693,15 @@ var enabledEdit = false;
 	
 	function generateRoll(){
 		var handler = {};
-		handler.success = function(e){$.notify({message: "Roll number generated"},{type: 'success'});};
+		handler.success = function(e){
+			$.notify({message: "Roll number generated"},{type: 'success'});
+			var batchData = $("#batch").data("batchData")[$("#batch").val()];
+			if(batchData.status == null){
+				$("#batch").data("batchData")[$("#batch").val()].status = "rollGenerated=yes";
+				generateButtonChange();
+			}
+			$(".searchStudentByBatch").click();
+		};
 		handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.post(generateRollNoUrl+$("#division").val()+"/"+$("#batch").val(),handler);
 	}
@@ -711,6 +719,10 @@ var enabledEdit = false;
 		}else{
 			$('.generateRollNumber').addClass('hide');
 		}
+	}
+	
+	function generateButtonChange(){
+		$('.generateRollNumber').text("Re Generate roll number").attr("data-toggle","tooltip").attr("data-original-title","Roll number for this batch are already generated, Click to regenerate, this may loose previously generated roll number");
 	}
 	
 	function studentDetailsAfterUpdate(studentId){

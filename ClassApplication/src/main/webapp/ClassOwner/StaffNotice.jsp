@@ -89,15 +89,34 @@ $(document).ready(function(){
 	});
 	
 	$("#save").click(function(){
+		$(".error").html("");
+		var flag = true;
 		var notice = {};
 		if($("input[name=applicableTo]:checked").val() == "all"){
 		notice.role = 0;
 		}else{
-			notice.role = $("#role").val().join(",");
+			notice.role = $("#role").val();
+			if(notice.role == null){
+				$("#roleError").html("Select Role/s");
+				flag = false;
+			}else{
+				notice.role = notice.role.join(",")
+			}
 		}
-		notice.notice = $("#noticeMsg").val();
+		notice.notice = $("#noticeMsg").val().trim();
 		notice.start_date = $("#startdate").val().split("-").reverse().join("-");
 		notice.end_date = $("#enddate").val().split("-").reverse().join("-");
+		var startDate = new Date(notice.start_date);
+		var endDate = new Date(notice.end_date);
+		if(startDate > endDate){
+			$("#dateError").html("End Date Cannot be less than start date");
+			flag = false;
+		}
+		if(notice.notice == ""){
+			$("#msgError").html("Please enter notice");
+			flag = false;	
+		}
+		if(flag){
 		var commonHandler = {};
 		commonHandler.success = function(e){
 			$.notify({message: "Notice saved successfully"},{type: 'success'});
@@ -107,6 +126,7 @@ $(document).ready(function(){
 			$.notify({message: "Notice not saved successfully"},{type: 'danger'});
 			}
 		rest.post("rest/classownerservice/saveStaffNotice",commonHandler,JSON.stringify(notice));	
+		}
 	});
 });
 </script>
@@ -118,7 +138,9 @@ $(document).ready(function(){
 <div class="container">
 <div class="row" style="padding: 2%">
 	<div class="col-md-2">Notice :</div>
-	<div class="col-md-6"><textarea id="noticeMsg" class="form-control"></textarea></div>
+	<div class="col-md-6"><textarea id="noticeMsg" class="form-control"></textarea>
+						  <span class="error" id="msgError"></span>	
+	</div>
 </div>
 <div class="row">
 	<div class="col-md-2">Notice Applicable To :</div>
@@ -136,7 +158,9 @@ $(document).ready(function(){
 				<option value='<c:out value="${role.roll_id}"></c:out>c'><c:out value="${role.roll_desc}"></c:out></option>
 		</c:forEach>
 		</optgroup>
-	</select></div>
+	</select>
+	 <span class="error" id="roleError"></span>	
+	</div>
 </div>
 
 <div class="row">
@@ -157,6 +181,7 @@ $(document).ready(function(){
 							class="glyphicon glyphicon-calendar glyphicon-time"></i>
 						</span>
 					</div>
+					<span class="error" id="dateError"></span>
 	</div>
 </div>
 <div class="row">

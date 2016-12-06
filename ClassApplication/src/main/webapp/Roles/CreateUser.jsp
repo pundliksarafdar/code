@@ -21,20 +21,22 @@ function validateEmail(sEmail) {
 	}
 $(document).ready(function(){
 	$('.datetimepicker').datetimepicker({
-		format : 'YYYY-MM-DD',
-		pickTime : false
+		format : 'DD-MM-YYYY',
+		pickTime : false,
+		maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 	});
 	
 	$(".joiningdatetimepicker").datetimepicker({
 		pickTime: false,
-		format:"YYYY-MM-DD"
+		format:"DD-MM-YYYY",
+		maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 	}).data("DateTimePicker").setDate(new Date());
 	
 	$("#submit").click(function(){
 		$(".error").html("");
 		var validFlag = true;
 		var education = $("#education").val().trim();
-		var joiningDate = $("#joiningDate").val();
+		var joiningDate = $("#joiningDate").val().split("-").reverse().join("-");
 		var register = {};
 		register.fname = $("#fname").val().trim();
 		register.lname = $("#lname").val().trim();
@@ -69,6 +71,8 @@ $(document).ready(function(){
 		if(register.dob == ""){
 			$("#dobError").html("Select DOB")
 			validFlag = false;
+		}else{
+			register.dob = register.dob.split("-").reverse().join("-")
 		}
 		if(register.addr1 == ""){
 			$("#addressError").html("Enter Address")

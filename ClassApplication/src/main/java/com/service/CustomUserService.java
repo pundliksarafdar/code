@@ -2985,6 +2985,21 @@ public class CustomUserService extends ServiceBase {
 		return Response.status(Response.Status.OK).entity(map).build();
 	}
 	
+	@POST
+	@Path("/setRollNumber/{divId}/{batchId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response generateRollNumber(
+			@PathParam("divId")String divId,
+			@PathParam("batchId")String batchId){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		StudentTransaction studentTransaction = new StudentTransaction();
+		BatchTransactions batchTransactions = new BatchTransactions();
+		List<StudentDetails>studentDetails = studentTransaction.generateRollNumber(batchId, divId, userBean.getInst_id());
+		batchTransactions.updateBatchRollGeneratedStatus(Integer.parseInt(batchId), userBean.getInst_id(), Integer.parseInt(divId), "yes");
+		studentTransaction.updateStudentRollNumber(batchId, userBean.getInst_id(), Integer.parseInt(divId), studentDetails);
+		return Response.status(Status.OK).entity(studentDetails).build();
+	}
+	
 	private Object readObject(File file) {
 		Object object = null;
 		FileInputStream fin = null;

@@ -20,17 +20,19 @@ function validateEmail(sEmail) {
 	
 $(document).ready(function(){
 	$('.datetimepicker').datetimepicker({
-		format : 'YYYY-MM-DD',
-		pickTime : false
+		format : 'DD-MM-YYYY',
+		pickTime : false,
+		maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 	});
 	
 	$(".joiningdatetimepicker").datetimepicker({
 		pickTime: false,
-		format:"YYYY-MM-DD"
+		format:"DD-MM-YYYY",
+		maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 	}).data("DateTimePicker").setDate(new Date());
 	
 $("#customUserTable").DataTable();
-$(".edit").click(function(){
+$("#customUserTableDiv").on("click",".edit",function(){
 	user_id = $(this).prop("id");
 	$(".error").html("");
 	$("#editcustomUser").show();
@@ -42,7 +44,7 @@ $(".edit").click(function(){
 			if(resp != null){
 				$("#fname").val(resp.registerBean.fname);
 				$("#lname").val(resp.registerBean.lname);
-				$("#dobfield").val(resp.registerBean.dob.slice(0,4)+"-"+resp.registerBean.dob.slice(4,6)+"-"+resp.registerBean.dob.slice(6,8));
+				$("#dobfield").val(resp.registerBean.dob.substring(6)+"-"+resp.registerBean.dob.substring(4,6)+"-"+resp.registerBean.dob.substring(0,4));
 				$("#address").val(resp.registerBean.addr1);
 				$("#city").val(resp.registerBean.city);
 				$("#state").select2().val(resp.registerBean.state).change();
@@ -50,7 +52,7 @@ $(".edit").click(function(){
 				$("#mobile").val(resp.registerBean.phone1);
 			    $("#role").select2().val(resp.registerBean.inst_roll).change();
 			    $("#education").val(resp.inst_user.education);
-				$("#joiningDate").val(resp.inst_user.joining_date);
+				$("#joiningDate").val(resp.inst_user.joining_date.substring(8)+"-"+resp.inst_user.joining_date.substring(5,7)+"-"+resp.inst_user.joining_date.substring(0,4));
 			}
 		}
 		handlers.error = function(){
@@ -68,7 +70,7 @@ $("#viewBack").click(function(){
 	$("#customUserTableDiv").show();
 });
 
-$(".view").click(function(){
+$("#customUserTableDiv").on("click",".view",function(){
 	$("#customUserTableDiv").hide();
 	$("#viewcustomUser").show();
 	var handlers = {};
@@ -76,7 +78,7 @@ $(".view").click(function(){
 		if(resp != null){
 			$("#viewfname").html(resp.registerBean.fname);
 			$("#viewlname").html(resp.registerBean.lname);
-			$("#viewDob").html(resp.registerBean.dob.slice(0,4)+"-"+resp.registerBean.dob.slice(4,6)+"-"+resp.registerBean.dob.slice(6,8));
+			$("#viewDob").html(resp.registerBean.dob.substring(6)+"-"+resp.registerBean.dob.substring(4,6)+"-"+resp.registerBean.dob.substring(0,4));
 			$("#viewAddress").html(resp.registerBean.addr1);
 			$("#viewCity").html(resp.registerBean.city);
 			$("#viewState").html(resp.registerBean.state);
@@ -85,7 +87,7 @@ $(".view").click(function(){
 			$("#role").select2().val(resp.registerBean.inst_roll).change();
 			$("#viewRole").html($("#role").select2('data')[0].text);
 		    $("#viewEducation").html(resp.inst_user.education);
-			$("#viewJoiningDate").html(resp.inst_user.joining_date);
+			$("#viewJoiningDate").html(resp.inst_user.joining_date.substring(8)+"-"+resp.inst_user.joining_date.substring(5,7)+"-"+resp.inst_user.joining_date.substring(0,4));
 		}
 	}
 	handlers.error = function(){
@@ -97,7 +99,7 @@ $("#submit").click(function(){
 	$(".error").html("");
 	var validFlag = true;
 	var education = $("#education").val().trim();
-	var joiningDate = $("#joiningDate").val();
+	var joiningDate = $("#joiningDate").val().split("-").reverse().join("-");
 	var register = {};
 	register.regId = user_id;
 	register.fname = $("#fname").val().trim();
@@ -133,6 +135,8 @@ $("#submit").click(function(){
 	if(register.dob == ""){
 		$("#dobError").html("Select DOB")
 		validFlag = false;
+	}else{
+		register.dob = register.dob.split("-").reverse().join("-")
 	}
 	if(register.addr1 == ""){
 		$("#addressError").html("Enter Address")

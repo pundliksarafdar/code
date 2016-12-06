@@ -126,11 +126,12 @@ public class CertificateTransaction {
 		fileData = fileData.replace("{{StudentAddress}}", student.getAddr()+","+student.getCity()+","+student.getState());
 		fileData = fileData.replace("{{StudentDOB}}", student.getDob()+"");
 		fileData = fileData.replace("{{StudentJoiningDate}}", student.getJoiningDate()+"");
-		fileData = fileData.replace("{{StudentMobile}}", student.getPhone());
-		fileData = fileData.replace("{{StudentEmail}}", student.getEmail());
+		fileData = fileData.replace("{{StudentMobile}}", student.getPhone()==null?"":student.getPhone());
+		fileData = fileData.replace("{{StudentEmail}}", student.getEmail()==null?"":student.getEmail());
 		String str = bean.getFormField();
 		String studentAdditionalData = student.getStudentAdditionalInfo();
-		 JsonParser parser = new JsonParser();
+		if(studentAdditionalData != null){ 
+		JsonParser parser = new JsonParser();
 		 Object obj = parser.parse(str);
 		 JsonObject studentAdditionalDataObject = (JsonObject) parser.parse(studentAdditionalData);
         JsonObject object = (JsonObject)obj;
@@ -142,6 +143,7 @@ public class CertificateTransaction {
             		fileData = fileData.replace("{{"+en.getKey()+"}}", "-");	
             	}
             }
+		}
 		return fileData;
 	}
 	

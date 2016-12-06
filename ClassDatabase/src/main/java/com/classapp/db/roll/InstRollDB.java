@@ -232,7 +232,7 @@ public class InstRollDB {
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		Query query = session.createQuery("update RegisterBean set  fname = :fname,lname = :lname,addr1 =:addr1,city = :city ,"
-				+ " state =:state,phone1=:phone1,inst_roll = :inst_roll,email = :email"
+				+ " state =:state,phone1=:phone1,inst_roll = :inst_roll,email = :email,dob = :dob"
 				+ " where  regId = :regId ");
 		//query.setParameter("inst_id", registerBean.getInst_id());
 		query.setParameter("fname", registerBean.getFname());
@@ -244,6 +244,7 @@ public class InstRollDB {
 		query.setParameter("inst_roll", registerBean.getInst_roll());
 		query.setParameter("regId", registerBean.getRegId());
 		query.setParameter("email", registerBean.getEmail());
+		query.setParameter("dob", registerBean.getDob());
 		query.executeUpdate();
 		transaction.commit();
 		}catch(Exception e){
