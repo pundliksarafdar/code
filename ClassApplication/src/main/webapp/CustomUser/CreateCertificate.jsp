@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <html>
     <head>
         <meta charset="utf-8">
@@ -55,5 +56,6 @@
 	    </form> 
 	    </div>   
     </div>
+    <input type="hidden" value='<c:out value="${AdditionalFieldJson}"></c:out>' id="AdditionalFieldJson">
     </body>
 </html>

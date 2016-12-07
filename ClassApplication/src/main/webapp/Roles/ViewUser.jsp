@@ -210,6 +210,7 @@ $("#submit").click(function(){
 		<td>
 			<button class="btn btn-xs btn-info view" id="<c:out value="${user.reg_id}"></c:out>">View</button>
 			<button class="btn btn-xs btn-primary edit" id="<c:out value="${user.reg_id}"></c:out>">Edit</button>
+			<button class="btn btn-xs btn-danger delete" id="<c:out value="${user.reg_id}"></c:out>">Delete</button>
 		</td>
 	</tr>
 	</c:forEach>

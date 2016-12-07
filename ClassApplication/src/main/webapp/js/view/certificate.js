@@ -13,17 +13,18 @@ $(document).ready(function(){
 	 })
 	manageSettings();
 	var toolbarOption = $.summernote.options.toolbar;
-	$.summernote.options.buttons = { addStudentNameButton:AddStudentNameButton,addAddressButton:AddAddressButton,addBorderDropDown:AddBorderDropDown,addBorderButton:AddBorderButton,
+	$.summernote.options.buttons = {addBorderDropDown:AddBorderDropDown,addBorderButton:AddBorderButton,
 			addPageBackgroundButton:AddPageBackgroundButton,addPageBackgroundDropDown:AddPageBackgroundDropDown,addBorderColorButton:AddBorderColorButton,
-			addBorderColorDropDown:AddBorderColorDropDown,addDetailsDropDown:AddDetailsDropDown,addInstituteDetailsDropDown:AddInstituteDetailsDropDown};
+			addBorderColorDropDown:AddBorderColorDropDown,addDetailsDropDown:AddDetailsDropDown,addInstituteDetailsDropDown:AddInstituteDetailsDropDown,
+			portraitLayoutButton:PortraitLayoutButton,landscapeLayoutButton:LandscapeLayoutButton,customPrint:CustomPrint};
 	toolbarOption.push(['fontsize', ['fontsize']]);
-	toolbarOption.push(['misc', ['print']]);
-	toolbarOption.push(['mybutton', ['addStudentNameButton','addAddressButton']]);
+	toolbarOption.push(['misc', ['customPrint']]);
 	toolbarOption.push(['studentDetails', ['addDetailsDropDown']]);
 	toolbarOption.push(['instituteDetails', ['addInstituteDetailsDropDown']]);
 	toolbarOption.push(['border', ['addBorderButton','addBorderDropDown']]);
 	toolbarOption.push(['borderColor', ['addBorderColorButton','addBorderColorDropDown']]);
 	toolbarOption.push(['pageColor', ['addPageBackgroundButton','addPageBackgroundDropDown']]);
+	toolbarOption.push(['pageLayout', ['portraitLayoutButton','landscapeLayoutButton']]);
 	$(".summernote").summernote();
 	/*$(".panel-body").prop("contenteditable","false");*/
 });
@@ -228,37 +229,6 @@ var AddPageBackgroundDropDown = function (context) {
     return button.render();   // return button as jquery object 
 }
 
-var AddAddressButton = function (context) {
-	  var ui = $.summernote.ui;
-	  
-	  // create button
-	  var button = ui.button({
-	    contents: 'Address',
-	    tooltip: 'Student address will be added automatically on certificate generation',
-	    click: function () {
-	      // invoke insertText method with 'hello' on editor module.
-	      context.invoke('editor.insertText', '{{StudentAddress}}');
-	    }
-	  });
-
-	  return button.render();   // return button as jquery object 
-	}
-var AddStudentNameButton = function (context) {
-	  var ui = $.summernote.ui;
-	  
-	  // create button
-	  var button = ui.button({
-	    contents: 'Student',
-	    tooltip: 'Student name will be added automatically on certificate generation',
-	    click: function () {
-	      // invoke insertText method with 'hello' on editor module.
-	      context.invoke('editor.insertText', '{{StudentName}}');
-	    }
-	  });
-
-	  return button.render();   // return button as jquery object 
-	}
-
 var AddDetailsDropDown = function (context) {
 	var con = context;
    var ui = $.summernote.ui;
@@ -366,6 +336,62 @@ var AddInstituteDetailsDropDown = function (context) {
    return button.render();   // return button as jquery object 
 }
 
+var PortraitLayoutButton = function (context) {
+	  var ui = $.summernote.ui;
+	  
+	  // create button
+	  var button = ui.button({
+	    contents: 'Portrait Page',
+	    tooltip: 'Portrait Page',
+	    click: function () {
+	      // invoke insertText method with 'hello' on editor module.
+	     $(".note-editing-area").css("padding-left","160px")
+	     $(".note-editing-area").css("padding-right","160px")
+	    }
+	  });
+
+	  return button.render();   // return button as jquery object 
+	}
+
+var LandscapeLayoutButton = function (context) {
+	  var ui = $.summernote.ui;
+	  
+	  // create button
+	  var button = ui.button({
+	    contents: 'Landscape Page',
+	    tooltip: 'Landscape Page',
+	    style:"background: #d5d5d5;",
+	    click: function () {
+	      // invoke insertText method with 'hello' on editor module.
+	     $(".note-editing-area").css("padding-left","21px")
+	     $(".note-editing-area").css("padding-right","21px")
+	    }
+	  });
+
+	  return button.render();   // return button as jquery object 
+	}
+
+var CustomPrint = function (context) {
+	  var ui = $.summernote.ui;
+	  
+	  // create button
+	  var button = ui.button({
+	    contents: 'Print',
+	    tooltip: 'Print',
+	    click: function () {
+	      // invoke insertText method with 'hello' on editor module.
+	    	var data  = $('.summernote').summernote('code');
+	    	data = "<div class='certificatePanel' style='background-color:"+globalBackgroundColor+";padding:2%'>" +
+			"<div class='certificateMargin' style='border-color:"+globalBorderColor+";border-style:"+globalBorder+"'><div class='certificateBody' style='padding:2%'>"+data+"</div></div></div>"
+	    	var win =window.open();
+			win.document.write(data);
+			win.print();
+			win.close();
+	    }
+	  });
+
+	  return button.render();   // return button as jquery object 
+	}
 
 var manageSettings = function(){
 	$("body").on("click","#save",save);
