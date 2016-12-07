@@ -345,8 +345,8 @@ var PortraitLayoutButton = function (context) {
 	    tooltip: 'Portrait Page',
 	    click: function () {
 	      // invoke insertText method with 'hello' on editor module.
-	     $(".note-editing-area").css("padding-left","160px")
-	     $(".note-editing-area").css("padding-right","160px")
+	     $(".note-editing-area").css("padding-left","195px")
+	     $(".note-editing-area").css("padding-right","195px")
 	    }
 	  });
 
@@ -363,8 +363,8 @@ var LandscapeLayoutButton = function (context) {
 	    style:"background: #d5d5d5;",
 	    click: function () {
 	      // invoke insertText method with 'hello' on editor module.
-	     $(".note-editing-area").css("padding-left","21px")
-	     $(".note-editing-area").css("padding-right","21px")
+	     $(".note-editing-area").css("padding-left","31px")
+	     $(".note-editing-area").css("padding-right","31px")
 	    }
 	  });
 
