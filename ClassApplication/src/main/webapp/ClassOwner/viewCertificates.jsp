@@ -7,8 +7,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
             <style type="text/css">
-            .note-editing-area{
-            padding: 2%
+           .note-editing-area{
+            padding-top : 2%;
+            padding-bottom :2%;
+            padding-left: 31px;
+            padding-right: 31px;
+            background: rgb(241,241,241);
             } 
             </style>
 </head>

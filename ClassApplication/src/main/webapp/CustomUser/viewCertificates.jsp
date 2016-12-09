@@ -94,5 +94,6 @@
 	    </div>   
 	
 	</div>
+	<input type="hidden" value='<c:out value="${AdditionalFieldJson}"></c:out>' id="AdditionalFieldJson">
 </body>
 </html>

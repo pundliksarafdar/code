@@ -13,6 +13,8 @@ import com.classapp.db.roll.EditInstUserObject;
 import com.classapp.db.roll.InstRollDB;
 import com.classapp.db.roll.Inst_roll;
 import com.classapp.db.roll.Inst_user;
+import com.classapp.db.syllabusplanner.SyllabusPlannerDb;
+import com.transaction.schedule.ScheduleTransaction;
 
 public class InstRollTransaction {
 	public boolean saveInstRoll(Inst_roll inst_roll) {
@@ -84,5 +86,15 @@ public class InstRollTransaction {
 	public boolean isCustomUserTeacher(int inst_id,int user_id) {
 		InstRollDB db = new InstRollDB();
 		return db.isCustomUserTeacher(inst_id,user_id);
+	}
+	
+	public boolean deleteInstUser(int inst_id,int user_id) {
+		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
+		scheduleTransaction.updateScheduleOfTeacher(user_id, inst_id);
+		SyllabusPlannerDb plannerDb = new SyllabusPlannerDb();
+		plannerDb.deleteSyllabus(user_id, null, null, null, inst_id);
+		InstRollDB db = new InstRollDB();
+		db.deleteInstUser(inst_id, user_id);
+		return true;
 	}
 }

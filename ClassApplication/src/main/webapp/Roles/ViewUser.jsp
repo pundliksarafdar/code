@@ -19,6 +19,12 @@ function validateEmail(sEmail) {
 	}
 	
 $(document).ready(function(){
+	var dataTable = $("#customUserTable").DataTable();
+	 dataTable.on( 'order.dt search.dt', function () {
+	        dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+	            cell.innerHTML = i+1;
+				});
+			}).draw(); 
 	$('.datetimepicker').datetimepicker({
 		format : 'DD-MM-YYYY',
 		pickTime : false,
@@ -93,6 +99,20 @@ $("#customUserTableDiv").on("click",".view",function(){
 	handlers.error = function(){
 	}
 	rest.get("rest/classownerservice/getinstuser/"+$(this).prop("id"),handlers);
+});
+
+$("#customUserTableDiv").on("click",".delete",function(){
+	var id = $(this).prop("id");
+	var handlers = {};
+	handlers.success = function(resp){
+		var table = $("#customUserTable").DataTable();
+		$("#customUserTable").find(".delete[id='"+id+"']").closest("tr").addClass('selected');;
+		table.row('.selected').remove().draw( false );
+		 $.notify({message: "User deleted successfuly"},{type: 'success'});
+	}
+	handlers.error = function(){
+	}
+	rest.get("rest/classownerservice/deleteUser/"+$(this).prop("id"),handlers);
 });
 
 $("#submit").click(function(){
@@ -205,7 +225,7 @@ $("#submit").click(function(){
 <tbody>
 	<c:forEach items="${customUserList}" var="user" varStatus="counter">
 	<tr>
-		<td><c:out value="${counter.count}"></c:out></td>
+		<td><%-- <c:out value="${counter.count}"></c:out> --%></td>
 		<td><div class="tableRoleDesc"><c:out value="${user.fname}"></c:out> <c:out value="${user.lname}"></c:out></div></td>
 		<td>
 			<button class="btn btn-xs btn-info view" id="<c:out value="${user.reg_id}"></c:out>">View</button>

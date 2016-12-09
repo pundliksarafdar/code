@@ -5,23 +5,28 @@ var globalBackgroundColor = "white";
 var globalBorder = "none";
 var globalBorderColor = "black";
 var addtionalFieldsString = "";
+var pagelayout = "1";
 $(document).ready(function(){
+	if($("#AdditionalFieldJson").val() != ""){
 	var data = JSON.parse($("#AdditionalFieldJson").val());
 	 $.each(data,function(key,val){
 		 addtionalFieldsString = addtionalFieldsString + "<li value="+key+">"+val+"</li>";
 	 })
+	}
 	manageSettings();
 	var toolbarOption = $.summernote.options.toolbar;
 	$.summernote.options.buttons = { addBorderDropDown:AddBorderDropDown,addBorderButton:AddBorderButton,
 			addPageBackgroundButton:AddPageBackgroundButton,addPageBackgroundDropDown:AddPageBackgroundDropDown,addBorderColorButton:AddBorderColorButton,
-			addBorderColorDropDown:AddBorderColorDropDown,addDetailsDropDown:AddDetailsDropDown,addInstituteDetailsDropDown:AddInstituteDetailsDropDown};
+			addBorderColorDropDown:AddBorderColorDropDown,addDetailsDropDown:AddDetailsDropDown,addInstituteDetailsDropDown:AddInstituteDetailsDropDown,
+			portraitLayoutButton:PortraitLayoutButton,landscapeLayoutButton:LandscapeLayoutButton,customPrint:CustomPrint};
 	toolbarOption.push(['fontsize', ['fontsize']]);
-	toolbarOption.push(['misc', ['print']]);
+	toolbarOption.push(['misc', ['customPrint']]);
 	toolbarOption.push(['studentDetails', ['addDetailsDropDown']]);
 	toolbarOption.push(['instituteDetails', ['addInstituteDetailsDropDown']]);
 	toolbarOption.push(['border', ['addBorderButton','addBorderDropDown']]);
 	toolbarOption.push(['borderColor', ['addBorderColorButton','addBorderColorDropDown']]);
 	toolbarOption.push(['pageColor', ['addPageBackgroundButton','addPageBackgroundDropDown']]);
+	toolbarOption.push(['pageLayout', ['portraitLayoutButton','landscapeLayoutButton']]);
 	$(".summernote").summernote();
 	/*$(".panel-body").prop("contenteditable","false");*/
 });
@@ -333,6 +338,65 @@ var AddInstituteDetailsDropDown = function (context) {
    return button.render();   // return button as jquery object 
 }
 
+var PortraitLayoutButton = function (context) {
+	  var ui = $.summernote.ui;
+	  
+	  // create button
+	  var button = ui.button({
+	    contents: 'Portrait Page',
+	    tooltip: 'Portrait Page',
+	    click: function () {
+	    	pagelayout = "2";
+	      // invoke insertText method with 'hello' on editor module.
+	     $(".note-editing-area").css("padding-left","195px")
+	     $(".note-editing-area").css("padding-right","195px")
+	    }
+	  });
+
+	  return button.render();   // return button as jquery object 
+	}
+
+var LandscapeLayoutButton = function (context) {
+	  var ui = $.summernote.ui;
+	  
+	  // create button
+	  var button = ui.button({
+	    contents: 'Landscape Page',
+	    tooltip: 'Landscape Page',
+	    style:"background: #d5d5d5;",
+	    click: function () {
+	    	pagelayout = "1";
+	      // invoke insertText method with 'hello' on editor module.
+	     $(".note-editing-area").css("padding-left","31px")
+	     $(".note-editing-area").css("padding-right","31px")
+	    }
+	  });
+
+	  return button.render();   // return button as jquery object 
+	}
+
+var CustomPrint = function (context) {
+	  var ui = $.summernote.ui;
+	  
+	  // create button
+	  var button = ui.button({
+	    contents: 'Print',
+	    tooltip: 'Print',
+	    click: function () {
+	      // invoke insertText method with 'hello' on editor module.
+	    	var data  = $('.summernote').summernote('code');
+	    	data = "<div class='certificatePanel' style='background-color:"+globalBackgroundColor+";padding:2%'>" +
+			"<div class='certificateMargin' style='border-color:"+globalBorderColor+";border-style:"+globalBorder+"'><div class='certificateBody' style='padding:2%'>"+data+"</div></div></div>"
+	    	var win =window.open();
+			win.document.write(data);
+			win.print();
+			win.close();
+	    }
+	  });
+
+	  return button.render();   // return button as jquery object 
+	}
+
 
 var manageSettings = function(){
 	$("body").on("click","#save",save);
@@ -370,7 +434,7 @@ var manageSettings = function(){
 		}
 		}
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});}
-		data = "<div class='certificatePanel' style='background-color:"+globalBackgroundColor+";padding:2%'>" +
+		data = "<div class='certificatePanel' style='background-color:"+globalBackgroundColor+";padding:2%' pagelayout='"+pagelayout+"'>" +
 				"<div class='certificateMargin' style='border-color:"+globalBorderColor+";border-style:"+globalBorder+"'><div class='certificateBody' style='padding:2%'>"+data+"</div></div></div>" 
 		rest.postString(uri,handlers,data);
 		}

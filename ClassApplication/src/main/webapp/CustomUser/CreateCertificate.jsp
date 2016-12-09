@@ -15,7 +15,11 @@
            	 padding: 2%; 
             }  */
             .note-editing-area{
-            padding: 2%
+            padding-top : 2%;
+            padding-bottom :2%;
+            padding-left: 31px;
+            padding-right: 31px;
+            background: rgb(241,241,241);
             } 
             </style>
     </head>

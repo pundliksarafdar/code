@@ -356,4 +356,32 @@ public class InstRollDB {
 		return  false;
 
 	}
+	
+	public boolean deleteInstUser(int inst_id,int user_id) {
+		Transaction transaction=null;
+		Session session=null;
+		List<Inst_user> list = null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("delete from Inst_user "
+				+ "  where  inst_id = :inst_id and user_id = :user_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("user_id", user_id);
+		 query.executeUpdate();
+		 transaction.commit();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  true;
+
+	}
 }

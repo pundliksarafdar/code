@@ -6,11 +6,14 @@ var globalBackgroundColor = "white";
 var globalBorder = "none";
 var globalBorderColor = "black";
 var addtionalFieldsString = "";
+var pagelayout = "1";
 $(document).ready(function(){
+	if($("#AdditionalFieldJson").val() != ""){
 	var data = JSON.parse($("#AdditionalFieldJson").val());
 	 $.each(data,function(key,val){
 		 addtionalFieldsString = addtionalFieldsString + "<li value="+key+">"+val+"</li>";
 	 })
+	}
 	manageSettings();
 	var toolbarOption = $.summernote.options.toolbar;
 	$.summernote.options.buttons = {addBorderDropDown:AddBorderDropDown,addBorderButton:AddBorderButton,
@@ -242,7 +245,8 @@ var AddDetailsDropDown = function (context) {
    			  "<li value='StudentDOB'>Date Of Birth</li>" +
    			  "<li value='StudentJoiningDate'>Joining Date</li>" +
    			  "<li value='StudentMobile'>Mobile</li>" +
-   			  "<li value='StudentEmail'>Email</li>"+addtionalFieldsString;
+   			  "<li value='StudentEmail'>Email</li>"+
+   			  "<li value='StudentRegNo'>Student Reg. No</li>"+addtionalFieldsString;
 
    var button = ui.buttonGroup([
        ui.button({
@@ -344,6 +348,7 @@ var PortraitLayoutButton = function (context) {
 	    contents: 'Portrait Page',
 	    tooltip: 'Portrait Page',
 	    click: function () {
+	    	pagelayout = "2";
 	      // invoke insertText method with 'hello' on editor module.
 	     $(".note-editing-area").css("padding-left","195px")
 	     $(".note-editing-area").css("padding-right","195px")
@@ -362,6 +367,7 @@ var LandscapeLayoutButton = function (context) {
 	    tooltip: 'Landscape Page',
 	    style:"background: #d5d5d5;",
 	    click: function () {
+	    	pagelayout = "1";
 	      // invoke insertText method with 'hello' on editor module.
 	     $(".note-editing-area").css("padding-left","31px")
 	     $(".note-editing-area").css("padding-right","31px")
@@ -429,7 +435,7 @@ var manageSettings = function(){
 		}
 		}
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});}
-		data = "<div class='certificatePanel' style='background-color:"+globalBackgroundColor+";padding:2%'>" +
+		data = "<div class='certificatePanel' style='background-color:"+globalBackgroundColor+";padding:2%' pagelayout='"+pagelayout+"'>" +
 				"<div class='certificateMargin' style='border-color:"+globalBorderColor+";border-style:"+globalBorder+"'><div class='certificateBody' style='padding:2%'>"+data+"</div></div></div>" 
 		rest.postString(uri,handlers,data);
 		}

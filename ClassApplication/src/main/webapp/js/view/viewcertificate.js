@@ -5,36 +5,50 @@ var globalBorder = "none";
 var globalBorderColor = "black";
 var cert_id = "";
 var addtionalFieldsString = "";
+var pagelayout = "1";
 $(document).ready(function(){
+	if($("#AdditionalFieldJson").val() != ""){
 	var data = JSON.parse($("#AdditionalFieldJson").val());
 	 $.each(data,function(key,val){
 		 addtionalFieldsString = addtionalFieldsString + "<li value="+key+">"+val+"</li>";
 	 })
+	}
 	getAllHeader();
 	$("#certificateTable").DataTable();
 	$("body").on("change","#headerSelect",showHeaders);
 	$("body").on("click","#save",save);
 	var toolbarOption = $.summernote.options.toolbar;
-	$.summernote.options.buttons = { addStudentNameButton:AddStudentNameButton,addAddressButton:AddAddressButton,addBorderDropDown:AddBorderDropDown,addBorderButton:AddBorderButton,
+	$.summernote.options.buttons = { addBorderDropDown:AddBorderDropDown,addBorderButton:AddBorderButton,
 			addPageBackgroundButton:AddPageBackgroundButton,addPageBackgroundDropDown:AddPageBackgroundDropDown,addBorderColorButton:AddBorderColorButton,
-			addBorderColorDropDown:AddBorderColorDropDown,addDetailsDropDown:AddDetailsDropDown,addInstituteDetailsDropDown:AddInstituteDetailsDropDown};
+			addBorderColorDropDown:AddBorderColorDropDown,addDetailsDropDown:AddDetailsDropDown,addInstituteDetailsDropDown:AddInstituteDetailsDropDown,
+			portraitLayoutButton:PortraitLayoutButton,landscapeLayoutButton:LandscapeLayoutButton,customPrint:CustomPrint};
 	toolbarOption.push(['fontsize', ['fontsize']]);
-	toolbarOption.push(['misc', ['print']]);
-	toolbarOption.push(['mybutton', ['addStudentNameButton','addAddressButton']]);
+	toolbarOption.push(['misc', ['customPrint']]);
 	toolbarOption.push(['studentDetails', ['addDetailsDropDown']]);
 	toolbarOption.push(['instituteDetails', ['addInstituteDetailsDropDown']]);
 	toolbarOption.push(['border', ['addBorderButton','addBorderDropDown']]);
 	toolbarOption.push(['borderColor', ['addBorderColorButton','addBorderColorDropDown']]);
 	toolbarOption.push(['pageColor', ['addPageBackgroundButton','addPageBackgroundDropDown']]);
+	toolbarOption.push(['pageLayout', ['portraitLayoutButton','landscapeLayoutButton']]);
 	$(".summernote").summernote();
 	
-	$(".view").click(function(){
+	$(".certificateList").on("click",".view",function(){
 		var uri = "rest/classownerservice/getCerificateTemplate/"+$(this).prop("id");
 		var handlers = {};
 		handlers.success = function(e){
 			$(".viewCertificate").show();
 			$(".certificateList").hide();
 			$(".viewCertificateData").html(e);
+			 if($(".certificatePanel").attr("pagelayout") == "1"){
+		       	 $(".viewCertificateData").css("padding-left","31px")
+		   	     $(".viewCertificateData").css("padding-right","31px")	 
+		       	 }else if($(".certificatePanel").attr("pagelayout") == "2"){
+		       	 $(".viewCertificateData").css("padding-left","195px")
+		   	     $(".viewCertificateData").css("padding-right","195px")
+		       	 }else{
+		       		$(".viewCertificateData").css("padding-left","195px")
+		      	     $(".viewCertificateData").css("padding-right","195px") 
+		       	 }
 		}
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});}
 		rest.get(uri,handlers);
@@ -46,7 +60,7 @@ $(document).ready(function(){
 		$(".certificateList").show();
 	});
 	
-	$(".edit").click(function(){
+	$(".certificateList").on("click",".edit",function(){
 		cert_id = $(this).prop("id");
 		var uri = "rest/classownerservice/getCerificateTemplate/"+$(this).prop("id");
 		var that = $(this);
@@ -58,6 +72,20 @@ $(document).ready(function(){
 			$(".note-editing-area").css("cssText","background:"+$(".certificatePanel").css("background-color")+" !important");
        	  	$(".panel-body").css("cssText","background:"+$(".certificatePanel").css("background-color")+" !important;border:"+$(".certificateMargin").css("border-style")+
        			  ";border-color:"+$(".certificateMargin").css("border-color"));
+       	 $(".note-editing-area").css("background","rgb(241,241,241)")
+       	 if($(".certificatePanel").attr("pagelayout") == "1"){
+       	 $(".note-editing-area").css("padding-left","31px")
+   	     $(".note-editing-area").css("padding-right","31px")	 
+   	      pagelayout = "1";
+       	 }else if($(".certificatePanel").attr("pagelayout") == "2"){
+       	 $(".note-editing-area").css("padding-left","195px")
+   	     $(".note-editing-area").css("padding-right","195px")
+   	  pagelayout = "2";
+       	 }else{
+       		$(".note-editing-area").css("padding-left","195px")
+      	     $(".note-editing-area").css("padding-right","195px") 
+      	   pagelayout = "2";
+       	 }
        	 $(".panel-body").html($(".certificateBody").html())
        	 $("#certificateName").val($(that.closest("tr")).find(".cert_desc").html());
        	 $("#headerSelect").select2().val($(that.closest("td")).find(".headerID").val()).change();
@@ -320,7 +348,8 @@ var AddDetailsDropDown = function (context) {
    			  "<li value='StudentDOB'>Date Of Birth</li>" +
    			  "<li value='StudentJoiningDate'>Joining Date</li>" +
    			  "<li value='StudentMobile'>Mobile</li>" +
-   			  "<li value='StudentEmail'>Email</li>"+addtionalFieldsString;
+   			  "<li value='StudentEmail'>Email</li>"+
+   			  "<li value='StudentRegNo'>Student Reg. No</li>"+addtionalFieldsString;
 
    var button = ui.buttonGroup([
        ui.button({
@@ -414,6 +443,64 @@ var AddInstituteDetailsDropDown = function (context) {
    return button.render();   // return button as jquery object 
 }
 
+var PortraitLayoutButton = function (context) {
+	  var ui = $.summernote.ui;
+	  
+	  // create button
+	  var button = ui.button({
+	    contents: 'Portrait Page',
+	    tooltip: 'Portrait Page',
+	    click: function () {
+	    	pagelayout = "2";
+	      // invoke insertText method with 'hello' on editor module.
+	     $(".note-editing-area").css("padding-left","195px")
+	     $(".note-editing-area").css("padding-right","195px")
+	    }
+	  });
+
+	  return button.render();   // return button as jquery object 
+	}
+
+var LandscapeLayoutButton = function (context) {
+	  var ui = $.summernote.ui;
+	  
+	  // create button
+	  var button = ui.button({
+	    contents: 'Landscape Page',
+	    tooltip: 'Landscape Page',
+	    style:"background: #d5d5d5;",
+	    click: function () {
+	    	pagelayout = "1";
+	      // invoke insertText method with 'hello' on editor module.
+	     $(".note-editing-area").css("padding-left","31px")
+	     $(".note-editing-area").css("padding-right","31px")
+	    }
+	  });
+
+	  return button.render();   // return button as jquery object 
+	}
+
+var CustomPrint = function (context) {
+	  var ui = $.summernote.ui;
+	  
+	  // create button
+	  var button = ui.button({
+	    contents: 'Print',
+	    tooltip: 'Print',
+	    click: function () {
+	      // invoke insertText method with 'hello' on editor module.
+	    	var data  = $('.summernote').summernote('code');
+	    	data = "<div class='certificatePanel' style='background-color:"+globalBackgroundColor+";padding:2%'>" +
+			"<div class='certificateMargin' style='border-color:"+globalBorderColor+";border-style:"+globalBorder+"'><div class='certificateBody' style='padding:2%'>"+data+"</div></div></div>"
+	    	var win =window.open();
+			win.document.write(data);
+			win.print();
+			win.close();
+	    }
+	  });
+
+	  return button.render();   // return button as jquery object 
+	}
 
 function getAllHeader(){
 	var handler = {};
@@ -500,7 +587,7 @@ function save(){
 	}
 	}
 	handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});}
-	data = "<div class='certificatePanel' style='background-color:"+globalBackgroundColor+";padding:2%'>" +
+	data = "<div class='certificatePanel' style='background-color:"+globalBackgroundColor+";padding:2%' pagelayout='"+pagelayout+"'>" +
 			"<div class='certificateMargin' style='border-color:"+globalBorderColor+";border-style:"+globalBorder+"'><div class='certificateBody' style='padding:2%'>"+data+"</div></div></div>" 
 	rest.postString(uri,handlers,data);
 	}

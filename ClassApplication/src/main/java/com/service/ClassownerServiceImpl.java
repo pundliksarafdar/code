@@ -1324,4 +1324,14 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		noticeTransaction.deleteStaffNotice(getRegId(), notice_id);
 		return Response.status(200).entity(true).build();
 	}
+	
+	@GET
+	@Path("/deleteUser/{user_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteInstUser(@PathParam("user_id")int user_id){
+		InstRollTransaction rollTransaction = new InstRollTransaction();
+		rollTransaction.deleteInstUser(getRegId(), user_id);
+		return Response.status(200).entity(true).build();
+	}
 }
