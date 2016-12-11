@@ -115,6 +115,34 @@ $("#customUserTableDiv").on("click",".delete",function(){
 	rest.get("rest/classownerservice/deleteUser/"+$(this).prop("id"),handlers);
 });
 
+$("#customUserTableDiv").on("click",".disable",function(){
+	var id = $(this).prop("id");
+	var handlers = {};
+	handlers.success = function(resp){
+		$("#customUserTable").find(".delete[id='"+id+"']").closest("tr").find(".disable").html("Enable");
+		$("#customUserTable").find(".delete[id='"+id+"']").closest("tr").find(".disable").addClass("enable btn-success");
+		$("#customUserTable").find(".delete[id='"+id+"']").closest("tr").find(".disable").removeClass("disable btn-warning");
+		 $.notify({message: "User disabled successfuly"},{type: 'success'});
+	}
+	handlers.error = function(){
+	}
+	rest.get("rest/classownerservice/disableUser/"+$(this).prop("id"),handlers);
+});
+
+$("#customUserTableDiv").on("click",".enable",function(){
+	var id = $(this).prop("id");
+	var handlers = {};
+	handlers.success = function(resp){
+		$("#customUserTable").find(".delete[id='"+id+"']").closest("tr").find(".enable").html("Disable");
+		$("#customUserTable").find(".delete[id='"+id+"']").closest("tr").find(".enable").addClass("disable btn-warning");
+		$("#customUserTable").find(".delete[id='"+id+"']").closest("tr").find(".enable").removeClass("enable btn-success");
+		 $.notify({message: "User enabled successfuly"},{type: 'success'});
+	}
+	handlers.error = function(){
+	}
+	rest.get("rest/classownerservice/enableUser/"+$(this).prop("id"),handlers);
+});
+
 $("#submit").click(function(){
 	$(".error").html("");
 	var validFlag = true;
@@ -231,6 +259,12 @@ $("#submit").click(function(){
 			<button class="btn btn-xs btn-info view" id="<c:out value="${user.reg_id}"></c:out>">View</button>
 			<button class="btn btn-xs btn-primary edit" id="<c:out value="${user.reg_id}"></c:out>">Edit</button>
 			<button class="btn btn-xs btn-danger delete" id="<c:out value="${user.reg_id}"></c:out>">Delete</button>
+			<c:if test="${user.status eq 'D' }">
+			<button class="btn btn-xs btn-success enable" id="<c:out value="${user.reg_id}"></c:out>">Enable</button>
+			</c:if>
+			<c:if test="${user.status ne 'D' }">
+			<button class="btn btn-xs btn-warning disable" id="<c:out value="${user.reg_id}"></c:out>">Disable</button>
+			</c:if>
 		</td>
 	</tr>
 	</c:forEach>

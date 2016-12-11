@@ -38,7 +38,7 @@
 			var handlers = {};
 			handlers.success=function(data){
 				var win =window.open();
-				win.document.write(data);
+				win.document.write("<html><link href='/css/bootstrap.min.css' rel='stylesheet'>"+data+"</html>");
 				win.print();
 				win.close();
 			};   

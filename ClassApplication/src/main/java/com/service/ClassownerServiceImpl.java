@@ -1334,4 +1334,24 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 		rollTransaction.deleteInstUser(getRegId(), user_id);
 		return Response.status(200).entity(true).build();
 	}
+	
+	@GET
+	@Path("/disableUser/{user_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response disableInstUser(@PathParam("user_id")int user_id){
+		InstRollTransaction rollTransaction = new InstRollTransaction();
+		rollTransaction.disableInstUser(getRegId(), user_id);
+		return Response.status(200).entity(true).build();
+	}
+	
+	@GET
+	@Path("/enableUser/{user_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response enableInstUser(@PathParam("user_id")int user_id){
+		InstRollTransaction rollTransaction = new InstRollTransaction();
+		rollTransaction.enableInstUser(getRegId(), user_id);
+		return Response.status(200).entity(true).build();
+	}
 }

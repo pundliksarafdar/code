@@ -385,8 +385,8 @@ var CustomPrint = function (context) {
 	    click: function () {
 	      // invoke insertText method with 'hello' on editor module.
 	    	var data  = $('.summernote').summernote('code');
-	    	data = "<div class='certificatePanel' style='background-color:"+globalBackgroundColor+";padding:2%'>" +
-			"<div class='certificateMargin' style='border-color:"+globalBorderColor+";border-style:"+globalBorder+"'><div class='certificateBody' style='padding:2%'>"+data+"</div></div></div>"
+	    	data = "<html><link href='/css/bootstrap.min.css' rel='stylesheet'><div class='certificatePanel' style='background-color:"+globalBackgroundColor+";padding:2%'>" +
+			"<div class='certificateMargin' style='border-color:"+globalBorderColor+";border-style:"+globalBorder+"'><div class='certificateBody' style='padding:2%'>"+data+"</div></div></div></html>"
 	    	var win =window.open();
 			win.document.write(data);
 			win.print();

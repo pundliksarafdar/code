@@ -72,6 +72,15 @@ public abstract class BaseAction extends ActionSupport implements Parameterizabl
 		}
 			forward = performBaseAction(userBean,request,response,session);
 		   
+			if(Constants.USER_DELETED.equals(userBean.getStatus())){
+				addActionError("Your account has been deleted");
+				userBean = new UserBean();
+				forward = ERROR;
+				}else if(Constants.USER_DISABLED.equals(userBean.getStatus())){
+					addActionError("Your account has been disabled");	
+					userBean = new UserBean();
+					forward = ERROR;
+				}
 			Integer role = userBean.getRole();
 			Integer roleInt;
 			if(null==role){

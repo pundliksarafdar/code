@@ -48,9 +48,9 @@ $(document).ready(function(){
 			$("#childModule[value='"+value+"']").bootstrapSwitch('state',true);
 			});
 		$("#roledesc").val(resp.roll_desc);
-		if(resp.teacher == true){
+		/* if(resp.teacher == true){
 			$("input[name=lectureCheckbox]").prop("checked","true");
-		}
+		} */
 		}
 		handlers.error = function(){
 		}
@@ -58,7 +58,7 @@ $(document).ready(function(){
 	});
 	
 	$("#editBack").click(function(){
-		$("input[name=lectureCheckbox]").prop("checked",false);
+		/* $("input[name=lectureCheckbox]").prop("checked",false); */
 		$(".parentModule").bootstrapSwitch('state',false);
 		$('input[name="childModule"]').bootstrapSwitch('state',false);
 		$("#editRoleDiv").hide();
@@ -84,9 +84,9 @@ $(document).ready(function(){
 			$(".viewChildModule[value='"+value+"']").css("color","lime");
 			});
 		$("#viewroledesc").html(resp.roll_desc);
-		if(resp.teacher == true){
+		/* if(resp.teacher == true){
 			$(".viewLecturer").css("color","lime");
-		}
+		} */
 		}
 		handlers.error = function(){
 		}
@@ -121,9 +121,9 @@ $(document).ready(function(){
 			$("#roledescError").html("Invalid Role Description.Only - and _ special character allowed.");
 			validationFlag = false;
 		}
-		if($("input[name=lectureCheckbox]").prop("checked") == true){
+		/* if($("input[name=lectureCheckbox]").prop("checked") == true){
 			lecturer = true;
-		}
+		} */
 		if(validationFlag){
 		inst_roll.roll_desc = roledesc;
 		inst_roll.parent_mod_access = parentModule.join(",");
@@ -476,9 +476,9 @@ $(document).ready(function(){
 		</div>
 		</div>
 		
-		<div class="row">
+		<!-- <div class="row">
 		<input type="checkbox" id="lectureCheckbox" name="lectureCheckbox" /> Lecturer
-		</div>
+		</div> -->
 		<div class="row">
 		<button id="create" class="btn btn-sm btn-success">Save</button>
 		</div>
@@ -784,9 +784,9 @@ $(document).ready(function(){
 		</div>
 		</div>
 		
-		<div class="row">
+		<!-- <div class="row">
 		<span class="viewLecturer"><span class="glyphicon  glyphicon-record"></span></span> Lecturer
-		</div>
+		</div> -->
 		</div>
 	</div>
 </body>

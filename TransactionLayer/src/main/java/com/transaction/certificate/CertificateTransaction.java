@@ -130,7 +130,7 @@ public class CertificateTransaction {
 		fileData = fileData.replace("{{StudentJoiningDate}}", student.getJoiningDate()+"");
 		fileData = fileData.replace("{{StudentMobile}}", student.getPhone()==null?"":student.getPhone());
 		fileData = fileData.replace("{{StudentEmail}}", student.getEmail()==null?"":student.getEmail());
-		fileData = fileData.replace("{{StudentRegNo}}", student.getStudentInstRegNo());
+		fileData = fileData.replace("{{StudentRegNo}}", student.getStudentInstRegNo()==null?"":student.getStudentInstRegNo());
 		fileData = fileData.replace("{{InstituteName}}", registerBean.getClassName());
 		fileData = fileData.replace("{{InstituteAddress}}", registerBean.getAddr1()+","+registerBean.getCity()+","+registerBean.getState());
 		fileData = fileData.replace("{{InstitutePhone}}", registerBean.getPhone1()==null?"":registerBean.getPhone1());

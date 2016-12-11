@@ -40,6 +40,7 @@ $(document).ready(function(){
 		var register = {};
 		register.fname = $("#fname").val().trim();
 		register.lname = $("#lname").val().trim();
+		register.mname = $("#mname").val().trim(); 
 		register.dob = $("#dobfield").val();
 		register.addr1 = $("#address").val().trim();
 		register.city = $("#city").val().trim();
@@ -59,6 +60,11 @@ $(document).ready(function(){
 			validFlag = false;
 		}else if(!register.fname.match(regStringExpr)){
 			$("#fnameError").html("Invalid first name,only alphabets allowed.")
+			validFlag = false;
+		}
+		
+		if(!register.mname.match(regStringExpr) && register.mname != ""){
+			$("#mnameError").html("Invalid middle name,only alphabets allowed.")
 			validFlag = false;
 		}
 		if(register.lname == ""){
@@ -144,6 +150,11 @@ $(document).ready(function(){
 	<div class="col-md-3"><label for="fname"  class="control-label">*First Name</label></div>
 	<div class="col-md-3"><input type="text" class="form-control" id="fname">
 	<span id="fnameError" class="error"></span></div>
+</div>
+<div class="row">
+	<div class="col-md-3"><label for="mname"  class="control-label">Middle Name</label></div>
+	<div class="col-md-3"><input type="text" class="form-control" id="mname">
+	<span id="mnameError" class="error"></span></div>
 </div>
 <div class="row">
 	<div class="col-md-3"><label for="lname"  class="control-label">*Last Name</label></div>

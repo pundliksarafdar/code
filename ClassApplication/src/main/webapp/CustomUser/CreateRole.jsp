@@ -58,9 +58,9 @@
 				$("#roledescError").html("Invalid Role Description.Only - and _ special character allowed.");
 				validationFlag = false;
 			}
-			if($("input[name=lectureCheckbox]").prop("checked") == true){
+			/* if($("input[name=lectureCheckbox]").prop("checked") == true){
 				lecturer = true;
-			}
+			} */
 			if(validationFlag){
 			var inst_roll = {};
 			inst_roll.roll_desc = roledesc;
@@ -381,9 +381,9 @@
 		</div>
 		</div>
 		
-		<div class="row">
+		<!-- <div class="row">
 		<input type="checkbox" id="lectureCheckbox" name="lectureCheckbox" /> Lecturer
-		</div>
+		</div> -->
 		<div class="row">
 		<button id="create" class="btn btn-sm btn-success">Save</button>
 		</div>

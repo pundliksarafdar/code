@@ -162,7 +162,7 @@ public class InstRollDB {
 		List list = null;
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
-		Query query = session.createQuery("select reg.regId,reg.fname,reg.lname,role.roll_desc from RegisterBean reg,"
+		Query query = session.createQuery("select reg.regId,reg.fname,reg.lname,role.roll_desc,reg.status from RegisterBean reg,"
 				+ "Inst_roll role where  reg.inst_id = :inst_id and reg.inst_id = role.inst_id  and "
 				+ "reg.inst_roll = role.roll_id");
 		query.setParameter("inst_id", inst_id);

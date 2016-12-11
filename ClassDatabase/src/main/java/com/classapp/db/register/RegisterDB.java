@@ -788,4 +788,33 @@ public List getStudents(List StudentIDs) {
 		}	
 		return true;
 	}
+	
+	public boolean updateStatus(int regID,String status) {
+		Session session = null;
+		Transaction transaction = null;
+		List<RegisterBean> subidList = null;
+		Calendar date = Calendar.getInstance();
+	    date.setTime(new Date());
+	    date.add(Calendar.YEAR,1);
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update RegisterBean set status = :status where  regId = :regId");
+			query.setParameter("regId", regID);
+			query.setParameter("status", status);
+			query.executeUpdate();
+			transaction.commit();
+		}catch(Exception e){
+			e.printStackTrace();
+			if(null!=transaction){
+				transaction.rollback();
+			}
+			
+		}finally{
+			if(null!=session){
+				session.close();
+			}
+		}	
+		return true;
+	}
 }

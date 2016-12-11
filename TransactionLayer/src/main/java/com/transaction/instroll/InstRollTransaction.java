@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.classapp.db.register.RegisterBean;
+import com.classapp.db.register.RegisterDB;
 import com.classapp.db.register.RegisterUser;
 import com.classapp.db.roll.CustomUser;
 import com.classapp.db.roll.EditInstUserObject;
@@ -54,6 +55,7 @@ public class InstRollTransaction {
 			customUser.setFname((String)object[1]);
 			customUser.setLname((String)object[2]);
 			customUser.setRole_desc((String)object[3]);
+			customUser.setStatus((String)object[4]);
 			customUserList.add(customUser);
 		}
 		return customUserList;
@@ -93,8 +95,22 @@ public class InstRollTransaction {
 		scheduleTransaction.updateScheduleOfTeacher(user_id, inst_id);
 		SyllabusPlannerDb plannerDb = new SyllabusPlannerDb();
 		plannerDb.deleteSyllabus(user_id, null, null, null, inst_id);
+		RegisterDB registerDB = new RegisterDB();
+		registerDB.updateStatus(user_id, "R");
 		InstRollDB db = new InstRollDB();
 		db.deleteInstUser(inst_id, user_id);
+		return true;
+	}
+	
+	public boolean disableInstUser(int inst_id,int user_id) {
+		RegisterDB registerDB = new RegisterDB();
+		registerDB.updateStatus(user_id, "D");
+		return true;
+	}
+	
+	public boolean enableInstUser(int inst_id,int user_id) {
+		RegisterDB registerDB = new RegisterDB();
+		registerDB.updateStatus(user_id, "");
 		return true;
 	}
 }
