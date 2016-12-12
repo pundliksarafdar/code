@@ -152,7 +152,7 @@
 		var regStringExpr = /^[a-zA-Z]+$/;
 		var regAddressExpr = /^[a-zA-Z0-9 ]+$/;
 		var regPasswordExpr = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%]).{5,20}/;
-		var regloginname=/^[a-z0-9]+[@._]*[a-z0-9]+$/;
+		var regloginname=/^[a-zA-Z0-9]+[@._]*[a-zA-Z0-9]+$/;
 		var textonly=/^[a-zA-Z]+$/;
 			//(^[a-z0-9]+[@._]*[a-z0-9]$){5,20}
 			
@@ -179,11 +179,14 @@
 			$('[data-toggle="tooltip"]').tooltip('show');
 		}
 		
-		if($("#loginname").val().length<5 || !$("#loginname").val().match(regloginname))
-			{
+		if($("#loginname").val().length<5){
 			$("#loginname").parents(".form-group").prepend("<p class='danger' >Username is invalid should be more than 5 character</p>");
 			isValidated = false;
 			$("#loginname").addClass("has-error");
+			}else if( !$("#loginname").val().match(regloginname)){
+				$("#loginname").parents(".form-group").prepend("<p class='danger' >Username is invalid</p>");
+				isValidated = false;
+				$("#loginname").addClass("has-error");	
 			}
 		
 		if(!$("#phone1").val().match(regPhoneNumber)){
