@@ -4,18 +4,29 @@ var deleteHeaderUri = "/rest/customuserservice/header/";
 var globalBackgroundColor = "white";
 var globalBorder = "none";
 var globalBorderColor = "black";
+var addtionalFieldsString = "";
+var pagelayout = "1";
 $(document).ready(function(){
+	if($("#AdditionalFieldJson").val() != ""){
+	var data = JSON.parse($("#AdditionalFieldJson").val());
+	 $.each(data,function(key,val){
+		 addtionalFieldsString = addtionalFieldsString + "<li value="+key+">"+val+"</li>";
+	 })
+	}
 	manageSettings();
 	var toolbarOption = $.summernote.options.toolbar;
-	$.summernote.options.buttons = { addStudentNameButton:AddStudentNameButton,addAddressButton:AddAddressButton,addBorderDropDown:AddBorderDropDown,addBorderButton:AddBorderButton,
+	$.summernote.options.buttons = { addBorderDropDown:AddBorderDropDown,addBorderButton:AddBorderButton,
 			addPageBackgroundButton:AddPageBackgroundButton,addPageBackgroundDropDown:AddPageBackgroundDropDown,addBorderColorButton:AddBorderColorButton,
-			addBorderColorDropDown:AddBorderColorDropDown};
+			addBorderColorDropDown:AddBorderColorDropDown,addDetailsDropDown:AddDetailsDropDown,addInstituteDetailsDropDown:AddInstituteDetailsDropDown,
+			portraitLayoutButton:PortraitLayoutButton,landscapeLayoutButton:LandscapeLayoutButton,customPrint:CustomPrint};
 	toolbarOption.push(['fontsize', ['fontsize']]);
-	toolbarOption.push(['misc', ['print']]);
-	toolbarOption.push(['mybutton', ['addStudentNameButton','addAddressButton']]);
+	toolbarOption.push(['misc', ['customPrint']]);
+	toolbarOption.push(['studentDetails', ['addDetailsDropDown']]);
+	toolbarOption.push(['instituteDetails', ['addInstituteDetailsDropDown']]);
 	toolbarOption.push(['border', ['addBorderButton','addBorderDropDown']]);
 	toolbarOption.push(['borderColor', ['addBorderColorButton','addBorderColorDropDown']]);
 	toolbarOption.push(['pageColor', ['addPageBackgroundButton','addPageBackgroundDropDown']]);
+	toolbarOption.push(['pageLayout', ['portraitLayoutButton','landscapeLayoutButton']]);
 	$(".summernote").summernote();
 	/*$(".panel-body").prop("contenteditable","false");*/
 });
@@ -220,31 +231,166 @@ var AddPageBackgroundDropDown = function (context) {
     return button.render();   // return button as jquery object 
 }
 
-var AddAddressButton = function (context) {
+var AddDetailsDropDown = function (context) {
+	var con = context;
+   var ui = $.summernote.ui;
+   var list = "<li value='StudentFullName'>Student full name</li>" +
+   			  "<li value='StudentFirstName'>Student first name</li>" +
+   			  "<li value='StudentLastName'>Student last name</li>" +
+   			  "<li value='ParentFullName'>Parent full name</li>" +
+   			  "<li value='ParentFirstName'>Parent first name</li>" +
+   			  "<li value='ParentLastName'>Parent last name</li>" +
+   			  "<li value='StudentAddress'>Address</li>" +
+   			  "<li value='StudentDOB'>Date Of Birth</li>" +
+   			  "<li value='StudentJoiningDate'>Joining Date</li>" +
+   			  "<li value='StudentMobile'>Mobile</li>" +
+   			  "<li value='StudentEmail'>Email</li>"+addtionalFieldsString;
+
+   var button = ui.buttonGroup([
+       ui.button({
+           className: 'dropdown-toggle',
+           contents: ' <span class="selectedBorder">Select Student Placeholders</span> <span class="caret"></span>',
+           data: {
+               toggle: 'dropdown'
+           },
+           click: function () {
+        	   context.invoke('editor.saveRange');
+        	   }
+       }),
+       ui.dropdown({
+           className: 'drop-default summernote-list',
+           contents: "<ul type='none' style='cursor: pointer;padding-left: 1%;font-size:small'>"+list+"</ul>",
+           callback: function ($dropdown) {
+               $dropdown.find('li').each(function () {
+                  /* $(this).click(function () {            
+                	   $(".summernote").summernote('editor.saveRange');
+                	   $(".summernote").summernote('editor.restoreRange');
+                	   $(".summernote").summernote('editor.focus');
+                	   con.summernote('editor.insertText', '{{Po}}');
+                   });*/
+                   $(this).hover(function(){
+                       $(this).css("background-color", "#eeeeee");
+                       $(this).attr("data-val", "1");
+                       }, function(){
+                       $(this).css("background-color", "white");
+                       $(this).attr("data-val", "0");
+                   });
+               });
+           },
+           click:function(){
+        	   context.invoke('editor.restoreRange');
+        	   context.invoke('editor.focus');
+        	   context.invoke('editor.insertText', '{{'+$($(this).find("li[data-val=1]")).attr("value")+'}}');
+           }
+       })
+   ]);        
+
+   return button.render();   // return button as jquery object 
+}
+
+var AddInstituteDetailsDropDown = function (context) {
+	var con = context;
+   var ui = $.summernote.ui;
+   var list = "<li value='InstituteName'>Institute name</li>" +
+   			  "<li value='InstituteAddress'>Institute Address</li>" +
+   			  "<li value='InstitutePhone'>Institute Phone</li>" +
+   			  "<li value='InstituteEmail'>Institute Email</li>" ;
+
+   var button = ui.buttonGroup([
+       ui.button({
+           className: 'dropdown-toggle',
+           contents: ' <span class="selectedBorder">Select Institute Placeholders</span> <span class="caret"></span>',
+           data: {
+               toggle: 'dropdown'
+           },
+           click: function () {
+        	   context.invoke('editor.saveRange');
+        	   }
+       }),
+       ui.dropdown({
+           className: 'drop-default summernote-list',
+           contents: "<ul type='none' style='cursor: pointer;padding-left: 1%;font-size:small'>"+list+"</ul>",
+           callback: function ($dropdown) {
+               $dropdown.find('li').each(function () {
+                  /* $(this).click(function () {            
+                	   $(".summernote").summernote('editor.saveRange');
+                	   $(".summernote").summernote('editor.restoreRange');
+                	   $(".summernote").summernote('editor.focus');
+                	   con.summernote('editor.insertText', '{{Po}}');
+                   });*/
+                   $(this).hover(function(){
+                       $(this).css("background-color", "#eeeeee");
+                       $(this).attr("data-val", "1");
+                       }, function(){
+                       $(this).css("background-color", "white");
+                       $(this).attr("data-val", "0");
+                   });
+               });
+           },
+           click:function(){
+        	   context.invoke('editor.restoreRange');
+        	   context.invoke('editor.focus');
+        	   context.invoke('editor.insertText', '{{'+$($(this).find("li[data-val=1]")).attr("value")+'}}');
+           }
+       })
+   ]);        
+
+   return button.render();   // return button as jquery object 
+}
+
+var PortraitLayoutButton = function (context) {
 	  var ui = $.summernote.ui;
 	  
 	  // create button
 	  var button = ui.button({
-	    contents: 'Address',
-	    tooltip: 'Student address will be added automatically on certificate generation',
+	    contents: 'Portrait Page',
+	    tooltip: 'Portrait Page',
 	    click: function () {
+	    	pagelayout = "2";
 	      // invoke insertText method with 'hello' on editor module.
-	      context.invoke('editor.insertText', '{{StudentAddress}}');
+	     $(".note-editing-area").css("padding-left","195px")
+	     $(".note-editing-area").css("padding-right","195px")
 	    }
 	  });
 
 	  return button.render();   // return button as jquery object 
 	}
-var AddStudentNameButton = function (context) {
+
+var LandscapeLayoutButton = function (context) {
 	  var ui = $.summernote.ui;
 	  
 	  // create button
 	  var button = ui.button({
-	    contents: 'Student',
-	    tooltip: 'Student name will be added automatically on certificate generation',
+	    contents: 'Landscape Page',
+	    tooltip: 'Landscape Page',
+	    style:"background: #d5d5d5;",
+	    click: function () {
+	    	pagelayout = "1";
+	      // invoke insertText method with 'hello' on editor module.
+	     $(".note-editing-area").css("padding-left","31px")
+	     $(".note-editing-area").css("padding-right","31px")
+	    }
+	  });
+
+	  return button.render();   // return button as jquery object 
+	}
+
+var CustomPrint = function (context) {
+	  var ui = $.summernote.ui;
+	  
+	  // create button
+	  var button = ui.button({
+	    contents: 'Print',
+	    tooltip: 'Print',
 	    click: function () {
 	      // invoke insertText method with 'hello' on editor module.
-	      context.invoke('editor.insertText', '{{StudentName}}');
+	    	var data  = $('.summernote').summernote('code');
+	    	data = "<html><link href='/css/bootstrap.min.css' rel='stylesheet'><div class='certificatePanel' style='background-color:"+globalBackgroundColor+";padding:2%'>" +
+			"<div class='certificateMargin' style='border-color:"+globalBorderColor+";border-style:"+globalBorder+"'><div class='certificateBody' style='padding:2%'>"+data+"</div></div></div></html>"
+	    	var win =window.open();
+			win.document.write(data);
+			win.print();
+			win.close();
 	    }
 	  });
 
@@ -288,7 +434,7 @@ var manageSettings = function(){
 		}
 		}
 		handlers.error = function(e){$.notify({message: "Error"},{type: 'danger'});}
-		data = "<div class='certificatePanel' style='background-color:"+globalBackgroundColor+";padding:2%'>" +
+		data = "<div class='certificatePanel' style='background-color:"+globalBackgroundColor+";padding:2%' pagelayout='"+pagelayout+"'>" +
 				"<div class='certificateMargin' style='border-color:"+globalBorderColor+";border-style:"+globalBorder+"'><div class='certificateBody' style='padding:2%'>"+data+"</div></div></div>" 
 		rest.postString(uri,handlers,data);
 		}

@@ -4,11 +4,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.record.OldCellRecord;
+
 import com.classapp.db.register.RegisterBean;
 import com.classapp.logger.AppLogger;
 import com.config.BaseAction;
 import com.config.Constants;
 import com.opensymphony.xwork2.ActionContext;
+import com.transaction.register.RegisterTransaction;
 import com.user.UserBean;
 
 public class EditUserConfirm extends BaseAction{
@@ -37,9 +41,15 @@ public class EditUserConfirm extends BaseAction{
 	public String performBaseAction(UserBean userBean,HttpServletRequest request,HttpServletResponse response,Map<String, Object> session) {
 		AppLogger.logger(registerBean);
 		registerBean.setRole(userBean.getRole());
+		if(userBean.getRole() == 5){
+			registerBean.setInst_roll(userBean.getInst_roll());
+			registerBean.setInst_id(userBean.getInst_id());
+		}
 		ActionContext.getContext().getSession().put("registerbean", registerBean);
 		getActionErrors().clear();
-		if(oldPassword==null || (!"".equals(oldPassword.trim()) && !oldPassword.equals(userBean.getLoginBean().getLoginpass()))){
+		RegisterTransaction registerTransaction = new RegisterTransaction();
+		RegisterBean oldRegisterBean = registerTransaction.getregistereduser(userBean.getRegId());
+		if(oldPassword==null || (!"".equals(oldPassword.trim()) && !oldPassword.equals(oldRegisterBean.getLoginPass()))){
 			addActionError("Old password is wrong");
 			return ERROR;
 		}

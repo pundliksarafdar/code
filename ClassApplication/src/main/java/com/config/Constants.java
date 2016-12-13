@@ -71,5 +71,8 @@ public class Constants {
 	public static String STORAGE_PATH = "";
 	public static String BASE64_IMAGE_PREFIX = "data:image/png;base64,";
 	
+	public static final String USER_DELETED = "R";
+	public static final String USER_DISABLED = "D";
+	
 	
 }

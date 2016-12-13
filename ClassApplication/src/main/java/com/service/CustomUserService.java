@@ -774,15 +774,34 @@ public class CustomUserService extends ServiceBase {
 	}
 	
 	@POST
-	@Path("/updateStudent")
+	@Path("/updateStudent/{currentBatch}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateStudent(Student student){
+	public Response updateStudent(Student student,@PathParam("currentBatch") String currentBatch){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		StudentTransaction studentTransaction = new StudentTransaction();
 		Student DBstudent = studentTransaction.getStudentByStudentID(student.getStudent_id(), userBean.getInst_id());
 		DBstudent.setBatch_id(student.getBatch_id());
 		DBstudent.setDiv_id(student.getDiv_id());
+		int rollNo=Integer.parseInt("".equals(student.getBatchIdNRoll()) ? "0" :student.getBatchIdNRoll());
+		boolean validationFlag = true;
+		if(!"0".equals(currentBatch) && rollNo != 0){
+			validationFlag = studentTransaction.validateRollNo(currentBatch, userBean.getInst_id(), student.getDiv_id(), rollNo, student.getStudent_id());
+		}
+		if(validationFlag){
+			if(rollNo != 0){
+				String batchIDNRoll = DBstudent.getBatchIdNRoll();
+				JsonParser jsonParser = new JsonParser();
+				JsonObject object = new JsonObject();
+				if(null!=batchIDNRoll){
+					JsonElement element = jsonParser.parse(batchIDNRoll);
+					object = element.getAsJsonObject();
+				}object.addProperty(currentBatch, rollNo);
+				DBstudent.setBatchIdNRoll(object.toString());
+				}
 		studentTransaction.updateStudentDb(DBstudent);
+		}else{
+			return Response.status(Status.OK).entity(false).build();
+		}
 		return Response.status(Status.OK).entity(true).build();
 	}
 	
@@ -2964,6 +2983,21 @@ public class CustomUserService extends ServiceBase {
 		 }
 		 }
 		return Response.status(Response.Status.OK).entity(map).build();
+	}
+	
+	@POST
+	@Path("/setRollNumber/{divId}/{batchId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response generateRollNumber(
+			@PathParam("divId")String divId,
+			@PathParam("batchId")String batchId){
+		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
+		StudentTransaction studentTransaction = new StudentTransaction();
+		BatchTransactions batchTransactions = new BatchTransactions();
+		List<StudentDetails>studentDetails = studentTransaction.generateRollNumber(batchId, divId, userBean.getInst_id());
+		batchTransactions.updateBatchRollGeneratedStatus(Integer.parseInt(batchId), userBean.getInst_id(), Integer.parseInt(divId), "yes");
+		studentTransaction.updateStudentRollNumber(batchId, userBean.getInst_id(), Integer.parseInt(divId), studentDetails);
+		return Response.status(Status.OK).entity(studentDetails).build();
 	}
 	
 	private Object readObject(File file) {

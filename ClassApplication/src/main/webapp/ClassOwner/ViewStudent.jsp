@@ -76,6 +76,12 @@ var globalDivisionID = "";
 var graphData = [];
 var enabledEdit = false;
 	$(document).ready(function(){
+		$('#joiningDatePicker').datetimepicker({
+			format : 'DD-MM-YYYY',
+			pickTime : false,
+			maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
+		});
+		
 		if($("#studentNameSearch").val() != ""){
 			var studentName = $("#studentNameSearch").val();
 			$.ajax({
@@ -304,11 +310,12 @@ var enabledEdit = false;
 			$("#editPersonalDetailsParentLName").val(editStudent.parentLname);
 			$("#editPersonalDetailsParentMobile").val(editStudent.parentPhone);
 			$("#editPersonalDetailsParentEmail").val(editStudent.parentEmail);
-			$("#editPersonalDetailsStudentDOB").val(editStudent.dob);
+			$("#editPersonalDetailsStudentDOB").val(editStudent.dob.split("-").reverse().join("-"));
 			$("#editPersonalDetailsStudentAddress").val(editStudent.addr);
 			$("#editPersonalDetailsStudentCity").val(editStudent.city);
 			$("#editPersonalDetailsStudentState").val(editStudent.state);
 			$("#editPersonalDetailsRegNo").val(editStudent.studentInstRegNo);
+			$("#editPersonalDetailsJoiningDatePicker").val(editStudent.joiningDate.split("-").reverse().join("-"));
 			$(".addtionaEditFields").remove();
 			var additionalFieldStudentInfo = JSON.parse(editStudent.studentAdditionalInfo);
 			var additionalFieldHtml = "";
@@ -442,11 +449,12 @@ var enabledEdit = false;
 			editStudent.parentLname = $("#editPersonalDetailsParentLName").val();
 			editStudent.parentPhone = $("#editPersonalDetailsParentMobile").val();
 			editStudent.parentEmail = $("#editPersonalDetailsParentEmail").val();
-			editStudent.dob = $("#editPersonalDetailsStudentDOB").val();
+			editStudent.dob = $("#editPersonalDetailsStudentDOB").val().split("-").reverse().join("-");
 			editStudent.addr = $("#editPersonalDetailsStudentAddress").val();
 			editStudent.city = $("#editPersonalDetailsStudentCity").val();
 			editStudent.state = $("#editPersonalDetailsStudentState").val();
 			editStudent.studentInstRegNo = $("#editPersonalDetailsRegNo").val();
+			editStudent.joiningDate = $("#editPersonalDetailsJoiningDatePicker").val().split("-").reverse().join("-");
 			var handlers = {};
 			handlers.success=function(data){
 				if(data){
@@ -685,7 +693,15 @@ var enabledEdit = false;
 	
 	function generateRoll(){
 		var handler = {};
-		handler.success = function(e){$.notify({message: "Roll number generated"},{type: 'success'});};
+		handler.success = function(e){
+			$.notify({message: "Roll number generated"},{type: 'success'});
+			var batchData = $("#batch").data("batchData")[$("#batch").val()];
+			if(batchData.status == null){
+				$("#batch").data("batchData")[$("#batch").val()].status = "rollGenerated=yes";
+				generateButtonChange();
+			}
+			$(".searchStudentByBatch").click();
+		};
 		handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
 		rest.post(generateRollNoUrl+$("#division").val()+"/"+$("#batch").val(),handler);
 	}
@@ -703,6 +719,10 @@ var enabledEdit = false;
 		}else{
 			$('.generateRollNumber').addClass('hide');
 		}
+	}
+	
+	function generateButtonChange(){
+		$('.generateRollNumber').text("Re Generate roll number").attr("data-toggle","tooltip").attr("data-original-title","Roll number for this batch are already generated, Click to regenerate, this may loose previously generated roll number");
 	}
 	
 	function studentDetailsAfterUpdate(studentId){
@@ -734,6 +754,9 @@ var enabledEdit = false;
 		   $("#studentDetailsParentName").html(data.student.parentFname+" "+data.student.parentLname);
 		   $("#studentDetailsParentPhone").html(data.student.parentPhone);
 		   $("#studentDetailsParentEmail").html(data.student.parentEmail);
+		   if(data.student.joiningDate != null){
+			   $("#studentDetailsJoiningDate").html(data.student.joiningDate.split("-").reverse().join("/"));
+			   }
 		   if(data.studentUserBean.status == "M" || data.studentUserBean.status == "E"){
 			 $("#generalTab").append("<div class='crendentialDetails'><div class='row'><label>Credential Information</label></div>"+
 					 	"<div class='row'><div class='col-md-2'>Username</div>"+
@@ -784,6 +807,7 @@ var enabledEdit = false;
 	
 	
 	function studentDetails(){
+		$("#generalTab").find("span").html("");
 		$(".studentDetails").find("#batchID").val(globalBatchID);
 		$(".studentDetails").find("#divisionID").val(globalDivisionID);
 		$(".studentDetails").find("#studentID").val($(this).closest("tr").find("#studentId").val());
@@ -812,6 +836,9 @@ var enabledEdit = false;
 		   $("#studentDetailsParentName").html(data.student.parentFname+" "+data.student.parentLname);
 		   $("#studentDetailsParentPhone").html(data.student.parentPhone);
 		   $("#studentDetailsParentEmail").html(data.student.parentEmail);
+		   if(data.student.joiningDate != null){
+		   $("#studentDetailsJoiningDate").html(data.student.joiningDate.split("-").reverse().join("/"));
+		   }
 		   if(data.studentUserBean.status == "M" || data.studentUserBean.status == "E"){
 			 $("#generalTab").append("<div class='crendentialDetails'><div class='row'><label>Credential Information</label></div>"+
 					 	"<div class='row'><div class='col-md-2'>Username</div>"+
@@ -886,8 +913,15 @@ var enabledEdit = false;
 	}
 	
 	function updateStudentAjax(studentId,batchIds){
+		var regNumber = /^[0-9]+$/;
 		var flag=false;
 		var batchIdsStr = "";
+		var rollNo = that.closest("tr").find(".rollNo").val();
+		if(rollNo != undefined){
+			rollNo.trim();
+		}else{
+			rollNo = "";
+		}
 		var divstr = that.closest("tr").find(".selectDivision").select2('data')[0].text;
 		var div = that.closest("tr").find(".selectDivision").val();
 		if(batchIds == "" || batchIds == null){
@@ -895,6 +929,11 @@ var enabledEdit = false;
 			that.closest("tr").find(".batchError").html("Select Batch!");
 		}else{
 			 batchIdsStr = batchIds.join(',');	
+		}
+		
+		if(!rollNo.match(regNumber) && rollNo != ""){
+			flag = true;
+			that.closest("tr").find(".rollError").html("Invalid Roll no");
 		}
 		
 		if(flag==false){
@@ -905,10 +944,14 @@ var enabledEdit = false;
 						 regId:'',
 						 batchIds:batchIdsStr,
 						 studentId:studentId,
+						 currentBatch:globalBatchID,
+						 rollNo:rollNo,
 						 div:div
 				   		},
 				   type:"POST",
-				   success:function(data){					  
+				   success:function(data){
+					   data = JSON.parse(data);
+					   if(data.status != "roll"){
 					   that.closest("tr").find(".selectBatch").select2().val(batchIds).change();
 					   var batchStr = "";
 					   $.each(that.closest("tr").find(".selectBatch").select2('data'),function(key,val){
@@ -917,8 +960,14 @@ var enabledEdit = false;
 					   batchStr = batchStr.replace(",","");
 					   that.closest("tr").find(".defaultBatchname").html(batchStr);
 					   that.closest("tr").find(".defaultDiv").html(divstr);
+					   if(rollNo != ""){
+					   that.closest("tr").find(".defaultRollNo").html(rollNo);
+					   }
 					   that.closest("tr").removeClass("editEnabled");
-				   	},
+				   	}else{
+				   		that.closest("tr").find(".rollError").html("Duplicate Roll no");
+				   	}
+				   },
 				   error:function(data){
 				   
 				   }
@@ -1055,9 +1104,9 @@ var enabledEdit = false;
 			columns: [
 				{title:"Roll no",data:"rollNo",render:function(data,event,row){
 					if(data == 0){
-						return  "-";	
+						return  '<div class="editable"><input type="text" class="rollNo form-control"></div>'+'<div class="default defaultRollNo">-</div>'+'<span class="editable rollError error"></span>';	
 					}else{
-					return data;
+					return '<div class="editable"><input type="text" class="rollNo form-control" value="'+data+'"></div>'+'<div class="default defaultRollNo">'+data+'</div>'+'<span class="editable rollError error"></span>';
 					}
 				}},
 				{ title: "Student Name",data:"student",render:function(data,event,row){
@@ -1423,7 +1472,7 @@ var enabledEdit = false;
   <div id="generalTab" class="tab-pane fade in active">
    <div class="row"><label>Student Information</label></div>
     <div class="row">
-    	<div class="col-md-2">Student id</div>
+    	<div class="col-md-2">Registration number</div>
     	<div class="col-md-1">:</div>
     	<div class="col-md-3"><span id="studentInstId"></span></div>
     </div>
@@ -1442,6 +1491,11 @@ var enabledEdit = false;
     	<div class="col-md-2">Address</div>
     	<div class="col-md-1">:</div>
     	<div class="col-md-3"><span id="studentDetailsAddress"></span></div>
+    </div>
+     <div class="row">
+    	<div class="col-md-2">Institute Joining Date</div>
+    	<div class="col-md-1">:</div>
+    	<div class="col-md-3"><span id="studentDetailsJoiningDate"></span></div>
     </div>
     <div class="row"><label>Parents Information</label></div>
     <div class="row">
@@ -1564,6 +1618,17 @@ var enabledEdit = false;
 						<li><a href="javascript:void(0)">West Bengal</a></li>
 					</ul>
 			</div></div> 
+</div>
+<div class="row">
+	<div class="col-md-2"><b>Joining Date:</b></div> 
+	<div class="col-md-3"><div id="joiningDatePicker" class="input-group" style="width :250px;">
+						<input class="form-control" data-format="YYYY-MM-DD"
+							type="text"  id="editPersonalDetailsJoiningDatePicker" name="editPersonalDetailsJoiningDatePicker" required="required"  readonly/> <span class="input-group-addon add-on"> <i
+							class="glyphicon glyphicon-calendar glyphicon-time"></i>
+						</span>
+					</div>
+					<span id="editPersonalDetailsStudentDOBError" class="error"></span>	
+					</div> 
 </div>
 <div class="row"><b>Parent Details</b></div>
 <div class="row">

@@ -22,6 +22,8 @@
 				<div class="alert alert-info" role="alert"><i class="glyphicon glyphicon-paperclip"></i>&nbsp;Password Changed by you, On Submit it will changed</div>
 				<input type="hidden" name="registerBean.loginPass" value='<s:property value="registerBean.loginPass" />'/>
 			</c:if>
+			<input type="hidden" name="registerBean.inst_roll" value='<s:property value="registerBean.inst_roll" />'/>
+			<input type="hidden" name="registerBean.inst_id" value='<s:property value="registerBean.inst_id" />'/>
 			<table class="table" style="background-color: white;" border="0">
 				<tbody>
 					<tr>

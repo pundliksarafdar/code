@@ -3,13 +3,20 @@ package com.transaction.certificate;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.FileUtils;
 
 import com.classapp.db.certificate.CertificateDB;
 import com.classapp.db.certificate.certificate;
+import com.classapp.db.register.AdditionalFormFieldBeanDl;
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.student.Student;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.transaction.register.AdditionalFormFieldTransaction;
 import com.transaction.register.RegisterTransaction;
 import com.transaction.student.StudentTransaction;
 
@@ -106,10 +113,44 @@ public class CertificateTransaction {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		RegisterTransaction registerTransaction = new RegisterTransaction();
+		RegisterBean registerBean = registerTransaction.getregistereduser(inst_id);
 		StudentTransaction studentTransaction = new StudentTransaction();
 		Student student= studentTransaction.getclassStudent(student_id,inst_id);
-		fileData = fileData.replace("{{StudentName}}", student.getFname()+" "+student.getLname());
+		AdditionalFormFieldTransaction transaction = new AdditionalFormFieldTransaction();
+		AdditionalFormFieldBeanDl bean = transaction.getAdditionalFormFieldBean(inst_id);
+		fileData = fileData.replace("{{StudentFullName}}", student.getFname()+" "+student.getLname());
+		fileData = fileData.replace("{{StudentFirstName}}", student.getFname());
+		fileData = fileData.replace("{{StudentLastName}}", student.getLname());
+		fileData = fileData.replace("{{ParentFullName}}", student.getParentFname()+" "+student.getLname());
+		fileData = fileData.replace("{{ParentFirstName}}", student.getParentFname());
+		fileData = fileData.replace("{{ParentLastName}}", student.getParentLname());
 		fileData = fileData.replace("{{StudentAddress}}", student.getAddr()+","+student.getCity()+","+student.getState());
+		fileData = fileData.replace("{{StudentDOB}}", student.getDob()+"");
+		fileData = fileData.replace("{{StudentJoiningDate}}", student.getJoiningDate()+"");
+		fileData = fileData.replace("{{StudentMobile}}", student.getPhone()==null?"":student.getPhone());
+		fileData = fileData.replace("{{StudentEmail}}", student.getEmail()==null?"":student.getEmail());
+		fileData = fileData.replace("{{StudentRegNo}}", student.getStudentInstRegNo()==null?"":student.getStudentInstRegNo());
+		fileData = fileData.replace("{{InstituteName}}", registerBean.getClassName());
+		fileData = fileData.replace("{{InstituteAddress}}", registerBean.getAddr1()+","+registerBean.getCity()+","+registerBean.getState());
+		fileData = fileData.replace("{{InstitutePhone}}", registerBean.getPhone1()==null?"":registerBean.getPhone1());
+		fileData = fileData.replace("{{InstituteEmail}}", registerBean.getEmail()==null?"":registerBean.getEmail());
+		String str = bean.getFormField();
+		String studentAdditionalData = student.getStudentAdditionalInfo();
+		if(studentAdditionalData != null){ 
+		JsonParser parser = new JsonParser();
+		 Object obj = parser.parse(str);
+		 JsonObject studentAdditionalDataObject = (JsonObject) parser.parse(studentAdditionalData);
+        JsonObject object = (JsonObject)obj;
+        Set<Entry<String, JsonElement>> ens = object.entrySet();
+            for (Entry<String, JsonElement> en : ens) {
+            	if( studentAdditionalDataObject.get(en.getKey()) != null){
+            	fileData = fileData.replace("{{"+en.getKey()+"}}", studentAdditionalDataObject.get(en.getKey()).toString().replace("\"",""));
+            	}else{
+            		fileData = fileData.replace("{{"+en.getKey()+"}}", "-");	
+            	}
+            }
+		}
 		return fileData;
 	}
 	

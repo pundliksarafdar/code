@@ -105,7 +105,9 @@ public class LoginUser extends BaseAction{
 		}
 		
 		if(forward.equalsIgnoreCase(ERROR)){
-			addActionError("Please enter correct login name or password");
+			if(!Constants.USER_DELETED.equals(userBean.getStatus()) && !Constants.USER_DISABLED.equals(userBean.getStatus())){
+					addActionError("Please enter correct login name or password");
+				}
 		}
 		return forward;
 	}
@@ -152,6 +154,9 @@ public class LoginUser extends BaseAction{
 				catch (InvocationTargetException e) {
 					e.printStackTrace();
 				}
+					if(Constants.USER_DELETED.equals(userBeanLg.getStatus()) || Constants.USER_DISABLED.equals(userBeanLg.getStatus())){
+					return ERROR;
+					}
 			}else{
 				return ERROR;
 			}

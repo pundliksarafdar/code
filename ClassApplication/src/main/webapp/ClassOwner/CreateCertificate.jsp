@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core"%>
 <html>
     <head>
         <meta charset="utf-8">
@@ -14,9 +15,14 @@
            	 padding: 2%; 
             }  */
             .note-editing-area{
-            padding: 2%
+            padding-top : 2%;
+            padding-bottom :2%;
+            padding-left: 31px;
+            padding-right: 31px;
+            background: rgb(241,241,241);
             } 
             </style>
+           
     </head>
     
     <body>
@@ -55,5 +61,6 @@
 	    </form> 
 	    </div>   
     </div>
+    <input type="hidden" value='<c:out value="${AdditionalFieldJson}"></c:out>' id="AdditionalFieldJson">
     </body>
 </html>

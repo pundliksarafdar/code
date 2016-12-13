@@ -162,7 +162,7 @@ public class InstRollDB {
 		List list = null;
 		try{
 		session=HibernateUtil.getSessionfactory().openSession();
-		Query query = session.createQuery("select reg.regId,reg.fname,reg.lname,role.roll_desc from RegisterBean reg,"
+		Query query = session.createQuery("select reg.regId,reg.fname,reg.lname,role.roll_desc,reg.status from RegisterBean reg,"
 				+ "Inst_roll role where  reg.inst_id = :inst_id and reg.inst_id = role.inst_id  and "
 				+ "reg.inst_roll = role.roll_id");
 		query.setParameter("inst_id", inst_id);
@@ -232,7 +232,7 @@ public class InstRollDB {
 		session=HibernateUtil.getSessionfactory().openSession();
 		transaction=session.beginTransaction();
 		Query query = session.createQuery("update RegisterBean set  fname = :fname,lname = :lname,addr1 =:addr1,city = :city ,"
-				+ " state =:state,phone1=:phone1,inst_roll = :inst_roll,email = :email"
+				+ " state =:state,phone1=:phone1,inst_roll = :inst_roll,email = :email,dob = :dob"
 				+ " where  regId = :regId ");
 		//query.setParameter("inst_id", registerBean.getInst_id());
 		query.setParameter("fname", registerBean.getFname());
@@ -244,6 +244,7 @@ public class InstRollDB {
 		query.setParameter("inst_roll", registerBean.getInst_roll());
 		query.setParameter("regId", registerBean.getRegId());
 		query.setParameter("email", registerBean.getEmail());
+		query.setParameter("dob", registerBean.getDob());
 		query.executeUpdate();
 		transaction.commit();
 		}catch(Exception e){
@@ -353,6 +354,34 @@ public class InstRollDB {
 		}
 		}
 		return  false;
+
+	}
+	
+	public boolean deleteInstUser(int inst_id,int user_id) {
+		Transaction transaction=null;
+		Session session=null;
+		List<Inst_user> list = null;
+		try{
+		session=HibernateUtil.getSessionfactory().openSession();
+		transaction=session.beginTransaction();
+		Query query = session.createQuery("delete from Inst_user "
+				+ "  where  inst_id = :inst_id and user_id = :user_id");
+		query.setParameter("inst_id", inst_id);
+		query.setParameter("user_id", user_id);
+		 query.executeUpdate();
+		 transaction.commit();
+		}catch(Exception e){
+		e.printStackTrace();
+		if(null!=transaction){
+			transaction.rollback();
+		}
+		
+		}finally{
+		if(session!=null){
+			session.close();
+		}
+		}
+		return  true;
 
 	}
 }

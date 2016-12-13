@@ -67,4 +67,7 @@ private Constants(){
 	public static int TEACHER_ROLE = 2;
 	public static int STUDENT_ROLE = 3 ;
 	public static int PARENT_ROLE = 4;
+	
+	public static final String USER_DELETED = "R";
+	public static final String USER_DISABLED = "D";
 }

@@ -388,12 +388,12 @@ siteMapApp.controller("SiteMapController",function($scope){
         </div>
         <div class="col-sm-2 col-xs-4">
 		<a href="noticeBoard">
-            <div id="tile10" class="tile">
+            <div id="tile14" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div>
-                            	<img src="/images/Alert.svg">
+                            	<img src="/images/notice.svg">
                             </div>
                             <div class="icontext">
                                 Notice Board
@@ -467,7 +467,7 @@ siteMapApp.controller("SiteMapController",function($scope){
         	<a href="certificate">
         	<!-- This two settings need to merge -->
         	<!-- <a href="classownerSettings"> -->
-            <div id="tile13" class="tile">
+            <div id="tile15" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
@@ -487,7 +487,7 @@ siteMapApp.controller("SiteMapController",function($scope){
         	<a href="createrole">
         	<!-- This two settings need to merge -->
         	<!-- <a href="classownerSettings"> -->
-            <div id="tile13" class="tile">
+            <div id="tile16" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
@@ -507,12 +507,12 @@ siteMapApp.controller("SiteMapController",function($scope){
         	<a href="viewPlannedSyllabusAction">
         	<!-- This two settings need to merge -->
         	<!-- <a href="classownerSettings"> -->
-            <div id="tile13" class="tile">
+            <div id="tile17" class="tile">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner">
                         <div class="item active text-center">
                             <div class="markGlyphicon">
-                                <i class="glyphicon glyphicon-user bigicon"></i>
+                                 <img src="/images/planner.svg">
                             </div>
                             <div class="icontext">
                                 Syllabus
@@ -638,7 +638,22 @@ siteMapApp.controller("SiteMapController",function($scope){
     #tile13 {
     	background: #A0522D;
     }
+    
+    #tile14 {
+    	background: #ff3971;
+    }
 	
+	#tile15 {
+    	background: #30a02d;
+    }
+    
+    #tile16 {
+    	background: #dbe620;
+    }
+    
+    #tile17 {
+    	background: #1384f6;
+    }
 	.modal {
 		-webkit-transition: all 0.5s ease;
 		transition: all 0.5s ease;

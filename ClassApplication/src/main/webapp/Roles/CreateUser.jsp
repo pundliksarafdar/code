@@ -21,23 +21,26 @@ function validateEmail(sEmail) {
 	}
 $(document).ready(function(){
 	$('.datetimepicker').datetimepicker({
-		format : 'YYYY-MM-DD',
-		pickTime : false
+		format : 'DD-MM-YYYY',
+		pickTime : false,
+		maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 	});
 	
 	$(".joiningdatetimepicker").datetimepicker({
 		pickTime: false,
-		format:"YYYY-MM-DD"
+		format:"DD-MM-YYYY",
+		maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 	}).data("DateTimePicker").setDate(new Date());
 	
 	$("#submit").click(function(){
 		$(".error").html("");
 		var validFlag = true;
 		var education = $("#education").val().trim();
-		var joiningDate = $("#joiningDate").val();
+		var joiningDate = $("#joiningDate").val().split("-").reverse().join("-");
 		var register = {};
 		register.fname = $("#fname").val().trim();
 		register.lname = $("#lname").val().trim();
+		register.mname = $("#mname").val().trim(); 
 		register.dob = $("#dobfield").val();
 		register.addr1 = $("#address").val().trim();
 		register.city = $("#city").val().trim();
@@ -59,6 +62,11 @@ $(document).ready(function(){
 			$("#fnameError").html("Invalid first name,only alphabets allowed.")
 			validFlag = false;
 		}
+		
+		if(!register.mname.match(regStringExpr) && register.mname != ""){
+			$("#mnameError").html("Invalid middle name,only alphabets allowed.")
+			validFlag = false;
+		}
 		if(register.lname == ""){
 			$("#lnameError").html("Enter last name")
 			validFlag = false;
@@ -69,6 +77,8 @@ $(document).ready(function(){
 		if(register.dob == ""){
 			$("#dobError").html("Select DOB")
 			validFlag = false;
+		}else{
+			register.dob = register.dob.split("-").reverse().join("-")
 		}
 		if(register.addr1 == ""){
 			$("#addressError").html("Enter Address")
@@ -140,6 +150,11 @@ $(document).ready(function(){
 	<div class="col-md-3"><label for="fname"  class="control-label">*First Name</label></div>
 	<div class="col-md-3"><input type="text" class="form-control" id="fname">
 	<span id="fnameError" class="error"></span></div>
+</div>
+<div class="row">
+	<div class="col-md-3"><label for="mname"  class="control-label">Middle Name</label></div>
+	<div class="col-md-3"><input type="text" class="form-control" id="mname">
+	<span id="mnameError" class="error"></span></div>
 </div>
 <div class="row">
 	<div class="col-md-3"><label for="lname"  class="control-label">*Last Name</label></div>

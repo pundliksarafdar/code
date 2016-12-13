@@ -952,5 +952,38 @@ public class StudentDB {
 		return false;
 	}
 	
+	public boolean validateRollNo(String batchname,int inst_id,int div_id,int roll_no,int student_id) {
+		Session session = null;
+		boolean status=false;
+		List list=null;
+		String queryString="from Student " +
+				"where (batchIdNRoll like :roll1 or batchIdNRoll like :roll2 or batchIdNRoll like :roll3 or batchIdNRoll = :roll4) " +
+				"and class_id=:class_id and div_id=:div_id and student_id != :student_id ";
+		try{
+			session = HibernateUtil.getSessionfactory().openSession();
+			Query query = session.createQuery(queryString);
+			query.setParameter("roll1", "{\""+batchname+"\":"+roll_no+",%");
+			query.setParameter("roll2","%,\""+batchname+"\":"+roll_no+",%");	
+			query.setParameter("roll3", "%,\""+batchname+"\":"+roll_no+"}");
+			query.setParameter("roll4", "{\""+batchname+"\":"+roll_no+"}");
+			query.setParameter("class_id", inst_id);
+			query.setParameter("div_id", div_id);
+			query.setParameter("student_id", student_id);
+				list=query.list();
+			if(list!=null)
+			{
+				if(list.size() >0 ){
+				return false;
+				}
+			}
+		}catch(Exception e){
+			AppLogger.logError(e);
+		}finally{
+			session.close();
+		}
+		
+		return true;
+	}
+	
 	
 }

@@ -7,6 +7,7 @@ public class CustomUser {
 	String fname;
 	String lname;
 	String role_desc;
+	String status;
 	public int getInst_id() {
 		return inst_id;
 	}
@@ -42,6 +43,12 @@ public class CustomUser {
 	}
 	public void setRole_desc(String role_desc) {
 		this.role_desc = role_desc;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	

@@ -91,18 +91,41 @@ $(document).ready(function(){
 	});
 	
 	$("#save").click(function(){
+		$(".error").html("");
+		var flag = true;
 		var notice = {};
 		if($("input[name=applicableTo]:checked").val() == "all"){
 		notice.div_id = 0;
 		notice.batch_id = ""
 		}else{
 			notice.div_id = $("#division").val();
-			notice.batch_id = $("#batchSelect").val()	
+			notice.batch_id = $("#batchSelect").val();
+			if(notice.div_id == "-1"){
+				$("#divisionError").html("Select Class");
+				flag = false;
+			}
+			if(notice.batch_id == null){
+				$("#batchError").html("Select Batch/es");
+				flag = false;
+			}else{
+				notice.batch_id = notice.batch_id.join(",")
+			}
 		}
-		notice.notice = $("#noticeMsg").val();
+		notice.notice = $("#noticeMsg").val().trim();
 		notice.start_date = $("#startdate").val().split("-").reverse().join("-");
 		notice.end_date = $("#enddate").val().split("-").reverse().join("-");
-		var commonHandler = {};
+		var startDate = new Date(notice.start_date);
+		var endDate = new Date(notice.end_date);
+		if(startDate > endDate){
+			$("#dateError").html("End Date Cannot be less than start date");
+			flag = false;
+		}
+		if(notice.notice == ""){
+			$("#msgError").html("Please enter notice");
+			flag = false;	
+		}
+		if(flag){
+		 var commonHandler = {};
 		commonHandler.success = function(e){
 			$.notify({message: "Notice saved successfully"},{type: 'success'});
 		
@@ -110,7 +133,8 @@ $(document).ready(function(){
 		commonHandler.error = function(e){
 			$.notify({message: "Notice not saved successfully"},{type: 'danger'});
 			}
-		rest.post("rest/classownerservice/saveStudentNotice",commonHandler,JSON.stringify(notice));	
+		rest.post("rest/classownerservice/saveStudentNotice",commonHandler,JSON.stringify(notice));
+		}
 	});
 });
 </script>
@@ -122,7 +146,9 @@ $(document).ready(function(){
 <div class="container">
 <div class="row" style="padding: 2%">
 	<div class="col-md-2">Notice :</div>
-	<div class="col-md-6"><textarea id="noticeMsg" class="form-control"></textarea></div>
+	<div class="col-md-6"><textarea id="noticeMsg" class="form-control"></textarea>
+						  <span class="error" id="msgError"></span>	
+	</div>
 </div>
 <div class="row">
 	<div class="col-md-2">Notice Applicable To :</div>
@@ -136,12 +162,15 @@ $(document).ready(function(){
 		<c:forEach items="${divisionList}" var="division" varStatus="counter">
 				<option value='<c:out value="${division.divId}"></c:out>'><c:out value="${division.divisionName}"></c:out> &nbsp; <c:out value="${division.stream}"></c:out></option>
 		</c:forEach>
-	</select></div>
+	</select>
+	<span class="error" id="divisionError"></span>
+	</div>
 </div>
 <div class="row">
 	<div class="col-md-2">Select Batch :</div>
 	<div class="col-md-3"><select class="form-control" id="batchSelect" disabled multiple="multiple">
 				</select>
+				<span class="error" id="batchError"></span>
 	</div>
 </div>
 <div class="row">
@@ -162,6 +191,7 @@ $(document).ready(function(){
 							class="glyphicon glyphicon-calendar glyphicon-time"></i>
 						</span>
 					</div>
+	<span class="error" id="dateError"></span>
 	</div>
 </div>
 <div class="row">

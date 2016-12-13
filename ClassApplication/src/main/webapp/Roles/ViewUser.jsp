@@ -19,18 +19,26 @@ function validateEmail(sEmail) {
 	}
 	
 $(document).ready(function(){
+	var dataTable = $("#customUserTable").DataTable();
+	 dataTable.on( 'order.dt search.dt', function () {
+	        dataTable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+	            cell.innerHTML = i+1;
+				});
+			}).draw(); 
 	$('.datetimepicker').datetimepicker({
-		format : 'YYYY-MM-DD',
-		pickTime : false
+		format : 'DD-MM-YYYY',
+		pickTime : false,
+		maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 	});
 	
 	$(".joiningdatetimepicker").datetimepicker({
 		pickTime: false,
-		format:"YYYY-MM-DD"
+		format:"DD-MM-YYYY",
+		maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 	}).data("DateTimePicker").setDate(new Date());
 	
 $("#customUserTable").DataTable();
-$(".edit").click(function(){
+$("#customUserTableDiv").on("click",".edit",function(){
 	user_id = $(this).prop("id");
 	$(".error").html("");
 	$("#editcustomUser").show();
@@ -42,7 +50,7 @@ $(".edit").click(function(){
 			if(resp != null){
 				$("#fname").val(resp.registerBean.fname);
 				$("#lname").val(resp.registerBean.lname);
-				$("#dobfield").val(resp.registerBean.dob.slice(0,4)+"-"+resp.registerBean.dob.slice(4,6)+"-"+resp.registerBean.dob.slice(6,8));
+				$("#dobfield").val(resp.registerBean.dob.substring(6)+"-"+resp.registerBean.dob.substring(4,6)+"-"+resp.registerBean.dob.substring(0,4));
 				$("#address").val(resp.registerBean.addr1);
 				$("#city").val(resp.registerBean.city);
 				$("#state").select2().val(resp.registerBean.state).change();
@@ -50,7 +58,7 @@ $(".edit").click(function(){
 				$("#mobile").val(resp.registerBean.phone1);
 			    $("#role").select2().val(resp.registerBean.inst_roll).change();
 			    $("#education").val(resp.inst_user.education);
-				$("#joiningDate").val(resp.inst_user.joining_date);
+				$("#joiningDate").val(resp.inst_user.joining_date.substring(8)+"-"+resp.inst_user.joining_date.substring(5,7)+"-"+resp.inst_user.joining_date.substring(0,4));
 			}
 		}
 		handlers.error = function(){
@@ -68,7 +76,7 @@ $("#viewBack").click(function(){
 	$("#customUserTableDiv").show();
 });
 
-$(".view").click(function(){
+$("#customUserTableDiv").on("click",".view",function(){
 	$("#customUserTableDiv").hide();
 	$("#viewcustomUser").show();
 	var handlers = {};
@@ -76,7 +84,7 @@ $(".view").click(function(){
 		if(resp != null){
 			$("#viewfname").html(resp.registerBean.fname);
 			$("#viewlname").html(resp.registerBean.lname);
-			$("#viewDob").html(resp.registerBean.dob.slice(0,4)+"-"+resp.registerBean.dob.slice(4,6)+"-"+resp.registerBean.dob.slice(6,8));
+			$("#viewDob").html(resp.registerBean.dob.substring(6)+"-"+resp.registerBean.dob.substring(4,6)+"-"+resp.registerBean.dob.substring(0,4));
 			$("#viewAddress").html(resp.registerBean.addr1);
 			$("#viewCity").html(resp.registerBean.city);
 			$("#viewState").html(resp.registerBean.state);
@@ -85,7 +93,7 @@ $(".view").click(function(){
 			$("#role").select2().val(resp.registerBean.inst_roll).change();
 			$("#viewRole").html($("#role").select2('data')[0].text);
 		    $("#viewEducation").html(resp.inst_user.education);
-			$("#viewJoiningDate").html(resp.inst_user.joining_date);
+			$("#viewJoiningDate").html(resp.inst_user.joining_date.substring(8)+"-"+resp.inst_user.joining_date.substring(5,7)+"-"+resp.inst_user.joining_date.substring(0,4));
 		}
 	}
 	handlers.error = function(){
@@ -93,11 +101,53 @@ $(".view").click(function(){
 	rest.get("rest/classownerservice/getinstuser/"+$(this).prop("id"),handlers);
 });
 
+$("#customUserTableDiv").on("click",".delete",function(){
+	var id = $(this).prop("id");
+	var handlers = {};
+	handlers.success = function(resp){
+		var table = $("#customUserTable").DataTable();
+		$("#customUserTable").find(".delete[id='"+id+"']").closest("tr").addClass('selected');;
+		table.row('.selected').remove().draw( false );
+		 $.notify({message: "User deleted successfuly"},{type: 'success'});
+	}
+	handlers.error = function(){
+	}
+	rest.get("rest/classownerservice/deleteUser/"+$(this).prop("id"),handlers);
+});
+
+$("#customUserTableDiv").on("click",".disable",function(){
+	var id = $(this).prop("id");
+	var handlers = {};
+	handlers.success = function(resp){
+		$("#customUserTable").find(".delete[id='"+id+"']").closest("tr").find(".disable").html("Enable");
+		$("#customUserTable").find(".delete[id='"+id+"']").closest("tr").find(".disable").addClass("enable btn-success");
+		$("#customUserTable").find(".delete[id='"+id+"']").closest("tr").find(".disable").removeClass("disable btn-warning");
+		 $.notify({message: "User disabled successfuly"},{type: 'success'});
+	}
+	handlers.error = function(){
+	}
+	rest.get("rest/classownerservice/disableUser/"+$(this).prop("id"),handlers);
+});
+
+$("#customUserTableDiv").on("click",".enable",function(){
+	var id = $(this).prop("id");
+	var handlers = {};
+	handlers.success = function(resp){
+		$("#customUserTable").find(".delete[id='"+id+"']").closest("tr").find(".enable").html("Disable");
+		$("#customUserTable").find(".delete[id='"+id+"']").closest("tr").find(".enable").addClass("disable btn-warning");
+		$("#customUserTable").find(".delete[id='"+id+"']").closest("tr").find(".enable").removeClass("enable btn-success");
+		 $.notify({message: "User enabled successfuly"},{type: 'success'});
+	}
+	handlers.error = function(){
+	}
+	rest.get("rest/classownerservice/enableUser/"+$(this).prop("id"),handlers);
+});
+
 $("#submit").click(function(){
 	$(".error").html("");
 	var validFlag = true;
 	var education = $("#education").val().trim();
-	var joiningDate = $("#joiningDate").val();
+	var joiningDate = $("#joiningDate").val().split("-").reverse().join("-");
 	var register = {};
 	register.regId = user_id;
 	register.fname = $("#fname").val().trim();
@@ -133,6 +183,8 @@ $("#submit").click(function(){
 	if(register.dob == ""){
 		$("#dobError").html("Select DOB")
 		validFlag = false;
+	}else{
+		register.dob = register.dob.split("-").reverse().join("-")
 	}
 	if(register.addr1 == ""){
 		$("#addressError").html("Enter Address")
@@ -201,11 +253,18 @@ $("#submit").click(function(){
 <tbody>
 	<c:forEach items="${customUserList}" var="user" varStatus="counter">
 	<tr>
-		<td><c:out value="${counter.count}"></c:out></td>
+		<td><%-- <c:out value="${counter.count}"></c:out> --%></td>
 		<td><div class="tableRoleDesc"><c:out value="${user.fname}"></c:out> <c:out value="${user.lname}"></c:out></div></td>
 		<td>
 			<button class="btn btn-xs btn-info view" id="<c:out value="${user.reg_id}"></c:out>">View</button>
 			<button class="btn btn-xs btn-primary edit" id="<c:out value="${user.reg_id}"></c:out>">Edit</button>
+			<button class="btn btn-xs btn-danger delete" id="<c:out value="${user.reg_id}"></c:out>">Delete</button>
+			<c:if test="${user.status eq 'D' }">
+			<button class="btn btn-xs btn-success enable" id="<c:out value="${user.reg_id}"></c:out>">Enable</button>
+			</c:if>
+			<c:if test="${user.status ne 'D' }">
+			<button class="btn btn-xs btn-warning disable" id="<c:out value="${user.reg_id}"></c:out>">Disable</button>
+			</c:if>
 		</td>
 	</tr>
 	</c:forEach>
