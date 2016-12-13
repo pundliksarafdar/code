@@ -1,8 +1,14 @@
 package com.transaction.batch.division;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
+
 import com.classapp.db.Schedule.ScheduleDB;
+import com.classapp.db.batch.BatchDB;
 import com.classapp.db.batch.division.AddDivision;
 import com.classapp.db.batch.division.Division;
 import com.classapp.db.batch.division.DivisionDB;
@@ -11,6 +17,9 @@ import com.classapp.db.exam.ExamPaperDB;
 import com.classapp.db.fees.FeesDB;
 import com.classapp.db.questionPaper.QuestionPaperDB;
 import com.classapp.db.syllabusplanner.SyllabusPlannerDb;
+import com.classapp.login.UserBean;
+import com.datalayer.division.InstituteData;
+import com.datalayer.division.InstituteDataKey;
 import com.tranaction.subject.SubjectTransaction;
 import com.transaction.attendance.AttendanceTransaction;
 import com.transaction.batch.BatchTransactions;
@@ -123,5 +132,38 @@ public class DivisionTransactions {
 		DivisionDB db=new DivisionDB();
 		return db.retriveByID(divID);
 	}
+	 
+	 //Mobile function
+	 public HashMap<InstituteDataKey, List<InstituteDataKey>> getAllBatches(UserBean userBean){
+		 DivisionDB db=new DivisionDB();
+		 List<InstituteData> instituteDatas = db.getBatchMobile(userBean.getRegId());
+		 HashMap<InstituteDataKey, List<InstituteDataKey>> instituteDataMap = new HashMap<InstituteDataKey, List<InstituteDataKey>>();
+		 for(InstituteData instituteDataM:instituteDatas){
+			 InstituteDataKey instituteData = new InstituteDataKey();
+			 try {
+				BeanUtils.copyProperties(instituteData, instituteDataM);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			 if(instituteDataMap.containsKey(instituteData)){
+				 instituteDataMap.get(instituteData).add(instituteData);
+			 }else{
+				 List<InstituteDataKey> instituteDataList = new ArrayList<InstituteDataKey>();
+				 instituteDataList.add(instituteData);
+				 instituteDataMap.put(instituteData, instituteDataList);
+			 }
+		 }
+		 
+		 System.out.println(instituteDataMap);
+		 return instituteDataMap;
+	 }
+	 
+	 public void data(){
+		 
+	 }
 	 
 }

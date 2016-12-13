@@ -9,6 +9,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 
 import com.classapp.db.register.RegisterBean;
 import com.classapp.db.Schedule.Schedule;
@@ -18,6 +19,7 @@ import com.classapp.db.student.StudentDetails;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.subject.SubjectDb;
 import com.classapp.persistence.HibernateUtil;
+import com.datalayer.teacher.TeacherIdAndName;
 
 
 public class TeacherDB {
@@ -432,6 +434,16 @@ public Teacher getTeacher(int user_id, int class_id) {
 		cr.add(Restrictions.in("regId", teachersId));
 		List<RegisterBean> results = cr.list();
 		return results;
+	}
+	
+	public List<TeacherIdAndName> getTeachersInClass(int classId){
+		String sqlString = "select concat(regT.fname,' ',regT.lname) as name,regT.reg_Id as id from appl_classes teacher,regtable regT "+ 
+				"where regT.reg_Id = teacher.user_id and class_id=:classId";
+		Session session=HibernateUtil.getSessionfactory().openSession();
+		Query query = session.createSQLQuery(sqlString);
+		query.setParameter("classId", classId).setResultTransformer(Transformers.aliasToBean(TeacherIdAndName.class));
+		List<TeacherIdAndName> teacherIdAndNames = query.list();
+		return teacherIdAndNames;
 	}
 	
 }

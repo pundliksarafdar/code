@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
+import com.corex.service.AttendanceService;
+import com.corex.service.InstituteService;
 import com.corex.service.Service;
 
 public class AppClass extends Application{
@@ -12,6 +14,8 @@ public class AppClass extends Application{
     
 	public AppClass() {
 		singletons.add(new Service());
+		singletons.add(new InstituteService());
+		singletons.add(new AttendanceService());
     }
     @Override
     public Set<Object> getSingletons() {

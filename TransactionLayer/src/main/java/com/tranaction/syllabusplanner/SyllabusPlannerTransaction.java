@@ -191,4 +191,15 @@ public class SyllabusPlannerTransaction {
 	    }
 	    return workbook;
 	}
+	
+	public List<com.mobile.bean.SyllabusBean> getSyllabusBeanForMobileDb(String yyyymmdd,int instId,List<Integer> classId,List<Integer> subId,List<Integer> batchId,List<Integer> teacherId,String view){
+		String[] ymd = yyyymmdd.split("-");
+		String year = ymd[0];
+		String month = ymd[1];
+		String day = ymd[2];
+		
+		SyllabusPlannerDb syllabusPlannerDb = new SyllabusPlannerDb();
+		List<com.mobile.bean.SyllabusBean> syllabusBeans = syllabusPlannerDb.getSyllabusBeanForMobileDb(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day), instId, classId, subId, batchId, teacherId,view);
+		return syllabusBeans;
+	}
 }

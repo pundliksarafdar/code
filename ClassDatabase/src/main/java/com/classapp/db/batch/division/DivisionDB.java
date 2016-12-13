@@ -1,14 +1,18 @@
 package com.classapp.db.batch.division;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.transform.Transformers;
 
 import com.classapp.db.batch.Batch;
 import com.classapp.persistence.HibernateUtil;
+import com.datalayer.division.InstituteData;
 
 public class DivisionDB {
 	public String updateDb(Division division){
@@ -291,4 +295,39 @@ public class DivisionDB {
 		}
 		return true;
 	}
-}
+	
+	//Mobile function
+	 public List<InstituteData> getBatchMobile(int instId){
+		 String batchString = "select regtable.reg_id as classId,regtable.classname as classname ,division.div_id as divId,division.div_name as divisionName,"
+		 		+ "division.stream as stream,batch.batch_id as batchId,batch.batch_name as batchName from division,batch,regtable "
+		 		+ "where division.institute_id=batch.class_id and regtable.reg_id=:instId and batch.class_id=:instId and batch.div_id = division.div_id";
+		 Session session = null;
+			List<InstituteData> status = null;
+			try{
+				session = HibernateUtil.getSessionfactory().openSession();
+				Query query = session.createSQLQuery(batchString);
+				query.setParameter("instId", instId).setResultTransformer(Transformers.aliasToBean(InstituteData.class));
+				
+				status = query.list();
+				Set<InstituteData> instituteDatas = new HashSet<InstituteData>();
+				instituteDatas.addAll(status);
+				status = new ArrayList<InstituteData>();
+				status.addAll(instituteDatas);
+				return status;
+				}catch(Exception e){
+				e.printStackTrace();
+			}finally{
+				if(null!=session){
+					session.close();
+				}
+			}
+			return null;
+	 }
+	 
+	 public static void main(String[] args) {
+		DivisionDB divisionDB = new DivisionDB();
+		divisionDB.getBatchMobile(191);
+	}
+	}
+
+

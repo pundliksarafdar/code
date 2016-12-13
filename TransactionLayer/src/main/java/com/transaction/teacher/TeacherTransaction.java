@@ -17,6 +17,7 @@ import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Schedule.ScheduleDB;
 import com.classapp.db.subject.Subject;
 import com.classapp.db.syllabusplanner.SyllabusPlannerDb;
+import com.datalayer.teacher.TeacherIdAndName;
 import com.service.beans.TeacherDivisionsAndSubjects;
 import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.register.RegisterTransaction;
@@ -274,6 +275,11 @@ public class TeacherTransaction {
 		TeacherDB teacherDB = new TeacherDB();
 		List<RegisterBean> teacherdData = teacherDB.getTeacherDetail(teachersId);
 		return teacherdData;
+	}
+	
+	public List<TeacherIdAndName> getTeachersInClass(int classId){
+		TeacherDB teacherDB = new TeacherDB();
+		return teacherDB.getTeachersInClass(classId);
 	}
 	
 }

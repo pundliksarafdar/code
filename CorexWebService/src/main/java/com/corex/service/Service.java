@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -25,7 +26,12 @@ import javax.xml.ws.RequestWrapper;
 
 import com.corex.requestbean.WeeklyScheduleRequest;
 import com.corex.responsebean.WeeklyScheduleResponse;
-
+import com.datalayer.division.InstituteData;
+import com.datalayer.division.InstituteDataKey;
+import com.google.gson.JsonObject;
+import com.mobile.bean.SessionBean;
+import com.service.beans.MonthlyScheduleServiceBean;
+import com.service.beans.SyllabusFilterBean;
 import com.classapp.db.Notes.Notes;
 import com.classapp.db.Schedule.Schedule;
 import com.classapp.db.Teacher.Teacher;
@@ -41,6 +47,9 @@ import com.classapp.persistence.Constants;
 import com.classapp.schedule.ScheduleBean;
 import com.classapp.schedule.Scheduledata;
 import com.classapp.servicetable.ServiceMap;
+import com.corex.annotation.AuthorizeRole;
+import com.corex.annotation.AuthorizeRole.ROLE;
+import com.corex.common.Common;
 import com.corex.iservice.IService;
 import com.corex.requestbean.IRequest;
 import com.corex.requestbean.LoginBean;
@@ -57,7 +66,9 @@ import com.corex.responsebean.StudentsInstituteResponse;
 import com.corex.responsebean.WeeklyScheduleData;
 import com.tranaction.login.login;
 import com.tranaction.subject.SubjectTransaction;
+import com.tranaction.syllabusplanner.SyllabusPlannerTransaction;
 import com.transaction.batch.BatchTransactions;
+import com.transaction.batch.division.DivisionTransactions;
 import com.transaction.notes.NotesTransaction;
 import com.transaction.notification.NotificationTransaction;
 import com.transaction.register.RegisterTransaction;
@@ -65,137 +76,105 @@ import com.transaction.schedule.ScheduleTransaction;
 import com.transaction.student.StudentTransaction;
 import com.transaction.teacher.TeacherTransaction;
 
-public class Service implements IService {
+@Path("/corex")
+@Produces(MediaType.APPLICATION_JSON)
+public class Service extends MobileServiceBase{
 	@GET
 	@Path("/test")
-	public String test() {
-
-		return "Service is On";
+	//@AuthorizeRole
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response test() {
+		int i = 1/0;
+		return Response.ok().build();
 	}
 
-	@Override
+	
 	@POST
 	@Path("/login")
-	public Response login(LoginBeanMobile loginBeanMobile) {
-		
-		return Response.ok().entity(loginBeanMobile).build();
-	}
-
-	@Override
-	@POST
-	@Path("/getscheduledate")
-	@Consumes("application/json")
-	@Produces("application/json")
-	public Response getScheduleByDate(IRequest request) {
-		ScheduleResponse response = new ScheduleResponse();
-		List<com.classapp.schedule.Schedule> scheduleData = null;
-		HashMap<String, List> studentData = null;
-
-		Object dateObj =  request.getObject();
-		String date = (String) dateObj;
-		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
-		LoginBeanMobile beanMobile = request.getLoginBeanMobile();
-		UserBean userBean = new UserBean();
-		com.tranaction.login.login login = new login();
-		login.loadBean(userBean, beanMobile);
-		
-		if(null!=userBean.getRole()){
-		if (userBean.getRole() == 3) {
-			if (null != userBean) {
-				scheduleData = scheduleTransaction.getScheduleForDate(
-						userBean.getRegId(), date);
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response login(LoginBeanMobile loginBeanMobile) { 
+			SessionBean sessionBean = new SessionBean();
+			login login = new login();
+			UserBean userBean = login.loginck(loginBeanMobile.getUsername(), loginBeanMobile.getPassword());
+			if(userBean!=null){
+				String tokenId = UUID.randomUUID().toString();
+				sessionBean.setTimestamp(new java.util.Date());
+				sessionBean.setToken(tokenId);
+				sessionBean.setUserBean(userBean);
+				Common.userMap.put(tokenId, sessionBean);
+				DivisionTransactions divisionTransactions = new DivisionTransactions();
+				HashMap<InstituteDataKey, List<InstituteDataKey>> division = divisionTransactions.getAllBatches(userBean);
+				
+				HashMap authBean = new HashMap();
+				authBean.put("authtoken", tokenId);
+				authBean.put("role", userBean.getRole());
+				authBean.put("instituteData", division);
+				return Response.ok(authBean).build();
+			}else{
+				return Response.status(Response.Status.UNAUTHORIZED).build();
 			}
-			studentData = scheduleTransaction.getStudentData(userBean
-					.getRegId());
-
-			ScheduleBean scheduleBean = new ScheduleBean();
-			//scheduleBean.setSchedule(scheduleData);
-			scheduleBean.setStudentScheduleData(studentData);
-
-			response.setCode("000", "success");
-			response.setScheduleBean(scheduleBean);
-		} else {
-			response.setCode("002", "Invalid role");
-		}
-		}else{
-			response.setCode("001", "Invalid credentials");
-		}
-		return Response.ok().entity(response).build();
 	}
 	
-	@Override
+	@GET
+	@Path("view/mobile/{yyyymmdd}")
+	@AuthorizeRole
+	@Produces(MediaType.APPLICATION_JSON) 
+	public Response getAllPlannedSyllabusForMobileMonth(@PathParam("yyyymmdd") String yyyymmdd,
+			@QueryParam("division")List<Integer> classId,
+			@QueryParam("subject")List<Integer> subId,
+			@QueryParam("batchId")List<Integer> batchId,
+			@QueryParam("teacher")List<Integer> teacherId,
+			@QueryParam("view")String view) {
+		SyllabusPlannerTransaction transaction = new SyllabusPlannerTransaction();
+		List<com.mobile.bean.SyllabusBean> syllabusBeans = transaction.getSyllabusBeanForMobileDb(yyyymmdd, getRegId(), classId, subId, batchId, teacherId,view);
+		return Response.ok(syllabusBeans).build();
+	}
+	
 	@POST
-	//@Path("/data/{WeeklyScheduleBean}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces("application/json")
-	@Path("/getweeklyscheduledate")
-	public Response getWeeklyScheduleByDate(WeeklyScheduleRequest weeklyschedulerequest) {
-		System.out.println(weeklyschedulerequest);
-		
-		TeacherTransaction teacherTransaction=new TeacherTransaction();
-		List<TeacherDetails> teacherList =teacherTransaction.getAllTeachersFromClass(weeklyschedulerequest.getInst_id());
-		SubjectTransaction subjectTransaction=new SubjectTransaction();
-		List<Subjects> subjectList= subjectTransaction.getAllClassSubjects(weeklyschedulerequest.getInst_id());
-		StudentTransaction studentTransaction=new StudentTransaction();
-		Student student=studentTransaction.getclassStudent(weeklyschedulerequest.getRegID(), weeklyschedulerequest.getInst_id());
-		ScheduleTransaction scheduleTransaction=new ScheduleTransaction();
-		List<Schedule> scheduleList=new ArrayList<Schedule>();
-			if(weeklyschedulerequest.getBatch_ID()==0){
-				scheduleList=scheduleTransaction.getWeeklySchedule(new Date(weeklyschedulerequest.getDate()), weeklyschedulerequest.getInst_id(), student.getDiv_id());
-			}else{
-				scheduleList=scheduleTransaction.getWeeklySchedule(weeklyschedulerequest.getBatch_ID(), new Date(weeklyschedulerequest.getDate()), weeklyschedulerequest.getInst_id(), student.getDiv_id());
-			}	
-		BatchTransactions batchTransactions=new BatchTransactions();
-		List<Batch> batchList= batchTransactions.getAllBatchesOfDivision(student.getDiv_id(), weeklyschedulerequest.getInst_id());
-		DateFormat sdf = new SimpleDateFormat("kk:mm");
-		DateFormat f2 = new SimpleDateFormat("h:mma");
-		RegisterTransaction registerTransaction=new RegisterTransaction();
-		List<WeeklyScheduleResponse> weeklyScheduleResponseList=new ArrayList<WeeklyScheduleResponse>();
-		if(scheduleList!=null){
-			if(scheduleList.size()>0){
-				try{
-				for (int i = 0; i < scheduleList.size(); i++) {
-					WeeklyScheduleResponse weeklyScheduleResponse =new WeeklyScheduleResponse();
-					java.util.Date start=sdf.parse(scheduleList.get(i).getStart_time().toString());
-					java.util.Date end=sdf.parse(scheduleList.get(i).getEnd_time().toString());
-					String starttime=f2.format(start).toUpperCase();
-					String endtime=f2.format(end).toUpperCase();
-					weeklyScheduleResponse.setScheduledate(new SimpleDateFormat("dd-MM-yyyy").format(scheduleList.get(i).getDate()));
-					for (int j = 0; j < subjectList.size(); j++) {
-						if(subjectList.get(j).getSubjectId().intValue()==scheduleList.get(i).getSub_id()){
-							weeklyScheduleResponse.setSubject(subjectList.get(j).getSubjectName());
-							break;
-						}
-					}
-					
-					for (int j = 0; j < teacherList.size(); j++) {
-						if(teacherList.get(j).getTeacherId()==scheduleList.get(i).getTeacher_id()){
-							//RegisterBean registerBean=registerTransaction.getregistereduser(teacherList.get(j).getUser_id());
-							weeklyScheduleResponse.setTeacherName(teacherList.get(j).getTeacherBean().getFname()+" "+teacherList.get(j).getTeacherBean().getLname()+" "+teacherList.get(j).getSuffix());
-							break;
-						}
-					}
-					
-					for (int j = 0; j < batchList.size(); j++) {
-						if(batchList.get(j).getBatch_id()==scheduleList.get(i).getBatch_id()){
-							//RegisterBean registerBean=registerTransaction.getregistereduser(teacherList.get(j).getUser_id());
-							weeklyScheduleResponse.setBatchName(batchList.get(j).getBatch_name());
-							break;
-						}
-					}
-					weeklyScheduleResponse.setTime(starttime+":"+endtime);
-					weeklyScheduleResponseList.add(weeklyScheduleResponse);
-				}
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		return Response.ok().entity(weeklyScheduleResponseList).build();
+	@Path("mobile/changeStatus/{yyyymmdd}")
+	@AuthorizeRole
+	public Response setPlannedSyallbusStatus(@PathParam("yyyymmdd") String yyyymmdd,
+			@QueryParam("id")Long id,
+			@QueryParam("classId")int classId,
+			@QueryParam("subjectId")int subId,
+			@QueryParam("batchId")int batchId,
+			@QueryParam("teacherId")int teacherId,
+			@QueryParam("status")String status) {
+		SyllabusPlannerTransaction transaction = new SyllabusPlannerTransaction();
+		boolean res = transaction.setPlannedSyllabusStatus(yyyymmdd, id, getRegId(), classId, subId, batchId, teacherId, status);
+		return Response.ok(res).build();
+	}
+	
+	@GET
+	@Path("mobile/getFilterResult")
+	public Response getFilteredResult(){
+		SyllabusPlannerTransaction syllabusPlannerTransaction = new SyllabusPlannerTransaction();
+		HashMap<String, List<SyllabusFilterBean>> resultMap = syllabusPlannerTransaction.getSyllabusFilter(getRegId());
+		return Response.ok(resultMap).build();
 	}
 
-	@Override
+	@POST
+	@Path("/getscheduledate/{instituteId}/{batch}/{startDate}/{endDate}")
+	@Consumes("application/json")
+	@Produces("application/json")
+	public Response getScheduleByDate(
+			@PathParam("instituteId") int instId,
+			@PathParam("batch") int batch,
+			@PathParam("startDate") long startDate,
+			@PathParam("endDate") long endDate) {
+		StudentTransaction studentTransaction = new StudentTransaction();
+		Student student = studentTransaction.getStudentByStudentID(getRegId(), instId);
+		ScheduleTransaction scheduleTransaction = new ScheduleTransaction();
+		List<MonthlyScheduleServiceBean> scheduleList = new ArrayList<MonthlyScheduleServiceBean>();
+		if(endDate == 0){
+			scheduleList = scheduleTransaction.getMonthSchedule(batch, new Date(startDate), instId, student.getDiv_id());
+		}else{
+			scheduleList = scheduleTransaction.getMonthSchedule(batch, new Date(startDate),new Date(endDate), instId, student.getDiv_id());
+		}
+		return Response.status(Response.Status.OK).entity(scheduleList).build();
+	}
+	
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
@@ -226,7 +205,6 @@ public class Service implements IService {
 		return Response.ok().entity(notesListResponseList).build();
 	}
 
-	@Override
 	@POST
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -254,7 +232,6 @@ public class Service implements IService {
 		//return Response.ok().entity(fileResponse).build();
 	}
 
-	@Override
 	@GET
 	//@Consumes(MediaType.TEXT_PLAIN)
 	@Produces("application/json")
@@ -280,7 +257,6 @@ public class Service implements IService {
 		return Response.ok().entity(studentsInstituteResponseList).build();
 	}
 
-	@Override
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
@@ -305,7 +281,6 @@ public class Service implements IService {
 		return Response.ok().entity(studentBatchResponseList).build();
 	}
 
-	@Override
 	@GET
 	//@Consumes("application/json")
 	@Produces("application/json")

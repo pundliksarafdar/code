@@ -38,7 +38,6 @@ public interface IService {
 	
 	@POST
 	@Path("/login")
-	@AuthorizeRole
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response login(LoginBeanMobile request);

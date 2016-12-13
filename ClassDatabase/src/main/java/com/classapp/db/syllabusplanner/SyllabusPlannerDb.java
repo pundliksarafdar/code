@@ -201,8 +201,8 @@ public class SyllabusPlannerDb {
 		List<SyllabusBean> syllabusBeans = syllabusPlannerDb.getSyllabus(syllabusBean.getId(), syllabusBean.getInstId(), syllabusBean.getClassId(), syllabusBean.getSubjectId(), syllabusBean.getTeacherId());
 		SyllabusBean syllabusBean2 = syllabusBeans.get(0);
 		syllabusBean2.setStatus(syllabusBean.getStatus());
-		syllabusPlannerDb.saveSyllabusPlanner(syllabusBean2);
-		return true;
+		return syllabusPlannerDb.saveSyllabusPlanner(syllabusBean2);
+		
 		
 	}
 	
@@ -272,6 +272,35 @@ public class SyllabusPlannerDb {
 		return list;
 	}
 	
+	public List<com.mobile.bean.SyllabusBean> getSyllabusBeanForMobileDb(int year,int month,int day,int instId,List<Integer> classId,List<Integer> subId,List<Integer> batchId,List<Integer> teacherId,String view){
+		String mysqlStr = "select sTable.id,sTable.date,teacherId,concat(rTable.fname,\" \",rTable.lname) as teacherName,"+
+				"subjectId as subjectId,subj.sub_name as subjectName,"+
+				"classId as divisionId,concat(divis.div_name,\" \",divis.stream) as divisionName,"+
+				"sTable.Syllabus,sTable.status,sTable.teacherStatus as teacherRemark "+
+				"from syllabustable sTable,regtable rTable,subject subj,division divis "+
+				"where rTable.reg_id = sTable.teacherId and sTable.instId =:instituteId and YEAR(sTable.date) =:year "+
+				((view.equalsIgnoreCase(CALENDER_VIEW.MONTH.toString()) || view.equalsIgnoreCase(CALENDER_VIEW.DAY.toString()))?"and MONTH(sTable.date) =:month ":" ")+
+				((view.equalsIgnoreCase(CALENDER_VIEW.DAY.toString()))?"and DAY(sTable.date) =:day ":" ")+
+				"and subj.sub_id = sTable.subjectId "+
+				"and divis.div_id = sTable.classId;";
+
+		Session session=null;
+		session=HibernateUtil.getSessionfactory().openSession();
+		Query query = session.createSQLQuery(mysqlStr);
+		query.setParameter("instituteId", instId);
+		query.setParameter("year", year);
+		if(view.equalsIgnoreCase(CALENDER_VIEW.MONTH.toString()) || view.equalsIgnoreCase(CALENDER_VIEW.DAY.toString())){
+			query.setParameter("month", month);
+		}
+		if(view.equalsIgnoreCase(CALENDER_VIEW.DAY.toString())){
+			query.setParameter("day", day);
+		}
+		query.setResultTransformer(Transformers.aliasToBean(com.mobile.bean.SyllabusBean.class));
+		List<com.mobile.bean.SyllabusBean> list = query.list();
+		if(session!=null){session.close();}
+		return list;
+	}
+	
 		public void saveTest() {
 		SyllabusPlannerDb plannerDb = new SyllabusPlannerDb();
 		SyllabusBean syllabusBean = new SyllabusBean();
@@ -287,6 +316,6 @@ public class SyllabusPlannerDb {
 	
 	public static void main(String[] args) {
 		SyllabusPlannerDb db = new SyllabusPlannerDb();
-		db.deleteSyllabus(210, null, null, null, 190);
+		//db.getSyllabusBeanForMobileDb(190);
 	}
 }
