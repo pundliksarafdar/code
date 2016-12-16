@@ -679,14 +679,14 @@ public class ClassownerServiceImpl extends ServiceBase implements ClassownerServ
 	}
 	
 	@POST
-	@Path("/setRollNumber/{divId}/{batchId}")
+	@Path("/setRollNumber/{divId}/{batchId}/{gender}/{sortby}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response generateRollNumber(
 			@PathParam("divId")String divId,
-			@PathParam("batchId")String batchId){
+			@PathParam("batchId")String batchId,@PathParam("gender")String gender,@PathParam("sortby")String sortby){
 		StudentTransaction studentTransaction = new StudentTransaction();
 		BatchTransactions batchTransactions = new BatchTransactions();
-		List<StudentDetails>studentDetails = studentTransaction.generateRollNumber(batchId, divId, getRegId());
+		List<com.classapp.db.student.Student>studentDetails = studentTransaction.generateRollNumber(batchId, divId, getRegId(),gender,sortby);
 		batchTransactions.updateBatchRollGeneratedStatus(Integer.parseInt(batchId), getRegId(), Integer.parseInt(divId), "yes");
 		studentTransaction.updateStudentRollNumber(batchId, getRegId(), Integer.parseInt(divId), studentDetails);
 		return Response.status(Status.OK).entity(studentDetails).build();

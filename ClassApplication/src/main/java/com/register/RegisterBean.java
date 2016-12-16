@@ -42,6 +42,7 @@ public class RegisterBean implements Serializable{
 	private Date nextRenewalDate;
 	private int inst_roll;
 	private int inst_id;
+	private String gender;
 	public String getStatus() {
 		return status;
 	}
@@ -227,6 +228,12 @@ public class RegisterBean implements Serializable{
 	}
 	public void setInst_id(int inst_id) {
 		this.inst_id = inst_id;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 	
 	

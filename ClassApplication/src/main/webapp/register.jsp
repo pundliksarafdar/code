@@ -63,8 +63,10 @@
 			var role = $(this).val();
 			if(role == 1){
 				$("#divClassname").show();	
+				$("#divGender").hide();
 			}else{
 				$("#divClassname").hide();
+				$("#divGender").show();	
 			}
 		});
 		$('#datetimepicker').datetimepicker({
@@ -226,6 +228,17 @@
 					</div>
 					
 				</div>
+		</div>
+		<div class="form-group" id="divGender" style="display: none">
+			<label for="adr1" class="col-sm-4 control-label">*Gender</label>
+			<div class="col-sm-5">
+				<%-- <input type="text" class="form-control" name="registerBean.gender"  id="addr1" required="required" maxlength="50" value='<s:property value="registerBean.gender" />'/> --%>
+				<select id="gender" name="registerBean.gender"  class="form-control"  value='<s:property value="registerBean.gender" />' required="required">
+						<option value="-1">Select Gender</option>
+						<option value="M">Male</option>
+						<option value="F">Female</option>
+				</select>
+			</div>
 		</div>
 		<div class="form-group">
 			<label for="adr1" class="col-sm-4 control-label">*Address1</label>

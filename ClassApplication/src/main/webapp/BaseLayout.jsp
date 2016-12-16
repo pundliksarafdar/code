@@ -35,7 +35,7 @@ response.setHeader("Expires", "0");
 <link rel="shortcut icon " 
       type="image/gif" 
       href="images/bluelogo.gif">
- 
+
 <!-- DataTables, TableTools and Editor CSS 
 <link rel="stylesheet" type="text/css" href="/media/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href="/extensions/TableTools/css/dataTables.tableTools.css">
@@ -179,7 +179,7 @@ a.floatButton>div{
 <script src="js/morris.min.js"></script>
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/fixedcolumns/3.2.1/js/dataTables.fixedColumns.min.js"></script>
 <script src="js/bootstrap-notify.min.js"></script>
 <script src="js/select2.min.js"></script>

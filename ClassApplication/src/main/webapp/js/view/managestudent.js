@@ -234,6 +234,7 @@ var addStudent = function(){
 		var address = $(".studentInfoManually").find("#address").val().trim();
 		var state = $(".studentInfoManually").find("#state").val();
 		var city = $(".studentInfoManually").find("#city").val().trim();
+		var gender =  $(".studentInfoManually").find("#gender").val().trim();
 		var joiningDate = $(".studentInfoManually").find("#joiningDate").val().trim();
 		if(divisionId=="-1"){
 			flag=true;
@@ -340,6 +341,10 @@ var addStudent = function(){
 			flag=true;
 			$("#studentIdByManualError").html("Enter Registration no");
 		}
+		if(gender == "-1"){
+			flag=true;
+			$("#genderError").html("Select Gender");
+		}
 		if(flag == false){
 		var registerBean = new RegisterBean();
 		registerBean.fname = studentFname;
@@ -350,7 +355,7 @@ var addStudent = function(){
 		registerBean.addr1 = address;
 		registerBean.city = city;
 		registerBean.state = state;
-		
+		registerBean.gender = gender;
 		var student = new Student();
 		student.parentFname = parentFname;
 		student.parentLname = parentLname;
@@ -364,6 +369,7 @@ var addStudent = function(){
 		student.addr = address;
 		student.city = city;
 		student.state = state;
+		student.gender = gender;
 		student.studentInstRegNo = $("#studentIdByManual").val();
 		student.joiningDate = joiningDate.split("-").reverse().join("-");;
 		var tRow = $('#dataTableForFees tbody').find('tr');

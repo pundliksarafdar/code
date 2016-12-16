@@ -319,7 +319,7 @@ var enabledEdit = false;
 			$(".addtionaEditFields").remove();
 			var additionalFieldStudentInfo = JSON.parse(editStudent.studentAdditionalInfo);
 			var additionalFieldHtml = "";
-			additionalFieldHtml = additionalFieldHtml + '<div class="row addtionaEditFields"><b>Additional Details</b></div>';
+			additionalFieldHtml = additionalFieldHtml + '<div class="addtionalEditFieldsDiv"><div class="row addtionaEditFields"><b>Additional Details</b></div>';
 			var i =0;
 			 $.each(formFieldJSON,function(key,val){
 				if(i%2 == 0){
@@ -327,15 +327,16 @@ var enabledEdit = false;
 				}
 				additionalFieldHtml = additionalFieldHtml + "<div class='col-md-2'><b>"+val+"</b></div>";
 				if(additionalFieldStudentInfo[key] != undefined){
-				additionalFieldHtml = additionalFieldHtml + '<div class="col-md-3"><input type="text" id="'+key+'" class="form-control" value="'+additionalFieldStudentInfo[key]+'"></div>';
+				additionalFieldHtml = additionalFieldHtml + '<div class="col-md-3"><input type="text" fieldId="'+key+'" class="form-control" value="'+additionalFieldStudentInfo[key]+'"></div>';
 				}else{
-					additionalFieldHtml = additionalFieldHtml + '<div class="col-md-3"><input type="text" id="'+key+'" class="form-control"></div>';	
+					additionalFieldHtml = additionalFieldHtml + '<div class="col-md-3"><input type="text" fieldId="'+key+'" class="form-control"></div>';	
 				}
 				if((i+1)%2 == 0 || i == (formFieldJSON.length-1)){
 				additionalFieldHtml = additionalFieldHtml + "</div>";
 				}
 				i++;
 			});
+			 additionalFieldHtml = additionalFieldHtml + "</div>";
 			$(".updateAction").before(additionalFieldHtml);
 			$('#statebtn').html(editStudent.state+'&nbsp;<span class="caret"></span>');
 		});
@@ -436,9 +437,10 @@ var enabledEdit = false;
 			
 			if(flag){
 			var additionalValData = {};
-			$.each(formFieldJSON,function(key,val){
-				var fieldValue = $("#"+key+"").val();
-				additionalValData[key] = fieldValue;
+			$(".addtionalEditFieldsDiv").find("input").each(function(key,val){
+				var fieldValue = $(val).val();
+				var fieldId = $(val).attr("fieldId");
+				additionalValData[fieldId] = fieldValue;
 			});
 			editStudent.studentAdditionalInfo = JSON.stringify(additionalValData);
 			editStudent.fname = $("#editPersonalDetailsStudentFName").val();
@@ -472,6 +474,23 @@ var enabledEdit = false;
 			console.log(editStudent)
 			rest.put("rest/classownerservice/updateStudentDetails/",handlers,JSON.stringify(editStudent));
 			}
+		});
+		
+		$("#rollNoModalOK").click(function(){
+			var gender = $('input[name=sortgender]:checked').val();
+			var sortby = $('input[name=sortby]:checked').val();
+			var handler = {};
+			handler.success = function(e){
+				$.notify({message: "Roll number generated"},{type: 'success'});
+				var batchData = $("#batch").data("batchData")[$("#batch").val()];
+				if(batchData.status == null){
+					$("#batch").data("batchData")[$("#batch").val()].status = "rollGenerated=yes";
+					generateButtonChange();
+				}
+				$(".searchStudentByBatch").click();
+			};
+			handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
+			rest.post(generateRollNoUrl+$("#division").val()+"/"+$("#batch").val()+"/"+gender+"/"+sortby,handler);
 		});
 	});
 	
@@ -692,7 +711,8 @@ var enabledEdit = false;
 	}
 	
 	function generateRoll(){
-		var handler = {};
+		$("#rollNoModal").modal('toggle');
+		/* var handler = {};
 		handler.success = function(e){
 			$.notify({message: "Roll number generated"},{type: 'success'});
 			var batchData = $("#batch").data("batchData")[$("#batch").val()];
@@ -703,7 +723,7 @@ var enabledEdit = false;
 			$(".searchStudentByBatch").click();
 		};
 		handler.error = function(e){$.notify({message: "Error"},{type: 'danger'});};
-		rest.post(generateRollNoUrl+$("#division").val()+"/"+$("#batch").val(),handler);
+		rest.post(generateRollNoUrl+$("#division").val()+"/"+$("#batch").val(),handler); */
 	}
 	function onBatchChange(){
 		$(".containerData").hide();
@@ -1664,6 +1684,32 @@ var enabledEdit = false;
     	<div class="col-md-1">:</div>
     	<div class="col-md-3"><span id="data">13/02/1990</span></div>
     </div>
+</div>
+
+<div class="modal fade" id="rollNoModal">
+    <div class="modal-dialog">
+    <div class="modal-content">
+ 		<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title" id="myModalLabel">Generate Roll No.</h4>
+        </div>
+        <div class="modal-body" id="rollNoModalmessage">
+          <div class="well">
+          	<input type="radio" name="sortgender" value="M">Male First
+          	<input type="radio" name="sortgender" value="F">Female First
+          	<input type="radio" name="sortgender" value="X" checked="checked">Mixed
+          </div>
+          <div class="well">
+          	<input type="radio" name="sortby" value="FN" checked="checked">First Name
+          	<input type="radio" name="sortby" value="LN">Last Name
+          </div>
+        </div>
+      	<div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" data-dismiss="modal" id="rollNoModalOK">Ok</button>
+      	</div>
+    </div>
+</div>
 </div>
 </body>
 </html>

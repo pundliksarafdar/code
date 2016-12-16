@@ -30,6 +30,7 @@ public class Student implements Serializable{
 	private String phone;
 	private String email;
 	private Date joiningDate;
+	private String gender;
 	public int getStudent_id() {
 		return student_id;
 	}
@@ -157,6 +158,12 @@ public class Student implements Serializable{
 	}
 	public void setJoiningDate(Date joiningDate) {
 		this.joiningDate = joiningDate;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 	@Override
 	public boolean equals(Object arg0) {

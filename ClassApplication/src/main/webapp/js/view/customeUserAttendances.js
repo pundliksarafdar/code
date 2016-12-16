@@ -19,7 +19,8 @@ $(document).ready(function(){
 		.on("change",BATCH_SELECT,loadStudentTable);
 	 $( "#datetimepicker" ).datetimepicker({
 		  pickTime: false,
-		  format: 'DD/MM/YYYY'
+		  format: 'DD/MM/YYYY',
+		  maxDate:moment(((new Date()).getMonth()+1)+'/'+(new Date()).getDate()+'/'+(new Date()).getFullYear())
 	  }).data("DateTimePicker");
 	 
 	 $("#searchLectures").click(function(){

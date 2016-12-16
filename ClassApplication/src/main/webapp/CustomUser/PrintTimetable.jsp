@@ -22,10 +22,12 @@ $(document).ready(function(){
 	  }).data("DateTimePicker");
 	 
 	 $("#print").click(function(){
-			var newWin= window.open("");
-			newWin.document.write("<html><link href='/css/bootstrap.min.css' rel='stylesheet'><body class='container'>"+$("#printData").html()+"</body></html>");
-			newWin.print();
-			newWin.close();
+		 var  data = $("#printData").html();
+		 var newWin=window.open('','Print-Window');
+		  newWin.document.open();
+		  newWin.document.write('<html><link href="/css/bootstrap.min.css" rel="stylesheet"><body onload="window.print()">'+data+'</body></html>');
+		  newWin.document.close();
+		  setTimeout(function(){newWin.close();},10);
 	 });
 });
 

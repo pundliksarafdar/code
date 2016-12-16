@@ -2994,7 +2994,7 @@ public class CustomUserService extends ServiceBase {
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		StudentTransaction studentTransaction = new StudentTransaction();
 		BatchTransactions batchTransactions = new BatchTransactions();
-		List<StudentDetails>studentDetails = studentTransaction.generateRollNumber(batchId, divId, userBean.getInst_id());
+		List<Student>studentDetails = studentTransaction.generateRollNumber(batchId, divId, userBean.getInst_id(),"","");
 		batchTransactions.updateBatchRollGeneratedStatus(Integer.parseInt(batchId), userBean.getInst_id(), Integer.parseInt(divId), "yes");
 		studentTransaction.updateStudentRollNumber(batchId, userBean.getInst_id(), Integer.parseInt(divId), studentDetails);
 		return Response.status(Status.OK).entity(studentDetails).build();

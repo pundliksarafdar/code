@@ -325,6 +325,7 @@ public class StudentTransaction {
 		serviceStudent.setState(registerBean.getState());
 		serviceStudent.setPhone(registerBean.getPhone1());
 		serviceStudent.setEmail(registerBean.getEmail());
+		serviceStudent.setGender(registerBean.getGender());
 		Student student = new Student();
 		try {
 			BeanUtils.copyProperties(student, serviceStudent);
@@ -407,23 +408,58 @@ public class StudentTransaction {
 		
 	}
 	
-	public List<StudentDetails> generateRollNumber(String batchID,String batchdivision,int instId){
-		List<StudentDetails> studentDetails = getAllStudentsDetails(batchID,batchdivision,instId);
-		Collections.sort(studentDetails, new Comparator<StudentDetails>() {
+	public List<Student> generateRollNumber(String batchID,String batchdivision,int instId,String gender,String sortby){
+		List<Student> studentDetails = getStudentsrelatedtobatch(batchID, instId, Integer.parseInt(batchdivision));
+		if("F".equals(gender) && "FN".equals(sortby)){
+		Collections.sort(studentDetails, new Comparator<Student>() {
 			@Override
-			public int compare(StudentDetails o1, StudentDetails o2) {
-				return (o1.getStudentUserBean().getFname()+o1.getStudentUserBean().getLname()).toLowerCase().compareTo((o2.getStudentUserBean().getFname()+o2.getStudentUserBean().getLname()).toLowerCase());
+			public int compare(Student o1, Student o2) {
+				return (o1.getGender()+o1.getFname()+o1.getLname()).toLowerCase().compareTo((o2.getGender()+o2.getFname()+o2.getLname()).toLowerCase());
 			}
 		});
+		}else if("F".equals(gender) && "LN".equals(sortby)){
+			Collections.sort(studentDetails, new Comparator<Student>() {
+				@Override
+				public int compare(Student o1, Student o2) {
+					return (o1.getGender()+o1.getLname()+o1.getFname()).toLowerCase().compareTo((o2.getGender()+o2.getLname()+o2.getFname()).toLowerCase());
+				}
+			});
+			}else if("M".equals(gender) && "FN".equals(sortby)){
+				Collections.sort(studentDetails, new Comparator<Student>() {
+					@Override
+					public int compare(Student o1, Student o2) {
+						return (("M".equals(o1.getGender())?"A":o1.getGender())+o1.getFname()+o1.getLname()).toLowerCase().compareTo((("M".equals(o2.getGender())?"A":o2.getGender())+o2.getFname()+o2.getLname()).toLowerCase());
+					}
+				});
+				}else if("M".equals(gender) && "LN".equals(sortby)){
+					Collections.sort(studentDetails, new Comparator<Student>() {
+						@Override
+						public int compare(Student o1, Student o2) {
+							return (("M".equals(o1.getGender())?"A":o1.getGender())+o1.getLname()+o1.getFname()).toLowerCase().compareTo((("M".equals(o2.getGender())?"A":o2.getGender())+o2.getLname()+o2.getFname()).toLowerCase());
+						}
+					});
+					}else if("X".equals(gender) && "FN".equals(sortby)){
+						Collections.sort(studentDetails, new Comparator<Student>() {
+							@Override
+							public int compare(Student o1, Student o2) {
+								return (o1.getFname()+o1.getLname()).toLowerCase().compareTo((o2.getFname()+o2.getLname()).toLowerCase());
+							}
+						});
+						}else if("X".equals(gender) && "LN".equals(sortby)){
+							Collections.sort(studentDetails, new Comparator<Student>() {
+								@Override
+								public int compare(Student o1, Student o2) {
+									return (o1.getLname()+o1.getFname()).toLowerCase().compareTo((o2.getLname()+o2.getFname()).toLowerCase());
+								}
+							});
+							}
 		return studentDetails;
 	}
 	
-	public List updateStudentRollNumber(String batchname,int inst_id,int div_id,List<StudentDetails> sDList){
-		List<Student> students = getStudentsrelatedtobatch(batchname, inst_id, div_id);
+	public List updateStudentRollNumber(String batchname,int inst_id,int div_id,List<Student> students){
+		/*List<Student> students = getStudentsrelatedtobatch(batchname, inst_id, div_id);*/
 		int rollNumber = 1;
-		for(StudentDetails studentDetails:sDList){
 			for(Student student:students){
-				if(studentDetails.getStudentUserBean().getRegId()==student.getStudent_id()){
 					String batchIDNRoll = student.getBatchIdNRoll();
 					JsonParser jsonParser = new JsonParser();
 					JsonObject object = new JsonObject();
@@ -433,10 +469,8 @@ public class StudentTransaction {
 					}object.addProperty(batchname, rollNumber);
 					rollNumber++;
 					student.setBatchIdNRoll(object.toString());
-					break;
-				}
+
 			}			
-		}
 		StudentDB studentDB = new StudentDB();
 		studentDB.updateDb(students);
 		BatchDB batchDB = new BatchDB();
