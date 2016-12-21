@@ -54,6 +54,11 @@ $("#customUserTableDiv").on("click",".edit",function(){
 			    $("#role").select2().val(resp.registerBean.inst_roll).change();
 			    $("#education").val(resp.inst_user.education);
 				$("#joiningDate").val(resp.inst_user.joining_date.substring(8)+"-"+resp.inst_user.joining_date.substring(5,7)+"-"+resp.inst_user.joining_date.substring(0,4));
+				if(resp.registerBean.gender != null){
+					$("#gender").val(resp.registerBean.gender).change();
+					}else{
+					$("#gender").val("-1").change();	
+					}
 			}
 		}
 		handlers.error = function(){
@@ -89,6 +94,11 @@ $("#customUserTableDiv").on("click",".view",function(){
 			$("#viewRole").html($("#role").select2('data')[0].text);
 		    $("#viewEducation").html(resp.inst_user.education);
 			$("#viewJoiningDate").html(resp.inst_user.joining_date.substring(8)+"-"+resp.inst_user.joining_date.substring(5,7)+"-"+resp.inst_user.joining_date.substring(0,4));
+			if(resp.registerBean.gender !=null){
+				$("#viewGender").html(resp.registerBean.gender);
+				}else{
+					$("#viewGender").html("");	
+				}
 		}
 	}
 	handlers.error = function(){
@@ -112,6 +122,7 @@ $("#submit").click(function(){
 	register.email = $("#email").val().trim();
 	register.phone1 = $("#mobile").val().trim();
 	register.inst_roll = $("#role").val();
+	register.gender = $("#gender").val();
 	var regPhoneNumber = /^[0-9]+$/;
 	var regStringExpr = /^[a-zA-Z]+$/;
 	var regAddressExpr = /^[a-zA-Z0-9 ]+$/;
@@ -173,6 +184,10 @@ $("#submit").click(function(){
 	}
 	if($("#role").val() == "-1"){
 		$("#roleError").html("Select role")
+		validFlag = false;
+	}
+	if(register.gender == "-1"){
+		$("#genderError").html("Select gender")
 		validFlag = false;
 	}
 	if(validFlag){
@@ -258,6 +273,17 @@ $("#submit").click(function(){
 						</span>
 					</div>
 					<span id="dobError" class="error"></span>
+				</div>
+</div>
+<div class="row">
+			<div class="col-md-3"><label for="gender" class="control-label" >*Gender</label></div>
+			<div class="col-md-3">					
+					<select id="gender" class="form-control" style="width: 100%">
+						<option value="-1">Select Gender</option>
+						<option value="M">Male</option>
+						<option value="F">Female</option>
+				</select>
+					<span id="genderError" class="error"></span>
 				</div>
 </div>
 <div class="row">
@@ -361,6 +387,10 @@ $("#submit").click(function(){
 <div class="row">
 			<label for="dob" class="col-sm-3 control-label" >*Date of Birth</label>
 			<div class="col-sm-3"><span id="viewDob"></span></div>
+</div>
+<div class="row">
+			<label for="dob" class="col-sm-3 control-label" >*Gender</label>
+			<div class="col-sm-3"><span id="viewGender"></span></div>
 </div>
 <div class="row">
 			<label for="dob" class="col-sm-3 control-label" >*Institute joining date</label>

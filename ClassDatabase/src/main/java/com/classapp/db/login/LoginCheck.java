@@ -67,6 +67,7 @@ public class LoginCheck implements Serializable{
 			userBean.setLastlogin(registerBean.getLastlogin());
 			userBean.setInst_id(registerBean.getInst_id());
 			userBean.setInst_roll(registerBean.getInst_roll());
+			userBean.setGender(registerBean.getGender());
 			return userBean;
 			//return gson.toJson(userBean);
 		}catch(Exception ex){
@@ -123,6 +124,7 @@ public class LoginCheck implements Serializable{
 			userBean.setLastlogin(registerBean.getLastlogin());
 			userBean.setInst_id(registerBean.getInst_id());
 			userBean.setInst_roll(registerBean.getInst_roll());
+			userBean.setGender(registerBean.getGender());
 			return userBean;
 			//return gson.toJson(userBean);
 		}catch(Exception ex){

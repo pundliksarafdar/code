@@ -47,6 +47,7 @@ $(document).ready(function(){
 		register.email = $("#email").val().trim();
 		register.phone1 = $("#mobile").val().trim();
 		register.inst_roll = $("#role").val();
+		register.gender = $("#gender").val();
 		var regPhoneNumber = /^[0-9]+$/;
 		var regStringExpr = /^[a-zA-Z]+$/;
 		var regAddressExpr = /^[a-zA-Z0-9 ]+$/;
@@ -110,6 +111,10 @@ $(document).ready(function(){
 			$("#roleError").html("Select role")
 			validFlag = false;
 		}
+		if(register.gender == "-1"){
+			$("#genderError").html("Select gender")
+			validFlag = false;
+		}
 		if(validFlag){
 		var handlers = {};
 		handlers.success = function(resp){
@@ -160,6 +165,17 @@ $(document).ready(function(){
 						</span>
 					</div>
 					<span id="dobError" class="error"></span>
+				</div>
+</div>
+<div class="row">
+			<label for="dob" class="col-sm-3 control-label" >*Gender</label>
+			<div class="col-sm-3">					
+					<select id="gender" class="form-control" required="required">
+						<option value="-1">Select Gender</option>
+						<option value="M">Male</option>
+						<option value="F">Female</option>
+				</select>
+					<span id="genderError" class="error"></span>
 				</div>
 </div>
 <div class="row">

@@ -2986,15 +2986,15 @@ public class CustomUserService extends ServiceBase {
 	}
 	
 	@POST
-	@Path("/setRollNumber/{divId}/{batchId}")
+	@Path("/setRollNumber/{divId}/{batchId}/{gender}/{sortby}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response generateRollNumber(
 			@PathParam("divId")String divId,
-			@PathParam("batchId")String batchId){
+			@PathParam("batchId")String batchId,@PathParam("gender")String gender,@PathParam("sortby")String sortby){
 		UserBean userBean = (UserBean) request.getSession().getAttribute("user");
 		StudentTransaction studentTransaction = new StudentTransaction();
 		BatchTransactions batchTransactions = new BatchTransactions();
-		List<Student>studentDetails = studentTransaction.generateRollNumber(batchId, divId, userBean.getInst_id(),"","");
+		List<Student>studentDetails = studentTransaction.generateRollNumber(batchId, divId, userBean.getInst_id(),gender,sortby);
 		batchTransactions.updateBatchRollGeneratedStatus(Integer.parseInt(batchId), userBean.getInst_id(), Integer.parseInt(divId), "yes");
 		studentTransaction.updateStudentRollNumber(batchId, userBean.getInst_id(), Integer.parseInt(divId), studentDetails);
 		return Response.status(Status.OK).entity(studentDetails).build();

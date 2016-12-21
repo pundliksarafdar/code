@@ -10,6 +10,7 @@
 
 <script>
 	var isHidden = true;
+	var userRole = "";
 	$(function () {
 		$('[data-toggle="tooltip"]').attr("title",passwordCriteria); 
 		$('[data-toggle="tooltip"]').tooltip({"html":true});
@@ -19,7 +20,7 @@
 	$(document).ready(function() {
 		var currentPhone = $("#phone1").val();
 		var currentLogin = 	$("#loginname").val();
-		
+		userRole = $("#userRole").val();
 		$('#datetimepicker').datetimepicker({
 			format : 'YYYY-MM-DD',
 			pickTime : false,
@@ -28,6 +29,12 @@
 		
 		if($("#dobhidden").val()>3){
 			$("#dobfield").val($("#dobhidden").val().substring(0,4)+"-"+$("#dobhidden").val().substring(4,6)+"-"+$("#dobhidden").val().substring(6,8));
+		}
+		
+		if($("#hidgender").val() != null && $("#hidgender").val() != ""){
+			$("#gender").val($("#hidgender").val()).change();
+		}else{
+			$("#gender").val("-1").change();
 		}
 		
 		/*Password related function*/
@@ -237,6 +244,14 @@
 			isValidated = false;
 			$("#country").addClass("has-error");
 		}
+		
+		if(userRole != "1"){
+		if($("#gender").val()== "-1"){
+			$("#gender").parents(".form-group").prepend("<p class='danger'>Select Gender. </p>");
+			isValidated = false;
+			$("#gender").addClass("has-error");
+		}
+		}
 		$("#rolebtn").focus();
 		return isValidated;
 	}
@@ -244,6 +259,7 @@
 </script>
 <body>
 <c:set var="user" value="${sessionScope.user}"></c:set>
+<input type="hidden" id="userRole" value="<c:out value="${user.role}"></c:out>">
 <form id="frEditUser" class="form-horizontal" role="form" action="editconfirm" method="post">
 	<s:if test="hasActionErrors()">
 		<div class="alert alert-danger">
@@ -295,6 +311,20 @@
 			</div>
 			</div>
 		</div>
+		
+		<c:if test="${user.role ne 1}">
+		<div class="form-group" id="divGender">
+			<input type="hidden" value='<c:out value="${user.gender}"></c:out>' id="hidgender"/>
+			<label for="adr1" class="col-sm-4 control-label">*Gender</label>
+			<div class="col-sm-5">
+				<select id="gender" name="registerBean.gender"  class="form-control"  value="<c:out value="${user.gender}"></c:out>" required="required">
+						<option value="-1">Select Gender</option>
+						<option value="M">Male</option>
+						<option value="F">Female</option>
+				</select>
+			</div>
+		</div>
+		</c:if>
 		
 		<div class="form-group">
     		<label for="inputAdd1" class="col-sm-4 control-label">Address1</label>

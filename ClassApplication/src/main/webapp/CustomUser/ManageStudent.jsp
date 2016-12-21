@@ -749,6 +749,18 @@ var wayOfAddition="";
 						</span>
 					</div></div>
 	</div>
+	<div class="row" style="padding-top: 1%">
+		<div class="col-md-2">Gender</div>
+		<div class="col-md-1">:</div>
+		<div class="col-md-3">
+		<select id="gender" class="form-control" style="width:100%">
+			<option value="-1">Select Gender</option>
+			<option value="M">Male</option>
+			<option value="F">Female</option>
+		</select>
+		<span id="genderError" class="error"></span>
+		</div>
+	</div>
 </div>
 
 

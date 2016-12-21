@@ -28,6 +28,7 @@ public class UserBean{
 	private String inst_status;
 	private int inst_roll;
 	private int inst_id;
+	private String gender;
 	public String getEmail() {
 		return email;
 	}
@@ -182,6 +183,12 @@ public class UserBean{
 	}
 	public void setInst_id(int inst_id) {
 		this.inst_id = inst_id;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 	
 }

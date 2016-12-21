@@ -43,6 +43,12 @@
 						<td>Date of Birth</td>
 						<td><input type="text" name="registerBean.dob"  value='<s:property value="registerBean.dob" />' readonly="readonly"/></td>
 					</tr>
+					<c:if test="${registerBean.role ne 1}">
+					<tr>
+						<td>Gender</td>
+						<td><input type="text" name="registerBean.gender"  value='<s:property value="registerBean.gender" />' readonly="readonly"/></td>
+					</tr>
+					</c:if>
 					<tr>
 						<td>*Address1</td>
 						<td><input type="text" name="registerBean.addr1"  value='<s:property value="registerBean.addr1" />' readonly="readonly"/></td>

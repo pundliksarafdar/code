@@ -130,7 +130,7 @@ font-size: 12px;
 		<br>
 		<div class="container well" id="saveSection" style="padding:1%;margin:1%;">
 		<div class="row" >
-			<div class="col-xs-5"><input type="text" class="form-control" id="saveQuestionPaperDesc" placeholder="Question paper description"></div>
+			<div class="col-xs-5"><input type="text" class="form-control" id="saveQuestionPaperDesc" placeholder="Question paper description" maxlength="25"></div>
 			<div class="col-xs-2"><input type="button" value="Save" class="btn btn-default" id="saveQuestionPaper"/></div>
 		</div>
 		</div>

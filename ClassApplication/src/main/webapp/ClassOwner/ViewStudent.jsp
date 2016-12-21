@@ -316,6 +316,11 @@ var enabledEdit = false;
 			$("#editPersonalDetailsStudentState").val(editStudent.state);
 			$("#editPersonalDetailsRegNo").val(editStudent.studentInstRegNo);
 			$("#editPersonalDetailsJoiningDatePicker").val(editStudent.joiningDate.split("-").reverse().join("-"));
+			if(editStudent.gender != null){
+			$("#editPersonalDetailsGender").val(editStudent.gender).change();
+			}else{
+			$("#editPersonalDetailsGender").val("-1").change();	
+			}
 			$(".addtionaEditFields").remove();
 			var additionalFieldStudentInfo = JSON.parse(editStudent.studentAdditionalInfo);
 			var additionalFieldHtml = "";
@@ -435,6 +440,11 @@ var enabledEdit = false;
 				flag = false;
 			}
 			
+			if($("#editPersonalDetailsGender").val() == "-1"){
+				$("#editPersonalDetailsGenderError").html("Select Gender")
+				flag = false;	
+			}
+			
 			if(flag){
 			var additionalValData = {};
 			$(".addtionalEditFieldsDiv").find("input").each(function(key,val){
@@ -457,6 +467,7 @@ var enabledEdit = false;
 			editStudent.state = $("#editPersonalDetailsStudentState").val();
 			editStudent.studentInstRegNo = $("#editPersonalDetailsRegNo").val();
 			editStudent.joiningDate = $("#editPersonalDetailsJoiningDatePicker").val().split("-").reverse().join("-");
+			editStudent.gender = $("#editPersonalDetailsGender").val();
 			var handlers = {};
 			handlers.success=function(data){
 				if(data){
@@ -777,6 +788,11 @@ var enabledEdit = false;
 		   if(data.student.joiningDate != null){
 			   $("#studentDetailsJoiningDate").html(data.student.joiningDate.split("-").reverse().join("/"));
 			   }
+		   if(data.student.gender != null){
+			   $("#studentDetailsGender").html(data.student.gender);
+			}else{
+				$("#studentDetailsGender").html("-");
+			}
 		   if(data.studentUserBean.status == "M" || data.studentUserBean.status == "E"){
 			 $("#generalTab").append("<div class='crendentialDetails'><div class='row'><label>Credential Information</label></div>"+
 					 	"<div class='row'><div class='col-md-2'>Username</div>"+
@@ -859,6 +875,12 @@ var enabledEdit = false;
 		   if(data.student.joiningDate != null){
 		   $("#studentDetailsJoiningDate").html(data.student.joiningDate.split("-").reverse().join("/"));
 		   }
+		   if(data.student.gender != null){
+			   $("#studentDetailsGender").html(data.student.gender);
+			}else{
+				$("#studentDetailsGender").html("-");
+			}
+		   
 		   if(data.studentUserBean.status == "M" || data.studentUserBean.status == "E"){
 			 $("#generalTab").append("<div class='crendentialDetails'><div class='row'><label>Credential Information</label></div>"+
 					 	"<div class='row'><div class='col-md-2'>Username</div>"+
@@ -1516,6 +1538,9 @@ var enabledEdit = false;
     	<div class="col-md-2">Institute Joining Date</div>
     	<div class="col-md-1">:</div>
     	<div class="col-md-3"><span id="studentDetailsJoiningDate"></span></div>
+    	<div class="col-md-2">Gender</div>
+    	<div class="col-md-1">:</div>
+    	<div class="col-md-3"><span id="studentDetailsGender"></span></div>
     </div>
     <div class="row"><label>Parents Information</label></div>
     <div class="row">
@@ -1649,6 +1674,15 @@ var enabledEdit = false;
 					</div>
 					<span id="editPersonalDetailsStudentDOBError" class="error"></span>	
 					</div> 
+	<div class="col-md-2">Gender:</div>
+		<div class="col-md-3">
+		<select id="editPersonalDetailsGender" class="form-control" style="width:100%">
+			<option value="-1">Select Gender</option>
+			<option value="M">Male</option>
+			<option value="F">Female</option>
+		</select>
+		<span id="editPersonalDetailsGenderError" class="error"></span>
+		</div>
 </div>
 <div class="row"><b>Parent Details</b></div>
 <div class="row">
