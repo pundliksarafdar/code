@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,7 +25,11 @@ import com.service.beans.SyllabusFilterBean;
 public class SyllabusPlannerTransaction {
 	public boolean saveSyallabus(SyllabusBean syllabusBean){
 		SyllabusPlannerDb syllabusPlannerDb = new SyllabusPlannerDb();
-		if(syllabusBean.getDate().before(new Date())){
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		int month = Calendar.getInstance().get(Calendar.MONTH);
+		int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+		Calendar calendar = new GregorianCalendar(year, month, day);
+		if(syllabusBean.getDate().before(calendar.getTime())){
 			return false;
 		}
 		return syllabusPlannerDb.saveSyllabusPlanner(syllabusBean);
@@ -138,23 +143,31 @@ public class SyllabusPlannerTransaction {
 		HashMap<String,String> batchName = new HashMap<String,String>();
 		
 		List<SyllabusFilterBean> teachersList = resultMap.get("teacher");
-		for(SyllabusFilterBean teacher:teachersList){
-			teacherName.put(teacher.getId(), teacher.getName());
+		if(teachersList!=null){
+			for(SyllabusFilterBean teacher:teachersList){
+				teacherName.put(teacher.getId(), teacher.getName());
+			}
 		}
 		
 		List<SyllabusFilterBean> batchList = resultMap.get("batch");
+		if(batchList!=null){
 		for(SyllabusFilterBean batch:batchList){
 			batchName.put(batch.getId()+"", batch.getName());
 		}
+		}
 		
 		List<SyllabusFilterBean> subjectList = resultMap.get("subject");
+		if(subjectList != null){
 		for(SyllabusFilterBean subject:subjectList){
 			subjectName.put(subject.getId(), subject.getName());
 		}
+		}
 		
 		List<SyllabusFilterBean> divisionList = resultMap.get("division");
+		if(divisionList!=null){
 		for(SyllabusFilterBean division:divisionList){
 			divisionName.put(division.getId(), division.getName());
+		}
 		}
 		
 		/*************************************************************************************************************/
