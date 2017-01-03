@@ -125,4 +125,27 @@ public String formatParentMessage(MessageDetailBean messageDetailBean,Notificati
 			return null;
 		}
 	}
+
+public String formatTeacherMessage(MessageDetailBean messageDetailBean,NotificationEnum.MessageType messageType) {
+	if(NotificationEnum.MessageType.EMAIL.equals(messageType)){
+		if(messageDetailBean.getEmailMessage() != null /*|| messageDetailBean.getEmailMessage().trim().length() != 0*/){
+			return messageDetailBean.getEmailMessage();
+		}else{
+			String templates =  messageDetailBean.getTeacherEmailTemplate();
+			Object bean = messageDetailBean.getTeacherEmailObject();
+			MustacheFactory mustacheFactory = new DefaultMustacheFactory();
+	        Mustache mustache = mustacheFactory.compile(templates);
+	        StringWriter writer = new StringWriter();
+	        try {
+				mustache.execute(writer, bean).flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+			return writer.toString();
+		}
+	}else{
+		return null;
+	}
+}
 }

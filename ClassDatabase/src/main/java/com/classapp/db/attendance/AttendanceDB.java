@@ -579,7 +579,7 @@ public class AttendanceDB {
 		Session session = null;
 		boolean status = false;
 		List list = null;
-		String queryString = " SELECT std.student_id,reg.fname,reg.lname,reg.phone1,reg.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
+		String queryString = " SELECT std.student_id,std.fname,std.lname,std.phone,std.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
 							+ "count(distinct att.schedule_id),std.parentFname,std.parentLname,"
 							+ "std.parentPhone,std.parentEmail,att.div_id,att.batch_id,batch.batch_name FROM Attendance att, RegisterBean reg,Student std,Batch batch "
 							+"where  reg.regId = att.student_id and std.student_id = att.student_id and std.class_id = att.inst_id"
@@ -636,7 +636,7 @@ public class AttendanceDB {
 		Session session = null;
 		boolean status = false;
 		List list = null;
-		String queryString =" SELECT std.student_id,reg.fname,reg.lname,reg.phone1,reg.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
+		String queryString =" SELECT std.student_id,std.fname,std.lname,std.phone,std.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
 							+ "count(distinct att.schedule_id,att_date),std.parentFname,std.parentLname,"
 							+ "std.parentPhone,std.parentEmail,att.div_id,att.batch_id,batch.batch_name  FROM Attendance att, regtable reg,Student std,Batch batch "
 							+ "where  reg.REG_ID = att.student_id and std.student_id = att.student_id and std.class_id = att.inst_id"
@@ -696,7 +696,7 @@ public class AttendanceDB {
 		Session session = null;
 		boolean status = false;
 		List list = null;
-		String queryString = " SELECT std.student_id,reg.fname,reg.lname,reg.phone1,reg.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
+		String queryString = " SELECT std.student_id,std.fname,std.lname,std.phone,std.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
 							+ "count(distinct att.schedule_id,att_date),std.parentFname,std.parentLname,"
 							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id,batch.batch_name  FROM Attendance att, regtable reg,Student std,Batch batch "
 							+ "where  reg.REG_ID = att.student_id and std.student_id = att.student_id and std.class_id = att.inst_id"
@@ -728,7 +728,7 @@ public class AttendanceDB {
 		Session session = null;
 		boolean status = false;
 		List list = null;
-		String queryString = " SELECT std.student_id,reg.fname,reg.lname,reg.phone1,reg.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
+		String queryString = " SELECT std.student_id,std.fname,std.lname,std.phone,std.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
 							+ "count(distinct att.schedule_id),std.parentFname,std.parentLname,"
 							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id FROM Attendance att, RegisterBean reg,Student std "
 							+"where  reg.regId = att.student_id and std.student_id = att.student_id and std.class_id = att.inst_id"
@@ -760,7 +760,7 @@ public class AttendanceDB {
 		Session session = null;
 		boolean status = false;
 		List list = null;
-		String queryString =" SELECT std.student_id,reg.fname,reg.lname,reg.phone1,reg.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
+		String queryString =" SELECT std.student_id,std.fname,std.lname,std.phone,std.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
 							+ "count(distinct att.schedule_id,att_date),std.parentFname,std.parentLname,"
 							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id  FROM attendance att, regtable reg,student std "
 							+ "where  reg.REG_ID = att.student_id and std.student_id = att.student_id and std.class_id = att.inst_id"
@@ -794,7 +794,7 @@ public class AttendanceDB {
 		Session session = null;
 		boolean status = false;
 		List list = null;
-		String queryString =" SELECT std.student_id,reg.fname,reg.lname,reg.phone1,reg.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
+		String queryString =" SELECT std.student_id,std.fname,std.lname,std.phone,std.email,count(CASE WHEN att.presentee = 'P' THEN att.presentee ELSE NULL END),"
 							+ "count(distinct att.schedule_id,att_date),std.parentFname,std.parentLname,"
 							+ "std.parentPhone,std.parentEmail,att.div_id,std.batch_id  FROM attendance att, regtable reg,student std "
 							+ "where  reg.REG_ID = att.student_id and std.student_id = att.student_id and std.class_id = att.inst_id"

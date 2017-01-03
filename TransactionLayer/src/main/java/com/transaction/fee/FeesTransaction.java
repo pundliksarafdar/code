@@ -641,4 +641,9 @@ public class FeesTransaction {
 		PrintFeesDb printFeesDb = new PrintFeesDb();
 		return printFeesDb.getLastFeesDetail(studentId, instId);
 	}
+	
+	public boolean isBatchLinked(int inst_id,int div_id,int batch_id) {
+		FeesDB feesDB = new FeesDB();
+		return feesDB.isBatchLinked(inst_id, div_id, batch_id);
+	}
 }

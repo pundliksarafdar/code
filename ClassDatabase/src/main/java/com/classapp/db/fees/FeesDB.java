@@ -1138,7 +1138,7 @@ public List getStudentDueFeesForNotification(int inst_id,int div_id,int batch_id
 	transaction=session.beginTransaction();
 	List studentIDList = null;
 	try{
-		Query query = session.createQuery("select std.student_id,reg.fname,reg.lname,reg.phone1,reg.email"
+		Query query = session.createQuery("select std.student_id,std.fname,std.lname,std.phone,std.email"
 										+ ",std.parentFname,std.parentLname,std.parentPhone,std.parentEmail,sf.final_fees_amt,sf.fees_paid,sf.fees_due  "
 										+ "from Student_Fees sf,Student std,RegisterBean reg" 
 										+" where sf.inst_id = :inst_id and sf.div_id = :div_id and sf.batch_id = :batch_id and sf.student_id = std.student_id and "
@@ -1170,7 +1170,7 @@ public List getStudentDueFeesForNotification(int inst_id) {
 	transaction=session.beginTransaction();
 	List studentIDList = null;
 	try{
-		Query query = session.createQuery("select std.student_id,reg.fname,reg.lname,reg.phone1,reg.email"
+		Query query = session.createQuery("select std.student_id,std.fname,std.lname,std.phone,std.email"
 										+ ",std.parentFname,std.parentLname,std.parentPhone,std.parentEmail,sf.final_fees_amt,"
 										+ "sf.fees_paid,sf.fees_due,batch.batch_name  "
 										+ "from Student_Fees sf,Student std,RegisterBean reg,Batch batch" 
@@ -1202,7 +1202,7 @@ public List getStudentForFeesPaymentNotification(int inst_id,List<Integer> stude
 	transaction=session.beginTransaction();
 	List studentIDList = null;
 	try{
-		Query query = session.createQuery("select std.student_id,reg.fname,reg.lname,reg.phone1,reg.email"
+		Query query = session.createQuery("select std.student_id,std.fname,std.lname,std.phone,std.email"
 										+ ",std.parentFname,std.parentLname,std.parentPhone,std.parentEmail,sf.final_fees_amt,"
 										+ "sf.fees_paid,sf.fees_due,batch.batch_name  "
 										+ "from Student_Fees sf,Student std,RegisterBean reg,Batch batch" 
@@ -1235,7 +1235,7 @@ public List getStudentDueFeesForNotification(int inst_id,int div_id,int batch_id
 	transaction=session.beginTransaction();
 	List studentFeesData = null;
 	try{
-		Query query = session.createQuery("select std.student_id,reg.fname,reg.lname,reg.phone1,reg.email"
+		Query query = session.createQuery("select std.student_id,std.fname,std.lname,std.phone,std.email"
 										+ ",std.parentFname,std.parentLname,std.parentPhone,std.parentEmail,sf.final_fees_amt,sf.fees_paid,sf.fees_due  "
 										+ "from Student_Fees sf,Student std,RegisterBean reg" 
 										+" where sf.inst_id = :inst_id and sf.div_id = :div_id and sf.batch_id = :batch_id and sf.student_id = std.student_id and "
@@ -1259,6 +1259,28 @@ public List getStudentDueFeesForNotification(int inst_id,int div_id,int batch_id
 	}
 	return  studentFeesData;
 
+}
+
+public boolean isBatchLinked(int inst_id,int div_id,int batch_id) {
+	Session session=null;
+	session=HibernateUtil.getSessionfactory().openSession();
+	Criteria criteria = session.createCriteria(BatchFees.class);
+	Criterion criterion = Restrictions.eq("inst_id", inst_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("div_id",div_id);
+	criteria.add(criterion);
+	criterion = Restrictions.eq("batch_id", batch_id);
+	criteria.add(criterion);
+	List<BatchFees> feesList = criteria.list();
+	if(feesList != null){
+		if(feesList.size()>0){
+			return true;
+		}
+	}
+	if(session!=null){
+		session.close();
+	}
+	return  false;
 }
 
 }

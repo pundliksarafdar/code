@@ -76,12 +76,13 @@
 		
 		
 		$("#loginname").on("blur",function(){
+			$("#lognameError").hide();
 			if(currentLogin != $(this).val().trim()){
 			allAjax.checkUserNameExist($(this).val().trim(),function(e){
 				var resultJson = JSON.parse(e);
 				   if(resultJson.exists == true){
 					   $("#loginname").focus();
-					   $("#lgnameError").show();						   					   	
+					   $("#lognameError").show();						   					   	
 				   	}else{
 				   		
 				   	}				
@@ -166,32 +167,32 @@
 		if(!isHidden && $("#oldpass").val()==""){
 			isValidated = false;
 			$("#oldpass").parents(".form-group").addClass("has-error");
-			$('#oldpass').parents(".form-group").prepend("<p class='danger' >Please Enter Password</p>");
+			$("#oldPasswordError").html("<p class='danger' >Please Enter Password</p>");
 		}else if(!isHidden && $("#loginpass").val()==""){
 			isValidated = false;
 			$("#loginpass").parents(".form-group").addClass("has-error");
-			$('#loginpass').parents(".form-group").prepend("<p class='danger' >Please Enter Password</p>");
+			$("#loginPassError").html("<p class='danger' >Please Enter Password</p>");
 		}else if(!isHidden && $("#loginpassre").val()==""){
 			isValidated = false;
 			$("#loginpassre").parents(".form-group").addClass("has-error");
-			$('#loginpassre').parents(".form-group").prepend("<p class='danger' >Please Enter Re-Password</p>");	
+			$("#loginPassReError").html("<p class='danger' >Please Enter Re-Password</p>");	
 		}else if(!isHidden && !$("#loginpass").val()==$("#loginpassre").val()){
 			isValidated = false;
 			$("#loginpassre").parents(".form-group").addClass("has-error");
-			$('#loginpassre').parents(".form-group").prepend("<p class='danger' >Password is mismatched.</p>");
+			$("#loginPassReError").html("<p class='danger' >Password is mismatched.</p>");
 		}else if(!isHidden && !$("#loginpass").val().match(regPasswordExpr)){
 			isValidated = false;
 			$("#loginpass").parents(".form-group").addClass("has-error");
-			$('#loginpass').parents(".form-group").prepend("<p class='danger' >Password is invalid, Please see flyout for criteria</p>");
+			$("#loginPassError").html("<p class='danger' >Password is invalid, Please see flyout for criteria</p>");
 			$('[data-toggle="tooltip"]').tooltip('show');
 		}
 		
 		if($("#loginname").val().length<5){
-			$("#loginname").parents(".form-group").prepend("<p class='danger' >Username is invalid should be more than 5 character</p>");
+			$("#lgNameError").html("<p class='danger' >Username is invalid should be more than 5 character</p>");
 			isValidated = false;
 			$("#loginname").addClass("has-error");
 			}else if( !$("#loginname").val().match(regloginname)){
-				$("#loginname").parents(".form-group").prepend("<p class='danger' >Username is invalid</p>");
+				$("#lgNameError").html("<p class='danger' >Username is invalid</p>");
 				isValidated = false;
 				$("#loginname").addClass("has-error");	
 			}
@@ -209,32 +210,32 @@
 		}
 		}
 		if(!$("#fname").val().match(regStringExpr)){
-			$("#fname").parents(".form-group").prepend("<p class='danger' >First Name is invalid. Only A-Z characters are allowed.</p>");
+			$("#fnameError").html("<p class='danger' >First Name is invalid. Only A-Z characters are allowed.</p>");
 			isValidated = false;
 			$("#fname").addClass("has-error");
 		}
 		if($("#mname").val()!=""){
 		if(!$("#mname").val().match(regStringExpr)){
-			$("#mname").parents(".form-group").prepend("<p class='danger' >Middle Name is invalid. Only A-Z characters are allowed</p>");
+			$("#mnameError").html("<p class='danger' >Middle Name is invalid. Only A-Z characters are allowed</p>");
 			isValidated = false;
 			$("#mname").addClass("has-error");			
 		}
 		}
 		if(!$("#lname").val().match(regStringExpr)){
-			$("#lname").parents(".form-group").prepend("<p class='danger' >Last Name is invalid. Only A-Z characters are allowed</p>");
+			$("#lnameError").html("<p class='danger' >Last Name is invalid. Only A-Z characters are allowed</p>");
 			isValidated = false;
 			$("#lname").addClass("has-error");
 		}
 		
 		/*Pundlik Validation for city,state and country*/
 		if(!$("#city").val().match(textonly)){
-			$("#city").parents(".form-group").prepend("<p class='danger' >City name is invalid. Only A-Z characters are allowed</p>");
+			$("#cityError").html("<p class='danger' >City name is invalid. Only A-Z characters are allowed</p>");
 			isValidated = false;	
 			$("#city").addClass("has-error");
 		}
 		
 		if($("#state").val()=="-1" ){
-			$("#state").parents(".form-group").prepend("<p class='danger' >Please Select State</p>");
+			$("#stateError").html("<p class='danger' >Please Select State</p>");
 			isValidated = false;
 			$("#state").addClass("has-error");
 		}
@@ -247,7 +248,7 @@
 		
 		if(userRole != "1"){
 		if($("#gender").val()== "-1"){
-			$("#gender").parents(".form-group").prepend("<p class='danger'>Select Gender. </p>");
+			$("#genderError").html("<p class='danger'>Select Gender. </p>");
 			isValidated = false;
 			$("#gender").addClass("has-error");
 		}
@@ -275,6 +276,7 @@
     		<label for="inputFirstName" class="col-sm-4 control-label">First Name</label>
     		<div class="col-sm-5">
 				<input type="text" class="form-control" id="fname" name="registerBean.fname" value="<c:out value="${user.firstname}"></c:out>"/>
+				<span id="fnameError" class="error"></span>
 			</div>
 		</div>
 		
@@ -282,6 +284,7 @@
     		<label for="inputMiddleName" class="col-sm-4 control-label">Middle Name</label>
     		<div class="col-sm-5">
 				<input type="text" class="form-control" id="mname" name="registerBean.mname" value="<c:out value="${user.middlename}"></c:out>"/>
+				<span id="mnameError" class="error"></span>
 			</div>
 		</div>
 		
@@ -289,6 +292,7 @@
     		<label for="inputLastName" class="col-sm-4 control-label">Last Name</label>
     		<div class="col-sm-5">
 				<input type="text" class="form-control" id="lname" name="registerBean.lname"  value="<c:out value="${user.lastname}"></c:out>"/>
+				<span id="lnameError" class="error"></span>
 			</div>
 		</div>
 		<!-- 
@@ -309,6 +313,7 @@
 					class="glyphicon glyphicon-calendar glyphicon-time"></i>
 				</span>
 			</div>
+			<span id="dobError" class="error"></span>
 			</div>
 		</div>
 		
@@ -322,6 +327,7 @@
 						<option value="M">Male</option>
 						<option value="F">Female</option>
 				</select>
+				<span id="genderError" class="error"></span>
 			</div>
 		</div>
 		</c:if>
@@ -330,6 +336,7 @@
     		<label for="inputAdd1" class="col-sm-4 control-label">Address1</label>
     		<div class="col-sm-5">
 				<input type="text" class="form-control" id="addr1" name="registerBean.addr1"  value="<c:out value="${user.addr1}"></c:out>"/>
+				<span id="addr1Error" class="error"></span>
 			</div>
 		</div>
 		
@@ -337,6 +344,7 @@
     		<label for="inputAdd2" class="col-sm-4 control-label">Address2</label>
     		<div class="col-sm-5">
 				<input type="text" class="form-control" id="addr2" name="registerBean.addr2"  value="<c:out value="${user.addr2}"></c:out>"/>
+				<span id="addr2Error" class="error"></span>
 			</div>
 		</div>
 		
@@ -344,6 +352,7 @@
     		<label for="inputCity" class="col-sm-4 control-label">City</label>
     		<div class="col-sm-5">
 				<input type="text" class="form-control" id="city" name="registerBean.city" value="<c:out value="${user.city}"></c:out>"/>
+				<span id="cityError" class="error"></span>
 			</div>
 		</div>
 		
@@ -400,6 +409,7 @@
 						<li><a href="#">West Bengal</a></li>
 					</ul>
 			</div>
+			<span id="stateError" class="error"></span>
 			</div>
 		</div>
 		
@@ -416,6 +426,7 @@
     		<label for="inputPhone1" class="col-sm-4 control-label">Phone 1</label>
     		<div class="col-sm-5">
 				<input type="text" class="form-control" id="phone1" maxlength="10" name="registerBean.phone1"  value="<c:out value="${user.phone1}"></c:out>"/>
+				<span id="phone1Error" class="error"></span>
 			</div>
 		</div>
 		
@@ -423,6 +434,7 @@
     		<label for="inputPhone2" class="col-sm-4 control-label">Phone 2</label>
     		<div class="col-sm-5">
 				<input type="text" class="form-control" id="phone2" maxlength="10" name="registerBean.phone2"  value="<c:out value="${user.phone2}"></c:out>"/>
+				<span id="phone2Error" class="error"></span>
 			</div>
 		</div>
 		
@@ -432,15 +444,17 @@
     		<label for="className" class="col-sm-4 control-label">Class Name</label>
     		<div class="col-sm-5">
 				<input type="text" class="form-control" required="required" id="className" maxlength="10" name="registerBean.className"  value="<c:out value="${user.className}"></c:out>"/>
+				<span id="classNameError" class="error"></span>
 			</div>
 		</div>
 		</c:if>
 		
-		<div id="lgnameError" style="display: none;color: red;">This login name is already registered</div>
+		<div id="lognameError" style="display: none;color: red;" align="center">This login name is already registered</div>
 		<div class="form-group">
     		<label for="inputLoginName" class="col-sm-4 control-label">Desired Login Name</label>
     		<div class="col-sm-5">
 				<input type="text" class="form-control" id="loginname" name="registerBean.loginName" value="<c:out value="${user.username}"></c:out>"/>
+				<span id="lgNameError" class="error"></span>
 			</div>
 		</div>
 		
@@ -458,6 +472,7 @@
     		<label for="loginpass" class="col-sm-4 control-label">*Old Password</label>
     		<div class="col-sm-5">
 				<input type="password" class="form-control" id="oldpass" name="oldPassword"/>
+				<span id="oldPasswordError" class="error"></span>
 			</div>
 		</div>
 		
@@ -466,6 +481,7 @@
     		<i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="bottom" title="" style="color: red;"></i>*Password</label>
     		<div class="col-sm-5">
 				<input type="password" class="form-control" id="loginpass" name="registerBean.loginPass"/>
+				<span id="loginPassError" class="error"></span>
 			</div>
 		</div>
 		
@@ -473,6 +489,7 @@
     		<label for="loginpassre" class="col-sm-4 control-label">Re-Enter Password</label>
     		<div class="col-sm-5">
 				<input type="password" class="form-control" id="loginpassre" name="registerBean.loginPassRe"/>
+				<span id="loginPassReError" class="error"></span>
 			</div>
 		</div>
 		</div>

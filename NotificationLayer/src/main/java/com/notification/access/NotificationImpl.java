@@ -28,12 +28,14 @@ import com.notification.bean.MessageDetailBean;
 import com.notification.bean.ProgressCardMessage;
 import com.notification.sms.SmsNotificationTransaction;
 import com.service.beans.ClassownerSettingsNotification;
+import com.service.beans.ManualMsg;
 import com.service.beans.ManualRegisteredStudentNotificationData;
 import com.service.beans.StudentAttendanceNotificationData;
 import com.service.beans.StudentFessNotificationData;
 import com.service.beans.StudentProgressCard;
 import com.transaction.batch.BatchTransactions;
 import com.transaction.classownersettingtransaction.ClassownerSettingstransaction;
+import com.transaction.fee.FeesTransaction;
 import com.transaction.student.StudentTransaction;
 import com.transaction.studentmarks.StudentMarksTransaction;
 import com.util.NotificationEnum;
@@ -61,6 +63,8 @@ public class NotificationImpl {
 			}
 		}
 		if("".equals(status)){
+		FeesTransaction feesTransaction = new FeesTransaction();
+		if(feesTransaction.isBatchLinked(inst_id, div_id, batch_id)){
 		RegisterDB db =new RegisterDB();
 		FeesDB feesDB = new FeesDB();
 		RegisterBean institute =db.getRegistereduser(inst_id);
@@ -155,6 +159,9 @@ public class NotificationImpl {
 		}	
 		}
 		}else{
+			status = "Batch is not linked with any fee structure";		
+		}
+		}else{
 			statusMap.put("status", status);
 		}
 		statusMap.put("status", status);
@@ -233,9 +240,9 @@ public class NotificationImpl {
 				messageDetailBean.setFrom(institute.getClassName());
 				messageDetailBean.setEmailSubject("Progress Report");
 				messageDetailBean.setStudentId(progressCard.getStudent_id());
-				messageDetailBean.setStudentEmail(studentDetails.getStudentUserBean().getEmail());
-				if (!"".equals(studentDetails.getStudentUserBean().getPhone1())) {
-					messageDetailBean.setStudentPhone(Long.parseLong(studentDetails.getStudentUserBean().getPhone1()));
+				messageDetailBean.setStudentEmail(studentDetails.getStudent().getEmail());
+				if (!"".equals(studentDetails.getStudent().getPhone())) {
+					messageDetailBean.setStudentPhone(Long.parseLong(studentDetails.getStudent().getPhone()));
 				}else{
 					messageDetailBean.setStudentPhone(0l);
 				}
@@ -793,15 +800,15 @@ public class NotificationImpl {
 		int msgCounter = 0;
 		StudentTransaction studentTransaction = new StudentTransaction();
 		Student student = studentTransaction.getclassStudent(student_id, inst_id);
-		RegisterBean studentRegisterBean = db.getRegistereduser(student_id);
+		//RegisterBean studentRegisterBean = db.getRegistereduser(student_id);
 		for (StudentFessNotificationData data : paymentDataList) {
 				MessageDetailBean messageDetailBean = new MessageDetailBean();
 				messageDetailBean.setFrom(institute.getClassName());
 				messageDetailBean.setEmailSubject("Fees Payment");
 				messageDetailBean.setStudentId(student_id);
-				messageDetailBean.setStudentEmail(studentRegisterBean.getEmail());
-				if(!"".equals(studentRegisterBean.getPhone1())){
-				messageDetailBean.setStudentPhone(Long.parseLong(studentRegisterBean.getPhone1()));
+				messageDetailBean.setStudentEmail(student.getEmail());
+				if(!"".equals(student.getPhone())){
+				messageDetailBean.setStudentPhone(Long.parseLong(student.getPhone()));
 				}
 				messageDetailBean.setParentEmail(student.getParentEmail());
 				if(!"".equals(student.getParentPhone())){
@@ -819,7 +826,7 @@ public class NotificationImpl {
 				}
 				data.setInst_name(institute.getClassName());
 				data.setParent_name(student.getParentFname()+" "+student.getParentLname());
-				data.setStudent_name(studentRegisterBean.getFname()+" "+studentRegisterBean.getLname());
+				data.setStudent_name(student.getFname()+" "+student.getLname());
 				messageDetailBean.setEmailMessage(null);
 				messageDetailBean.setEmailObject(data);
 				messageDetailBean.setEmailTemplate("feesPaymentStudentAlertEmail.tmpl");
@@ -1139,9 +1146,9 @@ public class NotificationImpl {
 					messageDetailBean.setFrom(institute.getClassName());
 					messageDetailBean.setEmailSubject("Alert");
 					messageDetailBean.setStudentId(studentDetails.getStudentId());
-					messageDetailBean.setStudentEmail(studentDetails.getStudentUserBean().getEmail());
-					if (!"".equals(studentDetails.getStudentUserBean().getPhone1())) {
-						messageDetailBean.setStudentPhone(Long.parseLong(studentDetails.getStudentUserBean().getPhone1()));
+					messageDetailBean.setStudentEmail(studentDetails.getStudent().getEmail());
+					if (!"".equals(studentDetails.getStudent().getPhone())) {
+						messageDetailBean.setStudentPhone(Long.parseLong(studentDetails.getStudent().getPhone()));
 					}else{
 						messageDetailBean.setStudentPhone(0l);
 					}
@@ -1174,10 +1181,17 @@ public class NotificationImpl {
 					if((messageDetailBean.getParentEmail()== null || "".equals(messageDetailBean.getParentEmail())) && messageDetailBean.isSendToParent()){
 						parentsWithoutEmail ++;
 					}
-					messageDetailBean.setEmailMessage(msg);
-					messageDetailBean.setEmailObject(null);
+					ManualMsg manualMsg = new ManualMsg();
+					manualMsg.setStudent_name(studentDetails.getStudent().getFname()+" "+studentDetails.getStudent().getLname());
+					manualMsg.setMsg(msg);
+					manualMsg.setParent_name(studentDetails.getStudent().getParentFname()+" "+studentDetails.getStudent().getParentLname());
+					
+					messageDetailBean.setEmailMessage(null);
+					messageDetailBean.setEmailObject(manualMsg);
+					messageDetailBean.setEmailTemplate("studentManualMsg.tmpl");
 					messageDetailBean.setParentEmailMessage(null);
-					messageDetailBean.setParentEmailObject(null);
+					messageDetailBean.setParentEmailObject(manualMsg);
+					messageDetailBean.setParentEmailTemplate("parentManualMsg.tmpl");
 					
 					messageDetailBean.setSmsMessage(msg);
 					messageDetailBean.setSmsObject(null);
@@ -1187,7 +1201,7 @@ public class NotificationImpl {
 					detailBeans.add(messageDetailBean);
 			}
 			NotifcationAccess notifcationAccess = new NotifcationAccess();
-			if(settings.getClassOwnerNotificationBean().isSmsPaymentDue()){
+			if(sendSMS){
 			SmsNotificationTransaction  notificationTransaction = new SmsNotificationTransaction();
 			statusMap = notificationTransaction.validateNSendSms(msgCounter, "", inst_id,Constants.COMMON_ZERO,Constants.COMMON_ZERO,Constants.PARENT_ROLE,Constants.AUTO_DAILY_MSG);;
 			if(statusMap.containsKey("access") && (boolean)statusMap.get("access")){
@@ -1266,18 +1280,23 @@ public class NotificationImpl {
 					if((messageDetailBean.getTeacherEmail()== null || "".equals(messageDetailBean.getTeacherEmail())) && sendEmail ){
 						teachersWithoutEmail ++;
 					}
+					ManualMsg manualMsg = new ManualMsg();
+					manualMsg.setTeacher_name(bean.getFname()+" "+bean.getLname());
+					manualMsg.setMsg(msg);
 					messageDetailBean.setSmsMessage(msg);
-					messageDetailBean.setTeacherEmailMessage(msg);
-					messageDetailBean.setTeacherEmailObject(null);
+					messageDetailBean.setTeacherEmailMessage(null);
+					messageDetailBean.setTeacherEmailObject(manualMsg);
+					messageDetailBean.setTeacherEmailTemplate("teacherManualMsg.tmpl");
 					
 					messageDetailBean.setSmsTeacherMessage(msg);
 					messageDetailBean.setSmsTeacherObject(null);
-	
+					messageDetailBean.setSmsTeacherTemplate(null);
+					
 					messageDetailBean.setSmsType(Constants.PRAMOTIONAL);
 					detailBeans.add(messageDetailBean);
 			}
 			NotifcationAccess notifcationAccess = new NotifcationAccess();
-			if(settings.getClassOwnerNotificationBean().isSmsPaymentDue()){
+			if(sendSMS){
 			SmsNotificationTransaction  notificationTransaction = new SmsNotificationTransaction();
 			statusMap = notificationTransaction.validateNSendSms(msgCounter, "", inst_id,Constants.COMMON_ZERO,Constants.COMMON_ZERO,Constants.PARENT_ROLE,Constants.AUTO_DAILY_MSG);;
 			if(statusMap.containsKey("access") && (boolean)statusMap.get("access")){

@@ -131,7 +131,7 @@ public class NotifcationAccess implements iNotificationAccess{
 			@Override
 			public void run() {
 				MessageFormatter formatter = new MessageFormatter();
-				String message = formatter.formatMessage(messageDetailBean, NotificationEnum.MessageType.EMAIL);
+				String message = "";//formatter.formatMessage(messageDetailBean, NotificationEnum.MessageType.EMAIL);
 				inotify.send(messageDetailBean,message);
 			}
 		}).start();
